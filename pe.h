@@ -78,6 +78,8 @@ public:
 		return res;
 	}
 
+    std::string get_path()  const { return _path; }
+
 private:
 	std::string _path;
 	std::vector<p_section> _sections;

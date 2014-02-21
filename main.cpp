@@ -6,6 +6,7 @@
 
 #include "pe.h"
 #include "mandiant_modules.h"
+#include "yara_modules.h"
 
 int check_sections(void                  *N,
                    VA                    secBase,
@@ -32,6 +33,7 @@ int main(int argc, char** argv)
 	sg::PE pe(argv[1]);
 	modules::check_sections(pe);
 	modules::check_rsrc_size(pe);
+	modules::peid_signature(pe);
 
 	return 0;
 }
