@@ -87,6 +87,7 @@ int peid_signature(sg::PE& pe)
 	if (rules != NULL) {
 		yr_rules_destroy(rules);
 	}
+	return 0;
 }
 
 } // !namespace modules
