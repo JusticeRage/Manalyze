@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
+#include <algorithm>
 
 #include <string>
 #include <vector>
@@ -50,6 +51,12 @@ typedef struct pe_header_t
 	boost::uint16_t Characteristics;
 } pe_header;
 
+typedef struct image_data_directory_t
+{
+	boost::uint32_t VirtualAddress;
+	boost::uint32_t Size;
+} image_data_directory;
+
 typedef struct image_optional_header_t
 {
 	boost::uint16_t Magic;
@@ -82,7 +89,23 @@ typedef struct image_optional_header_t
 	boost::uint64_t SizeofHeapCommit;
 	boost::uint32_t LoaderFlags;
 	boost::uint32_t NumberOfRvaAndSizes;
+	image_data_directory directories[0x10];
 } image_optional_header;
+
+typedef struct simage_section_header_t
+{
+	boost::uint8_t  Name[8];
+	boost::uint32_t VirtualSize;
+	boost::uint32_t VirtualAddress;
+	boost::uint32_t SizeOfRawData;
+	boost::uint32_t PointerToRawData;
+	boost::uint32_t PointerToRelocations;
+	boost::uint32_t PointerToLineNumbers;
+	boost::uint16_t NumberOfRelocations;
+	boost::uint16_t NumberOfLineNumbers;
+	boost::uint32_t Characteristics;
+} image_section_header;
+typedef boost::shared_ptr<image_section_header> pimage_section_header;
 
 class PE
 {
@@ -97,6 +120,7 @@ public:
 	void dump_dos_header(std::ostream& sink = std::cout) const;
 	void dump_pe_header(std::ostream& sink = std::cout) const;
 	void dump_image_optional_header(std::ostream& sink = std::cout) const;
+	void dump_section_table(std::ostream& sink = std::cout) const;
 
 private:
 	/**
@@ -118,12 +142,21 @@ private:
 	 */
 	bool _parse_image_optional_header(FILE* f);
 
-	std::string _path;
-    bool _initialized;
-    size_t _size;
-	dos_header _h_dos;
-	pe_header _h_pe;
-	image_optional_header _ioh;
+	/**
+	 *	@brief	Parses the IMAGE_SECTION_HEADERs of a PE.
+	 *	/!\ This relies on the information gathered in _parse_pe_header.
+	 */
+	bool _parse_section_table(FILE* f);
+
+	std::string							_path;
+    bool								_initialized;
+    size_t								_size;
+
+	// Fields related to the PE structure.
+	dos_header							_h_dos;
+	pe_header							_h_pe;
+	image_optional_header				_ioh;
+	std::vector<pimage_section_header>	_section_table;
 };
 
 

@@ -22,12 +22,18 @@ PE::PE(const std::string& path)
 	if (!_parse_image_optional_header(f)) {
 		goto END;
 	}
+
+	if (!_parse_section_table(f)) {
+		goto END;
+	}
 	
 
 	_initialized = true;
 
 	END:
-	fclose(f);
+	if (f != NULL) {
+		fclose(f);
+	}
 }
 
 
@@ -48,6 +54,8 @@ size_t PE::get_filesize()
     _size = res;
 	return _size;
 }
+
+// ----------------------------------------------------------------------------
 
 bool PE::_parse_dos_header(FILE* f)
 {
@@ -71,6 +79,8 @@ bool PE::_parse_dos_header(FILE* f)
 	return true;
 }
 
+// ----------------------------------------------------------------------------
+
 bool PE::_parse_pe_header(FILE* f)
 {
 	memset(&_h_pe, 0, sizeof(_h_pe));
@@ -92,9 +102,17 @@ bool PE::_parse_pe_header(FILE* f)
 	return true;
 }
 
+// ----------------------------------------------------------------------------
+
 bool PE::_parse_image_optional_header(FILE* f)
 {
 	memset(&_ioh, 0, sizeof(_ioh));
+
+	if (_h_pe.SizeOfOptionalHeader == 0)
+	{
+		std::cout << "[!] Warning: This PE has no Image Optional Header!." << std::endl;
+		return true;
+	}
 
 	if (fseek(f, _h_dos.e_lfanew + sizeof(pe_header), SEEK_SET))
 	{
@@ -165,8 +183,52 @@ bool PE::_parse_image_optional_header(FILE* f)
 		}
 	}
 
+	// The Windows Loader disregards the value if it is greater than 0x10. This trick is supposedly used to crash parsers.
+	// Source: http://opcode0x90.wordpress.com/2007/04/22/windows-loader-does-it-differently/
+	// TODO: Move to an analysis module, since this denotes a suspicious intent.
+	if (_ioh.NumberOfRvaAndSizes > 0x10) {
+		std::cout << "[!] Warning: NumberOfRvaAndSizes > 0x10. This PE may have manually been crafted." << std::endl;
+	}
+
+	for (unsigned int i = 0 ; i < std::min(_ioh.NumberOfRvaAndSizes, (boost::uint32_t) 0x10) ; ++i)
+	{
+		if (8 != fread(&_ioh.directories[i], 1, 8, f))
+		{
+			std::cout << "[!] Error: Could not read directory entry " << i << "." << std::endl;
+			return false;
+		}
+	}
+
 	return true;
 }
+
+// ----------------------------------------------------------------------------
+
+bool PE::_parse_section_table(FILE* f)
+{
+	if (fseek(f, _h_dos.e_lfanew + sizeof(pe_header) + _h_pe.SizeOfOptionalHeader, SEEK_SET))
+	{
+		std::cout << "[!] Error: Could not reach the Section Table (fseek to offset " 
+			<<  _h_dos.e_lfanew + sizeof(pe_header) + _h_pe.SizeOfOptionalHeader << " failed)." << std::endl;
+		return false;
+	}
+
+	for (int i = 0 ; i < _h_pe.NumberofSections ; ++i)
+	{
+		pimage_section_header sec(new image_section_header);
+		memset(sec.get(), 0, sizeof(image_section_header));
+		if (sizeof(image_section_header) != fread(&*sec, 1, sizeof(image_section_header), f))
+		{
+			std::cout << "[!] Error: Could not read section " << i << "." << std::endl;
+			return false;
+		}
+		_section_table.push_back(sec);
+	}
+
+	return true;
+}
+
+// ----------------------------------------------------------------------------
 
 void PE::dump_dos_header(std::ostream& sink) const
 {
@@ -194,6 +256,8 @@ void PE::dump_dos_header(std::ostream& sink) const
 	sink << "e_oeminfo\t" << _h_dos.e_oeminfo << std::endl;
 	sink << "e_lfanew\t" << _h_dos.e_lfanew << std::endl <<std::endl;
 }
+
+// ----------------------------------------------------------------------------
 
 void PE::dump_pe_header(std::ostream& sink) const
 {
@@ -230,6 +294,8 @@ void PE::dump_pe_header(std::ostream& sink) const
 	}
 	sink << std::endl;
 }
+
+// ----------------------------------------------------------------------------
 
 void PE::dump_image_optional_header(std::ostream& sink) const
 {
@@ -285,7 +351,49 @@ void PE::dump_image_optional_header(std::ostream& sink) const
 	sink << "SizeofHeapReserve\t\t" << _ioh.SizeofHeapReserve << std::endl;
 	sink << "SizeofHeapCommit\t\t" << _ioh.SizeofHeapCommit << std::endl;
 	sink << "LoaderFlags\t\t\t" << _ioh.LoaderFlags << std::endl;
-	sink << "NumberOfRvaAndSizes\t\t" << _ioh.NumberOfRvaAndSizes << std::endl;
+	sink << "NumberOfRvaAndSizes\t\t" << _ioh.NumberOfRvaAndSizes << std::endl << std::endl;
+}
+
+// ----------------------------------------------------------------------------
+
+void PE::dump_section_table(std::ostream& sink) const
+{
+	if (!_initialized) {
+		return;
+	}
+
+	sink << "SECTION TABLE:" << std::endl << "--------------" << std::endl << std::endl;
+	sink << std::hex;
+	std::vector<std::string> flags;
+	for (std::vector<pimage_section_header>::const_iterator it = _section_table.begin() ; it != _section_table.end() ; ++it)
+	{
+		sink << "Name\t\t\t" << (*it)->Name << std::endl;
+		sink << "VirtualSize\t\t" << (*it)->VirtualSize << std::endl;
+		sink << "VirtualAddress\t\t" << (*it)->VirtualAddress << std::endl;
+		sink << "SizeOfRawData\t\t" << (*it)->SizeOfRawData << std::endl;
+		sink << "PointerToRawData\t" << (*it)->PointerToRawData << std::endl;
+		sink << "PointerToRelocations\t" << (*it)->PointerToRelocations << std::endl;
+		sink << "PointerToLineNumbers\t" << (*it)->PointerToLineNumbers << std::endl;
+		sink << "NumberOfRelocations\t" << (*it)->NumberOfRelocations << std::endl;
+		sink << "NumberOfLineNumbers\t" << (*it)->NumberOfLineNumbers << std::endl;
+		sink << "NumberOfRelocations\t" << (*it)->NumberOfRelocations << std::endl;
+		sink << "Characteristics\t\t";
+		flags = nt::translate_to_flags((*it)->Characteristics, nt::SECTION_CHARACTERISTICS);
+		if (flags.size() > 0)
+		{
+			for (std::vector<std::string>::iterator it = flags.begin(); it != flags.end(); ++it)
+			{
+				if (it != flags.begin()) {
+					sink << "\t\t\t";
+				}
+				sink << *it << std::endl;
+			}
+		}
+		else {
+			sink << _ioh.DllCharacteristics << std::endl;
+		}
+		sink << std::endl;
+	}
 }
 
 } // !namespace sg

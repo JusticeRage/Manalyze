@@ -6,6 +6,25 @@
 #include <vector>
 #include <boost/assign.hpp>
 
+// Directory Entries - copied from WinNT.h
+// There is no need for a map for this one: we won't have to translate the values back to their names.
+#define IMAGE_DIRECTORY_ENTRY_EXPORT          0   // Export Directory
+#define IMAGE_DIRECTORY_ENTRY_IMPORT          1   // Import Directory
+#define IMAGE_DIRECTORY_ENTRY_RESOURCE        2   // Resource Directory
+#define IMAGE_DIRECTORY_ENTRY_EXCEPTION       3   // Exception Directory
+#define IMAGE_DIRECTORY_ENTRY_SECURITY        4   // Security Directory
+#define IMAGE_DIRECTORY_ENTRY_BASERELOC       5   // Base Relocation Table
+#define IMAGE_DIRECTORY_ENTRY_DEBUG           6   // Debug Directory
+#define IMAGE_DIRECTORY_ENTRY_COPYRIGHT       7   // (X86 usage)
+#define IMAGE_DIRECTORY_ENTRY_ARCHITECTURE    7   // Architecture Specific Data
+#define IMAGE_DIRECTORY_ENTRY_GLOBALPTR       8   // RVA of GP
+#define IMAGE_DIRECTORY_ENTRY_TLS             9   // TLS Directory
+#define IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG    10   // Load Configuration Directory
+#define IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT   11   // Bound Import Directory in headers
+#define IMAGE_DIRECTORY_ENTRY_IAT            12   // Import Address Table
+#define IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT   13   // Delay Load Import Descriptors
+#define IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR 14   // COM Runtime descriptor
+
 namespace nt {
 
 typedef std::map<std::string, int> flag_dict;
@@ -93,23 +112,36 @@ static flag_dict DLL_CHARACTERISTICS =
 							   ("IMAGE_DLLCHARACTERISTICS_GUARD_CF", 0x4000)
 							   ("IMAGE_DLLCHARACTERISTICS_TERMINAL_SERVER_AWARE", 0x8000);
 
-static flag_dict DIRECTORY_ENTRIED =
-	boost::assign::map_list_of ("IMAGE_DIRECTORY_ENTRY_EXPORT", 0)
-							   ("IMAGE_DIRECTORY_ENTRY_IMPORT", 1)
-							   ("IMAGE_DIRECTORY_ENTRY_RESOURCE", 2)
-							   ("IMAGE_DIRECTORY_ENTRY_EXCEPTION", 3)
-							   ("IMAGE_DIRECTORY_ENTRY_SECURITY", 4)
-							   ("IMAGE_DIRECTORY_ENTRY_BASERELOC", 5)
-							   ("IMAGE_DIRECTORY_ENTRY_DEBUG", 6)
-							   ("IMAGE_DIRECTORY_ENTRY_COPYRIGHT", 7)
-							   ("IMAGE_DIRECTORY_ENTRY_ARCHITECTURE", 7)
-							   ("IMAGE_DIRECTORY_ENTRY_GLOBALPTR", 8)
-							   ("IMAGE_DIRECTORY_ENTRY_TLS", 9)
-							   ("IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG", 10)
-							   ("IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT", 11)
-							   ("IMAGE_DIRECTORY_ENTRY_IAT", 12)
-							   ("IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT", 13)
-							   ("IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR", 14);
+static flag_dict SECTION_CHARACTERISTICS =
+	boost::assign::map_list_of ("IMAGE_SCN_TYPE_REG", 0x00000000)
+							   ("IMAGE_SCN_TYPE_DSECT", 0x00000001)
+							   ("IMAGE_SCN_TYPE_NOLOAD", 0x00000002)
+							   ("IMAGE_SCN_TYPE_GROUP", 0x00000004)
+							   ("IMAGE_SCN_TYPE_NO_PAD", 0x00000008)
+							   ("IMAGE_SCN_TYPE_COPY", 0x00000010)
+							   ("IMAGE_SCN_CNT_CODE", 0x00000020)
+							   ("IMAGE_SCN_CNT_INITIALIZED_DATA", 0x00000040)
+							   ("IMAGE_SCN_CNT_UNINITIALIZED_DATA", 0x00000080)
+							   ("IMAGE_SCN_LNK_OTHER", 0x00000100)
+							   ("IMAGE_SCN_LNK_INFO", 0x00000200)
+							   ("IMAGE_SCN_TYPE_OVER", 0x00000400)
+							   ("IMAGE_SCN_LNK_REMOVE", 0x00000800)
+							   ("IMAGE_SCN_LNK_COMDAT", 0x00001000)
+							   ("IMAGE_SCN_NO_DEFER_SPEC_EXC", 0x00004000)
+							   ("IMAGE_SCN_GPREL", 0x00008000)
+							   ("IMAGE_SCN_MEM_FARDATA", 0x00008000)
+							   ("IMAGE_SCN_MEM_PURGEABLE", 0x00020000)
+							   ("IMAGE_SCN_MEM_LOCKED", 0x00040000)
+							   ("IMAGE_SCN_MEM_PRELOAD", 0x00080000)
+							   ("IMAGE_SCN_ALIGN_MASK", 0x00)
+							   ("IMAGE_SCN_LNK_NRELOC_OVFL", 0x01000000)
+							   ("IMAGE_SCN_MEM_DISCARDABLE", 0x02000000)
+							   ("IMAGE_SCN_MEM_NOT_CACHED", 0x04000000)
+							   ("IMAGE_SCN_MEM_NOT_PAGED", 0x08000000)
+							   ("IMAGE_SCN_MEM_SHARED", 0x10000000)
+							   ("IMAGE_SCN_MEM_EXECUTE", 0x20000000)
+							   ("IMAGE_SCN_MEM_READ", 0x40000000)
+							   ("IMAGE_SCN_MEM_WRITE", 0x80000000);
 
 /**
  *	@brief	Breaks down an integer given as input as a combination of flags.

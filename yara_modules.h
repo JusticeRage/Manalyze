@@ -77,7 +77,6 @@ int peid_signature(sg::PE& pe)
     }
 
 	END:
-	yr_finalize();
 	if (compiler != NULL) {
 		yr_compiler_destroy(compiler);
 	}
@@ -87,6 +86,7 @@ int peid_signature(sg::PE& pe)
 	if (rules != NULL) {
 		yr_rules_destroy(rules);
 	}
+	yr_finalize();
 	return 0;
 }
 

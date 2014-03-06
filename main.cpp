@@ -18,11 +18,13 @@ int main(int argc, char** argv)
 	sg::PE pe(argv[1]);
 
 	std::cout << "Input file: " << pe.get_path() << std::endl;
-	std::cout << "Filesize: " << pe.get_filesize() << std::endl << std::endl;
+	//modules::peid_signature(pe);
+	std::cout << "File size: " << pe.get_filesize() << std::endl << std::endl;
 
 	pe.dump_dos_header();
 	pe.dump_pe_header();
 	pe.dump_image_optional_header();
+	pe.dump_section_table();
 
 	std::cin.get();
 	return 0;
