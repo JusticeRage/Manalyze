@@ -15,6 +15,8 @@ namespace modules {
 /**
  Detects non-standard section names, which could indicate packer presence.
  */
+
+	/*
 int check_sections(sg::PE& pe)
 {
 	// Check the section names against a list of known names.
@@ -41,7 +43,7 @@ int check_rsrc_size(sg::PE& pe)
 		}
 	}
 	return 0;
-}
+}*/
 
 } // !namespace modules
 

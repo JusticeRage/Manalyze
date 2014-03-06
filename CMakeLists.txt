@@ -7,7 +7,7 @@ include_directories(
 			${PROJECT_SOURCE_DIR}/external
 			${Boost_INCLUDE_DIRS}
                    )
-add_executable(SGStatic main.cpp)
+add_executable(SGStatic main.cpp pe.cpp nt_values.cpp)
 
 # pe-parse depencency
 add_subdirectory(external/pe-parse)
