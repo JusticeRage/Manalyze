@@ -8,7 +8,7 @@ include_directories(
 						${Boost_INCLUDE_DIRS}
                    )
 
-add_executable(SGStatic main.cpp pe.cpp nt_values.cpp)
+add_executable(SGStatic main.cpp pe.cpp nt_values.cpp utils.cpp)
 
 set (BUILD_SHARED_LIBS FALSE) # should force the libraries to be static
 

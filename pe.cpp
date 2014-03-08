@@ -26,7 +26,10 @@ PE::PE(const std::string& path)
 	if (!_parse_section_table(f)) {
 		goto END;
 	}
-	
+
+	if (!_parse_directories(f)) {
+		goto END;
+	}	
 
 	_initialized = true;
 
@@ -230,6 +233,135 @@ bool PE::_parse_section_table(FILE* f)
 
 // ----------------------------------------------------------------------------
 
+unsigned int PE::_rva_to_offset(boost::uint32_t rva)
+{
+	// Find the corresponding section.
+	pimage_section_header section = pimage_section_header();
+	for (std::vector<pimage_section_header>::const_iterator it = _section_table.begin() ; it != _section_table.end() ; ++it)
+	{
+		if ((*it)->VirtualAddress <= rva && rva < (*it)->VirtualAddress + (*it)->VirtualSize)
+		{
+			section = *it;
+			break;
+		}
+	}
+	if (section == NULL) {
+		return 0; // No section matches the RVA.
+	}
+	return rva - section->VirtualAddress + section->PointerToRawData;
+}
+
+// ----------------------------------------------------------------------------
+
+bool PE::_parse_directories(FILE* f)
+{
+	return _parse_imports(f);
+}
+
+// ----------------------------------------------------------------------------
+
+bool PE::_parse_imports(FILE* f)
+{
+	if (_ioh.directories[IMAGE_DIRECTORY_ENTRY_IMPORT].Size == 0)
+	{
+		std::cout << "[!] Warning: No imports." << std::endl;
+		return true;
+	}
+	unsigned int offset = _rva_to_offset(_ioh.directories[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress);
+	if (!offset || fseek(f, offset, SEEK_SET))
+	{
+		std::cout << "[!] Error: Could not reach the import directory data (offset=0x" << std::hex << offset << ")." << std::endl;
+		return false;
+	}
+
+	while (true) // We stop at the first NULL IMAGE_IMPORT_DESCRIPTOR.
+	{
+		pimage_import_descriptor iid(new image_import_descriptor);
+		memset(iid.get(), 0, 5*sizeof(boost::uint32_t)); // Don't overwrite the last member (a string)
+		iid->NameStr = std::string();
+		if (20 != fread(iid.get(), 1, 20, f))
+		{
+			std::cout << "[!] Error: Could not read the IMAGE_IMPORT_DESCRIPTOR." << std::endl;
+			return false;
+		}
+
+		// Non-standard parsing. The Name RVA is translated to an actual string here.
+		unsigned int saved_offset = ftell(f);
+		fseek(f, _rva_to_offset(iid->Name), SEEK_SET);
+		iid->NameStr = utils::read_ascii_string(f);
+		fseek(f, saved_offset, SEEK_SET);
+
+		// Exit condition
+		if (iid->OriginalFirstThunk == 0) {
+			break;
+		}
+		pimage_library_descriptor library = pimage_library_descriptor(new image_library_descriptor(iid, std::vector<pimport_lookup_table>()));
+		_imports.push_back(library);
+	}
+
+	// Parse the IMPORT_LOOKUP_TABLE for each imported library
+	for (std::vector<pimage_library_descriptor>::iterator it = _imports.begin() ; it != _imports.end() ; ++it)
+	{
+		int ilt_offset = _rva_to_offset((*it)->first->OriginalFirstThunk);
+		if (!ilt_offset || fseek(f, ilt_offset, SEEK_SET))
+		{
+			std::cout << "[!] Error: Could not reach an IMPORT_LOOKUP_TABLE." << std::endl;
+			return false;
+		}
+
+		while (true) // We stop at the first NULL IMPORT_LOOKUP_TABLE
+		{
+			pimport_lookup_table import = pimport_lookup_table(new import_lookup_table);
+			import->AddressOfData = 0;
+			import->Hint = 0;
+
+			// The field has a size of 8 for x64 PEs
+			int size_to_read = (_ioh.Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC["PE32+"] ? 8 : 4);
+			if (size_to_read != fread(&(import->AddressOfData), 1, size_to_read, f))
+			{
+				std::cout << "[!] Error: Could not read the IMPORT_LOOKUP_TABLE." << std::endl;
+				return false;
+			}
+
+			// Exit condition
+			if (import->AddressOfData == 0) {
+				break;
+			}
+
+			// Read the HINT/NAME TABLE if applicable. Check the most significant byte of AddressOfData to
+			// see if the import is by name or ordinal. For PE32+, AddressOfData is a uint64.
+			boost::uint64_t mask = (size_to_read == 8 ? 0x8000000000000000 : 0x80000000);
+			if (!(import->AddressOfData & mask))
+			{
+				// Import by name. Read the HINT/NAME table. For both PE32 and PE32+, its RVA is stored
+				// in bits 30-0 of AddressOfData.
+				unsigned int table_offset = _rva_to_offset(import->AddressOfData & 0x7FFFFFFF);
+				if (table_offset == 0)
+				{
+					std::cout << "[!] Error: Could not reach the HINT/NAME table." << std::endl;
+					return false;
+				}
+				unsigned int saved_offset = ftell(f);
+				if (fseek(f, table_offset, SEEK_SET) || 2 != fread(&(import->Hint), 1, 2, f))
+				{
+					std::cout << "[!] Error: Could not read a HINT/NAME hint." << std::endl;
+					return false;
+				}
+				import->Name = utils::read_ascii_string(f);
+
+				// Go back to the import lookup table.
+				fseek(f, saved_offset, SEEK_SET);
+			}
+
+			(*it)->second.push_back(import);
+		}
+	}
+
+	return true;
+}
+
+// ----------------------------------------------------------------------------
+
 void PE::dump_dos_header(std::ostream& sink) const
 {
 	if (!_initialized) {
@@ -394,6 +526,31 @@ void PE::dump_section_table(std::ostream& sink) const
 		}
 		sink << std::endl;
 	}
+}
+
+void PE::dump_imports(std::ostream& sink) const
+{
+	if (!_initialized) {
+		return;
+	}
+
+	sink << "IMPORTS:" << std::endl << "--------" << std::endl << std::endl;
+	for (std::vector<pimage_library_descriptor>::const_iterator it = _imports.begin() ; it != _imports.end() ; ++it)
+	{
+		sink << (*it)->first->NameStr << std::endl;
+		for ( std::vector<pimport_lookup_table>::const_iterator it2 = (*it)->second.begin() ; it2 != (*it)->second.end() ; ++it2)
+		{
+			if ((*it2)->Name != "") {
+				sink << "\t" << (*it2)->Name << std::endl;
+			}
+			else {
+				sink << "\tOrdinal " << ((*it2)->AddressOfData & 0x7FFF) << std::endl;
+			}
+		}
+		sink << std::endl;
+	}
+	sink << std::endl;
+
 }
 
 } // !namespace sg

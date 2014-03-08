@@ -13,6 +13,7 @@
 #include <boost/cstdint.hpp>
 
 #include "nt_values.h"
+#include "utils.h"
 
 namespace sg {
 
@@ -107,6 +108,33 @@ typedef struct simage_section_header_t
 } image_section_header;
 typedef boost::shared_ptr<image_section_header> pimage_section_header;
 
+// A field has been added at the end of the structure to keep the Name of the library.
+// The original Name field only contains a RVA, which is impractical.
+typedef struct image_import_descriptor_t
+{
+	boost::uint32_t OriginalFirstThunk;
+	boost::uint32_t TimeDateStamp;
+	boost::uint32_t ForwarderChain;
+	boost::uint32_t	Name;
+	boost::uint32_t FirstThunk;
+	std::string		NameStr; // Non-standard!
+} image_import_descriptor;
+typedef boost::shared_ptr<image_import_descriptor> pimage_import_descriptor;
+
+// For convenience, this structure has been merged with the associated Hint/Name table
+typedef struct import_lookup_table_t
+{
+	boost::uint64_t	AddressOfData;
+	boost::uint16_t	Hint;
+	std::string		Name;
+} import_lookup_table;
+typedef boost::shared_ptr<import_lookup_table> pimport_lookup_table;
+
+// This typedef isn't a Windows standard, but I find this representation useful when describing
+// all the imports related to a single DLL.
+typedef std::pair<pimage_import_descriptor, std::vector<pimport_lookup_table> > image_library_descriptor;
+typedef boost::shared_ptr<image_library_descriptor> pimage_library_descriptor;
+
 class PE
 {
 
@@ -121,6 +149,7 @@ public:
 	void dump_pe_header(std::ostream& sink = std::cout) const;
 	void dump_image_optional_header(std::ostream& sink = std::cout) const;
 	void dump_section_table(std::ostream& sink = std::cout) const;
+	void dump_imports(std::ostream& sink = std::cout) const;
 
 private:
 	/**
@@ -148,15 +177,39 @@ private:
 	 */
 	bool _parse_section_table(FILE* f);
 
+	/**
+	 *	@brief	Courtesy function used to parse all the PE directories (imports, exports, resources, ...).
+	 *	/!\ This relies on the information gathered in _parse_image_optional_header.
+	 */
+	bool _parse_directories(FILE* f);
+
+	/**
+	 *	@brief	Parses the imports of a PE.
+	 *	
+	 *	Included in the _parse_directories call.
+	 *	/!\ This relies on the information gathered in _parse_image_optional_header.
+	 */
+	bool _parse_imports(FILE* f);
+
+	/**
+	 *	@brief	Translates a Relative Virtual Address into an offset in the file.
+	 *
+	 *	@param	boost::uint32_t rva The RVA to translate
+	 *
+	 *	@return	The corresponding offset in the file, or 0 if the RVA could not be translated.
+	 */
+	unsigned int _rva_to_offset(boost::uint32_t rva);
+
 	std::string							_path;
     bool								_initialized;
     size_t								_size;
 
 	// Fields related to the PE structure.
-	dos_header							_h_dos;
-	pe_header							_h_pe;
-	image_optional_header				_ioh;
-	std::vector<pimage_section_header>	_section_table;
+	dos_header								_h_dos;
+	pe_header								_h_pe;
+	image_optional_header					_ioh;
+	std::vector<pimage_section_header>		_section_table;
+	std::vector<pimage_library_descriptor>	_imports;
 };
 
 

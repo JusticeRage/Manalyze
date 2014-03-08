@@ -25,6 +25,7 @@ int main(int argc, char** argv)
 	pe.dump_pe_header();
 	pe.dump_image_optional_header();
 	pe.dump_section_table();
+	pe.dump_imports();
 
 	std::cin.get();
 	return 0;
