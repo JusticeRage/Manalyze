@@ -2,105 +2,185 @@
 #define _PE_H_
 
 #include <stdio.h>
-
+#include <string.h>
+#include <iostream>
+#include <sstream>
+#include <algorithm>
 #include <string>
 #include <vector>
+
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/scoped_array.hpp>
+#include <boost/cstdint.hpp>
+#include <boost/regex.hpp>
 
-#include "pe-parse/parser-library/parse.h"
-
+#include "nt_values.h"  // Windows-related #defines flags are declared in this file.
+#include "pe_structs.h" // All typedefs and structs are over there
+#include "utils.h"
 
 namespace sg {
-
-typedef struct _section
-{
-	VA base_address;
-	std::string name;
-	boost::uint32_t size;
-} section;
-
-typedef boost::shared_ptr<section> p_section;
-
-int add_section(void* target_object,
-		VA base,
-		std::string& secname,
-		image_section_header s,
-		bounded_buffer* data);
-
-bool same_name(const std::string& name, p_section sec) {
-	return name == sec->name;
-}
 
 class PE
 {
 
 public:
-	PE(const std::string& path)
-		: _path(path)
-	{
-		parsed_pe *p = ParsePEFromFile(_path.c_str());
-		if (p == NULL) {
-			return;
-		}
+	PE(const std::string& path);
+	virtual ~PE() {}
 
-		IterSec(p, add_section, this);
-
-		DestructParsedPE(p);
-	}
-
-	std::vector<p_section>& get_sections()
-	{
-		return _sections;
-	}
-
-	p_section get_section(const std::string& name)
-	{
-		std::vector<p_section>::iterator it = std::find_if(_sections.begin(), _sections.end(), boost::bind(&sg::same_name, ".rsrc", _1));
-		if (it == _sections.end()) {
-			return p_section();
-		}
-		else {
-			return *it;
-		}
-	}
-
-	size_t get_filesize()
-	{
-		FILE* f = fopen(_path.c_str(), "r");
-		size_t res = 0;
-		if (f == NULL) {
-			return res;
-		}
-		fseek(f, 0, SEEK_END);
-		res = ftell(f);
-		fclose(f);
-		return res;
-	}
+	size_t get_filesize();
 
     std::string get_path()  const { return _path; }
 
+
+	/**
+	 *	@brief	Returns the list of DLLs imported by the PE.
+	 *
+	 *	Implementation is located in imports.cpp.
+	 */
+	std::vector<std::string> get_imported_dlls() const;
+
+	/**
+	 *	@brief	Returns the list of functions imported from a specified DLL.
+	 *
+	 *	@param	const std::string& dll The DLL from which we want the imported functions.
+	 *
+	 *	@return	A vector containing all the imported function names.
+	 *			Functions imported by ordinal will be returned as "#N", N being the ordinal number.
+	 *
+	 *	Implementation is located in imports.cpp.
+	 */
+	std::vector<std::string> get_imported_functions(const std::string& dll) const;
+
+	/**
+	 *	@brief	Finds imported functions matching regular expressions.
+	 *
+	 *	@param	const std::string& function_name_regexp		The regular expression selecting function names.
+	 *	@param	const std::string& dll_name_regexp			The regular expression selecting imported dlls into which the
+	 *														functions should be searched.
+	 *
+	 *	The default value for dll_name_regexp implies that all DLLs should be searched.
+	 *	Note that functions will only be returned if they match the WHOLE input sequence.
+	 *	/!\ Warning: Functions imported by ordinal can NOT be found using this function!
+	 *
+	 *	@return	A list of imported function names matching the requested criteria.
+	 *
+	 *	Implementation is located in imports.cpp.
+	 */
+	std::vector<std::string> find_imports(const std::string& function_name_regexp, 
+										  const std::string& dll_name_regexp = ".*") const;
+
+	/**
+	 *	@brief	Functions used to display the detailed contents of the PE.
+	 *
+	 *	@param	std::ostream& sink	The stream into which the information should be written.
+	 *								Default is stdout.
+	 *
+	 *	Implementation is located in dump.cpp.
+	 */
+	void dump_dos_header(std::ostream& sink = std::cout) const;
+	void dump_pe_header(std::ostream& sink = std::cout) const;
+	void dump_image_optional_header(std::ostream& sink = std::cout) const;
+	void dump_section_table(std::ostream& sink = std::cout) const;
+	void dump_imports(std::ostream& sink = std::cout) const;
+	void dump_exports(std::ostream& sink = std::cout) const;
+
 private:
-	std::string _path;
-	std::vector<p_section> _sections;
+	/**
+	 * Reads the first bytes of the file to reconstruct the DOS header.
+	 */
+	bool _parse_dos_header(FILE* f);
+
+	/**
+	 * Reads the PE header of an executable.
+	 * /!\ This relies on the information gathered in _parse_dos_header. Please do not call
+	 *     this function first! Actually, please don't call it at all. Let the constructor 
+	 *     handle the parsing.
+	 */
+	bool _parse_pe_header(FILE* f);
+
+	/**
+	 *	@brief	Parses the IMAGE_OPTIONAL_HEADER structure of a PE.
+	 *	/!\ This relies on the information gathered in _parse_pe_header.
+	 */
+	bool _parse_image_optional_header(FILE* f);
+
+	/**
+	 *	@brief	Parses the IMAGE_SECTION_HEADERs of a PE.
+	 *	/!\ This relies on the information gathered in _parse_pe_header.
+	 */
+	bool _parse_section_table(FILE* f);
+
+	/**
+	 *	@brief	Courtesy function used to parse all the PE directories (imports, exports, resources, ...).
+	 *	/!\ This relies on the information gathered in _parse_image_optional_header.
+	 */
+	bool _parse_directories(FILE* f);
+
+	/**
+	 *	@brief	Parses the imports of a PE.
+	 *	
+	 *	Included in the _parse_directories call.
+	 *	/!\ This relies on the information gathered in _parse_image_optional_header.
+	 */
+	bool _parse_imports(FILE* f);
+
+	/**
+	 *	@brief	Parses the exports of a PE.
+	 *	
+	 *	Included in the _parse_directories call.
+	 *	/!\ This relies on the information gathered in _parse_image_optional_header.
+	 */
+	bool _parse_exports(FILE* f);
+
+	/**
+	 *	@brief	Translates a Relative Virtual Address into an offset in the file.
+	 *
+	 *	@param	boost::uint32_t rva The RVA to translate
+	 *
+	 *	@return	The corresponding offset in the file, or 0 if the RVA could not be translated.
+	 */
+	unsigned int _rva_to_offset(boost::uint32_t rva) const;
+
+	/**
+	 *	@brief	Moves the file cursor to the target directory.
+	 *
+	 *	@param	FILE* f			The PE file object.
+	 *	@param	int directory	The directory to reach, i.e. IMAGE_DIRECTORY_ENTRY_EXPORT.
+	 *
+	 *	@return	Whether the directory was successfully reached.
+	 */
+	bool _reach_directory(FILE* f, int directory) const;
+
+	/**
+	 *	@brief	Finds imported DLLs whose names match a particular regular expression.
+	 *
+	 *	@param	const std::string& name_regexp The regular expression used to match DLL names.
+	 *
+	 *	Implementation is located in imports.cpp.
+	 */
+	std::vector<pimage_library_descriptor> _find_imported_dlls(const std::string& name_regexp) const;
+
+	std::string							_path;
+    bool								_initialized;
+    size_t								_size;
+
+	/* 
+	    -----------------------------------
+	    Fields related to the PE structure.
+	    -----------------------------------
+	    Those fields that are extremely close to the PE format and offer little abstraction.
+	    The user shouldn't ever have to touch them. A simple to use interface should be provided for
+	    everything that is useful. 
+	*/
+	dos_header								_h_dos;
+	pe_header								_h_pe;
+	image_optional_header					_ioh;
+	std::vector<pimage_section_header>		_section_table;
+	std::vector<pimage_library_descriptor>	_imports;
+	image_export_directory					_ied;
+	std::vector<pexported_function>			_exports;
 };
-
-int add_section(void* target_object,
-		VA base,
-		std::string& secname,
-		image_section_header s,
-		bounded_buffer* data)
-{
-	p_section sect(new section);
-
-	sect->base_address = base;
-	sect->name = secname;
-	sect->size = data->bufLen;
-	((PE*) target_object)->get_sections().push_back(sect);
-
-	delete data;
-	return 0;
-}
 
 
 } /* !namespace sg */
