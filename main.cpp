@@ -26,6 +26,9 @@ int main(int argc, char** argv)
 	pe.dump_image_optional_header();
 	pe.dump_section_table();
 	pe.dump_imports();
+	pe.dump_exports();
+
+	std::vector<std::string> imp = pe.find_imports("Virtual.*");
 
 	std::cin.get();
 	return 0;

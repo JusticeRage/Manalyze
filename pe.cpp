@@ -233,19 +233,31 @@ bool PE::_parse_section_table(FILE* f)
 
 // ----------------------------------------------------------------------------
 
-unsigned int PE::_rva_to_offset(boost::uint32_t rva)
+unsigned int PE::_rva_to_offset(boost::uint32_t rva) const
 {
 	// Find the corresponding section.
 	pimage_section_header section = pimage_section_header();
 	for (std::vector<pimage_section_header>::const_iterator it = _section_table.begin() ; it != _section_table.end() ; ++it)
 	{
-		if ((*it)->VirtualAddress <= rva && rva < (*it)->VirtualAddress + (*it)->VirtualSize)
+		if (utils::is_address_in_section(rva, *it))
 		{
 			section = *it;
 			break;
 		}
 	}
-	if (section == NULL) {
+
+	if (section == NULL) 
+	{
+		// No section found. Maybe the VirsualSize is erroneous? Try with the RawSizeOfData.
+		for (std::vector<pimage_section_header>::const_iterator it = _section_table.begin() ; it != _section_table.end() ; ++it)
+		{
+			if (utils::is_address_in_section(rva, *it, true))
+			{
+				section = *it;
+				break;
+			}
+		}
+
 		return 0; // No section matches the RVA.
 	}
 	return rva - section->VirtualAddress + section->PointerToRawData;
@@ -253,48 +265,66 @@ unsigned int PE::_rva_to_offset(boost::uint32_t rva)
 
 // ----------------------------------------------------------------------------
 
+bool PE::_reach_directory(FILE* f, int directory) const
+{
+	if (directory > 0x10) { // There can be no more than 0x16 directories.
+		return false;
+	}
+
+	if (_ioh.directories[directory].Size == 0)
+	{
+		return false; // Requested directory is empty.
+	}
+	unsigned int offset = _rva_to_offset(_ioh.directories[directory].VirtualAddress);
+	if (!offset || fseek(f, offset, SEEK_SET))
+	{
+		std::cout << "[!] Error: Could not reach the requested directory (offset=0x" << std::hex << offset << ")." << std::endl;
+		return false;
+	}
+	return true;
+}
+
+// ----------------------------------------------------------------------------
+
 bool PE::_parse_directories(FILE* f)
 {
-	return _parse_imports(f);
+	return _parse_imports(f) && _parse_exports(f);
 }
 
 // ----------------------------------------------------------------------------
 
 bool PE::_parse_imports(FILE* f)
 {
-	if (_ioh.directories[IMAGE_DIRECTORY_ENTRY_IMPORT].Size == 0)
+	if (!_reach_directory(f, IMAGE_DIRECTORY_ENTRY_IMPORT))
 	{
 		std::cout << "[!] Warning: No imports." << std::endl;
 		return true;
-	}
-	unsigned int offset = _rva_to_offset(_ioh.directories[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress);
-	if (!offset || fseek(f, offset, SEEK_SET))
-	{
-		std::cout << "[!] Error: Could not reach the import directory data (offset=0x" << std::hex << offset << ")." << std::endl;
-		return false;
 	}
 
 	while (true) // We stop at the first NULL IMAGE_IMPORT_DESCRIPTOR.
 	{
 		pimage_import_descriptor iid(new image_import_descriptor);
 		memset(iid.get(), 0, 5*sizeof(boost::uint32_t)); // Don't overwrite the last member (a string)
-		iid->NameStr = std::string();
+
 		if (20 != fread(iid.get(), 1, 20, f))
 		{
 			std::cout << "[!] Error: Could not read the IMAGE_IMPORT_DESCRIPTOR." << std::endl;
 			return false;
 		}
 
-		// Non-standard parsing. The Name RVA is translated to an actual string here.
-		unsigned int saved_offset = ftell(f);
-		fseek(f, _rva_to_offset(iid->Name), SEEK_SET);
-		iid->NameStr = utils::read_ascii_string(f);
-		fseek(f, saved_offset, SEEK_SET);
-
 		// Exit condition
-		if (iid->OriginalFirstThunk == 0) {
+		if (iid->OriginalFirstThunk == 0 && iid->FirstThunk == 0) {
 			break;
 		}
+
+		// Non-standard parsing. The Name RVA is translated to an actual string here.
+		unsigned int offset = _rva_to_offset(iid->Name);
+		if (!offset || !utils::read_ascii_string_at_offset(f, offset, iid->NameStr))
+		{
+			std::cout << "[!] Error: Could not read the import name." << std::endl;
+			return false;
+		}
+
 		pimage_library_descriptor library = pimage_library_descriptor(new image_library_descriptor(iid, std::vector<pimport_lookup_table>()));
 		_imports.push_back(library);
 	}
@@ -302,7 +332,13 @@ bool PE::_parse_imports(FILE* f)
 	// Parse the IMPORT_LOOKUP_TABLE for each imported library
 	for (std::vector<pimage_library_descriptor>::iterator it = _imports.begin() ; it != _imports.end() ; ++it)
 	{
-		int ilt_offset = _rva_to_offset((*it)->first->OriginalFirstThunk);
+		int ilt_offset;
+		if ((*it)->first->OriginalFirstThunk != 0) {
+			ilt_offset = _rva_to_offset((*it)->first->OriginalFirstThunk);
+		}
+		else { // Some packed executables use FirstThunk and set OriginalFirstThunk to 0.
+			ilt_offset = _rva_to_offset((*it)->first->FirstThunk);
+		}
 		if (!ilt_offset || fseek(f, ilt_offset, SEEK_SET))
 		{
 			std::cout << "[!] Error: Could not reach an IMPORT_LOOKUP_TABLE." << std::endl;
@@ -341,16 +377,21 @@ bool PE::_parse_imports(FILE* f)
 					std::cout << "[!] Error: Could not reach the HINT/NAME table." << std::endl;
 					return false;
 				}
+
 				unsigned int saved_offset = ftell(f);
-				if (fseek(f, table_offset, SEEK_SET) || 2 != fread(&(import->Hint), 1, 2, f))
+				if (saved_offset == -1 || fseek(f, table_offset, SEEK_SET) || 2 != fread(&(import->Hint), 1, 2, f))
 				{
 					std::cout << "[!] Error: Could not read a HINT/NAME hint." << std::endl;
 					return false;
 				}
 				import->Name = utils::read_ascii_string(f);
 
+				//TODO: Demangle the import name
+
 				// Go back to the import lookup table.
-				fseek(f, saved_offset, SEEK_SET);
+				if (fseek(f, saved_offset, SEEK_SET)) {
+					return false;
+				}
 			}
 
 			(*it)->second.push_back(import);
@@ -360,196 +401,105 @@ bool PE::_parse_imports(FILE* f)
 	return true;
 }
 
-// ----------------------------------------------------------------------------
-
-void PE::dump_dos_header(std::ostream& sink) const
+bool PE::_parse_exports(FILE* f)
 {
-	if (!_initialized) {
-		return;
-	}
+	// Don't overwrite the std::string at the end of the structure.
+	unsigned int ied_size = 9*sizeof(boost::uint32_t) + 2*sizeof(boost::uint16_t);
+	memset(&_ied, 0, ied_size);
 
-	sink << "DOS HEADER:" << std::endl << "-----------" << std::endl;
-	sink << std::hex;
-	sink << "e_magic\t\t" << _h_dos.e_magic[0] << _h_dos.e_magic[1] << std::endl;
-	sink << "e_cblp\t\t" << _h_dos.e_cblp << std::endl;
-	sink << "e_cp\t\t" << _h_dos.e_cp << std::endl;
-	sink << "e_crlc\t\t" << _h_dos.e_crlc << std::endl;
-	sink << "e_cparhdr\t" << _h_dos.e_cparhdr << std::endl;
-	sink << "e_minalloc\t" << _h_dos.e_minalloc << std::endl;
-	sink << "e_maxalloc\t" << _h_dos.e_maxalloc << std::endl;
-	sink << "e_ss\t\t" << _h_dos.e_ss << std::endl;
-	sink << "e_sp\t\t" << _h_dos.e_sp << std::endl;
-	sink << "e_csum\t\t" << _h_dos.e_csum << std::endl;
-	sink << "e_ip\t\t" << _h_dos.e_ip << std::endl;
-	sink << "e_cs\t\t" << _h_dos.e_cs << std::endl;
-	sink << "e_lfarlc\t" << _h_dos.e_lfarlc << std::endl;
-	sink << "e_ovno\t\t" << _h_dos.e_ovno << std::endl;
-	sink << "e_oemid\t\t" << _h_dos.e_oemid << std::endl;
-	sink << "e_oeminfo\t" << _h_dos.e_oeminfo << std::endl;
-	sink << "e_lfanew\t" << _h_dos.e_lfanew << std::endl <<std::endl;
-}
-
-// ----------------------------------------------------------------------------
-
-void PE::dump_pe_header(std::ostream& sink) const
-{
-	if (!_initialized) {
-		return;
-	}
-
-	std::vector<std::string> flags;
-
-	sink << "PE HEADER:" << std::endl << "----------" << std::endl;
-	sink << std::hex;
-	sink << "Signature\t\t" << _h_pe.Signature << std::endl;
-	sink << "Machine\t\t\t" << nt::translate_to_flag(_h_pe.Machine, nt::MACHINE_TYPES) << std::endl;
-	sink << "NumberofSections\t" << _h_pe.NumberofSections << std::endl;
-	sink << "TimeDateStamp\t\t" << _h_pe.TimeDateStamp << std::endl;
-	sink << "PointerToSymbolTable\t" << _h_pe.PointerToSymbolTable << std::endl;
-	sink << "NumberOfSymbols\t\t" << _h_pe.NumberOfSymbols << std::endl;
-	sink << "SizeOfOptionalHeader\t" << _h_pe.SizeOfOptionalHeader << std::endl;
-
-	sink << "Characteristics\t\t";
-	flags = nt::translate_to_flags(_h_pe.Characteristics, nt::PE_CHARACTERISTICS);
-	if (flags.size() > 0) 
+	if (!_reach_directory(f, IMAGE_DIRECTORY_ENTRY_EXPORT))
 	{
-		for (std::vector<std::string>::iterator it = flags.begin() ; it != flags.end() ; ++it) 
+		std::cout << "[!] Warning: No exports." << std::endl;
+		return true;
+	}
+
+	if (ied_size != fread(&_ied, 1, ied_size, f))
+	{
+		std::cout << "[!] Error: Could not read the IMAGE_EXPORT_DIRECTORY." << std::endl;
+		return false;
+	}
+
+	// Read the export name
+	unsigned int offset = _rva_to_offset(_ied.Name);
+	if (!offset || !utils::read_ascii_string_at_offset(f, offset, _ied.NameStr))
+	{
+		std::cout << "[!] Error: Could not read the exported DLL name." << std::endl;
+		return false;
+	}
+	
+	// Get the address and ordinal of each exported function
+	offset = _rva_to_offset(_ied.AddressOfFunctions);
+	if (!offset || fseek(f, offset, SEEK_SET))
+	{
+		std::cout << "[!] Error: Could not reach exported functions address table." << std::endl;
+		return false;
+	}
+
+	for (unsigned int i = 0 ; i < _ied.NumberOfFunctions ; ++i)
+	{
+		pexported_function ex = pexported_function(new exported_function);
+		if (4 != fread(&(ex->Address), 1, 4, f))
 		{
-			if (it != flags.begin()) {
-				sink << "\t\t\t";
-			}
-			sink << *it << std::endl;
+			std::cout << "[!] Error: Could not read an exported function's address." << std::endl;
+			return false;
 		}
-	}
-	else {
-		sink << _h_pe.Characteristics << std::endl;
-	}
-	sink << std::endl;
-}
+		ex->Ordinal = _ied.Base + i;
 
-// ----------------------------------------------------------------------------
-
-void PE::dump_image_optional_header(std::ostream& sink) const
-{
-	if (!_initialized) {
-		return;
-	}
-
-	std::vector<std::string> flags;
-
-	sink << "IMAGE OPTIONAL HEADER:" << std::endl << "----------------------" << std::endl;
-	sink << std::hex;
-	sink << "Magic\t\t\t\t" << nt::translate_to_flag(_ioh.Magic, nt::IMAGE_OPTIONAL_HEADER_MAGIC) << std::endl;
-	sink << "LinkerVersion\t\t\t" << (int) _ioh.MajorLinkerVersion << "." << (int) _ioh.MinorLinkerVersion << std::endl;
-	sink << "SizeOfCode\t\t\t" << _ioh.SizeOfCode << std::endl;
-	sink << "SizeOfInitializedData\t\t" << _ioh.SizeOfInitializedData << std::endl;
-	sink << "SizeOfUninitializedData\t\t" << _ioh.SizeOfUninitializedData << std::endl;
-	sink << "AddressOfEntryPoint\t\t" << _ioh.AddressOfEntryPoint << std::endl;
-	sink << "BaseOfCode\t\t\t" << _ioh.BaseOfCode << std::endl;
-
-	// Field absent from PE32+ headers.
-	if (_ioh.Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC["PE32"]) {
-		sink << "BaseOfData\t\t\t" << _ioh.BaseOfData << std::endl;
-	}
-
-	sink << "ImageBase\t\t\t" << _ioh.ImageBase << std::endl;
-	sink << "SectionAlignment\t\t" << _ioh.SectionAlignment << std::endl;
-	sink << "FileAlignment\t\t\t" << _ioh.FileAlignment << std::endl;
-	sink << "OperatingSystemVersion\t\t" << (int)_ioh.MajorOperatingSystemVersion << "." << (int)_ioh.MinorOperatingSystemVersion << std::endl;
-	sink << "ImageVersion\t\t\t" << (int)_ioh.MajorImageVersion << "." << (int)_ioh.MinorImageVersion << std::endl;
-	sink << "SubsystemVersion\t\t" << (int)_ioh.MajorSubsystemVersion << "." << (int)_ioh.MinorSubsystemVersion << std::endl;
-	sink << "Win32VersionValue\t\t" << _ioh.Win32VersionValue << std::endl;
-	sink << "SizeOfImage\t\t\t" << _ioh.SizeOfImage << std::endl;
-	sink << "SizeOfHeaders\t\t\t" << _ioh.SizeOfHeaders << std::endl;
-	sink << "Checksum\t\t\t" << _ioh.Checksum << std::endl;
-	sink << "Subsystem\t\t\t" << nt::translate_to_flag(_ioh.Subsystem, nt::SUBSYSTEMS) << std::endl;
-	sink << "DllCharacteristics\t\t";
-	flags = nt::translate_to_flags(_ioh.DllCharacteristics, nt::DLL_CHARACTERISTICS);
-	if (flags.size() > 0)
-	{
-		for (std::vector<std::string>::iterator it = flags.begin(); it != flags.end(); ++it)
+		// If the address is located in the export directory, then it is a forwarded export.
+		image_data_directory export_dir = _ioh.directories[IMAGE_DIRECTORY_ENTRY_EXPORT];
+		if (ex->Address > export_dir.VirtualAddress && ex->Address < export_dir.VirtualAddress + export_dir.Size)
 		{
-			if (it != flags.begin()) {
-				sink << "\t\t\t\t";
-			}
-			sink << *it << std::endl;
-		}
-	}
-	else {
-		sink << _ioh.DllCharacteristics << std::endl;
-	}
-	sink << "SizeofStackReserve\t\t" << _ioh.SizeofStackReserve << std::endl;
-	sink << "SizeofStackCommit\t\t" << _ioh.SizeofStackCommit << std::endl;
-	sink << "SizeofHeapReserve\t\t" << _ioh.SizeofHeapReserve << std::endl;
-	sink << "SizeofHeapCommit\t\t" << _ioh.SizeofHeapCommit << std::endl;
-	sink << "LoaderFlags\t\t\t" << _ioh.LoaderFlags << std::endl;
-	sink << "NumberOfRvaAndSizes\t\t" << _ioh.NumberOfRvaAndSizes << std::endl << std::endl;
-}
-
-// ----------------------------------------------------------------------------
-
-void PE::dump_section_table(std::ostream& sink) const
-{
-	if (!_initialized) {
-		return;
-	}
-
-	sink << "SECTION TABLE:" << std::endl << "--------------" << std::endl << std::endl;
-	sink << std::hex;
-	std::vector<std::string> flags;
-	for (std::vector<pimage_section_header>::const_iterator it = _section_table.begin() ; it != _section_table.end() ; ++it)
-	{
-		sink << "Name\t\t\t" << (*it)->Name << std::endl;
-		sink << "VirtualSize\t\t" << (*it)->VirtualSize << std::endl;
-		sink << "VirtualAddress\t\t" << (*it)->VirtualAddress << std::endl;
-		sink << "SizeOfRawData\t\t" << (*it)->SizeOfRawData << std::endl;
-		sink << "PointerToRawData\t" << (*it)->PointerToRawData << std::endl;
-		sink << "PointerToRelocations\t" << (*it)->PointerToRelocations << std::endl;
-		sink << "PointerToLineNumbers\t" << (*it)->PointerToLineNumbers << std::endl;
-		sink << "NumberOfRelocations\t" << (*it)->NumberOfRelocations << std::endl;
-		sink << "NumberOfLineNumbers\t" << (*it)->NumberOfLineNumbers << std::endl;
-		sink << "NumberOfRelocations\t" << (*it)->NumberOfRelocations << std::endl;
-		sink << "Characteristics\t\t";
-		flags = nt::translate_to_flags((*it)->Characteristics, nt::SECTION_CHARACTERISTICS);
-		if (flags.size() > 0)
-		{
-			for (std::vector<std::string>::iterator it = flags.begin(); it != flags.end(); ++it)
+			offset = _rva_to_offset(ex->Address);
+			if (!offset || !utils::read_ascii_string_at_offset(f, offset, ex->ForwardName))
 			{
-				if (it != flags.begin()) {
-					sink << "\t\t\t";
-				}
-				sink << *it << std::endl;
+				std::cout << "[!] Error: Could not read a forwarded export name." << std::endl;
+				return false;
 			}
 		}
-		else {
-			sink << _ioh.DllCharacteristics << std::endl;
-		}
-		sink << std::endl;
-	}
-}
 
-void PE::dump_imports(std::ostream& sink) const
-{
-	if (!_initialized) {
-		return;
+		_exports.push_back(ex);
 	}
 
-	sink << "IMPORTS:" << std::endl << "--------" << std::endl << std::endl;
-	for (std::vector<pimage_library_descriptor>::const_iterator it = _imports.begin() ; it != _imports.end() ; ++it)
+	// Associate possible exported names with the RVAs we just obtained. First, read the name and ordinal table.
+	boost::scoped_array<boost::uint32_t> names(new boost::uint32_t[_ied.NumberOfNames]);
+	boost::scoped_array<boost::uint16_t> ords(new boost::uint16_t[_ied.NumberOfNames]);
+	offset = _rva_to_offset(_ied.AddressOfNames);
+	if (!offset || fseek(f, offset, SEEK_SET))
 	{
-		sink << (*it)->first->NameStr << std::endl;
-		for ( std::vector<pimport_lookup_table>::const_iterator it2 = (*it)->second.begin() ; it2 != (*it)->second.end() ; ++it2)
-		{
-			if ((*it2)->Name != "") {
-				sink << "\t" << (*it2)->Name << std::endl;
-			}
-			else {
-				sink << "\tOrdinal " << ((*it2)->AddressOfData & 0x7FFF) << std::endl;
-			}
-		}
-		sink << std::endl;
+		std::cout << "[!] Error: Could not reach exported function's name table." << std::endl;
+		return false;
 	}
-	sink << std::endl;
+
+	if (_ied.NumberOfNames * sizeof(boost::uint32_t) != fread(names.get(), 1, _ied.NumberOfNames * sizeof(boost::uint32_t), f))
+	{
+		std::cout << "[!] Error: Could not read an exported function's name address." << std::endl;
+		return false;
+	}
+
+	offset = _rva_to_offset(_ied.AddressOfNameOrdinals);
+	if (!offset || fseek(f, offset, SEEK_SET))
+	{
+		std::cout << "[!] Error: Could not reach exported functions NameOrdinals table." << std::endl;
+		return false;
+	}
+	if (_ied.NumberOfNames * sizeof(boost::uint16_t) != fread(ords.get(), 1, _ied.NumberOfNames * sizeof(boost::uint16_t), f))
+	{
+		std::cout << "[!] Error: Could not read an exported function's name ordinal." << std::endl;
+		return false;
+	}
+
+	// Now match the names with with the exported addresses.
+	for (unsigned int i = 0 ; i < _ied.NumberOfNames ; ++i)
+	{
+		offset = _rva_to_offset(names[i]);
+		if (!offset || ords[i] > _exports.size() || !utils::read_ascii_string_at_offset(f, offset, _exports.at(ords[i])->Name))
+		{
+			std::cout << "[!] Error: Could not match an export name with its address!" << std::endl;
+			return false;
+		}
+	}
+
+	return true;
 
 }
 

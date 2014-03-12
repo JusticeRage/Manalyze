@@ -4,152 +4,86 @@
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
+#include <sstream>
 #include <algorithm>
-
 #include <string>
 #include <vector>
+
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/scoped_array.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/regex.hpp>
 
-#include "nt_values.h"
+#include "nt_values.h"  // Windows-related #defines flags are declared in this file.
+#include "pe_structs.h" // All typedefs and structs are over there
 #include "utils.h"
 
 namespace sg {
-
-typedef struct dos_header_t
-{
-    boost::uint8_t  e_magic[2];
-    boost::uint16_t e_cblp;
-    boost::uint16_t e_cp;
-    boost::uint16_t e_crlc;
-    boost::uint16_t e_cparhdr;
-    boost::uint16_t e_minalloc;
-    boost::uint16_t e_maxalloc;
-    boost::uint16_t e_ss;
-    boost::uint16_t e_sp;
-    boost::uint16_t e_csum;
-    boost::uint16_t e_ip;
-    boost::uint16_t e_cs;
-    boost::uint16_t e_lfarlc;
-    boost::uint16_t e_ovno;
-    boost::uint16_t e_res[4];
-    boost::uint16_t e_oemid;
-    boost::uint16_t e_oeminfo;
-    boost::uint16_t e_res2[10];
-    boost::uint32_t e_lfanew;
-} dos_header;
-
-typedef struct pe_header_t
-{
-	boost::uint8_t  Signature[4];
-	boost::uint16_t Machine;
-	boost::uint16_t NumberofSections;
-	boost::uint32_t TimeDateStamp;
-	boost::uint32_t PointerToSymbolTable;
-	boost::uint32_t NumberOfSymbols;
-	boost::uint16_t SizeOfOptionalHeader;
-	boost::uint16_t Characteristics;
-} pe_header;
-
-typedef struct image_data_directory_t
-{
-	boost::uint32_t VirtualAddress;
-	boost::uint32_t Size;
-} image_data_directory;
-
-typedef struct image_optional_header_t
-{
-	boost::uint16_t Magic;
-	boost::uint8_t  MajorLinkerVersion;
-	boost::uint8_t  MinorLinkerVersion;
-	boost::uint32_t SizeOfCode;
-	boost::uint32_t SizeOfInitializedData;
-	boost::uint32_t SizeOfUninitializedData;
-	boost::uint32_t AddressOfEntryPoint;
-	boost::uint32_t BaseOfCode;
-	boost::uint32_t BaseOfData;
-	boost::uint64_t ImageBase;
-	boost::uint32_t SectionAlignment;
-	boost::uint32_t FileAlignment;
-	boost::uint16_t MajorOperatingSystemVersion;
-	boost::uint16_t MinorOperatingSystemVersion;
-	boost::uint16_t MajorImageVersion;
-	boost::uint16_t MinorImageVersion;
-	boost::uint16_t MajorSubsystemVersion;
-	boost::uint16_t MinorSubsystemVersion;
-	boost::uint32_t Win32VersionValue;
-	boost::uint32_t SizeOfImage;
-	boost::uint32_t SizeOfHeaders;
-	boost::uint32_t Checksum;
-	boost::uint16_t Subsystem;
-	boost::uint16_t DllCharacteristics;
-	boost::uint64_t SizeofStackReserve;
-	boost::uint64_t SizeofStackCommit;
-	boost::uint64_t SizeofHeapReserve;
-	boost::uint64_t SizeofHeapCommit;
-	boost::uint32_t LoaderFlags;
-	boost::uint32_t NumberOfRvaAndSizes;
-	image_data_directory directories[0x10];
-} image_optional_header;
-
-typedef struct simage_section_header_t
-{
-	boost::uint8_t  Name[8];
-	boost::uint32_t VirtualSize;
-	boost::uint32_t VirtualAddress;
-	boost::uint32_t SizeOfRawData;
-	boost::uint32_t PointerToRawData;
-	boost::uint32_t PointerToRelocations;
-	boost::uint32_t PointerToLineNumbers;
-	boost::uint16_t NumberOfRelocations;
-	boost::uint16_t NumberOfLineNumbers;
-	boost::uint32_t Characteristics;
-} image_section_header;
-typedef boost::shared_ptr<image_section_header> pimage_section_header;
-
-// A field has been added at the end of the structure to keep the Name of the library.
-// The original Name field only contains a RVA, which is impractical.
-typedef struct image_import_descriptor_t
-{
-	boost::uint32_t OriginalFirstThunk;
-	boost::uint32_t TimeDateStamp;
-	boost::uint32_t ForwarderChain;
-	boost::uint32_t	Name;
-	boost::uint32_t FirstThunk;
-	std::string		NameStr; // Non-standard!
-} image_import_descriptor;
-typedef boost::shared_ptr<image_import_descriptor> pimage_import_descriptor;
-
-// For convenience, this structure has been merged with the associated Hint/Name table
-typedef struct import_lookup_table_t
-{
-	boost::uint64_t	AddressOfData;
-	boost::uint16_t	Hint;
-	std::string		Name;
-} import_lookup_table;
-typedef boost::shared_ptr<import_lookup_table> pimport_lookup_table;
-
-// This typedef isn't a Windows standard, but I find this representation useful when describing
-// all the imports related to a single DLL.
-typedef std::pair<pimage_import_descriptor, std::vector<pimport_lookup_table> > image_library_descriptor;
-typedef boost::shared_ptr<image_library_descriptor> pimage_library_descriptor;
 
 class PE
 {
 
 public:
 	PE(const std::string& path);
+	virtual ~PE() {}
 
 	size_t get_filesize();
 
     std::string get_path()  const { return _path; }
 
+
+	/**
+	 *	@brief	Returns the list of DLLs imported by the PE.
+	 *
+	 *	Implementation is located in imports.cpp.
+	 */
+	std::vector<std::string> get_imported_dlls() const;
+
+	/**
+	 *	@brief	Returns the list of functions imported from a specified DLL.
+	 *
+	 *	@param	const std::string& dll The DLL from which we want the imported functions.
+	 *
+	 *	@return	A vector containing all the imported function names.
+	 *			Functions imported by ordinal will be returned as "#N", N being the ordinal number.
+	 *
+	 *	Implementation is located in imports.cpp.
+	 */
+	std::vector<std::string> get_imported_functions(const std::string& dll) const;
+
+	/**
+	 *	@brief	Finds imported functions matching regular expressions.
+	 *
+	 *	@param	const std::string& function_name_regexp		The regular expression selecting function names.
+	 *	@param	const std::string& dll_name_regexp			The regular expression selecting imported dlls into which the
+	 *														functions should be searched.
+	 *
+	 *	The default value for dll_name_regexp implies that all DLLs should be searched.
+	 *	Note that functions will only be returned if they match the WHOLE input sequence.
+	 *	/!\ Warning: Functions imported by ordinal can NOT be found using this function!
+	 *
+	 *	@return	A list of imported function names matching the requested criteria.
+	 *
+	 *	Implementation is located in imports.cpp.
+	 */
+	std::vector<std::string> find_imports(const std::string& function_name_regexp, 
+										  const std::string& dll_name_regexp = ".*") const;
+
+	/**
+	 *	@brief	Functions used to display the detailed contents of the PE.
+	 *
+	 *	@param	std::ostream& sink	The stream into which the information should be written.
+	 *								Default is stdout.
+	 *
+	 *	Implementation is located in dump.cpp.
+	 */
 	void dump_dos_header(std::ostream& sink = std::cout) const;
 	void dump_pe_header(std::ostream& sink = std::cout) const;
 	void dump_image_optional_header(std::ostream& sink = std::cout) const;
 	void dump_section_table(std::ostream& sink = std::cout) const;
 	void dump_imports(std::ostream& sink = std::cout) const;
+	void dump_exports(std::ostream& sink = std::cout) const;
 
 private:
 	/**
@@ -192,24 +126,60 @@ private:
 	bool _parse_imports(FILE* f);
 
 	/**
+	 *	@brief	Parses the exports of a PE.
+	 *	
+	 *	Included in the _parse_directories call.
+	 *	/!\ This relies on the information gathered in _parse_image_optional_header.
+	 */
+	bool _parse_exports(FILE* f);
+
+	/**
 	 *	@brief	Translates a Relative Virtual Address into an offset in the file.
 	 *
 	 *	@param	boost::uint32_t rva The RVA to translate
 	 *
 	 *	@return	The corresponding offset in the file, or 0 if the RVA could not be translated.
 	 */
-	unsigned int _rva_to_offset(boost::uint32_t rva);
+	unsigned int _rva_to_offset(boost::uint32_t rva) const;
+
+	/**
+	 *	@brief	Moves the file cursor to the target directory.
+	 *
+	 *	@param	FILE* f			The PE file object.
+	 *	@param	int directory	The directory to reach, i.e. IMAGE_DIRECTORY_ENTRY_EXPORT.
+	 *
+	 *	@return	Whether the directory was successfully reached.
+	 */
+	bool _reach_directory(FILE* f, int directory) const;
+
+	/**
+	 *	@brief	Finds imported DLLs whose names match a particular regular expression.
+	 *
+	 *	@param	const std::string& name_regexp The regular expression used to match DLL names.
+	 *
+	 *	Implementation is located in imports.cpp.
+	 */
+	std::vector<pimage_library_descriptor> _find_imported_dlls(const std::string& name_regexp) const;
 
 	std::string							_path;
     bool								_initialized;
     size_t								_size;
 
-	// Fields related to the PE structure.
+	/* 
+	    -----------------------------------
+	    Fields related to the PE structure.
+	    -----------------------------------
+	    Those fields that are extremely close to the PE format and offer little abstraction.
+	    The user shouldn't ever have to touch them. A simple to use interface should be provided for
+	    everything that is useful. 
+	*/
 	dos_header								_h_dos;
 	pe_header								_h_pe;
 	image_optional_header					_ioh;
 	std::vector<pimage_section_header>		_section_table;
 	std::vector<pimage_library_descriptor>	_imports;
+	image_export_directory					_ied;
+	std::vector<pexported_function>			_exports;
 };
 
 
