@@ -87,7 +87,8 @@ void PE::dump_image_optional_header(std::ostream& sink) const
 	sink << "SizeOfCode\t\t\t" << _ioh.SizeOfCode << std::endl;
 	sink << "SizeOfInitializedData\t\t" << _ioh.SizeOfInitializedData << std::endl;
 	sink << "SizeOfUninitializedData\t\t" << _ioh.SizeOfUninitializedData << std::endl;
-	sink << "AddressOfEntryPoint\t\t" << _ioh.AddressOfEntryPoint << std::endl;
+	sink << "AddressOfEntryPoint\t\t" << _ioh.AddressOfEntryPoint 
+		 << " (Section: " << utils::find_section(_ioh.AddressOfEntryPoint, _section_table)->Name << ")" << std::endl;
 	sink << "BaseOfCode\t\t\t" << _ioh.BaseOfCode << std::endl;
 
 	// Field absent from PE32+ headers.
@@ -133,7 +134,7 @@ void PE::dump_image_optional_header(std::ostream& sink) const
 
 void PE::dump_section_table(std::ostream& sink) const
 {
-	if (!_initialized) {
+	if (!_initialized || _section_table.size() == 0) {
 		return;
 	}
 
@@ -173,7 +174,7 @@ void PE::dump_section_table(std::ostream& sink) const
 
 void PE::dump_imports(std::ostream& sink) const
 {
-	if (!_initialized) {
+	if (!_initialized || _imports.size() == 0) {
 		return;
 	}
 
@@ -195,7 +196,7 @@ void PE::dump_imports(std::ostream& sink) const
 
 void PE::dump_exports(std::ostream& sink) const
 {
-	if (!_initialized) {
+	if (!_initialized || _exports.size() == 0) {
 		return;
 	}
 
@@ -213,5 +214,21 @@ void PE::dump_exports(std::ostream& sink) const
 	}
 }
 
+void PE::dump_resources(std::ostream& sink) const
+{
+	if (!_initialized || _resource_table.size() == 0) {
+		return;
+	}
+
+	sink << "RESOURCES:" << std::endl << "----------" << std::endl << std::endl;
+	for (std::vector<presource>::const_iterator it = _resource_table.begin() ; it != _resource_table.end() ; ++it)
+	{
+		sink << (*it)->Name << std::endl;
+		sink << "\tType:\t\t" << (*it)->Type << std::endl;
+		sink << "\tLanguage:\t" << (*it)->Language << std::endl;
+		sink << "\tSize:\t\t0x" << std::hex << (*it)->Size << std::endl;
+	}
+	sink << std::endl;
+}
 
 } // !namespace sg

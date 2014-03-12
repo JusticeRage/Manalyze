@@ -16,7 +16,33 @@ std::string read_ascii_string(FILE* f)
 	return s;
 }
 
-bool read_ascii_string_at_offset(FILE* f, unsigned int offset, std::string& out)
+std::string read_unicode_string(FILE* f)
+{
+	std::wstring s = std::wstring();
+	wchar_t c;
+	boost::uint16_t size;
+	if (2 !=fread(&size, 1, 2, f)) {
+		return "";
+	}
+
+	// Microsoft's "unicode" strings are word aligned.
+	for (unsigned int i = 0 ; i < size ; ++i)
+	{
+		if (2 != fread(&c, 1, 2, f)) {
+			break;
+		}
+		s += c;
+	}
+	s += L'\0';
+
+	// Convert the wstring into a string
+	boost::shared_array<char> conv = boost::shared_array<char>((char*) malloc(sizeof(char) * s.size()));
+	memset(conv.get(), 0, sizeof(char) * s.size());
+	wcstombs(conv.get(), s.c_str(), s.size());
+	return std::string(conv.get());
+}
+
+bool read_string_at_offset(FILE* f, unsigned int offset, std::string& out, bool unicode)
 {
 	unsigned int saved_offset = ftell(f);
 	if (saved_offset == -1 || fseek(f, offset, SEEK_SET))
@@ -24,7 +50,12 @@ bool read_ascii_string_at_offset(FILE* f, unsigned int offset, std::string& out)
 		std::cerr << "[!] Error: Could not reach offset 0x" << std::hex << offset << "." << std::endl;
 		return false;
 	}
-	out = read_ascii_string(f);
+	if (!unicode) {
+		out = read_ascii_string(f);
+	}
+	else {
+		out = read_unicode_string(f);
+	}
 	return !fseek(f, saved_offset, SEEK_SET) && out != "";
 }
 

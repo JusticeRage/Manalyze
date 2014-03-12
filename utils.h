@@ -2,8 +2,13 @@
 #define _UTILS_H_
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string>
 #include <iostream>
+#include <string.h>
+
+#include <boost/cstdint.hpp>
+#include <boost/shared_array.hpp>
 
 #include "pe_structs.h"
 
@@ -22,6 +27,17 @@ namespace utils
 std::string read_ascii_string(FILE* f);
 
 /**
+ *	@brief	Reads a unicode string prefixed by its length in a file.
+ *
+ *	/!\ The file cursor will be updated accordingly!
+ *
+ *	@param	FILE* f The file from which to read. The read will occur at the cursor's current position!
+ *
+ *	@return	The string at the current location in the file, converted to ASCII.
+ */
+std::string read_unicode_string(FILE* f);
+
+/**
  *	@brief	Reads a null-terminated ASCII string in a file at a given offset.
  *
  *	This function will preserve the file cursor.
@@ -29,10 +45,12 @@ std::string read_ascii_string(FILE* f);
  *	@param	FILE* f The file from which to read.
  *	@param	unsigned int offset	The location in the file to read.
  *	@param	std::string& out The string into which the result should be saved
+ *	@param	bool unicode Set to true if the string is unicode (well, Windows' definition of
+ *			unicode anyway). Default is false.
  *
  *	@return	Whether a string was successfully read.
  */
-bool read_ascii_string_at_offset(FILE* f, unsigned int offset, std::string& out);
+bool read_string_at_offset(FILE* f, unsigned int offset, std::string& out, bool unicode = false);
 
 /**
  *	@brief	Checks whether the address belongs to a section.
