@@ -84,6 +84,7 @@ public:
 	void dump_section_table(std::ostream& sink = std::cout) const;
 	void dump_imports(std::ostream& sink = std::cout) const;
 	void dump_exports(std::ostream& sink = std::cout) const;
+	void dump_resources(std::ostream& sink = std::cout) const;
 
 private:
 	/**
@@ -134,6 +135,16 @@ private:
 	bool _parse_exports(FILE* f);
 
 	/**
+	 *	@brief	Parses the resources of a PE.
+	 *
+	 *	Included in the _parse_directories call.
+	 *	/!\ This relies on the information gathered in _parse_pe_header.
+	 *
+	 *	Implemented in resources.cpp
+	 */
+	bool _parse_resources(FILE* f);
+
+	/**
 	 *	@brief	Translates a Relative Virtual Address into an offset in the file.
 	 *
 	 *	@param	boost::uint32_t rva The RVA to translate
@@ -151,6 +162,19 @@ private:
 	 *	@return	Whether the directory was successfully reached.
 	 */
 	bool _reach_directory(FILE* f, int directory) const;
+
+	/**
+	 *	@brief	Reads a image_resource_directory at the current position in a file.
+	 *
+	 *	@param	image_resource_directory& dir The structure to fill.
+	 *	@param	FILE* f The file to read from.
+	 *	@param	unsigned int offset The offset at which to jump before reading the directory.
+	 *			The offset is relative to the beginning of the resource "section" (NOT a RVA). 
+	 *			If it is 0, the function reads from the cursor's current location.
+	 *
+	 *	@return	Whether a structure was successfully read.
+	 */
+	bool read_image_resource_directory(image_resource_directory& dir, FILE* f, unsigned int offset = 0);
 
 	/**
 	 *	@brief	Finds imported DLLs whose names match a particular regular expression.
@@ -180,6 +204,7 @@ private:
 	std::vector<pimage_library_descriptor>	_imports;
 	image_export_directory					_ied;
 	std::vector<pexported_function>			_exports;
+	std::vector<presource>					_resource_table;
 };
 
 

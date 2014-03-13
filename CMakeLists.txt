@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 2.6)
 
-project (SGStatic)
+project (sgstatic)
 
 set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)  
@@ -12,7 +12,7 @@ include_directories(
 						${Boost_INCLUDE_DIRS}
                    )
 
-add_executable(SGStatic main.cpp pe.cpp nt_values.cpp utils.cpp imports.cpp dump.cpp)
+add_executable(sgstatic main.cpp pe.cpp nt_values.cpp utils.cpp imports.cpp dump.cpp resources.cpp)
 
 if (WIN32)
 			add_definitions(/D_CRT_SECURE_NO_WARNINGS) # Please don't complain about fopen()
@@ -29,7 +29,7 @@ endif()
 add_subdirectory(external/yara)
 
 target_link_libraries(
-						SGStatic 
+						sgstatic 
 						yara
 						${Boost_LIBRARIES}
                      )

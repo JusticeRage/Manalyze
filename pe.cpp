@@ -288,16 +288,14 @@ bool PE::_reach_directory(FILE* f, int directory) const
 
 bool PE::_parse_directories(FILE* f)
 {
-	return _parse_imports(f) && _parse_exports(f);
+	return _parse_imports(f) && _parse_exports(f) && _parse_resources(f);
 }
 
 // ----------------------------------------------------------------------------
 
 bool PE::_parse_imports(FILE* f)
 {
-	if (!_reach_directory(f, IMAGE_DIRECTORY_ENTRY_IMPORT))
-	{
-		std::cout << "[!] Warning: No imports." << std::endl;
+	if (!_reach_directory(f, IMAGE_DIRECTORY_ENTRY_IMPORT))	{ // No imports
 		return true;
 	}
 
@@ -319,7 +317,7 @@ bool PE::_parse_imports(FILE* f)
 
 		// Non-standard parsing. The Name RVA is translated to an actual string here.
 		unsigned int offset = _rva_to_offset(iid->Name);
-		if (!offset || !utils::read_ascii_string_at_offset(f, offset, iid->NameStr))
+		if (!offset || !utils::read_string_at_offset(f, offset, iid->NameStr))
 		{
 			std::cout << "[!] Error: Could not read the import name." << std::endl;
 			return false;
@@ -407,10 +405,8 @@ bool PE::_parse_exports(FILE* f)
 	unsigned int ied_size = 9*sizeof(boost::uint32_t) + 2*sizeof(boost::uint16_t);
 	memset(&_ied, 0, ied_size);
 
-	if (!_reach_directory(f, IMAGE_DIRECTORY_ENTRY_EXPORT))
-	{
-		std::cout << "[!] Warning: No exports." << std::endl;
-		return true;
+	if (!_reach_directory(f, IMAGE_DIRECTORY_ENTRY_EXPORT))	{
+		return true; // No exports
 	}
 
 	if (ied_size != fread(&_ied, 1, ied_size, f))
@@ -421,7 +417,7 @@ bool PE::_parse_exports(FILE* f)
 
 	// Read the export name
 	unsigned int offset = _rva_to_offset(_ied.Name);
-	if (!offset || !utils::read_ascii_string_at_offset(f, offset, _ied.NameStr))
+	if (!offset || !utils::read_string_at_offset(f, offset, _ied.NameStr))
 	{
 		std::cout << "[!] Error: Could not read the exported DLL name." << std::endl;
 		return false;
@@ -450,7 +446,7 @@ bool PE::_parse_exports(FILE* f)
 		if (ex->Address > export_dir.VirtualAddress && ex->Address < export_dir.VirtualAddress + export_dir.Size)
 		{
 			offset = _rva_to_offset(ex->Address);
-			if (!offset || !utils::read_ascii_string_at_offset(f, offset, ex->ForwardName))
+			if (!offset || !utils::read_string_at_offset(f, offset, ex->ForwardName))
 			{
 				std::cout << "[!] Error: Could not read a forwarded export name." << std::endl;
 				return false;
@@ -492,7 +488,7 @@ bool PE::_parse_exports(FILE* f)
 	for (unsigned int i = 0 ; i < _ied.NumberOfNames ; ++i)
 	{
 		offset = _rva_to_offset(names[i]);
-		if (!offset || ords[i] > _exports.size() || !utils::read_ascii_string_at_offset(f, offset, _exports.at(ords[i])->Name))
+		if (!offset || ords[i] > _exports.size() || !utils::read_string_at_offset(f, offset, _exports.at(ords[i])->Name))
 		{
 			std::cout << "[!] Error: Could not match an export name with its address!" << std::endl;
 			return false;
@@ -500,7 +496,6 @@ bool PE::_parse_exports(FILE* f)
 	}
 
 	return true;
-
 }
 
 } // !namespace sg

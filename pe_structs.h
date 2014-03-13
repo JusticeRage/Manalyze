@@ -143,7 +143,7 @@ typedef struct image_export_directory_t
 	boost::uint32_t AddressOfFunctions;
 	boost::uint32_t AddressOfNames;
 	boost::uint32_t AddressOfNameOrdinals;
-	std::string		NameStr;
+	std::string		NameStr; // Non-standard!
 } image_export_directory;
 typedef boost::shared_ptr<image_export_directory> pexport_image_directory;
 
@@ -156,6 +156,46 @@ typedef struct exported_function_t
 	std::string		ForwardName;
 } exported_function;
 typedef boost::shared_ptr<exported_function> pexported_function;
+
+typedef struct image_resource_directory_entry_t
+{
+	boost::uint32_t	NameOrId;
+	boost::uint32_t OffsetToData;
+	std::string		NameStr; // Non-standard!
+} image_resource_directory_entry;
+typedef boost::shared_ptr<image_resource_directory_entry> pimage_resource_directory_entry;
+
+typedef struct image_resource_directory_t
+{
+	boost::uint32_t	Characteristics;
+	boost::uint32_t TimeDateStamp;
+	boost::uint16_t	MajorVersion;
+	boost::uint16_t	minorVersion;
+	boost::uint16_t	NumberOfNamedEntries;
+	boost::uint16_t	NumberOfIdEntries;
+	std::vector<pimage_resource_directory_entry> Entries;
+} image_resource_directory;
+typedef boost::shared_ptr<image_resource_directory> pimage_resource_directory;
+
+typedef struct image_resource_data_entry_t
+{
+	boost::uint32_t	OffsetToData;
+	boost::uint32_t	Size;
+	boost::uint32_t	Codepage;
+	boost::uint32_t	Reserved;
+} image_resource_data_entry;
+
+// Non-standard structure representing a structure after the resource tree has been flattened.
+typedef struct resource_t
+{
+	std::string		Type;
+	std::string		Name;
+	std::string		Language;
+	boost::uint32_t	OffsetToData;
+	boost::uint32_t	Codepage;
+	boost::uint32_t	Size;
+} resource;
+typedef boost::shared_ptr<resource> presource;
 
 } // !namespace sg
 
