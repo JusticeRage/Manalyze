@@ -1,3 +1,20 @@
+/*
+    This file is part of Spike Guard.
+
+    Spike Guard is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Spike Guard is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #ifndef _PE_STRUCTS_H_
 #define _PE_STRUCTS_H_
 
@@ -184,18 +201,6 @@ typedef struct image_resource_data_entry_t
 	boost::uint32_t	Codepage;
 	boost::uint32_t	Reserved;
 } image_resource_data_entry;
-
-// Non-standard structure representing a structure after the resource tree has been flattened.
-typedef struct resource_t
-{
-	std::string		Type;
-	std::string		Name;
-	std::string		Language;
-	boost::uint32_t	OffsetToData;
-	boost::uint32_t	Codepage;
-	boost::uint32_t	Size;
-} resource;
-typedef boost::shared_ptr<resource> presource;
 
 } // !namespace sg
 

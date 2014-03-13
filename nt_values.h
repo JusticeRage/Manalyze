@@ -1,3 +1,20 @@
+/*
+    This file is part of Spike Guard.
+
+    Spike Guard is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Spike Guard is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #ifndef  _NT_VALUES_H_
 # define _NT_VALUES_H_
 
@@ -96,52 +113,52 @@ static flag_dict SUBSYSTEMS =
 							   ("IMAGE_SUBSYSTEM_WINDOWS_BOOT_APPLICATION", 16);
 
 static flag_dict DLL_CHARACTERISTICS =
-	boost::assign::map_list_of ("IMAGE_LIBRARY_PROCESS_INIT", 0x0001)
-							   ("IMAGE_LIBRARY_PROCESS_TERM", 0x0002)
-							   ("IMAGE_LIBRARY_THREAD_INIT", 0x0004)
-							   ("IMAGE_LIBRARY_THREAD_TERM", 0x0008)
-							   ("IMAGE_DLLCHARACTERISTICS_HIGH_ENTROPY_VA", 0x0020)
-							   ("IMAGE_DLLCHARACTERISTICS_DYNAMIC_BASE", 0x0040)
-							   ("IMAGE_DLLCHARACTERISTICS_FORCE_INTEGRITY", 0x0080)
-							   ("IMAGE_DLLCHARACTERISTICS_NX_COMPAT", 0x0100)
-							   ("IMAGE_DLLCHARACTERISTICS_NO_ISOLATION", 0x0200)
-							   ("IMAGE_DLLCHARACTERISTICS_NO_SEH", 0x0400)
-							   ("IMAGE_DLLCHARACTERISTICS_NO_BIND", 0x0800)
-							   ("IMAGE_DLLCHARACTERISTICS_APPCONTAINER", 0x1000)
-							   ("IMAGE_DLLCHARACTERISTICS_WDM_DRIVER", 0x2000)
-							   ("IMAGE_DLLCHARACTERISTICS_GUARD_CF", 0x4000)
-							   ("IMAGE_DLLCHARACTERISTICS_TERMINAL_SERVER_AWARE", 0x8000);
+	boost::assign::map_list_of ("IMAGE_LIBRARY_PROCESS_INIT",						0x0001)
+							   ("IMAGE_LIBRARY_PROCESS_TERM",						0x0002)
+							   ("IMAGE_LIBRARY_THREAD_INIT",						0x0004)
+							   ("IMAGE_LIBRARY_THREAD_TERM",						0x0008)
+							   ("IMAGE_DLLCHARACTERISTICS_HIGH_ENTROPY_VA",			0x0020)
+							   ("IMAGE_DLLCHARACTERISTICS_DYNAMIC_BASE",			0x0040)
+							   ("IMAGE_DLLCHARACTERISTICS_FORCE_INTEGRITY",			0x0080)
+							   ("IMAGE_DLLCHARACTERISTICS_NX_COMPAT",				0x0100)
+							   ("IMAGE_DLLCHARACTERISTICS_NO_ISOLATION",			0x0200)
+							   ("IMAGE_DLLCHARACTERISTICS_NO_SEH",					0x0400)
+							   ("IMAGE_DLLCHARACTERISTICS_NO_BIND",					0x0800)
+							   ("IMAGE_DLLCHARACTERISTICS_APPCONTAINER",			0x1000)
+							   ("IMAGE_DLLCHARACTERISTICS_WDM_DRIVER",				0x2000)
+							   ("IMAGE_DLLCHARACTERISTICS_GUARD_CF",				0x4000)
+							   ("IMAGE_DLLCHARACTERISTICS_TERMINAL_SERVER_AWARE",	0x8000);
 
 static flag_dict SECTION_CHARACTERISTICS =
-	boost::assign::map_list_of ("IMAGE_SCN_TYPE_REG", 0x00000000)
-							   ("IMAGE_SCN_TYPE_DSECT", 0x00000001)
-							   ("IMAGE_SCN_TYPE_NOLOAD", 0x00000002)
-							   ("IMAGE_SCN_TYPE_GROUP", 0x00000004)
-							   ("IMAGE_SCN_TYPE_NO_PAD", 0x00000008)
-							   ("IMAGE_SCN_TYPE_COPY", 0x00000010)
-							   ("IMAGE_SCN_CNT_CODE", 0x00000020)
-							   ("IMAGE_SCN_CNT_INITIALIZED_DATA", 0x00000040)
+	boost::assign::map_list_of ("IMAGE_SCN_TYPE_REG",				0x00000000)
+							   ("IMAGE_SCN_TYPE_DSECT",				0x00000001)
+							   ("IMAGE_SCN_TYPE_NOLOAD",			0x00000002)
+							   ("IMAGE_SCN_TYPE_GROUP",				0x00000004)
+							   ("IMAGE_SCN_TYPE_NO_PAD",			0x00000008)
+							   ("IMAGE_SCN_TYPE_COPY",				0x00000010)
+							   ("IMAGE_SCN_CNT_CODE",				0x00000020)
+							   ("IMAGE_SCN_CNT_INITIALIZED_DATA",	0x00000040)
 							   ("IMAGE_SCN_CNT_UNINITIALIZED_DATA", 0x00000080)
-							   ("IMAGE_SCN_LNK_OTHER", 0x00000100)
-							   ("IMAGE_SCN_LNK_INFO", 0x00000200)
-							   ("IMAGE_SCN_TYPE_OVER", 0x00000400)
-							   ("IMAGE_SCN_LNK_REMOVE", 0x00000800)
-							   ("IMAGE_SCN_LNK_COMDAT", 0x00001000)
-							   ("IMAGE_SCN_NO_DEFER_SPEC_EXC", 0x00004000)
-							   ("IMAGE_SCN_GPREL", 0x00008000)
-							   ("IMAGE_SCN_MEM_FARDATA", 0x00008000)
-							   ("IMAGE_SCN_MEM_PURGEABLE", 0x00020000)
-							   ("IMAGE_SCN_MEM_LOCKED", 0x00040000)
-							   ("IMAGE_SCN_MEM_PRELOAD", 0x00080000)
-							   ("IMAGE_SCN_ALIGN_MASK", 0x00)
-							   ("IMAGE_SCN_LNK_NRELOC_OVFL", 0x01000000)
-							   ("IMAGE_SCN_MEM_DISCARDABLE", 0x02000000)
-							   ("IMAGE_SCN_MEM_NOT_CACHED", 0x04000000)
-							   ("IMAGE_SCN_MEM_NOT_PAGED", 0x08000000)
-							   ("IMAGE_SCN_MEM_SHARED", 0x10000000)
-							   ("IMAGE_SCN_MEM_EXECUTE", 0x20000000)
-							   ("IMAGE_SCN_MEM_READ", 0x40000000)
-							   ("IMAGE_SCN_MEM_WRITE", 0x80000000);
+							   ("IMAGE_SCN_LNK_OTHER",				0x00000100)
+							   ("IMAGE_SCN_LNK_INFO",				0x00000200)
+							   ("IMAGE_SCN_TYPE_OVER",				0x00000400)
+							   ("IMAGE_SCN_LNK_REMOVE",				0x00000800)
+							   ("IMAGE_SCN_LNK_COMDAT",				0x00001000)
+							   ("IMAGE_SCN_NO_DEFER_SPEC_EXC",		0x00004000)
+							   ("IMAGE_SCN_GPREL",					0x00008000)
+							   ("IMAGE_SCN_MEM_FARDATA",			0x00008000)
+							   ("IMAGE_SCN_MEM_PURGEABLE",			0x00020000)
+							   ("IMAGE_SCN_MEM_LOCKED",				0x00040000)
+							   ("IMAGE_SCN_MEM_PRELOAD",			0x00080000)
+							   ("IMAGE_SCN_ALIGN_MASK",				0x00F00000)
+							   ("IMAGE_SCN_LNK_NRELOC_OVFL",		0x01000000)
+							   ("IMAGE_SCN_MEM_DISCARDABLE",		0x02000000)
+							   ("IMAGE_SCN_MEM_NOT_CACHED",			0x04000000)
+							   ("IMAGE_SCN_MEM_NOT_PAGED",			0x08000000)
+							   ("IMAGE_SCN_MEM_SHARED",				0x10000000)
+							   ("IMAGE_SCN_MEM_EXECUTE",			0x20000000)
+							   ("IMAGE_SCN_MEM_READ",				0x40000000)
+							   ("IMAGE_SCN_MEM_WRITE",				0x80000000);
 
 static flag_dict RESOURCE_TYPES =
 	boost::assign::map_list_of ("RT_CURSOR",		1)
@@ -177,7 +194,7 @@ static flag_dict LANG_IDS =
 							   ("Traditional Chinese",			0x0404)
 							   ("Romanian",						0x0418)
 							   ("Czech",						0x0405)
-							   ("Russian"						,0x0419)
+							   ("Russian",						0x0419)
 							   ("Danish",						0x0406)
 							   ("Croato-Serbian (Latin)",		0x041A)
 							   ("German",						0x0407)

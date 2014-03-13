@@ -1,5 +1,26 @@
-#include "pe.h"
-#include "resources.h" // Helper functions used only in the context of resource parsing.
+/*
+    This file is part of Spike Guard.
+
+    Spike Guard is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Spike Guard is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+#include "pe.h" // Some functions from the PE class (related to resource parsing) have been
+				// implemented in this file. I know this isn't standard practice, but pe.cpp
+				// was getting way too big. It made sense (at least semantically) to move
+				// them here.
+
+#include "resources.h"
 
 namespace sg 
 {
@@ -54,6 +75,8 @@ bool PE::read_image_resource_directory(image_resource_directory& dir, FILE* f, u
 	return true;
 }
 
+// ----------------------------------------------------------------------------
+
 bool PE::_parse_resources(FILE* f)
 {
 	if (!_reach_directory(f, IMAGE_DIRECTORY_ENTRY_RESOURCE))	{ // No resources.
@@ -95,37 +118,45 @@ bool PE::_parse_resources(FILE* f)
 				}
 
 				// Flatten the resource tree.
-				presource res = presource(new resource);
-				res->OffsetToData = entry.OffsetToData;
-				res->Codepage = entry.Codepage;
-				res->Size = entry.Size;
+				std::string name;
+				std::string type;
+				std::string language;
 
 				// Translate resource type.
 				if ((*it)->NameOrId & 0x80000000) {// NameOrId is an offset to a string, we already recovered it
-					res->Type = (*it)->NameStr;
+					type = (*it)->NameStr;
 				}
 				else { // Otherwise, it's a MAKERESOURCEINT constant.
-					res->Type = nt::translate_to_flag((*it)->NameOrId, nt::RESOURCE_TYPES);
+					type = nt::translate_to_flag((*it)->NameOrId, nt::RESOURCE_TYPES);
 				}
 
 				// Translate resource name
 				if ((*it2)->NameOrId & 0x80000000) {
-					res->Name = (*it2)->NameStr;
+					name = (*it2)->NameStr;
 				}
 				else 
 				{
 					std::stringstream ss;
 					ss << "#" << (*it2)->NameOrId; // Use the ID as a name.
-					res->Name = ss.str();
+					name = ss.str();
 				}
 
 				// Translate the language.
 				if ((*it3)->NameOrId & 0x80000000) {
-					res->Language = (*it3)->NameStr;
+					language = (*it3)->NameStr;
 				}
 				else {
-					res->Language = nt::translate_to_flag((*it3)->NameOrId, nt::LANG_IDS);
+					language = nt::translate_to_flag((*it3)->NameOrId, nt::LANG_IDS);
 				}
+
+				offset = _rva_to_offset(entry.OffsetToData);
+				pResource res = pResource(new Resource(type,
+													   name,
+													   language,
+													   entry.Codepage,
+													   entry.Size,
+													   offset,
+													   get_path()));
 
 				_resource_table.push_back(res);
 			}
@@ -134,5 +165,106 @@ bool PE::_parse_resources(FILE* f)
 
 	return true;
 }
+
+// ----------------------------------------------------------------------------
+
+std::vector<boost::uint8_t> Resource::get_raw_data()
+{
+	std::vector<boost::uint8_t> res = std::vector<boost::uint8_t>();
+	
+	FILE* f = _reach_data();
+	if (f == NULL) {
+		goto END;
+	}
+	
+	res.resize(_size);
+	unsigned int read_bytes = fread(&res[0], 1, _size, f);
+	if (read_bytes != _size) { // We got less bytes than expected: reduce the vector's size.
+		res.resize(read_bytes);
+	}
+
+	END:
+	if (f != NULL) {
+		fclose(f);
+	}
+	return res;
+}
+
+// ----------------------------------------------------------------------------
+
+template<>
+std::string Resource::interpret_as()
+{
+	if (_type != "RT_MANIFEST") {
+		return "Resources of type " + _type + " cannot be interpreted as std::strings.";
+	}
+	std::vector<boost::uint8_t> manifest_bytes = get_raw_data();
+	return std::string(manifest_bytes.begin(), manifest_bytes.end());
+}
+
+// ----------------------------------------------------------------------------
+
+template<>
+std::vector<std::string> Resource::interpret_as()
+{
+	std::vector<std::string> res;
+	if (_type != "RT_STRING") {
+		return res;
+	}
+
+	FILE* f = _reach_data();
+	if (f == NULL) {
+		goto END;
+	}
+
+	// RT_STRING resources are made of 16 contiguous "unicode" strings.
+	for (int i = 0; i < 16; ++i) {
+		res.push_back(utils::read_unicode_string(f));
+	}
+
+	END:
+	if (f != NULL) {
+		fclose(f);
+	}
+	return res;
+}
+
+FILE* Resource::_reach_data()
+{
+	FILE* f = fopen(_path_to_pe.c_str(), "rb");
+	if (f == NULL) { // File has moved, or is already in use.
+		return NULL;
+	}
+
+	if (!_offset_in_file || fseek(f, _offset_in_file, SEEK_SET)) 
+	{
+		// Offset is invalid
+		fclose(f);
+		return NULL;
+	}
+
+	return f;
+}
+
+// ----------------------------------------------------------------------------
+// Below this: specific parsing for specific resource types (RT_*)
+// ----------------------------------------------------------------------------
+
+/*std::string Resource::as_rt_manifest(const std::vector<boost::uint8_t>& bytes) {
+	return std::string(bytes.begin(), bytes.end());
+}
+
+// ----------------------------------------------------------------------------
+
+std::vector<std::string> parse_rt_string(const std::vector<boost::uint8_t>& bytes)
+{
+	unsigned int cursor = 0;
+	std::vector<std::string> res();
+	for (int i = 0 ; i < 16 ; ++i)
+	{
+		res.push_back(utils::read_unicode_string(f))
+	}
+}*/
+
 
 } // !namespace sg
