@@ -1,3 +1,20 @@
+/*
+    This file is part of Spike Guard.
+
+    Spike Guard is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Spike Guard is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #ifndef _PE_H_
 #define _PE_H_
 
@@ -18,8 +35,10 @@
 #include "nt_values.h"  // Windows-related #defines flags are declared in this file.
 #include "pe_structs.h" // All typedefs and structs are over there
 #include "utils.h"
+#include "resources.h" // Definition of the Resource class
 
 namespace sg {
+
 
 class PE
 {
@@ -85,6 +104,28 @@ public:
 	void dump_imports(std::ostream& sink = std::cout) const;
 	void dump_exports(std::ostream& sink = std::cout) const;
 	void dump_resources(std::ostream& sink = std::cout) const;
+
+	std::vector<pResource> get_resources() const { return _resource_table; }
+
+	/**
+	 *	@brief	Extracts the resources of the PE and writes them to the disk.
+	 *
+	 *	In the general case, the resource's raw bytes are written to a file, but some resource
+	 *	types can be handled more gracefully:
+	 *	* RT_GROUP_ICON (and the referenced RT_ICON resources, which cannot be extracted alone)
+	 *	  are saved as .ico files. (RT_GROUP_CURSORS are supported as well, but don't seem to work
+	 *	  as well.)
+	 *	* RT_BITMAP as .bmp files. The bitmap header is reconstructed.
+	 *	* RT_MANIFEST as .xml files.
+	 *
+	 *	@param	const std::string& destination_folder The folder into which the resources should
+	 *			be placed.
+	 *
+	 *	@return	Whether the extraction was successful or not.
+	 *
+	 *	Implementation is located in resources.cpp.
+	 */
+	bool extract_resources(const std::string& destination_folder);
 
 private:
 	/**
@@ -172,6 +213,8 @@ private:
 	 *			The offset is relative to the beginning of the resource "section" (NOT a RVA). 
 	 *			If it is 0, the function reads from the cursor's current location.
 	 *
+	 *	Implementation is located in resources.cpp
+	 *
 	 *	@return	Whether a structure was successfully read.
 	 */
 	bool read_image_resource_directory(image_resource_directory& dir, FILE* f, unsigned int offset = 0);
@@ -204,7 +247,7 @@ private:
 	std::vector<pimage_library_descriptor>	_imports;
 	image_export_directory					_ied;
 	std::vector<pexported_function>			_exports;
-	std::vector<presource>					_resource_table;
+	std::vector<pResource>					_resource_table;
 };
 
 

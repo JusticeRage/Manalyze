@@ -1,3 +1,20 @@
+/*
+    This file is part of Spike Guard.
+
+    Spike Guard is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Spike Guard is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "pe.h"
 
 namespace sg 
@@ -221,12 +238,12 @@ void PE::dump_resources(std::ostream& sink) const
 	}
 
 	sink << "RESOURCES:" << std::endl << "----------" << std::endl << std::endl;
-	for (std::vector<presource>::const_iterator it = _resource_table.begin() ; it != _resource_table.end() ; ++it)
+	for (std::vector<pResource>::const_iterator it = _resource_table.begin() ; it != _resource_table.end() ; ++it)
 	{
-		sink << (*it)->Name << std::endl;
-		sink << "\tType:\t\t" << (*it)->Type << std::endl;
-		sink << "\tLanguage:\t" << (*it)->Language << std::endl;
-		sink << "\tSize:\t\t0x" << std::hex << (*it)->Size << std::endl;
+		sink << (*it)->get_name() << std::endl;
+		sink << "\tType:\t\t" << (*it)->get_type() << std::endl;
+		sink << "\tLanguage:\t" << (*it)->get_language() << std::endl;
+		sink << "\tSize:\t\t0x" << std::hex << (*it)->get_size() << std::endl;
 	}
 	sink << std::endl;
 }

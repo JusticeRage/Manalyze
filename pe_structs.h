@@ -1,3 +1,20 @@
+/*
+    This file is part of Spike Guard.
+
+    Spike Guard is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Spike Guard is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #ifndef _PE_STRUCTS_H_
 #define _PE_STRUCTS_H_
 
@@ -185,17 +202,45 @@ typedef struct image_resource_data_entry_t
 	boost::uint32_t	Reserved;
 } image_resource_data_entry;
 
-// Non-standard structure representing a structure after the resource tree has been flattened.
-typedef struct resource_t
+typedef struct group_icon_directory_entry_t
 {
-	std::string		Type;
-	std::string		Name;
-	std::string		Language;
-	boost::uint32_t	OffsetToData;
-	boost::uint32_t	Codepage;
-	boost::uint32_t	Size;
-} resource;
-typedef boost::shared_ptr<resource> presource;
+	boost::uint8_t	Width;
+	boost::uint8_t	Height;
+	boost::uint8_t	ColorCount;
+	boost::uint8_t	Reserved;
+	boost::uint16_t	Planes;
+	boost::uint16_t	BitCount;
+	boost::uint32_t	BytesInRes;
+
+	// /!\ WARNING: This field is a boost::uint16_t in the specification
+	// I switched it back to a boost::uint32_t to match the ICO file structure.
+	boost::uint32_t	Id;
+} group_icon_directory_entry;
+typedef boost::shared_ptr<group_icon_directory_entry> pgroup_icon_directory_entry;
+
+typedef struct group_icon_directory_t
+{
+	boost::uint16_t	Reserved;
+	boost::uint16_t	Type;
+	boost::uint16_t	Count;
+	std::vector<pgroup_icon_directory_entry> Entries;
+} group_icon_directory;
+typedef boost::shared_ptr<group_icon_directory> pgroup_icon_directory;
+
+// Not a standard structure. Bitmaps stored as resources don't have a header.
+// This represents the reconstructed header, followed by the resource data.
+#pragma pack (push, 1)
+typedef struct bitmap_t
+{
+	boost::uint8_t	Magic[2];
+	boost::uint32_t Size;
+	boost::uint16_t Reserved1;
+	boost::uint16_t Reserved2;
+	boost::uint32_t OffsetToData;
+	std::vector<boost::uint8_t> data;
+} bitmap;
+#pragma pack (pop)
+typedef boost::shared_ptr<bitmap_t> pbitmap;
 
 } // !namespace sg
 
