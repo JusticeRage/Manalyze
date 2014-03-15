@@ -56,6 +56,7 @@ PE::PE(const std::string& path)
 	}
 }
 
+// ----------------------------------------------------------------------------
 
 size_t PE::get_filesize()
 {
@@ -415,6 +416,8 @@ bool PE::_parse_imports(FILE* f)
 
 	return true;
 }
+
+// ----------------------------------------------------------------------------
 
 bool PE::_parse_exports(FILE* f)
 {

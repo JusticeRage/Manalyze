@@ -22,6 +22,8 @@
 
 #include "resources.h"
 
+namespace bfs = boost::filesystem;
+
 namespace sg 
 {
 
@@ -121,6 +123,7 @@ bool PE::_parse_resources(FILE* f)
 				std::string name;
 				std::string type;
 				std::string language;
+				int id = 0;
 
 				// Translate resource type.
 				if ((*it)->NameOrId & 0x80000000) {// NameOrId is an offset to a string, we already recovered it
@@ -134,11 +137,8 @@ bool PE::_parse_resources(FILE* f)
 				if ((*it2)->NameOrId & 0x80000000) {
 					name = (*it2)->NameStr;
 				}
-				else 
-				{
-					std::stringstream ss;
-					ss << "#" << (*it2)->NameOrId; // Use the ID as a name.
-					name = ss.str();
+				else {
+					id = (*it2)->NameOrId;
 				}
 
 				// Translate the language.
@@ -150,13 +150,26 @@ bool PE::_parse_resources(FILE* f)
 				}
 
 				offset = _rva_to_offset(entry.OffsetToData);
-				pResource res = pResource(new Resource(type,
-													   name,
-													   language,
-													   entry.Codepage,
-													   entry.Size,
-													   offset,
-													   get_path()));
+				pResource res;
+				if (name != "")
+				{
+					res = pResource(new Resource(type,
+												 name,
+												 language,
+												 entry.Codepage,
+												 entry.Size,
+												 offset,
+												 get_path()));
+				}
+				else { // No name: call the constructor with the resource ID instead.
+					res = pResource(new Resource(type,
+												 id,
+												 language,
+												 entry.Codepage,
+												 entry.Size,
+												 offset,
+												 get_path()));
+				}
 
 				_resource_table.push_back(res);
 			}
@@ -229,6 +242,111 @@ std::vector<std::string> Resource::interpret_as()
 	return res;
 }
 
+// ----------------------------------------------------------------------------
+
+template<>
+pbitmap Resource::interpret_as()
+{
+	if (_type != "RT_BITMAP") {
+		return pbitmap();
+	}
+
+	pbitmap res = pbitmap(new bitmap);
+	unsigned int header_size = 14;
+	res->Magic[0] = 'B';
+	res->Magic[1] = 'M';
+	res->Reserved1 = 0;
+	res->Reserved2 = 0;
+	res->data = get_raw_data();
+	res->Size = res->data.size() + header_size;
+
+	// Calculate the offset to the raw data.
+	if (res->data.size() < 36) { // Not enough bytes to make a valid BMP
+		return pbitmap();
+	}
+	boost::uint32_t dib_header_size = 0;
+	boost::uint32_t colors_used = 0;
+	memcpy(&dib_header_size, &(res->data[0]), sizeof(boost::uint32_t)); // DIB header size is located at offset 0.
+	memcpy(&colors_used, &(res->data[32]), sizeof(boost::uint32_t)); // DIB header size is located at offset 0.
+
+	res->OffsetToData = header_size + dib_header_size + 4*colors_used;
+	return res;
+}
+
+// ----------------------------------------------------------------------------
+
+template<>
+pgroup_icon_directory Resource::interpret_as()
+{
+	if (_type != "RT_GROUP_ICON" && _type != "RT_GROUP_CURSOR") {
+		return pgroup_icon_directory();
+	}
+	FILE* f = _reach_data();
+	if (f == NULL) {
+		return pgroup_icon_directory();
+	}
+
+	pgroup_icon_directory res = pgroup_icon_directory(new group_icon_directory);
+	unsigned int size = sizeof(boost::uint16_t) * 3;
+	if (size != fread(res.get(), 1, size, f)) 
+	{
+		res.reset();
+		goto END;
+	}
+
+	for (unsigned int i = 0; i < res->Count; ++i)
+	{
+		pgroup_icon_directory_entry entry = pgroup_icon_directory_entry(new group_icon_directory_entry);
+
+		memset(entry.get(), 0, sizeof(group_icon_directory_entry));
+
+		if (_type == "RT_GROUP_ICON") 
+		{
+			// sizeof(group_icon_directory_entry) - 2 to compensate the field that was changed to boost::uint32.
+			// See the comment in the structure for more information.
+			if (sizeof(group_icon_directory_entry)-2 != fread(entry.get(), 1, sizeof(group_icon_directory_entry) - 2, f))
+			{
+				res.reset();
+				goto END;
+			}
+		}
+		else // Cursors have a different structure. Adapt it to a .ico.
+		{
+			// I know I am casting bytes to shorts here. I'm not proud of it.
+			fread(&(entry->Width), 1, sizeof(boost::uint8_t), f);
+			fseek(f, 1, SEEK_CUR);
+			fread(&(entry->Height), 1, sizeof(boost::uint8_t), f);
+			fseek(f, 1, SEEK_CUR);
+			fread(&(entry->Planes), 1, sizeof(boost::uint16_t), f);
+			fread(&(entry->BitCount), 1, sizeof(boost::uint16_t), f);
+			fread(&(entry->BytesInRes), 1, sizeof(boost::uint32_t), f);
+			fread(&(entry->Id), 1, sizeof(boost::uint16_t), f);
+			if (ferror(f) || feof(f))
+			{
+				res.reset();
+				goto END;
+			}
+		}
+		
+		res->Entries.push_back(entry);
+	}
+	
+	END:
+	if (f != NULL) {
+		fclose(f);
+	}
+	return res;
+}
+
+// ----------------------------------------------------------------------------
+
+template<>
+std::vector<boost::uint8_t> Resource::interpret_as() {
+	return get_raw_data();
+}
+
+// ----------------------------------------------------------------------------
+
 FILE* Resource::_reach_data()
 {
 	FILE* f = fopen(_path_to_pe.c_str(), "rb");
@@ -247,24 +365,146 @@ FILE* Resource::_reach_data()
 }
 
 // ----------------------------------------------------------------------------
-// Below this: specific parsing for specific resource types (RT_*)
-// ----------------------------------------------------------------------------
 
-/*std::string Resource::as_rt_manifest(const std::vector<boost::uint8_t>& bytes) {
-	return std::string(bytes.begin(), bytes.end());
+std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, const std::vector<pResource>& resources)
+{
+	std::vector<boost::uint8_t> res;
+
+	if (directory == NULL) {
+		return res;
+	}
+
+	unsigned int header_size = 3 * sizeof(boost::uint16_t) + directory->Count * sizeof(group_icon_directory_entry);
+	res.resize(header_size);
+	memcpy(&res[0], directory.get(), 3 * sizeof(boost::uint16_t));
+
+	for (int i = 0; i < directory->Count; ++i)
+	{
+		// Locate the RT_ICON with a matching ID.
+		pResource icon = pResource();
+		for (std::vector<pResource>::const_iterator it = resources.begin(); it != resources.end(); ++it)
+		{
+			if ((*it)->get_id() == directory->Entries[i]->Id) 
+			{
+				icon = *it;
+				break;
+			}
+		}
+		if (icon == NULL)
+		{
+			std::cout << "Error: Could not locate RT_ICON with ID " << directory->Entries[i]->Id << "!" << std::endl;
+			res.clear();
+			return res;
+		}
+
+		std::vector<boost::uint8_t> icon_bytes = icon->get_raw_data();
+		memcpy(&res[3 * sizeof(boost::uint16_t) + i * sizeof(group_icon_directory_entry)],
+			   directory->Entries[i].get(),
+			   sizeof(group_icon_directory_entry) - sizeof(boost::uint32_t)); // Don't copy the last field.
+		// Fix the icon_directory_entry with the offset in the file instead of a RT_ICON id
+		unsigned int size_fix = res.size();
+		memcpy(&res[3 * sizeof(boost::uint16_t) + (i+1) * sizeof(group_icon_directory_entry) - sizeof(boost::uint32_t)],
+			   &size_fix,
+			   sizeof(boost::uint32_t));
+		// Append the icon bytes at the end of the data
+		if (directory->Type == 1) { // General case for icons
+			res.insert(res.end(), icon_bytes.begin(), icon_bytes.end());
+		}
+		else if (icon_bytes.size() > 2 * sizeof(boost::uint16_t)) { // Cursors have a "hotspot" structure that we have to discard to create a valid ico.
+			res.insert(res.end(), icon_bytes.begin() + 2 * sizeof(boost::uint16_t), icon_bytes.end());
+		}
+		else { // Invalid cursor.
+			res.clear();
+		}
+	}
+
+	return res;
 }
 
 // ----------------------------------------------------------------------------
 
-std::vector<std::string> parse_rt_string(const std::vector<boost::uint8_t>& bytes)
+bool PE::extract_resources(const std::string& destination_folder)
 {
-	unsigned int cursor = 0;
-	std::vector<std::string> res();
-	for (int i = 0 ; i < 16 ; ++i)
+	if (!bfs::exists(destination_folder) && !bfs::create_directory(destination_folder)) 
 	{
-		res.push_back(utils::read_unicode_string(f))
+		std::cout << "Error: Could not create directory " << destination_folder << "." << std::endl;
+		return false;
 	}
-}*/
 
+	std::string base = bfs::basename(get_path());
+	FILE* f;
+	for (std::vector<pResource>::iterator it = _resource_table.begin() ; it != _resource_table.end() ; ++it)
+	{
+		bfs::path destination_file;
+		std::stringstream ss;
+		std::vector<boost::uint8_t> data;
+		if ((*it)->get_type() == "RT_GROUP_ICON" || (*it)->get_type() == "RT_GROUP_CURSOR")
+		{
+			ss << base << "_" << (*it)->get_id() << "_" << (*it)->get_type() << ".ico";
+			data = reconstruct_icon((*it)->interpret_as<pgroup_icon_directory>(), _resource_table);
+		}
+		else if ((*it)->get_type() == "RT_MANIFEST") 
+		{
+			ss << base << "_" << (*it)->get_id() << "_RT_MANIFEST.xml";
+			data = (*it)->get_raw_data();
+		}
+		else if ((*it)->get_type() == "RT_BITMAP")
+		{
+			ss << base << "_" << (*it)->get_id() << "_RT_BITMAP.bmp";
+			unsigned int header_size = 2 * sizeof(boost::uint8_t) + 2 * sizeof(boost::uint16_t) + 2 * sizeof(boost::uint32_t);
+			pbitmap bmp = (*it)->interpret_as<pbitmap>();
+			if (bmp == NULL)
+			{
+				std::cout << "Error: Bitmap " << (*it)->get_name() << " is malformed!" << std::endl;
+				continue;
+			}
+
+			// Copy the BMP header
+			data.resize(header_size, 0);
+			memcpy(&data[0], bmp.get(), header_size);
+			// Copy the image bytes.
+			data.insert(data.end(), bmp->data.begin(), bmp->data.end());
+		}
+		else if ((*it)->get_type() == "RT_ICON" || (*it)->get_type() == "RT_CURSOR") {
+			// Ignore the following resource types: we don't want to extract them.
+			continue;
+		}
+		else // General case
+		{
+			ss << base << "_";
+			if ((*it)->get_name() != "") {
+				ss << (*it)->get_name();
+			}
+			else {
+				ss << (*it)->get_id();
+			}
+			ss << "_" << (*it)->get_type() << ".raw";
+			data = (*it)->get_raw_data();
+		}
+
+		if (data.size() == 0) 
+		{
+			std::cout << "Warning: Resource " << (*it)->get_name() << " is empty!" << std::endl;
+			continue;
+		}
+
+		destination_file = bfs::path(destination_folder) / bfs::path(ss.str());
+		f = fopen(destination_file.string().c_str(), "wb+");
+		if (f == NULL)
+		{
+			std::cout << "Error: Could not open " << destination_file << "." << std::endl;
+			return false;
+		}
+		if (data.size() != fwrite(&data[0], 1, data.size(), f)) 
+		{
+			fclose(f);
+			std::cout << "Error: Could not write all the bytes for " << destination_file << "." << std::endl; 
+			return false;
+		}
+
+		fclose(f);
+	}
+	return true;
+}
 
 } // !namespace sg

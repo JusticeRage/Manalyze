@@ -36,7 +36,6 @@ int main(int argc, char** argv)
 	sg::PE pe(argv[1]);
 
 	std::cout << "Input file: " << pe.get_path() << std::endl;
-	//modules::peid_signature(pe);
 	std::cout << "File size: " << pe.get_filesize() << std::endl << std::endl;
 
 	pe.dump_dos_header();
@@ -46,6 +45,8 @@ int main(int argc, char** argv)
 	pe.dump_imports();
 	pe.dump_exports();
 	pe.dump_resources();
+
+	pe.extract_resources("extracted_resources");
 
 	//modules::peid_signature(pe);
 

@@ -33,6 +33,8 @@ std::string read_ascii_string(FILE* f)
 	return s;
 }
 
+// ----------------------------------------------------------------------------
+
 std::string read_unicode_string(FILE* f)
 {
 	std::wstring s = std::wstring();
@@ -59,6 +61,8 @@ std::string read_unicode_string(FILE* f)
 	return std::string(conv.get());
 }
 
+// ----------------------------------------------------------------------------
+
 bool read_string_at_offset(FILE* f, unsigned int offset, std::string& out, bool unicode)
 {
 	unsigned int saved_offset = ftell(f);
@@ -76,6 +80,8 @@ bool read_string_at_offset(FILE* f, unsigned int offset, std::string& out, bool 
 	return !fseek(f, saved_offset, SEEK_SET) && out != "";
 }
 
+// ----------------------------------------------------------------------------
+
 bool is_address_in_section(unsigned int rva, sg::pimage_section_header section, bool check_raw_size)
 {
 	if (!check_raw_size) {
@@ -85,6 +91,8 @@ bool is_address_in_section(unsigned int rva, sg::pimage_section_header section, 
 		return section->VirtualAddress <= rva && rva < section->VirtualAddress + section->SizeOfRawData;
 	}
 }
+
+// ----------------------------------------------------------------------------
 
 sg::pimage_section_header find_section(unsigned int rva, const std::vector<sg::pimage_section_header>& section_list)
 {

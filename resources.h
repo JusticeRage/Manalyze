@@ -20,10 +20,12 @@
 
 #include <string>
 #include <vector>
+#include <sstream>
 
 #include <boost/cstdint.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/shared_array.hpp>
+#include <boost/filesystem.hpp>
 
 namespace sg
 {
@@ -44,16 +46,46 @@ public:
 		  _codepage(codepage), 
 		  _offset_in_file(offset_in_file), 
 		  _size(size),
-		  _path_to_pe(path_to_pe)
+		  _path_to_pe(path_to_pe),
+		  _id(0)
+	{}
+
+	Resource(const std::string&		type,
+			int						id,
+			const std::string&		language,
+			boost::uint32_t			codepage,
+			boost::uint32_t			size,
+			unsigned int			offset_in_file,
+			const std::string&		path_to_pe)
+		: _type(type),
+		  _name(""),
+		  _language(language),
+		  _codepage(codepage),
+		  _offset_in_file(offset_in_file),
+		  _size(size),
+		  _path_to_pe(path_to_pe),
+		  _id(id)
 	{}
 
 	virtual ~Resource() {}
 
 	std::string		get_type()		const { return _type; }
-	std::string		get_name()		const { return _name; }
 	std::string		get_language()	const { return _language; }
 	boost::uint32_t	get_codepage()	const { return _codepage; }
 	boost::uint32_t	get_size()		const { return _size; }
+	boost::uint32_t	get_id()		const { return _id; }
+	std::string		get_name()		const
+	{
+		if (_name != "") {
+			return _name;
+		}
+		else 
+		{
+			std::stringstream ss;
+			ss << "#" << _id;
+			return ss.str();
+		}
+	}
 
 	/**
 	 *	@brief	Retrieves the raw bytes of the resource.
@@ -70,6 +102,9 @@ public:
 	 *	Currently, the following interpretations are implemented:
 	 *	* std::string for RT_MANIFEST
 	 *	* std::vector<std::string> for RT_STRING
+	 *	* pgroup_icon_directory_t for RT_GROUP_ICON and RT_GROUP_CURSOR
+	 *	* pbitmap for RT_BITMAP
+	 *	* std::vector<boost::uint8_t> for all resource types (equivalent to  get_raw_data()).
 	 *
 	 *	@tparam	T The type into which the resource should be interpreted.
 	 *
@@ -80,7 +115,11 @@ public:
 
 private:
 	std::string		_type;
+	
+	// Resources can either have an identifier or a name.
 	std::string		_name;
+	boost::uint32_t	_id;
+
 	std::string		_language;
 	boost::uint32_t	_codepage;
 	boost::uint32_t	_size;
@@ -97,6 +136,19 @@ private:
 	FILE* _reach_data();
 };
 typedef boost::shared_ptr<Resource> pResource;
+
+/**
+ *	@brief	Recreates a .ico from resources.
+ *
+ *	@param	pgroup_icon_directory directory The RT_ICON_GROUP of the icon we want to recreate.
+ *	@param	const std::vector<pResource>& resources The resources of the PE.
+ *
+ *	We need to have access to the other resources, because the image data is spread across
+ *	several of them. This function will find the relevant RT_ICON in the vector.
+ *
+ *	@return	The reconstructed file bytes.
+ */
+std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, const std::vector<pResource>& resources);
 
 
 } // !namespace sg

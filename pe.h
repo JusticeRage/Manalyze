@@ -107,6 +107,26 @@ public:
 
 	std::vector<pResource> get_resources() const { return _resource_table; }
 
+	/**
+	 *	@brief	Extracts the resources of the PE and writes them to the disk.
+	 *
+	 *	In the general case, the resource's raw bytes are written to a file, but some resource
+	 *	types can be handled more gracefully:
+	 *	* RT_GROUP_ICON (and the referenced RT_ICON resources, which cannot be extracted alone)
+	 *	  are saved as .ico files. (RT_GROUP_CURSORS are supported as well, but don't seem to work
+	 *	  as well.)
+	 *	* RT_BITMAP as .bmp files. The bitmap header is reconstructed.
+	 *	* RT_MANIFEST as .xml files.
+	 *
+	 *	@param	const std::string& destination_folder The folder into which the resources should
+	 *			be placed.
+	 *
+	 *	@return	Whether the extraction was successful or not.
+	 *
+	 *	Implementation is located in resources.cpp.
+	 */
+	bool extract_resources(const std::string& destination_folder);
+
 private:
 	/**
 	 * Reads the first bytes of the file to reconstruct the DOS header.

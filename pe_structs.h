@@ -202,6 +202,46 @@ typedef struct image_resource_data_entry_t
 	boost::uint32_t	Reserved;
 } image_resource_data_entry;
 
+typedef struct group_icon_directory_entry_t
+{
+	boost::uint8_t	Width;
+	boost::uint8_t	Height;
+	boost::uint8_t	ColorCount;
+	boost::uint8_t	Reserved;
+	boost::uint16_t	Planes;
+	boost::uint16_t	BitCount;
+	boost::uint32_t	BytesInRes;
+
+	// /!\ WARNING: This field is a boost::uint16_t in the specification
+	// I switched it back to a boost::uint32_t to match the ICO file structure.
+	boost::uint32_t	Id;
+} group_icon_directory_entry;
+typedef boost::shared_ptr<group_icon_directory_entry> pgroup_icon_directory_entry;
+
+typedef struct group_icon_directory_t
+{
+	boost::uint16_t	Reserved;
+	boost::uint16_t	Type;
+	boost::uint16_t	Count;
+	std::vector<pgroup_icon_directory_entry> Entries;
+} group_icon_directory;
+typedef boost::shared_ptr<group_icon_directory> pgroup_icon_directory;
+
+// Not a standard structure. Bitmaps stored as resources don't have a header.
+// This represents the reconstructed header, followed by the resource data.
+#pragma pack (push, 1)
+typedef struct bitmap_t
+{
+	boost::uint8_t	Magic[2];
+	boost::uint32_t Size;
+	boost::uint16_t Reserved1;
+	boost::uint16_t Reserved2;
+	boost::uint32_t OffsetToData;
+	std::vector<boost::uint8_t> data;
+} bitmap;
+#pragma pack (pop)
+typedef boost::shared_ptr<bitmap_t> pbitmap;
+
 } // !namespace sg
 
 #endif // !_PE_STRUCTS_H_
