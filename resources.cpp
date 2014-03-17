@@ -34,7 +34,7 @@ bool PE::read_image_resource_directory(image_resource_directory& dir, FILE* f, u
 		offset = _rva_to_offset(_ioh.directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress) + offset;
 		if (!offset || fseek(f, offset, SEEK_SET))
 		{
-			std::cout << "[!] Error: Could not reach an IMAGE_RESOURCE_DIRECTORY." << std::endl;
+			std::cerr << "[!] Error: Could not reach an IMAGE_RESOURCE_DIRECTORY." << std::endl;
 			return false;
 		}
 	}
@@ -43,7 +43,7 @@ bool PE::read_image_resource_directory(image_resource_directory& dir, FILE* f, u
 	dir.Entries.clear();
 	if (size != fread(&dir, 1, size, f))
 	{
-		std::cout << "[!] Error: Could not read an IMAGE_RESOURCE_DIRECTORY." << std::endl;
+		std::cerr << "[!] Error: Could not read an IMAGE_RESOURCE_DIRECTORY." << std::endl;
 		return false;
 	}
 
@@ -54,7 +54,7 @@ bool PE::read_image_resource_directory(image_resource_directory& dir, FILE* f, u
 		memset(entry.get(), 0, size);
 		if (size != fread(entry.get(), 1, size, f))
 		{
-			std::cout << "[!] Error: Could not read an IMAGE_RESOURCE_DIRECTORY_ENTRY." << std::endl;
+			std::cerr << "[!] Error: Could not read an IMAGE_RESOURCE_DIRECTORY_ENTRY." << std::endl;
 			return false;
 		}
 
@@ -66,7 +66,7 @@ bool PE::read_image_resource_directory(image_resource_directory& dir, FILE* f, u
 				+ (entry->NameOrId & 0x7FFFFFFF);
 			if (!offset || !utils::read_string_at_offset(f, offset, entry->NameStr, true))
 			{
-				std::cout << "[!] Error: Could not read an IMAGE_RESOURCE_DIRECTORY_ENTRY's name." << std::endl;
+				std::cerr << "[!] Error: Could not read an IMAGE_RESOURCE_DIRECTORY_ENTRY's name." << std::endl;
 				return false;
 			}
 		}
@@ -109,13 +109,13 @@ bool PE::_parse_resources(FILE* f)
 				unsigned int offset = _rva_to_offset(_ioh.directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress + ((*it3)->OffsetToData & 0x7FFFFFFF));
 				if (!offset || fseek(f, offset, SEEK_SET))
 				{
-					std::cout << "[!] Error: Could not reach an IMAGE_RESOURCE_DATA_ENTRY." << std::endl;
+					std::cerr << "[!] Error: Could not reach an IMAGE_RESOURCE_DATA_ENTRY." << std::endl;
 					return false;
 				}
 
 				if (sizeof(image_resource_data_entry) != fread(&entry, 1, sizeof(image_resource_data_entry), f))
 				{
-					std::cout << "[!] Error: Could not read an IMAGE_RESOURCE_DATA_ENTRY." << std::endl;
+					std::cerr << "[!] Error: Could not read an IMAGE_RESOURCE_DATA_ENTRY." << std::endl;
 					return false;
 				}
 
@@ -392,7 +392,7 @@ std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, co
 		}
 		if (icon == NULL)
 		{
-			std::cout << "Error: Could not locate RT_ICON with ID " << directory->Entries[i]->Id << "!" << std::endl;
+			std::cerr << "Error: Could not locate RT_ICON with ID " << directory->Entries[i]->Id << "!" << std::endl;
 			res.clear();
 			return res;
 		}
@@ -427,7 +427,7 @@ bool PE::extract_resources(const std::string& destination_folder)
 {
 	if (!bfs::exists(destination_folder) && !bfs::create_directory(destination_folder)) 
 	{
-		std::cout << "Error: Could not create directory " << destination_folder << "." << std::endl;
+		std::cerr << "Error: Could not create directory " << destination_folder << "." << std::endl;
 		return false;
 	}
 
@@ -455,7 +455,7 @@ bool PE::extract_resources(const std::string& destination_folder)
 			pbitmap bmp = (*it)->interpret_as<pbitmap>();
 			if (bmp == NULL)
 			{
-				std::cout << "Error: Bitmap " << (*it)->get_name() << " is malformed!" << std::endl;
+				std::cerr << "Error: Bitmap " << (*it)->get_name() << " is malformed!" << std::endl;
 				continue;
 			}
 
@@ -467,6 +467,33 @@ bool PE::extract_resources(const std::string& destination_folder)
 		}
 		else if ((*it)->get_type() == "RT_ICON" || (*it)->get_type() == "RT_CURSOR") {
 			// Ignore the following resource types: we don't want to extract them.
+			continue;
+		}
+		else if ((*it)->get_type() == "RT_STRING") 
+		{
+			// Append all the strings to the same file.
+			std::vector<std::string> strings = (*it)->interpret_as<std::vector<std::string> >();
+			if (strings.size() == 0) {
+				continue;
+			}
+
+			destination_file = bfs::path(destination_folder) / bfs::path(base + "_RT_STRINGs.txt");
+			FILE* f = fopen(destination_file.string().c_str(), "a+");
+			if (f == NULL) 
+			{
+				std::cerr << "Error: Could not open/create " << destination_file << "!" << std::endl;
+				continue;
+			}
+
+			for (std::vector<std::string>::iterator it = strings.begin(); it != strings.end(); ++it)
+			{
+				if ((*it) != "") 
+				{
+					fwrite(it->c_str(), 1, it->size(), f);
+					fputc('\n', f);
+				}
+			}
+			fclose(f);
 			continue;
 		}
 		else // General case
@@ -484,7 +511,7 @@ bool PE::extract_resources(const std::string& destination_folder)
 
 		if (data.size() == 0) 
 		{
-			std::cout << "Warning: Resource " << (*it)->get_name() << " is empty!" << std::endl;
+			std::cerr << "Warning: Resource " << (*it)->get_name() << " is empty!" << std::endl;
 			continue;
 		}
 
@@ -492,13 +519,13 @@ bool PE::extract_resources(const std::string& destination_folder)
 		f = fopen(destination_file.string().c_str(), "wb+");
 		if (f == NULL)
 		{
-			std::cout << "Error: Could not open " << destination_file << "." << std::endl;
+			std::cerr << "Error: Could not open " << destination_file << "." << std::endl;
 			return false;
 		}
 		if (data.size() != fwrite(&data[0], 1, data.size(), f)) 
 		{
 			fclose(f);
-			std::cout << "Error: Could not write all the bytes for " << destination_file << "." << std::endl; 
+			std::cerr << "Error: Could not write all the bytes for " << destination_file << "." << std::endl; 
 			return false;
 		}
 
