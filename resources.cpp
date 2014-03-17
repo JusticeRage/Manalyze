@@ -186,12 +186,14 @@ std::vector<boost::uint8_t> Resource::get_raw_data()
 	std::vector<boost::uint8_t> res = std::vector<boost::uint8_t>();
 	
 	FILE* f = _reach_data();
+	unsigned int read_bytes;
+
 	if (f == NULL) {
 		goto END;
 	}
-	
+
 	res.resize(_size);
-	unsigned int read_bytes = fread(&res[0], 1, _size, f);
+	read_bytes = fread(&res[0], 1, _size, f);
 	if (read_bytes != _size) { // We got less bytes than expected: reduce the vector's size.
 		res.resize(read_bytes);
 	}

@@ -104,8 +104,15 @@ void PE::dump_image_optional_header(std::ostream& sink) const
 	sink << "SizeOfCode\t\t\t" << _ioh.SizeOfCode << std::endl;
 	sink << "SizeOfInitializedData\t\t" << _ioh.SizeOfInitializedData << std::endl;
 	sink << "SizeOfUninitializedData\t\t" << _ioh.SizeOfUninitializedData << std::endl;
-	sink << "AddressOfEntryPoint\t\t" << _ioh.AddressOfEntryPoint 
-		 << " (Section: " << utils::find_section(_ioh.AddressOfEntryPoint, _section_table)->Name << ")" << std::endl;
+	sg::pimage_section_header sec = utils::find_section(_ioh.AddressOfEntryPoint, _section_table);
+	if (sec != NULL) {
+		sink << "AddressOfEntryPoint\t\t" << _ioh.AddressOfEntryPoint 
+			 << " (Section: " << sec->Name << ")" << std::endl;
+	}
+	else {
+		sink << "AddressOfEntryPoint\t\t" << _ioh.AddressOfEntryPoint 
+			<< " (Section: ?)" << std::endl;
+	}
 	sink << "BaseOfCode\t\t\t" << _ioh.BaseOfCode << std::endl;
 
 	// Field absent from PE32+ headers.
