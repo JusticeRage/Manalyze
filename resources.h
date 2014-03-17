@@ -104,6 +104,7 @@ public:
 	 *	* std::vector<std::string> for RT_STRING
 	 *	* pgroup_icon_directory_t for RT_GROUP_ICON and RT_GROUP_CURSOR
 	 *	* pbitmap for RT_BITMAP
+	 *	* pversion_info for RT_VERSION
 	 *	* std::vector<boost::uint8_t> for all resource types (equivalent to  get_raw_data()).
 	 *
 	 *	@tparam	T The type into which the resource should be interpreted.
@@ -149,6 +150,17 @@ typedef boost::shared_ptr<Resource> pResource;
  *	@return	The reconstructed file bytes.
  */
 std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, const std::vector<pResource>& resources);
+
+/**
+ *	@brief	Parses a VERSION_INFO_HEADER, which is not a standard structure but does come up a lot.
+ *
+ *	@param	vs_version_info_header& header The structure to fill.
+ *	@param	FILE* f An opened file to read from. The cursor has to be set to the right offset and will
+ *			be updated.
+ *
+ *	@return	Whether the structure was read successfully.
+ */
+bool parse_version_info_header(vs_version_info_header& header, FILE* f);
 
 
 } // !namespace sg

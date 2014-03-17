@@ -242,6 +242,47 @@ typedef struct bitmap_t
 #pragma pack (pop)
 typedef boost::shared_ptr<bitmap_t> pbitmap;
 
+typedef struct vs_fixed_file_info_t
+{
+	boost::uint32_t	Signature;
+	boost::uint32_t	StructVersion;
+	boost::uint32_t	FileVersionMS;
+	boost::uint32_t	FileVersionLS;
+	boost::uint32_t	ProductVersionMS;
+	boost::uint32_t	ProductVersionLS;
+	boost::uint32_t	FileFlagsMask;
+	boost::uint32_t	FileFlags;
+	boost::uint32_t	FileOs;
+	boost::uint32_t	FileType;
+	boost::uint32_t	FileSubtype;
+	boost::uint32_t	FileDateMS;
+	boost::uint32_t	FileDateLS;
+} fixed_file_info;
+typedef boost::shared_ptr<fixed_file_info> pfixed_file_info;
+
+
+// Non-standard enum. This sequence does return a lot, though, so it was
+// worth putting it in a separate structure.
+typedef struct vs_version_info_header_t
+{
+	boost::uint16_t		Length;
+	boost::uint16_t		ValueLength;
+	boost::uint16_t		Type;
+	std::string			Key;
+} vs_version_info_header;
+typedef boost::shared_ptr<vs_version_info_header> pvs_version_info_header;
+
+// Non-standard enum. The last two field have been added for convenience.
+typedef boost::shared_ptr<std::pair<std::string, std::string> > ppair;
+typedef struct vs_version_info_t
+{
+	vs_version_info_header	Header;
+	pfixed_file_info		Value;
+	std::string				Language;
+	std::vector<ppair>		StringTable;
+} version_info;
+typedef boost::shared_ptr<vs_version_info_t> pversion_info;
+
 } // !namespace sg
 
 #endif // !_PE_STRUCTS_H_
