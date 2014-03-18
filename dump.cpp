@@ -22,36 +22,6 @@ namespace sg
 
 // ----------------------------------------------------------------------------
 
-/**
- *	@brief	Convenience function used to translate an integer to a list of flag and display
- *			it nicely.
- *
- *	@param	std::ostream& sink The output stream to write to.
- *	@param	boost::uint32_t value The value to translate.
- *	@param	const nt::flag_dict& dict The dictionary to use in order to translate the value.
- *	@param	std::string padding The padding to prepend to every string after the first one.
- *								This is used to display flags as a column.
- */
-void pretty_print_flags(std::ostream& sink, boost::uint32_t value, const nt::flag_dict& dict, std::string padding = "\t\t\t")
-{
-	std::vector<std::string> flags = nt::translate_to_flags(value, dict);
-	if (flags.size() > 0) 
-	{
-		for (std::vector<std::string>::iterator it = flags.begin() ; it != flags.end() ; ++it) 
-		{
-			if (it != flags.begin()) {
-				sink << padding;
-			}
-			sink << *it << std::endl;
-		}
-	}
-	else {
-		sink << value << std::endl;
-	}
-}
-
-// ----------------------------------------------------------------------------
-
 void PE::dump_dos_header(std::ostream& sink) const
 {
 	if (!_initialized) {
@@ -100,7 +70,20 @@ void PE::dump_pe_header(std::ostream& sink) const
 	sink << "SizeOfOptionalHeader\t" << _h_pe.SizeOfOptionalHeader << std::endl;
 
 	sink << "Characteristics\t\t";
-	pretty_print_flags(sink, _h_pe.Characteristics, nt::PE_CHARACTERISTICS);
+	flags = nt::translate_to_flags(_h_pe.Characteristics, nt::PE_CHARACTERISTICS);
+	if (flags.size() > 0) 
+	{
+		for (std::vector<std::string>::iterator it = flags.begin() ; it != flags.end() ; ++it) 
+		{
+			if (it != flags.begin()) {
+				sink << "\t\t\t";
+			}
+			sink << *it << std::endl;
+		}
+	}
+	else {
+		sink << _h_pe.Characteristics << std::endl;
+	}
 	sink << std::endl;
 }
 
@@ -121,15 +104,8 @@ void PE::dump_image_optional_header(std::ostream& sink) const
 	sink << "SizeOfCode\t\t\t" << _ioh.SizeOfCode << std::endl;
 	sink << "SizeOfInitializedData\t\t" << _ioh.SizeOfInitializedData << std::endl;
 	sink << "SizeOfUninitializedData\t\t" << _ioh.SizeOfUninitializedData << std::endl;
-	sg::pimage_section_header sec = utils::find_section(_ioh.AddressOfEntryPoint, _section_table);
-	if (sec != NULL) {
-		sink << "AddressOfEntryPoint\t\t" << _ioh.AddressOfEntryPoint 
-			 << " (Section: " << sec->Name << ")" << std::endl;
-	}
-	else {
-		sink << "AddressOfEntryPoint\t\t" << _ioh.AddressOfEntryPoint 
-			<< " (Section: ?)" << std::endl;
-	}
+	sink << "AddressOfEntryPoint\t\t" << _ioh.AddressOfEntryPoint 
+		 << " (Section: " << utils::find_section(_ioh.AddressOfEntryPoint, _section_table)->Name << ")" << std::endl;
 	sink << "BaseOfCode\t\t\t" << _ioh.BaseOfCode << std::endl;
 
 	// Field absent from PE32+ headers.
@@ -149,7 +125,20 @@ void PE::dump_image_optional_header(std::ostream& sink) const
 	sink << "Checksum\t\t\t" << _ioh.Checksum << std::endl;
 	sink << "Subsystem\t\t\t" << nt::translate_to_flag(_ioh.Subsystem, nt::SUBSYSTEMS) << std::endl;
 	sink << "DllCharacteristics\t\t";
-	pretty_print_flags(sink, _ioh.DllCharacteristics, nt::DLL_CHARACTERISTICS, "\t\t\t\t");
+	flags = nt::translate_to_flags(_ioh.DllCharacteristics, nt::DLL_CHARACTERISTICS);
+	if (flags.size() > 0)
+	{
+		for (std::vector<std::string>::iterator it = flags.begin(); it != flags.end(); ++it)
+		{
+			if (it != flags.begin()) {
+				sink << "\t\t\t\t";
+			}
+			sink << *it << std::endl;
+		}
+	}
+	else {
+		sink << _ioh.DllCharacteristics << std::endl;
+	}
 	sink << "SizeofStackReserve\t\t" << _ioh.SizeofStackReserve << std::endl;
 	sink << "SizeofStackCommit\t\t" << _ioh.SizeofStackCommit << std::endl;
 	sink << "SizeofHeapReserve\t\t" << _ioh.SizeofHeapReserve << std::endl;
@@ -182,7 +171,20 @@ void PE::dump_section_table(std::ostream& sink) const
 		sink << "NumberOfLineNumbers\t" << (*it)->NumberOfLineNumbers << std::endl;
 		sink << "NumberOfRelocations\t" << (*it)->NumberOfRelocations << std::endl;
 		sink << "Characteristics\t\t";
-		pretty_print_flags(sink, (*it)->Characteristics, nt::SECTION_CHARACTERISTICS);
+		flags = nt::translate_to_flags((*it)->Characteristics, nt::SECTION_CHARACTERISTICS);
+		if (flags.size() > 0)
+		{
+			for (std::vector<std::string>::iterator it = flags.begin(); it != flags.end(); ++it)
+			{
+				if (it != flags.begin()) {
+					sink << "\t\t\t";
+				}
+				sink << *it << std::endl;
+			}
+		}
+		else {
+			sink << _ioh.DllCharacteristics << std::endl;
+		}
 		sink << std::endl;
 	}
 }
@@ -242,55 +244,9 @@ void PE::dump_resources(std::ostream& sink) const
 		sink << "\tType:\t\t" << (*it)->get_type() << std::endl;
 		sink << "\tLanguage:\t" << (*it)->get_language() << std::endl;
 		sink << "\tSize:\t\t0x" << std::hex << (*it)->get_size() << std::endl;
+		(*it)->detect_filetype();
 	}
 	sink << std::endl;
-}
-
-void PE::dump_version_info(std::ostream& sink) const
-{
-	if (!_initialized || _resource_table.size() == 0) {
-		return;
-	}
-
-	pversion_info vi;
-	for (std::vector<sg::pResource>::const_iterator it = _resource_table.begin() ; it != _resource_table.end() ; ++it)
-	{
-		if ((*it)->get_type() == "RT_VERSION")
-		{
-			vi = (*it)->interpret_as<sg::pversion_info>();
-			if (vi == NULL) 
-			{
-				std::cerr << "Warning: Could not parse VERSION_INFO resource!" << std::endl;
-				continue;
-			}
-			
-			sink << "VERSION INFO:" << std::endl << "-------------" << std::endl << std::endl;
-			sink << "Resource LangID:\t" << (*it)->get_language() << std::endl;
-			sink << "Key:\t\t\t" << vi->Header.Key << std::endl;
-			sink << "Value:" << std::endl;
-			sink << "\tSignature:\t" << std::hex << vi->Value->Signature << std::endl;
-			sink << "\tStructVersion:\t" << vi->Value->StructVersion << std::endl;
-			sink << "\tFileVersion:\t" << utils::uint64_to_version_number(vi->Value->FileVersionMS, vi->Value->FileVersionLS) << std::endl;
-			sink << "\tProductVersion:\t" << utils::uint64_to_version_number(vi->Value->ProductVersionMS, vi->Value->ProductVersionLS) << std::endl;
-			sink << "\tFileFlags:\t";
-			pretty_print_flags(sink, vi->Value->FileFlags & vi->Value->FileFlagsMask, nt::FIXEDFILEINFO_FILEFLAGS);
-			sink << "\tFileOS:\t\t";
-			pretty_print_flags(sink, vi->Value->FileOs, nt::FIXEDFILEINFO_FILEOS);
-			sink << "\tFileType:\t" << nt::translate_to_flag(vi->Value->FileType, nt::FIXEDFILEINFO_FILETYPE) << std::endl;
-			if (vi->Value->FileType == nt::FIXEDFILEINFO_FILETYPE["VFT_DRV"]) {
-				sink << "\tFileSubtype\t"<< nt::translate_to_flag(vi->Value->FileSubtype, nt::FIXEDFILEINFO_FILESUBTYPE_DRV) << std::endl;
-			}
-			else if (vi->Value->FileType == nt::FIXEDFILEINFO_FILETYPE["VFT_FONT"])	{
-				sink << "\tFileSubtype\t"<< nt::translate_to_flag(vi->Value->FileSubtype, nt::FIXEDFILEINFO_FILESUBTYPE_FONT) << std::endl;
-			}
-			sink << "\tLanguage:\t" << vi->Language << std::endl << std::endl;
-			for (std::vector<ppair>::const_iterator it = vi->StringTable.begin() ; it != vi->StringTable.end() ; ++it) {
-				sink << "\t" << (*it)->first << ": " << (*it)->second << std::endl;
-			}
-			sink << std::endl;
-		}
-	}
-
 }
 
 } // !namespace sg

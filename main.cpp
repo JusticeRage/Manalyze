@@ -24,7 +24,7 @@
 #include "pe.h"
 #include "resources.h"
 #include "mandiant_modules.h"
-#include "yara_modules.h"
+#include "yara_wrapper.h"
 
 int main(int argc, char** argv)
 {
@@ -45,9 +45,8 @@ int main(int argc, char** argv)
 	pe.dump_imports();
 	pe.dump_exports();
 	pe.dump_resources();
-	pe.dump_version_info();
 
-	//pe.extract_resources("extracted_resources");
+	pe.extract_resources("extracted_resources");
 
 	//modules::peid_signature(pe);
 

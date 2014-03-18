@@ -12,7 +12,7 @@ include_directories(
 						${Boost_INCLUDE_DIRS}
                    )
 
-add_executable(sgstatic main.cpp pe.cpp nt_values.cpp utils.cpp imports.cpp dump.cpp resources.cpp)
+add_executable(sgstatic main.cpp pe.cpp nt_values.cpp utils.cpp imports.cpp dump.cpp resources.cpp yara_wrapper.cpp)
 
 if (WIN32)
 			add_definitions(/D_CRT_SECURE_NO_WARNINGS) # Please don't complain about fopen()

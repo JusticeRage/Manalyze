@@ -22,7 +22,7 @@ namespace utils {
 std::string read_ascii_string(FILE* f)
 {
 	std::string s = std::string();
-	char c = 0;
+	char c;
 	while (1 == fread(&c, 1, 1, f))
 	{
 		if (c == '\0') {
@@ -36,27 +36,6 @@ std::string read_ascii_string(FILE* f)
 // ----------------------------------------------------------------------------
 
 std::string read_unicode_string(FILE* f)
-{
-	std::wstring s = std::wstring();
-	wchar_t c = 0;
-	while (2 == fread(&c, 1, 2, f))
-	{
-		if (c == '\0') {
-			break;
-		}
-		s += c;
-	}
-
-	// Convert the wstring into a string
-	boost::shared_array<char> conv = boost::shared_array<char>(new char[s.size() + 1]);
-	memset(conv.get(), 0, sizeof(char) * (s.size() + 1));
-	wcstombs(conv.get(), s.c_str(), s.size());
-	return std::string(conv.get());
-}
-
-// ----------------------------------------------------------------------------
-
-std::string read_prefixed_unicode_string(FILE* f)
 {
 	std::wstring s = std::wstring();
 	wchar_t c = 0;
@@ -96,19 +75,9 @@ bool read_string_at_offset(FILE* f, unsigned int offset, std::string& out, bool 
 		out = read_ascii_string(f);
 	}
 	else {
-		out = read_prefixed_unicode_string(f);
+		out = read_unicode_string(f);
 	}
 	return !fseek(f, saved_offset, SEEK_SET) && out != "";
-}
-
-// ----------------------------------------------------------------------------
-
-std::string uint64_to_version_number(boost::uint32_t msbytes, boost::uint32_t lsbytes)
-{
-	std::stringstream ss;
-	ss << ((msbytes >> 16) & 0xFFFF) << "." << (msbytes & 0xFFFF) << ".";
-	ss << ((lsbytes >> 16) & 0xFFFF) << "." << (lsbytes & 0xFFFF);
-	return ss.str();
 }
 
 // ----------------------------------------------------------------------------

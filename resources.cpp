@@ -24,8 +24,12 @@
 
 namespace bfs = boost::filesystem;
 
+
 namespace sg 
 {
+
+// Initialize the Yara wrapper used by resource objects
+yara::pyara Resource::_yara = yara::pyara(new yara::Yara);
 
 bool PE::read_image_resource_directory(image_resource_directory& dir, FILE* f, unsigned int offset)
 {
@@ -186,14 +190,12 @@ std::vector<boost::uint8_t> Resource::get_raw_data()
 	std::vector<boost::uint8_t> res = std::vector<boost::uint8_t>();
 	
 	FILE* f = _reach_data();
-	unsigned int read_bytes;
-
 	if (f == NULL) {
 		goto END;
 	}
-
+	
 	res.resize(_size);
-	read_bytes = fread(&res[0], 1, _size, f);
+	unsigned int read_bytes = fread(&res[0], 1, _size, f);
 	if (read_bytes != _size) { // We got less bytes than expected: reduce the vector's size.
 		res.resize(read_bytes);
 	}
@@ -203,21 +205,6 @@ std::vector<boost::uint8_t> Resource::get_raw_data()
 		fclose(f);
 	}
 	return res;
-}
-
-// ----------------------------------------------------------------------------
-
-bool parse_version_info_header(vs_version_info_header& header, FILE* f)
-{
-	memset(&header, 0, 3 * sizeof(boost::uint16_t));
-	if (3*sizeof(boost::uint16_t) != fread(&header, 1, 3*sizeof(boost::uint16_t), f))
-	{
-		std::cerr << "Error: Could not read a VS_VERSION_INFO header!" << std::endl;
-		return false;
-	}
-	header.Key = utils::read_unicode_string(f);
-	unsigned int padding = ftell(f) % 4; // Next structure is 4-bytes aligned
-	return !fseek(f, padding, SEEK_CUR);
 }
 
 // ----------------------------------------------------------------------------
@@ -249,7 +236,7 @@ std::vector<std::string> Resource::interpret_as()
 
 	// RT_STRING resources are made of 16 contiguous "unicode" strings.
 	for (int i = 0; i < 16; ++i) {
-		res.push_back(utils::read_prefixed_unicode_string(f));
+		res.push_back(utils::read_unicode_string(f));
 	}
 
 	END:
@@ -352,111 +339,6 @@ pgroup_icon_directory Resource::interpret_as()
 	if (f != NULL) {
 		fclose(f);
 	}
-	return res;
-}
-
-// ----------------------------------------------------------------------------
-
-template<>
-pversion_info Resource::interpret_as()
-{
-	if (_type != "RT_VERSION") {
-		return pversion_info();
-	}
-
-	FILE* f = _reach_data();
-	if (f == NULL) {
-		return pversion_info();
-	}
-
-	pversion_info res = pversion_info(new version_info);
-	unsigned int bytes_read; // Is calculated by calling ftell before and after reading a structure, and keeping the difference.
-	unsigned int bytes_remaining;
-	unsigned int padding;
-	unsigned int language;
-	std::stringstream ss;
-
-	// We are going to read a lot of structures which look like a version info header.
-	// They will all be read into this variable, one at a time.
-	pvs_version_info_header current_structure = pvs_version_info_header(new vs_version_info_header);
-	if (!parse_version_info_header(res->Header, f)) 
-	{
-		res.reset();
-		goto END;
-	}
-	res->Value = pfixed_file_info(new fixed_file_info);
-	memset(res->Value.get(), 0, sizeof(fixed_file_info));
-	if (sizeof(fixed_file_info) != fread(res->Value.get(), 1, sizeof(fixed_file_info), f) || res->Value->Signature != 0xfeef04bd)
-	{
-		std::cerr << "Error: Could not read a VS_FIXED_FILE_INFO!" << std::endl;
-		goto END;
-	}
-
-	if (!parse_version_info_header(*current_structure, f) || current_structure->Key != "StringFileInfo") 
-	{
-		if (current_structure->Key != "StringFileInfo") {
-			std::cerr << "Error: StringFileInfo expected, read " << current_structure->Key << " instead." << std::endl;
-		}
-		res.reset();
-		goto END;
-	}
-	// We don't need the contents of StringFileInfo. Replace them with the next structure.
-	bytes_read = ftell(f);
-	if (!parse_version_info_header(*current_structure, f)) 
-	{
-		res.reset();
-		goto END;
-	}
-
-	// In the file, the language information is an int stored into a "unicode" string.
-	ss << std::hex << current_structure->Key;
-	ss >> language;
-	res->Language = nt::translate_to_flag((language >> 16) & 0xFFFF, nt::LANG_IDS);
-
-	bytes_read = ftell(f) - bytes_read;
-	bytes_remaining = current_structure->Length - bytes_read;
-	// Read the StringTable
-	while (bytes_remaining > 0)
-	{
-		bytes_read = ftell(f);
-		if (!parse_version_info_header(*current_structure, f))
-		{
-			res.reset();
-			goto END;
-		}
-		std::string value = utils::read_unicode_string(f);
-		bytes_read = ftell(f) - bytes_read;
-		bytes_remaining -= bytes_read;
-
-		// Add the key/value to our internal representation
-		ppair p = ppair(new std::pair<std::string, std::string>(current_structure->Key, value));
-		res->StringTable.push_back(p);
-
-		// The next structure is 4byte aligned.
-		padding = ftell(f) % 4;
-		if (padding)
-		{
-			fseek(f, padding, SEEK_CUR);
-			// The last padding doesn't seem to be included in the length given by the structure.
-			// So if there are no more remaining bytes, don't stop here. (Otherwise, integer underflow.)
-			if (padding < bytes_remaining) {
-				bytes_remaining -= padding;
-			}
-			else {
-				bytes_remaining = 0;
-			}
-		}
-	}
-
-	/* TODO ?
-	   Theoretically, there is a VarFileInfo (with translation information) structure afterwards. 
-	   In practice, I find it irrelevant to my interests, and supporting it would increase the 
-	   complexity of the version_info structure. If you *absolutely* need this for some reason, 
-	   let me know.       
-	*/
-
-	END:
-	fclose(f);
 	return res;
 }
 
@@ -587,7 +469,7 @@ bool PE::extract_resources(const std::string& destination_folder)
 			// Copy the image bytes.
 			data.insert(data.end(), bmp->data.begin(), bmp->data.end());
 		}
-		else if ((*it)->get_type() == "RT_ICON" || (*it)->get_type() == "RT_CURSOR" || (*it)->get_type() == "RT_VERSION") {
+		else if ((*it)->get_type() == "RT_ICON" || (*it)->get_type() == "RT_CURSOR") {
 			// Ignore the following resource types: we don't want to extract them.
 			continue;
 		}
@@ -654,6 +536,13 @@ bool PE::extract_resources(const std::string& destination_folder)
 		fclose(f);
 	}
 	return true;
+}
+
+// ----------------------------------------------------------------------------
+
+yara::matches Resource::detect_filetype()
+{
+	return _yara->scan_bytes(get_raw_data());
 }
 
 } // !namespace sg
