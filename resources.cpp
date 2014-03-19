@@ -190,12 +190,13 @@ std::vector<boost::uint8_t> Resource::get_raw_data()
 	std::vector<boost::uint8_t> res = std::vector<boost::uint8_t>();
 	
 	FILE* f = _reach_data();
+	unsigned int read_bytes;
 	if (f == NULL) {
 		goto END;
 	}
 	
 	res.resize(_size);
-	unsigned int read_bytes = fread(&res[0], 1, _size, f);
+	read_bytes = fread(&res[0], 1, _size, f);
 	if (read_bytes != _size) { // We got less bytes than expected: reduce the vector's size.
 		res.resize(read_bytes);
 	}
@@ -509,7 +510,16 @@ bool PE::extract_resources(const std::string& destination_folder)
 			else {
 				ss << (*it)->get_id();
 			}
-			ss << "_" << (*it)->get_type() << ".raw";
+
+			// Try to guess the file extension
+			yara::matches m = (*it)->detect_filetype();
+			if (m.size() > 0) {
+				ss << "_" << (*it)->get_type() << m[0]->at("extension");
+			}
+			else {
+				ss << "_" << (*it)->get_type() << ".raw";
+			}
+			
 			data = (*it)->get_raw_data();
 		}
 
@@ -542,7 +552,14 @@ bool PE::extract_resources(const std::string& destination_folder)
 
 yara::matches Resource::detect_filetype()
 {
-	return _yara->scan_bytes(get_raw_data());
+	if (_yara->load_rules("resources/magic.yara")) 
+	{
+		std::vector<boost::uint8_t> bytes =get_raw_data();
+		return _yara->scan_bytes(bytes);
+	}
+	else {
+		return yara::matches();
+	}
 }
 
 } // !namespace sg

@@ -24,6 +24,10 @@ Yara::~Yara()
 
 bool Yara::load_rules(const std::string& rule_filename)
 {
+	if (_current_rules == rule_filename) {
+		return true;
+	}
+
 	bool res = false;
 	int retval = yr_rules_load(rule_filename.c_str(), &_rules);
 	if (retval != ERROR_SUCCESS && retval != ERROR_INVALID_FILE)
@@ -50,6 +54,7 @@ bool Yara::load_rules(const std::string& rule_filename)
 			goto END;
 		}
 		res = true;
+		_current_rules = rule_filename;
 		END:
 		if (rule_file != NULL) {
 			fclose(rule_file);
@@ -63,9 +68,11 @@ bool Yara::load_rules(const std::string& rule_filename)
 matches Yara::scan_bytes(std::vector<boost::uint8_t>& bytes)
 {
 	matches res;
-	if (_rules == NULL)
+	if (_rules == NULL || bytes.size() == 0)
 	{
-		std::cerr << "Error: No Yara rules loaded!" << std::endl;
+		if (_rules == NULL) {
+			std::cerr << "Error: No Yara rules loaded!" << std::endl;
+		}
 		return res;
 	}
 
@@ -73,7 +80,7 @@ matches Yara::scan_bytes(std::vector<boost::uint8_t>& bytes)
 	yr_rules_scan_mem(_rules,
 		&bytes[0],			  // The bytes to scan
 		bytes.size(),			  // Number of bytes
-		yara_callback,
+		get_match_metadata,
 		&res,					  // The vector to fill
 		FALSE,                  // We don't want a fast scan.
 		0);                     // No timeout)
@@ -83,18 +90,28 @@ matches Yara::scan_bytes(std::vector<boost::uint8_t>& bytes)
 
 // ----------------------------------------------------------------------------
 
-int yara_callback(int message, YR_RULE* rule, void* data)
+int get_match_metadata(int message, YR_RULE* rule, void* data)
 {
 	matches* target = NULL;
+	YR_META* meta = NULL;
+	pmatch m;
+
 	switch (message)
 	{
-	case CALLBACK_MSG_RULE_MATCHING:
-		target = (matches*)data; // I know what I'm doing.
-		std::cout << "PEiD Signature: " << rule->identifier << std::endl;
-		return CALLBACK_CONTINUE;
+		case CALLBACK_MSG_RULE_MATCHING:
+			target = (matches*)data; // I know what I'm doing.
+			meta = rule->metas;
+			m = pmatch(new match);
+			while (!META_IS_NULL(meta))
+			{
+				m->operator[](std::string(meta->identifier)) = meta->string;
+				++meta;
+			}
+			target->push_back(m);
+			return CALLBACK_CONTINUE;
 
-	case CALLBACK_MSG_RULE_NOT_MATCHING:
-		return CALLBACK_CONTINUE;
+		case CALLBACK_MSG_RULE_NOT_MATCHING:
+			return CALLBACK_CONTINUE;
 	}
 	return CALLBACK_ERROR;
 }

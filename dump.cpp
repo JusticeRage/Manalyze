@@ -244,7 +244,13 @@ void PE::dump_resources(std::ostream& sink) const
 		sink << "\tType:\t\t" << (*it)->get_type() << std::endl;
 		sink << "\tLanguage:\t" << (*it)->get_language() << std::endl;
 		sink << "\tSize:\t\t0x" << std::hex << (*it)->get_size() << std::endl;
-		(*it)->detect_filetype();
+		yara::matches m = (*it)->detect_filetype();
+		if (m.size() > 0) 
+		{
+			for (yara::matches::iterator it = m.begin() ; it != m.end() ; ++it) {
+				sink <<	"\tDetected Type:\t" << (*it)->at("description") << std::endl;
+			}
+		}
 	}
 	sink << std::endl;
 }

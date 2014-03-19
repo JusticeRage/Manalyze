@@ -23,14 +23,25 @@
 #include <string>
 #include <list>
 #include <vector>
+#include <map>
 #include <yara/yara.h>
 #include <boost/shared_ptr.hpp>
 #include <boost/cstdint.hpp>
 
 namespace yara {
 
-int yara_callback(int message, YR_RULE* rule, void* data);
-typedef std::vector<std::pair<std::string, std::string> > matches;
+/**
+ *	@brief	A callback used when yara iterates through its signatures.
+ *
+ *	Using Yara metadata allows me to return more expressive results than simple, alphanumeric rule names.
+ *
+ *	@param	void* data	A pointer to a pmatch object which will be filled with the matching rules' metadata.
+ */
+int get_match_metadata(int message, YR_RULE* rule, void* data);
+
+typedef std::map<std::string, std::string> match;
+typedef boost::shared_ptr<std::map<std::string, std::string> > pmatch;
+typedef std::vector<pmatch> matches;
 
 class Yara
 {
@@ -39,6 +50,7 @@ public:
 	{
 		_compiler = NULL;
 		_rules = NULL;
+		_current_rules = "";
 
 		if (_instance_count == 0) {
 			yr_initialize();
@@ -47,13 +59,31 @@ public:
 
 	virtual ~Yara();
 
+	/**
+	 *	@brief	Loads rules inside a Yara engine.
+	 *
+	 *	Scanning will not work before rules have been loaded.
+	 *
+	 *	@param	const std::string& rule_filename The file containing the rules.
+	 *
+	 *	@return	Whether the rules were loaded successfully.
+	 */
 	bool load_rules(const std::string& rule_filename);
 
+	/**
+	 *	@brief	Tries to match a given input with the currently loaded Yara rules.
+	 *
+	 *	@param	std::vector<boost::uint8_t>& bytes The bytes to scan.
+	 *
+	 *	@return	A map containing the rule's metadata for all matching signatures.
+	 */
 	matches scan_bytes(std::vector<boost::uint8_t>& bytes);
 
 private:
 	YR_COMPILER*	_compiler;
 	YR_RULES*		_rules;
+
+	std::string		_current_rules;
 
 	static int _instance_count;
 };

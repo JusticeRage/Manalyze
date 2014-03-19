@@ -84,7 +84,7 @@ public:
 		else 
 		{
 			std::stringstream ss;
-			ss << "#" << _id;
+			ss << _id;
 			return ss.str();
 		}
 	}

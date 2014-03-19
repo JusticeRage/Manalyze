@@ -423,18 +423,6 @@ rule RAR_file
     condition:
         $a at 0
 }
-rule SYS_file 
-{
-    meta:
-        extension = ".sys"
-        description = "SYS file"
-
-    strings:
-        $a = { 4D 5A }
-
-    condition:
-        $a at 0
-}
 rule Help_file 
 {
     meta:
@@ -1070,7 +1058,7 @@ rule Executable_file
 {
     meta:
         extension = ".exe"
-        description = "Executable file"
+        description = "PE Executable"
 
     condition:
 		uint16(0) == 0x5A4D and
