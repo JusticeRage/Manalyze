@@ -45,10 +45,25 @@ int main(int argc, char** argv)
 	pe.dump_imports();
 	pe.dump_exports();
 	pe.dump_resources();
+	pe.dump_version_info();
 
 	pe.extract_resources("extracted_resources");
 
-	//modules::peid_signature(pe);
+
+	yara::Yara y = yara::Yara();
+	if (y.load_rules("resources/peid.yara"))
+	{
+		yara::matches m = y.scan_file(pe.get_path());
+		if (m.size() > 0) {
+			std::cout << "PEiD Signature:" << std::endl << "---------------" << std::endl;
+		}
+		for (yara::matches::iterator it = m.begin() ; it != m.end() ; ++it) {
+			std::cout << "\t" << (*it)->operator[]("packer_name") << std::endl;
+		}
+	}
+    else {
+        std::cerr << "[!] Warning: Could not load PEiD signatures!" << std::endl;
+    }
 
 	return 0;
 }

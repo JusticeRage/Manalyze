@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+#include <sstream>
 #include <iostream>
 #include <string.h>
 
@@ -45,6 +46,17 @@ std::string read_ascii_string(FILE* f);
 
 /**
  *	@brief	Reads a unicode string prefixed by its length in a file.
+ *
+ *	/!\ The file cursor will be updated accordingly!
+ *
+ *	@param	FILE* f The file from which to read. The read will occur at the cursor's current position!
+ *
+ *	@return	The string at the current location in the file, converted to ASCII.
+ */
+std::string read_prefixed_unicode_string(FILE* f);
+
+/**
+ *	@brief	Reads a (double-)null-terminated unicode string.
  *
  *	/!\ The file cursor will be updated accordingly!
  *
@@ -89,6 +101,16 @@ bool is_address_in_section(unsigned int rva, sg::pimage_section_header section, 
  *	@return	A pointer to the section containing the input address. NULL if no sections match.
  */
 sg::pimage_section_header find_section(unsigned int rva, const std::vector<sg::pimage_section_header>& section_list);
+
+/**
+ *	@brief	Converts a uint64 into a version number structured like X.X.X.X.
+ *
+ *	@param	boost::uint32_t msbytes The most significant bytes of the version number.
+ *	@param	boost::uint32_t lsbytes The least significant bytes of the version number.
+ *
+ *	@return	A string containing the "translated" version number.
+ */
+std::string uint64_to_version_number(boost::uint32_t msbytes, boost::uint32_t lsbytes);
 
 }
 

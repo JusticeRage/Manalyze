@@ -104,6 +104,7 @@ public:
 	void dump_imports(std::ostream& sink = std::cout) const;
 	void dump_exports(std::ostream& sink = std::cout) const;
 	void dump_resources(std::ostream& sink = std::cout) const;
+	void dump_version_info(std::ostream& sink = std::cout) const;
 
 	std::vector<pResource> get_resources() const { return _resource_table; }
 

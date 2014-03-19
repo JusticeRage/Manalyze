@@ -55,6 +55,7 @@ public:
 		if (_instance_count == 0) {
 			yr_initialize();
 		}
+		++_instance_count;
 	}
 
 	virtual ~Yara();
@@ -78,6 +79,15 @@ public:
 	 *	@return	A map containing the rule's metadata for all matching signatures.
 	 */
 	matches scan_bytes(std::vector<boost::uint8_t>& bytes);
+
+	/**
+	 *	@brief	Tries to match an input file with the currently loaded Yara rules.
+	 *
+	 *	@param	const std::string& path The path to the file to scan..
+	 *
+	 *	@return	A map containing the rule's metadata for all matching signatures.
+	 */
+	matches scan_file(const std::string& path);
 
 private:
 	YR_COMPILER*	_compiler;

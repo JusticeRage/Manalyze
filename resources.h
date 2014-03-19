@@ -156,6 +156,16 @@ typedef boost::shared_ptr<Resource> pResource;
  */
 std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, const std::vector<pResource>& resources);
 
+/**
+ *	@brief	Parses a VERSION_INFO_HEADER, which is not a standard structure but does come up a lot.
+ *
+ *	@param	vs_version_info_header& header The structure to fill.
+ *	@param	FILE* f An opened file to read from. The cursor has to be set to the right offset and will
+ *			be updated.
+ *
+ *	@return	Whether the structure was read successfully.
+ */
+bool parse_version_info_header(vs_version_info_header& header, FILE* f);
 
 } // !namespace sg
 
