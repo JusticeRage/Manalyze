@@ -283,6 +283,39 @@ typedef struct vs_version_info_t
 } version_info;
 typedef boost::shared_ptr<vs_version_info_t> pversion_info;
 
+
+// Non-standard enum. No information regarding underlying structures is kept.
+// If you need a more complete parsing here, let me know.
+typedef struct debug_directory_entry_t
+{
+	boost::uint32_t	Characteristics;
+	boost::uint32_t	TimeDateStamp;
+	boost::uint16_t	MajorVersion;
+	boost::uint16_t	MinorVersion;
+	boost::uint32_t	Type;
+	boost::uint32_t	SizeofData;
+	boost::uint32_t	AddressOfRawData;
+	boost::uint32_t	PointerToRawData;
+	std::string		Filename; // Non-standard!
+} debug_directory_entry;
+typedef boost::shared_ptr<debug_directory_entry> pdebug_directory_entry;
+
+typedef struct pdb_info_t
+{
+	boost::uint32_t	Signature;
+	boost::uint8_t	Guid[16];
+	boost::uint32_t	Age;
+	std::string		PdbFileName;
+} pdb_info;
+
+typedef struct image_debug_misc_t {
+	boost::uint32_t	DataType;
+	boost::uint32_t	Length;
+	boost::uint8_t	Unicode;
+	boost::uint8_t	Reserved[3];
+	std::string		DbgFile;
+} image_debug_misc;
+
 } // !namespace sg
 
 #endif // !_PE_STRUCTS_H_

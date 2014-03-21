@@ -39,10 +39,11 @@ namespace utils
  *	/!\ The file cursor will be updated accordingly!
  *
  *	@param	FILE* f The file from which to read. The read will occur at the cursor's current position!
+ *	@param	int max_bytes The maximum number of bytes to read from the file. 0 means no limit.
  *
  *	@return	The ASCII string at the current location in the file.
  */
-std::string read_ascii_string(FILE* f);
+std::string read_ascii_string(FILE* f, unsigned int max_bytes = 0);
 
 /**
  *	@brief	Reads a unicode string prefixed by its length in a file.
@@ -61,10 +62,12 @@ std::string read_prefixed_unicode_string(FILE* f);
  *	/!\ The file cursor will be updated accordingly!
  *
  *	@param	FILE* f The file from which to read. The read will occur at the cursor's current position!
+ *	@param	int max_bytes The maximum number of bytes to read from the file. 0 means no limit.
+ *			If this parameter is odd, it will be rounded to max_bytes-1 since bytes are read two by two.
  *
  *	@return	The string at the current location in the file, converted to ASCII.
  */
-std::string read_unicode_string(FILE* f);
+std::string read_unicode_string(FILE* f, unsigned int max_bytes = 0);
 
 /**
  *	@brief	Reads a null-terminated ASCII string in a file at a given offset.

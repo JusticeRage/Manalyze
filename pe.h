@@ -105,6 +105,7 @@ public:
 	void dump_exports(std::ostream& sink = std::cout) const;
 	void dump_resources(std::ostream& sink = std::cout) const;
 	void dump_version_info(std::ostream& sink = std::cout) const;
+	void dump_debug_info(std::ostream& sink = std::cout) const;
 
 	std::vector<pResource> get_resources() const { return _resource_table; }
 
@@ -127,6 +128,15 @@ public:
 	 *	Implementation is located in resources.cpp.
 	 */
 	bool extract_resources(const std::string& destination_folder);
+
+	/**
+	 *	@brief	Tells whether the PE could be parsed.
+	 *
+	 *	@return	True if the PE was parsed successfully (i.e. is valid), false otherwise.
+	 */
+	bool is_valid()	const {
+		return _initialized;
+	}
 
 private:
 	/**
@@ -185,6 +195,16 @@ private:
 	 *	Implemented in resources.cpp
 	 */
 	bool _parse_resources(FILE* f);
+
+	/**
+	 *	@brief	Parses the debug information of a PE.
+	 *
+	 *	Included in the _parse_directories call.
+	 *	/!\ This relies on the information gathered in _parse_pe_header.
+	 *
+	 *	Implemented in resources.cpp
+	 */
+	bool _parse_debug(FILE* f);
 
 	/**
 	 *	@brief	Translates a Relative Virtual Address into an offset in the file.
@@ -249,6 +269,7 @@ private:
 	image_export_directory					_ied;
 	std::vector<pexported_function>			_exports;
 	std::vector<pResource>					_resource_table;
+	std::vector<pdebug_directory_entry>		_debug_entries;
 };
 
 

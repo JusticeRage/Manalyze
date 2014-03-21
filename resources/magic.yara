@@ -186,18 +186,6 @@ rule MP3_file_with_ID3_identity_tag
     condition:
         $a at 0
 }
-rule AVI_video_file 
-{
-    meta:
-        extension = ".avi"
-        description = "AVI video file"
-
-    strings:
-        $a = { 52 49 46 46 }
-
-    condition:
-        $a at 0
-}
 rule Flash_Shockwave 
 {
     meta:

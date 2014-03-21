@@ -19,7 +19,7 @@
 
 namespace utils {
 
-std::string read_ascii_string(FILE* f)
+std::string read_ascii_string(FILE* f, unsigned int max_bytes)
 {
 	std::string s = std::string();
 	char c = 0;
@@ -29,13 +29,20 @@ std::string read_ascii_string(FILE* f)
 			break;
 		}
 		s += c;
+		if (max_bytes != 0) // Already 0 if no limit.
+		{
+			--max_bytes;
+			if (!max_bytes) { // <= Just in case someone thin
+				break;
+			}
+		}
 	}
 	return s;
 }
 
 // ----------------------------------------------------------------------------
 
-std::string read_unicode_string(FILE* f)
+std::string read_unicode_string(FILE* f, unsigned int max_bytes)
 {
 	std::wstring s = std::wstring();
 	wchar_t c = 0;
@@ -45,6 +52,13 @@ std::string read_unicode_string(FILE* f)
 			break;
 		}
 		s += c;
+		if (max_bytes != 0) // Already 0 if no limit.
+		{
+			max_bytes -= 2;
+			if (max_bytes <= 1) {
+				break;
+			}
+		}
 	}
 
 	// Convert the wstring into a string

@@ -285,6 +285,20 @@ static flag_dict FIXEDFILEINFO_FILESUBTYPE_FONT =
 							   ("VFT2_FONT_VECTOR",				0x00000002)
 							   ("VFT2_FONT_TRUETYPE",			0x00000003);
 
+static flag_dict DEBUG_TYPES =
+	boost::assign::map_list_of ("IMAGE_DEBUG_TYPE_UNKNOWN",			0)
+							   ("IMAGE_DEBUG_TYPE_COFF",			1)
+							   ("IMAGE_DEBUG_TYPE_CODEVIEW",		2)
+							   ("IMAGE_DEBUG_TYPE_FPO",				3)
+							   ("IMAGE_DEBUG_TYPE_MISC",			4)
+							   ("IMAGE_DEBUG_TYPE_EXCEPTION",		5)
+							   ("IMAGE_DEBUG_TYPE_FIXUP",			6)
+							   ("IMAGE_DEBUG_TYPE_OMAP_TO_SRC",		7)
+							   ("IMAGE_DEBUG_TYPE_OMAP_FROM_SRC",	8)
+							   ("IMAGE_DEBUG_TYPE_BORLAND",			9)
+							   ("IMAGE_DEBUG_TYPE_RESERVED",		10)
+							   ("IMAGE_DEBUG_TYPE_CLSID",			11);
+
 
 
 

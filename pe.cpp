@@ -306,7 +306,7 @@ bool PE::_reach_directory(FILE* f, int directory) const
 
 bool PE::_parse_directories(FILE* f)
 {
-	return _parse_imports(f) && _parse_exports(f) && _parse_resources(f);
+	return _parse_imports(f) && _parse_exports(f) && _parse_resources(f) && _parse_debug(f);
 }
 
 // ----------------------------------------------------------------------------

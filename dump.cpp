@@ -308,5 +308,31 @@ void PE::dump_version_info(std::ostream& sink) const
 	}
 }
 
+// ----------------------------------------------------------------------------
+
+void PE::dump_debug_info(std::ostream& sink) const
+{
+	if (!_initialized || _debug_entries.size() == 0) {
+		return;
+	}
+
+	sink << "DEBUG INFO:" << std::endl << "-----------" << std::endl;
+	for (std::vector<pdebug_directory_entry>::const_iterator it = _debug_entries.begin() ; it != _debug_entries.end() ; ++it) 
+	{
+		std::cout << std::endl;
+		std::cout << "\tCharacteristics:\t" << (*it)->Characteristics << std::endl;
+		std::cout << "\tTimeDateStamp:\t\t" << (*it)->TimeDateStamp << std::endl;
+		std::cout << "\tVersion:\t\t" << (*it)->MajorVersion << "." << (*it)->MinorVersion << std::endl;
+		std::cout << "\tType:\t\t\t" << nt::translate_to_flag((*it)->Type, nt::DEBUG_TYPES) << std::endl;
+		std::cout << "\tSizeofData:\t\t" << (*it)->SizeofData << std::endl;
+		std::cout << "\tAddressOfRawData:\t" << (*it)->AddressOfRawData << std::endl;
+		std::cout << "\tPointerToRawData:\t" << (*it)->PointerToRawData << std::endl;
+		if ((*it)->Filename != "") {
+			std::cout << "\tReferenced File:\t" << (*it)->Filename << std::endl;
+		}
+	}
+	std::cout << std::endl;
+}
+
 
 } // !namespace sg

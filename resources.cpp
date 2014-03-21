@@ -185,6 +185,76 @@ bool PE::_parse_resources(FILE* f)
 
 // ----------------------------------------------------------------------------
 
+bool PE::_parse_debug(FILE* f)
+{
+	if (!_reach_directory(f, IMAGE_DIRECTORY_ENTRY_DEBUG))	{ // No debug information.
+		return true;
+	}
+
+	unsigned int size = 6*sizeof(boost::uint32_t) + 2*sizeof(boost::uint16_t);
+	unsigned int number_of_entries = _ioh.directories[IMAGE_DIRECTORY_ENTRY_DEBUG].Size / size;
+
+	for (int i = 0 ; i < number_of_entries ; ++i)
+	{
+		pdebug_directory_entry debug = pdebug_directory_entry(new debug_directory_entry);
+		memset(debug.get(), 0, size);
+		if (size != fread(debug.get(), 1, size, f))
+		{
+			std::cerr << "[!] Error: Could not read the DEBUG_DIRECTORY_ENTRY" << std::endl;
+			return false;
+		}
+
+		// VC++ Debug information
+		if (debug->Type == nt::DEBUG_TYPES["IMAGE_DEBUG_TYPE_CODEVIEW"])
+		{
+			pdb_info pdb;
+			unsigned int pdb_size = 2*sizeof(boost::uint32_t) + 16*sizeof(boost::uint8_t);
+			memset(&pdb, 0, pdb_size);
+
+			unsigned int saved_offset = ftell(f);
+			fseek(f, debug->PointerToRawData, SEEK_SET);
+			if (pdb_size != fread(&pdb, 1, pdb_size, f) || pdb.Signature != 0x53445352) // Signature: "RSDS"
+			{
+				std::cerr << "[!] Error: Could not read PDB file information." << std::endl;
+				return false;
+			}
+			pdb.PdbFileName = utils::read_ascii_string(f); // Not optimal, but it'll help if I decide to 
+														   // further parse these debug sub-structures.
+			debug->Filename = pdb.PdbFileName;
+			fseek(f, saved_offset, SEEK_SET);
+		}
+		else if (debug->Type == nt::DEBUG_TYPES["IMAGE_DEBUG_TYPE_MISC"])
+		{
+			image_debug_misc misc;
+			unsigned int misc_size = 2*sizeof(boost::uint32_t) + 4*sizeof(boost::uint8_t);
+			memset(&misc, 1, misc_size);
+			unsigned int saved_offset = ftell(f);
+			fseek(f, debug->PointerToRawData, SEEK_SET);
+			if (misc_size != fread(&misc, 1, misc_size, f))
+			{
+				std::cerr << "[!] Error: Could not read DBG file information" << std::endl;
+				return false;
+			}
+			switch (misc.Unicode)
+			{
+				case 1:
+					misc.DbgFile = utils::read_unicode_string(f, misc.Length - misc_size);
+					break;
+				case 0:
+					misc.DbgFile = utils::read_ascii_string(f, misc.Length - misc_size);
+					break;
+			}
+			debug->Filename = misc.DbgFile;
+			fseek(f, saved_offset, SEEK_SET);
+		}
+		_debug_entries.push_back(debug);
+	}
+
+	return true;
+}
+
+// ----------------------------------------------------------------------------
+
 std::vector<boost::uint8_t> Resource::get_raw_data()
 {
 	std::vector<boost::uint8_t> res = std::vector<boost::uint8_t>();
