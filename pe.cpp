@@ -251,8 +251,13 @@ bool PE::_parse_section_table(FILE* f)
 
 // ----------------------------------------------------------------------------
 
-unsigned int PE::_rva_to_offset(boost::uint32_t rva) const
+unsigned int PE::_rva_to_offset(boost::uint64_t rva) const
 {
+	// Special case: PE with no sections
+	if (_section_table.size() == 0) {
+		return rva;
+	}
+
 	// Find the corresponding section.
 	pimage_section_header section = pimage_section_header();
 	for (std::vector<pimage_section_header>::const_iterator it = _section_table.begin() ; it != _section_table.end() ; ++it)
@@ -278,7 +283,16 @@ unsigned int PE::_rva_to_offset(boost::uint32_t rva) const
 
 		return 0; // No section matches the RVA.
 	}
-	return rva - section->VirtualAddress + section->PointerToRawData;
+
+	// Assume that the offset in the file can be stored inside an unsigned integer.
+	// PEs whose size is bigger than 4 Go may not be parsed properly.
+	return (rva - section->VirtualAddress + section->PointerToRawData) & 0xFFFFFFFF;
+}
+
+// ----------------------------------------------------------------------------
+
+unsigned int PE::_va_to_offset(boost::uint64_t va) const {
+	return va > _ioh.ImageBase ? _rva_to_offset(va - _ioh.ImageBase) : 0;
 }
 
 // ----------------------------------------------------------------------------
@@ -289,11 +303,18 @@ bool PE::_reach_directory(FILE* f, int directory) const
 		return false;
 	}
 
-	if (_ioh.directories[directory].Size == 0)
-	{
+	if (_ioh.directories[directory].VirtualAddress == 0 && _ioh.directories[directory].Size == 0) {
 		return false; // Requested directory is empty.
 	}
-	unsigned int offset = _rva_to_offset(_ioh.directories[directory].VirtualAddress);
+	else if (_ioh.directories[directory].Size == 0) { // Weird, but continue anyway.
+		std::cerr << "[!] Warning: directory " << directory << " has a size of 0! This PE may have been manually crafted!" << std::endl;
+	}
+	else if (_ioh.directories[directory].VirtualAddress == 0)
+	{
+		std::cerr << "[!] Error: directory " << directory << " has a RVA of 0 but a non-null size." << std::endl;
+		return false;
+	}
+	unsigned int offset = _rva_to_offset(_ioh.directories[directory].VirtualAddress); // TODO: Alignment may cause problems here.
 	if (!offset || fseek(f, offset, SEEK_SET))
 	{
 		std::cerr << "[!] Error: Could not reach the requested directory (offset=0x" << std::hex << offset << ")." << std::endl;
@@ -306,7 +327,12 @@ bool PE::_reach_directory(FILE* f, int directory) const
 
 bool PE::_parse_directories(FILE* f)
 {
-	return _parse_imports(f) && _parse_exports(f) && _parse_resources(f) && _parse_debug(f);
+	return _parse_imports(f) && 
+		   _parse_exports(f) && 
+		   _parse_resources(f) && 
+		   _parse_debug(f) && 
+		   _parse_relocations(f) &&
+		   _parse_tls(f);
 }
 
 // ----------------------------------------------------------------------------
@@ -515,6 +541,93 @@ bool PE::_parse_exports(FILE* f)
 		}
 	}
 
+	return true;
+}
+
+// ----------------------------------------------------------------------------
+
+bool PE::_parse_relocations(FILE* f)
+{
+	if (!_reach_directory(f, IMAGE_DIRECTORY_ENTRY_BASERELOC))	{ // No relocation table
+		return true;
+	}
+
+	unsigned int remaining_size = _ioh.directories[IMAGE_DIRECTORY_ENTRY_BASERELOC].Size;
+	unsigned int header_size =  2*sizeof(boost::uint32_t);
+	while (remaining_size > 0)
+	{
+		pimage_base_relocation reloc = pimage_base_relocation(new image_base_relocation);
+		memset(reloc.get(), 0, header_size);
+		if (header_size != fread(reloc.get(), 1, header_size, f) || reloc->BlockSize > remaining_size)
+		{
+			std::cerr << "[!] Error: Could not read an IMAGE_BASE_RELOCATION!" << std::endl;
+			return false;
+		}
+
+		// The remaining fields are an array of shorts. The number is deduced from the block size.
+		for (unsigned int i = 0 ; i < (reloc->BlockSize - header_size) / sizeof(boost::uint16_t) ; ++i)
+		{
+			boost::uint16_t type_or_offset = 0;
+			if (sizeof(boost::uint16_t) != fread(&type_or_offset, 1, sizeof(boost::uint16_t), f))
+			{
+				std::cerr << "[!] Error: Could not read an IMAGE_BASE_RELOCATION's TypeOrOffset!" << std::endl;
+				return false;
+			}
+			reloc->TypesOffsets.push_back(type_or_offset);
+		}
+
+		_relocations.push_back(reloc);
+		remaining_size -= reloc->BlockSize;
+	}
+	return true;
+}
+
+// ----------------------------------------------------------------------------
+
+bool PE::_parse_tls(FILE* f)
+{
+	if (!_reach_directory(f, IMAGE_DIRECTORY_ENTRY_TLS))	{ // No TLS callbacks
+		return true;
+	}
+
+	unsigned int size = 4*sizeof(boost::uint64_t) + 2*sizeof(boost::uint32_t);
+	memset(&_tls, 0, size);
+
+	if (_ioh.Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC["PE32+"]) {
+		fread(&_tls, 1, size, f);
+	}
+	else
+	{
+		fread(&_tls.StartAddressOfRawData, 1, sizeof(boost::uint32_t), f);
+		fread(&_tls.EndAddressOfRawData, 1, sizeof(boost::uint32_t), f);
+		fread(&_tls.AddressOfIndex, 1, sizeof(boost::uint32_t), f);
+		fread(&_tls.AddressOfCallbacks, 1, sizeof(boost::uint32_t), f);
+		fread(&_tls.SizeOfZeroFill, 1, 2*sizeof(boost::uint32_t), f);
+	}
+
+	if (feof(f) || ferror(f))
+	{
+		std::cerr << "[!] Error: Could not read the IMAGE_TLS_DIRECTORY." << std::endl;
+		return false;
+	}
+
+	// Go to the offset table
+	unsigned int offset = _va_to_offset(_tls.AddressOfCallbacks);
+	if (!offset || fseek(f, offset, SEEK_SET))
+	{
+		std::cerr << "[!] Error: Could not reach the TLS callback table." << std::endl;
+		return false;
+	}
+
+	boost::uint64_t callback_address = 0;
+	unsigned int callback_size = _ioh.Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC["PE32+"] ? sizeof(boost::uint64_t) : sizeof(boost::uint32_t);
+	while (true) // break on null callback
+	{
+		if (callback_size != fread(&callback_address, 1, callback_size, f) || !callback_address) { // Exit condition.
+			break;
+		}
+		_tls.Callbacks.push_back(callback_address);
+	}
 	return true;
 }
 

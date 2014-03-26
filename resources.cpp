@@ -154,6 +154,18 @@ bool PE::_parse_resources(FILE* f)
 				}
 
 				offset = _rva_to_offset(entry.OffsetToData);
+				if (!offset) 
+				{
+					std::cerr << "[!] Warning: Could not locate the section containing resource ";
+					if (id) {
+						std::cerr << id;
+					}
+					else {
+						std::cerr << name;
+					}
+					std::cerr << "! Trying to use the RVA as an offset..." << std::endl;
+					offset = entry.OffsetToData;
+				}
 				pResource res;
 				if (name != "")
 				{
@@ -194,7 +206,7 @@ bool PE::_parse_debug(FILE* f)
 	unsigned int size = 6*sizeof(boost::uint32_t) + 2*sizeof(boost::uint16_t);
 	unsigned int number_of_entries = _ioh.directories[IMAGE_DIRECTORY_ENTRY_DEBUG].Size / size;
 
-	for (int i = 0 ; i < number_of_entries ; ++i)
+	for (unsigned int i = 0 ; i < number_of_entries ; ++i)
 	{
 		pdebug_directory_entry debug = pdebug_directory_entry(new debug_directory_entry);
 		memset(debug.get(), 0, size);

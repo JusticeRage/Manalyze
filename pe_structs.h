@@ -308,13 +308,33 @@ typedef struct pdb_info_t
 	std::string		PdbFileName;
 } pdb_info;
 
-typedef struct image_debug_misc_t {
+typedef struct image_base_relocation_t
+{
+	boost::uint32_t					PageRVA;
+	boost::uint32_t					BlockSize;
+	std::vector<boost::uint16_t>	TypesOffsets; // Non-standard!
+} image_base_relocation;
+typedef boost::shared_ptr<image_base_relocation_t> pimage_base_relocation;
+
+typedef struct image_debug_misc_t 
+{
 	boost::uint32_t	DataType;
 	boost::uint32_t	Length;
 	boost::uint8_t	Unicode;
 	boost::uint8_t	Reserved[3];
 	std::string		DbgFile;
 } image_debug_misc;
+
+typedef struct image_tls_directory_t
+{
+	boost::uint64_t					StartAddressOfRawData;
+	boost::uint64_t					EndAddressOfRawData;
+	boost::uint64_t					AddressOfIndex;
+	boost::uint64_t					AddressOfCallbacks;
+	boost::uint32_t					SizeOfZeroFill;
+	boost::uint32_t					Characteristics;
+	std::vector<boost::uint64_t>	Callbacks;	// Non-standard!
+} image_tls_directory;
 
 } // !namespace sg
 

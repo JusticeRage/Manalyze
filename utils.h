@@ -93,7 +93,7 @@ bool read_string_at_offset(FILE* f, unsigned int offset, std::string& out, bool 
  *
  *	@return	Whether the RVA is between the bounds of the section.
  */
-bool is_address_in_section(unsigned int rva, sg::pimage_section_header section, bool check_raw_size = false);
+bool is_address_in_section(boost::uint64_t rva, sg::pimage_section_header section, bool check_raw_size = false);
 
 /**
  *	@brief	Finds the section containing a given RVA.

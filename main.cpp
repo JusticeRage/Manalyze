@@ -34,6 +34,9 @@ int main(int argc, char** argv)
 	std::cout << "*************************************** [ SGStatic ] ***" << std::endl;
 
 	sg::PE pe(argv[1]);
+    if (!pe.is_valid()) {
+        return 1;
+    }
 
 	std::cout << "Input file: " << pe.get_path() << std::endl;
 	std::cout << "File size: " << pe.get_filesize() << std::endl << std::endl;
@@ -46,11 +49,14 @@ int main(int argc, char** argv)
 	pe.dump_exports();
 	pe.dump_resources();
 	pe.dump_version_info();
+	pe.dump_debug_info();
+	//pe.dump_relocations(); //  - very verbose for DLLs
+	pe.dump_tls();
 
 	pe.extract_resources("extracted_resources");
 
 
-	yara::Yara y = yara::Yara();
+	/*yara::Yara y = yara::Yara();
 	if (y.load_rules("resources/peid.yara"))
 	{
 		yara::matches m = y.scan_file(pe.get_path());
@@ -63,7 +69,7 @@ int main(int argc, char** argv)
 	}
     else {
         std::cerr << "[!] Warning: Could not load PEiD signatures!" << std::endl;
-    }
+    }*/
 
 	return 0;
 }

@@ -127,7 +127,7 @@ std::string uint64_to_version_number(boost::uint32_t msbytes, boost::uint32_t ls
 
 // ----------------------------------------------------------------------------
 
-bool is_address_in_section(unsigned int rva, sg::pimage_section_header section, bool check_raw_size)
+bool is_address_in_section(boost::uint64_t rva, sg::pimage_section_header section, bool check_raw_size)
 {
 	if (!check_raw_size) {
 		return section->VirtualAddress <= rva && rva < section->VirtualAddress + section->VirtualSize;

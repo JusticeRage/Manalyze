@@ -232,6 +232,7 @@ void PE::dump_exports(std::ostream& sink) const
 		}
 		sink << std::endl;
 	}
+	sink << std::endl;
 }
 
 // ----------------------------------------------------------------------------
@@ -319,19 +320,76 @@ void PE::dump_debug_info(std::ostream& sink) const
 	sink << "DEBUG INFO:" << std::endl << "-----------" << std::endl;
 	for (std::vector<pdebug_directory_entry>::const_iterator it = _debug_entries.begin() ; it != _debug_entries.end() ; ++it) 
 	{
-		std::cout << std::endl;
-		std::cout << "\tCharacteristics:\t" << (*it)->Characteristics << std::endl;
-		std::cout << "\tTimeDateStamp:\t\t" << (*it)->TimeDateStamp << std::endl;
-		std::cout << "\tVersion:\t\t" << (*it)->MajorVersion << "." << (*it)->MinorVersion << std::endl;
-		std::cout << "\tType:\t\t\t" << nt::translate_to_flag((*it)->Type, nt::DEBUG_TYPES) << std::endl;
-		std::cout << "\tSizeofData:\t\t" << (*it)->SizeofData << std::endl;
-		std::cout << "\tAddressOfRawData:\t" << (*it)->AddressOfRawData << std::endl;
-		std::cout << "\tPointerToRawData:\t" << (*it)->PointerToRawData << std::endl;
+		sink << std::endl;
+		sink << "\tCharacteristics:\t" << (*it)->Characteristics << std::endl;
+		sink << "\tTimeDateStamp:\t\t" << (*it)->TimeDateStamp << std::endl;
+		sink << "\tVersion:\t\t" << (*it)->MajorVersion << "." << (*it)->MinorVersion << std::endl;
+		sink << "\tType:\t\t\t" << nt::translate_to_flag((*it)->Type, nt::DEBUG_TYPES) << std::endl;
+		sink << "\tSizeofData:\t\t" << (*it)->SizeofData << std::endl;
+		sink << "\tAddressOfRawData:\t" << (*it)->AddressOfRawData << std::endl;
+		sink << "\tPointerToRawData:\t" << (*it)->PointerToRawData << std::endl;
 		if ((*it)->Filename != "") {
-			std::cout << "\tReferenced File:\t" << (*it)->Filename << std::endl;
+			sink << "\tReferenced File:\t" << (*it)->Filename << std::endl;
 		}
 	}
-	std::cout << std::endl;
+	sink << std::endl;
+}
+
+// ----------------------------------------------------------------------------
+
+void PE::dump_relocations(std::ostream& sink) const
+{
+	if (!_initialized || _relocations.size() == 0) {
+		return;
+	}
+
+	sink << "RELOCATIONS:" << std::endl << "------------" << std::endl;
+	for (std::vector<pimage_base_relocation>::const_iterator it = _relocations.begin() ; it != _relocations.end() ; ++it)
+	{
+		sink << std::endl;
+		sink << "PageRVA:\t" << (*it)->PageRVA << std::endl;
+		sink << "BlockSize:\t" << (*it)->BlockSize << std::endl;
+		sink << "TypesOffsets:\t";
+		for (std::vector<boost::uint16_t>::const_iterator it2 = (*it)->TypesOffsets.begin() ;  it2 != (*it)->TypesOffsets.end() ; ++it2)
+		{
+			if (it2 != (*it)->TypesOffsets.begin()) {
+				sink << std::endl << "\t\t";
+			}
+			sink << nt::translate_to_flag((*it2 & 0xF000) >> 12, nt::BASE_RELOCATION_TYPES) << " - " << (*it2 & 0x0FFF);
+		}
+		sink << std::endl;
+	}
+	sink << std::endl;
+}
+
+// ----------------------------------------------------------------------------
+
+void PE::dump_tls(std::ostream& sink) const
+{
+	if (!_initialized || _tls.Callbacks.size() == 0) {
+		return;
+	}
+
+	int width = _ioh.Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC["PE32+"] ? 16 : 8;
+
+	sink << "TLS Callbacks:" << std::endl << "--------------" << std::endl;
+	sink << "StartAddressOfRawData:\t" << _tls.StartAddressOfRawData << std::endl;
+	sink << "EndAddressOfRawData:\t" << _tls.EndAddressOfRawData << std::endl;
+	sink << "AddressOfIndex:\t\t" << _tls.AddressOfIndex << std::endl;
+	sink << "AddressOfCallbacks:\t" << _tls.AddressOfCallbacks << std::endl;
+	sink << "SizeOfZeroFill:\t\t" << _tls.SizeOfZeroFill << std::endl;
+	sink << "Characteristics:\t" << _tls.Characteristics << std::endl;
+	sink << "Callbacks:\t\t" << std::hex;
+	for (std::vector<boost::uint64_t>::const_iterator it = _tls.Callbacks.begin() ; it != _tls.Callbacks.end() ; ++it)
+	{
+		if (it == _tls.Callbacks.begin()) {
+			sink << "0x" << *it << std::endl;
+		}
+		else {
+			sink << "\t\t\t0x" << *it << std::endl;
+		}
+	}
+	sink << std::endl;
 }
 
 
