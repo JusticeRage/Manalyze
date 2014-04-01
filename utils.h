@@ -27,6 +27,7 @@
 
 #include <boost/cstdint.hpp>
 #include <boost/shared_array.hpp>
+#include <boost/date_time.hpp>
 
 #include "pe_structs.h"
 
@@ -114,6 +115,15 @@ sg::pimage_section_header find_section(unsigned int rva, const std::vector<sg::p
  *	@return	A string containing the "translated" version number.
  */
 std::string uint64_to_version_number(boost::uint32_t msbytes, boost::uint32_t lsbytes);
+
+/**
+ *	@brief	Converts a POSIX timestamp into a human-readable string.
+ *
+ *	@param	uint32_t epoch_timestamp The timestamp to convert.
+ *
+ *	@return	A human readable string representing the given timestamp.
+ */
+std::string timestamp_to_string(boost::uint32_t epoch_timestamp);
 
 }
 

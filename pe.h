@@ -25,6 +25,7 @@
 #include <algorithm>
 #include <string>
 #include <vector>
+#include <set>
 
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
@@ -108,6 +109,8 @@ public:
 	void dump_debug_info(std::ostream& sink = std::cout) const;
 	void dump_relocations(std::ostream& sink = std::cout) const;
 	void dump_tls(std::ostream& sink = std::cout) const;
+	void dump_certificates(std::ostream& sink = std::cout) const;
+	void dump_summary(std::ostream& sink = std::cout) const;
 
 	std::vector<pResource> get_resources() const { return _resource_table; }
 
@@ -225,6 +228,14 @@ private:
 	bool _parse_debug(FILE* f);
 
 	/**
+	 *	@brief	Parses the certificate information (Authenticode) of a PE.
+	 *
+	 *	Included in the _parse_directories call.
+	 *	/!\ This relies on the information gathered in _parse_pe_header.
+	 */
+	bool _parse_authenticode(FILE* f);
+
+	/**
 	 *	@brief	Translates a Relative Virtual Address into an offset in the file.
 	 *
 	 *	@param	boost::uint32_t rva The RVA to translate
@@ -299,6 +310,7 @@ private:
 	std::vector<pdebug_directory_entry>		_debug_entries;
 	std::vector<pimage_base_relocation>		_relocations;
 	image_tls_directory						_tls;
+	std::vector<pwin_certificate>			_certificates;
 };
 
 

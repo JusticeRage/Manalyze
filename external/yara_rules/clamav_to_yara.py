@@ -10,9 +10,9 @@ Created by Matthew Richard on 2010-03-12.
 Copyright (c) 2010 __MyCompanyName__. All rights reserved.
 
 Updated by JusticeRage in 03/2014: additional checking for malformed signatures and added metadata.
+                          04/2014: BUGFIX: some cheks were only relevant at the entrypoint.
 """
 
-import sys
 import os
 import re
 from optparse import OptionParser
@@ -31,13 +31,13 @@ def main():
 
     (opts, args) = parser.parse_args()
 
-    if opts.filename == None:
+    if opts.filename is None:
         parser.print_help()
         parser.error("You must supply a filename!")
     if not os.path.isfile(opts.filename):
         parser.error("%s does not exist" % opts.filename)
 
-    if opts.outfile == None:
+    if opts.outfile is None:
         parser.print_help()
         parser.error("You must specify an output filename!")
 
@@ -97,7 +97,7 @@ rule %s
 
             # if the rule doesn't exist, create a dict entry
             if rulename not in rules:
-                rules[rulename] = [name]
+                rules[rulename] = [name, offset]
 
             # handle the ClamAV style jumps
             # {-n} is n or less bytes
@@ -176,11 +176,35 @@ rule %s
         detects = ''
         conds = "\t"
         x = 0
-        for detect in rules[rule][1:]:
+        for detect in rules[rule][2:]:
             detects += "\t$a%d = { %s }\r\n" % (x, detect)
             if x > 0:
                 conds += " and "
             conds += "$a%d" % (x)
+
+            # BUGFIX: Handle extended conditions
+            if rules[rule][1].startswith("EP"):
+
+                if "+" in rules[rule][1]:
+                    sign = "+"
+                elif "-" in rules[rule][1]:
+                    sign = "-"
+
+                extended_condition = rules[rule][1].split(sign)[1]
+                if "," in extended_condition:
+                    conds += " in (entrypoint%s%d..entrypoint%s%d)" \
+                             % (sign, int(extended_condition.split(",")[0]), sign, int(extended_condition.split(",")[1]))
+                else:
+                    conds += " at entrypoint %s %d" % (sign, int(extended_condition))
+
+            elif rules[rule][1].startswith("EOF"):
+                conds += " at filesize - %d" % int(rules[rule][1].split("-")[1])
+            elif rules[rule][1] != "*": # Direct offset
+                try:
+                    conds += " at %d" % int(rules[rule][1])
+                except ValueError:
+                    print "[!] Warning: Unhandled extended condition: %s" % rules[rule][1]
+
             x += 1
         if detects == '':
             if opts.verbose:
@@ -195,7 +219,7 @@ rule %s
         fout.write(output)
         fout.close()
     else:
-        print "\r\n**Could not find any signatures to convert!!!**\r\n"
+        print "\r\n**Could not find any signatures to convert!**\r\n"
 
 
 if __name__ == '__main__':

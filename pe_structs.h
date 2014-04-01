@@ -336,6 +336,15 @@ typedef struct image_tls_directory_t
 	std::vector<boost::uint64_t>	Callbacks;	// Non-standard!
 } image_tls_directory;
 
+typedef struct win_certificate_t
+{
+	boost::uint32_t				Length;
+	boost::uint16_t				Revision;
+	boost::uint16_t				CertificateType;
+	std::vector<boost::uint8_t>	Certificate;
+} win_certificate;
+typedef boost::shared_ptr<win_certificate> pwin_certificate;
+
 } // !namespace sg
 
 #endif // !_PE_STRUCTS_H_

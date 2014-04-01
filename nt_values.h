@@ -309,7 +309,15 @@ static flag_dict BASE_RELOCATION_TYPES =
 							   ("IMAGE_REL_BASED_IA64_IMM64",		9)
 							   ("IMAGE_REL_BASED_DIR64",			10);
 
+static flag_dict WIN_CERTIFICATE_REVISIONS =
+	boost::assign::map_list_of ("WIN_CERT_REVISION_1_0",			0x100)
+							   ("WIN_CERT_REVISION_2_0",			0x200);
 
+static flag_dict WIN_CERTIFICATE_TYPES =
+	boost::assign::map_list_of ("WIN_CERT_TYPE_X509",				1)
+							   ("WIN_CERT_TYPE_PKCS_SIGNED_DATA",	2)
+							   ("WIN_CERT_TYPE_RESERVED",			3)
+							   ("WIN_CERT_TYPE_PKCS1_SIGN",			4);
 
 /**
  *	@brief	Breaks down an integer given as input as a combination of flags.

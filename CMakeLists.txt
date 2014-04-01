@@ -5,7 +5,7 @@ project (sgstatic)
 set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)  
 set(Boost_USE_STATIC_RUNTIME ON)
-find_package(Boost REQUIRED COMPONENTS regex system filesystem)
+find_package(Boost REQUIRED COMPONENTS regex system filesystem program_options)
 
 include_directories(
 						${PROJECT_SOURCE_DIR}/external

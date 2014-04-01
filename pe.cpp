@@ -255,7 +255,7 @@ unsigned int PE::_rva_to_offset(boost::uint64_t rva) const
 {
 	// Special case: PE with no sections
 	if (_section_table.size() == 0) {
-		return rva;
+		return rva & 0xFFFFFFFF; // If the file is bigger than 4Go, this assumption may not be true.
 	}
 
 	// Find the corresponding section.
@@ -332,7 +332,8 @@ bool PE::_parse_directories(FILE* f)
 		   _parse_resources(f) && 
 		   _parse_debug(f) && 
 		   _parse_relocations(f) &&
-		   _parse_tls(f);
+		   _parse_tls(f) &&
+		   _parse_authenticode(f);
 }
 
 // ----------------------------------------------------------------------------
@@ -628,6 +629,49 @@ bool PE::_parse_tls(FILE* f)
 		}
 		_tls.Callbacks.push_back(callback_address);
 	}
+	return true;
+}
+
+// ----------------------------------------------------------------------------
+
+bool PE::_parse_authenticode(FILE* f)
+{
+	if (!_ioh.directories[IMAGE_DIRECTORY_ENTRY_SECURITY].VirtualAddress ||		// In this case, "VirtualAddress" is actually a file offset.
+		fseek(f, _ioh.directories[IMAGE_DIRECTORY_ENTRY_SECURITY].VirtualAddress, SEEK_SET))	{
+		return true;	// Unsigned binary
+	}
+
+	unsigned int remaining_bytes = _ioh.directories[IMAGE_DIRECTORY_ENTRY_SECURITY].Size;
+	unsigned int header_size = sizeof(boost::uint32_t) + 2*sizeof(boost::uint16_t);
+	while (remaining_bytes > header_size)
+	{
+		pwin_certificate cert = pwin_certificate(new win_certificate);
+		memset(cert.get(), 0, header_size);
+		if (header_size != fread(cert.get(), 1, header_size, f)) 
+		{
+			std::cerr << "[!] Error: Could not read a WIN_CERTIFICATE's header." << std::endl;
+			return false;
+		}
+
+		cert->Certificate.resize(cert->Length);
+		if (cert->Length < remaining_bytes || 
+			cert->Length - header_size != fread(&(cert->Certificate[0]), 1, cert->Length - header_size, f))
+		{
+			std::cerr << "[!] Error: Could not read a WIN_CERTIFICATE's data." << std::endl;
+			return false;
+		}
+		remaining_bytes -= cert->Length;
+		_certificates.push_back(cert);
+
+		// The certificates start on 8-byte aligned addresses
+		unsigned int padding = cert->Length % 8;
+		if (padding && remaining_bytes)
+		{
+			fseek(f, padding, SEEK_CUR);
+			remaining_bytes -= padding;
+		}
+	}
+
 	return true;
 }
 

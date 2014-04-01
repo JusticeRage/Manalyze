@@ -167,4 +167,15 @@ sg::pimage_section_header find_section(unsigned int rva, const std::vector<sg::p
 	return res;
 }
 
+// ----------------------------------------------------------------------------
+
+std::string timestamp_to_string(boost::uint32_t epoch_timestamp)
+{
+	static std::locale loc(std::cout.getloc(), new boost::posix_time::time_facet("%Y-%b-%d %H:%M:%S%F %z"));
+	std::stringstream ss;
+	ss.imbue(loc);
+	ss << boost::posix_time::from_time_t(epoch_timestamp);
+	return ss.str();
+}
+
 }

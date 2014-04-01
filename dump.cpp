@@ -94,7 +94,7 @@ void PE::dump_pe_header(std::ostream& sink) const
 	sink << "Signature\t\t" << _h_pe.Signature << std::endl;
 	sink << "Machine\t\t\t" << nt::translate_to_flag(_h_pe.Machine, nt::MACHINE_TYPES) << std::endl;
 	sink << "NumberofSections\t" << _h_pe.NumberofSections << std::endl;
-	sink << "TimeDateStamp\t\t" << _h_pe.TimeDateStamp << std::endl;
+	sink << "TimeDateStamp\t\t" << utils::timestamp_to_string(_h_pe.TimeDateStamp) << std::endl;
 	sink << "PointerToSymbolTable\t" << _h_pe.PointerToSymbolTable << std::endl;
 	sink << "NumberOfSymbols\t\t" << _h_pe.NumberOfSymbols << std::endl;
 	sink << "SizeOfOptionalHeader\t" << _h_pe.SizeOfOptionalHeader << std::endl;
@@ -322,7 +322,7 @@ void PE::dump_debug_info(std::ostream& sink) const
 	{
 		sink << std::endl;
 		sink << "\tCharacteristics:\t" << (*it)->Characteristics << std::endl;
-		sink << "\tTimeDateStamp:\t\t" << (*it)->TimeDateStamp << std::endl;
+		sink << "\tTimeDateStamp:\t\t" << utils::timestamp_to_string((*it)->TimeDateStamp) << std::endl;
 		sink << "\tVersion:\t\t" << (*it)->MajorVersion << "." << (*it)->MinorVersion << std::endl;
 		sink << "\tType:\t\t\t" << nt::translate_to_flag((*it)->Type, nt::DEBUG_TYPES) << std::endl;
 		sink << "\tSizeofData:\t\t" << (*it)->SizeofData << std::endl;
@@ -392,5 +392,92 @@ void PE::dump_tls(std::ostream& sink) const
 	sink << std::endl;
 }
 
+// ----------------------------------------------------------------------------
+
+void PE::dump_certificates(std::ostream& sink) const
+{
+	if (!_initialized || _certificates.size() == 0) {
+		return;
+	}
+
+	sink << "CERTIFICATES:" << std::endl << "-------------" << std::endl;
+	for (std::vector<pwin_certificate>::const_iterator it = _certificates.begin() ; it != _certificates.end() ; ++it)
+	{
+		sink << std::endl;
+		sink << "Length\t\t" << std::hex << (*it)->Length << std::endl;
+		sink << "Revision\t" << nt::translate_to_flag((*it)->Revision, nt::WIN_CERTIFICATE_REVISIONS) << std::endl;
+		sink << "CertificateType\t" << nt::translate_to_flag((*it)->CertificateType, nt::WIN_CERTIFICATE_TYPES) << std::endl;
+	}
+
+	// WINDOWS: https://stackoverflow.com/questions/7241453/read-and-validate-certificate-from-executable/7282440#7282440
+	sink << std::endl;
+}
+
+// ----------------------------------------------------------------------------
+
+void PE::dump_summary(std::ostream& sink) const
+{
+	if (!_initialized) {
+		return;
+	}
+	
+	// Grab all detected languages
+	std::set<std::string> languages;
+	for (std::vector<sg::pResource>::const_iterator it = _resource_table.begin() ; it != _resource_table.end() ; ++it)
+	{
+		if ((*it)->get_type() == "RT_VERSION")
+		{
+			pversion_info vi = (*it)->interpret_as<sg::pversion_info>();
+			if (vi == NULL) {
+				continue;
+			}
+			if (vi->Language != "UNKNOWN") {
+				languages.insert(vi->Language); // Some language info is also present in the VERSION_INFO resource.
+			}
+		}
+
+		if ((*it)->get_language() != "UNKNOWN") {
+			languages.insert((*it)->get_language());
+		}
+	}
+
+	// Get PDB location if it is present
+	std::set<std::string> debug_files;
+	for (std::vector<pdebug_directory_entry>::const_iterator it = _debug_entries.begin() ; it != _debug_entries.end() ; ++it) 
+	{
+		if ((*it)->Filename != "") {
+			debug_files.insert((*it)->Filename);
+		}
+	}
+
+	sink << "Architecture:\t\t" << nt::translate_to_flag(_h_pe.Machine, nt::MACHINE_TYPES) << std::endl;
+	sink << "Subsystem:\t\t" << nt::translate_to_flag(_ioh.Subsystem, nt::SUBSYSTEMS) << std::endl;
+	sink << "Compilation Date:\t" << utils::timestamp_to_string(_h_pe.TimeDateStamp) << std::endl;
+	if (languages.size() > 0) 
+	{
+		sink << "Detected languages:\t";
+		for (std::set<std::string>::iterator it = languages.begin() ; it != languages.end() ; ++it)
+		{
+			if (it != languages.begin()) {
+				sink << "\t\t\t";
+			}
+			sink << *it << std::endl;
+		}
+	}
+
+	if (debug_files.size() > 0) 
+	{
+		sink << "Debug artifacts:\t";
+		for (std::set<std::string>::iterator it = debug_files.begin() ; it != debug_files.end() ; ++it)
+		{
+			if (it != debug_files.begin()) {
+				sink << "\t\t\t";
+			}
+			sink << *it << std::endl;
+		}
+	}
+
+	sink << std::endl;
+}
 
 } // !namespace sg
