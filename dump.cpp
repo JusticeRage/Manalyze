@@ -450,6 +450,7 @@ void PE::dump_summary(std::ostream& sink) const
 		}
 	}
 
+	sink << "File:\t\t\t" << _path << std::endl;
 	sink << "Architecture:\t\t" << nt::translate_to_flag(_h_pe.Machine, nt::MACHINE_TYPES) << std::endl;
 	sink << "Subsystem:\t\t" << nt::translate_to_flag(_ioh.Subsystem, nt::SUBSYSTEMS) << std::endl;
 	sink << "Compilation Date:\t" << utils::timestamp_to_string(_h_pe.TimeDateStamp) << std::endl;

@@ -23,6 +23,7 @@
 
 #include <boost/program_options.hpp>
 #include <boost/tokenizer.hpp>
+#include <boost/filesystem.hpp>
 
 #include "pe.h"
 #include "resources.h"
@@ -37,13 +38,16 @@ namespace po = boost::program_options;
  *	@param	po::variables_map& vm The destination for parsed arguments
  *	@param	int argc The number of arguments
  *	@param	char**argv The raw arguments
+ *
+ *	@return	Whether the arguments are valid.
  */
-void parse_args(po::variables_map& vm, int argc, char**argv)
+bool parse_args(po::variables_map& vm, int argc, char**argv)
 {
 	po::options_description desc("Usage");
 	desc.add_options()
 		("help,h", "Displays this message.")
-		("pe,p", po::value<std::string>(), "The PE to analyze. Also accepted as a positional argument.")
+		("pe,p", po::value<std::vector< std::string> >(), "The PE to analyze. Also accepted as a positional argument. "
+			"Multiple files may be specified.")
 		("recursive,r", "Scan all files in a directory (subdirectories will be ignored).")
 		("dump,d", po::value<std::vector<std::string> >(), 
 			"Dumps PE information. Available choices are any combination of: "
@@ -55,23 +59,37 @@ void parse_args(po::variables_map& vm, int argc, char**argv)
 
 
 	po::positional_options_description p;
-	p.add("pe", 1);
+	p.add("pe", -1);
 
 	try
 	{
 		po::store(po::command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
 		po::notify(vm);
 	}
-	catch(po::error& e)	{
+	catch(po::error& e)	
+	{
 		std::cerr << "[!] Error: Could not parse command line (" << e.what() << ")." << std::endl << std::endl;
+		return false;
 	}
 
 	if (vm.count("help") || !vm.count("pe")) 
 	{
 		std::cout << desc << std::endl;
 		// Examples
-		exit(1);
+		return false;
 	}
+
+	// Verify that all the input files exist.
+	std::vector<std::string> input_files = vm["pe"].as<std::vector<std::string> >();
+	for (std::vector<std::string>::iterator it = input_files.begin() ; it != input_files.end() ; ++it)
+	{
+		if (!boost::filesystem::exists(*it))
+		{
+			std::cerr << "[!] Error: " << *it << " not found!" << std::endl;
+			return false;
+		}
+	}
+	return true;
 }
 
 /**
@@ -123,6 +141,45 @@ void handle_dump_option(const std::vector<std::string>& categories, const sg::PE
 	}
 }
 
+/**
+ *	@brief	Returns all the input files of the application
+ *
+ *	When the recursive option is specified, this function returns all the files in 
+ *	the requested directory (or directories).
+ *
+ *	@param	po::variables_map& vm The (parsed) arguments of the application.
+ *
+ *	@return	A vector containing all the files to analyze.
+ */
+std::vector<std::string> get_input_files(po::variables_map& vm)
+{
+	std::vector<std::string> targets;
+	if (vm.count("recursive")) 
+	{
+		std::vector<std::string> input = vm["pe"].as<std::vector<std::string> >();
+		for (std::vector<std::string>::iterator it = input.begin() ; it != input.end() ; ++it)
+		{
+			if (!boost::filesystem::is_directory(*it)) {
+				targets.push_back(*it);
+			}
+			else
+			{
+				boost::filesystem::directory_iterator end;
+				for (boost::filesystem::directory_iterator dit(*it) ; dit != end ; ++dit)
+				{
+					if (!boost::filesystem::is_directory(*dit)) { // Ignore subdirectories
+						targets.push_back(dit->path().string());
+					}
+				}
+			}
+		}
+	}
+	else {
+		targets = vm["pe"].as<std::vector<std::string> >();
+	}
+	return targets;
+}
+
 int main(int argc, char** argv)
 {
 	std::cout << "* SGStatic 0.8 *" << std::endl << std::endl;
@@ -130,11 +187,9 @@ int main(int argc, char** argv)
 	yara::Yara y_peid;
 	yara::Yara y_clamav;
 
-	parse_args(vm, argc, argv);
-
-	// Recursive scan?
-
-	sg::PE pe(vm["pe"].as<std::string>());
+	if (!parse_args(vm, argc, argv)) {
+		return -1;
+	}
 
 	// Load Yara if required
 	if (vm.count("peid")) 
@@ -142,7 +197,7 @@ int main(int argc, char** argv)
 		if (!y_peid.load_rules("resources/peid.yara")) 
 		{
 			std::cerr << "[!] Error: Could not load PEiD signatures!" << std::endl;
-			exit(1);
+			return 1;
 		}
 	}
 	if (vm.count("clamav")) 
@@ -150,82 +205,96 @@ int main(int argc, char** argv)
 		if (!y_clamav.load_rules("resources/clamav.yara")) 
 		{
 			std::cerr << "[!] Error: Could not load ClamAV signatures!" << std::endl;
-			exit(1);
+			return 1;
 		}
 	}
-    
-	// Try to parse the PE
-	if (!pe.is_valid()) 
-	{
-		std::cerr << "[!] Error: Could not parse " << vm["pe"].as<std::string>() << "!" << std::endl;
-        yara::Yara y = yara::Yara();
-		// In case of failure, we try to detect the file type to inform the user.
-		// Maybe he made a mistake and specified a wrong file?
-		if (y.load_rules("resources/magic.yara"))
-		{
-			yara::matches m = y.scan_file(pe.get_path());
-			if (m.size() > 0) 
-			{
-				std::cerr << "Detected file type(s):" << std::endl;
-				for (yara::matches::iterator it = m.begin() ; it != m.end() ; ++it) {
-					std::cerr << "\t" << (*it)->operator[]("description") << std::endl;
-				}
-			}	
-		}
-		std::cerr << std::endl;
-		return -1;
-    }
 
-	if (vm.count("dump")) 
+	// Perform analysis on all the input files
+	std::vector<std::string> targets = get_input_files(vm);
+	for (std::vector<std::string>::iterator it = targets.begin() ; it != targets.end() ; ++it)
 	{
-		// Categories may be comma-separated, so we have to separate them.
-		std::vector<std::string> categories;
-		boost::char_separator<char> sep(",");
-		std::vector<std::string> dump_args = vm["dump"].as<std::vector<std::string> >();
-		for (std::vector<std::string>::iterator it = dump_args.begin() ; it != dump_args.end() ; ++it)
+		sg::PE pe(*it);
+		
+		// Try to parse the PE
+		if (!pe.is_valid()) 
 		{
-			boost::tokenizer<boost::char_separator<char> > tokens(*it, sep);
-			for (boost::tokenizer<boost::char_separator<char> >::iterator tok_iter = tokens.begin();
-				 tok_iter != tokens.end();
-				 ++tok_iter) 
+			std::cerr << "[!] Error: Could not parse " << *it << "!" << std::endl;
+			yara::Yara y = yara::Yara();
+			// In case of failure, we try to detect the file type to inform the user.
+			// Maybe he made a mistake and specified a wrong file?
+			if (boost::filesystem::exists(*it) && 
+				!boost::filesystem::is_directory(*it) && 
+				y.load_rules("resources/magic.yara"))
 			{
-				categories.push_back(*tok_iter);
+				yara::matches m = y.scan_file(pe.get_path());
+				if (m.size() > 0) 
+				{
+					std::cerr << "Detected file type(s):" << std::endl;
+					for (yara::matches::iterator it = m.begin() ; it != m.end() ; ++it) {
+						std::cerr << "\t" << (*it)->operator[]("description") << std::endl;
+					}
+				}	
 			}
+			std::cerr << std::endl;
+			continue;
 		}
 
-		handle_dump_option(categories, pe);
-	}
-	else // No specific info required. Display the summary of the PE.
-	{
-		pe.dump_summary();
-	}
+		if (vm.count("dump")) 
+		{
+			// Categories may be comma-separated, so we have to separate them.
+			std::vector<std::string> categories;
+			boost::char_separator<char> sep(",");
+			std::vector<std::string> dump_args = vm["dump"].as<std::vector<std::string> >();
+			for (std::vector<std::string>::iterator it = dump_args.begin() ; it != dump_args.end() ; ++it)
+			{
+				boost::tokenizer<boost::char_separator<char> > tokens(*it, sep);
+				for (boost::tokenizer<boost::char_separator<char> >::iterator tok_iter = tokens.begin();
+					 tok_iter != tokens.end();
+					 ++tok_iter) 
+				{
+					categories.push_back(*tok_iter);
+				}
+			}
+
+			handle_dump_option(categories, pe);
+		}
+		else { // No specific info required. Display the summary of the PE.
+			pe.dump_summary();
+		}
 
 	
-	if (vm.count("extract")) {
-		pe.extract_resources(vm["extract"].as<std::string>());
-	}
+		if (vm.count("extract")) { // Extract resources if requested
+			pe.extract_resources(vm["extract"].as<std::string>());
+		}
 
-	if (vm.count("peid")) 
-	{
-		yara::matches m = y_peid.scan_file(pe.get_path());
-		if (m.size() > 0) 
+		if (vm.count("peid")) 
 		{
-			std::cout << "PEiD Signature:" << std::endl;
-			for (yara::matches::iterator it = m.begin() ; it != m.end() ; ++it) {
-				std::cout << "\t" << (*it)->operator[]("packer_name") << std::endl;
+			yara::matches m = y_peid.scan_file(pe.get_path());
+			if (m.size() > 0) 
+			{
+				std::cout << "PEiD Signature:" << std::endl;
+				for (yara::matches::iterator it = m.begin() ; it != m.end() ; ++it) {
+					std::cout << "\t" << (*it)->operator[]("packer_name") << std::endl;
+				}
+				std::cout << std::endl;
 			}
 		}
-	}
 
-	if (vm.count("clamav")) 
-	{
-		yara::matches m = y_clamav.scan_file(pe.get_path());
-		if (m.size() > 0) 
+		if (vm.count("clamav")) 
 		{
-			std::cout << "ClamAV Signature:" << std::endl;
-			for (yara::matches::iterator it = m.begin() ; it != m.end() ; ++it) {
-				std::cout << "\t" << (*it)->operator[]("signature") << std::endl;
+			yara::matches m = y_clamav.scan_file(pe.get_path());
+			if (m.size() > 0) 
+			{
+				std::cout << "ClamAV Signature:" << std::endl;
+				for (yara::matches::iterator it = m.begin() ; it != m.end() ; ++it) {
+					std::cout << "\t" << (*it)->operator[]("signature") << std::endl;
+				}
 			}
+			std::cout << std::endl;
+		}
+
+		if (it != targets.end() - 1) {
+			std::cout << "--------------------------------------------------------------------------------" << std::endl << std::endl;
 		}
 	}
 

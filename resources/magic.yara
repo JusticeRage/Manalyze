@@ -298,7 +298,7 @@ rule GZip
 {
     meta:
         extension = ".gz"
-        description = "GZip"
+        description = "GZip Compressed Archive"
 
     strings:
         $a = { 1F 8B 08 }
@@ -412,18 +412,6 @@ rule Microsoft_C___debugging_symbols_file
 
     strings:
         $a = { 4D 69 63 72 6F 73 6F 66 74 20 43 2F 43 2B 2B 20 }
-
-    condition:
-        $a at 0
-}
-rule RAR_file 
-{
-    meta:
-        extension = ".rar"
-        description = "RAR file"
-
-    strings:
-        $a = { 52 61 72 21 1A 07 00 }
 
     condition:
         $a at 0
@@ -1051,7 +1039,7 @@ rule Zip
 {
     meta:
         extension = ".zip"
-        description = "Zip"
+        description = "Zip Compressed Archive"
 
     strings:
         $a = { 50 4B 03 04 }
