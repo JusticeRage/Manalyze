@@ -21,11 +21,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+#include <sstream>
 #include <iostream>
 #include <string.h>
 
 #include <boost/cstdint.hpp>
 #include <boost/shared_array.hpp>
+#include <boost/date_time.hpp>
 
 #include "pe_structs.h"
 
@@ -38,10 +40,11 @@ namespace utils
  *	/!\ The file cursor will be updated accordingly!
  *
  *	@param	FILE* f The file from which to read. The read will occur at the cursor's current position!
+ *	@param	int max_bytes The maximum number of bytes to read from the file. 0 means no limit.
  *
  *	@return	The ASCII string at the current location in the file.
  */
-std::string read_ascii_string(FILE* f);
+std::string read_ascii_string(FILE* f, unsigned int max_bytes = 0);
 
 /**
  *	@brief	Reads a unicode string prefixed by its length in a file.
@@ -52,7 +55,20 @@ std::string read_ascii_string(FILE* f);
  *
  *	@return	The string at the current location in the file, converted to ASCII.
  */
-std::string read_unicode_string(FILE* f);
+std::string read_prefixed_unicode_string(FILE* f);
+
+/**
+ *	@brief	Reads a (double-)null-terminated unicode string.
+ *
+ *	/!\ The file cursor will be updated accordingly!
+ *
+ *	@param	FILE* f The file from which to read. The read will occur at the cursor's current position!
+ *	@param	int max_bytes The maximum number of bytes to read from the file. 0 means no limit.
+ *			If this parameter is odd, it will be rounded to max_bytes-1 since bytes are read two by two.
+ *
+ *	@return	The string at the current location in the file, converted to ASCII.
+ */
+std::string read_unicode_string(FILE* f, unsigned int max_bytes = 0);
 
 /**
  *	@brief	Reads a null-terminated ASCII string in a file at a given offset.
@@ -78,7 +94,7 @@ bool read_string_at_offset(FILE* f, unsigned int offset, std::string& out, bool 
  *
  *	@return	Whether the RVA is between the bounds of the section.
  */
-bool is_address_in_section(unsigned int rva, sg::pimage_section_header section, bool check_raw_size = false);
+bool is_address_in_section(boost::uint64_t rva, sg::pimage_section_header section, bool check_raw_size = false);
 
 /**
  *	@brief	Finds the section containing a given RVA.
@@ -89,6 +105,25 @@ bool is_address_in_section(unsigned int rva, sg::pimage_section_header section, 
  *	@return	A pointer to the section containing the input address. NULL if no sections match.
  */
 sg::pimage_section_header find_section(unsigned int rva, const std::vector<sg::pimage_section_header>& section_list);
+
+/**
+ *	@brief	Converts a uint64 into a version number structured like X.X.X.X.
+ *
+ *	@param	boost::uint32_t msbytes The most significant bytes of the version number.
+ *	@param	boost::uint32_t lsbytes The least significant bytes of the version number.
+ *
+ *	@return	A string containing the "translated" version number.
+ */
+std::string uint64_to_version_number(boost::uint32_t msbytes, boost::uint32_t lsbytes);
+
+/**
+ *	@brief	Converts a POSIX timestamp into a human-readable string.
+ *
+ *	@param	uint32_t epoch_timestamp The timestamp to convert.
+ *
+ *	@return	A human readable string representing the given timestamp.
+ */
+std::string timestamp_to_string(boost::uint32_t epoch_timestamp);
 
 }
 

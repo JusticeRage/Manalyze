@@ -242,6 +242,109 @@ typedef struct bitmap_t
 #pragma pack (pop)
 typedef boost::shared_ptr<bitmap_t> pbitmap;
 
+typedef struct vs_fixed_file_info_t
+{
+	boost::uint32_t	Signature;
+	boost::uint32_t	StructVersion;
+	boost::uint32_t	FileVersionMS;
+	boost::uint32_t	FileVersionLS;
+	boost::uint32_t	ProductVersionMS;
+	boost::uint32_t	ProductVersionLS;
+	boost::uint32_t	FileFlagsMask;
+	boost::uint32_t	FileFlags;
+	boost::uint32_t	FileOs;
+	boost::uint32_t	FileType;
+	boost::uint32_t	FileSubtype;
+	boost::uint32_t	FileDateMS;
+	boost::uint32_t	FileDateLS;
+} fixed_file_info;
+typedef boost::shared_ptr<fixed_file_info> pfixed_file_info;
+
+
+// Non-standard enum. This sequence does return a lot, though, so it was
+// worth putting it in a separate structure.
+typedef struct vs_version_info_header_t
+{
+	boost::uint16_t		Length;
+	boost::uint16_t		ValueLength;
+	boost::uint16_t		Type;
+	std::string			Key;
+} vs_version_info_header;
+typedef boost::shared_ptr<vs_version_info_header> pvs_version_info_header;
+
+// Non-standard enum. The last two field have been added for convenience.
+typedef boost::shared_ptr<std::pair<std::string, std::string> > ppair;
+typedef struct vs_version_info_t
+{
+	vs_version_info_header	Header;
+	pfixed_file_info		Value;
+	std::string				Language;
+	std::vector<ppair>		StringTable;
+} version_info;
+typedef boost::shared_ptr<vs_version_info_t> pversion_info;
+
+
+// Non-standard enum. No information regarding underlying structures is kept.
+// If you need a more complete parsing here, let me know.
+typedef struct debug_directory_entry_t
+{
+	boost::uint32_t	Characteristics;
+	boost::uint32_t	TimeDateStamp;
+	boost::uint16_t	MajorVersion;
+	boost::uint16_t	MinorVersion;
+	boost::uint32_t	Type;
+	boost::uint32_t	SizeofData;
+	boost::uint32_t	AddressOfRawData;
+	boost::uint32_t	PointerToRawData;
+	std::string		Filename; // Non-standard!
+} debug_directory_entry;
+typedef boost::shared_ptr<debug_directory_entry> pdebug_directory_entry;
+
+typedef struct pdb_info_t
+{
+	boost::uint32_t	Signature;
+	boost::uint8_t	Guid[16];
+	boost::uint32_t	Age;
+	std::string		PdbFileName;
+} pdb_info;
+
+typedef struct image_base_relocation_t
+{
+	boost::uint32_t					PageRVA;
+	boost::uint32_t					BlockSize;
+	std::vector<boost::uint16_t>	TypesOffsets; // Non-standard!
+} image_base_relocation;
+typedef boost::shared_ptr<image_base_relocation_t> pimage_base_relocation;
+
+typedef struct image_debug_misc_t 
+{
+	boost::uint32_t	DataType;
+	boost::uint32_t	Length;
+	boost::uint8_t	Unicode;
+	boost::uint8_t	Reserved[3];
+	std::string		DbgFile;
+} image_debug_misc;
+
+typedef struct image_tls_directory_t
+{
+	boost::uint64_t					StartAddressOfRawData;
+	boost::uint64_t					EndAddressOfRawData;
+	boost::uint64_t					AddressOfIndex;
+	boost::uint64_t					AddressOfCallbacks;
+	boost::uint32_t					SizeOfZeroFill;
+	boost::uint32_t					Characteristics;
+	std::vector<boost::uint64_t>	Callbacks;	// Non-standard!
+} image_tls_directory;
+
+typedef struct win_certificate_t
+{
+	boost::uint32_t				Length;
+	boost::uint16_t				Revision;
+	boost::uint16_t				CertificateType;
+	std::vector<boost::uint8_t>	Certificate;
+} win_certificate;
+typedef boost::shared_ptr<win_certificate> pwin_certificate;
+
 } // !namespace sg
 
 #endif // !_PE_STRUCTS_H_

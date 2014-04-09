@@ -24,8 +24,12 @@
 
 namespace bfs = boost::filesystem;
 
+
 namespace sg 
 {
+
+// Initialize the Yara wrapper used by resource objects
+yara::pyara Resource::_yara = yara::pyara(new yara::Yara);
 
 bool PE::read_image_resource_directory(image_resource_directory& dir, FILE* f, unsigned int offset)
 {
@@ -34,7 +38,7 @@ bool PE::read_image_resource_directory(image_resource_directory& dir, FILE* f, u
 		offset = _rva_to_offset(_ioh.directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress) + offset;
 		if (!offset || fseek(f, offset, SEEK_SET))
 		{
-			std::cout << "[!] Error: Could not reach an IMAGE_RESOURCE_DIRECTORY." << std::endl;
+			std::cerr << "[!] Error: Could not reach an IMAGE_RESOURCE_DIRECTORY." << std::endl;
 			return false;
 		}
 	}
@@ -43,7 +47,7 @@ bool PE::read_image_resource_directory(image_resource_directory& dir, FILE* f, u
 	dir.Entries.clear();
 	if (size != fread(&dir, 1, size, f))
 	{
-		std::cout << "[!] Error: Could not read an IMAGE_RESOURCE_DIRECTORY." << std::endl;
+		std::cerr << "[!] Error: Could not read an IMAGE_RESOURCE_DIRECTORY." << std::endl;
 		return false;
 	}
 
@@ -54,7 +58,7 @@ bool PE::read_image_resource_directory(image_resource_directory& dir, FILE* f, u
 		memset(entry.get(), 0, size);
 		if (size != fread(entry.get(), 1, size, f))
 		{
-			std::cout << "[!] Error: Could not read an IMAGE_RESOURCE_DIRECTORY_ENTRY." << std::endl;
+			std::cerr << "[!] Error: Could not read an IMAGE_RESOURCE_DIRECTORY_ENTRY." << std::endl;
 			return false;
 		}
 
@@ -66,7 +70,7 @@ bool PE::read_image_resource_directory(image_resource_directory& dir, FILE* f, u
 				+ (entry->NameOrId & 0x7FFFFFFF);
 			if (!offset || !utils::read_string_at_offset(f, offset, entry->NameStr, true))
 			{
-				std::cout << "[!] Error: Could not read an IMAGE_RESOURCE_DIRECTORY_ENTRY's name." << std::endl;
+				std::cerr << "[!] Error: Could not read an IMAGE_RESOURCE_DIRECTORY_ENTRY's name." << std::endl;
 				return false;
 			}
 		}
@@ -109,13 +113,13 @@ bool PE::_parse_resources(FILE* f)
 				unsigned int offset = _rva_to_offset(_ioh.directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress + ((*it3)->OffsetToData & 0x7FFFFFFF));
 				if (!offset || fseek(f, offset, SEEK_SET))
 				{
-					std::cout << "[!] Error: Could not reach an IMAGE_RESOURCE_DATA_ENTRY." << std::endl;
+					std::cerr << "[!] Error: Could not reach an IMAGE_RESOURCE_DATA_ENTRY." << std::endl;
 					return false;
 				}
 
 				if (sizeof(image_resource_data_entry) != fread(&entry, 1, sizeof(image_resource_data_entry), f))
 				{
-					std::cout << "[!] Error: Could not read an IMAGE_RESOURCE_DATA_ENTRY." << std::endl;
+					std::cerr << "[!] Error: Could not read an IMAGE_RESOURCE_DATA_ENTRY." << std::endl;
 					return false;
 				}
 
@@ -150,6 +154,18 @@ bool PE::_parse_resources(FILE* f)
 				}
 
 				offset = _rva_to_offset(entry.OffsetToData);
+				if (!offset) 
+				{
+					std::cerr << "[!] Warning: Could not locate the section containing resource ";
+					if (id) {
+						std::cerr << id;
+					}
+					else {
+						std::cerr << name;
+					}
+					std::cerr << "! Trying to use the RVA as an offset..." << std::endl;
+					offset = entry.OffsetToData;
+				}
 				pResource res;
 				if (name != "")
 				{
@@ -181,17 +197,88 @@ bool PE::_parse_resources(FILE* f)
 
 // ----------------------------------------------------------------------------
 
+bool PE::_parse_debug(FILE* f)
+{
+	if (!_reach_directory(f, IMAGE_DIRECTORY_ENTRY_DEBUG))	{ // No debug information.
+		return true;
+	}
+
+	unsigned int size = 6*sizeof(boost::uint32_t) + 2*sizeof(boost::uint16_t);
+	unsigned int number_of_entries = _ioh.directories[IMAGE_DIRECTORY_ENTRY_DEBUG].Size / size;
+
+	for (unsigned int i = 0 ; i < number_of_entries ; ++i)
+	{
+		pdebug_directory_entry debug = pdebug_directory_entry(new debug_directory_entry);
+		memset(debug.get(), 0, size);
+		if (size != fread(debug.get(), 1, size, f))
+		{
+			std::cerr << "[!] Error: Could not read the DEBUG_DIRECTORY_ENTRY" << std::endl;
+			return false;
+		}
+
+		// VC++ Debug information
+		if (debug->Type == nt::DEBUG_TYPES["IMAGE_DEBUG_TYPE_CODEVIEW"])
+		{
+			pdb_info pdb;
+			unsigned int pdb_size = 2*sizeof(boost::uint32_t) + 16*sizeof(boost::uint8_t);
+			memset(&pdb, 0, pdb_size);
+
+			unsigned int saved_offset = ftell(f);
+			fseek(f, debug->PointerToRawData, SEEK_SET);
+			if (pdb_size != fread(&pdb, 1, pdb_size, f) || pdb.Signature != 0x53445352) // Signature: "RSDS"
+			{
+				std::cerr << "[!] Error: Could not read PDB file information." << std::endl;
+				return false;
+			}
+			pdb.PdbFileName = utils::read_ascii_string(f); // Not optimal, but it'll help if I decide to 
+														   // further parse these debug sub-structures.
+			debug->Filename = pdb.PdbFileName;
+			fseek(f, saved_offset, SEEK_SET);
+		}
+		else if (debug->Type == nt::DEBUG_TYPES["IMAGE_DEBUG_TYPE_MISC"])
+		{
+			image_debug_misc misc;
+			unsigned int misc_size = 2*sizeof(boost::uint32_t) + 4*sizeof(boost::uint8_t);
+			memset(&misc, 1, misc_size);
+			unsigned int saved_offset = ftell(f);
+			fseek(f, debug->PointerToRawData, SEEK_SET);
+			if (misc_size != fread(&misc, 1, misc_size, f))
+			{
+				std::cerr << "[!] Error: Could not read DBG file information" << std::endl;
+				return false;
+			}
+			switch (misc.Unicode)
+			{
+				case 1:
+					misc.DbgFile = utils::read_unicode_string(f, misc.Length - misc_size);
+					break;
+				case 0:
+					misc.DbgFile = utils::read_ascii_string(f, misc.Length - misc_size);
+					break;
+			}
+			debug->Filename = misc.DbgFile;
+			fseek(f, saved_offset, SEEK_SET);
+		}
+		_debug_entries.push_back(debug);
+	}
+
+	return true;
+}
+
+// ----------------------------------------------------------------------------
+
 std::vector<boost::uint8_t> Resource::get_raw_data()
 {
 	std::vector<boost::uint8_t> res = std::vector<boost::uint8_t>();
 	
 	FILE* f = _reach_data();
+	unsigned int read_bytes;
 	if (f == NULL) {
 		goto END;
 	}
 	
 	res.resize(_size);
-	unsigned int read_bytes = fread(&res[0], 1, _size, f);
+	read_bytes = fread(&res[0], 1, _size, f);
 	if (read_bytes != _size) { // We got less bytes than expected: reduce the vector's size.
 		res.resize(read_bytes);
 	}
@@ -201,6 +288,21 @@ std::vector<boost::uint8_t> Resource::get_raw_data()
 		fclose(f);
 	}
 	return res;
+}
+
+// ----------------------------------------------------------------------------
+
+bool parse_version_info_header(vs_version_info_header& header, FILE* f)
+{
+	memset(&header, 0, 3 * sizeof(boost::uint16_t));
+	if (3*sizeof(boost::uint16_t) != fread(&header, 1, 3*sizeof(boost::uint16_t), f))
+	{
+		std::cerr << "Error: Could not read a VS_VERSION_INFO header!" << std::endl;
+		return false;
+	}
+	header.Key = utils::read_unicode_string(f);
+	unsigned int padding = ftell(f) % 4; // Next structure is 4-bytes aligned
+	return !fseek(f, padding, SEEK_CUR);
 }
 
 // ----------------------------------------------------------------------------
@@ -232,7 +334,7 @@ std::vector<std::string> Resource::interpret_as()
 
 	// RT_STRING resources are made of 16 contiguous "unicode" strings.
 	for (int i = 0; i < 16; ++i) {
-		res.push_back(utils::read_unicode_string(f));
+		res.push_back(utils::read_prefixed_unicode_string(f));
 	}
 
 	END:
@@ -341,6 +443,115 @@ pgroup_icon_directory Resource::interpret_as()
 // ----------------------------------------------------------------------------
 
 template<>
+pversion_info Resource::interpret_as()
+{
+	if (_type != "RT_VERSION") {
+		return pversion_info();
+	}
+
+	FILE* f = _reach_data();
+	if (f == NULL) {
+		return pversion_info();
+	}
+
+	pversion_info res = pversion_info(new version_info);
+	unsigned int bytes_read; // Is calculated by calling ftell before and after reading a structure, and keeping the difference.
+	unsigned int bytes_remaining;
+	unsigned int padding;
+	unsigned int language;
+	std::stringstream ss;
+
+	// We are going to read a lot of structures which look like a version info header.
+	// They will all be read into this variable, one at a time.
+	pvs_version_info_header current_structure = pvs_version_info_header(new vs_version_info_header);
+	if (!parse_version_info_header(res->Header, f)) 
+	{
+		res.reset();
+		goto END;
+	}
+	res->Value = pfixed_file_info(new fixed_file_info);
+	memset(res->Value.get(), 0, sizeof(fixed_file_info));
+	if (sizeof(fixed_file_info) != fread(res->Value.get(), 1, sizeof(fixed_file_info), f) || res->Value->Signature != 0xfeef04bd)
+	{
+		std::cerr << "Error: Could not read a VS_FIXED_FILE_INFO!" << std::endl;
+		goto END;
+	}
+
+	if (!parse_version_info_header(*current_structure, f) || current_structure->Key != "StringFileInfo") 
+	{
+		if (current_structure->Key != "StringFileInfo") {
+			std::cerr << "Error: StringFileInfo expected, read " << current_structure->Key << " instead." << std::endl;
+		}
+		res.reset();
+		goto END;
+	}
+	// We don't need the contents of StringFileInfo. Replace them with the next structure.
+	bytes_read = ftell(f);
+	if (!parse_version_info_header(*current_structure, f)) 
+	{
+		res.reset();
+		goto END;
+	}
+
+	// In the file, the language information is an int stored into a "unicode" string.
+	ss << std::hex << current_structure->Key;
+	ss >> language;
+	res->Language = nt::translate_to_flag((language >> 16) & 0xFFFF, nt::LANG_IDS);
+
+	bytes_read = ftell(f) - bytes_read;
+	bytes_remaining = current_structure->Length - bytes_read;
+	// Read the StringTable
+	while (bytes_remaining > 0)
+	{
+		bytes_read = ftell(f);
+		if (!parse_version_info_header(*current_structure, f))
+		{
+			res.reset();
+			goto END;
+		}
+		std::string value;
+		// If the string is null, there won't even be a null terminator.
+		if (ftell(f) - bytes_read < current_structure->Length) {
+			value = utils::read_unicode_string(f);
+		}
+		bytes_read = ftell(f) - bytes_read;
+		bytes_remaining -= bytes_read;
+
+		// Add the key/value to our internal representation
+		ppair p = ppair(new std::pair<std::string, std::string>(current_structure->Key, value));
+		res->StringTable.push_back(p);
+
+		// The next structure is 4byte aligned.
+		padding = ftell(f) % 4;
+		if (padding)
+		{
+			fseek(f, padding, SEEK_CUR);
+			// The last padding doesn't seem to be included in the length given by the structure.
+			// So if there are no more remaining bytes, don't stop here. (Otherwise, integer underflow.)
+			if (padding < bytes_remaining) {
+				bytes_remaining -= padding;
+			}
+			else {
+				bytes_remaining = 0;
+			}
+		}
+	}
+
+	/* TODO ?
+	   Theoretically, there is a VarFileInfo (with translation information) structure afterwards. 
+	   In practice, I find it irrelevant to my interests, and supporting it would increase the 
+	   complexity of the version_info structure. If you *absolutely* need this for some reason, 
+	   let me know.       
+	*/
+
+	END:
+	fclose(f);
+	return res;
+}
+
+// ----------------------------------------------------------------------------
+
+template<>
 std::vector<boost::uint8_t> Resource::interpret_as() {
 	return get_raw_data();
 }
@@ -392,7 +603,7 @@ std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, co
 		}
 		if (icon == NULL)
 		{
-			std::cout << "Error: Could not locate RT_ICON with ID " << directory->Entries[i]->Id << "!" << std::endl;
+			std::cerr << "Error: Could not locate RT_ICON with ID " << directory->Entries[i]->Id << "!" << std::endl;
 			res.clear();
 			return res;
 		}
@@ -427,7 +638,7 @@ bool PE::extract_resources(const std::string& destination_folder)
 {
 	if (!bfs::exists(destination_folder) && !bfs::create_directory(destination_folder)) 
 	{
-		std::cout << "Error: Could not create directory " << destination_folder << "." << std::endl;
+		std::cerr << "Error: Could not create directory " << destination_folder << "." << std::endl;
 		return false;
 	}
 
@@ -455,7 +666,7 @@ bool PE::extract_resources(const std::string& destination_folder)
 			pbitmap bmp = (*it)->interpret_as<pbitmap>();
 			if (bmp == NULL)
 			{
-				std::cout << "Error: Bitmap " << (*it)->get_name() << " is malformed!" << std::endl;
+				std::cerr << "Error: Bitmap " << (*it)->get_name() << " is malformed!" << std::endl;
 				continue;
 			}
 
@@ -465,8 +676,35 @@ bool PE::extract_resources(const std::string& destination_folder)
 			// Copy the image bytes.
 			data.insert(data.end(), bmp->data.begin(), bmp->data.end());
 		}
-		else if ((*it)->get_type() == "RT_ICON" || (*it)->get_type() == "RT_CURSOR") {
+		else if ((*it)->get_type() == "RT_ICON" || (*it)->get_type() == "RT_CURSOR" || (*it)->get_type() == "RT_VERSION") {
 			// Ignore the following resource types: we don't want to extract them.
+			continue;
+		}
+		else if ((*it)->get_type() == "RT_STRING") 
+		{
+			// Append all the strings to the same file.
+			std::vector<std::string> strings = (*it)->interpret_as<std::vector<std::string> >();
+			if (strings.size() == 0) {
+				continue;
+			}
+
+			destination_file = bfs::path(destination_folder) / bfs::path(base + "_RT_STRINGs.txt");
+			FILE* f = fopen(destination_file.string().c_str(), "a+");
+			if (f == NULL) 
+			{
+				std::cerr << "Error: Could not open/create " << destination_file << "!" << std::endl;
+				continue;
+			}
+
+			for (std::vector<std::string>::iterator it = strings.begin(); it != strings.end(); ++it)
+			{
+				if ((*it) != "") 
+				{
+					fwrite(it->c_str(), 1, it->size(), f);
+					fputc('\n', f);
+				}
+			}
+			fclose(f);
 			continue;
 		}
 		else // General case
@@ -478,13 +716,22 @@ bool PE::extract_resources(const std::string& destination_folder)
 			else {
 				ss << (*it)->get_id();
 			}
-			ss << "_" << (*it)->get_type() << ".raw";
+
+			// Try to guess the file extension
+			yara::matches m = (*it)->detect_filetype();
+			if (m.size() > 0) {
+				ss << "_" << (*it)->get_type() << m[0]->at("extension");
+			}
+			else {
+				ss << "_" << (*it)->get_type() << ".raw";
+			}
+			
 			data = (*it)->get_raw_data();
 		}
 
 		if (data.size() == 0) 
 		{
-			std::cout << "Warning: Resource " << (*it)->get_name() << " is empty!" << std::endl;
+			std::cerr << "Warning: Resource " << (*it)->get_name() << " is empty!" << std::endl;
 			continue;
 		}
 
@@ -492,19 +739,33 @@ bool PE::extract_resources(const std::string& destination_folder)
 		f = fopen(destination_file.string().c_str(), "wb+");
 		if (f == NULL)
 		{
-			std::cout << "Error: Could not open " << destination_file << "." << std::endl;
+			std::cerr << "Error: Could not open " << destination_file << "." << std::endl;
 			return false;
 		}
 		if (data.size() != fwrite(&data[0], 1, data.size(), f)) 
 		{
 			fclose(f);
-			std::cout << "Error: Could not write all the bytes for " << destination_file << "." << std::endl; 
+			std::cerr << "Error: Could not write all the bytes for " << destination_file << "." << std::endl; 
 			return false;
 		}
 
 		fclose(f);
 	}
 	return true;
+}
+
+// ----------------------------------------------------------------------------
+
+yara::matches Resource::detect_filetype()
+{
+	if (_yara->load_rules("resources/magic.yara")) 
+	{
+		std::vector<boost::uint8_t> bytes =get_raw_data();
+		return _yara->scan_bytes(bytes);
+	}
+	else {
+		return yara::matches();
+	}
 }
 
 } // !namespace sg

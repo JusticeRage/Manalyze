@@ -25,6 +25,7 @@
 #include <algorithm>
 #include <string>
 #include <vector>
+#include <set>
 
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
@@ -104,6 +105,12 @@ public:
 	void dump_imports(std::ostream& sink = std::cout) const;
 	void dump_exports(std::ostream& sink = std::cout) const;
 	void dump_resources(std::ostream& sink = std::cout) const;
+	void dump_version_info(std::ostream& sink = std::cout) const;
+	void dump_debug_info(std::ostream& sink = std::cout) const;
+	void dump_relocations(std::ostream& sink = std::cout) const;
+	void dump_tls(std::ostream& sink = std::cout) const;
+	void dump_certificates(std::ostream& sink = std::cout) const;
+	void dump_summary(std::ostream& sink = std::cout) const;
 
 	std::vector<pResource> get_resources() const { return _resource_table; }
 
@@ -126,6 +133,15 @@ public:
 	 *	Implementation is located in resources.cpp.
 	 */
 	bool extract_resources(const std::string& destination_folder);
+
+	/**
+	 *	@brief	Tells whether the PE could be parsed.
+	 *
+	 *	@return	True if the PE was parsed successfully (i.e. is valid), false otherwise.
+	 */
+	bool is_valid()	const {
+		return _initialized;
+	}
 
 private:
 	/**
@@ -186,13 +202,56 @@ private:
 	bool _parse_resources(FILE* f);
 
 	/**
+	 *	@brief	Parses the relocation table of a PE.
+	 *
+	 *	Included in the _parse_directories call.
+	 *	/!\ This relies on the information gathered in _parse_pe_header.
+	 */
+	bool _parse_relocations(FILE* f);
+	
+	/**
+	 *	@brief	Parses the Thread Local Storage callback table of a PE.
+	 *
+	 *	Included in the _parse_directories call.
+	 *	/!\ This relies on the information gathered in _parse_pe_header.
+	 */
+	bool _parse_tls(FILE* f);
+
+	/**
+	 *	@brief	Parses the debug information of a PE.
+	 *
+	 *	Included in the _parse_directories call.
+	 *	/!\ This relies on the information gathered in _parse_pe_header.
+	 *
+	 *	Implemented in resources.cpp
+	 */
+	bool _parse_debug(FILE* f);
+
+	/**
+	 *	@brief	Parses the certificate information (Authenticode) of a PE.
+	 *
+	 *	Included in the _parse_directories call.
+	 *	/!\ This relies on the information gathered in _parse_pe_header.
+	 */
+	bool _parse_authenticode(FILE* f);
+
+	/**
 	 *	@brief	Translates a Relative Virtual Address into an offset in the file.
 	 *
 	 *	@param	boost::uint32_t rva The RVA to translate
 	 *
 	 *	@return	The corresponding offset in the file, or 0 if the RVA could not be translated.
 	 */
-	unsigned int _rva_to_offset(boost::uint32_t rva) const;
+	unsigned int _rva_to_offset(boost::uint64_t rva) const;
+
+	/**
+	 *	@brief	Translates a Virtual Address (*not relative to the image base*) into an offset in the file.
+	 *
+	 *	@param	boost::uint32_t rva The VA to translate
+	 *
+	 *	@return	The corresponding offset in the file, or 0 if the VA could not be translated.
+	 */
+	unsigned int _va_to_offset(boost::uint64_t va) const;
 
 	/**
 	 *	@brief	Moves the file cursor to the target directory.
@@ -248,6 +307,10 @@ private:
 	image_export_directory					_ied;
 	std::vector<pexported_function>			_exports;
 	std::vector<pResource>					_resource_table;
+	std::vector<pdebug_directory_entry>		_debug_entries;
+	std::vector<pimage_base_relocation>		_relocations;
+	image_tls_directory						_tls;
+	std::vector<pwin_certificate>			_certificates;
 };
 
 

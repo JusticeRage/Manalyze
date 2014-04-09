@@ -5,14 +5,14 @@ project (sgstatic)
 set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)  
 set(Boost_USE_STATIC_RUNTIME ON)
-find_package(Boost REQUIRED COMPONENTS regex system filesystem)
+find_package(Boost REQUIRED COMPONENTS regex system filesystem program_options)
 
 include_directories(
 						${PROJECT_SOURCE_DIR}/external
 						${Boost_INCLUDE_DIRS}
                    )
 
-add_executable(sgstatic main.cpp pe.cpp nt_values.cpp utils.cpp imports.cpp dump.cpp resources.cpp)
+add_executable(sgstatic main.cpp pe.cpp nt_values.cpp utils.cpp imports.cpp dump.cpp resources.cpp yara_wrapper.cpp)
 
 if (WIN32)
 			add_definitions(/D_CRT_SECURE_NO_WARNINGS) # Please don't complain about fopen()

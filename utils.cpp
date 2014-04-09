@@ -19,23 +19,58 @@
 
 namespace utils {
 
-std::string read_ascii_string(FILE* f)
+std::string read_ascii_string(FILE* f, unsigned int max_bytes)
 {
 	std::string s = std::string();
-	char c;
+	char c = 0;
 	while (1 == fread(&c, 1, 1, f))
 	{
 		if (c == '\0') {
 			break;
 		}
 		s += c;
+		if (max_bytes != 0) // Already 0 if no limit.
+		{
+			--max_bytes;
+			if (!max_bytes) { // <= Just in case someone thin
+				break;
+			}
+		}
 	}
 	return s;
 }
 
 // ----------------------------------------------------------------------------
 
-std::string read_unicode_string(FILE* f)
+std::string read_unicode_string(FILE* f, unsigned int max_bytes)
+{
+	std::wstring s = std::wstring();
+	wchar_t c = 0;
+	while (2 == fread(&c, 1, 2, f))
+	{
+		if (c == '\0') {
+			break;
+		}
+		s += c;
+		if (max_bytes != 0) // Already 0 if no limit.
+		{
+			max_bytes -= 2;
+			if (max_bytes <= 1) {
+				break;
+			}
+		}
+	}
+
+	// Convert the wstring into a string
+	boost::shared_array<char> conv = boost::shared_array<char>(new char[s.size() + 1]);
+	memset(conv.get(), 0, sizeof(char) * (s.size() + 1));
+	wcstombs(conv.get(), s.c_str(), s.size());
+	return std::string(conv.get());
+}
+
+// ----------------------------------------------------------------------------
+
+std::string read_prefixed_unicode_string(FILE* f)
 {
 	std::wstring s = std::wstring();
 	wchar_t c = 0;
@@ -75,14 +110,24 @@ bool read_string_at_offset(FILE* f, unsigned int offset, std::string& out, bool 
 		out = read_ascii_string(f);
 	}
 	else {
-		out = read_unicode_string(f);
+		out = read_prefixed_unicode_string(f);
 	}
 	return !fseek(f, saved_offset, SEEK_SET) && out != "";
 }
 
 // ----------------------------------------------------------------------------
 
-bool is_address_in_section(unsigned int rva, sg::pimage_section_header section, bool check_raw_size)
+std::string uint64_to_version_number(boost::uint32_t msbytes, boost::uint32_t lsbytes)
+{
+	std::stringstream ss;
+	ss << ((msbytes >> 16) & 0xFFFF) << "." << (msbytes & 0xFFFF) << ".";
+	ss << ((lsbytes >> 16) & 0xFFFF) << "." << (lsbytes & 0xFFFF);
+	return ss.str();
+}
+
+// ----------------------------------------------------------------------------
+
+bool is_address_in_section(boost::uint64_t rva, sg::pimage_section_header section, bool check_raw_size)
 {
 	if (!check_raw_size) {
 		return section->VirtualAddress <= rva && rva < section->VirtualAddress + section->VirtualSize;
@@ -120,6 +165,17 @@ sg::pimage_section_header find_section(unsigned int rva, const std::vector<sg::p
 	}
 
 	return res;
+}
+
+// ----------------------------------------------------------------------------
+
+std::string timestamp_to_string(boost::uint32_t epoch_timestamp)
+{
+	static std::locale loc(std::cout.getloc(), new boost::posix_time::time_facet("%Y-%b-%d %H:%M:%S%F %z"));
+	std::stringstream ss;
+	ss.imbue(loc);
+	ss << boost::posix_time::from_time_t(epoch_timestamp);
+	return ss.str();
 }
 
 }

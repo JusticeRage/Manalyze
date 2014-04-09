@@ -231,7 +231,93 @@ static flag_dict LANG_IDS =
 							   ("Serbo-Croatian (Cyrillic)",	0x081A)
 							   ("Norwegian ? Nynorsk",			0x0814);
 
+static flag_dict FIXEDFILEINFO_FILEFLAGS =
+	boost::assign::map_list_of ("VS_FF_DEBUG",					0x00000001)
+							   ("VS_FF_PRERELEASE",				0x00000002)
+							   ("VS_FF_PATCHED",				0x00000004)
+							   ("VS_FF_PRIVATEBUILD",			0x00000008)
+							   ("VS_FF_INFOINFERRED",			0x00000010)
+							   ("VS_FF_SPECIALBUILD",			0x00000020);
 
+static flag_dict FIXEDFILEINFO_FILEOS =
+	boost::assign::map_list_of ("VOS_UNKNOWN",					0x00000000)
+							   ("VOS_DOS",						0x00010000)
+							   ("VOS_OS216",					0x00020000)
+							   ("VOS_OS232",					0x00030000)
+							   ("VOS_NT",						0x00040000)
+							   ("VOS_WINCE",					0x00050000)
+							   ("VOS__WINDOWS16",				0x00000001)
+							   ("VOS__PM16",					0x00000002)
+							   ("VOS__PM32",					0x00000003)
+							   ("VOS__WINDOWS32",				0x00000004)
+							   ("VOS_DOS_WINDOWS16",			0x00010001)
+							   ("VOS_DOS_WINDOWS32",			0x00010004)
+							   ("VOS_OS216_PM16",				0x00020002)
+							   ("VOS_OS232_PM32",				0x00030003)
+							   ("VOS_NT_WINDOWS32",				0x00040004);
+
+static flag_dict FIXEDFILEINFO_FILETYPE =
+	boost::assign::map_list_of ("VFT_UNKNOWN",					0x00000000)
+							   ("VFT_APP",						0x00000001)
+							   ("VFT_DLL",						0x00000002)
+							   ("VFT_DRV",						0x00000003)
+							   ("VFT_FONT",						0x00000004)
+							   ("VFT_VXD",						0x00000005)
+							   ("VFT_STATIC_LIB",				0x00000007);
+
+static flag_dict FIXEDFILEINFO_FILESUBTYPE_DRV =
+	boost::assign::map_list_of ("VFT2_UNKNOWN",					0x00000000)
+							   ("VFT2_DRV_PRINTER",				0x00000001)
+							   ("VFT2_DRV_KEYBOARD",			0x00000002)
+							   ("VFT2_DRV_LANGUAGE",			0x00000003)
+							   ("VFT2_DRV_DISPLAY",				0x00000004)
+							   ("VFT2_DRV_MOUSE",				0x00000005)
+							   ("VFT2_DRV_NETWORK",				0x00000006)
+							   ("VFT2_DRV_SYSTEM",				0x00000007)
+							   ("VFT2_DRV_INSTALLABLE",			0x00000008)
+							   ("VFT2_DRV_SOUND",				0x00000009)
+							   ("VFT2_DRV_COMM",				0x0000000A)
+							   ("VFT2_DRV_INPUTMETHOD",			0x0000000B)
+							   ("VFT2_DRV_VERSIONED_PRINTER",	0x0000000C);
+
+static flag_dict FIXEDFILEINFO_FILESUBTYPE_FONT =
+	boost::assign::map_list_of ("VFT2_FONT_RASTER",				0x00000001)
+							   ("VFT2_FONT_VECTOR",				0x00000002)
+							   ("VFT2_FONT_TRUETYPE",			0x00000003);
+
+static flag_dict DEBUG_TYPES =
+	boost::assign::map_list_of ("IMAGE_DEBUG_TYPE_UNKNOWN",			0)
+							   ("IMAGE_DEBUG_TYPE_COFF",			1)
+							   ("IMAGE_DEBUG_TYPE_CODEVIEW",		2)
+							   ("IMAGE_DEBUG_TYPE_FPO",				3)
+							   ("IMAGE_DEBUG_TYPE_MISC",			4)
+							   ("IMAGE_DEBUG_TYPE_EXCEPTION",		5)
+							   ("IMAGE_DEBUG_TYPE_FIXUP",			6)
+							   ("IMAGE_DEBUG_TYPE_OMAP_TO_SRC",		7)
+							   ("IMAGE_DEBUG_TYPE_OMAP_FROM_SRC",	8)
+							   ("IMAGE_DEBUG_TYPE_BORLAND",			9)
+							   ("IMAGE_DEBUG_TYPE_RESERVED",		10)
+							   ("IMAGE_DEBUG_TYPE_CLSID",			11);
+
+static flag_dict BASE_RELOCATION_TYPES =
+	boost::assign::map_list_of ("IMAGE_REL_BASED_ABSOLUTE",			0)
+							   ("IMAGE_REL_BASED_HIGH",				1)
+							   ("IMAGE_REL_BASED_LOW",				2)
+							   ("IMAGE_REL_BASED_HIGHLOW",			3)
+							   ("IMAGE_REL_BASED_HIGHADJ",			4)
+							   ("IMAGE_REL_BASED_MIPS_JMPADDR16",	9)
+							   ("IMAGE_REL_BASED_IA64_IMM64",		9)
+							   ("IMAGE_REL_BASED_DIR64",			10);
+
+static flag_dict WIN_CERTIFICATE_REVISIONS =
+	boost::assign::map_list_of ("WIN_CERT_REVISION_1_0",			0x100)
+							   ("WIN_CERT_REVISION_2_0",			0x200);
+
+static flag_dict WIN_CERTIFICATE_TYPES =
+	boost::assign::map_list_of ("WIN_CERT_TYPE_X509",				1)
+							   ("WIN_CERT_TYPE_PKCS_SIGNED_DATA",	2)
+							   ("WIN_CERT_TYPE_RESERVED",			3)
+							   ("WIN_CERT_TYPE_PKCS1_SIGN",			4);
 
 /**
  *	@brief	Breaks down an integer given as input as a combination of flags.
