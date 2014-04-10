@@ -16,6 +16,8 @@
 */
 
 #include "pe.h"
+#include "hashes.h"
+#include "imports.h" // Declares the helper function used to hash imports
 
 namespace sg 
 {
@@ -160,7 +162,7 @@ void PE::dump_image_optional_header(std::ostream& sink) const
 
 // ----------------------------------------------------------------------------
 
-void PE::dump_section_table(std::ostream& sink) const
+void PE::dump_section_table(std::ostream& sink, bool compute_hashes) const
 {
 	if (!_initialized || _section_table.size() == 0) {
 		return;
@@ -204,7 +206,8 @@ void PE::dump_imports(std::ostream& sink) const
 		std::vector<std::string> functions = get_imported_functions(*it);
 		for (std::vector<std::string>::iterator it2 = functions.begin() ; it2 != functions.end() ; ++it2)
 		{
-			sink << "\t" << (*it2) << std::endl;
+			sink << "\t" << (*it2);
+			sink << std::endl;
 		}
 		
 	}
@@ -237,7 +240,7 @@ void PE::dump_exports(std::ostream& sink) const
 
 // ----------------------------------------------------------------------------
 
-void PE::dump_resources(std::ostream& sink) const
+void PE::dump_resources(std::ostream& sink, bool compute_hashes) const
 {
 	if (!_initialized || _resource_table.size() == 0) {
 		return;
@@ -256,6 +259,14 @@ void PE::dump_resources(std::ostream& sink) const
 			for (yara::matches::iterator it = m.begin() ; it != m.end() ; ++it) {
 				sink <<	"\tDetected Type:\t" << (*it)->at("description") << std::endl;
 			}
+		}
+		if (compute_hashes)
+		{
+			std::vector<std::string> hashes = hash::hash_bytes(hash::ALL_DIGESTS, (*it)->get_raw_data());
+			sink << "\tMD5:\t\t" << hashes[hash::ALL_DIGESTS_INDEX["MD5"]] << std::endl;
+			sink << "\tSHA1:\t\t" << hashes[hash::ALL_DIGESTS_INDEX["SHA1"]] << std::endl;
+			sink << "\tSHA256:\t\t" << hashes[hash::ALL_DIGESTS_INDEX["SHA256"]] << std::endl;
+			sink << "\tSHA3:\t\t" << hashes[hash::ALL_DIGESTS_INDEX["SHA3"]] << std::endl;
 		}
 	}
 	sink << std::endl;
@@ -477,6 +488,30 @@ void PE::dump_summary(std::ostream& sink) const
 			sink << *it << std::endl;
 		}
 	}
+
+	sink << std::endl;
+}
+
+// ----------------------------------------------------------------------------
+
+void PE::dump_hashes(std::ostream& sink) const
+{
+	MD5		md5_hash;
+	SHA1	sha1_hash;
+	SHA256	sha256_hash;
+	Keccak	sha3_hash;
+
+	std::vector<std::string> hashes = hash::hash_file(hash::ALL_DIGESTS, _path);
+	if (hashes.size() != hash::ALL_DIGESTS.size()) {
+		return;
+	}
+
+	sink << "MD5:\t\t" << hashes[hash::ALL_DIGESTS_INDEX["MD5"]] << std::endl;
+	sink << "SHA1:\t\t" << hashes[hash::ALL_DIGESTS_INDEX["SHA1"]] << std::endl;
+	sink << "SHA256:\t\t" << hashes[hash::ALL_DIGESTS_INDEX["SHA256"]] << std::endl;
+	sink << "SHA3:\t\t" << hashes[hash::ALL_DIGESTS_INDEX["SHA3"]] << std::endl;
+	sink << "SSDeep:\t\t" << ssdeep::hash_file(_path) << std::endl;
+	sink << "Imports Hash:\t" << hash::hash_imports(*this) << std::endl;
 
 	sink << std::endl;
 }

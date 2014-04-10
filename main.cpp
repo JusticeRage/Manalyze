@@ -46,13 +46,14 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
 	po::options_description desc("Usage");
 	desc.add_options()
 		("help,h", "Displays this message.")
-		("pe,p", po::value<std::vector< std::string> >(), "The PE to analyze. Also accepted as a positional argument. "
+		("pe,p", po::value<std::vector<std::string> >(), "The PE to analyze. Also accepted as a positional argument. "
 			"Multiple files may be specified.")
 		("recursive,r", "Scan all files in a directory (subdirectories will be ignored).")
 		("dump,d", po::value<std::vector<std::string> >(), 
 			"Dumps PE information. Available choices are any combination of: "
-			"all, dos (dos header), pe (pe header), optpe optional header() sections, imports, "
+			"all, dos (dos header), pe (pe header), opt (pe optional header) sections, imports, "
 			"exports, resources, version, debug, tls, certificates, relocations")
+		("hashes", "Calculate various hashes of the file (may slow down the analysis!)")
 		("extract,x", po::value<std::string>(), "Extract the PE resources to the target directory.")
 		("peid", "Use PEiD signatures to determine packer/compiler info (may slow down the analysis!)")
 		("clamav", "Use ClamAV signatures to check for known viruses (may slow down the analysis!)");
@@ -75,7 +76,7 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
 	if (vm.count("help") || !vm.count("pe")) 
 	{
 		std::cout << desc << std::endl;
-		// Examples
+		// TODO: Examples
 		return false;
 	}
 
@@ -99,8 +100,9 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
  *			For the list of accepted categories, refer to the program help or the source
  *			below.
  *	@param	const sg::PE& pe The PE to dump.
+ *	@param	bool compute_hashes Whether hashes should be calculated.
  */
-void handle_dump_option(const std::vector<std::string>& categories, const sg::PE& pe)
+void handle_dump_option(const std::vector<std::string>& categories, bool compute_hashes, const sg::PE& pe)
 {
 	bool dump_all = (std::find(categories.begin(), categories.end(), "all") != categories.end());
 	if (dump_all || std::find(categories.begin(), categories.end(), "dos") != categories.end()) {
@@ -122,7 +124,7 @@ void handle_dump_option(const std::vector<std::string>& categories, const sg::PE
 		pe.dump_exports();
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "resources") != categories.end()) {
-		pe.dump_resources();
+		pe.dump_resources(std::cout, compute_hashes);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "version") != categories.end()) {
 		pe.dump_version_info();
@@ -256,7 +258,7 @@ int main(int argc, char** argv)
 				}
 			}
 
-			handle_dump_option(categories, pe);
+			handle_dump_option(categories, vm.count("hashes") != 0, pe);
 		}
 		else { // No specific info required. Display the summary of the PE.
 			pe.dump_summary();
@@ -265,6 +267,10 @@ int main(int argc, char** argv)
 	
 		if (vm.count("extract")) { // Extract resources if requested
 			pe.extract_resources(vm["extract"].as<std::string>());
+		}
+
+		if (vm.count("hashes")) {
+			pe.dump_hashes();
 		}
 
 		if (vm.count("peid")) 
@@ -289,8 +295,8 @@ int main(int argc, char** argv)
 				for (yara::matches::iterator it = m.begin() ; it != m.end() ; ++it) {
 					std::cout << "\t" << (*it)->operator[]("signature") << std::endl;
 				}
+				std::cout << std::endl;
 			}
-			std::cout << std::endl;
 		}
 
 		if (it != targets.end() - 1) {

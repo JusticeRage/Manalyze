@@ -36,10 +36,9 @@
 #include "nt_values.h"  // Windows-related #defines flags are declared in this file.
 #include "pe_structs.h" // All typedefs and structs are over there
 #include "utils.h"
-#include "resources.h" // Definition of the Resource class
+#include "resources.h"	// Definition of the Resource class
 
 namespace sg {
-
 
 class PE
 {
@@ -101,16 +100,17 @@ public:
 	void dump_dos_header(std::ostream& sink = std::cout) const;
 	void dump_pe_header(std::ostream& sink = std::cout) const;
 	void dump_image_optional_header(std::ostream& sink = std::cout) const;
-	void dump_section_table(std::ostream& sink = std::cout) const;
+	void dump_section_table(std::ostream& sink = std::cout, bool compute_hashes = false) const;
 	void dump_imports(std::ostream& sink = std::cout) const;
 	void dump_exports(std::ostream& sink = std::cout) const;
-	void dump_resources(std::ostream& sink = std::cout) const;
+	void dump_resources(std::ostream& sink = std::cout, bool compute_hashes = false) const;
 	void dump_version_info(std::ostream& sink = std::cout) const;
 	void dump_debug_info(std::ostream& sink = std::cout) const;
 	void dump_relocations(std::ostream& sink = std::cout) const;
 	void dump_tls(std::ostream& sink = std::cout) const;
 	void dump_certificates(std::ostream& sink = std::cout) const;
 	void dump_summary(std::ostream& sink = std::cout) const;
+	void dump_hashes(std::ostream& sink = std::cout) const;
 
 	std::vector<pResource> get_resources() const { return _resource_table; }
 
@@ -180,6 +180,8 @@ private:
 	 *	
 	 *	Included in the _parse_directories call.
 	 *	/!\ This relies on the information gathered in _parse_image_optional_header.
+	 *
+	 *	Implemented in imports.cpp
 	 */
 	bool _parse_imports(FILE* f);
 
