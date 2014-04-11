@@ -29,6 +29,8 @@
 #include <boost/shared_array.hpp>
 #include <boost/date_time.hpp>
 
+#include "hashes.h"
+
 #include "pe_structs.h"
 
 namespace utils 

@@ -12,7 +12,7 @@ include_directories(
 						${Boost_INCLUDE_DIRS}
                    )
 
-add_executable(sgstatic main.cpp pe.cpp nt_values.cpp utils.cpp imports.cpp dump.cpp resources.cpp yara_wrapper.cpp)
+add_executable(sgstatic main.cpp pe.cpp nt_values.cpp utils.cpp imports.cpp dump.cpp resources.cpp yara_wrapper.cpp ssdeep.cpp hashes.cpp)
 
 if (WIN32)
 			add_definitions(/D_CRT_SECURE_NO_WARNINGS) # Please don't complain about fopen()
@@ -28,10 +28,16 @@ endif()
 # yara dependency
 add_subdirectory(external/yara)
 
+# SSDeep dependency
+add_subdirectory(external/ssdeep)
+
+# hash-library dependency
+add_subdirectory(external/hash-library)
+
 target_link_libraries(
 						sgstatic 
 						yara
+                        ssdeep
+						hash-library
 						${Boost_LIBRARIES}
                      )
-
-
