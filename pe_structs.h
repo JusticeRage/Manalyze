@@ -103,7 +103,7 @@ typedef struct image_optional_header_t
 	image_data_directory directories[0x10];
 } image_optional_header;
 
-typedef struct simage_section_header_t
+typedef struct image_section_header_t
 {
 	boost::uint8_t  Name[8];
 	boost::uint32_t VirtualSize;

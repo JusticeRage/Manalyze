@@ -123,10 +123,10 @@ void PE::dump_image_optional_header(std::ostream& sink) const
 	sink << "SizeOfCode\t\t\t" << _ioh.SizeOfCode << std::endl;
 	sink << "SizeOfInitializedData\t\t" << _ioh.SizeOfInitializedData << std::endl;
 	sink << "SizeOfUninitializedData\t\t" << _ioh.SizeOfUninitializedData << std::endl;
-	sg::pimage_section_header sec = utils::find_section(_ioh.AddressOfEntryPoint, _section_table);
+	sg::pSection sec = utils::find_section(_ioh.AddressOfEntryPoint, _sections);
 	if (sec != NULL) {
 		sink << "AddressOfEntryPoint\t\t" << _ioh.AddressOfEntryPoint 
-			 << " (Section: " << sec->Name << ")" << std::endl;
+			 << " (Section: " << sec->get_name() << ")" << std::endl;
 	}
 	else {
 		sink << "AddressOfEntryPoint\t\t" << _ioh.AddressOfEntryPoint 
@@ -164,28 +164,36 @@ void PE::dump_image_optional_header(std::ostream& sink) const
 
 void PE::dump_section_table(std::ostream& sink, bool compute_hashes) const
 {
-	if (!_initialized || _section_table.size() == 0) {
+	if (!_initialized || _sections.size() == 0) {
 		return;
 	}
 
 	sink << "SECTION TABLE:" << std::endl << "--------------" << std::endl << std::endl;
 	sink << std::hex;
 	std::vector<std::string> flags;
-	for (std::vector<pimage_section_header>::const_iterator it = _section_table.begin() ; it != _section_table.end() ; ++it)
+	for (std::vector<pSection>::const_iterator it = _sections.begin() ; it != _sections.end() ; ++it)
 	{
-		sink << "Name\t\t\t" << (*it)->Name << std::endl;
-		sink << "VirtualSize\t\t" << (*it)->VirtualSize << std::endl;
-		sink << "VirtualAddress\t\t" << (*it)->VirtualAddress << std::endl;
-		sink << "SizeOfRawData\t\t" << (*it)->SizeOfRawData << std::endl;
-		sink << "PointerToRawData\t" << (*it)->PointerToRawData << std::endl;
-		sink << "PointerToRelocations\t" << (*it)->PointerToRelocations << std::endl;
-		sink << "PointerToLineNumbers\t" << (*it)->PointerToLineNumbers << std::endl;
-		sink << "NumberOfRelocations\t" << (*it)->NumberOfRelocations << std::endl;
-		sink << "NumberOfLineNumbers\t" << (*it)->NumberOfLineNumbers << std::endl;
-		sink << "NumberOfRelocations\t" << (*it)->NumberOfRelocations << std::endl;
+		sink << "Name\t\t\t" << (*it)->get_name() << std::endl;
+		if (compute_hashes)
+		{
+			std::vector<std::string> hashes = hash::hash_bytes(hash::ALL_DIGESTS, (*it)->get_raw_data());
+			sink << "MD5:\t\t\t" << hashes[ALL_DIGESTS_MD5] << std::endl;
+			sink << "SHA1:\t\t\t" << hashes[ALL_DIGESTS_SHA1] << std::endl;
+			sink << "SHA256:\t\t\t" << hashes[ALL_DIGESTS_SHA256] << std::endl;
+			sink << "SHA3:\t\t\t" << hashes[ALL_DIGESTS_SHA3] << std::endl;
+		}
+		sink << "VirtualSize\t\t" << (*it)->get_virtual_size() << std::endl;
+		sink << "VirtualAddress\t\t" << (*it)->get_virtual_address() << std::endl;
+		sink << "SizeOfRawData\t\t" << (*it)->get_size_or_raw_data() << std::endl;
+		sink << "PointerToRawData\t" << (*it)->get_pointer_to_raw_data() << std::endl;
+		sink << "PointerToRelocations\t" << (*it)->get_pointer_to_relocations() << std::endl;
+		sink << "PointerToLineNumbers\t" << (*it)->get_pointer_to_line_numbers() << std::endl;
+		sink << "NumberOfRelocations\t" << (*it)->get_number_of_relocations() << std::endl;
+		sink << "NumberOfLineNumbers\t" << (*it)->get_number_of_line_numbers() << std::endl;
+		sink << "NumberOfRelocations\t" << (*it)->get_number_of_relocations() << std::endl;
 		sink << "Characteristics\t\t";
-		flags = nt::translate_to_flags((*it)->Characteristics, nt::SECTION_CHARACTERISTICS);
-		pretty_print_flags(sink, (*it)->Characteristics, nt::SECTION_CHARACTERISTICS);
+		flags = nt::translate_to_flags((*it)->get_characteristics(), nt::SECTION_CHARACTERISTICS);
+		pretty_print_flags(sink, (*it)->get_characteristics(), nt::SECTION_CHARACTERISTICS);
 		sink << std::endl;
 	}
 }
@@ -263,10 +271,10 @@ void PE::dump_resources(std::ostream& sink, bool compute_hashes) const
 		if (compute_hashes)
 		{
 			std::vector<std::string> hashes = hash::hash_bytes(hash::ALL_DIGESTS, (*it)->get_raw_data());
-			sink << "\tMD5:\t\t" << hashes[hash::ALL_DIGESTS_INDEX["MD5"]] << std::endl;
-			sink << "\tSHA1:\t\t" << hashes[hash::ALL_DIGESTS_INDEX["SHA1"]] << std::endl;
-			sink << "\tSHA256:\t\t" << hashes[hash::ALL_DIGESTS_INDEX["SHA256"]] << std::endl;
-			sink << "\tSHA3:\t\t" << hashes[hash::ALL_DIGESTS_INDEX["SHA3"]] << std::endl;
+			sink << "\tMD5:\t\t" << hashes[ALL_DIGESTS_MD5] << std::endl;
+			sink << "\tSHA1:\t\t" << hashes[ALL_DIGESTS_SHA1] << std::endl;
+			sink << "\tSHA256:\t\t" << hashes[ALL_DIGESTS_SHA256] << std::endl;
+			sink << "\tSHA3:\t\t" << hashes[ALL_DIGESTS_SHA3] << std::endl;
 		}
 	}
 	sink << std::endl;
@@ -506,10 +514,10 @@ void PE::dump_hashes(std::ostream& sink) const
 		return;
 	}
 
-	sink << "MD5:\t\t" << hashes[hash::ALL_DIGESTS_INDEX["MD5"]] << std::endl;
-	sink << "SHA1:\t\t" << hashes[hash::ALL_DIGESTS_INDEX["SHA1"]] << std::endl;
-	sink << "SHA256:\t\t" << hashes[hash::ALL_DIGESTS_INDEX["SHA256"]] << std::endl;
-	sink << "SHA3:\t\t" << hashes[hash::ALL_DIGESTS_INDEX["SHA3"]] << std::endl;
+	sink << "MD5:\t\t" << hashes[ALL_DIGESTS_MD5] << std::endl;
+	sink << "SHA1:\t\t" << hashes[ALL_DIGESTS_SHA1] << std::endl;
+	sink << "SHA256:\t\t" << hashes[ALL_DIGESTS_SHA256] << std::endl;
+	sink << "SHA3:\t\t" << hashes[ALL_DIGESTS_SHA3] << std::endl;
 	sink << "SSDeep:\t\t" << ssdeep::hash_file(_path) << std::endl;
 	sink << "Imports Hash:\t" << hash::hash_imports(*this) << std::endl;
 

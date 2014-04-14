@@ -127,22 +127,22 @@ std::string uint64_to_version_number(boost::uint32_t msbytes, boost::uint32_t ls
 
 // ----------------------------------------------------------------------------
 
-bool is_address_in_section(boost::uint64_t rva, sg::pimage_section_header section, bool check_raw_size)
+bool is_address_in_section(boost::uint64_t rva, sg::pSection section, bool check_raw_size)
 {
 	if (!check_raw_size) {
-		return section->VirtualAddress <= rva && rva < section->VirtualAddress + section->VirtualSize;
+		return section->get_virtual_address() <= rva && rva < section->get_virtual_address() + section->get_virtual_size();
 	}
 	else {
-		return section->VirtualAddress <= rva && rva < section->VirtualAddress + section->SizeOfRawData;
+		return section->get_virtual_address() <= rva && rva < section->get_virtual_address() + section->get_size_or_raw_data();
 	}
 }
 
 // ----------------------------------------------------------------------------
 
-sg::pimage_section_header find_section(unsigned int rva, const std::vector<sg::pimage_section_header>& section_list)
+sg::pSection find_section(unsigned int rva, const std::vector<sg::pSection>& section_list)
 {
-	sg::pimage_section_header res = sg::pimage_section_header();
-	std::vector<sg::pimage_section_header>::const_iterator it;
+	sg::pSection res = sg::pSection();
+	std::vector<sg::pSection>::const_iterator it;
 	for (it = section_list.begin() ; it != section_list.end() ; ++it)
 	{
 		if (is_address_in_section(rva, *it)) 

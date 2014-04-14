@@ -24,9 +24,14 @@ std::string hash_file(const std::string& filename)
 	boost::shared_array<char> res = boost::shared_array<char>(new char[FUZZY_MAX_RESULT]);
 	FILE* f = fopen(filename.c_str(), "rb");
 
-	if (f == NULL || fuzzy_hash_file(f, res.get())) {
+	if (f == NULL || fuzzy_hash_file(f, res.get())) 
+	{
+		if (f != NULL) {
+			fclose(f);
+		}
 		return "";
 	}
+	fclose(f);
 	return std::string(res.get());
 }
 

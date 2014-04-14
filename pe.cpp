@@ -236,14 +236,14 @@ bool PE::_parse_section_table(FILE* f)
 
 	for (int i = 0 ; i < _h_pe.NumberofSections ; ++i)
 	{
-		pimage_section_header sec(new image_section_header);
-		memset(sec.get(), 0, sizeof(image_section_header));
-		if (sizeof(image_section_header) != fread(&*sec, 1, sizeof(image_section_header), f))
+		image_section_header sec;
+		memset(&sec, 0, sizeof(image_section_header));
+		if (sizeof(image_section_header) != fread(&sec, 1, sizeof(image_section_header), f))
 		{
 			std::cerr << "[!] Error: Could not read section " << i << "." << std::endl;
 			return false;
 		}
-		_section_table.push_back(sec);
+		_sections.push_back(pSection(new Section(sec, _path)));
 	}
 
 	return true;
@@ -254,13 +254,13 @@ bool PE::_parse_section_table(FILE* f)
 unsigned int PE::_rva_to_offset(boost::uint64_t rva) const
 {
 	// Special case: PE with no sections
-	if (_section_table.size() == 0) {
+	if (_sections.size() == 0) {
 		return rva & 0xFFFFFFFF; // If the file is bigger than 4Go, this assumption may not be true.
 	}
 
 	// Find the corresponding section.
-	pimage_section_header section = pimage_section_header();
-	for (std::vector<pimage_section_header>::const_iterator it = _section_table.begin() ; it != _section_table.end() ; ++it)
+	pSection section = pSection();
+	for (std::vector<pSection>::const_iterator it = _sections.begin() ; it != _sections.end() ; ++it)
 	{
 		if (utils::is_address_in_section(rva, *it))
 		{
@@ -272,7 +272,7 @@ unsigned int PE::_rva_to_offset(boost::uint64_t rva) const
 	if (section == NULL) 
 	{
 		// No section found. Maybe the VirsualSize is erroneous? Try with the RawSizeOfData.
-		for (std::vector<pimage_section_header>::const_iterator it = _section_table.begin() ; it != _section_table.end() ; ++it)
+		for (std::vector<pSection>::const_iterator it = _sections.begin() ; it != _sections.end() ; ++it)
 		{
 			if (utils::is_address_in_section(rva, *it, true))
 			{
@@ -286,7 +286,7 @@ unsigned int PE::_rva_to_offset(boost::uint64_t rva) const
 
 	// Assume that the offset in the file can be stored inside an unsigned integer.
 	// PEs whose size is bigger than 4 Go may not be parsed properly.
-	return (rva - section->VirtualAddress + section->PointerToRawData) & 0xFFFFFFFF;
+	return (rva - section->get_virtual_address() + section->get_pointer_to_raw_data()) & 0xFFFFFFFF;
 }
 
 // ----------------------------------------------------------------------------
@@ -333,7 +333,7 @@ bool PE::_parse_directories(FILE* f)
 		   _parse_debug(f) && 
 		   _parse_relocations(f) &&
 		   _parse_tls(f) &&
-		   _parse_authenticode(f);
+		   _parse_certificates(f);
 }
 
 // ----------------------------------------------------------------------------
@@ -526,7 +526,7 @@ bool PE::_parse_tls(FILE* f)
 
 // ----------------------------------------------------------------------------
 
-bool PE::_parse_authenticode(FILE* f)
+bool PE::_parse_certificates(FILE* f)
 {
 	if (!_ioh.directories[IMAGE_DIRECTORY_ENTRY_SECURITY].VirtualAddress ||		// In this case, "VirtualAddress" is actually a file offset.
 		fseek(f, _ioh.directories[IMAGE_DIRECTORY_ENTRY_SECURITY].VirtualAddress, SEEK_SET))	{

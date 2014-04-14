@@ -115,7 +115,7 @@ void handle_dump_option(const std::vector<std::string>& categories, bool compute
 		pe.dump_image_optional_header();
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "sections") != categories.end()) {
-		pe.dump_section_table();
+		pe.dump_section_table(std::cout, compute_hashes);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "imports") != categories.end()) {
 		pe.dump_imports();
