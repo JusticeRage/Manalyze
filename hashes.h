@@ -26,7 +26,7 @@
 #include <boost/cstdint.hpp>
 
 #include "ssdeep.h"
-#include "hash-library/digest.h"
+#include "hash-library/hash.h"
 #include "hash-library/md5.h"
 #include "hash-library/sha1.h"
 #include "hash-library/sha256.h"
@@ -34,7 +34,7 @@
 
 namespace hash {
 
-typedef boost::shared_ptr<Digest> pDigest;
+typedef boost::shared_ptr<Hash> pHash;
 
 /**
  *	@brief	Computes the hash of a buffer.
@@ -44,7 +44,7 @@ typedef boost::shared_ptr<Digest> pDigest;
  *
  *	@return	A string containing the hash value. May be empty if an error occurred.
  */
-std::string hash_bytes(Digest& digest, const std::vector<boost::uint8_t>& bytes);
+std::string hash_bytes(Hash& digest, const std::vector<boost::uint8_t>& bytes);
 
 /**
  *	@brief	Computes the hash of a file.
@@ -54,7 +54,7 @@ std::string hash_bytes(Digest& digest, const std::vector<boost::uint8_t>& bytes)
  *
  *	@return	A string containing the hash value. May be empty if an error occurred.
  */
-std::string hash_file(Digest& digest, const std::string& filename);
+std::string hash_file(Hash& digest, const std::string& filename);
 
 /**
  *	@brief	Computes the hashes of a file.
@@ -69,7 +69,7 @@ std::string hash_file(Digest& digest, const std::string& filename);
  *	@return	A vector containing all the computed hashes, in the same order as the input digests.
  *			If an error occurs for any digest, the return value's size is set to 0.
  */
-std::vector<std::string> hash_file(std::vector<pDigest>& digests, const std::string& filename);
+std::vector<std::string> hash_file(std::vector<pHash>& digests, const std::string& filename);
 
 /**
  *	@brief	Computes the hashes of a buffer.
@@ -82,20 +82,19 @@ std::vector<std::string> hash_file(std::vector<pDigest>& digests, const std::str
  *	@return	A vector containing all the computed hashes, in the same order as the input digests.
  *			If an error occurs for any digest, the return value's size is set to 0.
  */
-std::vector<std::string> hash_bytes(std::vector<pDigest>& digests, const std::vector<boost::uint8_t>& bytes);
+std::vector<std::string> hash_bytes(std::vector<pHash>& digests, const std::vector<boost::uint8_t>& bytes);
 
 // Convenience vector containing all available digests.
-static std::vector<pDigest> ALL_DIGESTS = boost::assign::list_of(pDigest(new MD5))
-																(pDigest(new SHA1))
-																(pDigest(new SHA256))
-																(pDigest(new Keccak));
+static std::vector<pHash> ALL_DIGESTS = boost::assign::list_of	(pHash(new MD5))
+																(pHash(new SHA1))
+																(pHash(new SHA256))
+																(pHash(new Keccak));
 
-// Simple map used to refer to ALL_DIGESTS consistently in case the list of algorithms evolves.
-static std::map<std::string, int> ALL_DIGESTS_INDEX = 
-	boost::assign::map_list_of	("MD5",		0)
-								("SHA1",	1)
-								("SHA256",	2)
-								("SHA3",	3);
+// Convenience #defines to access ALL_DIGESTS ciphers in a readable manner.
+#define ALL_DIGESTS_MD5		0
+#define ALL_DIGESTS_SHA1	1
+#define ALL_DIGESTS_SHA256	2
+#define ALL_DIGESTS_SHA3	3
 
 } // !namespace hash
 

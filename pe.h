@@ -37,6 +37,7 @@
 #include "pe_structs.h" // All typedefs and structs are over there
 #include "utils.h"
 #include "resources.h"	// Definition of the Resource class
+#include "section.h"	// Definition of the Section class
 
 namespace sg {
 
@@ -143,6 +144,8 @@ public:
 		return _initialized;
 	}
 
+	std::vector<boost::uint8_t> get_raw_section_bytes(const std::string& section_name) const;
+
 private:
 	/**
 	 * Reads the first bytes of the file to reconstruct the DOS header.
@@ -235,7 +238,7 @@ private:
 	 *	Included in the _parse_directories call.
 	 *	/!\ This relies on the information gathered in _parse_pe_header.
 	 */
-	bool _parse_authenticode(FILE* f);
+	bool _parse_certificates(FILE* f);
 
 	/**
 	 *	@brief	Translates a Relative Virtual Address into an offset in the file.
@@ -298,13 +301,11 @@ private:
 	    Fields related to the PE structure.
 	    -----------------------------------
 	    Those fields that are extremely close to the PE format and offer little abstraction.
-	    The user shouldn't ever have to touch them. A simple to use interface should be provided for
-	    everything that is useful. 
 	*/
 	dos_header								_h_dos;
 	pe_header								_h_pe;
 	image_optional_header					_ioh;
-	std::vector<pimage_section_header>		_section_table;
+	std::vector<pSection>					_sections;
 	std::vector<pimage_library_descriptor>	_imports;
 	image_export_directory					_ied;
 	std::vector<pexported_function>			_exports;

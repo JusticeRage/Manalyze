@@ -31,7 +31,7 @@
 
 #include "hashes.h"
 
-#include "pe_structs.h"
+#include "section.h"
 
 namespace utils 
 {
@@ -91,22 +91,22 @@ bool read_string_at_offset(FILE* f, unsigned int offset, std::string& out, bool 
  *	@brief	Checks whether the address belongs to a section.
  *
  *	@param	unsigned int rva The address (RVA) to check.
- *	@param	pimage_section_header section The section in which the address may belong.
+ *	@param	sg::pSection section The section in which the address may belong.
  *	@param	bool check_raw_size Use the SizeOfRawData instead of VirtualSize to determine the bounds of the section.
  *
  *	@return	Whether the RVA is between the bounds of the section.
  */
-bool is_address_in_section(boost::uint64_t rva, sg::pimage_section_header section, bool check_raw_size = false);
+bool is_address_in_section(boost::uint64_t rva, sg::pSection section, bool check_raw_size = false);
 
 /**
  *	@brief	Finds the section containing a given RVA.
  *
  *	@param	unsigned int rva The address whose section we want to identify.
- *	@param	const std::vector<pimage_section_header>& section_list A list of all the sections of the PE.
+ *	@param	const std::vector<sg::pSection>& section_list A list of all the sections of the PE.
  *
  *	@return	A pointer to the section containing the input address. NULL if no sections match.
  */
-sg::pimage_section_header find_section(unsigned int rva, const std::vector<sg::pimage_section_header>& section_list);
+sg::pSection find_section(unsigned int rva, const std::vector<sg::pSection>& section_list);
 
 /**
  *	@brief	Converts a uint64 into a version number structured like X.X.X.X.
