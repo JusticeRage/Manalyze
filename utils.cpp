@@ -103,7 +103,7 @@ bool read_string_at_offset(FILE* f, unsigned int offset, std::string& out, bool 
 	unsigned int saved_offset = ftell(f);
 	if (saved_offset == -1 || fseek(f, offset, SEEK_SET))
 	{
-		std::cerr << "[!] Error: Could not reach offset 0x" << std::hex << offset << "." << std::endl;
+		PRINT_ERROR << "Could not reach offset 0x" << std::hex << offset << "." << std::endl;
 		return false;
 	}
 	if (!unicode) {

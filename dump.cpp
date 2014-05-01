@@ -296,7 +296,7 @@ void PE::dump_version_info(std::ostream& sink) const
 			vi = (*it)->interpret_as<sg::pversion_info>();
 			if (vi == NULL) 
 			{
-				std::cerr << "Warning: Could not parse VERSION_INFO resource!" << std::endl;
+				PRINT_WARNING << "Could not parse VERSION_INFO resource!" << std::endl;
 				continue;
 			}
 

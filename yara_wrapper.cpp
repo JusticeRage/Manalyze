@@ -49,7 +49,7 @@ bool Yara::load_rules(const std::string& rule_filename)
 	int retval = yr_rules_load(rule_filename.c_str(), &_rules);
 	if (retval != ERROR_SUCCESS && retval != ERROR_INVALID_FILE)
 	{
-		std::cerr << "Could not load yara rules. (Yara Error 0x" << std::hex << retval << ")" << std::endl;
+		PRINT_ERROR << "Could not load yara rules. (Yara Error 0x" << std::hex << retval << ")" << std::endl;
 		return false;
 	}
 
@@ -89,7 +89,7 @@ matches Yara::scan_bytes(std::vector<boost::uint8_t>& bytes)
 	if (_rules == NULL || bytes.size() == 0)
 	{
 		if (_rules == NULL) {
-			std::cerr << "Error: No Yara rules loaded!" << std::endl;
+			PRINT_ERROR << "No Yara rules loaded!" << std::endl;
 		}
 		return res;
 	}
@@ -105,7 +105,8 @@ matches Yara::scan_bytes(std::vector<boost::uint8_t>& bytes)
 
 	if (retval != ERROR_SUCCESS)
 	{
-		std::cerr << "[!] Yara Error: error code = 0x" << std::hex << retval << std::endl;
+		//TODO: Translate yara errors defined in yara.h
+		PRINT_ERROR << "Yara error code = 0x" << std::hex << retval << std::endl;
 		res.clear();
 	}
 
@@ -120,7 +121,7 @@ matches Yara::scan_file(const std::string& path)
 	int retval;
 	if (_rules == NULL)	
 	{
-		std::cerr << "Error: No Yara rules loaded!" << std::endl;
+		PRINT_ERROR << "No Yara rules loaded!" << std::endl;
 		return res;
 	}
 	
@@ -133,7 +134,7 @@ matches Yara::scan_file(const std::string& path)
 
 	if (retval != ERROR_SUCCESS)
 	{
-		std::cerr << "[!] Yara Error: error code = 0x" << std::hex << retval << std::endl;
+		PRINT_ERROR << "Yara error code = 0x" << std::hex << retval << std::endl;
 		res.clear();
 	}
 	return res;

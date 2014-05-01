@@ -18,7 +18,6 @@
 #ifndef _YARA_WRAPPER_H_
 #define _YARA_WRAPPER_H_
 
-#define NOMINMAX // Yara seems to pull in some min/max stuff that messes with std::min and std::max.
 #include <iostream>
 #include <string>
 #include <list>
@@ -27,6 +26,8 @@
 #include <yara/yara.h>
 #include <boost/shared_ptr.hpp>
 #include <boost/cstdint.hpp>
+
+#include "color.h"
 
 namespace yara {
 
@@ -95,10 +96,10 @@ private:
 
 	std::string		_current_rules;
 
-	static int _instance_count;
+	static int		_instance_count;
 };
 
-typedef boost::shared_ptr<Yara> pyara;
+typedef boost::shared_ptr<Yara> pYara;
 
 } // !namespace yara
 

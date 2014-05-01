@@ -29,8 +29,8 @@
 #include <boost/shared_array.hpp>
 #include <boost/date_time.hpp>
 
+#include "color.h"
 #include "hashes.h"
-
 #include "section.h"
 
 namespace utils 

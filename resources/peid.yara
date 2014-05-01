@@ -375,37 +375,12 @@ condition:
 }
 
     
-rule MinGW_v3_2_x__Dll_main_
-{
-meta:
-    packer_name = "MinGW v3.2.x (Dll_main)"
-strings:
-    	$a0 = { 55 89 E5 83 EC 18 89 75 FC 8B 75 0C 89 5D F8 83 FE 01 74 5C 89 74 24 04 8B 55 10 89 54 24 08 8B 55 08 89 14 24 E8 96 01 00 00 83 EC 0C 83 FE 01 89 C3 74 2C 85 F6 75 0C 8B 0D 00 30 00 10 85 C9 75 10 31 DB 89 D8 8B 5D F8 8B 75 FC 89 EC 5D C2 0C 00 E8 59 00 }
-	$a1 = { 55 89 E5 83 EC 18 89 75 FC 8B 75 0C 89 5D F8 83 FE 01 74 5C 89 74 24 04 8B 55 10 89 54 24 08 8B 55 08 89 14 24 E8 96 01 00 00 83 EC 0C 83 FE 01 89 C3 74 2C 85 F6 75 0C 8B 0D 00 30 00 10 85 C9 75 10 31 DB 89 D8 8B 5D F8 8B 75 FC 89 EC 5D C2 0C 00 E8 59 00 00 00 EB EB 8D B4 26 00 00 00 00 85 C0 75 D0 E8 47 00 00 00 EB C9 90 8D 74 26 00 C7 04 24 80 00 00 00 E8 F4 05 00 00 A3 00 30 00 10 85 C0 74 1A C7 00 00 00 00 00 A3 10 30 00 10 E8 3B 02 00 00 E8 C6 01 00 00 E9 75 FF FF FF E8 BC 05 00 00 C7 00 0C 00 00 00 31 C0 EB 98 89 F6 55 89 E5 83 EC 08 89 5D FC 8B 15 00 30 00 10 85 D2 74 29 8B 1D 10 30 00 10 83 EB 04 39 D3 72 0D 8B 03 85 C0 75 2A 83 EB 04 39 D3 73 F3 89 14 24 E8 6B 05 00 00 31 C0 A3 00 30 00 10 C7 04 24 00 00 00 00 E8 48 05 00 00 8B 5D FC 89 EC 5D C3 }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint
-}
-
-    
 rule SVK_Protector_v1_051
 {
 meta:
     packer_name = "SVK-Protector v1.051"
 strings:
     	$a0 = { 60 EB 03 C7 84 E8 EB 03 C7 84 9A E8 00 00 00 00 5D 81 ED 10 00 00 00 EB 03 C7 84 E9 64 A0 23 00 00 00 EB }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Microsoft_Visual_C______
-{
-meta:
-    packer_name = "Microsoft Visual C++ ?.?"
-strings:
-    	$a0 = { 83 ?? ?? 6A 00 FF 15 F8 10 0B B0 8D ?? ?? ?? 51 6A 08 6A 00 6A 00 68 }
 
 condition:
     	$a0 at entrypoint
@@ -448,18 +423,6 @@ condition:
 }
 
     
-rule Microsoft_C____1990_1992_
-{
-meta:
-    packer_name = "Microsoft C++ (1990/1992)"
-strings:
-    	$a0 = { B8 00 30 CD 21 3C 03 73 ?? 0E 1F BA ?? ?? B4 09 CD 21 06 33 C0 50 CB }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule Upack_v0_1x___v0_2x____Dwing
 {
 meta:
@@ -470,19 +433,6 @@ strings:
 condition:
     	$a0 at entrypoint
 }
-
-    
-rule WATCOM_C_C__
-{
-meta:
-    packer_name = "WATCOM C/C++"
-strings:
-    	$a0 = { E9 ?? ?? ?? ?? ?? ?? ?? ?? 57 41 }
-
-condition:
-    	$a0 at entrypoint
-}
-
     
 rule PolyBox_D____Anskya
 {
@@ -520,18 +470,6 @@ condition:
 }
 
     
-rule Microsoft_CAB_SFX
-{
-meta:
-    packer_name = "Microsoft CAB SFX"
-strings:
-    	$a0 = { E8 0A 00 00 00 E9 7A FF FF FF CC CC CC CC CC }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule STNPEE_1_13
 {
 meta:
@@ -563,18 +501,6 @@ meta:
     packer_name = "* PseudoSigner 0.2 [FSG 1.0] --> Anorganix"
 strings:
     	$a0 = { 90 90 90 90 68 ?? ?? ?? ?? 67 64 FF 36 00 00 67 64 89 26 00 00 F1 90 90 90 90 BB D0 01 40 00 BF 00 10 40 00 BE 90 90 90 90 53 E8 0A 00 00 00 02 D2 75 05 8A 16 46 12 D2 C3 FC B2 80 A4 6A 02 5B }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Microsoft_Visual_C___4_2
-{
-meta:
-    packer_name = "Microsoft Visual C++ 4.2"
-strings:
-    	$a0 = { 64 A1 00 00 00 00 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 50 64 ?? ?? ?? ?? ?? ?? 83 ?? ?? 53 56 57 89 }
 
 condition:
     	$a0 at entrypoint
@@ -750,19 +676,6 @@ strings:
 condition:
     	$a0 at entrypoint
 }
-
-    
-rule MS_Run_Time_Library_1990__10_
-{
-meta:
-    packer_name = "MS Run-Time Library 1990 (10)"
-strings:
-    	$a0 = { E8 ?? ?? 2E FF 2E ?? ?? BB ?? ?? E8 ?? ?? CB }
-
-condition:
-    	$a0 at entrypoint
-}
-
     
 rule PseudoSigner_0_2___BJFNT_1_2_
 {
@@ -1019,18 +932,6 @@ condition:
 }
 
     
-rule MinGW_v3_2_x__Dll_mainCRTStartup_
-{
-meta:
-    packer_name = "MinGW v3.2.x (Dll_mainCRTStartup)"
-strings:
-    	$a0 = { 55 89 E5 83 EC 08 6A 00 6A 00 6A 00 6A 00 E8 0D 00 00 00 B8 00 00 00 00 C9 C3 90 90 90 90 90 90 FF 25 38 20 00 10 90 90 00 00 00 00 00 00 00 00 FF FF FF FF 00 00 00 00 FF FF FF FF 00 00 00 00 00 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule Reg2Exe_2_25___by_Jan_Vorel
 {
 meta:
@@ -1146,18 +1047,6 @@ meta:
     packer_name = "PEBundle v3.10"
 strings:
     	$a0 = { 9C 60 E8 02 00 00 00 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 07 20 40 00 87 DD ?? ?? ?? ?? 40 00 01 }
-
-condition:
-    	$a0
-}
-
-    
-rule Microsoft_Windows_Shortcut_file
-{
-meta:
-    packer_name = "Microsoft Windows Shortcut file"
-strings:
-    	$a0 = { 4C 00 00 00 01 14 02 00 00 00 }
 
 condition:
     	$a0
@@ -1345,18 +1234,6 @@ condition:
 }
 
     
-rule LCC_Win32_DLL
-{
-meta:
-    packer_name = "LCC Win32 DLL"
-strings:
-    	$a0 = { 55 89 E5 53 56 57 83 7D 0C 01 75 05 E8 17 ?? ?? ?? FF 75 10 FF 75 0C FF 75 08 A1 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule Crypter_3_1____SLESH
 {
 meta:
@@ -1378,19 +1255,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Nullsoft_Install_System_v2_0
-{
-meta:
-    packer_name = "Nullsoft Install System v2.0"
-strings:
-    	$a0 = { 83 EC 0C 53 55 56 57 C7 44 24 10 70 92 40 00 33 DB C6 44 24 14 20 FF 15 2C 70 40 00 53 FF 15 84 72 40 00 BE 00 54 43 00 BF 00 04 00 00 56 57 A3 A8 EC 42 00 FF 15 C4 70 40 00 E8 8D FF FF FF 8B 2D 90 70 40 00 85 C0 75 21 68 FB 03 00 00 56 FF 15 5C 71 40 00 }
-	$a1 = { 83 EC 0C 53 55 56 57 C7 44 24 10 70 92 40 00 33 DB C6 44 24 14 20 FF 15 2C 70 40 00 53 FF 15 84 72 40 00 BE 00 54 43 00 BF 00 04 00 00 56 57 A3 A8 EC 42 00 FF 15 C4 70 40 00 E8 8D FF FF FF 8B 2D 90 70 40 00 85 C0 75 21 68 FB 03 00 00 56 FF 15 5C 71 40 00 68 68 92 40 00 56 FF D5 E8 6A FF FF FF 85 C0 0F 84 57 01 00 00 BE 20 E4 42 00 56 FF 15 68 70 40 00 68 5C 92 40 00 56 E8 9C 28 00 00 57 FF 15 BC 70 40 00 BE 00 40 43 00 50 56 FF 15 B8 70 40 00 6A 00 FF 15 44 71 40 00 80 3D 00 40 43 00 22 A3 20 EC 42 00 75 0A C6 44 24 14 22 BE 01 40 43 00 FF 74 24 14 56 E8 8A 23 00 00 50 FF 15 80 71 40 00 8B F8 89 7C 24 18 EB 61 80 F9 20 75 06 40 80 38 20 74 FA 80 38 22 C6 44 24 14 20 75 06 40 C6 44 24 14 22 80 38 2F 75 31 40 80 38 53 75 0E 8A 48 01 80 C9 20 80 F9 20 75 03 }
-
-condition:
-    	$a0 or $a1
 }
 
     
@@ -1455,18 +1319,6 @@ strings:
 
 condition:
     	$a0 at entrypoint or $a1 at entrypoint or $a2 at entrypoint
-}
-
-    
-rule Turbo_C_1987_or_Borland_C___1991
-{
-meta:
-    packer_name = "Turbo C 1987 or Borland C++ 1991"
-strings:
-    	$a0 = { FB BA ?? ?? 2E 89 ?? ?? ?? B4 30 CD 21 }
-
-condition:
-    	$a0 at entrypoint
 }
 
     
@@ -1613,23 +1465,6 @@ strings:
 condition:
     	$a0
 }
-
-    
-rule Borland_Delphi_v6_0___v7_0
-{
-meta:
-    packer_name = "Borland Delphi v6.0 - v7.0"
-strings:
-    	$a0 = { 53 8B D8 33 C0 A3 0? ?? ?? ?0 6A 00 E8 0? ?? ?0 FF A3 0? ?? ?? ?0 A1 0? ?? ?? ?0 A3 0? ?? ?? ?0 33 C0 A3 0? ?? ?? ?0 33 C0 A3 0? ?? ?? ?0 E8 }
-	$a1 = { BA ?? ?? ?? ?? 83 7D 0C 01 75 ?? 50 52 C6 05 ?? ?? ?? ?? ?? 8B 4D 08 89 0D ?? ?? ?? ?? 89 4A 04 }
-	$a2 = { 55 8B EC 83 C4 F0 B8 ?? ?? ?? ?? E8 ?? ?? ?? ?? E8 }
-	$a3 = { 55 8B EC 83 C4 F0 B8 ?? ?? ?? ?? E8 ?? ?? FB FF A1 ?? ?? ?? ?? 8B ?? E8 ?? ?? FF FF 8B 0D ?? ?? ?? ?? A1 ?? ?? ?? ?? 8B 00 8B 15 ?? ?? ?? ?? E8 ?? ?? FF FF A1 ?? ?? ?? ?? 8B ?? E8 ?? ?? FF FF E8 ?? ?? FB FF 8D 40 }
-	$a4 = { 53 8B D8 33 C0 A3 00 ?? ?? ?? 06 A0 0E 80 ?? ?? 0F FA 30 ?? ?? ?? 0A 10 ?? ?? ?? 0A 30 ?? ?? ?? 03 3C 0A 30 ?? ?? ?? 03 3C 0A 30 ?? ?? ?? E8 }
-
-condition:
-    	$a0 or $a1 at entrypoint or $a2 or $a3 at entrypoint or $a4 at entrypoint
-}
-
     
 rule Vx__MTE__non_encrypted_
 {
@@ -1652,36 +1487,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Microsoft_Visual_C___7_0
-{
-meta:
-    packer_name = "Microsoft Visual C++ 7.0"
-strings:
-    	$a0 = { 6A 0C 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? 33 C0 40 89 45 E4 8B 75 0C }
-	$a1 = { 6A 18 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? BF 94 00 00 00 8B C7 E8 ?? ?? ?? ?? 89 }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint
-}
-
-    
-rule Microsoft_Visual_C___7_1
-{
-meta:
-    packer_name = "Microsoft Visual C++ 7.1"
-strings:
-    	$a0 = { 8B FF 55 8B EC 56 33 F6 39 75 0C 0F 84 ?? ?? ?? ?? 83 7D 0C 01 A1 ?? ?? ?? ?? 8B 00 A3 ?? ?? ?? ?? 0F 84 ?? ?? ?? ?? 39 75 0C 0F 84 ?? ?? ?? ?? 33 C0 40 5E 5D C2 0C 00 }
-	$a1 = { 8B FF 55 8B EC 56 33 F6 39 75 0C 0F 84 ?? ?? ?? ?? 83 7D 0C 01 A1 ?? ?? ?? ?? 8B 00 A3 ?? ?? ?? ?? 0F 85 ?? ?? ?? ?? 68 80 00 00 00 FF 15 ?? ?? ?? ?? 3B C6 59 A3 ?? ?? ?? ?? 0F 84 ?? ?? ?? ?? 89 30 A1 ?? ?? ?? ?? 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? A3 }
-	$a2 = { 8B FF 55 8B EC 56 33 F6 39 75 0C 0F 84 ?? ?? ?? ?? 83 7D 0C 01 A1 ?? ?? ?? ?? 8B 00 A3 ?? ?? ?? ?? 0F 85 ?? ?? ?? ?? 68 80 00 00 00 FF 15 ?? ?? ?? ?? 3B C6 59 A3 ?? ?? ?? ?? 0F 84 ?? ?? ?? ?? 89 30 A1 ?? ?? ?? ?? 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? A3 ?? ?? ?? ?? E8 ?? ?? ?? ?? FF 05 ?? ?? ?? ?? 59 59 33 C0 40 5E 5D C2 0C 00 }
-	$a3 = { 8B FF 55 8B EC 56 33 F6 39 75 0C 75 0E 39 35 ?? ?? ?? ?? 7E 2D FF 0D ?? ?? ?? ?? 83 7D 0C 01 A1 ?? ?? ?? ?? 8B 00 A3 ?? ?? ?? ?? 75 3D 68 80 00 00 00 FF 15 ?? ?? ?? ?? 3B C6 59 A3 ?? ?? ?? ?? 75 04 33 C0 EB 67 89 30 A1 ?? ?? ?? ?? 68 ?? ?? ?? ?? 68 }
-	$a4 = { 8B FF 55 8B EC 56 33 F6 39 75 0C 0F 84 ?? ?? ?? ?? 83 7D 0C 01 A1 ?? ?? ?? ?? 8B 00 A3 ?? ?? ?? ?? 75 44 68 80 00 00 00 FF 15 ?? ?? ?? ?? 3B C6 59 A3 ?? ?? ?? ?? 0F 84 ?? ?? ?? ?? 89 30 A1 ?? ?? ?? ?? 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? A3 ?? ?? ?? ?? E8 }
-	$a5 = { 55 8B EC 83 EC 08 53 56 57 55 FC 8B 5D 0C 8B 45 08 F7 40 04 06 00 00 00 0F 85 AB 00 00 00 89 45 F8 8B 45 10 89 45 FC 8D 45 F8 89 43 FC 8B 73 0C 8B 7B 08 53 E8 ?? ?? ?? ?? 83 C4 04 0B C0 74 7B 83 FE FF 74 7D 8D 0C 76 8B 44 8F 04 0B C0 74 59 56 55 }
-
-condition:
-    	$a0 or $a1 or $a2 or $a3 or $a4 or $a5
 }
 
     
@@ -1745,36 +1550,12 @@ condition:
 }
 
     
-rule WATCOM_C_C___DLL
-{
-meta:
-    packer_name = "WATCOM C/C++ DLL"
-strings:
-    	$a0 = { 53 56 57 55 8B 74 24 14 8B 7C 24 18 8B 6C 24 1C 83 FF 03 0F 87 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule Themida_WinLicense_V1_0_0_0_V1_8_0_0____Oreans_Technologies___Sign_by_fly
 {
 meta:
     packer_name = "Themida/WinLicense V1.0.0.0-V1.8.0.0 -> Oreans Technologies ! Sign by fly"
 strings:
     	$a0 = { B8 00 00 00 00 60 0B C0 74 58 E8 00 00 00 00 58 05 ?? 00 00 00 80 38 E9 75 ?? 61 EB ?? E8 00 00 00 00 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Zortech_C
-{
-meta:
-    packer_name = "Zortech C"
-strings:
-    	$a0 = { E8 ?? ?? 2E FF ?? ?? ?? FC 06 }
 
 condition:
     	$a0 at entrypoint
@@ -1902,19 +1683,6 @@ condition:
 }
 
     
-rule Watcom_C_C__
-{
-meta:
-    packer_name = "Watcom C/C++"
-strings:
-    	$a0 = { E9 ?? ?? 00 00 03 10 40 00 57 41 54 43 4F 4D 20 43 2F 43 2B 2B 33 32 20 52 75 6E 2D 54 69 6D 65 20 73 79 73 74 65 6D 2E 20 28 63 29 20 43 6F 70 79 72 69 67 68 74 20 62 79 20 57 41 54 43 4F 4D 20 49 6E 74 65 72 6E 61 74 69 6F 6E 61 6C 20 43 6F 72 70 2E 20 }
-	$a1 = { E9 ?? ?? 00 00 03 10 40 00 57 41 54 43 4F 4D 20 43 2F 43 2B 2B 33 32 20 52 75 6E 2D 54 69 6D 65 20 73 79 73 74 65 6D 2E 20 28 63 29 20 43 6F 70 79 72 69 67 68 74 20 62 79 20 57 41 54 43 4F 4D 20 49 6E 74 65 72 6E 61 74 69 6F 6E 61 6C 20 43 6F 72 70 2E 20 31 39 38 38 2D 31 39 39 35 2E 20 41 6C 6C 20 72 69 67 68 74 73 20 72 65 73 65 72 76 65 64 2E 00 00 00 00 00 00 }
-
-condition:
-    	$a0 or $a1
-}
-
-    
 rule PE_Spin_v0_4x
 {
 meta:
@@ -1957,18 +1725,6 @@ meta:
     packer_name = "Turbo C 1988"
 strings:
     	$a0 = { 8C D8 BB ?? ?? 8E DB 8C D3 8B CC FA 8E ?? ?? ?? BC }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Borland_Delphi_Setup_Module
-{
-meta:
-    packer_name = "Borland Delphi Setup Module"
-strings:
-    	$a0 = { 55 8B EC 83 C4 ?? 53 56 57 33 C0 89 45 F0 89 45 D4 89 45 D0 E8 }
 
 condition:
     	$a0 at entrypoint
@@ -2035,18 +1791,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Free_Pascal_1_06
-{
-meta:
-    packer_name = "Free Pascal 1.06"
-strings:
-    	$a0 = { C6 05 ?? ?? 40 00 ?? E8 ?? ?? 00 00 }
-
-condition:
-    	$a0
 }
 
     
@@ -2577,18 +2321,6 @@ meta:
     packer_name = "PE Crypt32 v1.02"
 strings:
     	$a0 = { E8 00 00 00 00 5B 83 ?? ?? EB ?? 52 4E 44 21 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule InstallAnywhere_6_1___Zero_G_Software_Inc
-{
-meta:
-    packer_name = "InstallAnywhere 6.1 ->Zero G Software Inc"
-strings:
-    	$a0 = { 60 BE 00 A0 42 00 8D BE 00 70 FD FF 57 83 CD FF EB 10 90 90 90 90 90 90 8A 06 46 88 07 47 01 DB 75 07 8B 1E 83 EE FC 11 DB 72 ED B8 01 00 00 00 01 DB 75 07 }
 
 condition:
     	$a0 at entrypoint
@@ -3444,19 +3176,6 @@ strings:
 condition:
     	$a0 at entrypoint
 }
-
-    
-rule Microsoft_Visual_Basic_5_0
-{
-meta:
-    packer_name = "Microsoft Visual Basic 5.0"
-strings:
-    	$a0 = { FF FF FF 00 00 00 00 00 00 30 00 00 00 40 00 00 00 00 00 00 }
-
-condition:
-    	$a0
-}
-
     
 rule Thinstall_2_403____Jitit
 {
@@ -3488,18 +3207,6 @@ meta:
     packer_name = "Upack 0.38 beta -> Dwing"
 strings:
     	$a0 = { BE B0 11 ?? ?? AD 50 FF 76 34 EB 7C 48 01 ?? ?? 0B 01 4C 6F 61 64 4C 69 62 72 61 72 79 41 00 00 18 10 00 00 10 00 00 00 00 ?? ?? ?? 00 00 ?? ?? 00 10 00 00 00 02 00 00 04 00 00 00 00 00 38 00 04 00 00 00 00 00 00 00 00 ?? ?? ?? 00 02 00 00 00 00 00 00 }
-
-condition:
-    	$a0
-}
-
-    
-rule Adlib_Sample_Audio_file
-{
-meta:
-    packer_name = "Adlib Sample Audio file"
-strings:
-    	$a0 = { 47 4F 4C 44 20 53 41 4D 50 4C 45 }
 
 condition:
     	$a0
@@ -3566,18 +3273,6 @@ condition:
 }
 
     
-rule Img_Software_Set_graphics_file
-{
-meta:
-    packer_name = "Img Software Set graphics file"
-strings:
-    	$a0 = { 53 43 4D 49 20 20 20 31 41 54 }
-
-condition:
-    	$a0
-}
-
-    
 rule Upack_v0_32_Beta____Sign_by_hot_UNP
 {
 meta:
@@ -3636,21 +3331,6 @@ strings:
 
 condition:
     	$a0
-}
-
-    
-rule Nullsoft_Install_System_v1_xx
-{
-meta:
-    packer_name = "Nullsoft Install System v1.xx"
-strings:
-    	$a0 = { 83 EC 0C 53 56 57 FF 15 20 71 40 00 05 E8 03 00 00 BE 60 FD 41 00 89 44 24 10 B3 20 FF 15 28 70 40 00 68 00 04 00 00 FF 15 28 71 40 00 50 56 FF 15 08 71 40 00 80 3D 60 FD 41 00 22 75 08 80 C3 02 BE 61 FD 41 00 8A 06 8B 3D F0 71 40 00 84 C0 74 0F 3A C3 74 0B 56 FF D7 8B F0 8A 06 84 C0 75 F1 80 3E 00 74 05 56 FF D7 8B F0 89 74 24 14 80 3E 20 75 07 56 FF D7 8B F0 EB F4 80 3E 2F 75 }
-	$a1 = { 55 8B EC 83 EC 2C 53 56 33 F6 57 56 89 75 DC 89 75 F4 BB A4 9E 40 00 FF 15 60 70 40 00 BF C0 B2 40 00 68 04 01 00 00 57 50 A3 AC B2 40 00 FF 15 4C 70 40 00 56 56 6A 03 56 6A 01 68 00 00 00 80 57 FF 15 9C 70 40 00 8B F8 83 FF FF 89 7D EC 0F 84 C3 00 00 00 }
-	$a2 = { 83 EC 0C 53 56 57 FF 15 20 71 40 00 05 E8 03 00 00 BE 60 FD 41 00 89 44 24 10 B3 20 FF 15 28 70 40 00 68 00 04 00 00 FF 15 28 71 40 00 50 56 FF 15 08 71 40 00 80 3D 60 FD 41 00 22 75 08 80 C3 02 BE 61 FD 41 00 8A 06 8B 3D F0 71 40 00 84 C0 74 0F 3A C3 74 }
-	$a3 = { 55 8B EC 83 EC 2C 53 56 33 F6 57 56 89 75 DC 89 75 F4 BB A4 9E 40 00 FF 15 60 70 40 00 BF C0 B2 40 00 68 04 01 00 00 57 50 A3 AC B2 40 00 FF 15 4C 70 40 00 56 56 6A 03 56 6A 01 68 00 00 00 80 57 FF 15 9C 70 40 00 8B F8 83 FF FF 89 7D EC 0F 84 C3 00 00 00 56 56 56 89 75 E4 E8 C1 C9 FF FF 8B 1D 68 70 40 00 83 C4 0C 89 45 E8 89 75 F0 6A 02 56 6A FC 57 FF D3 89 45 FC 8D 45 F8 56 50 8D 45 E4 6A 04 50 57 FF 15 48 70 40 00 85 C0 75 07 BB 7C 9E 40 00 EB 7A 56 56 56 57 FF D3 39 75 FC 7E 62 BF 74 A2 40 00 B8 00 10 00 00 39 45 FC 7F 03 8B 45 FC 8D 4D F8 56 51 50 57 FF 75 EC FF 15 48 70 40 00 85 C0 74 5A FF 75 F8 57 FF 75 E8 E8 4D C9 FF FF 89 45 E8 8B 45 F8 29 45 FC 83 C4 0C 39 75 F4 75 11 57 E8 D3 F9 FF FF 85 C0 59 74 06 8B 45 F0 89 45 F4 8B 45 F8 01 45 F0 39 75 FC }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint or $a2 at entrypoint or $a3 at entrypoint
 }
 
     
@@ -3863,31 +3543,6 @@ condition:
 }
 
     
-rule Norton_Speed_Disk_Configuration_file
-{
-meta:
-    packer_name = "Norton Speed Disk Configuration file"
-strings:
-    	$a0 = { 4E 6F 72 74 6F 6E 20 53 70 65 65 64 }
-
-condition:
-    	$a0
-}
-
-    
-rule FreePascal_2_0_0_Win32
-{
-meta:
-    packer_name = "FreePascal 2.0.0 Win32"
-strings:
-    	$a0 = { C6 05 ?? ?? ?? ?? 01 E8 74 00 00 00 C6 05 00 80 40 00 00 E8 68 00 00 00 50 E8 00 00 00 00 FF 25 D8 A1 40 00 90 90 90 90 90 90 90 90 90 90 90 90 55 89 E5 83 EC 04 89 5D FC E8 92 00 00 00 E8 ED 00 00 00 89 C3 B9 ?? 70 40 00 89 DA B8 00 00 00 00 E8 0A 01 00 }
-	$a1 = { C6 05 00 80 40 00 01 E8 74 00 00 00 C6 05 00 80 40 00 00 E8 68 00 00 00 50 E8 00 00 00 00 FF 25 D8 A1 40 00 90 90 90 90 90 90 90 90 90 90 90 90 55 89 E5 83 EC 04 89 5D FC E8 92 00 00 00 E8 ED 00 00 00 89 C3 B9 ?? 70 40 00 89 DA B8 00 00 00 00 E8 0A 01 00 }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint
-}
-
-    
 rule MicroJoiner_1_5____coban2k
 {
 meta:
@@ -3990,18 +3645,6 @@ meta:
     packer_name = "VcAsm Protector V1.0X-> VcAsm"
 strings:
     	$a0 = { 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 E8 03 00 00 00 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Symantec_Visual_Cafe_v3_0
-{
-meta:
-    packer_name = "Symantec Visual Cafe v3.0"
-strings:
-    	$a0 = { 64 8B 05 ?? ?? ?? ?? 55 8B EC 6A FF 68 ?? ?? 40 ?? 68 ?? ?? 40 ?? 50 64 89 25 ?? ?? ?? ?? 83 EC 08 50 53 56 57 89 65 E8 C7 45 FC }
 
 condition:
     	$a0 at entrypoint
@@ -4132,18 +3775,6 @@ condition:
 }
 
     
-rule Borland_Delphi_v2_0
-{
-meta:
-    packer_name = "Borland Delphi v2.0"
-strings:
-    	$a0 = { E8 ?? ?? ?? ?? 6A ?? E8 ?? ?? ?? ?? 89 05 ?? ?? ?? ?? E8 ?? ?? ?? ?? 89 05 ?? ?? ?? ?? C7 05 ?? ?? ?? ?? 0A ?? ?? ?? B8 ?? ?? ?? ?? C3 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule nPack_v1_1_250_Beta____NEOx
 {
 meta:
@@ -4178,31 +3809,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Nullsoft_Install_System_2_0b4
-{
-meta:
-    packer_name = "Nullsoft Install System 2.0b4"
-strings:
-    	$a0 = { 83 EC 14 83 64 24 04 00 53 55 56 57 C6 44 24 13 20 FF 15 30 70 40 00 BE 00 20 7A 00 BD 00 04 00 00 56 55 FF 15 C4 70 40 00 56 E8 7D 2B 00 00 8B 1D 8C 70 40 00 6A 00 56 FF D3 BF 80 92 79 00 56 57 E8 15 26 00 00 85 C0 75 38 68 F8 91 40 00 55 56 FF 15 60 71 }
-	$a1 = { 83 EC 10 53 55 56 57 C7 44 24 14 F0 91 40 00 33 ED C6 44 24 13 20 FF 15 2C 70 40 00 55 FF 15 88 72 40 00 BE 00 D4 42 00 BF 00 04 00 00 56 57 A3 60 6F 42 00 FF 15 C4 70 40 00 E8 9F FF FF FF 8B 1D 90 70 40 00 85 C0 75 21 68 FB 03 00 00 56 FF 15 60 71 40 00 }
-
-condition:
-    	$a0 or $a1
-}
-
-    
-rule Nullsoft_Install_System_2_06
-{
-meta:
-    packer_name = "Nullsoft Install System 2.06"
-strings:
-    	$a0 = { 83 EC 20 53 55 56 33 DB 57 89 5C 24 18 C7 44 24 10 ?? ?? ?? ?? C6 44 24 14 20 FF 15 ?? ?? ?? ?? 53 FF 15 ?? ?? ?? ?? 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? A3 ?? ?? ?? ?? E8 02 23 00 00 BE ?? ?? ?? ?? 56 }
-
-condition:
-    	$a0
 }
 
     
@@ -4263,19 +3869,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule CreateInstall_Stub_vx_x
-{
-meta:
-    packer_name = "CreateInstall Stub vx.x"
-strings:
-    	$a0 = { 55 8B EC 81 EC 20 02 00 00 53 56 57 6A 00 FF 15 18 61 40 00 68 00 70 40 00 89 45 08 FF 15 14 61 40 00 85 C0 74 27 6A 00 A1 00 20 40 00 50 FF 15 3C 61 40 00 8B F0 6A 06 56 FF 15 38 61 40 00 6A 03 56 FF 15 38 61 40 00 E9 36 03 00 00 68 02 7F 00 00 33 F6 56 BF 00 30 00 00 FF 15 20 61 40 00 50 FF 15 2C 61 40 00 6A 04 57 68 00 FF 01 00 56 FF 15 CC 60 40 00 6A 04 A3 CC 35 40 00 57 68 00 0F 01 00 56 FF 15 CC 60 40 00 68 00 01 00 00 BE B0 3F 40 00 56 A3 C4 30 40 00 FF 75 08 FF 15 10 61 40 00 }
-	$a1 = { 55 8B EC 81 EC 20 02 00 00 53 56 57 6A 00 FF 15 18 61 40 00 68 00 70 40 00 89 45 08 FF 15 14 61 40 00 85 C0 74 27 6A 00 A1 00 20 40 00 50 FF 15 3C 61 40 00 8B F0 6A 06 56 FF 15 38 61 40 00 6A 03 56 FF 15 38 61 40 00 E9 36 03 00 00 68 02 7F 00 00 33 F6 56 }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint
 }
 
     
@@ -4413,18 +4006,6 @@ condition:
 }
 
     
-rule Metrowerks_CodeWarrior__DLL__v2_0
-{
-meta:
-    packer_name = "Metrowerks CodeWarrior (DLL) v2.0"
-strings:
-    	$a0 = { 55 89 E5 53 56 57 8B 75 0C 8B 5D 10 83 FE 01 74 05 83 FE 02 75 12 53 56 FF 75 08 E8 6E FF FF FF 09 C0 75 04 31 C0 EB 21 53 56 FF 75 08 E8 ?? ?? ?? ?? 89 C7 09 F6 74 05 83 FE 03 75 0A 53 56 FF 75 08 E8 47 FF FF FF 89 F8 8D 65 F4 5F 5E 5B 5D C2 0C 00 C9 }
-
-condition:
-    	$a0
-}
-
-    
 rule EXECryptor_2_1_17____Strongbit_SoftComplete_Development__h_
 {
 meta:
@@ -4460,18 +4041,6 @@ strings:
 
 condition:
     	$a0 at entrypoint or $a1 at entrypoint
-}
-
-    
-rule Interplay_s_MVE_file
-{
-meta:
-    packer_name = "Interplay's MVE file"
-strings:
-    	$a0 = { 49 6E 74 65 72 70 6C 61 79 20 4D 56 45 20 46 69 6C 65 1A 00 1A }
-
-condition:
-    	$a0
 }
 
     
@@ -4547,19 +4116,6 @@ condition:
 }
 
     
-rule Reg2Exe_2_20_2_21___by_Jan_Vorel
-{
-meta:
-    packer_name = "Reg2Exe 2.20/2.21 - by Jan Vorel"
-strings:
-    	$a0 = { 6A 00 E8 7D 12 00 00 A3 A0 44 40 00 E8 79 12 00 00 6A 0A 50 6A 00 FF 35 A0 44 40 00 E8 0F 00 00 00 50 E8 69 12 00 00 CC CC CC CC CC CC CC CC CC 68 2C 02 00 00 68 00 00 00 00 68 B0 44 40 00 E8 3A 12 00 00 83 C4 0C 8B 44 24 04 A3 B8 44 40 00 68 00 00 00 00 68 A0 0F 00 00 68 00 00 00 00 E8 32 12 00 00 A3 B0 44 40 00 68 F4 01 00 00 68 BC 44 40 00 FF 35 B8 44 40 00 E8 1E 12 00 00 B8 BC 44 40 00 89 C1 8A 30 40 80 FE 5C 75 02 89 C1 80 FE 00 75 F1 C6 01 00 E8 EC 18 00 00 E8 28 16 00 00 E8 4A 12 00 00 68 00 FA 00 00 68 08 00 00 00 FF 35 B0 44 40 00 E8 E7 11 00 00 A3 B4 44 40 00 8B 15 D4 46 40 00 E8 65 0A 00 00 BB 00 00 10 00 B8 01 00 00 00 E8 72 0A 00 00 74 09 C7 00 01 00 00 00 83 C0 04 A3 D4 46 40 00 FF 35 B4 44 40 00 E8 26 05 00 00 8D 0D B8 46 40 00 5A E8 CF 0F 00 00 FF 35 B4 44 40 00 FF 35 B8 46 40 00 E8 EE 06 00 00 8D 0D B4 46 40 00 5A E8 }
-	$a1 = { 6A 00 E8 7D 12 00 00 A3 A0 44 40 00 E8 79 12 00 00 6A 0A 50 6A 00 FF 35 A0 44 40 00 E8 0F 00 00 00 50 E8 69 12 00 00 CC CC CC CC CC CC CC CC CC 68 2C 02 00 00 68 00 00 00 00 68 B0 44 40 00 E8 3A 12 00 00 83 C4 0C 8B 44 24 04 A3 B8 44 40 00 68 00 00 00 00 }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint
-}
-
-    
 rule BGI_Stroked_Font_v_1_1
 {
 meta:
@@ -4593,19 +4149,6 @@ strings:
 
 condition:
     	$a0
-}
-
-    
-rule MinGW_v3_2_x__Dll_WinMain_
-{
-meta:
-    packer_name = "MinGW v3.2.x (Dll_WinMain)"
-strings:
-    	$a0 = { 55 89 E5 83 EC 18 89 75 FC 8B 75 0C 89 5D F8 83 FE 01 74 5C 89 74 24 04 8B 55 10 89 54 24 08 8B 55 08 89 14 24 E8 76 01 00 00 83 EC 0C 83 FE 01 89 C3 74 2C 85 F6 75 0C 8B 0D 00 30 00 10 85 C9 75 10 31 DB 89 D8 8B 5D F8 8B 75 FC 89 EC 5D C2 0C 00 E8 59 00 }
-	$a1 = { 55 89 E5 83 EC 18 89 75 FC 8B 75 0C 89 5D F8 83 FE 01 74 5C 89 74 24 04 8B 55 10 89 54 24 08 8B 55 08 89 14 24 E8 76 01 00 00 83 EC 0C 83 FE 01 89 C3 74 2C 85 F6 75 0C 8B 0D 00 30 00 10 85 C9 75 10 31 DB 89 D8 8B 5D F8 8B 75 FC 89 EC 5D C2 0C 00 E8 59 00 00 00 EB EB 8D B4 26 00 00 00 00 85 C0 75 D0 E8 47 00 00 00 EB C9 90 8D 74 26 00 C7 04 24 80 00 00 00 E8 A4 05 00 00 A3 00 30 00 10 85 C0 74 1A C7 00 00 00 00 00 A3 10 30 00 10 E8 1B 02 00 00 E8 A6 01 00 00 E9 75 FF FF FF E8 6C 05 00 00 C7 00 0C 00 00 00 31 C0 EB 98 89 F6 55 89 E5 83 EC 08 89 5D FC 8B 15 00 30 00 10 85 D2 74 29 8B 1D 10 30 00 10 83 EB 04 39 D3 72 0D 8B 03 85 C0 75 2A 83 EB 04 39 D3 73 F3 89 14 24 E8 1B 05 00 00 31 C0 A3 00 30 00 10 C7 04 24 00 00 00 00 E8 F8 04 00 00 8B 5D FC 89 EC 5D C3 }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint
 }
 
     
@@ -4676,18 +4219,6 @@ meta:
     packer_name = "PseudoSigner 0.2 [Gleam 1.00] --> Anorganix"
 strings:
     	$a0 = { 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 0B 83 EC 0C 53 56 57 E8 24 02 00 FF }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Microsoft_Visual_C___V8_0
-{
-meta:
-    packer_name = "Microsoft Visual C++ V8.0"
-strings:
-    	$a0 = { 6A 14 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? BB 94 00 00 00 53 6A 00 8B ?? ?? ?? ?? ?? FF D7 50 FF ?? ?? ?? ?? ?? 8B F0 85 F6 75 0A 6A 12 E8 ?? ?? ?? ?? 59 EB 18 89 1E 56 FF ?? ?? ?? ?? ?? 56 85 C0 75 14 50 FF D7 50 FF ?? ?? ?? ?? ?? B8 }
 
 condition:
     	$a0 at entrypoint
@@ -4891,18 +4422,6 @@ condition:
 }
 
     
-rule MingWin32_v_____h_
-{
-meta:
-    packer_name = "MingWin32 v?.? (h)"
-strings:
-    	$a0 = { 55 89 E5 83 EC 08 C7 04 24 ?? 00 00 00 FF 15 ?? ?? ?? 00 E8 ?? FE FF FF 90 8D B4 26 00 00 00 00 55 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule ASPack_v1_08_01
 {
 meta:
@@ -5004,18 +4523,6 @@ meta:
     packer_name = "fds0ft c0m pr0tect v0.4b"
 strings:
     	$a0 = { 8C CA 2E ?? ?? ?? ?? B4 30 8B ?? ?? ?? 8B ?? ?? ?? 8E DA A3 ?? ?? 8C ?? ?? ?? 89 ?? ?? ?? 89 ?? ?? ?? EB }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule ExeTools_COM2EXE
-{
-meta:
-    packer_name = "ExeTools COM2EXE"
-strings:
-    	$a0 = { E8 ?? ?? 5D 83 ED ?? 8C DA 2E 89 96 ?? ?? 83 C2 ?? 8E DA 8E C2 2E 01 96 ?? ?? 60 }
 
 condition:
     	$a0 at entrypoint
@@ -5581,18 +5088,6 @@ condition:
 }
 
     
-rule AutoDesk_Animation_file
-{
-meta:
-    packer_name = "AutoDesk Animation file"
-strings:
-    	$a0 = { 00 12 AF ?? ?? 40 01 C8 }
-
-condition:
-    	$a0
-}
-
-    
 rule __PseudoSigner_0_2__MinGW_GCC_2_x______Anorganix
 {
 meta:
@@ -5663,18 +5158,6 @@ strings:
 
 condition:
     	$a0 at entrypoint or $a1 at entrypoint
-}
-
-    
-rule Microsoft_CAB_SFX_module
-{
-meta:
-    packer_name = "Microsoft CAB SFX module"
-strings:
-    	$a0 = { 55 8B EC 83 EC 44 56 FF 15 ?? 10 00 01 8B F0 8A 06 3C 22 75 14 8A 46 01 46 84 C0 74 04 3C 22 75 F4 80 3E 22 75 0D ?? EB 0A 3C 20 }
-
-condition:
-    	$a0 at entrypoint
 }
 
     
@@ -5776,18 +5259,6 @@ condition:
 }
 
     
-rule FreePascal_1_0_4_Win32_DLL_____Berczi_Gabor__Pierre_Muller___Peter_Vreman_
-{
-meta:
-    packer_name = "FreePascal 1.0.4 Win32 DLL -> (Berczi Gabor, Pierre Muller & Peter Vreman)"
-strings:
-    	$a0 = { C6 05 ?? ?? ?? ?? 00 55 89 E5 53 56 57 8B 7D 08 89 3D ?? ?? ?? ?? 8B 7D 0C 89 3D ?? ?? ?? ?? 8B 7D 10 89 3D ?? ?? ?? ?? E8 ?? ?? ?? ?? 5F 5E 5B 5D C2 0C 00 }
-
-condition:
-    	$a0
-}
-
-    
 rule SVKP_v1_43____Pavol_Cerven__h_
 {
 meta:
@@ -5824,19 +5295,6 @@ condition:
 }
 
     
-rule Silicon_Realms_Install_Stub
-{
-meta:
-    packer_name = "Silicon Realms Install Stub"
-strings:
-    	$a0 = { 55 8B EC 6A FF 68 ?? 92 40 00 68 ?? ?? 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 53 56 57 89 65 E8 FF 15 ?? ?? 40 00 33 D2 8A D4 89 15 ?? ?? 40 00 8B C8 81 E1 FF 00 00 00 89 0D ?? ?? 40 00 C1 E1 08 03 CA 89 0D ?? ?? 40 00 C1 E8 10 A3 }
-	$a1 = { 55 8B EC 6A FF 68 ?? 92 40 00 68 ?? ?? 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 53 56 57 89 65 E8 FF 15 ?? ?? 40 00 33 D2 8A D4 89 15 ?? ?? 40 00 8B C8 81 E1 FF 00 00 00 89 0D ?? ?? 40 00 C1 E1 08 03 CA 89 0D ?? ?? 40 00 C1 E8 10 A3 ?? ?? 40 00 33 F6 56 E8 ?? ?? 00 00 59 85 C0 75 08 6A 1C E8 B0 00 00 00 59 89 75 FC E8 ?? ?? 00 00 FF 15 ?? 91 40 00 A3 ?? ?? 40 00 E8 ?? ?? 00 00 A3 ?? ?? 40 00 E8 ?? ?? 00 00 E8 ?? ?? 00 00 E8 ?? ?? FF FF 89 75 D0 8D 45 A4 50 FF 15 ?? 91 40 00 E8 ?? ?? 00 00 89 45 9C F6 45 D0 01 74 06 0F B7 45 D4 EB 03 6A 0A 58 50 FF 75 9C 56 56 FF 15 ?? 91 40 00 50 E8 ?? ?? FF FF 89 45 A0 50 E8 ?? ?? FF FF 8B 45 EC 8B 08 8B 09 89 4D 98 50 51 E8 ?? ?? 00 00 59 59 C3 8B 65 E8 FF 75 98 E8 ?? ?? FF FF 83 3D ?? ?? 40 00 01 75 05 }
-
-condition:
-    	$a0 or $a1
-}
-
-    
 rule PeCompact2_2_53_2_76_____BitSum_Technologies
 {
 meta:
@@ -5846,18 +5304,6 @@ strings:
 
 condition:
     	$a0
-}
-
-    
-rule Setup_Factory_6_x_Custom
-{
-meta:
-    packer_name = "Setup Factory 6.x Custom"
-strings:
-    	$a0 = { 55 8B EC 6A FF 68 ?? 61 40 00 68 ?? 43 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 53 56 57 89 65 E8 FF 15 ?? 61 40 00 33 D2 8A D4 89 15 A0 A9 40 00 8B C8 81 E1 FF 00 00 00 89 0D }
-
-condition:
-    	$a0 at entrypoint
 }
 
     
@@ -5907,19 +5353,6 @@ strings:
 condition:
     	$a0
 }
-
-    
-rule File_Analyzer_Compiled_Datafile_Version
-{
-meta:
-    packer_name = "File Analyzer Compiled Datafile Version"
-strings:
-    	$a0 = { 46 69 6C 65 20 41 6E 61 6C 79 7A 65 72 20 43 6F 6D 70 69 6C 65 64 20 44 61 74 61 66 69 6C 65 20 56 65 72 73 69 6F 6E }
-
-condition:
-    	$a0
-}
-
     
 rule Vx__Keypress_1212
 {
@@ -5954,18 +5387,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Inno_Setup_Module_v3_0_4_beta_v3_0_6_v3_0_7
-{
-meta:
-    packer_name = "Inno Setup Module v3.0.4-beta/v3.0.6/v3.0.7"
-strings:
-    	$a0 = { 55 8B EC 83 C4 B8 53 56 57 33 C0 89 45 F0 89 45 BC 89 45 B8 E8 B3 70 FF FF E8 1A 85 FF FF E8 25 A7 FF FF E8 6C }
-
-condition:
-    	$a0
 }
 
     
@@ -6023,18 +5444,6 @@ meta:
     packer_name = "PseudoSigner 0.1 [Borland Delphi 3.0] --> Anorganix"
 strings:
     	$a0 = { 55 8B EC 83 C4 90 90 90 90 68 ?? ?? ?? ?? 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 00 01 E9 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Microsoft_C__1990_1992_
-{
-meta:
-    packer_name = "Microsoft C (1990/1992)"
-strings:
-    	$a0 = { B4 30 CD 21 3C 02 73 ?? 33 C0 06 50 CB BF ?? ?? 8B 36 ?? ?? 2B F7 81 FE ?? ?? 72 ?? BE ?? ?? FA 8E D7 }
 
 condition:
     	$a0 at entrypoint
@@ -6151,21 +5560,6 @@ condition:
 }
 
     
-rule Microsoft_Visual_C___DLL
-{
-meta:
-    packer_name = "Microsoft Visual C++ DLL"
-strings:
-    	$a0 = { 53 B8 01 00 00 00 8B 5C 24 0C 56 57 85 DB 55 75 12 83 3D ?? ?? ?? ?? ?? 75 09 33 C0 }
-	$a1 = { 55 8B EC 56 57 BF 01 00 00 00 8B 75 0C }
-	$a2 = { 53 56 57 BB 01 ?? ?? ?? 8B ?? 24 14 }
-	$a3 = { 53 55 56 8B 74 24 14 85 F6 57 B8 01 00 00 00 }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint or $a2 at entrypoint or $a3 at entrypoint
-}
-
-    
 rule PEncrypt_2_0____junkcode
 {
 meta:
@@ -6179,18 +5573,6 @@ condition:
 }
 
     
-rule Microsoft_C_for_Windows__2_
-{
-meta:
-    packer_name = "Microsoft C for Windows (2)"
-strings:
-    	$a0 = { 8C D8 ?? 45 55 8B EC 1E 8E D8 57 56 89 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule ASProtect_v1_1_BRS
 {
 meta:
@@ -6200,18 +5582,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule BDC_HelpSystem_Help_file
-{
-meta:
-    packer_name = "BDC HelpSystem Help file"
-strings:
-    	$a0 = { 42 44 43 20 48 65 6C 70 53 79 73 74 65 6D }
-
-condition:
-    	$a0
 }
 
     
@@ -6299,18 +5669,6 @@ strings:
 
 condition:
     	$a0 at entrypoint or $a1 at entrypoint or $a2 at entrypoint
-}
-
-    
-rule PowerBASIC_Win_8_00
-{
-meta:
-    packer_name = "PowerBASIC/Win 8.00"
-strings:
-    	$a0 = { 55 8B EC 53 56 57 BB 00 ?? ?? 00 66 2E F7 05 ?? ?? 40 00 04 00 75 05 E9 14 04 00 00 E9 19 02 }
-
-condition:
-    	$a0 at entrypoint
 }
 
     
@@ -6557,16 +5915,6 @@ condition:
 }
 
     
-rule RAR_SFX_Archive__1_
-{
-meta:
-    packer_name = "RAR-SFX Archive (1)"
-strings:
-    	$a0 = { 4D 5A ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 52 53 46 58 }
-
-condition:
-    	$a0
-}
 
     
 rule Armadillo_v2_60b1
@@ -6824,30 +6172,6 @@ condition:
 }
 
     
-rule Metrowerks_CodeWarrior_v2_0__Console_
-{
-meta:
-    packer_name = "Metrowerks CodeWarrior v2.0 (Console)"
-strings:
-    	$a0 = { 55 89 E5 55 B8 FF FF FF FF 50 50 68 ?? ?? ?? ?? 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? E8 ?? ?? 00 00 E8 ?? ?? 00 00 E8 }
-
-condition:
-    	$a0
-}
-
-    
-rule Symantec_C_v4_00___Libraries
-{
-meta:
-    packer_name = "Symantec C v4.00 + Libraries"
-strings:
-    	$a0 = { FA B8 ?? ?? DB E3 8E D8 8C 06 ?? ?? 8B D8 2B 1E ?? ?? 89 1E ?? ?? 26 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule JAM_v2_11
 {
 meta:
@@ -7019,21 +6343,6 @@ condition:
 }
 
     
-rule Microsoft_Visual_C___v6_0_DLL
-{
-meta:
-    packer_name = "Microsoft Visual C++ v6.0 DLL"
-strings:
-    	$a0 = { 83 7C 24 08 01 75 09 8B 44 24 04 A3 ?? ?? 00 10 E8 8B FF FF FF }
-	$a1 = { 55 8B EC 53 8B 5D 08 56 8B 75 0C }
-	$a2 = { 55 8B EC ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 10 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 }
-	$a3 = { 55 8D 6C ?? ?? 81 EC ?? ?? ?? ?? 8B 45 ?? 83 F8 01 56 0F 84 ?? ?? ?? ?? 85 C0 0F 84 }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint or $a2 or $a3 at entrypoint
-}
-
-    
 rule beria_v0_07_public_WIP_____symbiont__h_
 {
 meta:
@@ -7092,18 +6401,6 @@ strings:
 
 condition:
     	$a0
-}
-
-    
-rule Unknown_Protected_Mode_compiler__1_
-{
-meta:
-    packer_name = "Unknown Protected Mode compiler (1)"
-strings:
-    	$a0 = { FA BC ?? ?? 8C C8 8E D8 E8 ?? ?? E8 ?? ?? E8 ?? ?? 66 B8 ?? ?? ?? ?? 66 C1 }
-
-condition:
-    	$a0 at entrypoint
 }
 
     
@@ -7235,18 +6532,6 @@ meta:
     packer_name = "PseudoSigner 0.1 [MinGW GCC 2.x] -> Anorganix"
 strings:
     	$a0 = { 55 89 E5 E8 02 00 00 00 C9 C3 90 90 45 58 45 E9 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule MinGW_GCC_3_x
-{
-meta:
-    packer_name = "MinGW GCC 3.x"
-strings:
-    	$a0 = { 55 89 E5 83 EC 08 C7 04 24 ?? 00 00 00 FF 15 ?? ?? ?? ?? E8 ?? ?? FF FF ?? ?? ?? ?? ?? ?? ?? ?? 55 }
 
 condition:
     	$a0 at entrypoint
@@ -7447,18 +6732,6 @@ condition:
 }
 
     
-rule MS_Run_Time_Library_1992__14_
-{
-meta:
-    packer_name = "MS Run-Time Library 1992 (14)"
-strings:
-    	$a0 = { 1E 06 8C C8 8E D8 8C C0 A3 ?? ?? 83 C0 ?? A3 ?? ?? B4 30 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule PseudoSigner_0_2__NorthStar_PE_Shrinker_1_3______Anorganix
 {
 meta:
@@ -7507,18 +6780,6 @@ condition:
 }
 
     
-rule Microsoft_C__1988_1989_
-{
-meta:
-    packer_name = "Microsoft C (1988/1989)"
-strings:
-    	$a0 = { B4 30 CD 21 3C 02 73 ?? CD 20 BF ?? ?? 8B ?? ?? ?? 2B F7 81 ?? ?? ?? 72 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule _EP_ExE_Pack__V1_4_lite_b2____6aHguT___g_l_u_k
 {
 meta:
@@ -7562,30 +6823,6 @@ meta:
     packer_name = "NsPack 3.1 by North Star (Liu Xing Ping)"
 strings:
     	$a0 = { 9C 60 E8 00 00 00 00 5D 83 ED 07 8D 9D ?? ?? FF FF 8A 03 3C 00 74 10 8D 9D ?? ?? FF FF 8A 03 3C 01 0F 84 42 02 00 00 C6 03 01 8B D5 2B 95 ?? ?? FF FF 89 95 ?? ?? FF FF 01 95 ?? ?? FF FF 8D B5 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule The_Norton_Antivirus_Information_file
-{
-meta:
-    packer_name = "The Norton Antivirus Information file"
-strings:
-    	$a0 = { 54 68 65 20 4E 6F 72 74 6F 6E 20 41 6E 74 69 56 69 72 75 73 20 49 6E 66 6F 72 6D 61 74 69 6F 6E 20 46 69 6C 65 }
-
-condition:
-    	$a0
-}
-
-    
-rule WATCOM_C_C___32_Run_Time_System_1989__1994
-{
-meta:
-    packer_name = "WATCOM C/C++ 32 Run-Time System 1989, 1994"
-strings:
-    	$a0 = { 0E 1F 8C C6 B4 ?? 50 BB ?? ?? CD 21 73 ?? 58 CD 21 72 }
 
 condition:
     	$a0 at entrypoint
@@ -7649,19 +6886,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Setup_Factory_v6_0_0_3_Setup_Launcher
-{
-meta:
-    packer_name = "Setup Factory v6.0.0.3 Setup Launcher"
-strings:
-    	$a0 = { 55 8B EC 6A FF 68 90 61 40 00 68 70 3B 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 53 56 57 89 65 E8 FF 15 14 61 40 00 33 D2 8A D4 89 15 5C 89 40 00 8B C8 81 E1 FF 00 00 00 89 0D 58 89 40 00 C1 E1 08 03 CA 89 0D 54 89 40 00 C1 E8 10 A3 50 89 }
-	$a1 = { 55 8B EC 6A FF 68 90 61 40 00 68 70 3B 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 53 56 57 89 65 E8 FF 15 14 61 40 00 33 D2 8A D4 89 15 5C 89 40 00 8B C8 81 E1 FF 00 00 00 89 0D 58 89 40 00 C1 E1 08 03 CA 89 0D 54 89 40 00 C1 E8 10 A3 50 89 40 00 33 F6 56 E8 E0 00 00 00 59 85 C0 75 08 6A 1C E8 B0 00 00 00 59 89 75 FC E8 E6 0F 00 00 FF 15 10 61 40 00 A3 40 8E 40 00 E8 A4 0E 00 00 A3 90 89 40 00 E8 4D 0C 00 00 E8 8F 0B 00 00 E8 22 FE FF FF 89 75 D0 8D 45 A4 50 FF 15 0C 61 40 00 E8 20 0B 00 00 89 45 9C F6 45 D0 01 74 06 0F B7 45 D4 EB 03 6A 0A 58 50 FF 75 9C 56 56 FF 15 08 61 40 00 50 E8 5A E9 FF FF 89 45 A0 50 E8 10 FE FF FF 8B 45 }
-
-condition:
-    	$a0 or $a1
 }
 
     
@@ -7759,30 +6983,6 @@ strings:
 
 condition:
     	$a0 at entrypoint or $a1 at entrypoint
-}
-
-    
-rule Microsoft__R__Full_text_index_file
-{
-meta:
-    packer_name = "Microsoft (R) Full-text index file"
-strings:
-    	$a0 = { 6C 6C 2D 74 65 78 74 20 69 6E 64 65 78 }
-
-condition:
-    	$a0
-}
-
-    
-rule Dev_C___4_9_9_2____Bloodshed_Software
-{
-meta:
-    packer_name = "Dev-C++ 4.9.9.2 -> Bloodshed Software"
-strings:
-    	$a0 = { 55 89 E5 83 EC 08 C7 04 24 01 00 00 00 FF 15 ?? ?? ?? 00 E8 C8 FE FF FF 90 8D B4 26 00 00 00 00 55 89 E5 83 EC 08 C7 04 24 02 00 00 00 FF 15 ?? ?? ?? 00 E8 A8 FE FF FF 90 8D B4 26 00 00 00 00 55 8B 0D ?? ?? ?? 00 89 E5 5D FF E1 8D 74 26 00 55 8B 0D }
-
-condition:
-    	$a0 at entrypoint
 }
 
     
@@ -7908,18 +7108,6 @@ condition:
 }
 
     
-rule Patch_Creation_Wizard_v1_2_Memory_Patch
-{
-meta:
-    packer_name = "Patch Creation Wizard v1.2 Memory Patch"
-strings:
-    	$a0 = { 6A 00 E8 9B 02 00 00 A3 7A 33 40 00 6A 00 68 8E 10 40 00 6A 00 6A 01 50 E8 B5 02 00 00 68 5A 31 40 00 68 12 31 40 00 6A 00 6A 00 6A 04 6A 01 6A 00 6A 00 68 A2 30 40 00 6A 00 E8 51 02 00 00 85 C0 74 31 FF 35 62 31 40 00 6A 00 6A 30 E8 62 02 00 00 E8 0B 01 00 00 FF 35 5A 31 40 00 E8 22 02 00 00 FF 35 5E 31 40 00 E8 53 02 00 00 6A 00 E8 22 02 00 00 6A 10 68 F7 30 40 00 68 FE 30 40 00 6A 00 E8 63 02 00 00 6A 00 E8 08 02 00 00 55 8B EC 56 51 57 8B 45 0C 98 3D 10 01 00 00 75 6B 6A 01 FF 35 7A 33 40 00 E8 38 02 00 00 50 6A 01 68 80 00 00 00 FF 75 08 E8 34 02 00 00 68 00 30 40 00 6A 65 FF 75 08 E8 2B 02 00 00 68 51 30 40 00 6A 67 FF 75 08 E8 1C 02 00 00 68 A2 30 40 00 6A 66 FF 75 08 E8 0D 02 00 00 8B 45 08 A3 7E 33 40 00 68 3B 11 40 00 68 E8 03 00 00 68 9A 02 00 }
-
-condition:
-    	$a0
-}
-
-    
 rule Wise_Installer_Stub_1_10_1029_1
 {
 meta:
@@ -7929,18 +7117,6 @@ strings:
 
 condition:
     	$a0
-}
-
-    
-rule Macromedia_Windows_Flash_Projector_Player_v4_0
-{
-meta:
-    packer_name = "Macromedia Windows Flash Projector/Player v4.0"
-strings:
-    	$a0 = { 83 EC 44 56 FF 15 24 41 43 00 8B F0 8A 06 3C 22 75 1C 8A 46 01 46 3C 22 74 0C 84 C0 74 08 8A 46 01 46 3C 22 75 F4 80 3E 22 75 0F 46 EB 0C }
-
-condition:
-    	$a0 at entrypoint
 }
 
     
@@ -8197,31 +7373,7 @@ condition:
     	$a0 at entrypoint
 }
 
-    
-rule TXT2COM
-{
-meta:
-    packer_name = "TXT2COM"
-strings:
-    	$a0 = { E8 ?? ?? CD 20 }
 
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Microsoft_Visual_C___7_0_Custom
-{
-meta:
-    packer_name = "Microsoft Visual C++ 7.0 Custom"
-strings:
-    	$a0 = { 60 BE 00 B0 44 00 8D BE 00 60 FB FF 57 83 CD FF EB 10 90 90 90 90 90 90 8A 06 46 88 07 47 01 DB 75 07 8B 1E 83 EE FC 11 DB 72 ED B8 01 00 00 00 01 DB 75 07 8B 1E 83 EE FC 11 DB 11 C0 01 DB 73 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule Obsidium_1_3_4_1____Obsidium_Software
 {
 meta:
@@ -8404,18 +7556,6 @@ condition:
 }
 
     
-rule Microsoft_Visual_Studio__NET
-{
-meta:
-    packer_name = "Microsoft Visual Studio .NET"
-strings:
-    	$a0 = { FF 25 00 20 40 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule PseudoSigner_0_1__VBOX_4_3_MTE______Anorganix
 {
 meta:
@@ -8434,18 +7574,6 @@ meta:
     packer_name = "Vx: Einstein"
 strings:
     	$a0 = { 00 42 CD 21 72 31 B9 6E 03 33 D2 B4 40 CD 21 72 19 3B C1 75 15 B8 00 42 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Macromedia_Windows_Flash_Projector_Player_v3_0
-{
-meta:
-    packer_name = "Macromedia Windows Flash Projector/Player v3.0"
-strings:
-    	$a0 = { 55 8B EC 83 EC 44 56 FF 15 94 13 42 00 8B F0 B1 22 8A 06 3A C1 75 13 8A 46 01 46 3A C1 74 04 84 C0 75 F4 38 0E 75 0D 46 EB 0A 3C 20 7E 06 }
 
 condition:
     	$a0 at entrypoint
@@ -8561,43 +7689,6 @@ condition:
 }
 
     
-rule XM_music_file
-{
-meta:
-    packer_name = "XM music file"
-strings:
-    	$a0 = { 45 78 74 65 6E 64 65 64 20 4D 6F 64 75 6C 65 3A }
-
-condition:
-    	$a0
-}
-
-    
-rule LCC_Win32
-{
-meta:
-    packer_name = "LCC-Win32"
-strings:
-    	$a0 = { 64 A1 00 00 00 00 55 89 E5 6A FF 68 10 30 40 00 68 9A 10 40 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Inno_Setup_Module
-{
-meta:
-    packer_name = "Inno Setup Module"
-strings:
-    	$a0 = { 49 6E 6E 6F 53 65 74 75 70 4C 64 72 57 69 6E 64 6F 77 00 00 53 54 41 54 49 43 }
-	$a1 = { 55 8B EC 83 C4 ?? 53 56 57 33 C0 89 45 F0 89 45 ?? 89 45 ?? E8 ?? ?? FF FF E8 ?? ?? FF FF E8 ?? ?? FF FF E8 ?? ?? FF FF E8 ?? ?? FF FF }
-
-condition:
-    	$a0 at entrypoint or $a1
-}
-
-    
 rule Borland_Pascal_v7_0_for_Windows
 {
 meta:
@@ -8652,18 +7743,6 @@ meta:
     packer_name = "Vx: Uddy.2617"
 strings:
     	$a0 = { 2E ?? ?? ?? ?? ?? 2E ?? ?? ?? ?? ?? 2E ?? ?? ?? 8C C8 8E D8 8C ?? ?? ?? 2B ?? ?? ?? 03 ?? ?? ?? A3 ?? ?? A1 ?? ?? A3 ?? ?? A1 ?? ?? A3 ?? ?? 8C C8 2B ?? ?? ?? 03 ?? ?? ?? A3 ?? ?? B8 AB 9C CD 2F 3D 76 98 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Borland_Pascal_v7_0_Protected_Mode
-{
-meta:
-    packer_name = "Borland Pascal v7.0 Protected Mode"
-strings:
-    	$a0 = { B8 ?? ?? BB ?? ?? 8E D0 8B E3 8C D8 8E C0 0E 1F A1 ?? ?? 25 ?? ?? A3 ?? ?? E8 ?? ?? 83 3E ?? ?? ?? 75 }
 
 condition:
     	$a0 at entrypoint
@@ -8891,18 +7970,6 @@ condition:
 }
 
     
-rule Symantec_WinFax_PRO_8_3_Coverpage
-{
-meta:
-    packer_name = "Symantec WinFax PRO 8.3 Coverpage"
-strings:
-    	$a0 = { 0C BD 03 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? C0 06 6C }
-
-condition:
-    	$a0
-}
-
-    
 rule WWPACK_v3_05c4__Unextractable_
 {
 meta:
@@ -8982,30 +8049,6 @@ meta:
     packer_name = "FSG v1.10 (Eng) -> dulek/xt -> (MASM32)"
 strings:
     	$a0 = { EB 01 DB E8 02 00 00 00 86 43 5E 8D 1D D0 75 CF 83 C1 EE 1D 68 50 ?? 8F 83 EB 02 3D 0F 5A }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Microsoft_Resource_Cursors_file
-{
-meta:
-    packer_name = "Microsoft Resource Cursors file"
-strings:
-    	$a0 = { 00 00 02 00 01 00 20 20 00 00 ?? 00 ?? 00 E8 02 00 00 16 }
-
-condition:
-    	$a0
-}
-
-    
-rule Microsoft_Visual_C_2_0
-{
-meta:
-    packer_name = "Microsoft Visual C 2.0"
-strings:
-    	$a0 = { 64 A1 00 00 00 00 55 8B EC 6A FF 68 }
 
 condition:
     	$a0 at entrypoint
@@ -9327,18 +8370,6 @@ condition:
 }
 
     
-rule MS_Run_Time_Library_1992__13_
-{
-meta:
-    packer_name = "MS Run-Time Library 1992 (13)"
-strings:
-    	$a0 = { BF ?? ?? 8E DF FA 8E D7 81 C4 ?? ?? FB 33 DB B8 ?? ?? CD 21 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule NsPack_v2_3____North_Star
 {
 meta:
@@ -9497,30 +8528,6 @@ condition:
 }
 
     
-rule Microsoft_Access_Database_file
-{
-meta:
-    packer_name = "Microsoft Access Database file"
-strings:
-    	$a0 = { 00 01 00 00 53 74 61 6E 64 61 72 64 20 4A 65 74 20 44 42 00 }
-
-condition:
-    	$a0
-}
-
-    
-rule Borland_C___1992__1994
-{
-meta:
-    packer_name = "Borland C++ 1992, 1994"
-strings:
-    	$a0 = { 8C C8 8E D8 8C 1E ?? ?? 8C 06 ?? ?? 8C 06 ?? ?? 8C 06 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule GHF_Protector__pack_only_____GPcH
 {
 meta:
@@ -9534,18 +8541,6 @@ strings:
 
 condition:
     	$a0 at entrypoint or $a1 at entrypoint or $a2 at entrypoint or $a3 at entrypoint or $a4
-}
-
-    
-rule Turbo_C___3_0_1990
-{
-meta:
-    packer_name = "Turbo C++ 3.0 1990"
-strings:
-    	$a0 = { 8C CA 2E 89 16 ?? ?? B4 30 CD 21 8B 2E ?? ?? 8B ?? ?? ?? 8E DA A3 ?? ?? 8C 06 }
-
-condition:
-    	$a0 at entrypoint
 }
 
     
@@ -9621,18 +8616,6 @@ condition:
 }
 
     
-rule Microsoft_Visual_C___6_0_SFX_Custom
-{
-meta:
-    packer_name = "Microsoft Visual C++ 6.0 SFX Custom"
-strings:
-    	$a0 = { E8 21 48 00 00 E9 16 FE FF FF 51 C7 01 08 B4 00 30 E8 A4 48 00 00 59 C3 56 8B F1 E8 EA FF FF FF F6 ?? ?? ?? ?? 74 07 56 E8 F6 04 00 00 59 8B C6 5E C2 04 00 8B 44 24 04 83 C1 09 51 83 C0 09 50 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule Armadillo_4_30a____Silicon_Realms_Toolworks
 {
 meta:
@@ -9654,18 +8637,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Interchange_Format_File__IFF___type_WVQA
-{
-meta:
-    packer_name = "Interchange Format File (IFF), type WVQA"
-strings:
-    	$a0 = { 46 4F 52 4D ?? ?? ?? ?? 57 56 51 41 56 51 48 44 }
-
-condition:
-    	$a0
 }
 
     
@@ -9703,19 +8674,6 @@ strings:
 
 condition:
     	$a0 at entrypoint or $a1 at entrypoint
-}
-
-    
-rule Nullsoft_Install_System_2_0
-{
-meta:
-    packer_name = "Nullsoft Install System 2.0"
-strings:
-    	$a0 = { 83 EC 0C 53 55 56 57 C7 44 24 10 ?? ?? ?? ?? 33 DB C6 44 24 14 20 FF 15 ?? ?? ?? ?? 53 FF 15 ?? ?? ?? ?? BE ?? ?? ?? ?? BF ?? ?? ?? ?? 56 57 A3 ?? ?? ?? ?? FF 15 ?? ?? ?? ?? E8 8D FF FF FF 8B 2D ?? ?? ?? ?? 85 C0 }
-	$a1 = { 83 EC 0C 53 55 56 57 C7 44 24 10 70 92 40 00 33 DB C6 44 24 14 20 FF 15 2C 70 40 00 53 FF 15 84 72 40 00 BE 00 54 43 00 BF 00 04 00 00 56 57 A3 A8 EC 42 00 FF 15 C4 70 40 00 E8 8D FF FF FF 8B 2D 90 70 40 00 85 C0 75 21 68 FB 03 00 00 56 FF 15 5C 71 40 00 }
-
-condition:
-    	$a0 at entrypoint or $a1
 }
 
     
@@ -9801,19 +8759,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Microsoft_Visual_C___v6_0_SPx
-{
-meta:
-    packer_name = "Microsoft Visual C++ v6.0 SPx"
-strings:
-    	$a0 = { 55 8B EC 83 EC 44 56 FF 15 ?? ?? ?? ?? 8B F0 8A ?? 3C 22 }
-	$a1 = { 55 8B EC 83 EC 44 56 FF 15 ?? ?? ?? ?? 6A 01 8B F0 FF 15 }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint
 }
 
     
@@ -9938,18 +8883,6 @@ condition:
 }
 
     
-rule FreeBASIC_v0_11
-{
-meta:
-    packer_name = "FreeBASIC v0.11"
-strings:
-    	$a0 = { E8 ?? ?? 00 00 E8 01 00 00 00 C3 55 89 E5 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule _MSLRH__v0_32a____emadicius
 {
 meta:
@@ -9971,19 +8904,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule CA_Visual_Objects_2_0___2_5
-{
-meta:
-    packer_name = "CA Visual Objects 2.0 - 2.5"
-strings:
-    	$a0 = { 89 25 ?? ?? ?? ?? 33 ED 55 8B EC E8 ?? ?? ?? ?? 8B D0 81 E2 FF 00 00 00 89 15 ?? ?? ?? ?? 8B D0 C1 EA 08 81 E2 FF 00 00 00 A3 ?? ?? ?? ?? D1 E0 0F 93 C3 33 C0 8A C3 A3 ?? ?? ?? ?? 68 FF 00 00 00 E8 ?? ?? ?? ?? 6A 00 E8 ?? ?? ?? ?? A3 ?? ?? ?? ?? BB }
-	$a1 = { 89 25 ?? ?? ?? ?? 33 ED 55 8B EC E8 ?? ?? ?? ?? 8B D0 81 E2 FF 00 00 00 89 15 ?? ?? ?? ?? 8B D0 C1 EA 08 81 E2 FF 00 00 00 A3 ?? ?? ?? ?? D1 E0 0F 93 C3 33 C0 8A C3 A3 ?? ?? ?? ?? 68 FF 00 00 00 E8 ?? ?? ?? ?? 6A 00 E8 ?? ?? ?? ?? A3 ?? ?? ?? ?? BB ?? ?? ?? ?? C7 03 44 00 00 00 }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint
 }
 
     
@@ -10092,18 +9012,6 @@ meta:
     packer_name = "FreeCryptor 0.2 (build 002) -> GlOFF"
 strings:
     	$a0 = { 33 D2 90 1E 68 1B ?? ?? ?? 0F A0 1F 8B 02 90 50 54 8F 02 90 90 8E 64 24 08 FF E2 58 50 33 D2 52 83 F8 01 9B 40 8A 10 89 14 24 90 D9 04 24 90 D9 FA D9 5C 24 FC 8B 5C 24 FC 81 F3 C2 FC 1D 1C 75 E3 74 01 62 FF D0 90 5A 33 C0 8B 54 24 08 90 64 8F 00 90 83 C2 08 52 5C 5A }
-
-condition:
-    	$a0
-}
-
-    
-rule Symantec_WinFax_PRO_7_5_Coverpage
-{
-meta:
-    packer_name = "Symantec WinFax PRO 7.5 Coverpage"
-strings:
-    	$a0 = { 0C BD 03 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? C0 06 80 }
 
 condition:
     	$a0
@@ -10668,18 +9576,6 @@ condition:
 }
 
     
-rule MS_Run_Time_Library_1990__07_
-{
-meta:
-    packer_name = "MS Run-Time Library 1990 (07)"
-strings:
-    	$a0 = { 2E 8C 1E ?? ?? BB ?? ?? 8E DB 1E E8 ?? ?? 1F 8B 1E ?? ?? 0B DB 74 ?? 8C D1 8B D4 FA 8E D3 BC ?? ?? FB }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule Morphine_V3_3____Holy_Father___Ratter_29A
 {
 meta:
@@ -10826,18 +9722,6 @@ condition:
 }
 
     
-rule MS_Run_Time_Library_1990__1992__09_
-{
-meta:
-    packer_name = "MS Run-Time Library 1990, 1992 (09)"
-strings:
-    	$a0 = { B4 30 CD 21 3C 02 73 ?? C3 8C DF 8B 36 ?? ?? 2E }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule Blade_Joiner_v1_5
 {
 meta:
@@ -10880,18 +9764,6 @@ meta:
     packer_name = "VProtector V1.0A -> vcasm"
 strings:
     	$a0 = { 55 8B EC 6A FF 68 8A 8E 40 00 68 C6 8E 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 E8 03 00 00 00 C7 84 00 58 EB 01 E9 83 C0 07 50 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule MetaWare_High_C_Run_Time_Library___Phar_Lap_DOS_Extender_1983_89
-{
-meta:
-    packer_name = "MetaWare High C Run-Time Library + Phar Lap DOS Extender 1983-89"
-strings:
-    	$a0 = { B8 ?? ?? 50 B8 ?? ?? 50 CB }
 
 condition:
     	$a0 at entrypoint
@@ -10959,18 +9831,6 @@ condition:
 }
 
     
-rule Borland_C___for_Win16_1991
-{
-meta:
-    packer_name = "Borland C++ for Win16 1991"
-strings:
-    	$a0 = { 9A FF FF 00 00 0B C0 75 ?? E9 ?? ?? 8C ?? ?? ?? 89 ?? ?? ?? 89 ?? ?? ?? 89 ?? ?? ?? 89 ?? ?? ?? B8 FF FF 50 9A FF FF 00 00 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule eXPressor_v1_3____CGSoftLabs__h_
 {
 meta:
@@ -11019,34 +9879,6 @@ strings:
 
 condition:
     	$a0 at entrypoint or $a1 at entrypoint
-}
-
-    
-rule Borland_C___DLL
-{
-meta:
-    packer_name = "Borland C++ DLL"
-strings:
-    	$a0 = { EB 10 66 62 3A 43 2B 2B 48 4F 4F 4B 90 E9 A1 C1 E0 02 A3 8B }
-	$a1 = { EB 10 66 62 3A 43 2B 2B 48 4F 4F 4B 90 E9 ?? ?? ?? ?? A1 ?? ?? ?? ?? C1 E0 02 A3 ?? ?? ?? ?? 8B }
-	$a2 = { EB 10 66 62 3A 43 2B 2B 48 4F 4F 4B 90 E9 }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint or $a2
-}
-
-    
-rule Microsoft_Visual_C___vx_x
-{
-meta:
-    packer_name = "Microsoft Visual C++ vx.x"
-strings:
-    	$a0 = { 53 55 56 8B ?? ?? ?? 85 F6 57 B8 ?? ?? ?? ?? 75 ?? 8B ?? ?? ?? ?? ?? 85 C9 75 ?? 33 C0 5F 5E 5D 5B C2 }
-	$a1 = { 55 8B EC ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 04 }
-	$a2 = { 55 8B EC 56 57 BF ?? ?? ?? ?? 8B ?? ?? 3B F7 0F }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint or $a2 at entrypoint
 }
 
     
@@ -11111,18 +9943,6 @@ condition:
 }
 
     
-rule Borland_Delphi_3____Portions_Copyright__c__1983_97_Borland__h_
-{
-meta:
-    packer_name = "Borland Delphi 3 -> Portions Copyright (c) 1983,97 Borland (h)"
-strings:
-    	$a0 = { 50 6F 72 74 69 6F 6E 73 20 43 6F 70 79 72 69 67 68 74 20 28 63 29 20 31 39 38 33 2C 39 37 20 42 6F 72 6C 61 6E 64 00 }
-
-condition:
-    	$a0
-}
-
-    
 rule Vx__Necropolis_1963
 {
 meta:
@@ -11183,19 +10003,6 @@ condition:
 }
 
     
-rule MASM_TASM___sig4__h_
-{
-meta:
-    packer_name = "MASM/TASM - sig4 (h)"
-strings:
-    	$a0 = { FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 }
-	$a1 = { C3 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 }
-
-condition:
-    	$a0 or $a1
-}
-
-    
 rule Turbo_C_1987
 {
 meta:
@@ -11217,18 +10024,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Microsoft_Visual_C___6_0_DLL__Debug_
-{
-meta:
-    packer_name = "Microsoft Visual C++ 6.0 DLL (Debug)"
-strings:
-    	$a0 = { 55 8B EC 53 8B 5D 08 56 8B 75 0C 57 8B 7D 10 85 F6 ?? ?? 83 }
-
-condition:
-    	$a0
 }
 
     
@@ -11378,18 +10173,6 @@ condition:
 }
 
     
-rule CC_v2_61_Beta
-{
-meta:
-    packer_name = "CC v2.61 Beta"
-strings:
-    	$a0 = { BA ?? ?? B4 30 CD 21 3C 02 73 ?? 33 C0 06 50 CB }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule CopyControl_v3_03
 {
 meta:
@@ -11459,18 +10242,6 @@ strings:
 
 condition:
     	$a0
-}
-
-    
-rule Exact_Audio_Copy_____UnknownCompiler_
-{
-meta:
-    packer_name = "Exact Audio Copy -> (UnknownCompiler)"
-strings:
-    	$a0 = { E8 ?? ?? ?? 00 31 ED 55 89 E5 81 EC ?? 00 00 00 8D BD ?? FF FF FF B9 ?? 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 }
-
-condition:
-    	$a0 at entrypoint
 }
 
     
@@ -11604,18 +10375,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Hitachi_Raster_Format_graphics_format
-{
-meta:
-    packer_name = "Hitachi Raster Format graphics format"
-strings:
-    	$a0 = { 43 41 44 43 2F 4B 52 20 52 53 54 }
-
-condition:
-    	$a0
 }
 
     
@@ -11775,18 +10534,6 @@ strings:
 
 condition:
     	$a0
-}
-
-    
-rule PowerBASIC_CC_3_0x
-{
-meta:
-    packer_name = "PowerBASIC/CC 3.0x"
-strings:
-    	$a0 = { 55 8B EC 53 56 57 BB 00 ?? ?? 00 66 2E F7 05 ?? ?? ?? 00 04 00 0F 85 }
-
-condition:
-    	$a0 at entrypoint
 }
 
     
@@ -11959,19 +10706,6 @@ strings:
 condition:
     	$a0 at entrypoint
 }
-
-    
-rule Installer_VISE_Custom
-{
-meta:
-    packer_name = "Installer VISE Custom"
-strings:
-    	$a0 = { 55 8B EC 6A FF 68 ?? ?? 40 00 68 ?? ?? 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 53 56 57 89 65 E8 FF 15 ?? ?? 40 00 33 D2 8A D4 89 15 ?? ?? 40 00 8B C8 81 E1 FF 00 00 00 89 0D }
-
-condition:
-    	$a0 at entrypoint
-}
-
     
 rule SPLayer_v0_08
 {
@@ -12009,18 +10743,6 @@ condition:
 }
 
     
-rule Splash_Bitmap_v1_00____BoB___Bobsoft
-{
-meta:
-    packer_name = "Splash Bitmap v1.00 -> BoB / Bobsoft"
-strings:
-    	$a0 = { E8 00 00 00 00 60 8B 6C 24 20 55 81 ED ?? ?? ?? ?? 8D BD ?? ?? ?? ?? 8D 8D ?? ?? ?? ?? 29 F9 31 C0 FC F3 AA 8B 04 24 48 66 25 00 F0 66 81 38 4D 5A 75 F4 8B 48 3C 81 3C 01 50 45 00 00 75 E8 89 85 ?? ?? ?? ?? 8D BD ?? ?? ?? ?? 6A 00 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule PKLITE_v1_12__v1_15__v1_20__2_
 {
 meta:
@@ -12052,18 +10774,6 @@ meta:
     packer_name = "tElock v0.98b2"
 strings:
     	$a0 = { E9 1B E4 FF FF }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Turbo_or_Borland_Pascal_v7_0
-{
-meta:
-    packer_name = "Turbo or Borland Pascal v7.0"
-strings:
-    	$a0 = { 9A ?? ?? ?? ?? C8 ?? ?? ?? 9A ?? ?? ?? ?? 09 C0 75 ?? EB ?? 8D ?? ?? ?? 16 57 6A ?? 9A ?? ?? ?? ?? BF ?? ?? 1E 57 68 }
 
 condition:
     	$a0 at entrypoint
@@ -12128,19 +10838,6 @@ strings:
 condition:
     	$a0 at entrypoint
 }
-
-    
-rule Vx__Compiler
-{
-meta:
-    packer_name = "Vx: Compiler"
-strings:
-    	$a0 = { 8C C3 83 C3 10 2E 01 1E ?? 02 2E 03 1E ?? 02 53 1E }
-
-condition:
-    	$a0 at entrypoint
-}
-
     
 rule VProtector_0_X_1_2X____vcasm
 {
@@ -12160,18 +10857,6 @@ meta:
     packer_name = "Thinstall V2.736 -> Jitit"
 strings:
     	$a0 = { 9C 60 E8 00 00 00 00 58 BB F3 1C 00 00 2B C3 50 68 00 00 40 00 68 00 26 00 00 68 CC 00 00 00 E8 C1 FE FF FF E9 97 FF FF FF CC CC CC CC CC CC CC CC CC CC CC 55 8B EC 83 C4 F4 FC 53 57 56 8B 75 08 8B 7D 0C C7 45 FC 08 00 00 00 33 DB BA 00 00 00 80 43 33 C0 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule MASM32
-{
-meta:
-    packer_name = "MASM32"
-strings:
-    	$a0 = { 6A ?? 68 00 30 40 00 68 ?? 30 40 00 6A 00 E8 07 00 00 00 6A 00 E8 06 00 00 00 FF 25 08 20 }
 
 condition:
     	$a0 at entrypoint
@@ -12374,18 +11059,6 @@ condition:
 }
 
     
-rule Nullsoft_PIMP_Install_System_v1_x
-{
-meta:
-    packer_name = "Nullsoft PIMP Install System v1.x"
-strings:
-    	$a0 = { 83 EC 5C 53 55 56 57 FF 15 ?? ?? ?? 00 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule PseudoSigner_0_2__LCC_Win32_1_x______Anorganix
 {
 meta:
@@ -12582,18 +11255,6 @@ condition:
 }
 
     
-rule MS_Run_Time_Library__OS_2____FORTRAN_Compiler_1989
-{
-meta:
-    packer_name = "MS Run-Time Library (OS/2) & FORTRAN Compiler 1989"
-strings:
-    	$a0 = { B4 30 CD 21 86 E0 2E A3 ?? ?? 3D ?? ?? 73 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule CICompress_v1_0
 {
 meta:
@@ -12628,19 +11289,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Microsoft_Visual_C___v7_0__64_Bit_
-{
-meta:
-    packer_name = "Microsoft Visual C++ v7.0 (64 Bit)"
-strings:
-    	$a0 = { 41 00 00 00 00 00 00 00 63 00 00 00 00 00 ?? 00 ?? ?? ?? ?? ?? 00 ?? 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 ?? 00 ?? 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 ?? ?? 20 ?? ?? 00 ?? 00 ?? ?? ?? ?? ?? ?? ?? 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 ?? 00 ?? ?? ?? 00 ?? ?? ?? ?? ?? ?? ?? 00 ?? 00 ?? 00 ?? 00 ?? 00 ?? 00 ?? 00 ?? 00 ?? 00 ?? 00 ?? 00 ?? 00 ?? ?? ?? 00 ?? 00 ?? 00 ?? 00 ?? 00 ?? 00 ?? 00 ?? ?? ?? 00 ?? 00 ?? 00 ?? 00 ?? 00 ?? 00 ?? 00 ?? ?? ?? 00 ?? 00 ?? 00 ?? 00 ?? 00 ?? 00 ?? 00 ?? ?? ?? 00 ?? 00 ?? 00 ?? 00 ?? 00 ?? 00 ?? 00 ?? ?? ?? 00 ?? 00 ?? 00 ?? 00 ?? 00 ?? 00 ?? 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 ?? 00 ?? 00 ?? ?? ?? 00 ?? 00 ?? 00 ?? 00 ?? 00 ?? 00 }
-	$a1 = { 41 00 00 00 00 00 00 00 63 00 00 00 00 00 ?? 00 ?? ?? ?? ?? ?? 00 ?? 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 ?? 00 ?? 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 ?? ?? 20 ?? ?? 00 ?? 00 ?? ?? ?? ?? ?? ?? ?? 00 }
-
-condition:
-    	$a0 at entrypoint or $a1
 }
 
     
@@ -12699,18 +11347,6 @@ meta:
     packer_name = "PseudoSigner 0.2 [REALBasic] --> Anorganix"
 strings:
     	$a0 = { 55 89 E5 90 90 90 90 90 90 90 90 90 90 50 90 90 90 90 90 00 01 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Borland_Delphi_v5_0_KOL
-{
-meta:
-    packer_name = "Borland Delphi v5.0 KOL"
-strings:
-    	$a0 = { 55 8B EC 83 C4 F0 B8 ?? ?? 40 00 E8 ?? ?? FF FF E8 ?? ?? FF FF E8 ?? ?? FF FF 8B C0 00 00 00 00 00 00 00 00 00 00 00 }
 
 condition:
     	$a0 at entrypoint
@@ -12799,18 +11435,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule FreePascal_1_0_4_Win32_____Berczi_Gabor__Pierre_Muller___Peter_Vreman_
-{
-meta:
-    packer_name = "FreePascal 1.0.4 Win32 -> (Berczi Gabor, Pierre Muller & Peter Vreman)"
-strings:
-    	$a0 = { 55 89 E5 C6 05 ?? ?? ?? ?? 00 E8 ?? ?? ?? ?? 55 31 ED 89 E0 A3 ?? ?? ?? ?? 66 8C D5 89 2D ?? ?? ?? ?? DB E3 D9 2D ?? ?? ?? ?? 31 ED E8 ?? ?? ?? ?? 5D E8 ?? ?? ?? ?? C9 C3 }
-
-condition:
-    	$a0
 }
 
     
@@ -12911,18 +11535,6 @@ condition:
 }
 
     
-rule Microsoft_C_for_Windows__1_
-{
-meta:
-    packer_name = "Microsoft C for Windows (1)"
-strings:
-    	$a0 = { 33 ED 55 9A ?? ?? ?? ?? 0B C0 74 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule RCryptor_v1_______Vaska
 {
 meta:
@@ -13017,18 +11629,6 @@ strings:
 
 condition:
     	$a0
-}
-
-    
-rule Borland_C__
-{
-meta:
-    packer_name = "Borland C++"
-strings:
-    	$a0 = { A1 ?? ?? ?? ?? C1 E0 02 A3 ?? ?? ?? ?? 57 51 33 C0 BF ?? ?? ?? ?? B9 ?? ?? ?? ?? 3B CF 76 05 2B CF FC F3 AA 59 5F }
-
-condition:
-    	$a0 at entrypoint
 }
 
     
@@ -13129,18 +11729,6 @@ condition:
 }
 
     
-rule Audio_CD_file
-{
-meta:
-    packer_name = "Audio-CD file"
-strings:
-    	$a0 = { 52 49 46 46 ?? ?? ?? ?? 43 44 44 41 66 6D 74 }
-
-condition:
-    	$a0
-}
-
-    
 rule ICrypt_1_0___by_BuGGz
 {
 meta:
@@ -13154,18 +11742,6 @@ condition:
 }
 
     
-rule Vx__SK
-{
-meta:
-    packer_name = "Vx: SK"
-strings:
-    	$a0 = { CD 20 B8 03 00 CD 10 51 E8 00 00 5E 83 EE 09 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule UPX_v1_03___v1_04_Modified
 {
 meta:
@@ -13175,18 +11751,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Dev_C___v5
-{
-meta:
-    packer_name = "Dev-C++ v5"
-strings:
-    	$a0 = { 55 89 E5 83 EC 14 6A ?? FF 15 ?? ?? ?? 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 }
-
-condition:
-    	$a0
 }
 
     
@@ -13214,19 +11778,6 @@ condition:
 }
 
     
-rule CreateInstall_v2003_3_5
-{
-meta:
-    packer_name = "CreateInstall v2003.3.5"
-strings:
-    	$a0 = { 81 EC 0C 04 00 00 53 56 57 55 68 60 50 40 00 6A 01 6A 00 FF 15 D8 80 40 00 8B F0 FF 15 D4 80 40 00 3D B7 00 00 00 75 0F 56 FF 15 B8 80 40 00 6A 02 FF 15 A4 80 40 00 33 DB E8 F2 FE FF FF 68 02 7F 00 00 89 1D 94 74 40 00 53 89 1D 98 74 40 00 FF 15 E4 80 40 00 50 FF 15 E0 80 40 00 8B 0D 00 50 40 00 E8 68 FF FF FF B9 40 0D 03 00 89 44 24 14 E8 5A FF FF FF 68 00 02 00 00 8B 2D D0 80 40 00 89 44 24 1C 8D 44 24 20 50 53 FF D5 8D 4C 24 1C 53 68 00 00 00 80 8B 3D CC 80 40 00 6A 03 53 6A 03 68 00 00 00 80 51 FF D7 8B F0 53 8D 44 24 14 8B 0D 00 50 40 00 8B 54 24 18 50 51 52 56 FF 15 C8 80 40 00 85 C0 0F 84 40 02 00 00 8B 15 00 50 40 00 3B 54 24 10 0F 85 30 02 00 00 6A FF A1 04 50 40 00 2B D0 8B 4C 24 18 03 C8 E8 9F FE FF FF 3B 05 10 50 40 00 0F 85 10 02 00 00 56 FF }
-	$a1 = { 81 EC 0C 04 00 00 53 56 57 55 68 60 50 40 00 6A 01 6A 00 FF 15 D8 80 40 00 8B F0 FF 15 D4 80 40 00 3D B7 00 00 00 75 0F 56 FF 15 B8 80 40 00 6A 02 FF 15 A4 80 40 00 33 DB E8 F2 FE FF FF 68 02 7F 00 00 89 1D 94 74 40 00 53 89 1D 98 74 40 00 FF 15 E4 80 40 }
-
-condition:
-    	$a0 or $a1
-}
-
-    
 rule PseudoSigner_0_1__Microsoft_Visual_C___6_0__Debug_Version__
 {
 meta:
@@ -13249,23 +11800,6 @@ strings:
 
 condition:
     	$a0 at entrypoint or $a1 at entrypoint
-}
-
-    
-rule Microsoft_Visual_C___6_0___8_0
-{
-meta:
-    packer_name = "Microsoft Visual C++ 6.0 - 8.0"
-strings:
-    	$a0 = { 68 ?? ?? ?? ?? 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 8B 44 24 10 89 6C 24 10 8D 6C 24 10 2B E0 53 56 57 8B 45 F8 89 65 E8 50 8B 45 FC C7 45 FC FF FF FF FF 89 45 F8 C3 8B 4D F0 64 89 0D 00 00 00 00 59 5F 5E 5B C9 51 C3 }
-	$a1 = { 68 ?? ?? ?? ?? 64 A1 00 00 00 00 50 8B 44 24 10 89 6C 24 10 8D 6C 24 10 2B E0 53 56 57 8B 45 F8 89 65 E8 50 8B 45 FC C7 45 FC FF FF FF FF 89 45 F8 8D 45 F0 64 A3 00 00 00 00 C3 8B 4D F0 64 89 0D 00 00 00 00 59 5F 5E 5B C9 51 }
-	$a2 = { 3D 00 10 00 00 73 0E F7 D8 03 C4 83 C0 04 85 00 94 8B 00 50 C3 51 8D 4C 24 08 81 E9 00 10 00 00 2D 00 10 00 00 85 01 3D 00 10 00 00 73 EC 2B C8 8B C4 85 01 8B E1 8B 08 8B 40 04 50 C3 }
-	$a3 = { 8B 44 24 08 85 C0 0F 84 ?? ?? ?? ?? 83 F8 01 8B 0D ?? ?? ?? ?? 8B 09 89 0D ?? ?? ?? ?? 0F 85 ?? ?? ?? ?? 68 80 00 00 00 FF 15 ?? ?? ?? ?? 85 C0 59 A3 ?? ?? ?? ?? 0F 84 ?? ?? ?? ?? 83 20 00 A1 ?? ?? ?? ?? 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? A3 ?? ?? ?? ?? E8 }
-	$a4 = { 8B 44 24 08 8B 4C 24 10 0B C8 8B 4C 24 0C 75 09 8B 44 24 04 F7 E1 C2 10 00 53 F7 E1 8B D8 8B 44 24 08 F7 64 24 14 03 D8 8B 44 24 08 F7 E1 03 D3 5B C2 10 00 }
-	$a5 = { 68 ?? ?? ?? ?? 64 A1 00 00 00 00 50 8B 44 24 10 89 6C 24 10 8D 6C 24 10 2B E0 53 56 57 8B 45 F8 89 65 E8 50 8B 45 FC C7 45 FC FF FF FF FF 89 45 F8 8D 45 F0 64 A3 00 00 00 00 C3 8B 4D F0 64 89 0D 00 00 00 00 59 5F 5E 5B C9 51 C3 }
-
-condition:
-    	$a0 or $a1 at entrypoint or $a2 or $a3 or $a4 or $a5
 }
 
     
@@ -13355,37 +11889,12 @@ condition:
 }
 
     
-rule Microsoft_Visual_C___v7_0
-{
-meta:
-    packer_name = "Microsoft Visual C++ v7.0"
-strings:
-    	$a0 = { 6A 0C 68 88 BF 01 10 E8 B8 1C 00 00 33 C0 40 89 45 E4 8B 75 0C 33 FF 3B F7 75 0C 39 3D 6C 1E 12 10 0F 84 B3 00 00 00 89 7D FC 3B F0 74 05 83 FE 02 75 31 A1 98 36 12 10 3B C7 74 0C FF 75 10 56 }
-	$a1 = { 6A ?? 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? BF ?? ?? ?? ?? 8B C7 E8 ?? ?? ?? ?? 89 65 ?? 8B F4 89 3E 56 FF 15 ?? ?? ?? ?? 8B 4E ?? 89 0D ?? ?? ?? ?? 8B 46 ?? A3 }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint
-}
-
-    
 rule bambam_V0_01____bedrock___Sign_by_fly
 {
 meta:
     packer_name = "bambam V0.01 -> bedrock ! Sign by fly"
 strings:
     	$a0 = { 6A 14 E8 9A 05 00 00 8B D8 53 68 ?? ?? ?? ?? E8 6C FD FF FF B9 05 00 00 00 8B F3 BF ?? ?? ?? ?? 53 F3 A5 E8 8D 05 00 00 8B 3D ?? ?? ?? ?? A1 ?? ?? ?? ?? 66 8B 15 ?? ?? ?? ?? B9 ?? ?? ?? ?? 2B CF 89 45 E8 89 0D ?? ?? ?? ?? 66 89 55 EC 8B 41 3C 33 D2 03 C1 83 C4 10 66 8B 48 06 66 8B 50 14 81 E1 FF FF 00 00 8D 5C 02 18 8D 41 FF 85 C0 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Microsoft_Visual_C___v5_0
-{
-meta:
-    packer_name = "Microsoft Visual C++ v5.0"
-strings:
-    	$a0 = { 55 8B EC 6A FF 68 68 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 53 56 57 }
 
 condition:
     	$a0 at entrypoint
@@ -13518,18 +12027,6 @@ meta:
     packer_name = "DBPE v2.33"
 strings:
     	$a0 = { EB 20 ?? ?? 40 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 9C 55 57 56 52 51 53 9C E8 ?? ?? ?? ?? 5D 81 ED ?? ?? ?? ?? 9C 6A 10 73 0B EB 02 C1 51 E8 06 ?? ?? ?? C4 11 73 F7 5B CD 83 C4 04 EB 02 99 EB FF 0C 24 71 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Exact_Audio_Copy
-{
-meta:
-    packer_name = "Exact Audio Copy"
-strings:
-    	$a0 = { E8 ?? ?? ?? 00 31 ED 55 89 E5 81 EC ?? 00 00 00 8D BD ?? FF FF FF B9 ?? 00 00 00 }
 
 condition:
     	$a0 at entrypoint
@@ -14611,18 +13108,6 @@ condition:
 }
 
     
-rule WinRAR_32_bit_SFX_Module
-{
-meta:
-    packer_name = "WinRAR 32-bit SFX Module"
-strings:
-    	$a0 = { E9 ?? ?? 00 00 00 00 00 00 90 90 90 ?? ?? ?? ?? ?? ?? 00 ?? 00 ?? ?? ?? ?? ?? FF }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule FSG_v1_10__Eng_____dulek_xt_____Microsoft_Visual_Basic_5_0___6_0_
 {
 meta:
@@ -14672,19 +13157,6 @@ condition:
 }
 
     
-rule MinGW_v3_2_x__main_
-{
-meta:
-    packer_name = "MinGW v3.2.x (main)"
-strings:
-    	$a0 = { 55 89 E5 83 EC 08 C7 04 24 01 00 00 00 FF 15 E4 40 40 00 E8 68 00 00 00 89 EC 31 C0 5D C3 89 F6 55 89 E5 83 EC 08 C7 04 24 02 00 00 00 FF 15 E4 40 40 00 E8 48 00 00 00 89 EC 31 C0 5D C3 89 F6 55 89 E5 83 EC 08 8B 55 08 89 14 24 FF 15 00 41 40 00 89 EC 5D }
-	$a1 = { 55 89 E5 83 EC 08 C7 04 24 01 00 00 00 FF 15 E4 40 40 00 E8 68 00 00 00 89 EC 31 C0 5D C3 89 F6 55 89 E5 83 EC 08 C7 04 24 02 00 00 00 FF 15 E4 40 40 00 E8 48 00 00 00 89 EC 31 C0 5D C3 89 F6 55 89 E5 83 EC 08 8B 55 08 89 14 24 FF 15 00 41 40 00 89 EC 5D C3 8D 76 00 8D BC 27 00 00 00 00 55 89 E5 83 EC 08 8B 55 08 89 14 24 FF 15 F4 40 40 00 89 EC 5D C3 8D 76 00 8D BC 27 00 00 00 00 55 89 E5 53 83 EC 24 C7 04 24 A0 11 40 00 E8 8D 07 00 00 83 EC 04 E8 85 02 00 00 C7 04 24 00 20 40 00 8B 15 10 20 40 00 8D 4D F8 C7 45 F8 00 00 00 00 89 4C 24 10 89 54 24 0C 8D 55 F4 89 54 24 08 C7 44 24 04 04 20 40 00 E8 02 07 00 00 A1 20 20 40 00 85 C0 74 76 A3 30 20 40 00 A1 F0 40 40 00 85 C0 74 1F 89 04 24 E8 C3 06 00 00 8B 1D 20 20 40 00 89 04 24 89 5C 24 04 E8 C1 06 00 00 }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint
-}
-
-    
 rule SimplePack_1_11_Method_2_NT_____bagie_TMX___h_
 {
 meta:
@@ -14706,18 +13178,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Dev_C___v4
-{
-meta:
-    packer_name = "Dev-C++ v4"
-strings:
-    	$a0 = { 55 89 E5 83 EC 08 83 C4 F4 6A ?? A1 ?? ?? ?? 00 FF D0 E8 ?? FF FF FF }
-
-condition:
-    	$a0
 }
 
     
@@ -14754,19 +13214,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule MS_Visual_C___v_8__h_good_sig__but_is_it_MSVC__
-{
-meta:
-    packer_name = "MS Visual C++ v.8 (h-good sig, but is it MSVC?)"
-strings:
-    	$a0 = { E8 ?? ?? ?? ?? E9 8D FE FF FF CC CC CC CC CC 66 81 3D 00 00 00 01 4D 5A 74 04 33 C0 EB 51 A1 3C 00 00 01 81 B8 00 00 00 01 50 45 00 00 75 EB 0F B7 88 18 00 00 01 81 F9 0B 01 00 00 74 1B 81 F9 0B 02 00 00 75 D4 83 B8 84 00 00 01 0E 76 CB 33 C9 39 88 F8 00 }
-	$a1 = { E8 ?? ?? ?? ?? E9 8D FE FF FF CC CC CC CC CC 66 81 3D 00 00 00 01 4D 5A 74 04 33 C0 EB 51 A1 3C 00 00 01 81 B8 00 00 00 01 50 45 00 00 75 EB 0F B7 88 18 00 00 01 81 F9 0B 01 00 00 74 1B 81 F9 0B 02 00 00 75 D4 83 B8 84 00 00 01 0E 76 CB 33 C9 39 88 F8 00 00 01 EB 11 83 B8 74 00 00 01 0E 76 B8 33 C9 39 88 E8 00 00 01 0F 95 C1 8B C1 6A 01 A3 ?? ?? ?? 01 E8 ?? ?? 00 00 50 FF ?? ?? ?? 00 01 83 0D ?? ?? ?? 01 FF 83 0D ?? ?? ?? 01 FF 59 59 FF 15 ?? ?? 00 01 8B 0D ?? ?? ?? 01 89 08 FF 15 ?? ?? 00 01 8B 0D ?? ?? ?? 01 89 08 A1 ?? ?? 00 01 8B 00 A3 ?? ?? ?? 01 E8 ?? ?? 00 00 83 3D ?? ?? ?? 01 00 75 0C 68 ?? ?? ?? 01 FF 15 ?? ?? 00 01 59 E8 ?? ?? 00 00 33 C0 C3 CC CC CC CC CC }
-
-condition:
-    	$a0 or $a1 at entrypoint
 }
 
     
@@ -14831,18 +13278,6 @@ condition:
 }
 
     
-rule Vx__November_17_768
-{
-meta:
-    packer_name = "Vx: November 17.768"
-strings:
-    	$a0 = { E8 ?? ?? 5E 81 EE ?? ?? 50 33 C0 8E D8 80 3E ?? ?? ?? 0E 1F ?? ?? FC }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule PKLITE_v1_14__v1_20
 {
 meta:
@@ -14861,56 +13296,6 @@ meta:
     packer_name = "Crunch/PE v2.0.x.x"
 strings:
     	$a0 = { 55 E8 ?? ?? ?? ?? 5D 83 ED 06 8B C5 55 60 89 AD ?? ?? ?? ?? 2B 85 ?? ?? ?? ?? 89 85 ?? ?? ?? ?? 55 BB ?? ?? ?? ?? 03 DD 53 64 67 FF 36 ?? ?? 64 67 89 26 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule WATCOM_C_C___32_Run_Time_System_1988_1995
-{
-meta:
-    packer_name = "WATCOM C/C++ 32 Run-Time System 1988-1995"
-strings:
-    	$a0 = { E9 ?? ?? ?? ?? ?? ?? ?? ?? 57 41 54 43 4F 4D 20 43 2F 43 2B 2B 33 32 20 52 75 6E 2D 54 }
-	$a1 = { E9 ?? ?? ?? ?? ?? ?? ?? ?? 57 41 54 43 4F 4D ?? 43 2F 43 2B 2B 33 32 ?? 52 75 }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint
-}
-
-    
-rule WATCOM_C_C___32_Run_Time_System_1988_1994
-{
-meta:
-    packer_name = "WATCOM C/C++ 32 Run-Time System 1988-1994"
-strings:
-    	$a0 = { FB 83 ?? ?? 89 E3 89 ?? ?? ?? ?? ?? 89 ?? ?? ?? ?? ?? 66 ?? ?? ?? 66 ?? ?? ?? ?? ?? BB ?? ?? ?? ?? 29 C0 B4 30 CD 21 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule MinGW_GCC_v2_x
-{
-meta:
-    packer_name = "MinGW GCC v2.x"
-strings:
-    	$a0 = { 55 89 E5 ?? ?? ?? ?? ?? ?? FF FF ?? ?? ?? ?? ?? 00 ?? ?? 00 ?? ?? ?? 00 00 00 00 }
-	$a1 = { 55 89 E5 E8 ?? ?? ?? ?? C9 C3 ?? ?? 45 58 45 }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint
-}
-
-    
-rule MS_Run_Time_Library_1992__11_
-{
-meta:
-    packer_name = "MS Run-Time Library 1992 (11)"
-strings:
-    	$a0 = { B4 51 CD 21 8E DB B8 ?? ?? 83 E8 ?? 8E C0 33 F6 33 FF B9 ?? ?? FC F3 A5 }
 
 condition:
     	$a0 at entrypoint
@@ -14953,18 +13338,6 @@ strings:
 
 condition:
     	$a0 at entrypoint or $a1 at entrypoint or $a2 at entrypoint or $a3 at entrypoint
-}
-
-    
-rule Microsoft_Basic_Compiler_v5_60_1982_97
-{
-meta:
-    packer_name = "Microsoft Basic Compiler v5.60 1982-97"
-strings:
-    	$a0 = { 9A ?? ?? ?? ?? 9A ?? ?? ?? ?? 9A ?? ?? ?? ?? 33 DB BA ?? ?? 9A ?? ?? ?? ?? C7 06 ?? ?? ?? ?? 33 DB }
-
-condition:
-    	$a0 at entrypoint
 }
 
     
@@ -15015,19 +13388,6 @@ strings:
 
 condition:
     	$a0 at entrypoint or $a1 at entrypoint or $a2 at entrypoint
-}
-
-    
-rule TrueType_Font_file
-{
-meta:
-    packer_name = "TrueType Font file"
-strings:
-    	$a0 = { 00 01 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 4C 54 53 48 }
-	$a1 = { 00 01 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 4F 53 2F 32 }
-
-condition:
-    	$a0 or $a1
 }
 
     
@@ -15154,18 +13514,6 @@ condition:
 }
 
     
-rule Amiga_IFF_ILBM_Graphics_format
-{
-meta:
-    packer_name = "Amiga IFF/ILBM Graphics format"
-strings:
-    	$a0 = { 46 4F 52 4D ?? ?? ?? ?? 49 4C 42 4D 42 4D 48 44 }
-
-condition:
-    	$a0
-}
-
-    
 rule EPW_v1_2
 {
 meta:
@@ -15264,18 +13612,6 @@ condition:
 }
 
     
-rule EXE2COM__With_CRC_check_
-{
-meta:
-    packer_name = "EXE2COM (With CRC check)"
-strings:
-    	$a0 = { B3 ?? B9 ?? ?? 33 D2 BE ?? ?? 8B FE AC 32 C3 AA 43 49 32 E4 03 D0 E3 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule Aase_Crypter___by_santasdad
 {
 meta:
@@ -15295,18 +13631,6 @@ meta:
     packer_name = "Armadillo v1.60a"
 strings:
     	$a0 = { 55 8B EC 6A FF 68 98 71 40 00 68 48 2D 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Turbo_Pascal_v2_0_1984
-{
-meta:
-    packer_name = "Turbo Pascal v2.0 1984"
-strings:
-    	$a0 = { 90 90 CD AB ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 38 34 }
 
 condition:
     	$a0 at entrypoint
@@ -15349,18 +13673,6 @@ condition:
 }
 
     
-rule Microsoft_Visual_Basic_v5_0_v6_0
-{
-meta:
-    packer_name = "Microsoft Visual Basic v5.0/v6.0"
-strings:
-    	$a0 = { 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? 00 00 00 00 00 00 30 00 00 00 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule AntiDote_V1_2_Demo____SIS_Team
 {
 meta:
@@ -15391,18 +13703,6 @@ meta:
     packer_name = "Special EXE Password Protector v1.0"
 strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED 06 00 00 00 89 AD 8C 01 00 00 8B C5 2B 85 FE 75 00 00 89 85 3E 77 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Turbo_C_1990_or_Turbo_C_1988
-{
-meta:
-    packer_name = "Turbo C 1990 or Turbo C 1988"
-strings:
-    	$a0 = { BA ?? ?? 2E 89 ?? ?? ?? B4 30 CD 21 8B ?? ?? ?? 8B ?? ?? ?? 8E DA }
 
 condition:
     	$a0 at entrypoint
@@ -15495,18 +13795,6 @@ condition:
 }
 
     
-rule MinGW_GCC_DLL_v2xx
-{
-meta:
-    packer_name = "MinGW GCC DLL v2xx"
-strings:
-    	$a0 = { 55 89 E5 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule DotFix_Nice_Protect_V2_1____GPcH_Soft___Sign_By_haggar
 {
 meta:
@@ -15516,18 +13804,6 @@ strings:
 
 condition:
     	$a0
-}
-
-    
-rule MSVC___DLL_v_8__typical_OEP_recognized___h_
-{
-meta:
-    packer_name = "MSVC++ DLL v.8 (typical OEP recognized - h)"
-strings:
-    	$a0 = { 8B FF 55 8B EC 53 8B 5D 08 56 8B 75 0C 85 F6 57 8B 7D 10 75 09 83 3D ?? ?? ?? ?? 00 EB 26 83 FE 01 74 05 83 FE 02 75 22 A1 ?? ?? ?? ?? 85 C0 74 09 57 56 53 FF D0 85 C0 74 0C 57 56 53 E8 ?? ?? ?? FF 85 C0 75 04 33 C0 EB 4E 57 56 53 E8 ?? ?? ?? FF 83 FE 01 89 45 0C 75 0C 85 C0 75 37 57 50 53 E8 ?? ?? ?? FF 85 F6 74 05 83 FE 03 75 26 57 56 53 E8 ?? ?? ?? FF 85 C0 75 03 21 45 0C 83 7D 0C 00 74 11 A1 ?? ?? ?? ?? 85 C0 74 08 57 56 53 FF D0 89 45 0C 8B 45 0C 5F 5E 5B 5D C2 0C 00 }
-
-condition:
-    	$a0 at entrypoint
 }
 
     
@@ -15654,18 +13930,6 @@ condition:
 }
 
     
-rule Vx__TravJack_883
-{
-meta:
-    packer_name = "Vx: TravJack.883"
-strings:
-    	$a0 = { EB ?? 9C 9E 26 ?? ?? 51 04 ?? 7D ?? 00 ?? 2E ?? ?? ?? ?? 8C C8 8E C0 8E D8 80 ?? ?? ?? ?? 74 ?? 8A ?? ?? ?? BB ?? ?? 8A ?? 32 C2 88 ?? FE C2 43 81 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule Thinstall_v2_460____Jitit
 {
 meta:
@@ -15727,36 +13991,12 @@ condition:
 }
 
     
-rule PowerBASIC_Win_7_0x
-{
-meta:
-    packer_name = "PowerBASIC/Win 7.0x"
-strings:
-    	$a0 = { 55 8B EC 53 56 57 BB 00 ?? 40 00 66 2E F7 05 ?? ?? 40 00 04 00 0F 85 DB 00 00 00 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule Splash_Bitmap_v1_00__With_Unpack_Code_____BoB___Bobsoft
 {
 meta:
     packer_name = "Splash Bitmap v1.00 (With Unpack Code) -> BoB / Bobsoft"
 strings:
     	$a0 = { E8 00 00 00 00 60 8B 6C 24 20 55 81 ED ?? ?? ?? ?? 8D BD ?? ?? ?? ?? 8D 8D ?? ?? ?? ?? 29 F9 31 C0 FC F3 AA 8B 04 24 48 66 25 00 F0 66 81 38 4D 5A 75 F4 8B 48 3C 81 3C 01 50 45 00 00 75 E8 89 85 ?? ?? ?? ?? 6A 40 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Lattice_C_v3_0
-{
-meta:
-    packer_name = "Lattice C v3.0"
-strings:
-    	$a0 = { FA B8 ?? ?? 8E D8 B8 ?? ?? 8E }
 
 condition:
     	$a0 at entrypoint
@@ -16952,6 +15192,53 @@ condition:
 }
 
     
+rule Vx__TravJack_883
+{
+meta:
+    packer_name = "Vx: TravJack.883"
+strings:
+    	$a0 = { EB ?? 9C 9E 26 ?? ?? 51 04 ?? 7D ?? 00 ?? 2E ?? ?? ?? ?? 8C C8 8E C0 8E D8 80 ?? ?? ?? ?? 74 ?? 8A ?? ?? ?? BB ?? ?? 8A ?? 32 C2 88 ?? FE C2 43 81 }
+
+condition:
+    	$a0 at entrypoint
+}
+
+    
+rule Vx__SK
+{
+meta:
+    packer_name = "Vx: SK"
+strings:
+    	$a0 = { CD 20 B8 03 00 CD 10 51 E8 00 00 5E 83 EE 09 }
+
+condition:
+    	$a0 at entrypoint
+}
+
+    
+rule Vx__November_17_768
+{
+meta:
+    packer_name = "Vx: November 17.768"
+strings:
+    	$a0 = { E8 ?? ?? 5E 81 EE ?? ?? 50 33 C0 8E D8 80 3E ?? ?? ?? 0E 1F ?? ?? FC }
+
+condition:
+    	$a0 at entrypoint
+}
+
+rule Vx__Compiler
+{
+meta:
+    packer_name = "Vx: Compiler"
+strings:
+    	$a0 = { 8C C3 83 C3 10 2E 01 1E ?? 02 2E 03 1E ?? 02 53 1E }
+
+condition:
+    	$a0 at entrypoint
+}
+
+    
 rule Vx__Trojan_Telefoon
 {
 meta:
@@ -16961,19 +15248,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Microsoft_Visual_C___v7_1_EXE
-{
-meta:
-    packer_name = "Microsoft Visual C++ v7.1 EXE"
-strings:
-    	$a0 = { 6A ?? 68 ?? ?? ?? 01 E8 ?? ?? 00 00 66 81 3D 00 00 00 01 4D 5A 75 ?? A1 3C 00 00 01 ?? ?? 00 00 00 01 }
-	$a1 = { 6A ?? 68 ?? ?? ?? ?? E8 }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint
 }
 
     
@@ -17247,19 +15521,6 @@ condition:
 }
 
     
-rule Microsoft_Windows_Update_CAB_SFX_module
-{
-meta:
-    packer_name = "Microsoft Windows Update CAB SFX module"
-strings:
-    	$a0 = { E9 C5 FA FF FF 55 8B EC 56 8B 75 08 68 04 08 00 00 FF D6 59 33 C9 3B C1 75 0F 51 6A 05 FF 75 28 E8 2E 11 00 00 33 C0 EB 69 8B 55 0C 83 88 88 00 00 00 FF 83 88 84 00 00 00 FF 89 50 04 8B 55 10 89 50 0C 8B 55 14 89 50 10 8B 55 18 89 50 14 8B 55 1C 89 50 18 8B 55 20 89 50 1C 8B 55 24 89 50 20 8B 55 28 89 48 48 89 48 44 89 48 4C B9 FF FF 00 00 89 70 08 89 10 66 C7 80 B2 00 00 00 0F 00 89 88 A0 00 00 00 89 88 A8 00 00 00 89 88 A4 00 00 }
-	$a1 = { E9 C5 FA FF FF 55 8B EC 56 8B 75 08 68 04 08 00 00 FF D6 59 33 C9 3B C1 75 0F 51 6A 05 FF 75 28 E8 2E 11 00 00 33 C0 EB 69 8B 55 0C 83 88 88 00 00 00 FF 83 88 84 00 00 00 FF 89 50 04 8B 55 10 89 50 0C 8B 55 14 89 50 10 8B 55 18 89 50 14 8B 55 1C 89 50 18 }
-
-condition:
-    	$a0 or $a1
-}
-
-    
 rule PseudoSigner_0_1__Borland_Delphi_6_0___7_0_
 {
 meta:
@@ -17522,18 +15783,6 @@ meta:
     packer_name = "PseudoSigner 0.1 [Yoda's Protector 1.02] --> Anorganix"
 strings:
     	$a0 = { E8 03 00 00 00 EB 01 90 90 E9 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule MS_Run_Time_Library_1987
-{
-meta:
-    packer_name = "MS Run-Time Library 1987"
-strings:
-    	$a0 = { B4 30 CD 21 3C 02 73 ?? 9A ?? ?? ?? ?? B8 ?? ?? 50 9A ?? ?? ?? ?? 92 }
 
 condition:
     	$a0 at entrypoint
@@ -17842,42 +16091,6 @@ condition:
 }
 
     
-rule TASM___MASM
-{
-meta:
-    packer_name = "TASM / MASM"
-strings:
-    	$a0 = { 6A 00 E8 ?? ?? 00 00 A3 ?? ?? 40 00 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule MSVC___v_8__procedure_1_recognized___h_
-{
-meta:
-    packer_name = "MSVC++ v.8 (procedure 1 recognized - h)"
-strings:
-    	$a0 = { 55 8B EC 83 EC 10 A1 ?? ?? ?? ?? 83 65 F8 00 83 65 FC 00 53 57 BF 4E E6 40 BB 3B C7 BB 00 00 FF FF 74 0D 85 C3 74 09 F7 D0 A3 ?? ?? ?? ?? EB 60 56 8D 45 F8 50 FF 15 ?? ?? ?? ?? 8B 75 FC 33 75 F8 FF 15 ?? ?? ?? ?? 33 F0 FF 15 ?? ?? ?? ?? 33 F0 FF 15 ?? ?? ?? ?? 33 F0 8D 45 F0 50 FF 15 ?? ?? ?? ?? 8B 45 F4 33 45 F0 33 F0 3B F7 75 07 BE 4F E6 40 BB EB 0B 85 F3 75 07 8B C6 C1 E0 10 0B F0 89 35 ?? ?? ?? ?? F7 D6 89 35 ?? ?? ?? ?? 5E 5F 5B C9 C3 }
-
-condition:
-    	$a0
-}
-
-    
-rule XMI_music_file
-{
-meta:
-    packer_name = "XMI music file"
-strings:
-    	$a0 = { 46 4F 52 4D ?? ?? ?? ?? 58 4D 49 44 }
-
-condition:
-    	$a0
-}
-
-    
 rule RLPack_Full_Edition_1_17__aPLib_____Ap0x
 {
 meta:
@@ -18131,18 +16344,6 @@ condition:
 }
 
     
-rule Borland_Delphi_v3_0
-{
-meta:
-    packer_name = "Borland Delphi v3.0"
-strings:
-    	$a0 = { 50 6A ?? E8 ?? ?? FF FF BA ?? ?? ?? ?? 52 89 05 ?? ?? ?? ?? 89 42 04 E8 ?? ?? ?? ?? 5A 58 E8 ?? ?? ?? ?? C3 55 8B EC 33 C0 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule EXE2COM__Packed_
 {
 meta:
@@ -18299,18 +16500,6 @@ condition:
 }
 
     
-rule Install_Stub_32_bit
-{
-meta:
-    packer_name = "Install Stub 32-bit"
-strings:
-    	$a0 = { 55 8B EC 81 EC 14 ?? 00 00 53 56 57 6A 00 FF 15 ?? ?? ?? ?? 68 ?? ?? ?? ?? FF 15 ?? ?? ?? ?? 85 C0 74 29 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule Berio_2_00_beta__h_
 {
 meta:
@@ -18418,19 +16607,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Reg2Exe_2_22_2_23___by_Jan_Vorel
-{
-meta:
-    packer_name = "Reg2Exe 2.22/2.23 - by Jan Vorel"
-strings:
-    	$a0 = { 6A 00 E8 2F 1E 00 00 A3 C4 35 40 00 E8 2B 1E 00 00 6A 0A 50 6A 00 FF 35 C4 35 40 00 E8 07 00 00 00 50 E8 1B 1E 00 00 CC 68 48 00 00 00 68 00 00 00 00 68 C8 35 40 00 E8 76 16 00 00 83 C4 0C 8B 44 24 04 A3 CC 35 40 00 68 00 00 00 00 68 A0 0F 00 00 68 00 00 00 00 E8 EC 1D 00 00 A3 C8 35 40 00 E8 62 1D 00 00 E8 92 1A 00 00 E8 80 16 00 00 E8 13 14 00 00 68 01 00 00 00 68 08 36 40 00 68 00 00 00 00 8B 15 08 36 40 00 E8 71 3F 00 00 B8 00 00 10 00 BB 01 00 00 00 E8 82 3F 00 00 FF 35 48 31 40 00 B8 00 01 00 00 E8 0D 13 00 00 8D 0D EC 35 40 00 5A E8 F2 13 00 00 68 00 01 00 00 FF 35 EC 35 40 00 E8 84 1D 00 00 A3 F4 35 40 00 FF 35 48 31 40 00 FF 35 F4 35 40 00 FF 35 EC 35 40 00 E8 }
-	$a1 = { 6A 00 E8 2F 1E 00 00 A3 C4 35 40 00 E8 2B 1E 00 00 6A 0A 50 6A 00 FF 35 C4 35 40 00 E8 07 00 00 00 50 E8 1B 1E 00 00 CC 68 48 00 00 00 68 00 00 00 00 68 C8 35 40 00 E8 76 16 00 00 83 C4 0C 8B 44 24 04 A3 CC 35 40 00 68 00 00 00 00 68 A0 0F 00 00 68 00 00 }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint
 }
 
     
@@ -18687,18 +16863,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule MinGW_3_2_x__Dll_main_
-{
-meta:
-    packer_name = "MinGW 3.2.x (Dll_main)"
-strings:
-    	$a0 = { 55 89 E5 83 EC 18 89 75 FC 8B 75 0C 89 5D F8 83 FE 01 74 5C 89 74 24 04 8B 55 10 89 54 24 08 8B 55 08 89 14 24 E8 96 01 00 00 83 EC 0C 83 FE 01 89 C3 74 2C 85 F6 75 0C 8B 0D 00 30 00 10 85 C9 75 10 31 DB 89 D8 8B 5D F8 8B 75 FC 89 EC 5D C2 0C 00 E8 59 00 }
-
-condition:
-    	$a0
 }
 
     
@@ -19377,18 +17541,6 @@ condition:
 }
 
     
-rule Turbo_C_or_Borland_C__
-{
-meta:
-    packer_name = "Turbo C or Borland C++"
-strings:
-    	$a0 = { BA ?? ?? 2E 89 16 ?? ?? B4 30 CD 21 8B 2E ?? ?? 8B 1E ?? ?? 8E DA }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule Private_exe_Protector_V2_0____SetiSoft_Team
 {
 meta:
@@ -19708,31 +17860,6 @@ condition:
 }
 
     
-rule Creative_Audio_file
-{
-meta:
-    packer_name = "Creative Audio file"
-strings:
-    	$a0 = { 43 72 65 61 74 69 76 65 20 56 6F 69 63 65 20 46 69 6C 65 }
-
-condition:
-    	$a0
-}
-
-    
-rule MinGW_v3_2_x__WinMain_
-{
-meta:
-    packer_name = "MinGW v3.2.x (WinMain)"
-strings:
-    	$a0 = { 55 89 E5 83 EC 08 C7 04 24 01 00 00 00 FF 15 FC 40 40 00 E8 68 00 00 00 89 EC 31 C0 5D C3 89 F6 55 89 E5 83 EC 08 C7 04 24 02 00 00 00 FF 15 FC 40 40 00 E8 48 00 00 00 89 EC 31 C0 5D C3 89 F6 55 89 E5 83 EC 08 8B 55 08 89 14 24 FF 15 18 41 40 00 89 EC 5D C3 8D 76 00 8D BC 27 00 00 00 00 55 89 E5 83 EC 08 8B 55 08 89 14 24 FF 15 0C 41 40 00 89 EC 5D C3 8D 76 00 8D BC 27 00 00 00 00 55 89 E5 53 83 EC 24 C7 04 24 A0 11 40 00 E8 5D 08 00 00 83 EC 04 E8 55 03 00 00 C7 04 24 00 20 40 00 8B 15 10 20 40 00 8D 4D F8 C7 45 F8 00 00 00 00 89 4C 24 10 89 54 24 0C 8D 55 F4 89 54 24 08 C7 44 24 04 04 20 40 00 E8 D2 07 00 00 A1 20 20 40 00 85 C0 74 76 A3 30 20 40 00 A1 08 41 40 00 85 C0 74 1F 89 04 24 E8 93 07 00 00 8B 1D 20 20 40 00 89 04 24 89 5C 24 04 E8 91 07 00 00 }
-	$a1 = { 55 89 E5 83 EC 08 C7 04 24 01 00 00 00 FF 15 FC 40 40 00 E8 68 00 00 00 89 EC 31 C0 5D C3 89 F6 55 89 E5 83 EC 08 C7 04 24 02 00 00 00 FF 15 FC 40 40 00 E8 48 00 00 00 89 EC 31 C0 5D C3 89 F6 55 89 E5 83 EC 08 8B 55 08 89 14 24 FF 15 18 41 40 00 89 EC 5D }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint
-}
-
-    
 rule Upack_0_24_beta____Dwing
 {
 meta:
@@ -19755,30 +17882,6 @@ strings:
 
 condition:
     	$a0 at entrypoint or $a1 at entrypoint
-}
-
-    
-rule MIDI_Music_file
-{
-meta:
-    packer_name = "MIDI Music file"
-strings:
-    	$a0 = { 4D 54 68 64 00 00 00 06 ?? ?? ?? ?? ?? ?? 4D 54 }
-
-condition:
-    	$a0
-}
-
-    
-rule Microsoft_Visual_C____Basic__NET
-{
-meta:
-    packer_name = "Microsoft Visual C# / Basic .NET"
-strings:
-    	$a0 = { FF 25 00 20 ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 }
-
-condition:
-    	$a0 at entrypoint
 }
 
     
@@ -19819,18 +17922,6 @@ condition:
 }
 
     
-rule Microsoft_Visual_C___7_0_MFC
-{
-meta:
-    packer_name = "Microsoft Visual C++ 7.0 MFC"
-strings:
-    	$a0 = { 6A 60 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? BF 94 00 00 00 8B C7 E8 ?? ?? ?? ?? 89 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule Nullsoft_PiMP_Install_System_v1_x
 {
 meta:
@@ -19841,30 +17932,6 @@ strings:
 
 condition:
     	$a0 or $a1
-}
-
-    
-rule Obsidium_1_3_0_37____Obsidium_Software
-{
-meta:
-    packer_name = "Obsidium 1.3.0.37 -> Obsidium Software"
-strings:
-    	$a0 = { EB 02 ?? ?? E8 26 00 00 00 EB 03 ?? ?? ?? EB 01 ?? 8B 54 24 0C EB 04 ?? ?? ?? ?? 83 82 B8 00 00 00 26 EB 01 ?? 33 C0 EB 02 ?? ?? C3 EB 01 ?? EB 04 ?? ?? ?? ?? 64 67 FF 36 00 00 EB 01 ?? 64 67 89 26 00 00 EB 01 ?? EB 03 ?? ?? ?? 50 EB 03 ?? ?? ?? 33 C0 EB 03 ?? ?? ?? 8B 00 EB 04 ?? ?? ?? ?? C3 EB 03 ?? ?? ?? E9 FA 00 00 00 EB 03 ?? ?? ?? E8 D5 FF FF FF EB 04 ?? ?? ?? ?? EB 01 ?? 58 EB 02 ?? ?? EB 03 ?? ?? ?? 64 67 8F 06 00 00 EB 01 ?? 83 C4 04 EB 03 ?? ?? ?? E8 23 27 00 00 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule from_NORMAN_Anti_Virus_Utilites
-{
-meta:
-    packer_name = "from NORMAN Anti-Virus Utilites"
-strings:
-    	$a0 = { E8 ?? ?? 5B 52 45 2F 4E 44 44 53 5D 0D 0A }
-
-condition:
-    	$a0 at entrypoint
 }
 
     
@@ -20078,18 +18145,6 @@ condition:
 }
 
     
-rule JAR_Archive
-{
-meta:
-    packer_name = "JAR Archive"
-strings:
-    	$a0 = { 1A 4A 61 72 1B }
-
-condition:
-    	$a0
-}
-
-    
 rule WWPACK_v3_00__v3_01__Extractable_
 {
 meta:
@@ -20099,18 +18154,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule configuration_file_Version__v3__v4
-{
-meta:
-    packer_name = "configuration file Version %v3.%v4"
-strings:
-    	$a0 = { 50 68 6F 6E 65 62 6F 6F 6B ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 63 6F }
-
-condition:
-    	$a0
 }
 
     
@@ -20193,18 +18236,6 @@ meta:
     packer_name = "FSG 1.10 (Eng) -> dulek/xt -> (MASM32 / TASM32)"
 strings:
     	$a0 = { 03 F7 23 FE 33 FB EB 02 CD 20 BB 80 ?? 40 00 EB 01 86 EB 01 90 B8 F4 00 00 00 83 EE 05 2B F2 81 F6 EE 00 00 00 EB 02 CD 20 8A 0B E8 02 00 00 00 A9 54 5E C1 EE 07 F7 D7 EB 01 DE 81 E9 B7 96 A0 C4 EB 01 6B EB 02 CD 20 80 E9 4B C1 CF 08 EB 01 71 80 E9 1C EB }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Microsoft_C_v1_04
-{
-meta:
-    packer_name = "Microsoft C v1.04"
-strings:
-    	$a0 = { FA B8 ?? ?? 8E D8 8E D0 26 8B ?? ?? ?? 2B D8 F7 ?? ?? ?? 75 ?? B1 04 D3 E3 EB }
 
 condition:
     	$a0 at entrypoint
@@ -20539,18 +18570,6 @@ condition:
 }
 
     
-rule Microsoft_Visual_C___8
-{
-meta:
-    packer_name = "Microsoft Visual C++ 8"
-strings:
-    	$a0 = { E8 ?? ?? 00 00 E9 ?? ?? FF FF }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule SLVc0deProtector_1_1____SLV__h_
 {
 meta:
@@ -20624,18 +18643,6 @@ condition:
 }
 
     
-rule Microsoft_Visual_C__v7_0___Basic__NET
-{
-meta:
-    packer_name = "Microsoft Visual C# v7.0 / Basic .NET"
-strings:
-    	$a0 = { FF 25 00 20 40 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 }
-
-condition:
-    	$a0
-}
-
-    
 rule RJoiner_by_Vaska__Sign_from_pinch_25_03_2007_17_00_
 {
 meta:
@@ -20661,18 +18668,6 @@ strings:
 
 condition:
     	$a0 at entrypoint or $a1 at entrypoint or $a2 at entrypoint or $a3 at entrypoint or $a4 at entrypoint
-}
-
-    
-rule Turbo_Pascal_Desktop_File
-{
-meta:
-    packer_name = "Turbo Pascal Desktop File"
-strings:
-    	$a0 = { 54 75 72 62 6F 20 50 61 73 63 61 6C 20 44 65 73 6B 74 6F 70 }
-
-condition:
-    	$a0
 }
 
     
@@ -20706,18 +18701,6 @@ meta:
     packer_name = "Vx: Gotcha.879"
 strings:
     	$a0 = { E8 ?? ?? 5B 81 EB ?? ?? 9C FC 2E ?? ?? ?? ?? ?? ?? ?? 8C D8 05 ?? ?? 2E ?? ?? ?? ?? 50 2E ?? ?? ?? ?? ?? ?? 8B C3 05 ?? ?? 8B F0 BF 00 01 B9 20 00 F3 A4 0E B8 00 01 50 B8 DA DA CD 21 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Lattice_C_v1_01
-{
-meta:
-    packer_name = "Lattice C v1.01"
-strings:
-    	$a0 = { FA B8 ?? ?? 05 ?? ?? B1 ?? D3 E8 8C CB 03 C3 8E D8 8E D0 26 ?? ?? ?? ?? 2B D8 F7 ?? ?? ?? 75 ?? B1 ?? D3 E3 EB }
 
 condition:
     	$a0 at entrypoint
@@ -20898,18 +18881,6 @@ meta:
     packer_name = "Morphine 2.7 -> Holy_Father & Ratter/29A (h)"
 strings:
     	$a0 = { 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 6B 65 72 6E 65 6C 33 32 2E 64 6C 6C 00 00 47 65 74 50 72 6F 63 }
-
-condition:
-    	$a0
-}
-
-    
-rule XCF_File_Format_by_Adeline_Software
-{
-meta:
-    packer_name = "XCF File Format by Adeline Software"
-strings:
-    	$a0 = { 46 72 61 6D 65 4C 65 6E F4 0F }
 
 condition:
     	$a0
@@ -21357,18 +19328,6 @@ condition:
 }
 
     
-rule MingWin32_GCC_3_x
-{
-meta:
-    packer_name = "MingWin32 GCC 3.x"
-strings:
-    	$a0 = { 55 89 E5 83 EC 08 C7 04 24 ?? 00 00 00 FF 15 ?? ?? 40 00 E8 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 55 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule ExeSplitter_1_3__Split_Crypt_Method_____Bill_Prisoner___TPOC
 {
 meta:
@@ -21400,18 +19359,6 @@ meta:
     packer_name = "RLPack 1.16 (LZMA compression) -> ap0x (h)"
 strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 8D B5 5A 0A 00 00 8D 9D 40 02 00 00 33 FF E8 83 01 00 00 6A 40 68 00 10 00 00 68 00 20 0C 00 6A 00 FF 95 EB 09 00 00 89 85 3A 0A 00 00 EB 14 60 FF B5 3A 0A 00 00 FF 34 37 FF 74 37 04 FF D3 61 83 C7 08 83 3C 37 00 75 E6 8D 74 37 04 53 6A 40 68 00 10 00 00 68 ?? ?? ?? ?? 6A 00 FF 95 EB 09 00 00 89 85 56 0A 00 00 5B 60 FF B5 3A 0A 00 00 56 FF B5 56 0A 00 00 FF D3 61 8B B5 56 0A 00 00 8B C6 EB 01 40 80 38 01 75 FA 40 8B 38 E8 E7 00 00 00 83 C0 04 89 85 52 0A 00 00 E9 97 00 00 00 56 FF 95 E3 09 00 00 89 85 4E 0A 00 00 85 C0 0F 84 C2 }
-
-condition:
-    	$a0
-}
-
-    
-rule Microsoft_Visual_C___6_0_DLL
-{
-meta:
-    packer_name = "Microsoft Visual C++ 6.0 DLL"
-strings:
-    	$a0 = { 55 8B EC 53 8B 5D 08 56 8B 75 0C 57 8B 7D 10 85 F6 75 09 83 3D ?? ?? ?? ?? ?? EB 26 83 FE 01 74 05 83 FE 02 75 22 A1 ?? ?? ?? ?? 85 C0 74 09 57 56 53 FF D0 85 C0 74 0C 57 56 53 E8 15 FF FF FF 85 C0 75 04 33 C0 EB 4E }
 
 condition:
     	$a0
@@ -21490,18 +19437,6 @@ condition:
 }
 
     
-rule Microsoft_Visual_C___7_0_DLL
-{
-meta:
-    packer_name = "Microsoft Visual C++ 7.0 DLL"
-strings:
-    	$a0 = { 55 8B EC 53 8B 5D 08 56 8B 75 0C 85 F6 57 8B 7D 10 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 01 }
-
-condition:
-    	$a0
-}
-
-    
 rule INCrypter_0_3__INinY____by_z3e_NiFe
 {
 meta:
@@ -21524,21 +19459,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Microsoft_Visual_C___8_0
-{
-meta:
-    packer_name = "Microsoft Visual C++ 8.0"
-strings:
-    	$a0 = { 00 00 00 00 00 00 ?? ?? 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 ?? ?? ?? ?? ?? 00 00 00 00 ?? ?? 00 00 00 00 00 ?? ?? ?? 00 00 00 00 00 ?? ?? ?? 00 00 00 00 00 ?? ?? ?? ?? 00 00 00 00 00 ?? ?? 00 00 00 00 00 ?? ?? ?? 00 00 }
-	$a1 = { 83 3D ?? ?? ?? ?? 00 74 1A 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? 85 C0 59 74 0B FF 74 24 04 FF 15 ?? ?? ?? ?? 59 E8 ?? ?? ?? ?? 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? 85 C0 59 59 75 54 56 57 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? BE ?? ?? ?? ?? 8B C6 BF }
-	$a2 = { 6A 14 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? BB 94 00 00 00 53 6A 00 8B ?? ?? ?? ?? ?? FF D7 50 FF ?? ?? ?? ?? ?? 8B F0 85 F6 75 0A 6A 12 E8 ?? ?? ?? ?? 59 EB 18 89 1E 56 FF ?? ?? ?? ?? ?? 56 85 C0 75 14 50 FF D7 50 FF ?? ?? ?? ?? ?? B8 }
-	$a3 = { 48 83 EC 28 E8 ?? ?? 00 00 48 83 C4 28 E9 ?? ?? FF FF CC CC CC CC CC CC CC CC CC CC CC CC CC CC }
-
-condition:
-    	$a0 at entrypoint or $a1 or $a2 at entrypoint or $a3 at entrypoint
 }
 
     
@@ -21858,21 +19778,6 @@ condition:
 }
 
     
-rule Nullsoft_Install_System_v2_0b4
-{
-meta:
-    packer_name = "Nullsoft Install System v2.0b4"
-strings:
-    	$a0 = { 83 EC 10 53 55 56 57 C7 44 24 14 F0 91 40 00 33 ED C6 44 24 13 20 FF 15 2C 70 40 00 55 FF 15 88 72 40 00 BE 00 D4 42 00 BF 00 04 00 00 56 57 A3 60 6F 42 00 FF 15 C4 70 40 00 E8 9F FF FF FF 8B 1D 90 70 40 00 85 C0 75 21 68 FB 03 00 00 56 FF 15 60 71 40 00 68 E4 91 40 00 56 FF D3 E8 7C FF FF FF 85 C0 0F 84 59 01 00 00 BE E0 66 42 00 56 FF 15 68 70 40 00 68 D8 91 40 00 56 E8 FE 27 00 00 57 FF 15 BC 70 40 00 BE 00 C0 42 00 50 56 FF 15 B8 70 40 00 6A 00 FF 15 44 71 40 00 80 3D 00 C0 42 00 22 A3 E0 6E 42 00 8B C6 75 0A C6 44 24 13 22 B8 01 C0 42 00 8B 3D 10 72 40 00 EB 09 3A 4C 24 13 74 09 50 FF D7 8A 08 84 C9 75 F1 50 FF D7 8B F0 89 74 24 1C EB 05 56 FF D7 8B F0 80 3E 20 74 F6 80 3E 2F 75 44 46 80 3E 53 75 0C 8A 46 01 0C 20 3C 20 75 03 83 CD 02 81 3E 4E 43 52 }
-	$a1 = { 83 EC 10 53 55 56 57 C7 44 24 14 F0 91 40 00 33 ED C6 44 24 13 20 FF 15 2C 70 40 00 55 FF 15 88 72 40 00 BE 00 D4 42 00 BF 00 04 00 00 56 57 A3 60 6F 42 00 FF 15 C4 70 40 00 E8 9F FF FF FF 8B 1D 90 70 40 00 85 C0 75 21 68 FB 03 00 00 56 FF 15 60 71 40 00 }
-	$a2 = { 83 EC 14 83 64 24 04 00 53 55 56 57 C6 44 24 13 20 FF 15 30 70 40 00 BE 00 20 7A 00 BD 00 04 00 00 56 55 FF 15 C4 70 40 00 56 E8 7D 2B 00 00 8B 1D 8C 70 40 00 6A 00 56 FF D3 BF 80 92 79 00 56 57 E8 15 26 00 00 85 C0 75 38 68 F8 91 40 00 55 56 FF 15 60 71 }
-	$a3 = { 83 EC 14 83 64 24 04 00 53 55 56 57 C6 44 24 13 20 FF 15 30 70 40 00 BE 00 20 7A 00 BD 00 04 00 00 56 55 FF 15 C4 70 40 00 56 E8 7D 2B 00 00 8B 1D 8C 70 40 00 6A 00 56 FF D3 BF 80 92 79 00 56 57 E8 15 26 00 00 85 C0 75 38 68 F8 91 40 00 55 56 FF 15 60 71 40 00 03 C6 50 E8 78 29 00 00 56 E8 47 2B 00 00 6A 00 56 FF D3 56 57 E8 EA 25 00 00 85 C0 75 0D C7 44 24 14 58 91 40 00 E9 72 02 00 00 57 FF 15 24 71 40 00 68 EC 91 40 00 57 E8 43 }
-
-condition:
-    	$a0 or $a1 or $a2 or $a3
-}
-
-    
 rule RCryptor_v1_6b___v1_6c_____Vaska
 {
 meta:
@@ -21923,18 +19828,6 @@ condition:
 }
 
     
-rule CGM_Graphics_format
-{
-meta:
-    packer_name = "CGM Graphics format"
-strings:
-    	$a0 = { 00 2A 08 48 69 4A 61 61 6B 20 32 }
-
-condition:
-    	$a0
-}
-
-    
 rule yoda_s_Protector_1_0_beta____Ashkbiz_Danehkar
 {
 meta:
@@ -21978,18 +19871,6 @@ meta:
     packer_name = "MZ_Crypt 1.0 - by BrainSt0rm"
 strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED 25 14 40 00 8B BD 77 14 40 00 8B 8D 7F 14 40 00 EB 28 83 7F 1C 07 75 1E 8B 77 0C 03 B5 7B 14 40 00 33 C0 EB 0C 50 8A A5 83 14 40 00 30 26 58 40 46 3B 47 10 76 EF 83 C7 28 49 0B C9 75 D4 8B 85 73 14 40 00 89 44 24 1C 61 FF E0 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule InstallShield_2000
-{
-meta:
-    packer_name = "InstallShield 2000"
-strings:
-    	$a0 = { 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 64 A1 ?? ?? ?? ?? 50 64 89 25 ?? ?? ?? ?? 83 C4 ?? 53 56 57 }
 
 condition:
     	$a0 at entrypoint
@@ -22074,18 +19955,6 @@ meta:
     packer_name = "mucki's protector -> mucki"
 strings:
     	$a0 = { BE ?? ?? ?? ?? B9 ?? ?? ?? ?? 8A 06 F6 D0 88 06 46 E2 F7 E9 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule InstallShield_3_x_Custom
-{
-meta:
-    packer_name = "InstallShield 3.x Custom"
-strings:
-    	$a0 = { 64 A1 00 00 00 00 55 8B EC 6A FF 68 00 A0 40 00 68 34 76 40 00 50 64 89 25 00 00 00 00 83 EC 60 53 56 57 89 65 E8 FF 15 8C E3 40 00 A3 70 B1 40 00 33 C0 A0 71 B1 40 00 A3 7C B1 40 00 A1 70 B1 }
 
 condition:
     	$a0 at entrypoint
@@ -22234,18 +20103,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Windows_Animation_format
-{
-meta:
-    packer_name = "Windows Animation format"
-strings:
-    	$a0 = { 52 49 46 46 ?? ?? ?? ?? 41 43 4F 4E 4C 49 53 54 }
-
-condition:
-    	$a0
 }
 
     
@@ -22546,18 +20403,6 @@ condition:
 }
 
     
-rule File_Analyzer_Registration_file_v1_1
-{
-meta:
-    packer_name = "File Analyzer Registration file v1.1"
-strings:
-    	$a0 = { 24 46 41 52 45 47 24 45 4E 43 3D ?? 26 26 52 45 47 3D ?? 26 26 45 58 50 3D }
-
-condition:
-    	$a0
-}
-
-    
 rule BeRo_Tiny_Pascal____BeRo___Farbrausch
 {
 meta:
@@ -22777,18 +20622,6 @@ condition:
 }
 
     
-rule MingWin32___Dev_C___v4_9_9_1__h_
-{
-meta:
-    packer_name = "MingWin32 - Dev C++ v4.9.9.1 (h)"
-strings:
-    	$a0 = { 55 89 E5 83 EC 08 C7 04 24 01 00 00 00 FF 15 ?? ?? ?? 00 E8 C8 FE FF FF 90 8D B4 26 00 00 00 00 55 89 E5 83 EC 08 C7 04 24 02 00 00 00 FF 15 ?? ?? ?? 00 E8 A8 FE FF FF 90 8D B4 26 00 00 00 00 55 8B 0D ?? ?? ?? 00 89 E5 5D FF E1 8D 74 26 00 55 8B 0D ?? ?? ?? 00 89 E5 5D FF E1 90 90 90 90 55 89 E5 5D E9 ?? ?? 00 00 90 90 90 90 90 90 90 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule PACKWIN_v1_01p
 {
 meta:
@@ -22932,18 +20765,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Borland_Delphi_5____Portions_Copyright__c__1983_99_Borland__h_
-{
-meta:
-    packer_name = "Borland Delphi 5 -> Portions Copyright (c) 1983,99 Borland (h)"
-strings:
-    	$a0 = { 50 6F 72 74 69 6F 6E 73 20 43 6F 70 79 72 69 67 68 74 20 28 63 29 20 31 39 38 33 2C 39 39 20 42 6F 72 6C 61 6E 64 00 }
-
-condition:
-    	$a0
 }
 
     
@@ -23209,18 +21030,6 @@ condition:
 }
 
     
-rule Nullsoft_Install_System_v1_98
-{
-meta:
-    packer_name = "Nullsoft Install System v1.98"
-strings:
-    	$a0 = { 83 EC 0C 53 56 57 FF 15 2C 81 40 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule ExeShield_v3_7____ExeShield_Team__h_
 {
 meta:
@@ -23391,18 +21200,6 @@ condition:
 }
 
     
-rule Microsoft_Visual_C___5_0___7_1
-{
-meta:
-    packer_name = "Microsoft Visual C++ 5.0 - 7.1"
-strings:
-    	$a0 = { 55 8B EC 81 EC 04 01 00 00 68 04 01 00 00 8D 85 FC FE FF FF 50 6A 00 FF 15 ?? ?? ?? ?? E8 ?? ?? ?? ?? 8D 8D FC FE FF FF 51 E8 ?? ?? ?? ?? 83 C4 04 E8 ?? ?? ?? ?? 6A 00 FF 15 ?? ?? ?? ?? 8B E5 5D C2 10 00 }
-
-condition:
-    	$a0
-}
-
-    
 rule Launcher_Generator_1_03
 {
 meta:
@@ -23496,18 +21293,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule PRO_MIDI_Music_file
-{
-meta:
-    packer_name = "PRO-MIDI Music file"
-strings:
-    	$a0 = { 52 49 46 46 ?? ?? ?? ?? 52 4D 49 44 }
-
-condition:
-    	$a0
 }
 
     
@@ -23856,18 +21641,6 @@ condition:
 }
 
     
-rule _NET_executable____Microsoft
-{
-meta:
-    packer_name = ".NET executable -> Microsoft"
-strings:
-    	$a0 = { 00 00 00 00 00 00 00 00 5F 43 6F 72 45 78 65 4D 61 69 6E 00 6D 73 63 6F 72 65 65 2E 64 6C 6C 00 00 00 00 00 FF 25 }
-
-condition:
-    	$a0
-}
-
-    
 rule __PseudoSigner_0_2__Gleam_1_00______Anorganix
 {
 meta:
@@ -23978,18 +21751,6 @@ condition:
 }
 
     
-rule LCC_Win32_v1_x
-{
-meta:
-    packer_name = "LCC Win32 v1.x"
-strings:
-    	$a0 = { 64 A1 ?? ?? ?? ?? 55 89 E5 6A FF 68 ?? ?? ?? ?? 68 9A 10 40 ?? 50 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule GameGuard___nProtect
 {
 meta:
@@ -24081,18 +21842,6 @@ meta:
     packer_name = "NX PE Packer v1.0"
 strings:
     	$a0 = { FF 60 FF CA FF 00 BA DC 0D E0 40 00 50 00 60 00 70 00 80 00 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule MinGW_GCC_2_x
-{
-meta:
-    packer_name = "MinGW GCC 2.x"
-strings:
-    	$a0 = { 55 89 E5 ?? ?? ?? ?? ?? ?? FF FF ?? ?? ?? ?? ?? 00 ?? ?? 00 ?? ?? ?? 00 00 00 00 }
 
 condition:
     	$a0 at entrypoint
@@ -24219,18 +21968,6 @@ strings:
 
 condition:
     	$a0 or $a1 at entrypoint
-}
-
-    
-rule MinGW_v3_2_x___mainCRTStartup_
-{
-meta:
-    packer_name = "MinGW v3.2.x (_mainCRTStartup)"
-strings:
-    	$a0 = { 55 89 E5 83 EC 08 6A 00 6A 00 6A 00 6A 00 E8 0D 00 00 00 B8 00 00 00 00 C9 C3 90 90 90 90 90 90 FF 25 38 20 40 00 90 90 00 00 00 00 00 00 00 00 FF FF FF FF 00 00 00 00 FF FF FF FF 00 00 00 00 00 }
-
-condition:
-    	$a0 at entrypoint
 }
 
     
@@ -24470,18 +22207,6 @@ meta:
     packer_name = "EXE Stealth v2.74 -> WebToolMaster"
 strings:
     	$a0 = { EB 00 EB 17 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 60 90 E8 00 00 00 00 5D }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule PureBasic_4_x_DLL____Neil_Hodgson
-{
-meta:
-    packer_name = "PureBasic 4.x DLL -> Neil Hodgson"
-strings:
-    	$a0 = { 83 7C 24 08 01 75 0E 8B 44 24 04 A3 ?? ?? ?? 10 E8 22 00 00 00 83 7C 24 08 02 75 00 83 7C 24 08 00 75 05 E8 ?? 00 00 00 83 7C 24 08 03 75 00 B8 01 00 00 00 C2 0C 00 68 00 00 00 00 68 00 10 00 00 68 00 00 00 00 E8 ?? 0F 00 00 A3 }
 
 condition:
     	$a0 at entrypoint
@@ -24839,18 +22564,6 @@ condition:
 }
 
     
-rule Free_Pascal_v0_99_10
-{
-meta:
-    packer_name = "Free Pascal v0.99.10"
-strings:
-    	$a0 = { E8 00 6E 00 00 55 89 E5 8B 7D 0C 8B 75 08 89 F8 8B 5D 10 29 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule Thinstall_Virtualization_Suite_V3_0X____Thinstall_Company
 {
 meta:
@@ -24905,18 +22618,6 @@ meta:
     packer_name = "PE Spin 0.b"
 strings:
     	$a0 = { EB 01 68 60 E8 00 00 00 00 8B 1C 24 83 C3 12 81 2B E8 B1 06 00 FE 4B FD 82 2C 24 72 C8 46 00 0B E4 74 9E 75 01 C7 81 73 04 D7 7A F7 2F 81 73 19 77 00 43 B7 F6 C3 6B B7 00 00 F9 FF E3 C9 C2 08 00 A3 68 72 01 FF 5D 33 C9 41 E2 26 E8 01 00 00 00 EA 5A 33 C9 }
-
-condition:
-    	$a0
-}
-
-    
-rule MASM_TASM___sig2_h_
-{
-meta:
-    packer_name = "MASM/TASM - sig2(h)"
-strings:
-    	$a0 = { C2 ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 }
 
 condition:
     	$a0
@@ -25083,48 +22784,12 @@ condition:
 }
 
     
-rule ASYLUM_Music_File_v_1_0
-{
-meta:
-    packer_name = "ASYLUM Music File v.1.0"
-strings:
-    	$a0 = { 41 53 59 4C 55 4D 20 4D 75 73 69 63 20 46 6F 72 6D 61 74 20 56 31 2E 30 00 }
-
-condition:
-    	$a0
-}
-
-    
-rule WinZip__32_bit__6_x
-{
-meta:
-    packer_name = "WinZip (32-bit) 6.x"
-strings:
-    	$a0 = { FF 15 FC 81 40 00 B1 22 38 08 74 02 B1 20 40 80 38 00 74 10 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule EXE_Shield_0_5____Smoke
 {
 meta:
     packer_name = "EXE Shield 0.5 -> Smoke"
 strings:
     	$a0 = { E8 04 00 00 00 83 60 EB 0C 5D EB 05 45 55 EB 04 B8 EB F9 00 C3 E8 00 00 00 00 5D 81 ED BC 1A 40 00 EB 01 00 8D B5 46 1B 40 00 BA B3 0A 00 00 EB 01 00 8D 8D F9 25 40 00 8B 09 E8 14 00 00 00 83 EB 01 00 8B FE E8 00 00 00 00 58 83 C0 07 50 C3 00 EB 04 58 40 }
-
-condition:
-    	$a0
-}
-
-    
-rule Nullsoft_Install_System_2_0_RC2
-{
-meta:
-    packer_name = "Nullsoft Install System 2.0 RC2"
-strings:
-    	$a0 = { 83 EC 10 53 55 56 57 C7 44 24 14 70 92 40 00 33 ED C6 44 24 13 20 FF 15 2C 70 40 00 55 FF 15 84 72 40 00 BE 00 54 43 00 BF 00 04 00 00 56 57 A3 A8 EC 42 00 FF 15 C4 70 40 00 E8 8D FF FF FF 8B 1D 90 70 40 00 85 C0 75 21 68 FB 03 00 00 56 FF 15 5C 71 40 00 }
 
 condition:
     	$a0
@@ -25176,19 +22841,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Nullsoft_Install_System_v2_0_RC2
-{
-meta:
-    packer_name = "Nullsoft Install System v2.0 RC2"
-strings:
-    	$a0 = { 83 EC 10 53 55 56 57 C7 44 24 14 70 92 40 00 33 ED C6 44 24 13 20 FF 15 2C 70 40 00 55 FF 15 84 72 40 00 BE 00 54 43 00 BF 00 04 00 00 56 57 A3 A8 EC 42 00 FF 15 C4 70 40 00 E8 8D FF FF FF 8B 1D 90 70 40 00 85 C0 75 21 68 FB 03 00 00 56 FF 15 5C 71 40 00 68 68 92 40 00 56 FF D3 E8 6A FF FF FF 85 C0 0F 84 59 01 00 00 BE 20 E4 42 00 56 FF 15 68 70 40 00 68 5C 92 40 00 56 E8 B9 28 00 00 57 FF 15 BC 70 40 00 BE 00 40 43 00 50 56 FF 15 B8 70 40 00 6A 00 FF 15 44 71 40 00 80 3D 00 40 43 00 22 A3 20 EC 42 00 8B C6 75 0A C6 44 24 13 22 B8 01 40 43 00 8B 3D 18 72 40 00 EB 09 3A 4C 24 13 74 09 50 FF D7 8A 08 84 C9 75 F1 50 FF D7 8B F0 89 74 24 1C EB 05 56 FF D7 8B F0 80 3E 20 74 F6 80 3E 2F 75 44 46 80 3E 53 75 0C 8A 46 01 0C 20 3C 20 75 03 83 CD 02 81 3E 4E 43 52 }
-	$a1 = { 83 EC 10 53 55 56 57 C7 44 24 14 70 92 40 00 33 ED C6 44 24 13 20 FF 15 2C 70 40 00 55 FF 15 84 72 40 00 BE 00 54 43 00 BF 00 04 00 00 56 57 A3 A8 EC 42 00 FF 15 C4 70 40 00 E8 8D FF FF FF 8B 1D 90 70 40 00 85 C0 75 21 68 FB 03 00 00 56 FF 15 5C 71 40 00 }
-
-condition:
-    	$a0 or $a1
 }
 
     
@@ -25307,18 +22959,6 @@ meta:
     packer_name = "TopSpeed v3.01 1989"
 strings:
     	$a0 = { 1E BA ?? ?? 8E DA 8B ?? ?? ?? 8B ?? ?? ?? FF ?? ?? ?? 50 53 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule ARC_SFX_Archive
-{
-meta:
-    packer_name = "ARC-SFX Archive"
-strings:
-    	$a0 = { 8C C8 8C DB 8E D8 8E C0 89 ?? ?? ?? 2B C3 A3 ?? ?? 89 ?? ?? ?? BE ?? ?? B9 ?? ?? BF ?? ?? BA ?? ?? FC AC 32 C2 8A D8 }
 
 condition:
     	$a0 at entrypoint
@@ -25655,18 +23295,6 @@ condition:
 }
 
     
-rule _NET_executable
-{
-meta:
-    packer_name = ".NET executable"
-strings:
-    	$a0 = { FF 25 00 20 40 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule BookManager_v9510
 {
 meta:
@@ -25813,18 +23441,6 @@ condition:
 }
 
     
-rule Turbo_Pascal_Help_File
-{
-meta:
-    packer_name = "Turbo Pascal Help File"
-strings:
-    	$a0 = { 54 55 52 ?? ?? ?? 50 41 53 ?? ?? ?? ?? 48 45 4C 50 }
-
-condition:
-    	$a0
-}
-
-    
 rule PseudoSigner_0_1__LCC_Win32_1_x_____Anorganix
 {
 meta:
@@ -25907,18 +23523,6 @@ strings:
 
 condition:
     	$a0
-}
-
-    
-rule Microsoft_Visual_C_v2_0
-{
-meta:
-    packer_name = "Microsoft Visual C v2.0"
-strings:
-    	$a0 = { 53 56 57 BB ?? ?? ?? ?? 8B ?? ?? ?? 55 3B FB 75 }
-
-condition:
-    	$a0 at entrypoint
 }
 
     
@@ -26277,21 +23881,6 @@ condition:
 }
 
     
-rule MASM___TASM
-{
-meta:
-    packer_name = "MASM / TASM"
-strings:
-    	$a0 = { 6A 00 E8 ?? ?? 00 00 A3 ?? 32 40 00 E8 ?? ?? 00 00 }
-	$a1 = { 6A 00 E8 ?? 0? 00 00 A3 ?? ?? 40 00 ?? ?? ?? ?0 ?0 ?? ?? 00 00 00 ?? ?? 0? ?? ?? ?0 ?? ?? ?0 ?0 ?? ?? ?? ?0 ?? 0? ?? ?0 ?0 00 }
-	$a2 = { 6A 00 E8 ?? ?? 00 00 A3 ?? 32 40 00 E8 ?? ?? 00 00 }
-	$a3 = { 6A 00 E8 ?? 0? 00 00 A3 ?? 32 40 00 E8 ?? 0? 00 00 }
-
-condition:
-    	$a0 or $a1 or $a2 at entrypoint or $a3 at entrypoint
-}
-
-    
 rule Mew_5_0_1____NorthFox___HCC
 {
 meta:
@@ -26461,22 +24050,6 @@ condition:
 }
 
     
-rule Wise_Installer_Stub
-{
-meta:
-    packer_name = "Wise Installer Stub"
-strings:
-    	$a0 = { 55 8B EC 81 EC 78 05 00 00 53 56 BE 04 01 00 00 57 8D 85 94 FD FF FF 56 33 DB 50 53 FF 15 34 20 40 00 8D 85 94 FD FF FF 56 50 8D 85 94 FD FF FF 50 FF 15 30 20 40 00 8B 3D 2C 20 40 00 53 53 6A 03 53 6A 01 8D 85 94 FD FF FF 68 00 00 00 80 50 FF D7 83 F8 FF }
-	$a1 = { 55 8B EC 81 EC ?? ?? 00 00 53 56 57 6A 01 5E 6A 04 89 75 E8 FF 15 ?? 40 40 00 FF 15 ?? 40 40 00 8B F8 89 7D ?? 8A 07 3C 22 0F 85 ?? 00 00 00 8A 47 01 47 89 7D ?? 33 DB 3A C3 74 0D 3C 22 74 09 8A 47 01 47 89 7D ?? EB EF 80 3F 22 75 04 47 89 7D ?? 80 3F 20 75 09 47 80 3F 20 74 FA 89 7D ?? 53 FF 15 ?? 40 40 00 80 3F 2F 89 45 ?? 75 ?? 8A 47 01 3C 53 74 04 3C 73 75 06 89 35 }
-	$a2 = { 55 8B EC 81 EC ?? ?? 00 00 53 56 57 6A 01 5E 6A 04 89 75 E8 FF 15 ?? 40 40 00 FF 15 ?? 40 40 00 8B F8 89 7D ?? 8A 07 3C 22 0F 85 ?? 00 00 00 8A 47 01 47 89 7D ?? 33 DB 3A C3 74 0D 3C 22 74 09 8A 47 01 47 89 7D ?? EB EF 80 3F 22 75 04 47 89 7D ?? 80 3F 20 }
-	$a3 = { 55 8B EC 81 EC ?? 04 00 00 53 56 57 6A ?? ?? ?? ?? ?? ?? ?? FF 15 ?? ?? 40 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 80 ?? 20 }
-	$a4 = { 55 8B EC 81 EC 78 05 00 00 53 56 BE 04 01 00 00 57 8D 85 94 FD FF FF 56 33 DB 50 53 FF 15 34 20 40 00 8D 85 94 FD FF FF 56 50 8D 85 94 FD FF FF 50 FF 15 30 20 40 00 8B 3D 2C 20 40 00 53 53 6A 03 53 6A 01 8D 85 94 FD FF FF 68 00 00 00 80 50 FF D7 83 F8 FF 89 45 FC 0F 84 7B 01 00 00 8D 85 90 FC FF FF 50 56 FF 15 28 20 40 00 8D 85 98 FE FF FF 50 53 8D 85 90 FC FF FF 68 10 30 40 00 50 FF 15 24 20 40 00 53 68 80 00 00 00 6A 02 53 53 8D 85 98 FE FF FF 68 00 00 00 40 50 FF D7 83 F8 FF 89 45 F4 0F 84 2F 01 00 00 53 53 53 6A 02 53 FF 75 FC FF 15 00 20 40 00 53 53 53 6A 04 50 89 45 F8 FF 15 1C 20 40 00 8B F8 C7 45 FC 01 00 00 00 8D 47 01 8B 08 81 F9 4D 5A 9A 00 74 08 81 F9 4D 5A 90 00 75 06 80 78 04 03 74 0D FF 45 FC 40 81 7D FC 00 80 00 00 7C DB 8D 4D F0 53 51 68 }
-
-condition:
-    	$a0 at entrypoint or $a1 or $a2 or $a3 at entrypoint or $a4 at entrypoint
-}
-
-    
 rule RLP_V0_7_3_beta____ap0x
 {
 meta:
@@ -26634,30 +24207,6 @@ condition:
 }
 
     
-rule Borland_C___Borland_Builder
-{
-meta:
-    packer_name = "Borland C / Borland Builder"
-strings:
-    	$a0 = { 3B CF 76 05 2B CF FC F3 AA 59 }
-
-condition:
-    	$a0
-}
-
-    
-rule AVI_movie_file
-{
-meta:
-    packer_name = "AVI movie file"
-strings:
-    	$a0 = { 52 49 46 46 ?? ?? ?? ?? 41 56 49 ?? 4C 49 53 54 }
-
-condition:
-    	$a0
-}
-
-    
 rule StarForce_V3_X____StarForce_Copy_Protection_System
 {
 meta:
@@ -26691,18 +24240,6 @@ strings:
 
 condition:
     	$a0
-}
-
-    
-rule RAR_SFX
-{
-meta:
-    packer_name = "RAR SFX"
-strings:
-    	$a0 = { E8 ?? ?? ?? ?? 50 E8 ?? ?? ?? ?? 00 00 00 00 90 }
-
-condition:
-    	$a0 at entrypoint
 }
 
     
@@ -26748,18 +24285,6 @@ meta:
     packer_name = "AverCryptor 1.02 beta -> os1r1s"
 strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED 0C 17 40 00 8B BD 33 18 40 00 8B 8D 3B 18 40 00 B8 51 18 40 00 03 C5 80 30 05 83 F9 00 74 71 81 7F 1C AB 00 00 00 75 62 8B 57 0C 03 95 37 18 40 00 33 C0 51 33 C9 66 B9 F7 00 66 83 F9 00 74 49 8B 57 0C 03 95 37 18 40 00 8B 85 3F 18 40 00 83 F8 02 75 06 81 C2 00 02 00 00 51 8B 4F 10 83 F8 02 75 06 81 E9 00 02 00 00 57 BF C8 00 00 00 8B F1 E8 27 00 00 00 8B C8 5F B8 51 18 40 00 03 C5 E8 24 00 00 00 59 49 EB B1 59 83 C7 28 49 EB 8A 8B 85 2F 18 40 00 89 44 24 1C 61 FF E0 56 57 4F F7 D7 23 F7 8B C6 5F 5E C3 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Gentee_Installer_Custom
-{
-meta:
-    packer_name = "Gentee Installer Custom"
-strings:
-    	$a0 = { 55 8B EC 81 EC 14 04 00 00 53 56 57 6A 00 FF 15 08 41 40 00 68 00 50 40 00 FF 15 04 41 40 00 85 C0 74 29 6A 00 A1 00 20 40 00 ?? ?? ?? ?? 41 40 00 8B F0 6A 06 56 FF 15 1C 41 40 00 6A 03 56 FF }
 
 condition:
     	$a0 at entrypoint
@@ -26934,18 +24459,6 @@ condition:
 }
 
     
-rule Cygwin32
-{
-meta:
-    packer_name = "Cygwin32"
-strings:
-    	$a0 = { 55 89 E5 83 EC 04 83 3D }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule REC_v0_34__3_
 {
 meta:
@@ -26967,18 +24480,6 @@ strings:
 
 condition:
     	$a0
-}
-
-    
-rule MetaWare_High_C___Phar_Lap_DOS_Extender_1983_89
-{
-meta:
-    packer_name = "MetaWare High C + Phar Lap DOS Extender 1983-89"
-strings:
-    	$a0 = { B8 ?? ?? 8E D8 B8 ?? ?? CD 21 A3 ?? ?? 3C 03 7D ?? B4 09 }
-
-condition:
-    	$a0 at entrypoint
 }
 
     
@@ -27015,31 +24516,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Netopsystems_FEAD_Optimizer
-{
-meta:
-    packer_name = "Netopsystems FEAD Optimizer"
-strings:
-    	$a0 = { 60 BE 00 50 43 00 8D BE 00 C0 FC FF }
-	$a1 = { E8 00 00 00 00 58 BB 00 00 40 00 8B }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint
-}
-
-    
-rule _NET_DLL____Microsoft
-{
-meta:
-    packer_name = ".NET DLL -> Microsoft"
-strings:
-    	$a0 = { 00 00 00 00 00 00 00 00 5F 43 6F 72 44 6C 6C 4D 61 69 6E 00 6D 73 63 6F 72 65 65 2E 64 6C 6C 00 00 ?? 00 00 FF 25 }
-
-condition:
-    	$a0
 }
 
     
@@ -27111,18 +24587,6 @@ meta:
     packer_name = "PEBundle v0.2 - v2.0x"
 strings:
     	$a0 = { 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB ?? ?? 40 ?? 87 DD 6A 04 68 ?? 10 ?? ?? 68 ?? 02 ?? ?? 6A ?? FF 95 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule MS_Run_Time_Library_1988__04_
-{
-meta:
-    packer_name = "MS Run-Time Library 1988 (04)"
-strings:
-    	$a0 = { 1E B8 ?? ?? 8E D8 B4 30 CD 21 3C 02 73 ?? BA ?? ?? E8 ?? ?? 06 33 C0 50 CB }
 
 condition:
     	$a0 at entrypoint
@@ -27225,18 +24689,6 @@ condition:
 }
 
     
-rule File_Analyzer_Registration_file_v1_0
-{
-meta:
-    packer_name = "File Analyzer Registration file v1.0"
-strings:
-    	$a0 = { 24 46 41 52 45 47 24 4D 2D ?? ?? ?? ?? 31 }
-
-condition:
-    	$a0
-}
-
-    
 rule PseudoSigner_0_2___BJFNT_1_2______Anorganix
 {
 meta:
@@ -27321,18 +24773,6 @@ condition:
 }
 
     
-rule Setup2Go_Installer_Stub
-{
-meta:
-    packer_name = "Setup2Go Installer Stub"
-strings:
-    	$a0 = { 5B 53 45 54 55 50 5F 49 4E 46 4F 5D 0D 0A 56 65 72 }
-
-condition:
-    	$a0
-}
-
-    
 rule __PseudoSigner_0_2__PE_Protect_0_9______Anorganix
 {
 meta:
@@ -27405,30 +24845,6 @@ condition:
 }
 
     
-rule Turbo_Pascal_Configuration_File
-{
-meta:
-    packer_name = "Turbo Pascal Configuration File"
-strings:
-    	$a0 = { 54 75 72 62 6F 20 50 61 73 63 61 6C 20 43 6F 6E 66 69 67 75 72 61 74 69 6F 6E }
-
-condition:
-    	$a0
-}
-
-    
-rule CorelDraw_CMX_Graphics_format
-{
-meta:
-    packer_name = "CorelDraw CMX Graphics format"
-strings:
-    	$a0 = { 52 49 46 46 ?? ?? ?? ?? 43 4D 58 31 }
-
-condition:
-    	$a0
-}
-
-    
 rule AntiVirus_Vaccine_v_1_03
 {
 meta:
@@ -27489,18 +24905,6 @@ strings:
 
 condition:
     	$a0 or $a1 or $a2
-}
-
-    
-rule Microsoft_C_Library_1985
-{
-meta:
-    packer_name = "Microsoft C Library 1985"
-strings:
-    	$a0 = { BF ?? ?? 8B 36 ?? ?? 2B F7 81 FE ?? ?? 72 ?? BE ?? ?? FA 8E D7 81 C4 ?? ?? FB 73 }
-
-condition:
-    	$a0 at entrypoint
 }
 
     
@@ -27819,19 +25223,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Macromedia_Windows_Flash_Projector_Player_v5_0
-{
-meta:
-    packer_name = "Macromedia Windows Flash Projector/Player v5.0"
-strings:
-    	$a0 = { 83 EC 44 56 FF 15 70 61 44 00 8B F0 8A 06 3C 22 75 1C 8A 46 01 46 3C 22 74 0C 84 C0 74 08 8A 46 01 46 3C 22 75 F4 80 3E 22 75 0F 46 EB 0C 3C 20 7E 08 8A 46 01 46 3C 20 7F F8 8A 06 84 C0 74 0C 3C 20 7F 08 8A 46 01 46 84 C0 75 F4 8D 44 24 04 C7 44 24 30 00 }
-	$a1 = { 83 EC 44 56 FF 15 70 61 44 00 8B F0 8A 06 3C 22 75 1C 8A 46 01 46 3C 22 74 0C 84 C0 74 08 8A 46 01 46 3C 22 75 F4 80 3E 22 75 0F 46 EB 0C 3C 20 7E 08 8A 46 01 46 3C 20 7F F8 8A 06 84 C0 74 0C 3C 20 7F 08 8A 46 01 46 84 C0 75 F4 8D 44 24 04 C7 44 24 30 00 00 00 00 50 FF 15 80 61 44 00 F6 44 24 30 01 74 0B 8B 44 24 34 25 FF FF 00 00 EB 05 B8 0A 00 00 00 50 56 6A 00 6A 00 FF 15 74 61 44 00 50 E8 18 00 00 00 50 FF 15 78 61 44 00 5E 83 C4 44 C3 90 90 90 90 90 90 }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint
 }
 
     
@@ -28209,20 +25600,6 @@ condition:
 }
 
     
-rule FreePascal_2_0_0_Win32_____B__rczi_G__bor__Pierre_Muller___Peter_Vreman_
-{
-meta:
-    packer_name = "FreePascal 2.0.0 Win32 -> (Bérczi Gábor, Pierre Muller & Peter Vreman)"
-strings:
-    	$a0 = { C6 05 00 80 40 00 01 E8 74 00 00 00 C6 05 00 80 40 00 00 E8 68 00 00 00 50 E8 00 00 00 00 FF 25 D8 A1 40 00 90 90 90 90 90 90 90 90 90 90 90 90 55 89 E5 83 EC 04 89 5D FC E8 92 00 00 00 E8 ED 00 00 00 89 C3 B9 ?? 70 40 00 89 DA B8 00 00 00 00 E8 0A 01 00 }
-	$a1 = { C6 05 ?? ?? ?? ?? 01 E8 74 00 00 00 C6 05 00 80 40 00 00 E8 68 00 00 00 50 E8 00 00 00 00 FF 25 D8 A1 40 00 90 90 90 90 90 90 90 90 90 90 90 90 55 89 E5 83 EC 04 89 5D FC E8 92 00 00 00 E8 ED 00 00 00 89 C3 B9 ?? 70 40 00 89 DA B8 00 00 00 00 E8 0A 01 00 }
-	$a2 = { C6 05 00 80 40 00 01 E8 74 00 00 00 C6 05 00 80 40 00 00 E8 68 00 00 00 50 E8 00 00 00 00 FF 25 D8 A1 40 00 90 90 90 90 90 90 90 90 90 90 90 90 55 89 E5 83 EC 04 89 5D FC E8 92 00 00 00 E8 ED 00 00 00 89 C3 B9 ?? 70 40 00 89 DA B8 00 00 00 00 E8 0A 01 00 00 E8 C5 01 00 00 89 D8 E8 3E 02 00 00 E8 B9 01 00 00 E8 54 02 00 00 8B 5D FC C9 C3 8D 76 00 00 00 00 00 00 00 00 00 00 00 00 00 55 89 E5 C6 05 10 80 40 00 00 E8 D1 03 00 00 6A 00 64 FF 35 00 00 00 00 89 E0 A3 ?? 70 40 00 55 31 ED 89 E0 A3 20 80 40 00 66 8C D5 89 2D 30 80 40 00 E8 B9 03 00 00 31 ED E8 72 FF FF FF 5D E8 BC 03 00 00 C9 C3 00 00 00 00 00 00 00 00 00 00 55 89 E5 83 EC 08 E8 15 04 00 00 A1 ?? 70 40 00 89 45 F8 B8 01 00 00 00 89 45 FC 3B 45 F8 7F 2A FF 4D FC 90 FF 45 FC 8B 45 FC 83 3C C5 ?? 70 40 00 00 74 09 8B 04 C5 ?? 70 40 }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint or $a2 at entrypoint
-}
-
-    
 rule Armadillo_5_0_Dll____Silicon_Realms_Toolworks
 {
 meta:
@@ -28296,37 +25673,12 @@ condition:
 }
 
     
-rule Nullsoft_Install_System_1_xx
-{
-meta:
-    packer_name = "Nullsoft Install System 1.xx"
-strings:
-    	$a0 = { 55 8B EC 83 EC 2C 53 56 33 F6 57 56 89 75 DC 89 75 F4 BB A4 9E 40 00 FF 15 60 70 40 00 BF C0 B2 40 00 68 04 01 00 00 57 50 A3 AC B2 40 00 FF 15 4C 70 40 00 56 56 6A 03 56 6A 01 68 00 00 00 80 57 FF 15 9C 70 40 00 8B F8 83 FF FF 89 7D EC 0F 84 C3 00 00 00 }
-	$a1 = { 83 EC 0C 53 56 57 FF 15 20 71 40 00 05 E8 03 00 00 BE 60 FD 41 00 89 44 24 10 B3 20 FF 15 28 70 40 00 68 00 04 00 00 FF 15 28 71 40 00 50 56 FF 15 08 71 40 00 80 3D 60 FD 41 00 22 75 08 80 C3 02 BE 61 FD 41 00 8A 06 8B 3D F0 71 40 00 84 C0 74 0F 3A C3 74 }
-
-condition:
-    	$a0 at entrypoint or $a1
-}
-
-    
 rule VProtector_V1_0__Build_2004_12_13__test_____vcasm
 {
 meta:
     packer_name = "VProtector V1.0 [Build 2004.12.13] test! -> vcasm"
 strings:
     	$a0 = { 55 8B EC 6A FF 68 1A 89 40 00 68 56 89 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 E8 03 00 00 00 C7 84 00 58 EB 01 E9 83 C0 07 50 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Macromedia_Windows_Flash_Projector_Player_v6_0
-{
-meta:
-    packer_name = "Macromedia Windows Flash Projector/Player v6.0"
-strings:
-    	$a0 = { 83 EC 44 56 FF 15 24 81 49 00 8B F0 8A 06 3C 22 75 1C 8A 46 01 46 3C 22 74 0C 84 C0 74 08 8A 46 01 46 3C 22 75 F4 80 3E 22 75 0F 46 EB 0C }
 
 condition:
     	$a0 at entrypoint
@@ -28520,18 +25872,6 @@ meta:
     packer_name = "yoda's Protector V1.03.3 -> Ashkbiz Danehkar ! Sign by fly"
 strings:
     	$a0 = { E8 03 00 00 00 EB 01 ?? BB 55 00 00 00 E8 03 00 00 00 EB 01 ?? E8 8E 00 00 00 E8 03 00 00 00 EB 01 ?? E8 81 00 00 00 E8 03 00 00 00 EB 01 ?? E8 B7 00 00 00 E8 03 00 00 00 EB 01 ?? E8 AA 00 00 00 E8 03 00 00 00 EB 01 ?? 83 FB 55 E8 03 00 00 00 EB 01 ?? 75 2D E8 03 00 00 00 EB 01 ?? 60 E8 00 00 00 00 5D 81 ED 07 E2 40 00 8B D5 81 C2 56 E2 40 00 52 E8 01 00 00 00 C3 C3 E8 03 00 00 00 EB 01 ?? E8 0E 00 00 00 E8 D1 FF FF FF C3 E8 03 00 00 00 EB 01 ?? 33 C0 64 FF 30 64 89 20 CC C3 E8 03 00 00 00 EB 01 ?? 33 C0 64 FF 30 64 89 20 4B CC C3 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule WinZip_32_bit_SFX_v8_x_module
-{
-meta:
-    packer_name = "WinZip 32-bit SFX v8.x module"
-strings:
-    	$a0 = { 53 FF 15 ?? ?? ?? 00 B3 22 38 18 74 03 80 C3 FE 8A 48 01 40 33 D2 3A CA 74 0A 3A CB 74 06 8A 48 01 40 EB F2 38 10 74 01 40 ?? ?? ?? ?? FF 15 }
 
 condition:
     	$a0 at entrypoint
@@ -28749,19 +26089,6 @@ condition:
 }
 
     
-rule Microsoft_Visual_Basic_v5_0___v6_0
-{
-meta:
-    packer_name = "Microsoft Visual Basic v5.0 - v6.0"
-strings:
-    	$a0 = { 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? 00 00 ?? 00 00 00 30 ?? 00 }
-	$a1 = { FF 25 ?? ?? ?? ?? ?? ?? 68 ?? ?? ?? ?? E8 ?? FF FF FF }
-
-condition:
-    	$a0 or $a1
-}
-
-    
 rule PseudoSigner_0_1__Video_Lan_Client_____Anorganix
 {
 meta:
@@ -28795,19 +26122,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule LaunchAnywhere_v4_0_0_1
-{
-meta:
-    packer_name = "LaunchAnywhere v4.0.0.1"
-strings:
-    	$a0 = { 55 89 E5 53 83 EC 48 55 B8 FF FF FF FF 50 50 68 E0 3E 42 00 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 68 C0 69 44 00 E8 E4 80 FF FF 59 E8 4E 29 00 00 E8 C9 0D 00 00 85 C0 75 08 6A FF E8 6E 2B 00 00 59 E8 A8 2C 00 00 E8 23 2E 00 00 FF 15 4C C2 44 00 89 C3 }
-	$a1 = { 55 89 E5 53 83 EC 48 55 B8 FF FF FF FF 50 50 68 E0 3E 42 00 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 68 C0 69 44 00 E8 E4 80 FF FF 59 E8 4E 29 00 00 E8 C9 0D 00 00 85 C0 75 08 6A FF E8 6E 2B 00 00 59 E8 A8 2C 00 00 E8 23 2E 00 00 FF 15 4C C2 44 00 89 C3 EB 19 3C 22 75 14 89 C0 8D 40 00 43 8A 03 84 C0 74 04 3C 22 75 F5 3C 22 75 01 43 8A 03 84 C0 74 0B 3C 20 74 07 3C 09 75 D9 EB 01 43 8A 03 84 C0 74 04 3C 20 7E F5 8D 45 B8 50 FF 15 E4 C1 44 00 8B 45 E4 25 01 00 00 00 74 06 0F B7 45 E8 EB 05 B8 0A 00 00 00 50 53 6A 00 6A 00 FF 15 08 C2 44 00 50 E8 63 15 FF FF 50 E8 EE 2A 00 00 59 8D 65 FC 5B }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint
 }
 
     
@@ -28865,18 +26179,6 @@ meta:
     packer_name = "MSLRH 0.32a (fake MSVC++ DLL Method 4) -> emadicius"
 strings:
     	$a0 = { 55 8B EC 56 57 BF 01 00 00 00 8B 75 0C 85 F6 5F 5E 5D EB 05 E8 EB 04 40 00 EB FA E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 50 E8 02 00 00 00 29 5A 58 6B C0 03 E8 02 00 00 00 29 5A 83 C4 04 58 74 04 75 }
-
-condition:
-    	$a0
-}
-
-    
-rule Microsoft_Visual_C_5_0
-{
-meta:
-    packer_name = "Microsoft Visual C 5.0"
-strings:
-    	$a0 = { 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 C4 A8 53 56 57 }
 
 condition:
     	$a0
@@ -29055,18 +26357,6 @@ condition:
 }
 
     
-rule Microsoft_Visual_C___v7_1_DLL__Debug_
-{
-meta:
-    packer_name = "Microsoft Visual C++ v7.1 DLL (Debug)"
-strings:
-    	$a0 = { 55 8B EC ?? ?? 0C 83 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 8B }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule MSLRH_0_32a__fake_ASPack_2_11d_____emadicius
 {
 meta:
@@ -29200,30 +26490,6 @@ condition:
 }
 
     
-rule Turbo_Pascal_v3_0_1985
-{
-meta:
-    packer_name = "Turbo Pascal v3.0 1985"
-strings:
-    	$a0 = { 90 90 CD AB ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 38 35 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Lotus_Word_Pro_document_file
-{
-meta:
-    packer_name = "Lotus Word Pro document file"
-strings:
-    	$a0 = { 57 6F 72 64 50 72 6F ?? ?? ?? ?? ?? ?? ?? ?? ?? 4C 57 50 37 }
-
-condition:
-    	$a0
-}
-
-    
 rule WebCops__EXE
 {
 meta:
@@ -29309,18 +26575,6 @@ condition:
 }
 
     
-rule Microsoft_Visual_Basic_v6_0_DLL
-{
-meta:
-    packer_name = "Microsoft Visual Basic v6.0 DLL"
-strings:
-    	$a0 = { 5A 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 52 E9 ?? ?? FF }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule AntiDote_1_2_DLL_Demo____SIS_Team
 {
 meta:
@@ -29355,20 +26609,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule InstallAnywhere_6_1____Zero_G_Software_Inc
-{
-meta:
-    packer_name = "InstallAnywhere 6.1 -> Zero G Software Inc"
-strings:
-    	$a0 = { 60 BE 00 A0 42 00 8D BE 00 70 FD FF 57 83 CD FF EB 10 90 90 90 90 90 90 8A 06 46 88 07 47 01 DB 75 07 8B 1E 83 EE FC 11 DB 72 ED B8 01 00 00 00 01 DB 75 07 }
-	$a1 = { 60 BE 00 A0 42 00 8D BE 00 70 FD FF 57 83 CD FF EB 10 90 90 90 90 90 90 8A 06 46 88 07 47 01 DB 75 07 8B 1E 83 EE FC 11 DB 72 ED B8 01 00 00 00 01 DB 75 07 8B 1E 83 EE FC 11 DB 11 C0 01 DB 73 EF 75 09 8B 1E 83 EE FC 11 DB 73 E4 31 C9 83 E8 03 72 0D C1 E0 }
-	$a2 = { 60 BE 00 A0 42 00 8D BE 00 70 FD FF 57 83 CD FF EB 10 90 90 90 90 90 90 8A 06 46 88 07 47 01 DB 75 07 8B 1E 83 EE FC 11 DB 72 ED B8 01 00 00 00 01 DB 75 07 8B 1E 83 EE FC 11 DB 11 C0 01 DB 73 EF 75 09 8B 1E 83 EE FC 11 DB 73 E4 31 C9 83 E8 03 72 0D C1 E0 08 8A 06 46 83 F0 FF 74 74 89 C5 01 DB 75 07 8B 1E 83 EE FC 11 DB 11 C9 01 DB 75 07 8B 1E 83 EE FC 11 DB 11 C9 75 20 41 01 DB 75 07 8B 1E 83 EE FC 11 DB 11 C9 01 DB 73 EF 75 09 8B 1E 83 EE FC 11 DB 73 E4 }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint or $a2 at entrypoint
 }
 
     
@@ -29442,18 +26682,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Metrowerks_CodeWarrior_v2_0__GUI_
-{
-meta:
-    packer_name = "Metrowerks CodeWarrior v2.0 (GUI)"
-strings:
-    	$a0 = { 55 89 E5 53 56 83 EC 44 55 B8 FF FF FF FF 50 50 68 ?? ?? 40 00 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 68 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? E8 ?? ?? 00 00 E8 ?? ?? 00 00 E8 }
-
-condition:
-    	$a0
 }
 
     
@@ -29564,18 +26792,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule MASM_TASM___sig1_h_
-{
-meta:
-    packer_name = "MASM/TASM - sig1(h)"
-strings:
-    	$a0 = { CC FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 FF 25 ?? ?? ?? 00 }
-
-condition:
-    	$a0
 }
 
     
@@ -29857,18 +27073,6 @@ condition:
 }
 
     
-rule Nullsoft_Install_System_2_0a0
-{
-meta:
-    packer_name = "Nullsoft Install System 2.0a0"
-strings:
-    	$a0 = { 83 EC 0C 53 56 57 FF 15 B4 10 40 00 05 E8 03 00 00 BE E0 E3 41 00 89 44 24 10 B3 20 FF 15 28 10 40 00 68 00 04 00 00 FF 15 14 11 40 00 50 56 FF 15 10 11 40 00 80 3D E0 E3 41 00 22 75 08 80 C3 02 BE E1 E3 41 00 8A 06 8B 3D 14 12 40 00 84 C0 74 19 3A C3 74 }
-
-condition:
-    	$a0
-}
-
-    
 rule CipherWall_Self_Extrator_Decryptor__GUI__1_5
 {
 meta:
@@ -29929,21 +27133,6 @@ condition:
 }
 
     
-rule Microsoft_Visual_C__
-{
-meta:
-    packer_name = "Microsoft Visual C++"
-strings:
-    	$a0 = { 8B 44 24 08 83 ?? ?? 74 }
-	$a1 = { 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 }
-	$a2 = { 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 }
-	$a3 = { 8B 44 24 08 56 83 E8 ?? 74 ?? 48 75 }
-
-condition:
-    	$a0 at entrypoint or $a1 or $a2 at entrypoint or $a3 at entrypoint
-}
-
-    
 rule PocketPC_MIB
 {
 meta:
@@ -29990,19 +27179,6 @@ strings:
 
 condition:
     	$a0
-}
-
-    
-rule Borland_Delphi_v6_0
-{
-meta:
-    packer_name = "Borland Delphi v6.0"
-strings:
-    	$a0 = { 55 8B EC 83 C4 F0 B8 ?? ?? 45 00 E8 ?? ?? ?? FF A1 ?? ?? 45 00 8B 00 E8 ?? ?? FF FF 8B 0D }
-	$a1 = { 53 8B D8 33 C0 A3 ?? ?? ?? ?? 6A 00 E8 ?? ?? ?? FF A3 ?? ?? ?? ?? A1 ?? ?? ?? ?? A3 ?? ?? ?? ?? 33 C0 A3 ?? ?? ?? ?? 33 C0 A3 ?? ?? ?? ?? E8 }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint
 }
 
     
@@ -30114,20 +27290,6 @@ condition:
 }
 
     
-rule Microsoft_Visual_C___v6_0
-{
-meta:
-    packer_name = "Microsoft Visual C++ v6.0"
-strings:
-    	$a0 = { 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 64 A1 ?? ?? ?? ?? 50 64 89 25 ?? ?? ?? ?? 83 EC ?? 53 56 57 }
-	$a1 = { 55 8B EC 6A FF 68 ?? ?? ?? 00 68 ?? ?? ?? 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC ?? 53 56 57 89 65 E8 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? FF }
-	$a2 = { 55 8B EC 83 EC 50 53 56 57 BE ?? ?? ?? ?? 8D 7D F4 A5 A5 66 A5 8B }
-
-condition:
-    	$a0 or $a1 or $a2 at entrypoint
-}
-
-    
 rule Vcasm_Protector_1_0
 {
 meta:
@@ -30150,18 +27312,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Borland_Delphi_3____Portions_Copyright__c__1983_96_Borland__h_
-{
-meta:
-    packer_name = "Borland Delphi 3 -> Portions Copyright (c) 1983,96 Borland (h)"
-strings:
-    	$a0 = { 50 6F 72 74 69 6F 6E 73 20 43 6F 70 79 72 69 67 68 74 20 28 63 29 20 31 39 38 33 2C 39 36 20 42 6F 72 6C 61 6E 64 00 }
-
-condition:
-    	$a0
 }
 
     
@@ -30201,18 +27351,6 @@ condition:
 }
 
     
-rule Microsoft_WAV_Audio_file
-{
-meta:
-    packer_name = "Microsoft WAV Audio file"
-strings:
-    	$a0 = { 52 49 46 46 ?? ?? ?? ?? 57 41 56 45 66 6D 74 }
-
-condition:
-    	$a0
-}
-
-    
 rule RLPack_V1_18_Basic_Edition__LZMA_4_30_____ap0x
 {
 meta:
@@ -30231,30 +27369,6 @@ meta:
     packer_name = "UPX v0.71 [DLL]"
 strings:
     	$a0 = { 80 7C 24 08 01 0F 85 95 01 00 00 60 E8 00 00 00 00 83 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule File_Analyzer_Extended_Datafile_Version
-{
-meta:
-    packer_name = "File Analyzer Extended Datafile Version"
-strings:
-    	$a0 = { 23 03 45 58 54 44 ?? ?? 3A 03 }
-
-condition:
-    	$a0
-}
-
-    
-rule Microsoft_Visual_C___v4_x
-{
-meta:
-    packer_name = "Microsoft Visual C++ v4.x"
-strings:
-    	$a0 = { 64 A1 00 00 00 00 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 50 64 89 25 00 00 00 00 83 EC ?? 53 56 57 }
 
 condition:
     	$a0 at entrypoint
@@ -30517,80 +27631,6 @@ condition:
 }
 
     
-rule Reg2Exe_2_24___by_Jan_Vorel
-{
-meta:
-    packer_name = "Reg2Exe 2.24 - by Jan Vorel"
-strings:
-    	$a0 = { 6A 00 E8 CF 20 00 00 A3 F4 45 40 00 E8 CB 20 00 00 6A 0A 50 6A 00 FF 35 F4 45 40 00 E8 07 00 00 00 50 E8 BB 20 00 00 CC 68 48 00 00 00 68 00 00 00 00 68 F8 45 40 00 E8 06 19 00 00 83 C4 0C 8B 44 24 04 A3 FC 45 40 00 68 00 00 00 00 68 A0 0F 00 00 68 00 00 00 00 E8 8C 20 00 00 A3 F8 45 40 00 E8 02 20 00 00 E8 32 1D 00 00 E8 20 19 00 00 E8 A3 16 00 00 68 01 00 00 00 68 38 46 40 00 68 00 00 00 00 8B 15 38 46 40 00 E8 71 4F 00 00 B8 00 00 10 00 BB 01 00 00 00 E8 82 4F 00 00 FF 35 48 41 40 00 B8 00 01 00 00 E8 9D 15 00 00 8D 0D 1C 46 40 00 5A E8 82 16 00 00 68 00 01 00 00 FF 35 1C 46 40 00 E8 24 20 00 00 A3 24 46 40 00 FF 35 48 41 40 00 FF 35 24 46 40 00 FF 35 1C 46 40 00 E8 DC 10 00 00 8D 0D 14 46 40 00 5A E8 4A 16 }
-	$a1 = { 6A 00 E8 CF 20 00 00 A3 F4 45 40 00 E8 CB 20 00 00 6A 0A 50 6A 00 FF 35 F4 45 40 00 E8 07 00 00 00 50 E8 BB 20 00 00 CC 68 48 00 00 00 68 00 00 00 00 68 F8 45 40 00 E8 06 19 00 00 83 C4 0C 8B 44 24 04 A3 FC 45 40 00 68 00 00 00 00 68 A0 0F 00 00 68 00 00 }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint
-}
-
-    
-rule Free_Pascal_0_99_10
-{
-meta:
-    packer_name = "Free Pascal 0.99.10"
-strings:
-    	$a0 = { E8 00 6E 00 00 55 89 E5 8B 7D 0C 8B 75 08 89 F8 8B 5D 10 29 }
-
-condition:
-    	$a0
-}
-
-    
-rule Microsoft_Visual_C___v4_2
-{
-meta:
-    packer_name = "Microsoft Visual C++ v4.2"
-strings:
-    	$a0 = { 64 A1 00 00 00 00 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 50 64 ?? ?? ?? ?? ?? ?? 83 ?? ?? 53 56 57 89 ?? ?? C7 }
-	$a1 = { 64 A1 00 00 00 00 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 50 64 ?? ?? ?? ?? ?? ?? 83 ?? ?? 53 56 57 89 ?? ?? FF }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint
-}
-
-    
-rule CAN2EXE_v0_01
-{
-meta:
-    packer_name = "CAN2EXE v0.01"
-strings:
-    	$a0 = { 26 8E 06 ?? ?? B9 ?? ?? 33 C0 8B F8 F2 AE E3 ?? 26 38 05 75 ?? EB ?? E9 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Borland_C___for_Win32_1994
-{
-meta:
-    packer_name = "Borland C++ for Win32 1994"
-strings:
-    	$a0 = { A1 ?? ?? ?? ?? C1 ?? ?? A3 ?? ?? ?? ?? 83 ?? ?? ?? ?? 75 ?? 57 51 33 C0 BF }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Borland_C___for_Win32_1995
-{
-meta:
-    packer_name = "Borland C++ for Win32 1995"
-strings:
-    	$a0 = { A1 ?? ?? ?? ?? C1 ?? ?? A3 ?? ?? ?? ?? 57 51 33 C0 BF ?? ?? ?? ?? B9 ?? ?? ?? ?? 3B CF 76 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule PseudoSigner_0_2__PE_Pack_0_99______Anorganix
 {
 meta:
@@ -30615,18 +27655,6 @@ condition:
 }
 
     
-rule Microsoft_Visual_C____3_0_old_crap_
-{
-meta:
-    packer_name = "Microsoft Visual C++ (3.0 old crap)"
-strings:
-    	$a0 = { 64 A1 00 00 00 00 55 ?? ?? 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 50 ?? ?? ?? ?? ?? 00 00 83 EC 10 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule ASPack_v1_08_04____Alexey_Solodovnikov
 {
 meta:
@@ -30636,19 +27664,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Borland_C___for_Win32_1999
-{
-meta:
-    packer_name = "Borland C++ for Win32 1999"
-strings:
-    	$a0 = { EB 10 66 62 3A 43 2B 2B 48 4F 4F 4B 90 }
-	$a1 = { EB 10 66 62 3A 43 2B 2B 48 4F 4F 4B 90 E9 ?? ?? ?? ?? A1 ?? ?? ?? ?? C1 E0 02 A3 ?? ?? ?? ?? 52 }
-
-condition:
-    	$a0 or $a1 at entrypoint
 }
 
     
@@ -30732,18 +27747,6 @@ meta:
     packer_name = "EXE Stealth 2.73"
 strings:
     	$a0 = { EB 00 EB 2F 53 68 61 72 65 77 61 72 65 20 2D 20 45 78 65 53 74 65 61 6C 74 68 00 EB 16 77 77 77 2E 77 65 62 74 6F 6F 6C 6D 61 73 74 65 72 2E 63 6F 6D 00 60 90 E8 00 00 00 00 5D 81 ED F0 27 40 00 B9 15 00 00 00 83 C1 05 EB 05 EB FE 83 C7 56 EB 00 83 E9 02 }
-
-condition:
-    	$a0
-}
-
-    
-rule MinGW_3_2_x__WinMain_
-{
-meta:
-    packer_name = "MinGW 3.2.x (WinMain)"
-strings:
-    	$a0 = { 55 89 E5 83 EC 08 C7 04 24 01 00 00 00 FF 15 FC 40 40 00 E8 68 00 00 00 89 EC 31 C0 5D C3 89 F6 55 89 E5 83 EC 08 C7 04 24 02 00 00 00 FF 15 FC 40 40 00 E8 48 00 00 00 89 EC 31 C0 5D C3 89 F6 55 89 E5 83 EC 08 8B 55 08 89 14 24 FF 15 18 41 40 00 89 EC 5D }
 
 condition:
     	$a0
@@ -30876,18 +27879,6 @@ meta:
     packer_name = "LZEXE v0.91, v1.00a (1)"
 strings:
     	$a0 = { 06 0E 1F 8B ?? ?? ?? 8B F1 4E 89 F7 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Microsoft_Visual_C___8_0__MFC_
-{
-meta:
-    packer_name = "Microsoft Visual C++ 8.0 (MFC)"
-strings:
-    	$a0 = { 48 83 EC 28 E8 ?? ?? 00 00 48 83 C4 28 E9 0E FD FF FF CC CC CC CC CC CC CC CC CC CC CC CC CC CC }
 
 condition:
     	$a0 at entrypoint
@@ -31197,19 +28188,6 @@ condition:
 }
 
     
-rule MS_FORTRAN_Library_19__
-{
-meta:
-    packer_name = "MS FORTRAN Library 19??"
-strings:
-    	$a0 = { FC 1E B8 ?? ?? 8E D8 9A ?? ?? ?? ?? 81 ?? ?? ?? 8B EC B8 ?? ?? 8E C0 26 C7 ?? ?? ?? ?? ?? 26 }
-	$a1 = { FC 1E B8 ?? ?? 8E D8 9A ?? ?? ?? ?? 81 ?? ?? ?? 8B EC 8C DB 8E C3 BB ?? ?? 9A ?? ?? ?? ?? 9B DB E3 9B D9 2E ?? ?? 33 C9 }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint
-}
-
-    
 rule Crunch_4
 {
 meta:
@@ -31281,18 +28259,6 @@ strings:
 
 condition:
     	$a0 at entrypoint or $a1 at entrypoint
-}
-
-    
-rule CreateInstall_2003_3_5
-{
-meta:
-    packer_name = "CreateInstall 2003.3.5"
-strings:
-    	$a0 = { 81 EC 0C 04 00 00 53 56 57 55 68 60 50 40 00 6A 01 6A 00 FF 15 D8 80 40 00 8B F0 FF 15 D4 80 40 00 3D B7 00 00 00 75 0F 56 FF 15 B8 80 40 00 6A 02 FF 15 A4 80 40 00 33 DB E8 F2 FE FF FF 68 02 7F 00 00 89 1D 94 74 40 00 53 89 1D 98 74 40 00 FF 15 E4 80 40 }
-
-condition:
-    	$a0
 }
 
     
@@ -31393,18 +28359,6 @@ condition:
 }
 
     
-rule Windows_Type_1_font_metric_file
-{
-meta:
-    packer_name = "Windows Type 1 font metric file"
-strings:
-    	$a0 = { 00 01 ?? ?? 00 00 43 6F 70 79 72 69 67 68 74 20 }
-
-condition:
-    	$a0
-}
-
-    
 rule eXPressor_1_2____CGSoftLabs__h_
 {
 meta:
@@ -31486,18 +28440,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Microsoft_Visual_Basic_v6_0
-{
-meta:
-    packer_name = "Microsoft Visual Basic v6.0"
-strings:
-    	$a0 = { FF 25 ?? ?? ?? ?? 68 ?? ?? ?? ?? E8 ?? FF FF FF ?? ?? ?? ?? ?? ?? 30 }
-
-condition:
-    	$a0
 }
 
     
@@ -31598,18 +28540,6 @@ condition:
 }
 
     
-rule Borland_Delphi_DLL
-{
-meta:
-    packer_name = "Borland Delphi DLL"
-strings:
-    	$a0 = { 55 8B EC 83 C4 B4 B8 ?? ?? ?? ?? E8 ?? ?? ?? ?? E8 ?? ?? ?? ?? 8D 40 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule NTPacker_1_0____ErazerZ
 {
 meta:
@@ -31628,18 +28558,6 @@ meta:
     packer_name = "PseudoSigner 0.1 [PENightMare 2 Beta] -> Anorganix"
 strings:
     	$a0 = { 60 E9 10 00 00 00 EF 40 03 A7 07 8F 07 1C 37 5D 43 A7 04 B9 2C 3A E9 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Microsoft_Visual_C___v6_0__Debug_Version_
-{
-meta:
-    packer_name = "Microsoft Visual C++ v6.0 (Debug Version)"
-strings:
-    	$a0 = { 55 8B EC 51 ?? ?? ?? 01 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 }
 
 condition:
     	$a0 at entrypoint
@@ -31700,18 +28618,6 @@ meta:
     packer_name = "UnoPiX 1.03-1.10 -> BaGiE"
 strings:
     	$a0 = { 83 EC 04 C7 04 24 00 ?? ?? ?? C3 00 ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? 00 10 00 00 00 02 00 00 01 00 00 00 00 00 00 00 04 00 00 00 00 00 00 00 00 ?? ?? 00 00 10 00 00 00 00 00 00 02 00 00 ?? 00 00 ?? 00 00 ?? ?? 00 00 00 10 00 00 10 00 00 00 00 00 00 10 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule MS_Visual_C___v_8_DLL__h_small_sig2_
-{
-meta:
-    packer_name = "MS Visual C++ v.8 DLL (h-small sig2)"
-strings:
-    	$a0 = { 8B FF 55 8B EC 53 8B 5D 08 56 8B 75 0C 85 F6 57 8B 7D 10 0F 84 ?? ?? 00 00 83 FE 01 }
 
 condition:
     	$a0 at entrypoint
@@ -31887,31 +28793,6 @@ condition:
 }
 
     
-rule PerlApp_6_0_2____ActiveState
-{
-meta:
-    packer_name = "PerlApp 6.0.2 -> ActiveState"
-strings:
-    	$a0 = { 68 2C EA 40 00 FF D3 83 C4 0C 85 C0 0F 85 CD 00 00 00 6A 09 57 68 20 EA 40 00 FF D3 83 C4 0C 85 C0 75 12 8D 47 09 50 FF 15 1C D1 40 00 59 A3 B8 07 41 00 EB 55 6A 08 57 68 14 EA 40 00 FF D3 83 C4 0C 85 C0 75 11 8D 47 08 50 FF 15 1C D1 40 00 59 89 44 24 10 EB 33 6A 09 57 68 08 EA 40 00 FF D3 83 C4 0C 85 C0 74 22 6A 08 57 68 FC E9 40 00 FF D3 83 C4 0C 85 C0 74 11 6A 0B 57 68 F0 E9 40 00 FF D3 83 C4 0C 85 C0 75 55 }
-	$a1 = { 68 9C E1 40 00 FF 15 A4 D0 40 00 85 C0 59 74 0F 50 FF 15 1C D1 40 00 85 C0 59 89 45 FC 75 62 6A 00 8D 45 F8 FF 75 0C F6 45 14 01 50 8D 45 14 50 E8 9B 01 00 00 83 C4 10 85 C0 0F 84 E9 00 00 00 8B 45 F8 83 C0 14 50 FF D6 85 C0 59 89 45 FC 75 0E FF 75 14 FF 15 78 D0 40 00 E9 C9 00 00 00 68 8C E1 40 00 FF 75 14 50 }
-
-condition:
-    	$a0 or $a1
-}
-
-    
-rule Nullsoft_PiMP_Install_System_1_x
-{
-meta:
-    packer_name = "Nullsoft PiMP Install System 1.x"
-strings:
-    	$a0 = { 83 EC 0C 53 56 57 FF 15 ?? ?? 40 00 05 E8 03 00 00 BE ?? ?? ?? 00 89 44 24 10 B3 20 FF 15 28 ?? 40 00 68 00 04 00 00 FF 15 ?? ?? 40 00 50 56 FF 15 ?? ?? 40 00 80 3D ?? ?? ?? 00 22 75 08 80 C3 02 BE ?? ?? ?? 00 8A 06 8B 3D ?? ?? 40 00 84 C0 74 ?? 3A C3 74 }
-
-condition:
-    	$a0
-}
-
-    
 rule RCryptor_v1_5__Private______Vaska
 {
 meta:
@@ -31921,18 +28802,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Microsoft__R__Incremental_Linker_Version_5_12_8078__MASM_TASM_
-{
-meta:
-    packer_name = "Microsoft (R) Incremental Linker Version 5.12.8078 (MASM/TASM)"
-strings:
-    	$a0 = { 6A 00 68 00 30 40 00 68 1E 30 40 00 6A 00 E8 0D 00 00 00 6A 00 E8 00 00 00 00 FF 25 00 20 40 00 FF 25 08 20 40 }
-
-condition:
-    	$a0
 }
 
     
@@ -32071,18 +28940,6 @@ condition:
 }
 
     
-rule Microsoft_Visual_C___v5_0_v6_0__MFC_
-{
-meta:
-    packer_name = "Microsoft Visual C++ v5.0/v6.0 (MFC)"
-strings:
-    	$a0 = { 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 64 A1 00 00 00 00 50 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule PECompact_2_0beta_student_version____Jeremy_Collake
 {
 meta:
@@ -32201,18 +29058,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Video_CD_file
-{
-meta:
-    packer_name = "Video-CD file"
-strings:
-    	$a0 = { 52 49 46 46 ?? ?? ?? ?? 43 44 58 41 66 6D 74 }
-
-condition:
-    	$a0
 }
 
     
@@ -32413,18 +29258,6 @@ condition:
 }
 
     
-rule Free_Pascal_v1_0_10__win32_console_
-{
-meta:
-    packer_name = "Free Pascal v1.0.10 (win32 console)"
-strings:
-    	$a0 = { C6 05 ?? ?? ?? 00 01 E8 ?? ?? 00 00 C6 05 ?? ?? ?? 00 00 E8 ?? ?? 00 00 50 E8 00 00 00 00 FF 25 ?? ?? ?? 00 55 89 E5 ?? EC }
-
-condition:
-    	$a0
-}
-
-    
 rule nPack_V1_1_150_2006_Beta____NEOx__uinC_
 {
 meta:
@@ -32572,18 +29405,6 @@ condition:
 }
 
     
-rule Macromedia_Windows_Flash_Projector_Player_5_0
-{
-meta:
-    packer_name = "Macromedia Windows Flash Projector/Player 5.0"
-strings:
-    	$a0 = { 83 EC 44 56 FF 15 70 61 44 00 8B F0 8A 06 3C 22 75 1C 8A 46 01 46 3C 22 74 0C 84 C0 74 08 8A 46 01 46 3C 22 75 F4 80 3E 22 75 0F 46 EB 0C 3C 20 7E 08 8A 46 01 46 3C 20 7F F8 8A 06 84 C0 74 0C 3C 20 7F 08 8A 46 01 46 84 C0 75 F4 8D 44 24 04 C7 44 24 30 00 }
-
-condition:
-    	$a0
-}
-
-    
 rule KGCrypt_vx_x
 {
 meta:
@@ -32655,18 +29476,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Free_Pascal_v1_06
-{
-meta:
-    packer_name = "Free Pascal v1.06"
-strings:
-    	$a0 = { C6 05 ?? ?? 40 00 ?? E8 ?? ?? 00 00 }
-
-condition:
-    	$a0
 }
 
     
@@ -32862,18 +29671,6 @@ condition:
 }
 
     
-rule Microsoft_C
-{
-meta:
-    packer_name = "Microsoft C"
-strings:
-    	$a0 = { B4 30 CD 21 3C 02 73 ?? B8 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule Unnamed_Scrambler_1_0____p0ke
 {
 meta:
@@ -32896,19 +29693,6 @@ strings:
 
 condition:
     	$a0
-}
-
-    
-rule Microsoft_Visual_C___v7_0_DLL
-{
-meta:
-    packer_name = "Microsoft Visual C++ v7.0 DLL"
-strings:
-    	$a0 = { 55 8B EC 53 8B 5D 08 56 8B 75 0C 57 8B 7D 10 ?? ?? 83 }
-	$a1 = { 55 8B EC 53 8B 5D 08 56 8B 75 0C 85 F6 57 8B 7D 10 }
-
-condition:
-    	$a0 or $a1 at entrypoint
 }
 
     
@@ -32984,19 +29768,6 @@ condition:
 }
 
     
-rule Borland_Delphi_v4_0___v5_0
-{
-meta:
-    packer_name = "Borland Delphi v4.0 - v5.0"
-strings:
-    	$a0 = { 50 6A 00 E8 ?? ?? FF FF BA ?? ?? ?? ?? 52 89 05 ?? ?? ?? ?? 89 42 04 C7 42 08 00 00 00 00 C7 42 0C 00 00 00 00 E8 ?? ?? ?? ?? 5A 58 E8 ?? ?? ?? ?? C3 }
-	$a1 = { 50 6A ?? E8 ?? ?? FF FF BA ?? ?? ?? ?? 52 89 05 ?? ?? ?? ?? 89 42 04 C7 42 08 ?? ?? ?? ?? C7 42 0C ?? ?? ?? ?? E8 ?? ?? ?? ?? 5A 58 E8 ?? ?? ?? ?? C3 }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint
-}
-
-    
 rule EXECrypt_1_0____ReBirth
 {
 meta:
@@ -33018,21 +29789,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Microsoft_Visual_C___v7_1_DLL
-{
-meta:
-    packer_name = "Microsoft Visual C++ v7.1 DLL"
-strings:
-    	$a0 = { 55 8B EC 53 8B 5D 08 56 8B 75 0C 85 F6 57 8B 7D 10 75 09 83 3D ?? ?? 40 00 00 EB 26 83 FE 01 74 05 83 FE 02 75 22 A1 }
-	$a1 = { 6A 0C 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? 33 C0 40 89 45 E4 }
-	$a2 = { 83 7C 24 08 01 75 ?? ?? ?? 24 04 50 A3 ?? ?? ?? 50 FF 15 00 10 ?? 50 33 C0 40 C2 0C 00 }
-	$a3 = { 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 C4 E4 53 56 57 89 65 E8 C7 45 E4 01 00 00 00 C7 45 FC }
-
-condition:
-    	$a0 at entrypoint or $a1 at entrypoint or $a2 at entrypoint or $a3 at entrypoint
 }
 
     
@@ -33194,18 +29950,6 @@ condition:
 }
 
     
-rule MinGW_3_2_x__main_
-{
-meta:
-    packer_name = "MinGW 3.2.x (main)"
-strings:
-    	$a0 = { 55 89 E5 83 EC 08 C7 04 24 01 00 00 00 FF 15 E4 40 40 00 E8 68 00 00 00 89 EC 31 C0 5D C3 89 F6 55 89 E5 83 EC 08 C7 04 24 02 00 00 00 FF 15 E4 40 40 00 E8 48 00 00 00 89 EC 31 C0 5D C3 89 F6 55 89 E5 83 EC 08 8B 55 08 89 14 24 FF 15 00 41 40 00 89 EC 5D }
-
-condition:
-    	$a0
-}
-
-    
 rule FSG_v1_10__Eng_____dulek_xt_____Microsoft_Visual_C___6_0_
 {
 meta:
@@ -33251,19 +29995,6 @@ strings:
 condition:
     	$a0 or $a1
 }
-
-    
-rule MingWin32___Dev_C___v4_x__h_
-{
-meta:
-    packer_name = "MingWin32 - Dev C++ v4.x (h)"
-strings:
-    	$a0 = { 55 89 E5 83 EC ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 55 89 E5 83 EC ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 55 ?? ?? ?? ?? ?? ?? ?? ?? ?? FF ?? ?? ?? ?? 00 }
-
-condition:
-    	$a0 at entrypoint
-}
-
     
 rule PseudoSigner_0_2__Macromedia_Flash_Projector_6_0_
 {
@@ -33385,18 +30116,6 @@ condition:
 }
 
     
-rule Borland_C___1994
-{
-meta:
-    packer_name = "Borland C++ 1994"
-strings:
-    	$a0 = { 8C CA 2E 89 ?? ?? ?? B4 30 CD 21 8B 2E ?? ?? 8B 1E ?? ?? 8E DA A3 ?? ?? 8C }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
 rule PECompact_v1_40b2___v1_40b4
 {
 meta:
@@ -33415,18 +30134,6 @@ meta:
     packer_name = "PESpin V1.1 -> cyberbob"
 strings:
     	$a0 = { EB 01 68 60 E8 00 00 00 00 8B 1C 24 83 C3 12 81 2B E8 B1 06 00 FE 4B FD 82 2C 24 7D DE 46 00 0B E4 74 9E }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Borland_C___1991
-{
-meta:
-    packer_name = "Borland C++ 1991"
-strings:
-    	$a0 = { 2E 8C 06 ?? ?? 2E 8C 1E ?? ?? BB ?? ?? 8E DB 1E E8 ?? ?? 1F }
 
 condition:
     	$a0 at entrypoint
@@ -33560,18 +30267,6 @@ meta:
     packer_name = "HACKSTOP v1.00"
 strings:
     	$a0 = { FA BD ?? ?? FF E5 6A 49 48 0C ?? E4 ?? 3F 98 3F }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Nullsoft_Install_System_v2_0b2__v2_0b3
-{
-meta:
-    packer_name = "Nullsoft Install System v2.0b2, v2.0b3"
-strings:
-    	$a0 = { 83 EC 0C 53 55 56 57 FF 15 ?? 70 40 00 8B 35 ?? 92 40 00 05 E8 03 00 00 89 44 24 14 B3 20 FF 15 2C 70 40 00 BF 00 04 00 00 68 ?? ?? ?? 00 57 FF 15 ?? ?? 40 00 57 FF 15 }
 
 condition:
     	$a0 at entrypoint
@@ -33749,18 +30444,6 @@ condition:
 }
 
     
-rule IBM_PictureMaker_graphics_file
-{
-meta:
-    packer_name = "IBM PictureMaker graphics file"
-strings:
-    	$a0 = { 00 ?? C1 ?? 00 ?? ?? ?? ?? 02 00 01 }
-
-condition:
-    	$a0
-}
-
-    
 rule yC_v1_3_by_Ashkbiz_Danehkar
 {
 meta:
@@ -33807,18 +30490,6 @@ strings:
 
 condition:
     	$a0 at entrypoint
-}
-
-    
-rule Sharp_GPB_Graphics_format
-{
-meta:
-    packer_name = "Sharp GPB Graphics format"
-strings:
-    	$a0 = { 4D 00 00 00 00 ?? ?? ?? ?? 08 00 00 00 03 00 00 }
-
-condition:
-    	$a0
 }
 
     
@@ -33876,18 +30547,6 @@ meta:
     packer_name = "PECompact v1.25"
 strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 0F 70 40 ?? 87 DD 8B 85 A6 70 40 ?? 01 85 03 70 40 ?? 66 C7 85 70 40 90 ?? 90 01 85 9E 70 40 BB ?? F3 0D }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Inno_Setup_Module_v1_2_9
-{
-meta:
-    packer_name = "Inno Setup Module v1.2.9"
-strings:
-    	$a0 = { 55 8B EC 83 C4 C0 53 56 57 33 C0 89 45 F0 89 45 EC 89 45 C0 E8 5B 73 FF FF E8 D6 87 FF FF E8 C5 A9 FF FF E8 E0 }
 
 condition:
     	$a0 at entrypoint
@@ -34010,18 +30669,6 @@ meta:
     packer_name = "EXE Packer v7.0 by TurboPower Software"
 strings:
     	$a0 = { 1E 06 8C C3 83 ?? ?? 2E ?? ?? ?? ?? B9 ?? ?? 8C C8 8E D8 8B F1 4E 8B FE }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Dr_Web_Virus_Finding_Engine____InSoft_EDV_Systeme
-{
-meta:
-    packer_name = "Dr.Web Virus-Finding Engine -> InSoft EDV-Systeme"
-strings:
-    	$a0 = { B8 01 00 00 00 C2 0C 00 8D 80 00 00 00 00 8B D2 8B ?? 24 04 }
 
 condition:
     	$a0 at entrypoint
@@ -34285,18 +30932,6 @@ condition:
 }
 
     
-rule AVP_Inspector_Database
-{
-meta:
-    packer_name = "AVP Inspector Database"
-strings:
-    	$a0 = { 47 68 6F 73 74 20 42 75 73 74 65 72 }
-
-condition:
-    	$a0
-}
-
-    
 rule TTPpack
 {
 meta:
@@ -34475,18 +31110,6 @@ meta:
     packer_name = "Thinstall 2.5xx -> Jtit"
 strings:
     	$a0 = { 55 8B EC B8 ?? ?? ?? ?? BB ?? ?? ?? ?? 50 E8 00 00 00 00 58 2D ?? 1A 00 00 B9 ?? 1A 00 00 BA ?? 1B 00 00 BE 00 10 00 00 BF ?? 53 00 00 BD ?? 1A 00 00 03 E8 81 75 00 ?? ?? ?? ?? ?? 75 04 ?? ?? ?? ?? 81 75 08 ?? ?? ?? ?? 81 75 0C ?? ?? ?? ?? 81 75 10 }
-
-condition:
-    	$a0 at entrypoint
-}
-
-    
-rule Microsoft_FORTRAN
-{
-meta:
-    packer_name = "Microsoft FORTRAN"
-strings:
-    	$a0 = { FC 1E B8 ?? ?? 8E D8 9A ?? ?? ?? ?? 81 ?? ?? ?? 8B EC 8C DB 8E C3 BB ?? ?? B9 ?? ?? 9A ?? ?? ?? ?? 80 ?? ?? ?? ?? 74 ?? E9 }
 
 condition:
     	$a0 at entrypoint

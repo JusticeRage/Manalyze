@@ -17,6 +17,7 @@
 
 #include "pe.h"
 #include "imports.h" // Non-member functions related to imports
+#include "color.h"
 
 namespace sg {
 
@@ -33,7 +34,7 @@ bool PE::_parse_imports(FILE* f)
 
 		if (20 != fread(iid.get(), 1, 20, f))
 		{
-			std::cerr << "[!] Error: Could not read the IMAGE_IMPORT_DESCRIPTOR." << std::endl;
+			PRINT_ERROR << "Could not read the IMAGE_IMPORT_DESCRIPTOR." << std::endl;
 			return false;
 		}
 
@@ -46,7 +47,7 @@ bool PE::_parse_imports(FILE* f)
 		unsigned int offset = _rva_to_offset(iid->Name);
 		if (!offset || !utils::read_string_at_offset(f, offset, iid->NameStr))
 		{
-			std::cerr << "[!] Error: Could not read the import name." << std::endl;
+			PRINT_ERROR << "Could not read the import name." << std::endl;
 			return false;
 		}
 
@@ -66,7 +67,7 @@ bool PE::_parse_imports(FILE* f)
 		}
 		if (!ilt_offset || fseek(f, ilt_offset, SEEK_SET))
 		{
-			std::cerr << "[!] Error: Could not reach an IMPORT_LOOKUP_TABLE." << std::endl;
+			PRINT_ERROR << "Could not reach an IMPORT_LOOKUP_TABLE." << std::endl;
 			return false;
 		}
 
@@ -80,7 +81,7 @@ bool PE::_parse_imports(FILE* f)
 			int size_to_read = (_ioh.Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC["PE32+"] ? 8 : 4);
 			if (size_to_read != fread(&(import->AddressOfData), 1, size_to_read, f))
 			{
-				std::cerr << "[!] Error: Could not read the IMPORT_LOOKUP_TABLE." << std::endl;
+				PRINT_ERROR << "Could not read the IMPORT_LOOKUP_TABLE." << std::endl;
 				return false;
 			}
 
@@ -99,14 +100,14 @@ bool PE::_parse_imports(FILE* f)
 				unsigned int table_offset = _rva_to_offset(import->AddressOfData & 0x7FFFFFFF);
 				if (table_offset == 0)
 				{
-					std::cerr << "[!] Error: Could not reach the HINT/NAME table." << std::endl;
+					PRINT_ERROR << "Could not reach the HINT/NAME table." << std::endl;
 					return false;
 				}
 
 				unsigned int saved_offset = ftell(f);
 				if (saved_offset == -1 || fseek(f, table_offset, SEEK_SET) || 2 != fread(&(import->Hint), 1, 2, f))
 				{
-					std::cerr << "[!] Error: Could not read a HINT/NAME hint." << std::endl;
+					PRINT_ERROR << "Could not read a HINT/NAME hint." << std::endl;
 					return false;
 				}
 				import->Name = utils::read_ascii_string(f);

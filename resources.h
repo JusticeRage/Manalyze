@@ -118,7 +118,7 @@ public:
 	yara::matches detect_filetype();
 
 private:
-	static yara::pyara _yara;
+	static yara::pYara _yara;
 
 	std::string		_type;
 	
