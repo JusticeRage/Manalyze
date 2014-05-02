@@ -24,6 +24,7 @@
 #include <vector>
 
 #include "pe_structs.h"
+#include "color.h"
 
 namespace sg {
 

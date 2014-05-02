@@ -8,11 +8,14 @@ set(Boost_USE_STATIC_RUNTIME ON)
 find_package(Boost REQUIRED COMPONENTS regex system filesystem program_options)
 
 include_directories(
+						${PROJECT_SOURCE_DIR}
 						${PROJECT_SOURCE_DIR}/external
 						${Boost_INCLUDE_DIRS}
                    )
 
-add_executable(sgstatic main.cpp pe.cpp nt_values.cpp utils.cpp imports.cpp dump.cpp resources.cpp section.cpp yara_wrapper.cpp ssdeep.cpp hashes.cpp)
+add_executable(sgstatic main.cpp pe.cpp nt_values.cpp utils.cpp imports.cpp dump.cpp resources.cpp section.cpp yara_wrapper.cpp ssdeep.cpp hashes.cpp color.cpp
+			   plugin/dynamic_library.cpp plugin/plugin_manager.cpp # Plugin system
+			   plugin/plugins_yara/plugins_yara.cpp) # Bundled plugins
 
 if (WIN32)
 			add_definitions(/D_CRT_SECURE_NO_WARNINGS) # Please don't complain about fopen()
@@ -22,7 +25,9 @@ if (WIN32)
             set (CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -MT")
             set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -MT")
 			
-			add_definitions(-DBOOST_ALL_NO_LIB) # Problems with autolink and MSVC
+			add_definitions(-DBOOST_ALL_NO_LIB -DNOMINMAX) # Problems with autolink and MSVC + don't hide std::min and std::max.
+else()
+			target_link_libraries(sgstatic dl)
 endif()
 
 # yara dependency

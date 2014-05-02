@@ -32,7 +32,9 @@ Section::Section(const image_section_header& header, const std::string& path)
 		_characteristics(header.Characteristics),
 		_path(path)
 {
-	_name = std::string(header.Name, header.Name + 8);
+	_name = std::string((char*) header.Name);
+	// TODO: If the name starts with a slash, then it is followed by an index into the StringTable
+	// which is the actual section name. Does it ever happen, though?
 }
 
 // ----------------------------------------------------------------------------
@@ -49,7 +51,7 @@ std::vector<boost::uint8_t> Section::get_raw_data()
 
 	if (_size_of_raw_data != fread(&res[0], 1, _size_of_raw_data, f)) 
 	{
-		std::cerr << "[!] Warning: Raw bytes from section " << _name << " could not be obtained." << std::endl;
+		PRINT_WARNING << "Raw bytes from section " << _name << " could not be obtained." << std::endl;
 		res.resize(0);
 	}
 

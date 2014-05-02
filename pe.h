@@ -38,6 +38,7 @@
 #include "utils.h"
 #include "resources.h"	// Definition of the Resource class
 #include "section.h"	// Definition of the Section class
+#include "color.h"		// Allows changing the font color in the terminal
 
 namespace sg {
 

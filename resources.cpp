@@ -29,7 +29,7 @@ namespace sg
 {
 
 // Initialize the Yara wrapper used by resource objects
-yara::pyara Resource::_yara = yara::pyara(new yara::Yara);
+yara::pYara Resource::_yara = yara::pYara(new yara::Yara);
 
 bool PE::read_image_resource_directory(image_resource_directory& dir, FILE* f, unsigned int offset)
 {
@@ -38,7 +38,7 @@ bool PE::read_image_resource_directory(image_resource_directory& dir, FILE* f, u
 		offset = _rva_to_offset(_ioh.directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress) + offset;
 		if (!offset || fseek(f, offset, SEEK_SET))
 		{
-			std::cerr << "[!] Error: Could not reach an IMAGE_RESOURCE_DIRECTORY." << std::endl;
+			PRINT_ERROR << "Could not reach an IMAGE_RESOURCE_DIRECTORY." << std::endl;
 			return false;
 		}
 	}
@@ -47,7 +47,7 @@ bool PE::read_image_resource_directory(image_resource_directory& dir, FILE* f, u
 	dir.Entries.clear();
 	if (size != fread(&dir, 1, size, f))
 	{
-		std::cerr << "[!] Error: Could not read an IMAGE_RESOURCE_DIRECTORY." << std::endl;
+		PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DIRECTORY." << std::endl;
 		return false;
 	}
 
@@ -58,7 +58,7 @@ bool PE::read_image_resource_directory(image_resource_directory& dir, FILE* f, u
 		memset(entry.get(), 0, size);
 		if (size != fread(entry.get(), 1, size, f))
 		{
-			std::cerr << "[!] Error: Could not read an IMAGE_RESOURCE_DIRECTORY_ENTRY." << std::endl;
+			PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DIRECTORY_ENTRY." << std::endl;
 			return false;
 		}
 
@@ -70,7 +70,7 @@ bool PE::read_image_resource_directory(image_resource_directory& dir, FILE* f, u
 				+ (entry->NameOrId & 0x7FFFFFFF);
 			if (!offset || !utils::read_string_at_offset(f, offset, entry->NameStr, true))
 			{
-				std::cerr << "[!] Error: Could not read an IMAGE_RESOURCE_DIRECTORY_ENTRY's name." << std::endl;
+				PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DIRECTORY_ENTRY's name." << std::endl;
 				return false;
 			}
 		}
@@ -113,13 +113,13 @@ bool PE::_parse_resources(FILE* f)
 				unsigned int offset = _rva_to_offset(_ioh.directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress + ((*it3)->OffsetToData & 0x7FFFFFFF));
 				if (!offset || fseek(f, offset, SEEK_SET))
 				{
-					std::cerr << "[!] Error: Could not reach an IMAGE_RESOURCE_DATA_ENTRY." << std::endl;
+					PRINT_ERROR << "Could not reach an IMAGE_RESOURCE_DATA_ENTRY." << std::endl;
 					return false;
 				}
 
 				if (sizeof(image_resource_data_entry) != fread(&entry, 1, sizeof(image_resource_data_entry), f))
 				{
-					std::cerr << "[!] Error: Could not read an IMAGE_RESOURCE_DATA_ENTRY." << std::endl;
+					PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DATA_ENTRY." << std::endl;
 					return false;
 				}
 
@@ -156,14 +156,14 @@ bool PE::_parse_resources(FILE* f)
 				offset = _rva_to_offset(entry.OffsetToData);
 				if (!offset) 
 				{
-					std::cerr << "[!] Warning: Could not locate the section containing resource ";
+					PRINT_WARNING << "Could not locate the section containing resource ";
 					if (id) {
 						std::cerr << id;
 					}
 					else {
 						std::cerr << name;
 					}
-					std::cerr << "! Trying to use the RVA as an offset..." << std::endl;
+					PRINT_ERROR << "Trying to use the RVA as an offset..." << std::endl;
 					offset = entry.OffsetToData;
 				}
 				pResource res;
@@ -212,7 +212,7 @@ bool PE::_parse_debug(FILE* f)
 		memset(debug.get(), 0, size);
 		if (size != fread(debug.get(), 1, size, f))
 		{
-			std::cerr << "[!] Error: Could not read the DEBUG_DIRECTORY_ENTRY" << std::endl;
+			PRINT_ERROR << "Could not read the DEBUG_DIRECTORY_ENTRY" << std::endl;
 			return false;
 		}
 
@@ -227,7 +227,7 @@ bool PE::_parse_debug(FILE* f)
 			fseek(f, debug->PointerToRawData, SEEK_SET);
 			if (pdb_size != fread(&pdb, 1, pdb_size, f) || pdb.Signature != 0x53445352) // Signature: "RSDS"
 			{
-				std::cerr << "[!] Error: Could not read PDB file information." << std::endl;
+				PRINT_ERROR << "Could not read PDB file information." << std::endl;
 				return false;
 			}
 			pdb.PdbFileName = utils::read_ascii_string(f); // Not optimal, but it'll help if I decide to 
@@ -244,7 +244,7 @@ bool PE::_parse_debug(FILE* f)
 			fseek(f, debug->PointerToRawData, SEEK_SET);
 			if (misc_size != fread(&misc, 1, misc_size, f))
 			{
-				std::cerr << "[!] Error: Could not read DBG file information" << std::endl;
+				PRINT_ERROR << "Could not read DBG file information" << std::endl;
 				return false;
 			}
 			switch (misc.Unicode)
@@ -297,7 +297,7 @@ bool parse_version_info_header(vs_version_info_header& header, FILE* f)
 	memset(&header, 0, 3 * sizeof(boost::uint16_t));
 	if (3*sizeof(boost::uint16_t) != fread(&header, 1, 3*sizeof(boost::uint16_t), f))
 	{
-		std::cerr << "Error: Could not read a VS_VERSION_INFO header!" << std::endl;
+		PRINT_ERROR << "Could not read a VS_VERSION_INFO header!" << std::endl;
 		return false;
 	}
 	header.Key = utils::read_unicode_string(f);
@@ -473,14 +473,14 @@ pversion_info Resource::interpret_as()
 	memset(res->Value.get(), 0, sizeof(fixed_file_info));
 	if (sizeof(fixed_file_info) != fread(res->Value.get(), 1, sizeof(fixed_file_info), f) || res->Value->Signature != 0xfeef04bd)
 	{
-		std::cerr << "Error: Could not read a VS_FIXED_FILE_INFO!" << std::endl;
+		PRINT_ERROR << "Could not read a VS_FIXED_FILE_INFO!" << std::endl;
 		goto END;
 	}
 
 	if (!parse_version_info_header(*current_structure, f) || current_structure->Key != "StringFileInfo") 
 	{
 		if (current_structure->Key != "StringFileInfo") {
-			std::cerr << "Error: StringFileInfo expected, read " << current_structure->Key << " instead." << std::endl;
+			PRINT_ERROR << "StringFileInfo expected, read " << current_structure->Key << " instead." << std::endl;
 		}
 		res.reset();
 		goto END;
@@ -603,7 +603,7 @@ std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, co
 		}
 		if (icon == NULL)
 		{
-			std::cerr << "Error: Could not locate RT_ICON with ID " << directory->Entries[i]->Id << "!" << std::endl;
+			PRINT_ERROR << "Could not locate RT_ICON with ID " << directory->Entries[i]->Id << "!" << std::endl;
 			res.clear();
 			return res;
 		}
@@ -638,7 +638,7 @@ bool PE::extract_resources(const std::string& destination_folder)
 {
 	if (!bfs::exists(destination_folder) && !bfs::create_directory(destination_folder)) 
 	{
-		std::cerr << "Error: Could not create directory " << destination_folder << "." << std::endl;
+		PRINT_ERROR << "Could not create directory " << destination_folder << "." << std::endl;
 		return false;
 	}
 
@@ -666,7 +666,7 @@ bool PE::extract_resources(const std::string& destination_folder)
 			pbitmap bmp = (*it)->interpret_as<pbitmap>();
 			if (bmp == NULL)
 			{
-				std::cerr << "Error: Bitmap " << (*it)->get_name() << " is malformed!" << std::endl;
+				PRINT_ERROR << "Bitmap " << (*it)->get_name() << " is malformed!" << std::endl;
 				continue;
 			}
 
@@ -692,7 +692,7 @@ bool PE::extract_resources(const std::string& destination_folder)
 			FILE* f = fopen(destination_file.string().c_str(), "a+");
 			if (f == NULL) 
 			{
-				std::cerr << "Error: Could not open/create " << destination_file << "!" << std::endl;
+				PRINT_ERROR << "Could not open/create " << destination_file << "!" << std::endl;
 				continue;
 			}
 
@@ -739,13 +739,13 @@ bool PE::extract_resources(const std::string& destination_folder)
 		f = fopen(destination_file.string().c_str(), "wb+");
 		if (f == NULL)
 		{
-			std::cerr << "Error: Could not open " << destination_file << "." << std::endl;
+			PRINT_ERROR << "Could not open " << destination_file << "." << std::endl;
 			return false;
 		}
 		if (data.size() != fwrite(&data[0], 1, data.size(), f)) 
 		{
 			fclose(f);
-			std::cerr << "Error: Could not write all the bytes for " << destination_file << "." << std::endl; 
+			PRINT_ERROR << "Could not write all the bytes for " << destination_file << "." << std::endl; 
 			return false;
 		}
 

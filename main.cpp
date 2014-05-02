@@ -25,10 +25,13 @@
 #include <boost/tokenizer.hpp>
 #include <boost/filesystem.hpp>
 
+#include "plugin/plugin_manager.h"
+
 #include "pe.h"
 #include "resources.h"
 #include "mandiant_modules.h"
 #include "yara_wrapper.h"
+#include "color.h"
 
 namespace po = boost::program_options;
 
@@ -55,8 +58,7 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
 			"exports, resources, version, debug, tls, certificates, relocations")
 		("hashes", "Calculate various hashes of the file (may slow down the analysis!)")
 		("extract,x", po::value<std::string>(), "Extract the PE resources to the target directory.")
-		("peid", "Use PEiD signatures to determine packer/compiler info (may slow down the analysis!)")
-		("clamav", "Use ClamAV signatures to check for known viruses (may slow down the analysis!)");
+		("plugins", "Analyze the binary with additional plugins. (may slow down the analysis!)");
 
 
 	po::positional_options_description p;
@@ -69,7 +71,7 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
 	}
 	catch(po::error& e)	
 	{
-		std::cerr << "[!] Error: Could not parse command line (" << e.what() << ")." << std::endl << std::endl;
+		PRINT_ERROR << "Could not parse command line (" << e.what() << ")." << std::endl << std::endl;
 		return false;
 	}
 
@@ -86,7 +88,7 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
 	{
 		if (!boost::filesystem::exists(*it))
 		{
-			std::cerr << "[!] Error: " << *it << " not found!" << std::endl;
+			PRINT_ERROR << *it << " not found!" << std::endl;
 			return false;
 		}
 	}
@@ -186,29 +188,15 @@ int main(int argc, char** argv)
 {
 	std::cout << "* SGStatic 0.8 *" << std::endl << std::endl;
 	po::variables_map vm;
-	yara::Yara y_peid;
-	yara::Yara y_clamav;
 
 	if (!parse_args(vm, argc, argv)) {
 		return -1;
 	}
 
-	// Load Yara if required
-	if (vm.count("peid")) 
-	{
-		if (!y_peid.load_rules("resources/peid.yara")) 
-		{
-			std::cerr << "[!] Error: Could not load PEiD signatures!" << std::endl;
-			return 1;
-		}
-	}
-	if (vm.count("clamav")) 
-	{
-		if (!y_clamav.load_rules("resources/clamav.yara")) 
-		{
-			std::cerr << "[!] Error: Could not load ClamAV signatures!" << std::endl;
-			return 1;
-		}
+	// Instantiate plugins now, and only once in case they have a long setup time.
+	std::vector<plugin::pIPlugin> plugins;
+	if (vm.count("plugins")) {
+		plugins = plugin::PluginManager::get_instance().get_plugins();
 	}
 
 	// Perform analysis on all the input files
@@ -220,7 +208,7 @@ int main(int argc, char** argv)
 		// Try to parse the PE
 		if (!pe.is_valid()) 
 		{
-			std::cerr << "[!] Error: Could not parse " << *it << "!" << std::endl;
+			PRINT_ERROR << "Could not parse " << *it << "!" << std::endl;
 			yara::Yara y = yara::Yara();
 			// In case of failure, we try to detect the file type to inform the user.
 			// Maybe he made a mistake and specified a wrong file?
@@ -273,29 +261,45 @@ int main(int argc, char** argv)
 			pe.dump_hashes();
 		}
 
-		if (vm.count("peid")) 
+		if (vm.count("plugins")) 
 		{
-			yara::matches m = y_peid.scan_file(pe.get_path());
-			if (m.size() > 0) 
+			for (std::vector<plugin::pIPlugin>::iterator it = plugins.begin() ; it != plugins.end() ; ++it) 
 			{
-				std::cout << "PEiD Signature:" << std::endl;
-				for (yara::matches::iterator it = m.begin() ; it != m.end() ; ++it) {
-					std::cout << "\t" << (*it)->operator[]("packer_name") << std::endl;
+				plugin::pResult res = (*it)->analyze(pe);
+				plugin::Result::pInformation info = res->get_information();
+				plugin::Result::pString summary = res->get_summary();
+				
+				if (!info) {
+					continue;
 				}
-				std::cout << std::endl;
-			}
-		}
+				switch (res->get_level())
+				{
+					case plugin::Result::NO_OPINION:
+						break;
+					
+					case plugin::Result::MALICIOUS:
+						utils::print_colored_text("DANGEROUS", utils::RED, std::cout, "[ ", " ] ");
+						break;
 
-		if (vm.count("clamav")) 
-		{
-			yara::matches m = y_clamav.scan_file(pe.get_path());
-			if (m.size() > 0) 
-			{
-				std::cout << "ClamAV Signature:" << std::endl;
-				for (yara::matches::iterator it = m.begin() ; it != m.end() ; ++it) {
-					std::cout << "\t" << (*it)->operator[]("signature") << std::endl;
+					case plugin::Result::SUSPICIOUS:
+						utils::print_colored_text("SUSPICIOUS", utils::YELLOW, std::cout, "[ ", " ]");
+						break;
+
+					case plugin::Result::SAFE:
+						utils::print_colored_text("SAFE", utils::GREEN, std::cout, "[ ", " ]");
+						break;
 				}
-				std::cout << std::endl;
+
+				if (summary) {
+					std::cout << *summary << std::endl;
+				}
+
+				for (std::vector<std::string>::iterator it2 = info->begin() ; it2 != info->end() ; ++it2) {
+					std::cout << "\t" << *it2 << std::endl;
+				}
+				if (info->size() > 0) {
+					std::cout << std::endl;
+				}
 			}
 		}
 
