@@ -25,7 +25,7 @@
 #include <boost/tokenizer.hpp>
 #include <boost/filesystem.hpp>
 
-#include "plugin/plugin_manager.h"
+#include "plugin_framework/plugin_manager.h"
 
 #include "pe.h"
 #include "resources.h"
@@ -186,7 +186,7 @@ std::vector<std::string> get_input_files(po::variables_map& vm)
 
 int main(int argc, char** argv)
 {
-	std::cout << "* SGStatic 0.8 *" << std::endl << std::endl;
+	std::cout << "* SGStatic 0.9 *" << std::endl << std::endl;
 	po::variables_map vm;
 
 	if (!parse_args(vm, argc, argv)) {
@@ -195,8 +195,12 @@ int main(int argc, char** argv)
 
 	// Instantiate plugins now, and only once in case they have a long setup time.
 	std::vector<plugin::pIPlugin> plugins;
-	if (vm.count("plugins")) {
+
+	if (vm.count("plugins")) 
+	{
+		std::cerr << "Loading plugins...";
 		plugins = plugin::PluginManager::get_instance().get_plugins();
+		std::cerr << "\r                  \r";
 	}
 
 	// Perform analysis on all the input files
@@ -266,8 +270,8 @@ int main(int argc, char** argv)
 			for (std::vector<plugin::pIPlugin>::iterator it = plugins.begin() ; it != plugins.end() ; ++it) 
 			{
 				plugin::pResult res = (*it)->analyze(pe);
-				plugin::Result::pInformation info = res->get_information();
-				plugin::Result::pString summary = res->get_summary();
+				plugin::pInformation info = res->get_information();
+				plugin::pString summary = res->get_summary();
 				
 				if (!info) {
 					continue;
@@ -282,16 +286,19 @@ int main(int argc, char** argv)
 						break;
 
 					case plugin::Result::SUSPICIOUS:
-						utils::print_colored_text("SUSPICIOUS", utils::YELLOW, std::cout, "[ ", " ]");
+						utils::print_colored_text("SUSPICIOUS", utils::YELLOW, std::cout, "[ ", " ] ");
 						break;
 
 					case plugin::Result::SAFE:
-						utils::print_colored_text("SAFE", utils::GREEN, std::cout, "[ ", " ]");
+						utils::print_colored_text("SAFE", utils::GREEN, std::cout, "[ ", " ] ");
 						break;
 				}
 
 				if (summary) {
 					std::cout << *summary << std::endl;
+				}
+				else if (res->get_level() != plugin::Result::NO_OPINION) {
+					std::cout << std::endl;
 				}
 
 				for (std::vector<std::string>::iterator it2 = info->begin() ; it2 != info->end() ; ++it2) {

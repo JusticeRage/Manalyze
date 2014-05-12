@@ -25,6 +25,10 @@
 namespace plugin
 {
 
+
+typedef boost::shared_ptr<std::string> pString;
+typedef boost::shared_ptr<std::vector<std::string> > pInformation;
+
 /**
  *	@brief	Represents the result of a PE analysis, as returned by plugins.
  *
@@ -37,8 +41,6 @@ class Result
 
 public:
 	enum LEVEL { SAFE, NO_OPINION, SUSPICIOUS, MALICIOUS };
-	typedef boost::shared_ptr<std::string> pString;
-	typedef boost::shared_ptr<std::vector<std::string> > pInformation;
 
 	Result() : _level(NO_OPINION),
 			   _data(new std::vector<std::string>())

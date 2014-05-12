@@ -16,8 +16,8 @@
 */
 
 #include "yara_wrapper.h"
-#include "plugin/plugin_interface.h"
-#include "plugin/auto_register.h"
+#include "plugin_framework/plugin_interface.h"
+#include "plugin_framework/auto_register.h"
 
 namespace plugin
 {
@@ -86,12 +86,12 @@ public:
 		return scan(pe, "Matching ClamAV signature(s):", Result::MALICIOUS, "signature");
 	}
 
-	boost::shared_ptr<std::string> get_id() { 
-		return boost::shared_ptr<std::string>(new std::string("clamav"));
+	pString get_id() { 
+		return pString (new std::string("clamav"));
 	}
 
-	boost::shared_ptr<std::string> get_description() { 
-		return boost::shared_ptr<std::string>(new std::string("Scans the binary with ClamAV virus definitions."));
+	pString  get_description() { 
+		return pString (new std::string("Scans the binary with ClamAV virus definitions."));
 	}
 };
 

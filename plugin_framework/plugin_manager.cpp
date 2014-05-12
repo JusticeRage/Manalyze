@@ -15,7 +15,7 @@
     along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "plugin/plugin_manager.h"
+#include "plugin_framework/plugin_manager.h"
 
 namespace plugin {
 

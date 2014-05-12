@@ -23,7 +23,7 @@
 #include <boost/system/api_config.hpp>
 
 #include "pe.h"
-#include "plugin/result.h"
+#include "plugin_framework/result.h"
 
 #ifdef BOOST_WINDOWS_API
 #	define PLUGIN_API __declspec(dllexport)

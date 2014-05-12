@@ -31,7 +31,7 @@ namespace sg
 // Initialize the Yara wrapper used by resource objects
 yara::pYara Resource::_yara = yara::pYara(new yara::Yara);
 
-bool PE::read_image_resource_directory(image_resource_directory& dir, FILE* f, unsigned int offset)
+bool PE::_read_image_resource_directory(image_resource_directory& dir, FILE* f, unsigned int offset)
 {
 	if (offset)
 	{
@@ -90,19 +90,19 @@ bool PE::_parse_resources(FILE* f)
 	}
 
 	image_resource_directory root;
-	read_image_resource_directory(root, f);
+	_read_image_resource_directory(root, f);
 
 	// Read Type directories
 	for (std::vector<pimage_resource_directory_entry>::iterator it = root.Entries.begin() ; it != root.Entries.end() ; ++it)
 	{
 		image_resource_directory type;
-		read_image_resource_directory(type, f, (*it)->OffsetToData & 0x7FFFFFFF);
+		_read_image_resource_directory(type, f, (*it)->OffsetToData & 0x7FFFFFFF);
 
 		// Read Name directory
 		for (std::vector<pimage_resource_directory_entry>::iterator it2 = type.Entries.begin() ; it2 != type.Entries.end() ; ++it2)
 		{
 			image_resource_directory name;
-			read_image_resource_directory(name, f, (*it2)->OffsetToData & 0x7FFFFFFF);
+			_read_image_resource_directory(name, f, (*it2)->OffsetToData & 0x7FFFFFFF);
 
 			// Read the IMAGE_RESOURCE_DATA_ENTRY
 			for (std::vector<pimage_resource_directory_entry>::iterator it3 = name.Entries.begin() ; it3 != name.Entries.end() ; ++it3)

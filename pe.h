@@ -53,6 +53,8 @@ public:
 
     std::string get_path()  const { return _path; }
 
+	std::vector<pSection> get_sections() const { return _sections; }
+
 
 	/**
 	 *	@brief	Returns the list of DLLs imported by the PE.
@@ -270,7 +272,7 @@ private:
 	bool _reach_directory(FILE* f, int directory) const;
 
 	/**
-	 *	@brief	Reads a image_resource_directory at the current position in a file.
+	 *	@brief	Reads an image_resource_directory at the current position in a file.
 	 *
 	 *	@param	image_resource_directory& dir The structure to fill.
 	 *	@param	FILE* f The file to read from.
@@ -282,7 +284,7 @@ private:
 	 *
 	 *	@return	Whether a structure was successfully read.
 	 */
-	bool read_image_resource_directory(image_resource_directory& dir, FILE* f, unsigned int offset = 0);
+	bool _read_image_resource_directory(image_resource_directory& dir, FILE* f, unsigned int offset = 0);
 
 	/**
 	 *	@brief	Finds imported DLLs whose names match a particular regular expression.

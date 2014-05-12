@@ -14,8 +14,8 @@ include_directories(
                    )
 
 add_executable(sgstatic main.cpp pe.cpp nt_values.cpp utils.cpp imports.cpp dump.cpp resources.cpp section.cpp yara_wrapper.cpp ssdeep.cpp hashes.cpp color.cpp
-			   plugin/dynamic_library.cpp plugin/plugin_manager.cpp # Plugin system
-			   plugin/plugins_yara/plugins_yara.cpp) # Bundled plugins
+			   plugin_framework/dynamic_library.cpp plugin_framework/plugin_manager.cpp # Plugin system
+			   plugins/yara/plugins_yara.cpp plugins/plugin_packer_detection.cpp) # Bundled plugins
 
 if (WIN32)
 			add_definitions(/D_CRT_SECURE_NO_WARNINGS) # Please don't complain about fopen()

@@ -15,7 +15,7 @@
     along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "plugin/dynamic_library.h"
+#include "plugin_framework/dynamic_library.h"
 #include "color.h"
 
 namespace plugin {

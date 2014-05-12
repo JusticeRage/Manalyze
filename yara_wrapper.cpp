@@ -146,6 +146,7 @@ int get_match_metadata(int message, YR_RULE* rule, void* data)
 {
 	matches* target = NULL;
 	YR_META* meta = NULL;
+	YR_STRING* strings = NULL;
 	pmatch m;
 
 	switch (message)
@@ -153,12 +154,14 @@ int get_match_metadata(int message, YR_RULE* rule, void* data)
 		case CALLBACK_MSG_RULE_MATCHING:
 			target = (matches*)data; // I know what I'm doing.
 			meta = rule->metas;
+			strings = rule->strings;
 			m = pmatch(new match);
 			while (!META_IS_NULL(meta))
 			{
 				m->operator[](std::string(meta->identifier)) = meta->string;
 				++meta;
 			}
+			// TODO: Also get the matched string
 			target->push_back(m);
 			return CALLBACK_CONTINUE;
 

@@ -24,9 +24,9 @@
 #include <boost/bind.hpp>
 #include <boost/optional.hpp>
 
-#include "plugin/dynamic_library.h"
-#include "plugin/plugin_interface.h"
-#include "plugin/plugin.h"
+#include "plugin_framework/dynamic_library.h"
+#include "plugin_framework/plugin_interface.h"
+#include "plugin_framework/plugin.h"
 
 #include "color.h"
 
