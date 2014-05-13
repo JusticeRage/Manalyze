@@ -265,7 +265,7 @@ void PE::dump_resources(std::ostream& sink, bool compute_hashes) const
 		if (m.size() > 0) 
 		{
 			for (yara::matches::iterator it = m.begin() ; it != m.end() ; ++it) {
-				sink <<	"\tDetected Type:\t" << (*it)->at("description") << std::endl;
+				sink <<	"\tDetected Type:\t" << (*it)->operator[]("description") << std::endl;
 			}
 		}
 		if (compute_hashes)

@@ -46,10 +46,11 @@ public:
 	 *	Result::LEVEL level The threat level to set if there is a match.
 	 *	const std::string& meta_field_name The meta field name (of the yara rule) to query to
 	 *									   extract results.
+	 *	bool show_strings Adds the matched strings/patterns to the result.
 	 *
 	 *	@return	A pResult detailing the findings of the scan.
 	 */
-	pResult scan(const sg::PE& pe, const std::string& summary, Result::LEVEL level, const std::string& meta_field_name)
+	pResult scan(const sg::PE& pe, const std::string& summary, Result::LEVEL level, const std::string& meta_field_name, bool show_strings = false)
 	{
 		pResult res = pResult(new Result);
 		if (!_initialized) {
@@ -61,8 +62,17 @@ public:
 		{
 			res->set_level(level);
 			res->set_summary(summary);
-			for (yara::matches::iterator it = m.begin() ; it != m.end() ; ++it) {
+			for (yara::matches::iterator it = m.begin() ; it != m.end() ; ++it) 
+			{
 				res->add_information((*it)->operator[](meta_field_name));
+				if (show_strings) 
+				{
+					res->add_information("Related string(s) found:");
+					std::set<std::string> found = (*it)->get_found_strings();
+					for (std::set<std::string>::iterator it = found.begin() ; it != found.end() ; ++it) {
+						res->add_information("\t" + *it);
+					}
+				}
 			}
 		}
 
@@ -113,7 +123,46 @@ public:
 	}
 };
 
+class PEiDPlugin : public YaraPlugin
+{
+public:
+	PEiDPlugin() : YaraPlugin("resources/peid.yara") {}
+
+	pResult analyze(const sg::PE& pe) {
+		return scan(pe, "PEiD Signature:", Result::SUSPICIOUS, "packer_name");
+	}
+
+	boost::shared_ptr<std::string> get_id() { 
+		return boost::shared_ptr<std::string>(new std::string("peid"));
+	}
+
+	boost::shared_ptr<std::string> get_description() { 
+		return boost::shared_ptr<std::string>(new std::string("Returns the PEiD signature of the binary."));
+	}
+};
+
+
+class SuspiciousStringsPlugin : public YaraPlugin
+{
+public:
+	SuspiciousStringsPlugin() : YaraPlugin("resources/suspicious_strings.yara") {}
+
+	pResult analyze(const sg::PE& pe) {
+		return scan(pe, "Strings found in the binary may indicate undesirable behavior:", Result::SUSPICIOUS, "description", true);
+	}
+
+	boost::shared_ptr<std::string> get_id() { 
+		return boost::shared_ptr<std::string>(new std::string("strings"));
+	}
+
+	boost::shared_ptr<std::string> get_description() { 
+		return boost::shared_ptr<std::string>(new std::string("Looks for suspicious strings in the binary (anti-VM, process names...)."));
+	}
+};
+
 AutoRegister<ClamavPlugin> auto_register_clamav;
 AutoRegister<CompilerDetectionPlugin> auto_register_compiler;
+AutoRegister<PEiDPlugin> auto_register_peid;
+AutoRegister<SuspiciousStringsPlugin> auto_register_strings;
 
 }

@@ -46,14 +46,27 @@ bool Yara::load_rules(const std::string& rule_filename)
 	}
 
 	bool res = false;
-	int retval = yr_rules_load(rule_filename.c_str(), &_rules);
+	int retval;
+
+	// Look for a compiled version of the rule file first.
+	if (boost::filesystem::exists(rule_filename + "c")) { // File extension is .yarac instead of .yara.
+		retval = yr_rules_load((rule_filename + "c").c_str(), &_rules);
+	}
+	else {
+		retval = yr_rules_load(rule_filename.c_str(), &_rules);
+	}
+
+	
 	if (retval != ERROR_SUCCESS && retval != ERROR_INVALID_FILE)
 	{
 		PRINT_ERROR << "Could not load yara rules. (Yara Error 0x" << std::hex << retval << ")" << std::endl;
 		return false;
 	}
 
-	if (retval == ERROR_INVALID_FILE)
+	if (retval == ERROR_SUCCESS) {
+		return true;
+	}
+	else if (retval == ERROR_INVALID_FILE) // Uncompiled rules
 	{
 		if (yr_compiler_create(&_compiler) != ERROR_SUCCESS) {
 			return false;
@@ -70,6 +83,14 @@ bool Yara::load_rules(const std::string& rule_filename)
 		if (retval != ERROR_SUCCESS) {
 			goto END;
 		}
+
+		// Save the compiled rules to improve load times.
+		// /!\ The compiled rules will have to be deleted if the original (readable) rule file is updated!
+		retval = yr_rules_save(_rules, (rule_filename + "c").c_str());
+		if (retval != ERROR_SUCCESS) {
+			goto END;
+		}
+
 		res = true;
 		_current_rules = rule_filename;
 		END:
@@ -98,7 +119,7 @@ matches Yara::scan_bytes(std::vector<boost::uint8_t>& bytes)
 	retval = yr_rules_scan_mem(_rules,
 							   &bytes[0],				// The bytes to scan
 							   bytes.size(),			// Number of bytes
-							   get_match_metadata,
+							   get_match_data,
 							   &res,					// The vector to fill
 							   FALSE,					// We don't want a fast scan.
 							   0);						// No timeout)
@@ -127,7 +148,7 @@ matches Yara::scan_file(const std::string& path)
 	
 	retval = yr_rules_scan_file(_rules,
 						        path.c_str(),
-								get_match_metadata,
+								get_match_data,
 								&res,
 								FALSE,
 								0);
@@ -142,28 +163,57 @@ matches Yara::scan_file(const std::string& path)
 
 // ----------------------------------------------------------------------------
 
-int get_match_metadata(int message, YR_RULE* rule, void* data)
+int get_match_data(int message, YR_RULE* rule, void* data)
 {
 	matches* target = NULL;
 	YR_META* meta = NULL;
-	YR_STRING* strings = NULL;
-	pmatch m;
+	YR_STRING* s = NULL;
+	pMatch m;
 
 	switch (message)
 	{
 		case CALLBACK_MSG_RULE_MATCHING:
 			target = (matches*)data; // I know what I'm doing.
 			meta = rule->metas;
-			strings = rule->strings;
-			m = pmatch(new match);
+			s = rule->strings;
+			m = pMatch(new Match);
+
 			while (!META_IS_NULL(meta))
 			{
-				m->operator[](std::string(meta->identifier)) = meta->string;
+				m->add_metadata(std::string(meta->identifier), meta->string);
 				++meta;
 			}
-			// TODO: Also get the matched string
+			while (!STRING_IS_NULL(s))
+			{
+				if (STRING_FOUND(s))
+				{
+					YR_MATCH* match = STRING_MATCHES(s).head;
+					while (match != NULL)
+					{
+						std::stringstream ss;
+						if (!STRING_IS_HEX(s)) {
+							m->add_found_string(std::string((char*) match->data, match->length));
+						}
+						else
+						{
+							std::stringstream ss;
+							ss << std::hex;
+							for (int i = 0; i < std::min(20, match->length); i++) {
+								ss << static_cast<unsigned int>(match->data[i]); // Don't interpret as a char
+							}
+							if (match->length > 20) {
+								ss << "...";
+							}
+							m->add_found_string(ss.str());
+						}
+						match = match->next;
+					}
+				}
+				++s;
+			}
+
 			target->push_back(m);
-			return CALLBACK_CONTINUE;
+			return CALLBACK_CONTINUE; // Don't stop on the first matching rule.
 
 		case CALLBACK_MSG_RULE_NOT_MATCHING:
 			return CALLBACK_CONTINUE;

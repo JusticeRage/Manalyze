@@ -1035,6 +1035,18 @@ rule WinAmp_Playlist_file
     condition:
         $a at 0
 }
+rule Yara_Compiled_Rule
+{
+    meta:
+        extension = ".yarac"
+        description = "Yara Compiled Rule"
+
+    strings:
+        $a = "YARA"
+
+    condition:
+        $a at 0
+}
 rule Zip 
 {
     meta:

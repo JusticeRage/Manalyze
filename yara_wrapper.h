@@ -23,10 +23,14 @@
 #include <sstream>
 #include <list>
 #include <vector>
+#include <set>
 #include <map>
-#include <yara/yara.h>
+
 #include <boost/shared_ptr.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/filesystem.hpp>
+
+#include <yara/yara.h>
 
 #include "color.h"
 
@@ -39,11 +43,47 @@ namespace yara {
  *
  *	@param	void* data	A pointer to a pmatch object which will be filled with the matching rules' metadata.
  */
-int get_match_metadata(int message, YR_RULE* rule, void* data);
+int get_match_data(int message, YR_RULE* rule, void* data);
 
-typedef std::map<std::string, std::string> match;
-typedef boost::shared_ptr<std::map<std::string, std::string> > pmatch;
-typedef std::vector<pmatch> matches;
+/**
+ *	@brief	An object representing Yara results.
+ *
+ *	It contains the metadata of the matching rule, and the pattern that was found
+ *	in the input.
+ */
+class Match
+{
+public:
+	Match() : _metadata(), _found_strings() {}
+	typedef std::map<std::string, std::string> match_metadata;
+
+	void add_metadata(const std::string& key, const std::string& value)	{
+		_metadata[key] = value;
+	}
+
+	void add_found_string(const std::string found) {
+		_found_strings.insert(found);
+	}
+
+	match_metadata get_metadata() const { return _metadata; }
+	std::set<std::string> get_found_strings() const { return _found_strings; }
+
+	/**
+	 *	@brief	The [] operator provides fast access to the match's metadata.
+	 *
+	 *	@param	const std::string& key The metadata's identifier.
+	 *
+	 *	@param	The corresponding metadata.
+	 */
+	std::string operator[](const std::string& key) { return _metadata[key]; }
+
+private:
+	match_metadata				_metadata;
+	std::set<std::string>	_found_strings;
+};
+
+typedef boost::shared_ptr<Match> pMatch;
+typedef std::vector<pMatch> matches;
 
 class Yara
 {

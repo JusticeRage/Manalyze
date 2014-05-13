@@ -720,7 +720,7 @@ bool PE::extract_resources(const std::string& destination_folder)
 			// Try to guess the file extension
 			yara::matches m = (*it)->detect_filetype();
 			if (m.size() > 0) {
-				ss << "_" << (*it)->get_type() << m[0]->at("extension");
+				ss << "_" << (*it)->get_type() << m[0]->operator[]("extension");
 			}
 			else {
 				ss << "_" << (*it)->get_type() << ".raw";
