@@ -58,7 +58,8 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
 			"exports, resources, version, debug, tls, certificates, relocations")
 		("hashes", "Calculate various hashes of the file (may slow down the analysis!)")
 		("extract,x", po::value<std::string>(), "Extract the PE resources to the target directory.")
-		("plugins", "Analyze the binary with additional plugins. (may slow down the analysis!)");
+		("plugins", po::value<std::vector<std::string> >(),
+			"Analyze the binary with additional plugins. (may slow down the analysis!)");
 
 
 	po::positional_options_description p;
@@ -77,7 +78,22 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
 
 	if (vm.count("help") || !vm.count("pe")) 
 	{
-		std::cout << desc << std::endl;
+		std::cout << desc << std::endl; // Standard usage
+
+		// Plugin description
+		plugin::PluginManager::get_instance().load_all(".");
+		std::vector<plugin::pIPlugin> plugins = plugin::PluginManager::get_instance().get_plugins();
+		//TODO: Load all plugins in shared objects
+		if (plugins.size() > 0) 
+		{
+			std::cout << "Available plugins:" << std::endl;			
+			for (std::vector<plugin::pIPlugin>::iterator it = plugins.begin() ; it != plugins.end() ; ++it) {
+				std::cout << "  - " << *(*it)->get_id() << ": " << *(*it)->get_description() << std::endl;
+			}
+			std::cout << "  - all: Run all the available plugins." << std::endl;
+		}
+		std::cout << std::endl;
+
 		// TODO: Examples
 		return false;
 	}
@@ -94,6 +110,39 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
 	}
 	return true;
 }
+
+// ----------------------------------------------------------------------------
+
+/**
+ *	@brief	Tokenizes arguments received on the command line.
+ *
+ *	Complex options may be specified multiple times (-dimports -dexports). When the
+ *	long argument format is used (--dump=imports,exports), some additional processing
+ *	has to take place to break them down.
+ *
+ *	@param	const std::vector<std::string>& args A vector containing the raw program_options arguments.
+ *
+ *	@return	A vector containing all the arguments.
+ */
+std::vector<std::string> tokenize_args(const std::vector<std::string>& args)
+{
+	// Categories may be comma-separated, so we have to separate them.
+	std::vector<std::string> tokenized_args;
+	boost::char_separator<char> sep(",");
+	for (std::vector<std::string>::const_iterator it = args.begin() ; it != args.end() ; ++it)
+	{
+		boost::tokenizer<boost::char_separator<char> > tokens(*it, sep);
+		for (boost::tokenizer<boost::char_separator<char> >::iterator tok_iter = tokens.begin();
+			tok_iter != tokens.end();
+			++tok_iter) 
+		{
+			tokenized_args.push_back(*tok_iter);
+		}
+	}
+	return tokenized_args;
+}
+
+// ----------------------------------------------------------------------------
 
 /**
  *	@brief	Dumps select information from a PE.
@@ -145,6 +194,65 @@ void handle_dump_option(const std::vector<std::string>& categories, bool compute
 	}
 }
 
+void handle_plugins_option(const std::vector<std::string>& selected, const sg::PE& pe)
+{
+	bool all_plugins = std::find(selected.begin(), selected.end(), "all") != selected.end();
+	
+	// Load dynamic plugins
+	std::vector<plugin::pIPlugin> plugins;
+	plugin::PluginManager::get_instance().load_all(".");
+	plugins = plugin::PluginManager::get_instance().get_plugins();
+
+	for (std::vector<plugin::pIPlugin>::iterator it = plugins.begin() ; it != plugins.end() ; ++it) 
+	{
+		// Verify that the plugin was selected
+		if (!all_plugins && std::find(selected.begin(), selected.end(), *(*it)->get_id()) == selected.end()) {
+			continue;
+		}
+
+		plugin::pResult res = (*it)->analyze(pe);
+		plugin::pInformation info = res->get_information();
+		plugin::pString summary = res->get_summary();
+
+		if (!info) {
+			continue;
+		}
+		switch (res->get_level())
+		{
+		case plugin::Result::NO_OPINION:
+			break;
+
+		case plugin::Result::MALICIOUS:
+			utils::print_colored_text("MALICIOUS", utils::RED, std::cout, "[ ", " ] ");
+			break;
+
+		case plugin::Result::SUSPICIOUS:
+			utils::print_colored_text("SUSPICIOUS", utils::YELLOW, std::cout, "[ ", " ] ");
+			break;
+
+		case plugin::Result::SAFE:
+			utils::print_colored_text("SAFE", utils::GREEN, std::cout, "[ ", " ] ");
+			break;
+		}
+
+		if (summary) {
+			std::cout << *summary << std::endl;
+		}
+		else if (res->get_level() != plugin::Result::NO_OPINION) {
+			std::cout << std::endl;
+		}
+
+		for (std::vector<std::string>::iterator it2 = info->begin() ; it2 != info->end() ; ++it2) {
+			std::cout << "\t" << *it2 << std::endl;
+		}
+		if (summary || info->size() > 0) {
+			std::cout << std::endl;
+		}
+	}
+}
+
+// ----------------------------------------------------------------------------
+
 /**
  *	@brief	Returns all the input files of the application
  *
@@ -184,6 +292,8 @@ std::vector<std::string> get_input_files(po::variables_map& vm)
 	return targets;
 }
 
+// ----------------------------------------------------------------------------
+
 int main(int argc, char** argv)
 {
 	std::cout << "* SGStatic 0.9 *" << std::endl << std::endl;
@@ -191,16 +301,6 @@ int main(int argc, char** argv)
 
 	if (!parse_args(vm, argc, argv)) {
 		return -1;
-	}
-
-	// Instantiate plugins now, and only once in case they have a long setup time.
-	std::vector<plugin::pIPlugin> plugins;
-
-	if (vm.count("plugins")) 
-	{
-		std::cerr << "Loading plugins...";
-		plugins = plugin::PluginManager::get_instance().get_plugins();
-		std::cerr << "\r                  \r";
 	}
 
 	// Perform analysis on all the input files
@@ -218,7 +318,7 @@ int main(int argc, char** argv)
 			// Maybe he made a mistake and specified a wrong file?
 			if (boost::filesystem::exists(*it) && 
 				!boost::filesystem::is_directory(*it) && 
-				y.load_rules("resources/magic.yara"))
+				y.load_rules("yara_rules/magic.yara"))
 			{
 				yara::matches m = y.scan_file(pe.get_path());
 				if (m.size() > 0) 
@@ -236,20 +336,7 @@ int main(int argc, char** argv)
 		if (vm.count("dump")) 
 		{
 			// Categories may be comma-separated, so we have to separate them.
-			std::vector<std::string> categories;
-			boost::char_separator<char> sep(",");
-			std::vector<std::string> dump_args = vm["dump"].as<std::vector<std::string> >();
-			for (std::vector<std::string>::iterator it = dump_args.begin() ; it != dump_args.end() ; ++it)
-			{
-				boost::tokenizer<boost::char_separator<char> > tokens(*it, sep);
-				for (boost::tokenizer<boost::char_separator<char> >::iterator tok_iter = tokens.begin();
-					 tok_iter != tokens.end();
-					 ++tok_iter) 
-				{
-					categories.push_back(*tok_iter);
-				}
-			}
-
+			std::vector<std::string> categories = tokenize_args(vm["dump"].as<std::vector<std::string> >());
 			handle_dump_option(categories, vm.count("hashes") != 0, pe);
 		}
 		else { // No specific info required. Display the summary of the PE.
@@ -267,47 +354,8 @@ int main(int argc, char** argv)
 
 		if (vm.count("plugins")) 
 		{
-			for (std::vector<plugin::pIPlugin>::iterator it = plugins.begin() ; it != plugins.end() ; ++it) 
-			{
-				plugin::pResult res = (*it)->analyze(pe);
-				plugin::pInformation info = res->get_information();
-				plugin::pString summary = res->get_summary();
-				
-				if (!info) {
-					continue;
-				}
-				switch (res->get_level())
-				{
-					case plugin::Result::NO_OPINION:
-						break;
-					
-					case plugin::Result::MALICIOUS:
-						utils::print_colored_text("DANGEROUS", utils::RED, std::cout, "[ ", " ] ");
-						break;
-
-					case plugin::Result::SUSPICIOUS:
-						utils::print_colored_text("SUSPICIOUS", utils::YELLOW, std::cout, "[ ", " ] ");
-						break;
-
-					case plugin::Result::SAFE:
-						utils::print_colored_text("SAFE", utils::GREEN, std::cout, "[ ", " ] ");
-						break;
-				}
-
-				if (summary) {
-					std::cout << *summary << std::endl;
-				}
-				else if (res->get_level() != plugin::Result::NO_OPINION) {
-					std::cout << std::endl;
-				}
-
-				for (std::vector<std::string>::iterator it2 = info->begin() ; it2 != info->end() ; ++it2) {
-					std::cout << "\t" << *it2 << std::endl;
-				}
-				if (info->size() > 0) {
-					std::cout << std::endl;
-				}
-			}
+			std::vector<std::string> selected = tokenize_args(vm["plugins"].as<std::vector<std::string> >());
+			handle_plugins_option(selected, pe);
 		}
 
 		if (it != targets.end() - 1) {

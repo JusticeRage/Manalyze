@@ -7,6 +7,14 @@ set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME ON)
 find_package(Boost REQUIRED COMPONENTS regex system filesystem program_options)
 
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin)
+
+
 include_directories(
 						${PROJECT_SOURCE_DIR}
 						${PROJECT_SOURCE_DIR}/external
@@ -26,6 +34,10 @@ if (WIN32)
             set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -MT")
 			
 			add_definitions(-DBOOST_ALL_NO_LIB -DNOMINMAX) # Problems with autolink and MSVC + don't hide std::min and std::max.
+			
+			# Windows only plugins:
+			add_library(plugin_authenticode SHARED plugins/plugin_authenticode.cpp)
+			target_link_libraries(plugin_authenticode hash-library ${Boost_LIBRARIES}) #TODO: Find a way to share this code.
 else()
 			target_link_libraries(sgstatic dl)
 endif()

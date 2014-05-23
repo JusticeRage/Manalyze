@@ -758,7 +758,7 @@ bool PE::extract_resources(const std::string& destination_folder)
 
 yara::matches Resource::detect_filetype()
 {
-	if (_yara->load_rules("resources/magic.yara")) 
+	if (_yara->load_rules("yara_rules/magic.yara")) 
 	{
 		std::vector<boost::uint8_t> bytes =get_raw_data();
 		return _yara->scan_bytes(bytes);

@@ -53,13 +53,36 @@ void PluginManager::load(const std::string& path)
 	{
 		if ((*it)->get_id() == test->get_id())
 		{
-			PRINT_WARNING << "The plugin " << test->get_id() << " was loaded twice!" << std::endl;
+			PRINT_WARNING << "The plugin " << test->get_id() << " tried to load twice!" << std::endl;
 			return;
 		}
 	}
 
 	// Everything ok: add register the plugin.
 	_plugins.push_back(pRegisterEntry(new RegisterEntry(plugin, lib)));
+}
+
+// ----------------------------------------------------------------------------
+
+void PluginManager::load_all(const std::string& path)
+{
+	#ifdef BOOST_WINDOWS_API
+		std::string ext(".dll");
+	#elif defined BOOST_POSIX_API
+		std::string ext(".so");
+	#endif
+
+	if (!bfs::exists(path)) {
+		return;
+	}
+
+	bfs::directory_iterator end_it;
+	for (bfs::directory_iterator it(path) ; it != end_it ; ++it)
+	{
+		if (it->path().extension() == ext) {
+			load(it->path().string());
+		}
+	}
 }
 
 } // !namespace plugin

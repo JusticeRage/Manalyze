@@ -23,12 +23,16 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
 #include <boost/optional.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/system/api_config.hpp>
 
 #include "plugin_framework/dynamic_library.h"
 #include "plugin_framework/plugin_interface.h"
 #include "plugin_framework/plugin.h"
 
 #include "color.h"
+
+namespace bfs = boost::filesystem;
 
 namespace plugin {
 
@@ -102,6 +106,13 @@ public:
 	 *	@param	const std::string& path The path to the shared library.
 	 */
 	void load(const std::string& path);
+
+	/**
+	 *	@brief	Loads all the dynamic plugins located in the specified folder.
+	 *
+	 *	@param	const std::string& path The folder in which the plugins are located.
+	 */
+	void load_all(const std::string& path);
 
 	/**
 	 *	@brief	Registers a plugin.

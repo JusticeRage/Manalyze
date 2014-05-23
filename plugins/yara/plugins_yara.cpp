@@ -26,17 +26,7 @@ class YaraPlugin : public IPlugin
 {
 
 public:
-	YaraPlugin(const std::string& rule_file) : _rule_file(rule_file) 
-	{
-		if (!_engine.load_rules(_rule_file)) 
-		{
-			PRINT_ERROR << "Could not load " << rule_file << "!" << std::endl;
-			_initialized = false;
-		}
-		else {
-			_initialized = true;
-		}
-	}
+	YaraPlugin(const std::string& rule_file) : _rule_file(rule_file) {}
 
 	/**
 	 *	@brief	Helper function designed to generically prepare a result based on a Yara scan.
@@ -53,7 +43,7 @@ public:
 	pResult scan(const sg::PE& pe, const std::string& summary, Result::LEVEL level, const std::string& meta_field_name, bool show_strings = false)
 	{
 		pResult res = pResult(new Result);
-		if (!_initialized) {
+		if (!_load_rules()) {
 			return res;
 		}
 
@@ -64,10 +54,12 @@ public:
 			res->set_summary(summary);
 			for (yara::matches::iterator it = m.begin() ; it != m.end() ; ++it) 
 			{
-				res->add_information((*it)->operator[](meta_field_name));
-				if (show_strings) 
+				if (!show_strings) {
+					res->add_information((*it)->operator[](meta_field_name));
+				}
+				else
 				{
-					res->add_information("Related string(s) found:");
+					res->add_information((*it)->operator[](meta_field_name) + " String(s) found:");
 					std::set<std::string> found = (*it)->get_found_strings();
 					for (std::set<std::string>::iterator it = found.begin() ; it != found.end() ; ++it) {
 						res->add_information("\t" + *it);
@@ -84,13 +76,23 @@ public:
 private:
 	std::string _rule_file;
 	yara::Yara _engine;
-	bool _initialized;
+	
+	bool _load_rules()
+	{
+		if (!_engine.load_rules(_rule_file)) 
+		{
+			PRINT_ERROR << "Could not load " << _rule_file << "!" << std::endl;
+			return false;
+		}
+		return true;
+	}
+
 };
 
 class ClamavPlugin : public YaraPlugin
 {
 public:
-	ClamavPlugin() : YaraPlugin("resources/clamav.yara") {}
+	ClamavPlugin() : YaraPlugin("yara_rules/clamav.yara") {}
 
 	pResult analyze(const sg::PE& pe) {
 		return scan(pe, "Matching ClamAV signature(s):", Result::MALICIOUS, "signature");
@@ -108,7 +110,7 @@ public:
 class CompilerDetectionPlugin : public YaraPlugin
 {
 public:
-	CompilerDetectionPlugin() : YaraPlugin("resources/compilers.yara") {}
+	CompilerDetectionPlugin() : YaraPlugin("yara_rules/compilers.yara") {}
 
 	pResult analyze(const sg::PE& pe) {
 		return scan(pe, "Matching compiler(s):", Result::NO_OPINION, "description");
@@ -119,14 +121,14 @@ public:
 	}
 
 	boost::shared_ptr<std::string> get_description() { 
-		return boost::shared_ptr<std::string>(new std::string("Tries to determine the compiler which generated the binary."));
+		return boost::shared_ptr<std::string>(new std::string("Tries to determine which compiler generated the binary."));
 	}
 };
 
 class PEiDPlugin : public YaraPlugin
 {
 public:
-	PEiDPlugin() : YaraPlugin("resources/peid.yara") {}
+	PEiDPlugin() : YaraPlugin("yara_rules/peid.yara") {}
 
 	pResult analyze(const sg::PE& pe) {
 		return scan(pe, "PEiD Signature:", Result::SUSPICIOUS, "packer_name");
@@ -145,7 +147,7 @@ public:
 class SuspiciousStringsPlugin : public YaraPlugin
 {
 public:
-	SuspiciousStringsPlugin() : YaraPlugin("resources/suspicious_strings.yara") {}
+	SuspiciousStringsPlugin() : YaraPlugin("yara_rules/suspicious_strings.yara") {}
 
 	pResult analyze(const sg::PE& pe) {
 		return scan(pe, "Strings found in the binary may indicate undesirable behavior:", Result::SUSPICIOUS, "description", true);
@@ -156,7 +158,7 @@ public:
 	}
 
 	boost::shared_ptr<std::string> get_description() { 
-		return boost::shared_ptr<std::string>(new std::string("Looks for suspicious strings in the binary (anti-VM, process names...)."));
+		return boost::shared_ptr<std::string>(new std::string("Looks for suspicious strings (anti-VM, process names...)."));
 	}
 };
 
