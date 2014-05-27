@@ -32,7 +32,8 @@ void PluginManager::load(const std::string& path)
 	DynamicPlugin::destroyer d = (DynamicPlugin::destroyer) lib->resolve_symbol("destroy");
 	if (!c || !d)
 	{
-		PRINT_ERROR << "Could not resolve " << path << "'s creator or destroyer function!" << std::endl;
+		// The shared object is not a valid plugin.
+		// PRINT_ERROR << "Could not resolve " << path << "'s creator or destroyer function!" << std::endl;
 		return;
 	}
 	pPlugin plugin = pPlugin(new DynamicPlugin(c, d));

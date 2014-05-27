@@ -95,6 +95,10 @@ public:
 				res->set_level(Result::MALICIOUS);
 				res->set_summary("The PE's digital signature is invalid.");
 				break;
+			case CERT_E_UNTRUSTEDROOT:
+				res->set_level(Result::SUSPICIOUS);
+				res->set_summary("The root certificate of the signature is not trusted.");
+				break;
 			default:
 				std::stringstream ss;
 				ss << "Unknown error encountered while reading the signature (0x" << std::hex << retval << ").";

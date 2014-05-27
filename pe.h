@@ -32,6 +32,7 @@
 #include <boost/scoped_array.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/regex.hpp>
+#include <boost/system/api_config.hpp>
 
 #include "nt_values.h"  // Windows-related #defines flags are declared in this file.
 #include "pe_structs.h" // All typedefs and structs are over there
@@ -40,20 +41,30 @@
 #include "section.h"	// Definition of the Section class
 #include "color.h"		// Allows changing the font color in the terminal
 
+#if defined BOOST_WINDOWS_API
+	#ifdef SGPE_EXPORT
+		#define DECLSPEC    __declspec(dllexport)
+	#else
+		#define DECLSPEC    __declspec(dllimport)
+	#endif
+#else
+	#define DECLSPEC
+#endif
+
 namespace sg {
 
 class PE
 {
 
 public:
-	PE(const std::string& path);
-	virtual ~PE() {}
+	DECLSPEC PE(const std::string& path);
+	DECLSPEC virtual ~PE() {}
 
-	size_t get_filesize();
+	DECLSPEC size_t get_filesize();
 
-    std::string get_path()  const { return _path; }
+    DECLSPEC std::string get_path()  const { return _path; }
 
-	std::vector<pSection> get_sections() const { return _sections; }
+	DECLSPEC std::vector<pSection> get_sections() const { return _sections; }
 
 
 	/**
@@ -61,7 +72,7 @@ public:
 	 *
 	 *	Implementation is located in imports.cpp.
 	 */
-	std::vector<std::string> get_imported_dlls() const;
+	DECLSPEC std::vector<std::string> get_imported_dlls() const;
 
 	/**
 	 *	@brief	Returns the list of functions imported from a specified DLL.
@@ -73,7 +84,7 @@ public:
 	 *
 	 *	Implementation is located in imports.cpp.
 	 */
-	std::vector<std::string> get_imported_functions(const std::string& dll) const;
+	DECLSPEC std::vector<std::string> get_imported_functions(const std::string& dll) const;
 
 	/**
 	 *	@brief	Finds imported functions matching regular expressions.
@@ -90,8 +101,8 @@ public:
 	 *
 	 *	Implementation is located in imports.cpp.
 	 */
-	std::vector<std::string> find_imports(const std::string& function_name_regexp, 
-										  const std::string& dll_name_regexp = ".*") const;
+	DECLSPEC std::vector<std::string> find_imports(const std::string& function_name_regexp, 
+												   const std::string& dll_name_regexp = ".*") const;
 
 	/**
 	 *	@brief	Functions used to display the detailed contents of the PE.
@@ -101,22 +112,22 @@ public:
 	 *
 	 *	Implementation is located in dump.cpp.
 	 */
-	void dump_dos_header(std::ostream& sink = std::cout) const;
-	void dump_pe_header(std::ostream& sink = std::cout) const;
-	void dump_image_optional_header(std::ostream& sink = std::cout) const;
-	void dump_section_table(std::ostream& sink = std::cout, bool compute_hashes = false) const;
-	void dump_imports(std::ostream& sink = std::cout) const;
-	void dump_exports(std::ostream& sink = std::cout) const;
-	void dump_resources(std::ostream& sink = std::cout, bool compute_hashes = false) const;
-	void dump_version_info(std::ostream& sink = std::cout) const;
-	void dump_debug_info(std::ostream& sink = std::cout) const;
-	void dump_relocations(std::ostream& sink = std::cout) const;
-	void dump_tls(std::ostream& sink = std::cout) const;
-	void dump_certificates(std::ostream& sink = std::cout) const;
-	void dump_summary(std::ostream& sink = std::cout) const;
-	void dump_hashes(std::ostream& sink = std::cout) const;
+	DECLSPEC void dump_dos_header(std::ostream& sink = std::cout) const;
+	DECLSPEC void dump_pe_header(std::ostream& sink = std::cout) const;
+	DECLSPEC void dump_image_optional_header(std::ostream& sink = std::cout) const;
+	DECLSPEC void dump_section_table(std::ostream& sink = std::cout, bool compute_hashes = false) const;
+	DECLSPEC void dump_imports(std::ostream& sink = std::cout) const;
+	DECLSPEC void dump_exports(std::ostream& sink = std::cout) const;
+	DECLSPEC void dump_resources(std::ostream& sink = std::cout, bool compute_hashes = false) const;
+	DECLSPEC void dump_version_info(std::ostream& sink = std::cout) const;
+	DECLSPEC void dump_debug_info(std::ostream& sink = std::cout) const;
+	DECLSPEC void dump_relocations(std::ostream& sink = std::cout) const;
+	DECLSPEC void dump_tls(std::ostream& sink = std::cout) const;
+	DECLSPEC void dump_certificates(std::ostream& sink = std::cout) const;
+	DECLSPEC void dump_summary(std::ostream& sink = std::cout) const;
+	DECLSPEC void dump_hashes(std::ostream& sink = std::cout) const;
 
-	std::vector<pResource> get_resources() const { return _resource_table; }
+	DECLSPEC std::vector<pResource> get_resources() const { return _resource_table; }
 
 	/**
 	 *	@brief	Extracts the resources of the PE and writes them to the disk.
@@ -136,18 +147,18 @@ public:
 	 *
 	 *	Implementation is located in resources.cpp.
 	 */
-	bool extract_resources(const std::string& destination_folder);
+	DECLSPEC bool extract_resources(const std::string& destination_folder);
 
 	/**
 	 *	@brief	Tells whether the PE could be parsed.
 	 *
 	 *	@return	True if the PE was parsed successfully (i.e. is valid), false otherwise.
 	 */
-	bool is_valid()	const {
+	DECLSPEC bool is_valid()	const {
 		return _initialized;
 	}
 
-	std::vector<boost::uint8_t> get_raw_section_bytes(const std::string& section_name) const;
+	DECLSPEC std::vector<boost::uint8_t> get_raw_section_bytes(const std::string& section_name) const;
 
 private:
 	/**
