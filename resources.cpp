@@ -175,7 +175,7 @@ bool PE::_parse_resources(FILE* f)
 												 entry.Codepage,
 												 entry.Size,
 												 offset,
-												 get_path()));
+												 _path));
 				}
 				else { // No name: call the constructor with the resource ID instead.
 					res = pResource(new Resource(type,
@@ -184,7 +184,7 @@ bool PE::_parse_resources(FILE* f)
 												 entry.Codepage,
 												 entry.Size,
 												 offset,
-												 get_path()));
+												 _path));
 				}
 
 				_resource_table.push_back(res);
@@ -642,7 +642,7 @@ bool PE::extract_resources(const std::string& destination_folder)
 		return false;
 	}
 
-	std::string base = bfs::basename(get_path());
+	std::string base = bfs::basename(_path);
 	FILE* f;
 	for (std::vector<pResource>::iterator it = _resource_table.begin() ; it != _resource_table.end() ; ++it)
 	{

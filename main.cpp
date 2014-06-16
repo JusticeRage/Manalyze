@@ -320,7 +320,7 @@ int main(int argc, char** argv)
 				!boost::filesystem::is_directory(*it) && 
 				y.load_rules("yara_rules/magic.yara"))
 			{
-				yara::matches m = y.scan_file(pe.get_path());
+				yara::matches m = y.scan_file(*pe.get_path());
 				if (m.size() > 0) 
 				{
 					std::cerr << "Detected file type(s):" << std::endl;
@@ -361,6 +361,12 @@ int main(int argc, char** argv)
 		if (it != targets.end() - 1) {
 			std::cout << "--------------------------------------------------------------------------------" << std::endl << std::endl;
 		}
+	}
+
+	if (vm.count("plugins")) 
+	{
+		// Explicitly unload the plugins
+		plugin::PluginManager::get_instance().unload_all();
 	}
 
 	return 0;

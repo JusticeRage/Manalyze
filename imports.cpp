@@ -129,26 +129,26 @@ bool PE::_parse_imports(FILE* f)
 
 // ----------------------------------------------------------------------------
 
-std::vector<std::string> PE::get_imported_dlls() const
+const_shared_strings PE::get_imported_dlls() const
 {
-	std::vector<std::string> res;
+	shared_strings destination = shared_strings(new std::vector<std::string>());
 	if (!_initialized) {
-		return res;
+		return destination;
 	}
 
 	for (std::vector<pimage_library_descriptor>::const_iterator it = _imports.begin() ; it != _imports.end() ; ++it) {
-		res.push_back((*it)->first->NameStr);
+		destination->push_back((*it)->first->NameStr);
 	}
-	return res;
+	return destination;
 }
 
 // ----------------------------------------------------------------------------
 
-std::vector<std::string> PE::get_imported_functions(const std::string& dll) const
+const_shared_strings PE::get_imported_functions(const std::string& dll) const
 {
-	std::vector<std::string> res;
+	shared_strings destination = shared_strings(new std::vector<std::string>());
 	if (!_initialized) {
-		return res;
+		return destination;
 	}
 
 	pimage_library_descriptor ild = pimage_library_descriptor();
@@ -168,47 +168,47 @@ std::vector<std::string> PE::get_imported_functions(const std::string& dll) cons
 		for (std::vector<pimport_lookup_table>::const_iterator it = ild->second.begin() ; it != ild->second.end() ; ++it)
 		{
 			if ((*it)->Name != "") {
-				res.push_back((*it)->Name);
+				destination->push_back((*it)->Name);
 			}
 			else 
 			{
 				std::stringstream ss;
 				ss << "#" << ((*it)->AddressOfData & 0x7FFF);
-				res.push_back(ss.str());
+				destination->push_back(ss.str());
 			}
 		}
 	}
 
-	return res;
+	return destination;
 }
 
 // ----------------------------------------------------------------------------
 
 std::vector<pimage_library_descriptor> PE::_find_imported_dlls(const std::string& name_regexp) const
 {
-	std::vector<pimage_library_descriptor> res;
+	std::vector<pimage_library_descriptor> destination;
 	if (!_initialized) {
-		return res;
+		return destination;
 	}
 
 	boost::regex e(name_regexp);
 	for (std::vector<pimage_library_descriptor>::const_iterator it = _imports.begin() ; it != _imports.end() ; ++it)
 	{
 		if (boost::regex_match((*it)->first->NameStr, e)) {
-			res.push_back(*it);
+			destination.push_back(*it);
 		}
 	}
-	return res;
+	return destination;
 }
 
 // ----------------------------------------------------------------------------
 
-std::vector<std::string> PE::find_imports(const std::string& function_name_regexp, 
-										  const std::string& dll_name_regexp) const
+const_shared_strings PE::find_imports(const std::string& function_name_regexp,
+					  const std::string& dll_name_regexp) const
 {
-	std::vector<std::string> matching_functions;
+	shared_strings destination = shared_strings(new std::vector<std::string>());
 	if (!_initialized) {
-		return matching_functions;
+		return destination;
 	}
 
 	std::vector<pimage_library_descriptor> matching_dlls = _find_imported_dlls(dll_name_regexp);
@@ -225,11 +225,11 @@ std::vector<std::string> PE::find_imports(const std::string& function_name_regex
 				continue;
 			}
 			if (boost::regex_match((*it2)->Name, e)) {
-				matching_functions.push_back((*it2)->Name);
+				destination->push_back((*it2)->Name);
 			}
 		}
 	}
-	return matching_functions;
+	return destination;
 }
 
 } // !namespace sg
@@ -241,15 +241,15 @@ std::string hash_imports(const sg::PE& pe)
 	MD5 md5;
 	std::stringstream ss;
 
-	std::vector<std::string> dlls = pe.get_imported_dlls();
-	for (std::vector<std::string>::iterator it = dlls.begin() ; it != dlls.end() ; ++it)
+	sg::const_shared_strings dlls = pe.get_imported_dlls();
+	for (std::vector<std::string>::const_iterator it = dlls->begin() ; it != dlls->end() ; ++it)
 	{
 		// Lowercase DLL and function names for import hashes
 		std::string dll_name(bfs::basename(*it));
 		std::transform(dll_name.begin(), dll_name.end(), dll_name.begin(), ::tolower);
 
-		std::vector<std::string> functions = pe.get_imported_functions(*it); // Will not return functions imported by ordinal.
-		for (std::vector<std::string>::iterator it2 = functions.begin() ; it2 != functions.end() ; ++it2)
+		sg::const_shared_strings functions = pe.get_imported_functions(*it);
+		for (std::vector<std::string>::const_iterator it2 = functions->begin() ; it2 != functions->end() ; ++it2)
 		{
 			std::string function_name;
 
@@ -273,7 +273,7 @@ std::string hash_imports(const sg::PE& pe)
 			}
 
 			// Imports are comma-separated.
-			if (it != dlls.begin() || it2 != functions.begin()) {
+			if (it != dlls->begin() || it2 != functions->begin()) {
 				ss << ",";
 			}
 

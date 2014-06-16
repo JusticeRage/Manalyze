@@ -53,8 +53,8 @@ public:
 
 		bool suspicious = false;
 
-		std::vector<sg::pSection> sections = pe.get_sections();
-		for (std::vector<sg::pSection>::iterator it = sections.begin() ; it != sections.end() ; ++it)
+		sg::shared_sections sections = 	pe.get_sections();
+		for (std::vector<sg::pSection>::iterator it = sections->begin() ; it != sections->end() ; ++it)
 		{
 			if (common_names.end() == std::find(common_names.begin(), common_names.end(), (*it)->get_name())) 
 			{
@@ -68,11 +68,11 @@ public:
 		// TODO: Calculate entropy
 
 		// A low number of imports indicates that the binary is packed.
-		std::vector<std::string> imports = pe.find_imports(".*"); // Get all imports
-		if (imports.size() < 10) // TODO: How much is too low?
+		sg::const_shared_strings imports = pe.find_imports(".*"); // Get all imports
+		if (imports->size() < 10) // TODO: How much is too low?
 		{
 			std::stringstream ss;
-			ss << "The PE only has " << imports.size() << " import(s).";
+			ss << "The PE only has " << imports->size() << " import(s).";
 			res->add_information(ss.str());
 			suspicious = true;
 		}

@@ -15,11 +15,17 @@
     along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#pragma comment (lib, "wintrust")
+#pragma comment(lib, "wintrust")
+#pragma comment(lib, "crypt32.lib")
 
 #include <sstream>
-#include <windows.h> // Windows-only plugin (1)
+#include <stdlib.h>
+#include <Windows.h> // Windows-only plugin (1)
 #include <Softpub.h>
+#include <WinCrypt.h>
+
+#include "utils.h"
+
 #include "plugin_framework/plugin_interface.h"
 
 /*
@@ -28,9 +34,41 @@
  * portable, lightweight cryptography library supporting it. For a while, I considered
  * implementing it on my own, but then I figured that you need to be on Windows to have
  * access to the CAs trusted by the OS anyway.
-*/
+ */
 
 namespace plugin {
+
+/**
+ *	@brief	Retrieves the information about the publisher / issuer present in the
+ *			certificate.
+ *
+ *	@param	const std::string& file_path The file to analyze.
+ *	@param	plugin::pResult result The result into which the information should be 
+ *			appended.
+ */
+void get_certificate_info(const std::wstring& file_path, plugin::pResult result);
+
+/**
+ *	@brief	Helper function designed to create information and insert it into a result
+ *			based on a read unicode string.
+ *
+ *	The information appended to the result will look like this: "type: data"
+ *
+ *	@param	const std::string& type The description of the data.
+ *	@param	const std::wstring& data The contents of the information
+ *	@param	pResult result The result to update.
+ *
+ */
+void make_information(const std::string& type, const std::wstring& data, pResult result)
+{
+	boost::shared_array<char> conv = boost::shared_array<char>(new char[data.size() + 1]);
+	memset(conv.get(), 0, sizeof(char) * (data.size() + 1));
+	wcstombs(conv.get(), data.c_str(), data.size());
+	
+	std::stringstream ss;
+	ss << type << ": " << conv.get();
+	result->add_information(ss.str());
+}
 
 /**
  *	@brief	This plugin uses the Windows API to verify the digital signature of a PE.
@@ -55,7 +93,7 @@ public:
 		WINTRUST_FILE_INFO file_info;
 		memset(&file_info, 0, sizeof(file_info));
 		file_info.cbStruct = sizeof(WINTRUST_FILE_INFO);
-		std::string path = pe.get_path();
+		std::string path = *pe.get_path();
 		std::wstring wide_path(path.begin(), path.end());
 		file_info.pcwszFilePath = wide_path.c_str();
 
@@ -84,7 +122,9 @@ public:
 				res->set_summary("The PE's digital signature has been explicitly blacklisted.");
 			case TRUST_E_NOSIGNATURE:
 				error_code = ::GetLastError();
-				if (TRUST_E_NOSIGNATURE == error_code || TRUST_E_SUBJECT_FORM_UNKNOWN == error_code || TRUST_E_PROVIDER_UNKNOWN == error_code)
+				if (TRUST_E_NOSIGNATURE == error_code || 
+					TRUST_E_SUBJECT_FORM_UNKNOWN == error_code || 
+					TRUST_E_PROVIDER_UNKNOWN == error_code)
 				{
 					// No digital signature.
 					break;
@@ -95,9 +135,9 @@ public:
 				res->set_level(Result::MALICIOUS);
 				res->set_summary("The PE's digital signature is invalid.");
 				break;
-			case CERT_E_UNTRUSTEDROOT:
-				res->set_level(Result::SUSPICIOUS);
-				res->set_summary("The root certificate of the signature is not trusted.");
+			case CERT_E_REVOKED:
+				res->set_level(Result::MALICIOUS);
+				res->set_summary("The PE's certificate was explicitly revoked by its issuer.");
 				break;
 			default:
 				std::stringstream ss;
@@ -108,18 +148,403 @@ public:
 
 		if (res->get_level() != Result::NO_OPINION)
 		{
-			// Get the publisher's identity
+			get_certificate_info(wide_path, res);
 		}
+
+		// Close a handle that was opened by the verification
+		data.dwStateAction = WTD_STATEACTION_CLOSE;
+		::WinVerifyTrust(0, &guid_verify, &data);
+
+		sg::const_shared_strings vect = pe.get_imported_dlls();
 
 		return res;
 	}
 };
+
+// ----------------------------------------------------------------------------
 
 extern "C"
 {
 	PLUGIN_API IPlugin* create() { return new AuthenticodePlugin(); }
 	PLUGIN_API void destroy(IPlugin* p) { if (p) delete p; }
 };
+
+// ----------------------------------------------------------------------------
+
+std::string make_error(const std::string& message)
+{
+	std::stringstream ss;
+	ss << message << " (Windows error code: 0x" << std::hex << ::GetLastError() << ")";
+	return ss.str();
+}
+
+// ----------------------------------------------------------------------------
+
+/**
+ *	@brief	Reads the information related to the PE's publisher in the digital signature.
+ *
+ *	@param	PCMSG_SIGNER_INFO info A structure returned by CryptMsgGetParam.
+ *	@param	pResult result The result to fill with the obtained information.
+ */
+void get_publisher_information(PCMSG_SIGNER_INFO info, pResult result)
+{
+	DWORD size;
+	DWORD res;
+	PSPC_SP_OPUS_INFO opus = NULL;
+
+	for (unsigned int i = 0 ; i < info->AuthAttrs.cAttr ; ++i)
+	{
+		if (::lstrcmpA(SPC_SP_OPUS_INFO_OBJID, info->AuthAttrs.rgAttr[i].pszObjId) == 0)
+		{
+			res = ::CryptDecodeObject(X509_ASN_ENCODING | PKCS_7_ASN_ENCODING,		// Encoding
+									  SPC_SP_OPUS_INFO_OBJID,						// OID defining the structure type
+									  info->AuthAttrs.rgAttr[i].rgValue[0].pbData,	// Structure to decode
+									  info->AuthAttrs.rgAttr[i].rgValue[0].cbData,	// Size of the structure
+									  0,											// Flags
+									  NULL,											// NULL buffer: return the needed size
+									  &size);										// Destination of the size
+
+			if (!res)
+			{
+				result->add_information(make_error("Could not get certificate information: CryptDecodeObject failed."));
+				goto END;
+			}
+
+			opus =  (PSPC_SP_OPUS_INFO) malloc(size);
+			if (!opus)
+			{
+				result->add_information(make_error("Could not get certificate information: malloc failed."));
+				goto END;
+			}
+
+			res = ::CryptDecodeObject(X509_ASN_ENCODING | PKCS_7_ASN_ENCODING,		// Encoding
+									  SPC_SP_OPUS_INFO_OBJID,						// OID defining the structure type
+									  info->AuthAttrs.rgAttr[i].rgValue[0].pbData,	// Structure to decode
+									  info->AuthAttrs.rgAttr[i].rgValue[0].cbData,	// Size of the structure
+									  0,											// Flags
+									  opus,											// The structure to fill
+									  &size);										// Destination of the size
+
+			if (!res)
+			{
+				result->add_information(make_error("Could not get certificate information: CryptDecodeObject failed."));
+				goto END;
+			}
+
+			if (opus->pwszProgramName != NULL)
+			{
+				std::wstring wide_program_name(opus->pwszProgramName);
+				make_information("Program name", wide_program_name, result);
+			}
+			if (opus->pPublisherInfo != NULL)
+			{
+				std::wstring wide_publisher_info;
+				switch (opus->pPublisherInfo->dwLinkChoice)
+				{
+					case SPC_URL_LINK_CHOICE:
+						wide_publisher_info.assign(opus->pPublisherInfo->pwszUrl);
+						break;
+					case SPC_FILE_LINK_CHOICE:
+						wide_publisher_info.assign(opus->pPublisherInfo->pwszFile);
+						break;
+				}
+				make_information("Publisher information", wide_publisher_info, result);
+			}
+			if (opus->pMoreInfo != NULL)
+			{
+				std::wstring wide_more_info;
+				switch (opus->pMoreInfo->dwLinkChoice)
+				{
+				case SPC_URL_LINK_CHOICE:
+					wide_more_info.assign(opus->pMoreInfo->pwszUrl);
+					break;
+				case SPC_FILE_LINK_CHOICE:
+					wide_more_info.assign(opus->pMoreInfo->pwszFile);
+					break;
+				}
+				make_information("Additional information", wide_more_info, result);
+			}
+		}
+	}
+
+	END:
+	if (opus != NULL) {
+		free(opus);
+	}
+}
+
+// ----------------------------------------------------------------------------
+
+/**
+ *	@brief	A wrapper around GetCertNameString.
+ *
+ *	It simplifies the process of querying information by hiding the complexity of having to
+ *	call the function twice (one for the size, and one for the result) and having to allocate
+ *	memory in between.
+ *
+ *	@param	PCCERT_CONTEXT context The certificate context to query
+ *	@param	DWORD type A GetCertNameString argument which is just forwarded.
+ *	@param	DWORD flags A GetCertNameString argument which is just forwarded.
+ *	@param	const std::string& description A description of the queried parameter, tu display in the result.
+ *	@param	pResult result The result to update with the obtained information.
+ */
+void GetCertNameString_wrapper(PCCERT_CONTEXT context, DWORD type, DWORD flags, const std::string& description, pResult result)
+{
+
+	DWORD size;
+	std::stringstream ss;
+
+	size = ::CertGetNameString(context,	// The certificate context
+							   type,
+							   flags,
+							   NULL,	// ...I'm not too sure what this is.
+							   NULL,	// Destination buffer is NULL - we want the size for now
+							   0);		// Size of the destination buffer
+
+	if (size == 0)
+	{
+		result->add_information(make_error("Could not get certificate details: CertGetNameString failed."));
+		return;
+	}
+
+	char* name = (char*) malloc(size);
+	if (name == NULL)
+	{
+		result->add_information(make_error("Could not get certificate details: malloc failed."));
+		return;
+	}
+
+	if (!::CertGetNameString(context,	// The certificate context
+							 type,
+							 flags,
+							 NULL,		// ...I'm not too sure what this is.
+							 name,		// Destination buffer is NULL - we want the size for now
+							 size))		// Size of the destination buffer)
+	{
+		result->add_information(make_error("Could not get certificate details: CertGetNameString failed."));
+		goto END;
+	}
+
+	if (name[0] == '\0') { // No information
+		goto END;
+	}
+
+	ss << description << ": " << name;
+	result->add_information(ss.str());
+
+END:
+	if (name != NULL) {
+		free(name);
+	}
+}
+
+// ----------------------------------------------------------------------------
+
+void get_certificate_details(PCMSG_SIGNER_INFO info, HCERTSTORE hStore, pResult result)
+{
+	CERT_INFO cert_info;
+	PCCERT_CONTEXT context;
+
+	cert_info.Issuer = info->Issuer;
+	cert_info.SerialNumber = info->SerialNumber;
+
+	context = ::CertFindCertificateInStore(hStore,									// Handle to the certificate store
+										   X509_ASN_ENCODING | PKCS_7_ASN_ENCODING,	// Encoding
+										   0,										// No flags
+										   CERT_FIND_SUBJECT_CERT,					// Find a certificate matching a serial number and an issuer
+										   &cert_info,								// The data to look for
+										   NULL);									// NULL on the first call - used to find the next matching certificate.
+
+	if (!context)
+	{
+		result->add_information(make_error("Could not get certificate information: CertFindCertificateInStore failed."));
+		return;
+	}
+
+	GetCertNameString_wrapper(context, CERT_NAME_SIMPLE_DISPLAY_TYPE, CERT_NAME_ISSUER_FLAG, "Issued by", result);
+	GetCertNameString_wrapper(context, CERT_NAME_SIMPLE_DISPLAY_TYPE, 0, "Issued to", result);
+	// TODO: Test with a cert containing an email address
+	GetCertNameString_wrapper(context, CERT_NAME_EMAIL_TYPE, 0, "Subject's email", result);
+
+	if (!context) {
+		::CertFreeCertificateContext(context);
+	}
+}
+
+// ----------------------------------------------------------------------------
+
+void get_certificate_timestamp(PCMSG_SIGNER_INFO info, pResult result)
+{
+	PCMSG_SIGNER_INFO cs_info = NULL;
+	FILETIME file_time;
+	SYSTEMTIME system_time;
+	struct tm time;
+	char date_string[100];
+	BOOL res;
+	DWORD size;
+
+
+
+	for (unsigned int i = 0 ; i < info->UnauthAttrs.cAttr ; ++i)
+	{
+		// 1) Get the CMSG_SIGNER_INFO structure
+		if (::lstrcmpA(szOID_RSA_counterSign, info->UnauthAttrs.rgAttr[i].pszObjId) == 0)
+		{
+			res = ::CryptDecodeObject(X509_ASN_ENCODING | PKCS_7_ASN_ENCODING,		// Encoding
+									  PKCS7_SIGNER_INFO,							// Structure of the data to decode
+									  info->UnauthAttrs.rgAttr[i].rgValue->pbData,	// The data to decode
+									  info->UnauthAttrs.rgAttr[i].rgValue->cbData,	// Size of the data to decode
+									  0,											// Flags
+									  NULL,											// Destination buffer is null - we only want the size
+									  &size);										// Put the size here
+			if (!res)
+			{
+				result->add_information(make_error("Could not get certificate timestamp: CryptDecodeObject failed."));
+				return;
+			}
+
+			cs_info = (PCMSG_SIGNER_INFO) malloc(size);
+			if (cs_info == NULL)
+			{
+				result->add_information(make_error("Could not get certificate timestamp: malloc failed."));
+				return;
+			}
+			
+			res = ::CryptDecodeObject(X509_ASN_ENCODING | PKCS_7_ASN_ENCODING,		// Encoding
+									  PKCS7_SIGNER_INFO,							// Structure of the data to decode
+									  info->UnauthAttrs.rgAttr[i].rgValue->pbData,	// The data to decode
+									  info->UnauthAttrs.rgAttr[i].rgValue->cbData,	// Size of the data to decode
+									  0,											// Flags
+									  cs_info,										// Destination buffer
+									  &size);										// Size of the destination buffer
+			if (!res)
+			{
+				result->add_information(make_error("Could not get certificate timestamp: CryptDecodeObject failed."));
+				goto END;
+			}
+			break;
+		}
+	}
+
+	if (cs_info == NULL) { // Timestamp unavailable
+		goto END;
+	}
+
+	// 2) Read the FILETIME data from it
+	for (unsigned int i = 0 ; i < cs_info->AuthAttrs.cAttr ; ++i)
+	{
+		if (::lstrcmpA(szOID_RSA_signingTime, cs_info->AuthAttrs.rgAttr[i].pszObjId) == 0)
+		{
+			size = sizeof(FILETIME);
+			res = ::CryptDecodeObject(X509_ASN_ENCODING | PKCS_7_ASN_ENCODING,
+									  szOID_RSA_signingTime,
+									  cs_info->AuthAttrs.rgAttr[i].rgValue->pbData,
+									  cs_info->AuthAttrs.rgAttr[i].rgValue->cbData,
+									  0,
+									  &file_time,
+									  &size);
+			if (!res)
+			{
+				result->add_information(make_error("Could not get certificate timestamp: CryptDecodeObject failed."));
+				goto END;
+			}
+
+			if (!::FileTimeToSystemTime(&file_time, &system_time))
+			{
+				result->add_information(make_error("Could not convert certificate timestamp: FileTimeToSystemTime failed."));
+				goto END;
+			}
+
+			time.tm_hour = system_time.wHour;
+			time.tm_min = system_time.wMinute;
+			time.tm_mday = system_time.wDay;
+			time.tm_mon = system_time.wMonth - 1;
+			time.tm_sec = system_time.wSecond;
+			time.tm_year = system_time.wYear - 1900;
+			strftime(date_string, sizeof(date_string), "%Y-%b-%d %H:%M:%S %z", &time);
+			
+			std::stringstream ss;
+			ss << "Signing time: " << date_string;
+			result->add_information(ss.str());
+		}
+	}
+
+	END:
+	if (cs_info != NULL) {
+		free(cs_info);
+	}
+}
+
+// ----------------------------------------------------------------------------
+
+void get_certificate_info(const std::wstring& file_path, pResult result)
+{
+	HCERTSTORE hStore = NULL;
+	HCRYPTMSG hMsg = NULL; 
+	PCMSG_SIGNER_INFO info = NULL;
+
+	BOOL res = ::CryptQueryObject(CERT_QUERY_OBJECT_FILE,						// The function targets a file (as opposed to a memory structure)
+								  file_path.c_str(),							// The file to query
+								  CERT_QUERY_CONTENT_FLAG_PKCS7_SIGNED_EMBED,	// The content is an embedded PKCS #7 signed message
+								  CERT_QUERY_FORMAT_FLAG_BINARY,				// The content should be returned in binary format
+								  0,											// Reserved
+								  0,											// We don't care about the encoding...
+								  0,											// ...we don't care about the content type...
+								  0,											// ...and we don't care about the format type either.
+								  &hStore,										// Destination of the certificate store
+								  &hMsg,										// Destination of the message
+								  NULL);										// No context
+	if (!res)
+	{
+		result->add_information(make_error("Could not get certificate information: CryptQueryObject failed."));
+		goto END;
+	}
+
+	DWORD info_size;
+	res = CryptMsgGetParam(hMsg,					// Handle to the cryptographic message
+						   CMSG_SIGNER_INFO_PARAM,	// Information about the message signer
+						   0,						// Index of the required parameter - means nothing here.
+						   NULL,					// NULL buffer: return the needed size.
+						   &info_size);				// Destination of the size
+	if (!res)
+	{
+		result->add_information(make_error("Could not get certificate information: CryptMsgGetParam failed."));
+		goto END;
+	}
+
+	info = (PCMSG_SIGNER_INFO) malloc(info_size);
+	if (!info)
+	{
+		result->add_information(make_error("Could not get certificate information: malloc failed."));
+		goto END;
+	}
+
+	res = CryptMsgGetParam(hMsg,					// Handle to the cryptographic message
+						   CMSG_SIGNER_INFO_PARAM,	// Information about the message signer
+						   0,						// Index of the required parameter - means nothing here.
+						   info,					// NULL buffer: return the needed size.
+						   &info_size);				// Destination of the size
+	if (!res)
+	{
+		result->add_information(make_error("Could not get certificate information: CryptMsgGetParam failed."));
+		goto END;
+	}
+
+	get_publisher_information(info, result);
+	get_certificate_details(info, hStore, result);
+	get_certificate_timestamp(info, result);
+
+	END:
+	if (info != NULL) {
+		free(info);
+	}
+	if (hStore != NULL) {
+		::CertCloseStore(hStore, 0);
+	}
+	if (hMsg != NULL) {
+		::CryptMsgClose(hMsg);
+	}
+}
 
 
 } // !namespace plugin

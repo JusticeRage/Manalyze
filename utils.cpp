@@ -169,7 +169,7 @@ sg::pSection find_section(unsigned int rva, const std::vector<sg::pSection>& sec
 
 // ----------------------------------------------------------------------------
 
-std::string timestamp_to_string(boost::uint32_t epoch_timestamp)
+std::string timestamp_to_string(boost::uint64_t epoch_timestamp)
 {
 	static std::locale loc(std::cout.getloc(), new boost::posix_time::time_facet("%Y-%b-%d %H:%M:%S%F %z"));
 	std::stringstream ss;

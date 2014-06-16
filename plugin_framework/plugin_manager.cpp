@@ -32,8 +32,7 @@ void PluginManager::load(const std::string& path)
 	DynamicPlugin::destroyer d = (DynamicPlugin::destroyer) lib->resolve_symbol("destroy");
 	if (!c || !d)
 	{
-		// The shared object is not a valid plugin.
-		// PRINT_ERROR << "Could not resolve " << path << "'s creator or destroyer function!" << std::endl;
+		PRINT_ERROR << "Could not resolve " << path << "'s creator or destroyer function!" << std::endl;
 		return;
 	}
 	pPlugin plugin = pPlugin(new DynamicPlugin(c, d));
@@ -84,6 +83,12 @@ void PluginManager::load_all(const std::string& path)
 			load(it->path().string());
 		}
 	}
+}
+
+// ----------------------------------------------------------------------------
+
+void PluginManager::unload_all() {
+	_plugins.clear();
 }
 
 } // !namespace plugin

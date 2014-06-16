@@ -28,10 +28,22 @@
 #include <boost/cstdint.hpp>
 #include <boost/shared_array.hpp>
 #include <boost/date_time.hpp>
+#include <boost/system/api_config.hpp>
 
 #include "color.h"
 #include "hashes.h"
 #include "section.h"
+
+// Some miscellaneous functions are exported
+#if defined BOOST_WINDOWS_API
+	#ifdef SGPE_EXPORT
+		#define DECLSPEC    __declspec(dllexport)
+	#else
+		#define DECLSPEC    __declspec(dllimport)
+	#endif
+#else
+	#define DECLSPEC
+#endif
 
 namespace utils 
 {
@@ -96,7 +108,7 @@ bool read_string_at_offset(FILE* f, unsigned int offset, std::string& out, bool 
  *
  *	@return	Whether the RVA is between the bounds of the section.
  */
-bool is_address_in_section(boost::uint64_t rva, sg::pSection section, bool check_raw_size = false);
+bool DECLSPEC is_address_in_section(boost::uint64_t rva, sg::pSection section, bool check_raw_size = false);
 
 /**
  *	@brief	Finds the section containing a given RVA.
@@ -106,7 +118,7 @@ bool is_address_in_section(boost::uint64_t rva, sg::pSection section, bool check
  *
  *	@return	A pointer to the section containing the input address. NULL if no sections match.
  */
-sg::pSection find_section(unsigned int rva, const std::vector<sg::pSection>& section_list);
+sg::pSection DECLSPEC find_section(unsigned int rva, const std::vector<sg::pSection>& section_list);
 
 /**
  *	@brief	Converts a uint64 into a version number structured like X.X.X.X.
@@ -125,7 +137,7 @@ std::string uint64_to_version_number(boost::uint32_t msbytes, boost::uint32_t ls
  *
  *	@return	A human readable string representing the given timestamp.
  */
-std::string timestamp_to_string(boost::uint32_t epoch_timestamp);
+std::string timestamp_to_string(boost::uint64_t epoch_timestamp);
 
 }
 

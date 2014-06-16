@@ -47,7 +47,7 @@ public:
 			return res;
 		}
 
-		yara::matches m = _engine.scan_file(pe.get_path());
+		yara::matches m = _engine.scan_file(*pe.get_path());
 		if (m.size() > 0) 
 		{
 			res->set_level(level);

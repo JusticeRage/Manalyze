@@ -53,6 +53,13 @@
 
 namespace sg {
 
+typedef boost::shared_ptr<std::vector<std::string> > shared_strings;
+typedef boost::shared_ptr<const std::vector<std::string> > const_shared_strings;
+typedef boost::shared_ptr<std::vector<pSection> > shared_sections;
+typedef boost::shared_ptr<std::vector<pResource> > shared_resources;
+typedef boost::shared_ptr<std::vector<boost::uint8_t> > shared_bytes;
+typedef boost::shared_ptr<std::string> pString;
+
 class PE
 {
 
@@ -62,9 +69,18 @@ public:
 
 	DECLSPEC size_t get_filesize();
 
-    DECLSPEC std::string get_path()  const { return _path; }
+    DECLSPEC pString get_path()  const { 
+		return pString(new std::string(_path)); 
+	}
 
-	DECLSPEC std::vector<pSection> get_sections() const { return _sections; }
+	/**
+	 *	@brief	Get the sections of the PE.
+	 *
+	 *	@return	A shared object containing the section information.
+	 */
+	DECLSPEC shared_sections get_sections() const { 
+		return shared_sections(new std::vector<pSection>(_sections));
+	}
 
 
 	/**
@@ -72,19 +88,19 @@ public:
 	 *
 	 *	Implementation is located in imports.cpp.
 	 */
-	DECLSPEC std::vector<std::string> get_imported_dlls() const;
+	DECLSPEC const_shared_strings get_imported_dlls() const;
 
 	/**
 	 *	@brief	Returns the list of functions imported from a specified DLL.
 	 *
 	 *	@param	const std::string& dll The DLL from which we want the imported functions.
 	 *
-	 *	@return	A vector containing all the imported function names.
-	 *			Functions imported by ordinal will be returned as "#N", N being the ordinal number.
+	 *	@return	A shared vector in which the imported function names will be stored. Functions 
+	 *			imported by ordinal will be returned as "#N",  N being the ordinal number.
 	 *
 	 *	Implementation is located in imports.cpp.
 	 */
-	DECLSPEC std::vector<std::string> get_imported_functions(const std::string& dll) const;
+	DECLSPEC const_shared_strings get_imported_functions(const std::string& dll) const;
 
 	/**
 	 *	@brief	Finds imported functions matching regular expressions.
@@ -93,16 +109,16 @@ public:
 	 *	@param	const std::string& dll_name_regexp			The regular expression selecting imported dlls into which the
 	 *														functions should be searched.
 	 *
+	 *	@return	A shared vector containing the matching function names.
+	 *
 	 *	The default value for dll_name_regexp implies that all DLLs should be searched.
 	 *	Note that functions will only be returned if they match the WHOLE input sequence.
 	 *	/!\ Warning: Functions imported by ordinal can NOT be found using this function!
 	 *
-	 *	@return	A list of imported function names matching the requested criteria.
-	 *
 	 *	Implementation is located in imports.cpp.
 	 */
-	DECLSPEC std::vector<std::string> find_imports(const std::string& function_name_regexp, 
-												   const std::string& dll_name_regexp = ".*") const;
+	DECLSPEC const_shared_strings find_imports(const std::string& function_name_regexp,
+											   const std::string& dll_name_regexp = ".*") const;
 
 	/**
 	 *	@brief	Functions used to display the detailed contents of the PE.
@@ -127,7 +143,7 @@ public:
 	DECLSPEC void dump_summary(std::ostream& sink = std::cout) const;
 	DECLSPEC void dump_hashes(std::ostream& sink = std::cout) const;
 
-	DECLSPEC std::vector<pResource> get_resources() const { return _resource_table; }
+	DECLSPEC shared_resources get_resources() const { return shared_resources(new std::vector<pResource>(_resource_table)); }
 
 	/**
 	 *	@brief	Extracts the resources of the PE and writes them to the disk.
@@ -158,7 +174,10 @@ public:
 		return _initialized;
 	}
 
-	DECLSPEC std::vector<boost::uint8_t> get_raw_section_bytes(const std::string& section_name) const;
+	/**
+	 * TODO: Not implemented yet.
+	 */
+	DECLSPEC shared_bytes get_raw_section_bytes(const std::string& section_name) const;
 
 private:
 	/**
@@ -301,6 +320,7 @@ private:
 	 *	@brief	Finds imported DLLs whose names match a particular regular expression.
 	 *
 	 *	@param	const std::string& name_regexp The regular expression used to match DLL names.
+	 *	@param	std::vector<pimage_library_descriptor>& destination The vector into which the result should be stored.
 	 *
 	 *	Implementation is located in imports.cpp.
 	 */

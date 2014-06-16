@@ -39,7 +39,7 @@ namespace hash {
  *
  *	Implementation is located in imports.cpp.
  */
-DECLSPEC std::string hash_imports(const sg::PE& pe);
+std::string hash_imports(const sg::PE& pe);
 
 } //namespace sg
 

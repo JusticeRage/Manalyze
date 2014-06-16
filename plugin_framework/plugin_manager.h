@@ -115,6 +115,11 @@ public:
 	void load_all(const std::string& path);
 
 	/**
+	 *	@brief	Unloads all the dynamic plugins that are currently loaded.
+	 */
+	void unload_all();
+
+	/**
 	 *	@brief	Registers a plugin.
 	 *
 	 *	Calling this function only makes sens in the context of a static

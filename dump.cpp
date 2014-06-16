@@ -207,14 +207,14 @@ void PE::dump_imports(std::ostream& sink) const
 	}
 
 	sink << "IMPORTS:" << std::endl << "--------" << std::endl << std::endl;
-	std::vector<std::string> dlls = get_imported_dlls();
-	for (std::vector<std::string>::iterator it = dlls.begin() ; it != dlls.end() ; ++it)
+	const_shared_strings dlls = get_imported_dlls();
+	for (std::vector<std::string>::const_iterator it = dlls->begin() ; it != dlls->end() ; ++it)
 	{
 		sink << *it << std::endl;
-		std::vector<std::string> functions = get_imported_functions(*it);
-		for (std::vector<std::string>::iterator it2 = functions.begin() ; it2 != functions.end() ; ++it2)
+		const_shared_strings functions = get_imported_functions(*it);
+		for (std::vector<std::string>::const_iterator it2 = functions->begin() ; it2 != functions->end() ; ++it2)
 		{
-			sink << "\t" << (*it2);
+			sink << "\t" << *it2;
 			sink << std::endl;
 		}
 		
