@@ -58,6 +58,32 @@ PE::PE(const std::string& path)
 
 // ----------------------------------------------------------------------------
 
+boost::shared_ptr<PE> PE::create(const std::string& path) {
+	return boost::shared_ptr<PE>(new PE(path));
+}
+
+// ----------------------------------------------------------------------------
+
+void* PE::operator new(size_t size)
+{
+	void* p = malloc(size); 
+	if (p == NULL)
+		throw std::bad_alloc();
+	return p;
+}
+
+// ----------------------------------------------------------------------------
+
+void PE::operator delete(void* p)
+{
+	if (p != NULL) {
+		free(p);
+	}
+}
+
+
+// ----------------------------------------------------------------------------
+
 size_t PE::get_filesize()
 {
     if (_size != -1) {

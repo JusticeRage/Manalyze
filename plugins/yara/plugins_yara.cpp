@@ -15,7 +15,7 @@
     along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "yara_wrapper.h"
+#include "yara/yara_wrapper.h"
 #include "plugin_framework/plugin_interface.h"
 #include "plugin_framework/auto_register.h"
 
@@ -47,12 +47,12 @@ public:
 			return res;
 		}
 
-		yara::matches m = _engine.scan_file(*pe.get_path());
-		if (m.size() > 0) 
+		yara::const_matches m = _engine.scan_file(*pe.get_path());
+		if (m->size() > 0) 
 		{
 			res->set_level(level);
 			res->set_summary(summary);
-			for (yara::matches::iterator it = m.begin() ; it != m.end() ; ++it) 
+			for (yara::match_vector::const_iterator it = m->begin() ; it != m->end() ; ++it) 
 			{
 				if (!show_strings) {
 					res->add_information((*it)->operator[](meta_field_name));

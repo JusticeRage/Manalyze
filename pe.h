@@ -26,6 +26,7 @@
 #include <string>
 #include <vector>
 #include <set>
+#include <exception>
 
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
@@ -66,6 +67,7 @@ class PE
 public:
 	DECLSPEC PE(const std::string& path);
 	DECLSPEC virtual ~PE() {}
+	DECLSPEC static boost::shared_ptr<PE> create(const std::string& path);
 
 	DECLSPEC size_t get_filesize();
 
@@ -179,7 +181,23 @@ public:
 	 */
 	DECLSPEC shared_bytes get_raw_section_bytes(const std::string& section_name) const;
 
+	/**
+	 *	@brief	The delete operator. "new" had to be re-implemented in order to make it private.
+	 *
+	 *	@param	void* p	The memory to free.
+	 */
+	void operator delete(void* p);
+
 private:
+	/**
+	 *	@brief	The new operator, re-implemented only so it could be made private.
+	 *
+	 *	Users can't be allowed to allocate objects on the heap themselves. If this happens across DLL 
+	 *	boundaries, the heap will get corrupted.
+	 */
+	void* operator new(size_t);
+	void* operator new[](size_t);
+
 	/**
 	 * Reads the first bytes of the file to reconstruct the DOS header.
 	 */
