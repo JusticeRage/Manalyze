@@ -26,11 +26,11 @@
 #include <boost/filesystem.hpp>
 
 #include "plugin_framework/plugin_manager.h"
+#include "yara/yara_wrapper.h"
 
 #include "pe.h"
 #include "resources.h"
 #include "mandiant_modules.h"
-#include "yara_wrapper.h"
 #include "color.h"
 
 namespace po = boost::program_options;
@@ -320,11 +320,11 @@ int main(int argc, char** argv)
 				!boost::filesystem::is_directory(*it) && 
 				y.load_rules("yara_rules/magic.yara"))
 			{
-				yara::matches m = y.scan_file(*pe.get_path());
-				if (m.size() > 0) 
+				yara::const_matches m = y.scan_file(*pe.get_path());
+				if (m->size() > 0) 
 				{
 					std::cerr << "Detected file type(s):" << std::endl;
-					for (yara::matches::iterator it = m.begin() ; it != m.end() ; ++it) {
+					for (yara::match_vector::const_iterator it = m->begin() ; it != m->end() ; ++it) {
 						std::cerr << "\t" << (*it)->operator[]("description") << std::endl;
 					}
 				}	

@@ -261,10 +261,10 @@ void PE::dump_resources(std::ostream& sink, bool compute_hashes) const
 		sink << "\tType:\t\t" << (*it)->get_type() << std::endl;
 		sink << "\tLanguage:\t" << (*it)->get_language() << std::endl;
 		sink << "\tSize:\t\t0x" << std::hex << (*it)->get_size() << std::endl;
-		yara::matches m = (*it)->detect_filetype();
-		if (m.size() > 0) 
+		yara::const_matches m = (*it)->detect_filetype();
+		if (m->size() > 0) 
 		{
-			for (yara::matches::iterator it = m.begin() ; it != m.end() ; ++it) {
+			for (yara::match_vector::const_iterator it = m->begin() ; it != m->end() ; ++it) {
 				sink <<	"\tDetected Type:\t" << (*it)->operator[]("description") << std::endl;
 			}
 		}

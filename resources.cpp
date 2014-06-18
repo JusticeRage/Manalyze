@@ -29,7 +29,7 @@ namespace sg
 {
 
 // Initialize the Yara wrapper used by resource objects
-yara::pYara Resource::_yara = yara::pYara(new yara::Yara);
+yara::pYara Resource::_yara = yara::Yara::create();
 
 bool PE::_read_image_resource_directory(image_resource_directory& dir, FILE* f, unsigned int offset)
 {
@@ -718,9 +718,9 @@ bool PE::extract_resources(const std::string& destination_folder)
 			}
 
 			// Try to guess the file extension
-			yara::matches m = (*it)->detect_filetype();
-			if (m.size() > 0) {
-				ss << "_" << (*it)->get_type() << m[0]->operator[]("extension");
+			yara::const_matches m = (*it)->detect_filetype();
+			if (m->size() > 0) {
+				ss << "_" << (*it)->get_type() << m->at(0)->operator[]("extension");
 			}
 			else {
 				ss << "_" << (*it)->get_type() << ".raw";
@@ -756,7 +756,7 @@ bool PE::extract_resources(const std::string& destination_folder)
 
 // ----------------------------------------------------------------------------
 
-yara::matches Resource::detect_filetype()
+yara::const_matches Resource::detect_filetype()
 {
 	if (_yara->load_rules("yara_rules/magic.yara")) 
 	{

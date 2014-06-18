@@ -27,7 +27,7 @@
 #include <boost/shared_array.hpp>
 #include <boost/filesystem.hpp>
 
-#include "yara_wrapper.h"
+#include "yara/yara_wrapper.h"
 
 namespace sg
 {
@@ -115,7 +115,7 @@ public:
 	template <class T>
 	T interpret_as();
 
-	yara::matches detect_filetype();
+	yara::const_matches detect_filetype();
 
 private:
 	static yara::pYara _yara;

@@ -1,0 +1,3 @@
+--memcheck:leak-check=full
+--show-reachable=yes
+--suppressions=./.dlopen.valgrind.supp

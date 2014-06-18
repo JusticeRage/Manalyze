@@ -155,8 +155,6 @@ public:
 		data.dwStateAction = WTD_STATEACTION_CLOSE;
 		::WinVerifyTrust(0, &guid_verify, &data);
 
-		sg::const_shared_strings vect = pe.get_imported_dlls();
-
 		return res;
 	}
 };
