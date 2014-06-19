@@ -41,9 +41,16 @@ Section::Section(const image_section_header& header, const std::string& path)
 
 std::vector<boost::uint8_t> Section::get_raw_data()
 {
-	std::vector<boost::uint8_t> res;	
+	std::vector<boost::uint8_t> res;
+	if (_size_of_raw_data == 0)
+	{
+		PRINT_WARNING << "Section " << _name << " has a size of 0!";
+		return res;
+	}
 	FILE* f = fopen(_path.c_str(), "rb");
-	if (f == NULL || fseek(f, _pointer_to_raw_data, SEEK_SET)) {
+	if (f == NULL || fseek(f, _pointer_to_raw_data, SEEK_SET)) 
+	{
+		fclose(f);
 		return res;
 	}
 

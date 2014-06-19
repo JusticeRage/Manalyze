@@ -325,7 +325,7 @@ unsigned int PE::_va_to_offset(boost::uint64_t va) const {
 
 bool PE::_reach_directory(FILE* f, int directory) const
 {
-	if (directory > 0x10) { // There can be no more than 0x16 directories.
+	if (directory > 0x10) { // There can be no more than 16 directories.
 		return false;
 	}
 

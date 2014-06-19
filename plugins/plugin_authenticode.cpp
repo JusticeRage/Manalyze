@@ -361,7 +361,6 @@ void get_certificate_details(PCMSG_SIGNER_INFO info, HCERTSTORE hStore, pResult 
 
 	GetCertNameString_wrapper(context, CERT_NAME_SIMPLE_DISPLAY_TYPE, CERT_NAME_ISSUER_FLAG, "Issued by", result);
 	GetCertNameString_wrapper(context, CERT_NAME_SIMPLE_DISPLAY_TYPE, 0, "Issued to", result);
-	// TODO: Test with a cert containing an email address
 	GetCertNameString_wrapper(context, CERT_NAME_EMAIL_TYPE, 0, "Subject's email", result);
 
 	if (!context) {

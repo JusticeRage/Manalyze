@@ -83,7 +83,7 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
 		// Plugin description
 		plugin::PluginManager::get_instance().load_all(".");
 		std::vector<plugin::pIPlugin> plugins = plugin::PluginManager::get_instance().get_plugins();
-		//TODO: Load all plugins in shared objects
+		
 		if (plugins.size() > 0) 
 		{
 			std::cout << "Available plugins:" << std::endl;			
