@@ -18,6 +18,8 @@
 #include "plugin_framework/plugin_interface.h"
 #include "plugin_framework/auto_register.h"
 
+#include "color.h"
+
 namespace plugin {
 
 enum REQUIREMENT { AT_LEAST_ONE = 1, AT_LEAST_TWO = 2, AT_LEAST_THREE = 3 };
@@ -39,7 +41,7 @@ std::string wininet_api = "Internet(.*)|WSA(.*)|URLDownloadToFile(A|W)";
 std::string process_creation_api = "CreateProcess(.*)|system|WinExec|ShellExecute(A|W)";
 
 std::string privilege_api = "AdjustTokenPrivileges|IsNTAdmin|LsaEnumerateLogonSessions|SamQueryInformationUse|"
-							"SamIGetPrivateData|SfcTerminateWatcherThread";
+							"SamIGetPrivateData|SfcTerminateWatcherThread|(Zw)?OpenProcessToken(Ex)?|(Zw)?DuplicateToken(Ex)?";
 
 std::string dynamic_import = "LoadLibrary(A|W)|GetProcAddress|LdrLoadDll|MmGetSystemRoutineAddress";
 
@@ -97,14 +99,14 @@ public:
 	pResult analyze(const sg::PE& pe) 
 	{
 		pResult res(new Result());
-		check_functions(pe, dynamic_import, Result::NO_OPINION, "The program may be hiding some of its imports", AT_LEAST_TWO, res);
+		check_functions(pe, dynamic_import, Result::NO_OPINION, "[!] The program may be hiding some of its imports", AT_LEAST_TWO, res);
 		check_functions(pe, anti_debug, Result::SUSPICIOUS, "Functions which can be used for anti-debugging purposes", AT_LEAST_ONE, res);
 		check_functions(pe, vanilla_injection, Result::MALICIOUS, "Code injection capabilities", AT_LEAST_THREE, res);
 		check_functions(pe, "Reg(.*)(Key|Value)(.*)", Result::NO_OPINION, "Can access the registry", AT_LEAST_ONE, res);
 		check_functions(pe, process_creation_api, Result::NO_OPINION, "Possibly launches other programs", AT_LEAST_ONE, res);
-		check_functions(pe, "(Nt|Zw|Rtl)(.*)", Result::SUSPICIOUS, "Uses Windows' Native API", AT_LEAST_ONE, res);
+		check_functions(pe, "(Nt|Zw)(.*)", Result::SUSPICIOUS, "Uses Windows' Native API", AT_LEAST_TWO, res);
 		check_functions(pe, "Crypt(.*)", Result::NO_OPINION, "Uses Microsoft's cryptographic API", AT_LEAST_ONE, res);
-		check_functions(pe, temporary_files, Result::NO_OPINION, "Can create temporary files", AT_LEAST_THREE, res);
+		check_functions(pe, temporary_files, Result::NO_OPINION, "Can create temporary files", AT_LEAST_TWO, res);
 		check_functions(pe, "Wlx(.*)", Result::MALICIOUS, "Possibly attempts GINA replacement", AT_LEAST_THREE, res);
 		check_functions(pe, keylogger_api, Result::MALICIOUS, "Uses functions commonly found in keyloggers", AT_LEAST_TWO, res);
 		check_functions(pe, packer_api, Result::SUSPICIOUS, "Memory manipulation functions often used by packers", AT_LEAST_TWO, res);
@@ -132,6 +134,6 @@ public:
 	}
 };
 
-AutoRegister<ImportsPlugin> auto_register;
+AutoRegister<ImportsPlugin> auto_register_imports;
 
 } // !namespace plugin

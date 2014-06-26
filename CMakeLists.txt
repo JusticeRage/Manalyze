@@ -27,7 +27,7 @@ add_library(sgpe SHARED pe.cpp nt_values.cpp utils.cpp imports.cpp dump.cpp reso
 
 add_executable(sgstatic main.cpp color.cpp
 			   plugin_framework/dynamic_library.cpp plugin_framework/plugin_manager.cpp # Plugin system
-			   plugins/yara/plugins_yara.cpp plugins/plugin_packer_detection.cpp) # Bundled plugins
+			   plugins/yara/plugins_yara.cpp plugins/plugin_packer_detection.cpp plugins/plugin_imports.cpp plugins/plugin_resources.cpp) # Bundled plugins
 
 if (WIN32)
 			add_definitions(/D_CRT_SECURE_NO_WARNINGS) # Please don't complain about fopen()

@@ -1154,11 +1154,11 @@ rule RedHat_Package_Manager_file__rpm
     condition:
         $a at 0
 }
-rule Keyboard_driver_file 
+rule Driver_file 
 {
     meta:
         extension = ".sys"
-        description = "Keyboard driver file"
+        description = "Driver file"
 
     strings:
         $a = { FF 4B 45 59 42 20 20 20 }

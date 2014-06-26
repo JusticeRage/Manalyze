@@ -47,6 +47,7 @@ public:
 	{}
 
 	void set_level(LEVEL level) { _level = level; }
+	void raise_level(LEVEL level) { if (level > _level) _level = level; }
 	LEVEL get_level() const		 { return _level;  }
 	void set_summary(const std::string& s) { _summary = pString(new std::string(s)); }
 	pString get_summary() const { return _summary; }

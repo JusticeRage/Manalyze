@@ -53,13 +53,13 @@ public:
 
 		bool suspicious = false;
 
-		sg::shared_sections sections = 	pe.get_sections();
-		for (std::vector<sg::pSection>::iterator it = sections->begin() ; it != sections->end() ; ++it)
+		sg::shared_sections sections = pe.get_sections();
+		for (sg::shared_sections::element_type::const_iterator it = sections->begin() ; it != sections->end() ; ++it)
 		{
-			if (common_names.end() == std::find(common_names.begin(), common_names.end(), (*it)->get_name())) 
+			if (common_names.end() == std::find(common_names.begin(), common_names.end(), *(*it)->get_name())) 
 			{
 				std::stringstream ss;
-				ss << "Unusual section name found: " << (*it)->get_name();
+				ss << "Unusual section name found: " << *(*it)->get_name();
 				res->add_information(ss.str());
 				suspicious = true;
 			}
@@ -87,6 +87,6 @@ public:
 	}
 };
 
-AutoRegister<PackerDetectionPlugin> auto_register;
+AutoRegister<PackerDetectionPlugin> auto_register_packer;
 
 } // !namespace plugin

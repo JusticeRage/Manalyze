@@ -163,7 +163,7 @@ bool PE::_parse_resources(FILE* f)
 					else {
 						std::cerr << name;
 					}
-					PRINT_ERROR << "Trying to use the RVA as an offset..." << std::endl;
+					std::cerr << ". Trying to use the RVA as an offset..." << std::endl;
 					offset = entry.OffsetToData;
 				}
 				pResource res;
@@ -225,9 +225,10 @@ bool PE::_parse_debug(FILE* f)
 
 			unsigned int saved_offset = ftell(f);
 			fseek(f, debug->PointerToRawData, SEEK_SET);
-			if (pdb_size != fread(&pdb, 1, pdb_size, f) || pdb.Signature != 0x53445352) // Signature: "RSDS"
+			if (pdb_size != fread(&pdb, 1, pdb_size, f) || 
+				(pdb.Signature != 0x53445352 && pdb.Signature != 0x3031424E)) // Signature: "RSDS" or "NB10"
 			{
-				PRINT_ERROR << "Could not read PDB file information." << std::endl;
+				PRINT_ERROR << "Could not read PDB file information of invalid magic number." << std::endl;
 				return false;
 			}
 			pdb.PdbFileName = utils::read_ascii_string(f); // Not optimal, but it'll help if I decide to 
@@ -267,9 +268,9 @@ bool PE::_parse_debug(FILE* f)
 
 // ----------------------------------------------------------------------------
 
-std::vector<boost::uint8_t> Resource::get_raw_data()
+shared_bytes Resource::get_raw_data()
 {
-	std::vector<boost::uint8_t> res = std::vector<boost::uint8_t>();
+	boost::shared_ptr<std::vector<boost::uint8_t> > res(new std::vector<boost::uint8_t>());
 	
 	FILE* f = _reach_data();
 	unsigned int read_bytes;
@@ -277,10 +278,10 @@ std::vector<boost::uint8_t> Resource::get_raw_data()
 		goto END;
 	}
 	
-	res.resize(_size);
-	read_bytes = fread(&res[0], 1, _size, f);
+	res->resize(_size);
+	read_bytes = fread(&(*res)[0], 1, _size, f);
 	if (read_bytes != _size) { // We got less bytes than expected: reduce the vector's size.
-		res.resize(read_bytes);
+		res->resize(read_bytes);
 	}
 
 	END:
@@ -310,11 +311,13 @@ bool parse_version_info_header(vs_version_info_header& header, FILE* f)
 template<>
 std::string Resource::interpret_as()
 {
-	if (_type != "RT_MANIFEST") {
-		return "Resources of type " + _type + " cannot be interpreted as std::strings.";
+	if (_type != "RT_MANIFEST") 
+	{
+		PRINT_WARNING << "Resources of type " << _type << "cannot be interpreted as std::strings." << std::endl;
+		return "";
 	}
-	std::vector<boost::uint8_t> manifest_bytes = get_raw_data();
-	return std::string(manifest_bytes.begin(), manifest_bytes.end());
+	shared_bytes manifest_bytes = get_raw_data();
+	return std::string(manifest_bytes->begin(), manifest_bytes->end());
 }
 
 // ----------------------------------------------------------------------------
@@ -323,7 +326,9 @@ template<>
 std::vector<std::string> Resource::interpret_as()
 {
 	std::vector<std::string> res;
-	if (_type != "RT_STRING") {
+	if (_type != "RT_STRING") 
+	{
+		PRINT_WARNING << "Resources of type " << _type << " cannot be interpreted as vectors of strings." << std::endl;
 		return res;
 	}
 
@@ -347,7 +352,7 @@ std::vector<std::string> Resource::interpret_as()
 // ----------------------------------------------------------------------------
 
 template<>
-pbitmap Resource::interpret_as()
+DECLSPEC pbitmap Resource::interpret_as()
 {
 	if (_type != "RT_BITMAP") {
 		return pbitmap();
@@ -359,7 +364,7 @@ pbitmap Resource::interpret_as()
 	res->Magic[1] = 'M';
 	res->Reserved1 = 0;
 	res->Reserved2 = 0;
-	res->data = get_raw_data();
+	res->data = *get_raw_data();
 	res->Size = res->data.size() + header_size;
 
 	// Calculate the offset to the raw data.
@@ -369,7 +374,7 @@ pbitmap Resource::interpret_as()
 	boost::uint32_t dib_header_size = 0;
 	boost::uint32_t colors_used = 0;
 	memcpy(&dib_header_size, &(res->data[0]), sizeof(boost::uint32_t)); // DIB header size is located at offset 0.
-	memcpy(&colors_used, &(res->data[32]), sizeof(boost::uint32_t)); // DIB header size is located at offset 0.
+	memcpy(&colors_used, &(res->data[32]), sizeof(boost::uint32_t));
 
 	res->OffsetToData = header_size + dib_header_size + 4*colors_used;
 	return res;
@@ -378,7 +383,7 @@ pbitmap Resource::interpret_as()
 // ----------------------------------------------------------------------------
 
 template<>
-pgroup_icon_directory Resource::interpret_as()
+DECLSPEC pgroup_icon_directory Resource::interpret_as()
 {
 	if (_type != "RT_GROUP_ICON" && _type != "RT_GROUP_CURSOR") {
 		return pgroup_icon_directory();
@@ -443,7 +448,7 @@ pgroup_icon_directory Resource::interpret_as()
 // ----------------------------------------------------------------------------
 
 template<>
-pversion_info Resource::interpret_as()
+DECLSPEC pversion_info Resource::interpret_as()
 {
 	if (_type != "RT_VERSION") {
 		return pversion_info();
@@ -471,20 +476,41 @@ pversion_info Resource::interpret_as()
 	}
 	res->Value = pfixed_file_info(new fixed_file_info);
 	memset(res->Value.get(), 0, sizeof(fixed_file_info));
+
+	// 0xFEEF04BD is a magic located at the beginning of the VS_FIXED_FILE_INFO structure.
 	if (sizeof(fixed_file_info) != fread(res->Value.get(), 1, sizeof(fixed_file_info), f) || res->Value->Signature != 0xfeef04bd)
 	{
 		PRINT_ERROR << "Could not read a VS_FIXED_FILE_INFO!" << std::endl;
 		goto END;
 	}
 
-	if (!parse_version_info_header(*current_structure, f) || current_structure->Key != "StringFileInfo") 
-	{
-		if (current_structure->Key != "StringFileInfo") {
-			PRINT_ERROR << "StringFileInfo expected, read " << current_structure->Key << " instead." << std::endl;
-		}
+	bytes_read = ftell(f);
+	if (!parse_version_info_header(*current_structure, f)) 
+	{		
 		res.reset();
 		goto END;
 	}
+
+	// This (uninteresting) VAR_FILE_INFO structure may be located before the STRING_FILE_INFO we're after.
+	// In this case, just skip it.
+	if (current_structure->Key == "VarFileInfo")
+	{
+		bytes_read = ftell(f) - bytes_read;
+		fseek(f, current_structure->Length - bytes_read, SEEK_CUR);
+		if (!parse_version_info_header(*current_structure, f)) 
+		{		
+			res.reset();
+			goto END;
+		}
+	}
+
+	if (current_structure->Key != "StringFileInfo") 
+	{
+		PRINT_ERROR << "StringFileInfo expected, read " << current_structure->Key << " instead." << std::endl;
+		res.reset();
+		goto END;
+	}
+
 	// We don't need the contents of StringFileInfo. Replace them with the next structure.
 	bytes_read = ftell(f);
 	if (!parse_version_info_header(*current_structure, f)) 
@@ -499,7 +525,14 @@ pversion_info Resource::interpret_as()
 	res->Language = nt::translate_to_flag((language >> 16) & 0xFFFF, nt::LANG_IDS);
 
 	bytes_read = ftell(f) - bytes_read;
+	if (current_structure->Length < bytes_read)
+	{
+		PRINT_ERROR << "The StringTableInfo has an invalid size." << std::endl;
+		res.reset();
+		goto END;
+	}
 	bytes_remaining = current_structure->Length - bytes_read;
+
 	// Read the StringTable
 	while (bytes_remaining > 0)
 	{
@@ -515,7 +548,14 @@ pversion_info Resource::interpret_as()
 			value = utils::read_unicode_string(f);
 		}
 		bytes_read = ftell(f) - bytes_read;
-		bytes_remaining -= bytes_read;
+		if (bytes_remaining < bytes_read)
+		{
+			bytes_remaining = 0;
+			PRINT_WARNING << bytes_read - bytes_remaining << " excess bytes have been read from a StringFileInfo!" << std::endl;
+		}
+		else {
+			bytes_remaining -= bytes_read;
+		}
 
 		// Add the key/value to our internal representation
 		ppair p = ppair(new std::pair<std::string, std::string>(current_structure->Key, value));
@@ -537,8 +577,9 @@ pversion_info Resource::interpret_as()
 		}
 	}
 
-	/* TODO ?
-	   Theoretically, there is a VarFileInfo (with translation information) structure afterwards. 
+	/* 
+	   Theoretically, there may be a VarFileInfo (with translation information) structure afterwards
+	   if it wasn't encountered before).
 	   In practice, I find it irrelevant to my interests, and supporting it would increase the 
 	   complexity of the version_info structure. If you *absolutely* need this for some reason, 
 	   let me know.       
@@ -552,7 +593,7 @@ pversion_info Resource::interpret_as()
 // ----------------------------------------------------------------------------
 
 template<>
-std::vector<boost::uint8_t> Resource::interpret_as() {
+DECLSPEC shared_bytes Resource::interpret_as() {
 	return get_raw_data();
 }
 
@@ -608,7 +649,7 @@ std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, co
 			return res;
 		}
 
-		std::vector<boost::uint8_t> icon_bytes = icon->get_raw_data();
+		shared_bytes icon_bytes = icon->get_raw_data();
 		memcpy(&res[3 * sizeof(boost::uint16_t) + i * sizeof(group_icon_directory_entry)],
 			   directory->Entries[i].get(),
 			   sizeof(group_icon_directory_entry) - sizeof(boost::uint32_t)); // Don't copy the last field.
@@ -619,10 +660,10 @@ std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, co
 			   sizeof(boost::uint32_t));
 		// Append the icon bytes at the end of the data
 		if (directory->Type == 1) { // General case for icons
-			res.insert(res.end(), icon_bytes.begin(), icon_bytes.end());
+			res.insert(res.end(), icon_bytes->begin(), icon_bytes->end());
 		}
-		else if (icon_bytes.size() > 2 * sizeof(boost::uint16_t)) { // Cursors have a "hotspot" structure that we have to discard to create a valid ico.
-			res.insert(res.end(), icon_bytes.begin() + 2 * sizeof(boost::uint16_t), icon_bytes.end());
+		else if (icon_bytes->size() > 2 * sizeof(boost::uint16_t)) { // Cursors have a "hotspot" structure that we have to discard to create a valid ico.
+			res.insert(res.end(), icon_bytes->begin() + 2 * sizeof(boost::uint16_t), icon_bytes->end());
 		}
 		else { // Invalid cursor.
 			res.clear();
@@ -649,24 +690,24 @@ bool PE::extract_resources(const std::string& destination_folder)
 		bfs::path destination_file;
 		std::stringstream ss;
 		std::vector<boost::uint8_t> data;
-		if ((*it)->get_type() == "RT_GROUP_ICON" || (*it)->get_type() == "RT_GROUP_CURSOR")
+		if (*(*it)->get_type() == "RT_GROUP_ICON" || *(*it)->get_type() == "RT_GROUP_CURSOR")
 		{
-			ss << base << "_" << (*it)->get_id() << "_" << (*it)->get_type() << ".ico";
+			ss << base << "_" << (*it)->get_id() << "_" << *(*it)->get_type() << ".ico";
 			data = reconstruct_icon((*it)->interpret_as<pgroup_icon_directory>(), _resource_table);
 		}
-		else if ((*it)->get_type() == "RT_MANIFEST") 
+		else if (*(*it)->get_type() == "RT_MANIFEST") 
 		{
 			ss << base << "_" << (*it)->get_id() << "_RT_MANIFEST.xml";
-			data = (*it)->get_raw_data();
+			data = *(*it)->get_raw_data();
 		}
-		else if ((*it)->get_type() == "RT_BITMAP")
+		else if (*(*it)->get_type() == "RT_BITMAP")
 		{
 			ss << base << "_" << (*it)->get_id() << "_RT_BITMAP.bmp";
 			unsigned int header_size = 2 * sizeof(boost::uint8_t) + 2 * sizeof(boost::uint16_t) + 2 * sizeof(boost::uint32_t);
 			pbitmap bmp = (*it)->interpret_as<pbitmap>();
 			if (bmp == NULL)
 			{
-				PRINT_ERROR << "Bitmap " << (*it)->get_name() << " is malformed!" << std::endl;
+				PRINT_ERROR << "Bitmap " << *(*it)->get_name() << " is malformed!" << std::endl;
 				continue;
 			}
 
@@ -676,11 +717,11 @@ bool PE::extract_resources(const std::string& destination_folder)
 			// Copy the image bytes.
 			data.insert(data.end(), bmp->data.begin(), bmp->data.end());
 		}
-		else if ((*it)->get_type() == "RT_ICON" || (*it)->get_type() == "RT_CURSOR" || (*it)->get_type() == "RT_VERSION") {
+		else if (*(*it)->get_type() == "RT_ICON" || *(*it)->get_type() == "RT_CURSOR" || *(*it)->get_type() == "RT_VERSION") {
 			// Ignore the following resource types: we don't want to extract them.
 			continue;
 		}
-		else if ((*it)->get_type() == "RT_STRING") 
+		else if (*(*it)->get_type() == "RT_STRING") 
 		{
 			// Append all the strings to the same file.
 			std::vector<std::string> strings = (*it)->interpret_as<std::vector<std::string> >();
@@ -710,8 +751,8 @@ bool PE::extract_resources(const std::string& destination_folder)
 		else // General case
 		{
 			ss << base << "_";
-			if ((*it)->get_name() != "") {
-				ss << (*it)->get_name();
+			if (*(*it)->get_name() != "") {
+				ss << *(*it)->get_name();
 			}
 			else {
 				ss << (*it)->get_id();
@@ -720,18 +761,18 @@ bool PE::extract_resources(const std::string& destination_folder)
 			// Try to guess the file extension
 			yara::const_matches m = (*it)->detect_filetype();
 			if (m->size() > 0) {
-				ss << "_" << (*it)->get_type() << m->at(0)->operator[]("extension");
+				ss << "_" << *(*it)->get_type() << m->at(0)->operator[]("extension");
 			}
 			else {
-				ss << "_" << (*it)->get_type() << ".raw";
+				ss << "_" << *(*it)->get_type() << ".raw";
 			}
 			
-			data = (*it)->get_raw_data();
+			data = *(*it)->get_raw_data();
 		}
 
 		if (data.size() == 0) 
 		{
-			std::cerr << "Warning: Resource " << (*it)->get_name() << " is empty!" << std::endl;
+			std::cerr << "Warning: Resource " << *(*it)->get_name() << " is empty!" << std::endl;
 			continue;
 		}
 
@@ -760,8 +801,8 @@ yara::const_matches Resource::detect_filetype()
 {
 	if (_yara->load_rules("yara_rules/magic.yara")) 
 	{
-		std::vector<boost::uint8_t> bytes =get_raw_data();
-		return _yara->scan_bytes(bytes);
+		shared_bytes bytes = get_raw_data();
+		return _yara->scan_bytes(*bytes);
 	}
 	else {
 		return yara::matches();

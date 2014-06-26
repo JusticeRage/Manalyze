@@ -30,10 +30,46 @@
 
 #include "pe.h"
 #include "resources.h"
-#include "mandiant_modules.h"
 #include "color.h"
 
 namespace po = boost::program_options;
+
+/**
+ *	@brief	Prints the help message of the program.
+ *
+ *	@param	po::options_description& desc The boost::program_options argument descriptor.
+ *	@param	const std::string& argv_0 argv[0], the program name.
+ */
+void print_help(po::options_description& desc, const std::string& argv_0)
+{
+	std::cout << desc << std::endl; // Standard usage
+
+	// Plugin description
+	plugin::PluginManager::get_instance().load_all(".");
+	std::vector<plugin::pIPlugin> plugins = plugin::PluginManager::get_instance().get_plugins();
+
+	if (plugins.size() > 0) 
+	{
+		std::cout << "Available plugins:" << std::endl;			
+		for (std::vector<plugin::pIPlugin>::iterator it = plugins.begin() ; it != plugins.end() ; ++it) {
+			std::cout << "  - " << *(*it)->get_id() << ": " << *(*it)->get_description() << std::endl;
+		}
+		std::cout << "  - all: Run all the available plugins." << std::endl;
+	}
+	std::cout << std::endl;
+
+	std::string filename = boost::filesystem::basename(argv_0);
+	std::string extension = boost::filesystem::extension(argv_0);
+	if (extension != "") {
+		filename += extension;
+	}
+
+	std::cout << "Examples:" << std::endl;
+	std::cout << "  " << filename << " program.exe" << std::endl;
+	std::cout << "  " << filename << " -dresources -dexports -x out/ program.exe" << std::endl;
+	std::cout << "  " << filename << " --dump=imports,sections --hashes program.exe" << std::endl;
+	std::cout << "  " << filename << " -r malwares/ --plugins=peid,clamav --dump=all" << std::endl;
+}
 
 /**
  *	@brief	Parses and validates the command line options of the application.
@@ -54,7 +90,7 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
 		("recursive,r", "Scan all files in a directory (subdirectories will be ignored).")
 		("dump,d", po::value<std::vector<std::string> >(), 
 			"Dumps PE information. Available choices are any combination of: "
-			"all, dos (dos header), pe (pe header), opt (pe optional header) sections, imports, "
+			"all, dos (dos header), pe (pe header), opt (pe optional header), sections, imports, "
 			"exports, resources, version, debug, tls, certificates, relocations")
 		("hashes", "Calculate various hashes of the file (may slow down the analysis!)")
 		("extract,x", po::value<std::string>(), "Extract the PE resources to the target directory.")
@@ -78,23 +114,7 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
 
 	if (vm.count("help") || !vm.count("pe")) 
 	{
-		std::cout << desc << std::endl; // Standard usage
-
-		// Plugin description
-		plugin::PluginManager::get_instance().load_all(".");
-		std::vector<plugin::pIPlugin> plugins = plugin::PluginManager::get_instance().get_plugins();
-		
-		if (plugins.size() > 0) 
-		{
-			std::cout << "Available plugins:" << std::endl;			
-			for (std::vector<plugin::pIPlugin>::iterator it = plugins.begin() ; it != plugins.end() ; ++it) {
-				std::cout << "  - " << *(*it)->get_id() << ": " << *(*it)->get_description() << std::endl;
-			}
-			std::cout << "  - all: Run all the available plugins." << std::endl;
-		}
-		std::cout << std::endl;
-
-		// TODO: Examples
+		print_help(desc, argv[0]);
 		return false;
 	}
 
@@ -198,10 +218,7 @@ void handle_plugins_option(const std::vector<std::string>& selected, const sg::P
 {
 	bool all_plugins = std::find(selected.begin(), selected.end(), "all") != selected.end();
 	
-	// Load dynamic plugins
-	std::vector<plugin::pIPlugin> plugins;
-	plugin::PluginManager::get_instance().load_all(".");
-	plugins = plugin::PluginManager::get_instance().get_plugins();
+	std::vector<plugin::pIPlugin> plugins = plugin::PluginManager::get_instance().get_plugins();
 
 	for (std::vector<plugin::pIPlugin>::iterator it = plugins.begin() ; it != plugins.end() ; ++it) 
 	{
@@ -303,6 +320,9 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
+	// Load the dynamic plugins
+	plugin::PluginManager::get_instance().load_all(".");
+
 	// Perform analysis on all the input files
 	std::vector<std::string> targets = get_input_files(vm);
 	for (std::vector<std::string>::iterator it = targets.begin() ; it != targets.end() ; ++it)
@@ -324,10 +344,10 @@ int main(int argc, char** argv)
 				if (m->size() > 0) 
 				{
 					std::cerr << "Detected file type(s):" << std::endl;
-					for (yara::match_vector::const_iterator it = m->begin() ; it != m->end() ; ++it) {
+					for (yara::const_matches::element_type::const_iterator it = m->begin() ; it != m->end() ; ++it) {
 						std::cerr << "\t" << (*it)->operator[]("description") << std::endl;
 					}
-				}	
+				}
 			}
 			std::cerr << std::endl;
 			continue;

@@ -58,7 +58,7 @@ typedef boost::shared_ptr<std::vector<std::string> > shared_strings;
 typedef boost::shared_ptr<const std::vector<std::string> > const_shared_strings;
 typedef boost::shared_ptr<std::vector<pSection> > shared_sections;
 typedef boost::shared_ptr<std::vector<pResource> > shared_resources;
-typedef boost::shared_ptr<std::vector<boost::uint8_t> > shared_bytes;
+typedef boost::shared_ptr<const std::vector<boost::uint8_t> > shared_bytes;
 typedef boost::shared_ptr<std::string> pString;
 
 class PE
@@ -69,9 +69,9 @@ public:
 	DECLSPEC virtual ~PE() {}
 	DECLSPEC static boost::shared_ptr<PE> create(const std::string& path);
 
-	DECLSPEC size_t get_filesize();
+	DECLSPEC size_t get_filesize() const;
 
-    DECLSPEC pString get_path()  const { 
+    DECLSPEC pString get_path() const { 
 		return pString(new std::string(_path)); 
 	}
 
@@ -346,7 +346,6 @@ private:
 
 	std::string							_path;
     bool								_initialized;
-    size_t								_size;
 
 	/* 
 	    -----------------------------------

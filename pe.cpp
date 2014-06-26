@@ -20,7 +20,7 @@
 namespace sg {
 
 PE::PE(const std::string& path)
-	: _path(path), _initialized(false), _size(-1)
+	: _path(path), _initialized(false)
 {
 	FILE* f = fopen(_path.c_str(), "rb");
 	if (f == NULL) 
@@ -84,12 +84,8 @@ void PE::operator delete(void* p)
 
 // ----------------------------------------------------------------------------
 
-size_t PE::get_filesize()
+size_t PE::get_filesize() const
 {
-    if (_size != -1) {
-        return _size;
-    }
-
 	FILE* f = fopen(_path.c_str(), "rb");
 	size_t res = 0;
 	if (f == NULL) {
@@ -98,8 +94,7 @@ size_t PE::get_filesize()
 	fseek(f, 0, SEEK_END);
 	res = ftell(f);
 	fclose(f);
-    _size = res;
-	return _size;
+	return res;
 }
 
 // ----------------------------------------------------------------------------
@@ -310,6 +305,16 @@ unsigned int PE::_rva_to_offset(boost::uint64_t rva) const
 		return 0; // No section matches the RVA.
 	}
 
+	// The sections have to be aligned on FileAlignment bytes.
+	// TODO: Move warning to a plugin?
+	if (section->get_pointer_to_raw_data() % _ioh.FileAlignment != 0)
+	{
+		PRINT_WARNING << "The PE's sections are not aligned to its reported FileAlignment. "
+			<< "It was almost certainly crafted manually." << std::endl;
+		int new_raw_pointer = (section->get_pointer_to_raw_data() / _ioh.FileAlignment) * _ioh.FileAlignment;
+		return (rva - section->get_virtual_address() + new_raw_pointer) & 0xFFFFFFFF;
+	}
+
 	// Assume that the offset in the file can be stored inside an unsigned integer.
 	// PEs whose size is bigger than 4 Go may not be parsed properly.
 	return (rva - section->get_virtual_address() + section->get_pointer_to_raw_data()) & 0xFFFFFFFF;
@@ -386,6 +391,10 @@ bool PE::_parse_exports(FILE* f)
 	{
 		PRINT_ERROR << "Could not read the exported DLL name." << std::endl;
 		return false;
+	}
+
+	if (_ied.NumberOfFunctions == 0) {
+		return true;
 	}
 	
 	// Get the address and ordinal of each exported function

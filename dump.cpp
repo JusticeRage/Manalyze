@@ -126,7 +126,7 @@ void PE::dump_image_optional_header(std::ostream& sink) const
 	sg::pSection sec = utils::find_section(_ioh.AddressOfEntryPoint, _sections);
 	if (sec != NULL) {
 		sink << "AddressOfEntryPoint\t\t" << _ioh.AddressOfEntryPoint 
-			 << " (Section: " << sec->get_name() << ")" << std::endl;
+			 << " (Section: " << *sec->get_name() << ")" << std::endl;
 	}
 	else {
 		sink << "AddressOfEntryPoint\t\t" << _ioh.AddressOfEntryPoint 
@@ -173,10 +173,10 @@ void PE::dump_section_table(std::ostream& sink, bool compute_hashes) const
 	std::vector<std::string> flags;
 	for (std::vector<pSection>::const_iterator it = _sections.begin() ; it != _sections.end() ; ++it)
 	{
-		sink << "Name\t\t\t" << (*it)->get_name() << std::endl;
+		sink << "Name\t\t\t" << *(*it)->get_name() << std::endl;
 		if (compute_hashes)
 		{
-			std::vector<std::string> hashes = hash::hash_bytes(hash::ALL_DIGESTS, (*it)->get_raw_data());
+			std::vector<std::string> hashes = hash::hash_bytes(hash::ALL_DIGESTS, *(*it)->get_raw_data());
 			sink << "MD5:\t\t\t" << hashes[ALL_DIGESTS_MD5] << std::endl;
 			sink << "SHA1:\t\t\t" << hashes[ALL_DIGESTS_SHA1] << std::endl;
 			sink << "SHA256:\t\t\t" << hashes[ALL_DIGESTS_SHA256] << std::endl;
@@ -257,9 +257,9 @@ void PE::dump_resources(std::ostream& sink, bool compute_hashes) const
 	sink << "RESOURCES:" << std::endl << "----------" << std::endl << std::endl;
 	for (std::vector<pResource>::const_iterator it = _resource_table.begin() ; it != _resource_table.end() ; ++it)
 	{
-		sink << (*it)->get_name() << std::endl;
-		sink << "\tType:\t\t" << (*it)->get_type() << std::endl;
-		sink << "\tLanguage:\t" << (*it)->get_language() << std::endl;
+		sink << *(*it)->get_name() << std::endl;
+		sink << "\tType:\t\t" << *(*it)->get_type() << std::endl;
+		sink << "\tLanguage:\t" << *(*it)->get_language() << std::endl;
 		sink << "\tSize:\t\t0x" << std::hex << (*it)->get_size() << std::endl;
 		yara::const_matches m = (*it)->detect_filetype();
 		if (m->size() > 0) 
@@ -270,7 +270,7 @@ void PE::dump_resources(std::ostream& sink, bool compute_hashes) const
 		}
 		if (compute_hashes)
 		{
-			std::vector<std::string> hashes = hash::hash_bytes(hash::ALL_DIGESTS, (*it)->get_raw_data());
+			std::vector<std::string> hashes = hash::hash_bytes(hash::ALL_DIGESTS, *(*it)->get_raw_data());
 			sink << "\tMD5:\t\t" << hashes[ALL_DIGESTS_MD5] << std::endl;
 			sink << "\tSHA1:\t\t" << hashes[ALL_DIGESTS_SHA1] << std::endl;
 			sink << "\tSHA256:\t\t" << hashes[ALL_DIGESTS_SHA256] << std::endl;
@@ -291,7 +291,7 @@ void PE::dump_version_info(std::ostream& sink) const
 	pversion_info vi;
 	for (std::vector<sg::pResource>::const_iterator it = _resource_table.begin() ; it != _resource_table.end() ; ++it)
 	{
-		if ((*it)->get_type() == "RT_VERSION")
+		if (*(*it)->get_type() == "RT_VERSION")
 		{
 			vi = (*it)->interpret_as<sg::pversion_info>();
 			if (vi == NULL) 
@@ -301,7 +301,7 @@ void PE::dump_version_info(std::ostream& sink) const
 			}
 
 			sink << "VERSION INFO:" << std::endl << "-------------" << std::endl << std::endl;
-			sink << "Resource LangID:\t" << (*it)->get_language() << std::endl;
+			sink << "Resource LangID:\t" << *(*it)->get_language() << std::endl;
 			sink << "Key:\t\t\t" << vi->Header.Key << std::endl;
 			sink << "Value:" << std::endl;
 			sink << "\tSignature:\t" << std::hex << vi->Value->Signature << std::endl;
@@ -442,11 +442,12 @@ void PE::dump_summary(std::ostream& sink) const
 	
 	// Grab all detected languages
 	std::set<std::string> languages;
+	pversion_info vi;
 	for (std::vector<sg::pResource>::const_iterator it = _resource_table.begin() ; it != _resource_table.end() ; ++it)
 	{
-		if ((*it)->get_type() == "RT_VERSION")
+		if (*(*it)->get_type() == "RT_VERSION")
 		{
-			pversion_info vi = (*it)->interpret_as<sg::pversion_info>();
+			vi = (*it)->interpret_as<sg::pversion_info>();
 			if (vi == NULL) {
 				continue;
 			}
@@ -455,8 +456,8 @@ void PE::dump_summary(std::ostream& sink) const
 			}
 		}
 
-		if ((*it)->get_language() != "UNKNOWN") {
-			languages.insert((*it)->get_language());
+		if (*(*it)->get_language() != "UNKNOWN") {
+			languages.insert(*(*it)->get_language());
 		}
 	}
 
@@ -494,6 +495,14 @@ void PE::dump_summary(std::ostream& sink) const
 				sink << "\t\t\t";
 			}
 			sink << *it << std::endl;
+		}
+	}
+
+	if (vi != NULL)
+	{
+		sink << std::endl;
+		for (std::vector<ppair>::const_iterator it = vi->StringTable.begin() ; it != vi->StringTable.end() ; ++it) {
+			sink << (*it)->first << ": " << (*it)->second << std::endl;
 		}
 	}
 

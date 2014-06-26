@@ -32,6 +32,9 @@
 namespace sg
 {
 
+typedef boost::shared_ptr<std::string> pString;
+typedef boost::shared_ptr<const std::vector<boost::uint8_t> > shared_bytes;
+
 class Resource
 {
 public:
@@ -71,21 +74,21 @@ public:
 
 	virtual ~Resource() {}
 
-	std::string		get_type()		const { return _type; }
-	std::string		get_language()	const { return _language; }
-	boost::uint32_t	get_codepage()	const { return _codepage; }
-	boost::uint32_t	get_size()		const { return _size; }
-	boost::uint32_t	get_id()		const { return _id; }
-	std::string		get_name()		const
+	DECLSPEC pString			get_type()		const { return pString(new std::string(_type)); }
+	DECLSPEC pString			get_language()	const { return pString(new std::string(_language)); }
+	DECLSPEC boost::uint32_t	get_codepage()	const { return _codepage; }
+	DECLSPEC boost::uint32_t	get_size()		const { return _size; }
+	DECLSPEC boost::uint32_t	get_id()		const { return _id; }
+	DECLSPEC pString			get_name()		const
 	{
 		if (_name != "") {
-			return _name;
+			return pString(new std::string(_name));
 		}
 		else 
 		{
 			std::stringstream ss;
 			ss << _id;
-			return ss.str();
+			return pString(new std::string(ss.str()));
 		}
 	}
 
@@ -95,7 +98,7 @@ public:
 	 *	@return	A vector containing the read bytes. Its size may be 0 if
 	 *			the resource could not be read.
 	 */
-	std::vector<boost::uint8_t> get_raw_data();
+	DECLSPEC shared_bytes get_raw_data();
 	
 	/**
 	 *	@brief	Interprets the resource as a given type.
@@ -106,7 +109,8 @@ public:
 	 *	* std::vector<std::string> for RT_STRING
 	 *	* pgroup_icon_directory_t for RT_GROUP_ICON and RT_GROUP_CURSOR
 	 *	* pbitmap for RT_BITMAP
-	 *	* std::vector<boost::uint8_t> for all resource types (equivalent to  get_raw_data()).
+	 *  * pversion_info for RT_VERSION
+	 *	* shared_bytes for all resource types (equivalent to  get_raw_data()).
 	 *
 	 *	@tparam	T The type into which the resource should be interpreted.
 	 *
@@ -115,7 +119,7 @@ public:
 	template <class T>
 	T interpret_as();
 
-	yara::const_matches detect_filetype();
+	DECLSPEC yara::const_matches detect_filetype();
 
 private:
 	static yara::pYara _yara;

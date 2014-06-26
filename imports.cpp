@@ -35,7 +35,7 @@ bool PE::_parse_imports(FILE* f)
 		if (20 != fread(iid.get(), 1, 20, f))
 		{
 			PRINT_ERROR << "Could not read the IMAGE_IMPORT_DESCRIPTOR." << std::endl;
-			return false;
+			return true; // Don't give up on the rest of the parsing.
 		}
 
 		// Exit condition
@@ -45,10 +45,20 @@ bool PE::_parse_imports(FILE* f)
 
 		// Non-standard parsing. The Name RVA is translated to an actual string here.
 		unsigned int offset = _rva_to_offset(iid->Name);
-		if (!offset || !utils::read_string_at_offset(f, offset, iid->NameStr))
+		if (!offset) { // Try to use the RVA as a direct address if the imports are outside of a section.
+			offset = iid->Name;
+		}
+		if (!utils::read_string_at_offset(f, offset, iid->NameStr))
 		{
-			PRINT_ERROR << "Could not read the import name." << std::endl;
-			return false;
+			// It seems that the Windows loader doesn't give up if such a thing happens.
+			if (_imports.size() > 0) 
+			{
+				PRINT_WARNING << "Could not read an import's name." << std::endl;
+				break; // Try to continue the parsing with the available imports.
+			}
+
+			PRINT_ERROR << "Could not read an import's name." << std::endl;
+			return true;
 		}
 
 		pimage_library_descriptor library = pimage_library_descriptor(new image_library_descriptor(iid, std::vector<pimport_lookup_table>()));
@@ -68,7 +78,7 @@ bool PE::_parse_imports(FILE* f)
 		if (!ilt_offset || fseek(f, ilt_offset, SEEK_SET))
 		{
 			PRINT_ERROR << "Could not reach an IMPORT_LOOKUP_TABLE." << std::endl;
-			return false;
+			return true;
 		}
 
 		while (true) // We stop at the first NULL IMPORT_LOOKUP_TABLE
@@ -82,7 +92,7 @@ bool PE::_parse_imports(FILE* f)
 			if (size_to_read != fread(&(import->AddressOfData), 1, size_to_read, f))
 			{
 				PRINT_ERROR << "Could not read the IMPORT_LOOKUP_TABLE." << std::endl;
-				return false;
+				return true;
 			}
 
 			// Exit condition
@@ -101,14 +111,14 @@ bool PE::_parse_imports(FILE* f)
 				if (table_offset == 0)
 				{
 					PRINT_ERROR << "Could not reach the HINT/NAME table." << std::endl;
-					return false;
+					return true;
 				}
 
 				unsigned int saved_offset = ftell(f);
 				if (saved_offset == -1 || fseek(f, table_offset, SEEK_SET) || 2 != fread(&(import->Hint), 1, 2, f))
 				{
 					PRINT_ERROR << "Could not read a HINT/NAME hint." << std::endl;
-					return false;
+					return true;
 				}
 				import->Name = utils::read_ascii_string(f);
 
@@ -116,7 +126,7 @@ bool PE::_parse_imports(FILE* f)
 
 				// Go back to the import lookup table.
 				if (fseek(f, saved_offset, SEEK_SET)) {
-					return false;
+					return true;
 				}
 			}
 
@@ -213,12 +223,11 @@ const_shared_strings PE::find_imports(const std::string& function_name_regexp,
 
 	std::vector<pimage_library_descriptor> matching_dlls = _find_imported_dlls(dll_name_regexp);
 
-	boost::regex e(dll_name_regexp);
+	boost::regex e(function_name_regexp);
 	// Iterate on matching DLLs
 	for (std::vector<pimage_library_descriptor>::const_iterator it = matching_dlls.begin() ; it != matching_dlls.end() ; ++it)
 	{
 		// Iterate on functions imported by each of these DLLs
-		e = boost::regex(function_name_regexp);
 		for (std::vector<pimport_lookup_table>::iterator it2 = (*it)->second.begin() ; it2 != (*it)->second.end() ; ++it2)
 		{
 			if ((*it2)->Name == "") { // Functions imported by ordinal are skipped.

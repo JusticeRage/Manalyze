@@ -21,12 +21,26 @@
 #include <stdio.h>
 #include <boost/shared_ptr.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/system/api_config.hpp>
 #include <vector>
 
 #include "pe_structs.h"
 #include "color.h"
 
+#if defined BOOST_WINDOWS_API
+	#ifdef SGPE_EXPORT
+		#define DECLSPEC    __declspec(dllexport)
+	#else
+		#define DECLSPEC    __declspec(dllimport)
+	#endif
+#else
+	#define DECLSPEC
+#endif
+
 namespace sg {
+
+typedef boost::shared_ptr<std::string> pString;
+typedef boost::shared_ptr<const std::vector<boost::uint8_t> > shared_bytes;
 
 class Section
 {
@@ -40,21 +54,21 @@ public:
 	 *	Note that calling this function for PEs which have giant sections may end up 
 	 *	eating a lot of memory.
 	 *
-	 *	@return	A vector containing the raw bytes of the section. If an error occurs, the vector
+	 *	@return	A shared vector containing the raw bytes of the section. If an error occurs, the vector
 	 *			will be empty.
 	 */
-	std::vector<boost::uint8_t> get_raw_data();
+	shared_bytes get_raw_data();
 
-	std::string		get_name()						const { return _name; }
-	boost::uint32_t get_virtual_size()				const { return _virtual_size; }
-	boost::uint32_t get_virtual_address()			const { return _virtual_address; }
-	boost::uint32_t get_size_or_raw_data()			const { return _size_of_raw_data; }
-	boost::uint32_t get_pointer_to_raw_data()		const { return _pointer_to_raw_data; }
-	boost::uint32_t get_pointer_to_relocations()	const { return _pointer_to_relocations; }
-	boost::uint32_t get_pointer_to_line_numbers()	const { return _pointer_to_line_numbers; }
-	boost::uint32_t get_number_of_relocations()		const { return _number_of_relocations; }
-	boost::uint32_t get_number_of_line_numbers()	const { return _number_of_line_numbers; }
-	boost::uint32_t get_characteristics()			const { return _characteristics; }
+	DECLSPEC pString		 get_name()						const { return pString(new std::string(_name)); }
+	DECLSPEC boost::uint32_t get_virtual_size()				const { return _virtual_size; }
+	DECLSPEC boost::uint32_t get_virtual_address()			const { return _virtual_address; }
+	DECLSPEC boost::uint32_t get_size_or_raw_data()			const { return _size_of_raw_data; }
+	DECLSPEC boost::uint32_t get_pointer_to_raw_data()		const { return _pointer_to_raw_data; }
+	DECLSPEC boost::uint32_t get_pointer_to_relocations()	const { return _pointer_to_relocations; }
+	DECLSPEC boost::uint32_t get_pointer_to_line_numbers()	const { return _pointer_to_line_numbers; }
+	DECLSPEC boost::uint32_t get_number_of_relocations()	const { return _number_of_relocations; }
+	DECLSPEC boost::uint32_t get_number_of_line_numbers()	const { return _number_of_line_numbers; }
+	DECLSPEC boost::uint32_t get_characteristics()			const { return _characteristics; }
 
 private:
 

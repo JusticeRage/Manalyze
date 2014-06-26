@@ -155,6 +155,9 @@ public:
 		data.dwStateAction = WTD_STATEACTION_CLOSE;
 		::WinVerifyTrust(0, &guid_verify, &data);
 
+		// TODO: Look for corporation names in the RT_VERSION resource (Google, Microsoft, Adobe, Apple, Oracle......)
+		// Flag as malicious if the binary isn't signed.
+
 		return res;
 	}
 };
