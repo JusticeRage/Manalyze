@@ -24,6 +24,7 @@
 #include <sstream>
 #include <iostream>
 #include <string.h>
+#include <math.h>
 
 #include <boost/cstdint.hpp>
 #include <boost/shared_array.hpp>
@@ -138,6 +139,17 @@ std::string uint64_to_version_number(boost::uint32_t msbytes, boost::uint32_t ls
  *	@return	A human readable string representing the given timestamp.
  */
 std::string timestamp_to_string(boost::uint64_t epoch_timestamp);
+
+/**
+ *	@brief	Calculates the entropy of a byte stream.
+ *
+ *	See http://en.wikipedia.org/wiki/Entropy_(information_theory)
+ *
+ *	@param	const std::vector<boost::uint8_t>& bytes The byte stream to work on.
+ *
+ *	@return	The entropy of the byte stream.
+ */
+double DECLSPEC shannon_entropy(const std::vector<boost::uint8_t>& bytes);
 
 }
 

@@ -194,6 +194,7 @@ void PE::dump_section_table(std::ostream& sink, bool compute_hashes) const
 		sink << "Characteristics\t\t";
 		flags = nt::translate_to_flags((*it)->get_characteristics(), nt::SECTION_CHARACTERISTICS);
 		pretty_print_flags(sink, (*it)->get_characteristics(), nt::SECTION_CHARACTERISTICS);
+		sink << "Entropy:\t\t" << utils::shannon_entropy(*(*it)->get_raw_data()) << std::endl;
 		sink << std::endl;
 	}
 }
@@ -261,6 +262,7 @@ void PE::dump_resources(std::ostream& sink, bool compute_hashes) const
 		sink << "\tType:\t\t" << *(*it)->get_type() << std::endl;
 		sink << "\tLanguage:\t" << *(*it)->get_language() << std::endl;
 		sink << "\tSize:\t\t0x" << std::hex << (*it)->get_size() << std::endl;
+		sink << "\tEntropy:\t" << utils::shannon_entropy(*(*it)->get_raw_data()) << std::endl;
 		yara::const_matches m = (*it)->detect_filetype();
 		if (m->size() > 0) 
 		{

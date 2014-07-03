@@ -178,4 +178,27 @@ std::string timestamp_to_string(boost::uint64_t epoch_timestamp)
 	return ss.str();
 }
 
+// ----------------------------------------------------------------------------
+
+double DECLSPEC shannon_entropy(const std::vector<boost::uint8_t>& bytes)
+{
+	int frequency[256] = { 0 };
+	for (std::vector<boost::uint8_t>::const_iterator it = bytes.begin() ; it != bytes.end() ; ++it)	{
+		frequency[*it] += 1;
+	}
+
+	double res = 0.;
+	double size = static_cast<double>(bytes.size());
+	for (int i = 0 ; i < 256 ; ++i)
+	{
+		if (frequency[i] == 0) {
+			continue;
+		}
+		double freq = static_cast<double>(frequency[i]) / size;
+		res -= freq * log(freq) / log(2.);
+	}
+
+	return res;
+}
+
 }

@@ -177,6 +177,17 @@ rule Dropper_Strings
         any of them
 }
 
+rule AutoIT_compiled_script
+{
+    meta:
+        description = "Is an AutoIT compiled script."
+    strings:
+        $a0 = "AutoIt Error" ascii wide
+        $a1 = "reserved for AutoIt internal use" ascii wide
+    condition:
+        any of them
+}
+
 rule Misc_Suspicious_Strings
 {
     meta:
