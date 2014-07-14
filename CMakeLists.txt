@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 2.8)
 
 project (sgstatic)
 
@@ -7,7 +7,25 @@ if (WIN32)
 	set(Boost_USE_MULTITHREADED ON)  
 	set(Boost_USE_STATIC_RUNTIME ON)
 endif()
+
 find_package(Boost REQUIRED COMPONENTS regex system filesystem program_options)
+find_package(Git REQUIRED)
+
+# Download or update external projects
+if (EXISTS external/yara)
+    message("Updating yara...")
+    execute_process(COMMAND ${GIT_EXECUTABLE} --git-dir=external/yara/.git fetch)
+    execute_process(COMMAND ${GIT_EXECUTABLE} --git-dir=external/yara/.git --work-tree=external/yara merge origin/master)
+
+    message("Updating hash-library...")
+    execute_process(COMMAND ${GIT_EXECUTABLE} --git-dir=external/hash-library/.git fetch)
+    execute_process(COMMAND ${GIT_EXECUTABLE} --git-dir=external/hash-library/.git --work-tree=external/hash-library merge origin/master)
+else()
+    message("Checking out yara...")
+    execute_process(COMMAND ${GIT_EXECUTABLE} clone https://github.com/JusticeRage/yara.git external/yara)
+    message("Checking out hash-library...")
+    execute_process(COMMAND ${GIT_EXECUTABLE} clone https://github.com/JusticeRage/hash-library.git external/hash-library)
+endif()
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
