@@ -123,7 +123,7 @@ void PE::dump_image_optional_header(std::ostream& sink) const
 	sink << "SizeOfCode\t\t\t" << _ioh.SizeOfCode << std::endl;
 	sink << "SizeOfInitializedData\t\t" << _ioh.SizeOfInitializedData << std::endl;
 	sink << "SizeOfUninitializedData\t\t" << _ioh.SizeOfUninitializedData << std::endl;
-	sg::pSection sec = utils::find_section(_ioh.AddressOfEntryPoint, _sections);
+	sg::pSection sec = find_section(_ioh.AddressOfEntryPoint, _sections);
 	if (sec != NULL) {
 		sink << "AddressOfEntryPoint\t\t" << _ioh.AddressOfEntryPoint 
 			 << " (Section: " << *sec->get_name() << ")" << std::endl;
@@ -194,7 +194,7 @@ void PE::dump_section_table(std::ostream& sink, bool compute_hashes) const
 		sink << "Characteristics\t\t";
 		flags = nt::translate_to_flags((*it)->get_characteristics(), nt::SECTION_CHARACTERISTICS);
 		pretty_print_flags(sink, (*it)->get_characteristics(), nt::SECTION_CHARACTERISTICS);
-		sink << "Entropy:\t\t" << utils::shannon_entropy(*(*it)->get_raw_data()) << std::endl;
+		sink << "Entropy:\t\t" << (*it)->get_entropy() << std::endl;
 		sink << std::endl;
 	}
 }
@@ -262,7 +262,7 @@ void PE::dump_resources(std::ostream& sink, bool compute_hashes) const
 		sink << "\tType:\t\t" << *(*it)->get_type() << std::endl;
 		sink << "\tLanguage:\t" << *(*it)->get_language() << std::endl;
 		sink << "\tSize:\t\t0x" << std::hex << (*it)->get_size() << std::endl;
-		sink << "\tEntropy:\t" << utils::shannon_entropy(*(*it)->get_raw_data()) << std::endl;
+		sink << "\tEntropy:\t" << (*it)->get_entropy() << std::endl;
 		yara::const_matches m = (*it)->detect_filetype();
 		if (m->size() > 0) 
 		{

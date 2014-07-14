@@ -162,9 +162,28 @@ public:
 	}
 };
 
+class FindCryptPlugin : public YaraPlugin
+{
+public:
+	FindCryptPlugin() : YaraPlugin("yara_rules/findcrypt.yara") {}
+
+	pResult analyze(const sg::PE& pe) {
+		return scan(pe, "Cryptographic algorithms detected in the binary:", Result::NO_OPINION, "description");
+	}
+
+	boost::shared_ptr<std::string> get_id() { 
+		return boost::shared_ptr<std::string>(new std::string("findcrypt"));
+	}
+
+	boost::shared_ptr<std::string> get_description() { 
+		return boost::shared_ptr<std::string>(new std::string("Detects embedded cryptographic constants."));
+	}
+};
+
 AutoRegister<ClamavPlugin> auto_register_clamav;
 AutoRegister<CompilerDetectionPlugin> auto_register_compiler;
 AutoRegister<PEiDPlugin> auto_register_peid;
 AutoRegister<SuspiciousStringsPlugin> auto_register_strings;
+AutoRegister<FindCryptPlugin> auto_register_findcrypt;
 
 }

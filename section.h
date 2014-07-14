@@ -26,6 +26,7 @@
 
 #include "pe_structs.h"
 #include "color.h"
+#include "utils.h"
 
 #if defined BOOST_WINDOWS_API
 	#ifdef SGPE_EXPORT
@@ -57,7 +58,7 @@ public:
 	 *	@return	A shared vector containing the raw bytes of the section. If an error occurs, the vector
 	 *			will be empty.
 	 */
-	shared_bytes get_raw_data();
+	shared_bytes get_raw_data() const;
 
 	DECLSPEC pString		 get_name()						const { return pString(new std::string(_name)); }
 	DECLSPEC boost::uint32_t get_virtual_size()				const { return _virtual_size; }
@@ -69,6 +70,7 @@ public:
 	DECLSPEC boost::uint32_t get_number_of_relocations()	const { return _number_of_relocations; }
 	DECLSPEC boost::uint32_t get_number_of_line_numbers()	const { return _number_of_line_numbers; }
 	DECLSPEC boost::uint32_t get_characteristics()			const { return _characteristics; }
+	DECLSPEC double			 get_entropy()					const { return utils::shannon_entropy(*get_raw_data()); }
 
 private:
 
@@ -90,6 +92,27 @@ private:
 };
 
 typedef boost::shared_ptr<Section> pSection;
+
+/**
+ *	@brief	Checks whether the address belongs to a section.
+ *
+ *	@param	unsigned int rva The address (RVA) to check.
+ *	@param	sg::pSection section The section in which the address may belong.
+ *	@param	bool check_raw_size Use the SizeOfRawData instead of VirtualSize to determine the bounds of the section.
+ *
+ *	@return	Whether the RVA is between the bounds of the section.
+ */
+bool DECLSPEC is_address_in_section(boost::uint64_t rva, sg::pSection section, bool check_raw_size = false);
+
+/**
+ *	@brief	Finds the section containing a given RVA.
+ *
+ *	@param	unsigned int rva The address whose section we want to identify.
+ *	@param	const std::vector<sg::pSection>& section_list A list of all the sections of the PE.
+ *
+ *	@return	A pointer to the section containing the input address. NULL if no sections match.
+ */
+sg::pSection DECLSPEC find_section(unsigned int rva, const std::vector<sg::pSection>& section_list);
 
 } // !namespace sg
 

@@ -71,8 +71,15 @@ public:
 					res->add_information(ss.str());
 				}
 			}
-
-			// Calculate resource entropy
+			else 
+			{
+				if ((*it)->get_entropy() > 7.) 
+				{
+					std::stringstream ss;
+					ss << "Resource " << *(*it)->get_name() << " is possibly compressed or encrypted.";
+					res->add_information(ss.str());
+				}
+			}
 		}
 
 		float ratio = (float) size / (float) pe.get_filesize();

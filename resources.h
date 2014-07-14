@@ -29,6 +29,8 @@
 
 #include "yara/yara_wrapper.h"
 
+#include "utils.h"
+
 namespace sg
 {
 
@@ -79,6 +81,9 @@ public:
 	DECLSPEC boost::uint32_t	get_codepage()	const { return _codepage; }
 	DECLSPEC boost::uint32_t	get_size()		const { return _size; }
 	DECLSPEC boost::uint32_t	get_id()		const { return _id; }
+	DECLSPEC double				get_entropy()	const { 
+		return utils::shannon_entropy(*get_raw_data()); 
+	}
 	DECLSPEC pString			get_name()		const
 	{
 		if (_name != "") {
@@ -98,7 +103,7 @@ public:
 	 *	@return	A vector containing the read bytes. Its size may be 0 if
 	 *			the resource could not be read.
 	 */
-	DECLSPEC shared_bytes get_raw_data();
+	DECLSPEC shared_bytes get_raw_data() const;
 	
 	/**
 	 *	@brief	Interprets the resource as a given type.
@@ -143,7 +148,7 @@ private:
 	 *
 	 *	@return	A file object with its cursor correctly set, or NULL if there was an error.
 	 */
-	FILE* _reach_data();
+	FILE* _reach_data() const;
 };
 typedef boost::shared_ptr<Resource> pResource;
 

@@ -74,11 +74,8 @@ void* PE::operator new(size_t size)
 
 // ----------------------------------------------------------------------------
 
-void PE::operator delete(void* p)
-{
-	if (p != NULL) {
-		free(p);
-	}
+void PE::operator delete(void* p) {
+	free(p);
 }
 
 
@@ -283,7 +280,7 @@ unsigned int PE::_rva_to_offset(boost::uint64_t rva) const
 	pSection section = pSection();
 	for (std::vector<pSection>::const_iterator it = _sections.begin() ; it != _sections.end() ; ++it)
 	{
-		if (utils::is_address_in_section(rva, *it))
+		if (is_address_in_section(rva, *it))
 		{
 			section = *it;
 			break;
@@ -295,7 +292,7 @@ unsigned int PE::_rva_to_offset(boost::uint64_t rva) const
 		// No section found. Maybe the VirsualSize is erroneous? Try with the RawSizeOfData.
 		for (std::vector<pSection>::const_iterator it = _sections.begin() ; it != _sections.end() ; ++it)
 		{
-			if (utils::is_address_in_section(rva, *it, true))
+			if (is_address_in_section(rva, *it, true))
 			{
 				section = *it;
 				break;

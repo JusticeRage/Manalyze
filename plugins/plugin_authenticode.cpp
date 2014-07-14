@@ -269,9 +269,7 @@ void get_publisher_information(PCMSG_SIGNER_INFO info, pResult result)
 	}
 
 	END:
-	if (opus != NULL) {
-		free(opus);
-	}
+	free(opus);
 }
 
 // ----------------------------------------------------------------------------
@@ -334,9 +332,7 @@ void GetCertNameString_wrapper(PCCERT_CONTEXT context, DWORD type, DWORD flags, 
 	result->add_information(ss.str());
 
 END:
-	if (name != NULL) {
-		free(name);
-	}
+	free(name);
 }
 
 // ----------------------------------------------------------------------------
@@ -470,9 +466,7 @@ void get_certificate_timestamp(PCMSG_SIGNER_INFO info, pResult result)
 	}
 
 	END:
-	if (cs_info != NULL) {
-		free(cs_info);
-	}
+	free(cs_info);
 }
 
 // ----------------------------------------------------------------------------
@@ -535,9 +529,8 @@ void get_certificate_info(const std::wstring& file_path, pResult result)
 	get_certificate_timestamp(info, result);
 
 	END:
-	if (info != NULL) {
-		free(info);
-	}
+	free(info);
+
 	if (hStore != NULL) {
 		::CertCloseStore(hStore, 0);
 	}

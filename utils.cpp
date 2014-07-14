@@ -127,48 +127,6 @@ std::string uint64_to_version_number(boost::uint32_t msbytes, boost::uint32_t ls
 
 // ----------------------------------------------------------------------------
 
-bool is_address_in_section(boost::uint64_t rva, sg::pSection section, bool check_raw_size)
-{
-	if (!check_raw_size) {
-		return section->get_virtual_address() <= rva && rva < section->get_virtual_address() + section->get_virtual_size();
-	}
-	else {
-		return section->get_virtual_address() <= rva && rva < section->get_virtual_address() + section->get_size_or_raw_data();
-	}
-}
-
-// ----------------------------------------------------------------------------
-
-sg::pSection find_section(unsigned int rva, const std::vector<sg::pSection>& section_list)
-{
-	sg::pSection res = sg::pSection();
-	std::vector<sg::pSection>::const_iterator it;
-	for (it = section_list.begin() ; it != section_list.end() ; ++it)
-	{
-		if (is_address_in_section(rva, *it)) 
-		{
-			res = *it;
-			break;
-		}
-	}
-
-	if (!res) // VirtualSize may be erroneous. Check with RawSizeofData.
-	{
-		for (it = section_list.begin() ; it != section_list.end() ; ++it)
-		{
-			if (is_address_in_section(rva, *it, true)) 
-			{
-				res = *it;
-				break;
-			}
-		}
-	}
-
-	return res;
-}
-
-// ----------------------------------------------------------------------------
-
 std::string timestamp_to_string(boost::uint64_t epoch_timestamp)
 {
 	static std::locale loc(std::cout.getloc(), new boost::posix_time::time_facet("%Y-%b-%d %H:%M:%S%F %z"));

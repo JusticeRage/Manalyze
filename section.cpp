@@ -42,7 +42,7 @@ Section::Section(const image_section_header& header, const std::string& path)
 
 // ----------------------------------------------------------------------------
 
-shared_bytes Section::get_raw_data()
+shared_bytes Section::get_raw_data() const
 {
 	boost::shared_ptr<std::vector<boost::uint8_t> > res(new std::vector<boost::uint8_t>());
 	if (_size_of_raw_data == 0)
@@ -69,4 +69,46 @@ shared_bytes Section::get_raw_data()
 	return res;
 }
 
+// ----------------------------------------------------------------------------
+
+bool is_address_in_section(boost::uint64_t rva, sg::pSection section, bool check_raw_size)
+{
+	if (!check_raw_size) {
+		return section->get_virtual_address() <= rva && rva < section->get_virtual_address() + section->get_virtual_size();
+	}
+	else {
+		return section->get_virtual_address() <= rva && rva < section->get_virtual_address() + section->get_size_or_raw_data();
+	}
 }
+
+// ----------------------------------------------------------------------------
+
+sg::pSection find_section(unsigned int rva, const std::vector<sg::pSection>& section_list)
+{
+	sg::pSection res = sg::pSection();
+	std::vector<sg::pSection>::const_iterator it;
+	for (it = section_list.begin() ; it != section_list.end() ; ++it)
+	{
+		if (is_address_in_section(rva, *it)) 
+		{
+			res = *it;
+			break;
+		}
+	}
+
+	if (!res) // VirtualSize may be erroneous. Check with RawSizeofData.
+	{
+		for (it = section_list.begin() ; it != section_list.end() ; ++it)
+		{
+			if (is_address_in_section(rva, *it, true)) 
+			{
+				res = *it;
+				break;
+			}
+		}
+	}
+
+	return res;
+}
+
+} // !namespace sg

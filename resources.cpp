@@ -268,7 +268,7 @@ bool PE::_parse_debug(FILE* f)
 
 // ----------------------------------------------------------------------------
 
-shared_bytes Resource::get_raw_data()
+shared_bytes Resource::get_raw_data() const
 {
 	boost::shared_ptr<std::vector<boost::uint8_t> > res(new std::vector<boost::uint8_t>());
 	
@@ -599,7 +599,7 @@ DECLSPEC shared_bytes Resource::interpret_as() {
 
 // ----------------------------------------------------------------------------
 
-FILE* Resource::_reach_data()
+FILE* Resource::_reach_data() const
 {
 	FILE* f = fopen(_path_to_pe.c_str(), "rb");
 	if (f == NULL) { // File has moved, or is already in use.
