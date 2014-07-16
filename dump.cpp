@@ -135,7 +135,7 @@ void PE::dump_image_optional_header(std::ostream& sink) const
 	sink << "BaseOfCode\t\t\t" << _ioh.BaseOfCode << std::endl;
 
 	// Field absent from PE32+ headers.
-	if (_ioh.Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC["PE32"]) {
+	if (_ioh.Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32")) {
 		sink << "BaseOfData\t\t\t" << _ioh.BaseOfData << std::endl;
 	}
 
@@ -315,10 +315,10 @@ void PE::dump_version_info(std::ostream& sink) const
 			sink << "\tFileOS:\t\t";
 			pretty_print_flags(sink, vi->Value->FileOs, nt::FIXEDFILEINFO_FILEOS);
 			sink << "\tFileType:\t" << nt::translate_to_flag(vi->Value->FileType, nt::FIXEDFILEINFO_FILETYPE) << std::endl;
-			if (vi->Value->FileType == nt::FIXEDFILEINFO_FILETYPE["VFT_DRV"]) {
+			if (vi->Value->FileType == nt::FIXEDFILEINFO_FILETYPE.at("VFT_DRV")) {
 				sink << "\tFileSubtype\t"<< nt::translate_to_flag(vi->Value->FileSubtype, nt::FIXEDFILEINFO_FILESUBTYPE_DRV) << std::endl;
 			}
-			else if (vi->Value->FileType == nt::FIXEDFILEINFO_FILETYPE["VFT_FONT"]) {
+			else if (vi->Value->FileType == nt::FIXEDFILEINFO_FILETYPE.at("VFT_FONT")) {
 				sink << "\tFileSubtype\t"<< nt::translate_to_flag(vi->Value->FileSubtype, nt::FIXEDFILEINFO_FILESUBTYPE_FONT) << std::endl;
 			}
 			sink << "\tLanguage:\t" << vi->Language << std::endl << std::endl;
@@ -391,7 +391,7 @@ void PE::dump_tls(std::ostream& sink) const
 		return;
 	}
 
-	int width = _ioh.Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC["PE32+"] ? 16 : 8;
+	int width = _ioh.Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32+") ? 16 : 8;
 
 	sink << "TLS Callbacks:" << std::endl << "--------------" << std::endl;
 	sink << "StartAddressOfRawData:\t" << _tls.StartAddressOfRawData << std::endl;
@@ -470,6 +470,11 @@ void PE::dump_summary(std::ostream& sink) const
 		if ((*it)->Filename != "") {
 			debug_files.insert((*it)->Filename);
 		}
+	}
+
+	// Inform the user if some COFF debug information is present
+	if (_h_pe.NumberOfSymbols > 0 && _h_pe.PointerToSymbolTable != 0) {
+		debug_files.insert("Embedded COFF debugging symbols");
 	}
 
 	sink << "File:\t\t\t" << _path << std::endl;

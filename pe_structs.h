@@ -164,6 +164,17 @@ typedef struct image_export_directory_t
 } image_export_directory;
 typedef boost::shared_ptr<image_export_directory> pexport_image_directory;
 
+typedef struct coff_symbol_t
+{
+	boost::uint8_t  Name[8];
+	boost::uint32_t	Value;
+	boost::uint16_t	SectionNumber;
+	boost::uint16_t	Type;
+	boost::uint8_t	StorageClass;
+	boost::uint8_t	NumberOfAuxSymbols;
+} coff_symbol;
+typedef boost::shared_ptr<coff_symbol> pcoff_symbol;
+
 // Not a standard Windows structure, but useful when it comes to representing exports.
 typedef struct exported_function_t
 {

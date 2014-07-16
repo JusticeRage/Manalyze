@@ -217,7 +217,7 @@ bool PE::_parse_debug(FILE* f)
 		}
 
 		// VC++ Debug information
-		if (debug->Type == nt::DEBUG_TYPES["IMAGE_DEBUG_TYPE_CODEVIEW"])
+		if (debug->Type == nt::DEBUG_TYPES.at("IMAGE_DEBUG_TYPE_CODEVIEW"))
 		{
 			pdb_info pdb;
 			unsigned int pdb_size = 2*sizeof(boost::uint32_t) + 16*sizeof(boost::uint8_t);
@@ -236,7 +236,7 @@ bool PE::_parse_debug(FILE* f)
 			debug->Filename = pdb.PdbFileName;
 			fseek(f, saved_offset, SEEK_SET);
 		}
-		else if (debug->Type == nt::DEBUG_TYPES["IMAGE_DEBUG_TYPE_MISC"])
+		else if (debug->Type == nt::DEBUG_TYPES.at("IMAGE_DEBUG_TYPE_MISC"))
 		{
 			image_debug_misc misc;
 			unsigned int misc_size = 2*sizeof(boost::uint32_t) + 4*sizeof(boost::uint8_t);

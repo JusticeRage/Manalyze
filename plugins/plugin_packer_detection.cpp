@@ -22,6 +22,8 @@
 #include "plugin_framework/plugin_interface.h"
 #include "plugin_framework/auto_register.h"
 
+#include "nt_values.h"
+
 namespace plugin {
 
 class PackerDetectionPlugin : public IPlugin
@@ -49,9 +51,8 @@ public:
 																	  (".edata")
 																	  (".pdata")
 																	  (".reloc")
-																	  (".bss");
-
-		bool suspicious = false;
+																	  (".bss")
+																	  (".tls");
 
 		sg::shared_sections sections = pe.get_sections();
 		for (sg::shared_sections::element_type::const_iterator it = sections->begin() ; it != sections->end() ; ++it)
@@ -61,7 +62,17 @@ public:
 				std::stringstream ss;
 				ss << "Unusual section name found: " << *(*it)->get_name();
 				res->add_information(ss.str());
-				suspicious = true;
+				res->raise_level(Result::SUSPICIOUS);
+			}
+
+			int characteristics = (*it)->get_characteristics();
+			if (characteristics & nt::SECTION_CHARACTERISTICS.at("IMAGE_SCN_MEM_EXECUTE") &&
+				characteristics & nt::SECTION_CHARACTERISTICS.at("IMAGE_SCN_MEM_WRITE"))
+			{
+				std::stringstream ss;
+				ss << "Section " << *(*it)->get_name() << " is both writable and executable.";
+				res->add_information(ss.str());
+				res->raise_level(Result::SUSPICIOUS);
 			}
 		}
 
@@ -74,12 +85,10 @@ public:
 			std::stringstream ss;
 			ss << "The PE only has " << imports->size() << " import(s).";
 			res->add_information(ss.str());
-			suspicious = true;
+			res->raise_level(Result::SUSPICIOUS);
 		}
 
-		if (suspicious)
-		{
-			res->set_level(Result::SUSPICIOUS);
+		if (res->get_level() != Result::NO_OPINION) {
 			res->set_summary("The PE is possibly packed.");
 		}
 

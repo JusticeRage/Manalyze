@@ -42,13 +42,13 @@
 #include "section.h"	// Definition of the Section class
 #include "color.h"		// Allows changing the font color in the terminal
 
-#if defined BOOST_WINDOWS_API
+#if defined BOOST_WINDOWS_API && !defined DECLSPEC
 	#ifdef SGPE_EXPORT
 		#define DECLSPEC    __declspec(dllexport)
 	#else
 		#define DECLSPEC    __declspec(dllimport)
 	#endif
-#else
+#elif !defined BOOST_WINDOWS_API && !defined DECLSPEC
 	#define DECLSPEC
 #endif
 
@@ -212,6 +212,12 @@ private:
 	bool _parse_pe_header(FILE* f);
 
 	/**
+	 * Reads the (optional) PE COFF symbols of an executable.
+	 * /!\ This relies on the information gathered in _parse_pe_header.
+	 */
+	bool _parse_coff_symbols(FILE* f);
+
+	/**
 	 *	@brief	Parses the IMAGE_OPTIONAL_HEADER structure of a PE.
 	 *	/!\ This relies on the information gathered in _parse_pe_header.
 	 */
@@ -356,6 +362,8 @@ private:
 	dos_header								_h_dos;
 	pe_header								_h_pe;
 	image_optional_header					_ioh;
+	std::vector<pcoff_symbol>				_coff_symbols;		// This debug information is parsed (crudely) but
+	std::vector<pString>					_coff_string_table;	// not displayed, because that's IDA's job.
 	std::vector<pSection>					_sections;
 	std::vector<pimage_library_descriptor>	_imports;
 	image_export_directory					_ied;

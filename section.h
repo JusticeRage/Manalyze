@@ -47,7 +47,17 @@ class Section
 {
 
 public:
-	Section(const image_section_header& header, const std::string& path);
+	/**
+	 *	@brief	Create a Section object from a raw image_section_header structure.
+	 *
+	 *	@param	const image_section_header& header The structure on which the section will be based.
+	 *	@param	const std::string& path The path to the PE (in order to be able to access the section bytes)
+	 *	@param	const std::vector<pString>& coff_string_table An optional COFF string table, in case section
+	 *			names are located in it.
+	 */
+	Section(const image_section_header& header, 
+		    const std::string& path, 
+			const std::vector<pString>& coff_string_table = std::vector<pString>());
 
 	/**
 	 *	@brief	Returns the raw bytes of the section.

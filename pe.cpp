@@ -36,6 +36,9 @@ PE::PE(const std::string& path)
 		goto END;
 	}
 
+	// Failure is acceptable for COFF symbols.
+	_parse_coff_symbols(f);
+
 	if (!_parse_image_optional_header(f)) {
 		goto END;
 	}
@@ -143,6 +146,46 @@ bool PE::_parse_pe_header(FILE* f)
 
 // ----------------------------------------------------------------------------
 
+bool PE::_parse_coff_symbols(FILE* f)
+{
+	if (_h_pe.NumberOfSymbols == 0 || _h_pe.PointerToSymbolTable == 0) {
+		return true;
+	}
+
+	if (fseek(f, _h_pe.PointerToSymbolTable, SEEK_SET))
+	{
+		PRINT_ERROR << "Could not reach PE COFF symbols (fseek to offset " <<  _h_pe.PointerToSymbolTable << " failed)." << std::endl;
+		return false;
+	}
+
+	for (unsigned int i = 0 ; i < _h_pe.NumberOfSymbols ; ++i)
+	{
+		pcoff_symbol sym = pcoff_symbol(new coff_symbol);
+		memset(sym.get(), 0, sizeof(pcoff_symbol));
+		if (18 != fread(sym.get(), 1, 18, f)) // Each symbol has a fixed size of 18 bytes.
+		{
+			PRINT_ERROR << "Could not read a COFF symbol." << std::endl;
+			return false;
+		}
+		_coff_symbols.push_back(sym);
+	}
+
+	// Read the COFF string table
+	boost::uint32_t st_size = 0;
+	boost::uint32_t count = 0;
+	fread(&st_size, 4, 1, f);
+	while (count < st_size)
+	{
+		pString s = pString(new std::string(utils::read_ascii_string(f)));
+		_coff_string_table.push_back(s);
+		count += s->size() + 1; // Count the null terminator as well.
+	}
+
+	return true;
+}
+
+// ----------------------------------------------------------------------------
+
 bool PE::_parse_image_optional_header(FILE* f)
 {
 	memset(&_ioh, 0, sizeof(_ioh));
@@ -167,12 +210,12 @@ bool PE::_parse_image_optional_header(FILE* f)
 		return false;
 	}
 
-	if (_ioh.Magic != nt::IMAGE_OPTIONAL_HEADER_MAGIC["PE32"] && _ioh.Magic != nt::IMAGE_OPTIONAL_HEADER_MAGIC["PE32+"])
+	if (_ioh.Magic != nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32") && _ioh.Magic != nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32+"))
 	{
 		PRINT_ERROR << "Invalid Image Optional Header magic." << std::endl;
 		return false;
 	}
-	else if (_ioh.Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC["PE32"])
+	else if (_ioh.Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32"))
 	{
 		if (4 != fread(&_ioh.BaseOfData, 1, 4, f) || 4 != fread(&_ioh.ImageBase, 1, 4, f)) 
 		{
@@ -199,7 +242,7 @@ bool PE::_parse_image_optional_header(FILE* f)
 
 	// The next 4 values may be uint32s or uint64s depending on whether this is a PE32+ header.
 	// We store them in uint64s in any case.
-	if (_ioh.Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC["PE32+"])
+	if (_ioh.Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32+"))
 	{
 		if (40 != fread(&_ioh.SizeofStackReserve, 1, 40, f))
 		{
@@ -261,7 +304,7 @@ bool PE::_parse_section_table(FILE* f)
 			PRINT_ERROR << "Could not read section " << i << "." << std::endl;
 			return false;
 		}
-		_sections.push_back(pSection(new Section(sec, _path)));
+		_sections.push_back(pSection(new Section(sec, _path, _coff_string_table)));
 	}
 
 	return true;
@@ -518,7 +561,7 @@ bool PE::_parse_tls(FILE* f)
 	unsigned int size = 4*sizeof(boost::uint64_t) + 2*sizeof(boost::uint32_t);
 	memset(&_tls, 0, size);
 
-	if (_ioh.Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC["PE32+"]) {
+	if (_ioh.Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32+")) {
 		fread(&_tls, 1, size, f);
 	}
 	else
@@ -545,7 +588,7 @@ bool PE::_parse_tls(FILE* f)
 	}
 
 	boost::uint64_t callback_address = 0;
-	unsigned int callback_size = _ioh.Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC["PE32+"] ? sizeof(boost::uint64_t) : sizeof(boost::uint32_t);
+	unsigned int callback_size = _ioh.Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32+") ? sizeof(boost::uint64_t) : sizeof(boost::uint32_t);
 	while (true) // break on null callback
 	{
 		if (callback_size != fread(&callback_address, 1, callback_size, f) || !callback_address) { // Exit condition.

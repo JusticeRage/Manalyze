@@ -20,7 +20,9 @@
 namespace sg 
 {
 
-Section::Section(const image_section_header& header, const std::string& path)	
+Section::Section(const image_section_header& header, 
+				 const std::string& path, 
+				 const std::vector<pString>& coff_string_table)	
 	  : _virtual_size(header.VirtualSize),
 		_virtual_address(header.VirtualAddress),
 		_size_of_raw_data(header.SizeOfRawData),
@@ -33,10 +35,20 @@ Section::Section(const image_section_header& header, const std::string& path)
 		_path(path)
 {
 	_name = std::string((char*) header.Name);
-	// TODO: If the name starts with a slash, then it is followed by an index into the StringTable
-	// which is the actual section name. Does it ever happen, though?
-	if (_name.size() > 0 && _name[0] == '/') {
-		PRINT_WARNING << "The actual section name of " << _name << " has not been retrieved!";
+
+	if (_name.size() > 0 && _name[0] == '/') 
+	{
+		std::stringstream ss;
+		unsigned int index;
+		ss << header.Name + 1; // Skip the trailing "/"
+		ss >> index;
+
+		if (index >= coff_string_table.size()) {
+			PRINT_WARNING << "Tried to read outside the COFF string table to get the name of section " << _name << "!" << std::endl;
+		}
+		else {
+			_name = *coff_string_table[index];
+		}
 	}
 }
 
