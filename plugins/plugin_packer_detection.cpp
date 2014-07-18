@@ -31,11 +31,11 @@ class PackerDetectionPlugin : public IPlugin
 public:
 	int get_api_version() { return 1; }
 	
-	pString get_id() { 
+	pString get_id() const { 
 		return pString(new std::string("packer"));
 	}
 
-	pString get_description() { 
+	pString get_description() const { 
 		return pString(new std::string("Tries to structurally detect packer presence."));
 	}
 

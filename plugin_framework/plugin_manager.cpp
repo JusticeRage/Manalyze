@@ -92,4 +92,10 @@ void PluginManager::unload_all() {
 	_plugins.clear();
 }
 
+// ----------------------------------------------------------------------------
+
+bool name_matches(const std::string& s, pIPlugin p) {
+	return *p == s;
+}
+
 } // !namespace plugin

@@ -37,6 +37,7 @@ class IPlugin
 {
 public:
 	virtual ~IPlugin() {}
+	bool operator==(const std::string& s) const { return s == *get_id(); }
 
 	/**
 	 *	@brief	Performs the analysis of the PE.
@@ -63,7 +64,7 @@ public:
 	 *	@return	The ID of the plugin, as a shared pointer since it may
 	 *			cross shared object boundaries.
 	 */
-	virtual boost::shared_ptr<std::string> get_id() = 0;
+	virtual boost::shared_ptr<std::string> get_id() const = 0;
 
 	/**
 	 *	@brief	Returns the description of the plugin.
@@ -71,7 +72,7 @@ public:
 	 *	@return	The description of the plugin, as a shared pointer since it may
 	 *			cross shared object boundaries.
 	 */
-	virtual boost::shared_ptr<std::string> get_description() = 0;
+	virtual boost::shared_ptr<std::string> get_description() const = 0;
 };
 
 typedef boost::shared_ptr<IPlugin> pIPlugin;

@@ -32,7 +32,7 @@ class Plugin
 {
 public:
 	Plugin() {}
-	virtual ~Plugin() {}
+	virtual ~Plugin() {}	
 
 	/**
 	 *	@brief	Creates an instance of the underlying plugin implementation.

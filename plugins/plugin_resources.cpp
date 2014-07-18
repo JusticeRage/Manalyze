@@ -30,11 +30,11 @@ class ResourcesPlugin : public IPlugin
 public:
 	int get_api_version() { return 1; }
 	
-	pString get_id() { 
+	pString get_id() const { 
 		return pString(new std::string("resources"));
 	}
 
-	pString get_description() { 
+	pString get_description() const {
 		return pString(new std::string("Analyzes the program's resources."));
 	}
 

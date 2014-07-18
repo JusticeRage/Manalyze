@@ -493,6 +493,10 @@ void PE::dump_summary(std::ostream& sink) const
 		}
 	}
 
+	if (_tls.Callbacks.size() > 0) {
+		sink << "TLS Callbacks:\t\t" << _tls.Callbacks.size() << " detected" << std::endl;
+	}
+
 	if (debug_files.size() > 0) 
 	{
 		sink << "Debug artifacts:\t";

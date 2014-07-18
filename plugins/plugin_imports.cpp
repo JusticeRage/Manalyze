@@ -49,8 +49,6 @@ std::string packer_api = "VirtualAlloc|VirtualProtect";
 
 std::string temporary_files = "GetTempPath(A|W)|(Create|Write)File(A|W)";
 
-std::string misc_suspicious_functions = "SetFileTime";
-
 /**
  *	@brief	Checks the presence of some functions in the PE and updates the 
  *			result accordingly.
@@ -88,11 +86,11 @@ class ImportsPlugin : public IPlugin
 public:
 	int get_api_version() { return 1; }
 	
-	pString get_id() { 
+	pString get_id() const { 
 		return pString(new std::string("imports"));
 	}
 
-	pString get_description() { 
+	pString get_description() const { 
 		return pString(new std::string("Looks for suspicious imports."));
 	}
 
@@ -113,7 +111,6 @@ public:
 		check_functions(pe, raw_socket_api, Result::SUSPICIOUS, "Leverages the raw socket API to access the Internet", AT_LEAST_ONE, res);
 		check_functions(pe, wininet_api, Result::NO_OPINION, "Has Internet access capabilities", AT_LEAST_ONE, res);
 		check_functions(pe, privilege_api, Result::MALICIOUS, "Functions related to the privilege level", AT_LEAST_ONE, res);
-		check_functions(pe, misc_suspicious_functions, Result::NO_OPINION, "Functions which may be used maliciously", AT_LEAST_ONE, res);
 
 		switch (res->get_level())
 		{

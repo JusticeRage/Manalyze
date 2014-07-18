@@ -27,6 +27,7 @@
 #include "utils.h"
 
 #include "plugin_framework/plugin_interface.h"
+#include "yara/yara_wrapper.h"
 
 /*
  * (1) I wish I could have implemented this in a platform-independent fashion.
@@ -71,6 +72,17 @@ void make_information(const std::string& type, const std::wstring& data, pResult
 }
 
 /**
+ *	@brief	Looks for well-known company names in the RT_VERSION resource of the PE.
+ *
+ *	The idea behind this check is that if the binary is unsigned but pretends to come from
+ *	Microsoft, Adobe, etc. then it is very likely a malware.
+ *
+ *	@param	const sg::PE& pe The PE to analyze.
+ *	@param	pResult res The result to update if something is found.
+ */
+void check_version_info(const sg::PE& pe, pResult res);
+
+/**
  *	@brief	This plugin uses the Windows API to verify the digital signature of a PE.
  */
 class AuthenticodePlugin : public IPlugin
@@ -78,11 +90,11 @@ class AuthenticodePlugin : public IPlugin
 public:
 	int get_api_version() { return 1; }
 
-	pString get_id() { 
+	pString get_id() const { 
 		return pString(new std::string("authenticode"));
 	}
 
-	pString get_description() { 
+	pString get_description() const { 
 		return pString(new std::string("Checks if the digital signature (authenticode) of the PE is valid."));
 	}
 
@@ -146,17 +158,16 @@ public:
 				break;
 		}
 
-		if (res->get_level() != Result::NO_OPINION)
-		{
+		if (res->get_level() != Result::NO_OPINION) {
 			get_certificate_info(wide_path, res);
+		}
+		else { // No certificate: try to determine if the application should be signed.
+			check_version_info(pe, res);
 		}
 
 		// Close a handle that was opened by the verification
 		data.dwStateAction = WTD_STATEACTION_CLOSE;
 		::WinVerifyTrust(0, &guid_verify, &data);
-
-		// TODO: Look for corporation names in the RT_VERSION resource (Google, Microsoft, Adobe, Apple, Oracle......)
-		// Flag as malicious if the binary isn't signed.
 
 		return res;
 	}
@@ -536,6 +547,48 @@ void get_certificate_info(const std::wstring& file_path, pResult result)
 	}
 	if (hMsg != NULL) {
 		::CryptMsgClose(hMsg);
+	}
+}
+
+// ----------------------------------------------------------------------------
+
+void check_version_info(const sg::PE& pe, pResult res)
+{
+	// Find the VERSION_INFO resource
+	sg::shared_resources resources = pe.get_resources();
+	sg::pResource version_info;
+	for (sg::shared_resources::element_type::const_iterator it = resources->begin() ; it != resources->end() ; ++it)
+	{
+		if (*(*it)->get_type() == "RT_VERSION") 
+		{
+			version_info = *it;
+			break;
+		}
+	}
+
+	// No RT_VERSION resource, we're done.
+	if (!version_info) {
+		return;
+	}
+
+	yara::Yara y;
+	if (!y.load_rules("yara_rules/company_names.yara")) 
+	{
+		std::cerr << "Could not load company_names.yara!" << std::endl;
+		return;
+	}
+	yara::const_matches m = y.scan_bytes(*version_info->get_raw_data());
+	if (m->size() > 0)
+	{
+		std::stringstream ss;
+		std::set<std::string> found_strings = m->at(0)->get_found_strings();
+		if (found_strings.size() > 0)
+		{
+			ss << "PE pretends to be from " << *(m->at(0)->get_found_strings().begin()) 
+				<< " but is not signed!";
+			res->set_summary(ss.str());
+			res->raise_level(Result::MALICIOUS);
+		}
 	}
 }
 

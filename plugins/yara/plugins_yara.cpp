@@ -98,11 +98,11 @@ public:
 		return scan(pe, "Matching ClamAV signature(s):", Result::MALICIOUS, "signature");
 	}
 
-	pString get_id() { 
+	pString get_id() const { 
 		return pString (new std::string("clamav"));
 	}
 
-	pString  get_description() { 
+	pString  get_description() const { 
 		return pString (new std::string("Scans the binary with ClamAV virus definitions."));
 	}
 };
@@ -116,11 +116,11 @@ public:
 		return scan(pe, "Matching compiler(s):", Result::NO_OPINION, "description");
 	}
 
-	boost::shared_ptr<std::string> get_id() { 
+	boost::shared_ptr<std::string> get_id() const { 
 		return boost::shared_ptr<std::string>(new std::string("compilers"));
 	}
 
-	boost::shared_ptr<std::string> get_description() { 
+	boost::shared_ptr<std::string> get_description() const { 
 		return boost::shared_ptr<std::string>(new std::string("Tries to determine which compiler generated the binary."));
 	}
 };
@@ -134,11 +134,11 @@ public:
 		return scan(pe, "PEiD Signature:", Result::SUSPICIOUS, "packer_name");
 	}
 
-	boost::shared_ptr<std::string> get_id() { 
+	boost::shared_ptr<std::string> get_id() const { 
 		return boost::shared_ptr<std::string>(new std::string("peid"));
 	}
 
-	boost::shared_ptr<std::string> get_description() { 
+	boost::shared_ptr<std::string> get_description() const { 
 		return boost::shared_ptr<std::string>(new std::string("Returns the PEiD signature of the binary."));
 	}
 };
@@ -153,11 +153,11 @@ public:
 		return scan(pe, "Strings found in the binary may indicate undesirable behavior:", Result::SUSPICIOUS, "description", true);
 	}
 
-	boost::shared_ptr<std::string> get_id() { 
+	boost::shared_ptr<std::string> get_id() const { 
 		return boost::shared_ptr<std::string>(new std::string("strings"));
 	}
 
-	boost::shared_ptr<std::string> get_description() { 
+	boost::shared_ptr<std::string> get_description() const{ 
 		return boost::shared_ptr<std::string>(new std::string("Looks for suspicious strings (anti-VM, process names...)."));
 	}
 };
@@ -167,15 +167,32 @@ class FindCryptPlugin : public YaraPlugin
 public:
 	FindCryptPlugin() : YaraPlugin("yara_rules/findcrypt.yara") {}
 
-	pResult analyze(const sg::PE& pe) {
-		return scan(pe, "Cryptographic algorithms detected in the binary:", Result::NO_OPINION, "description");
+	pResult analyze(const sg::PE& pe) 
+	{
+		pResult res = scan(pe, "Cryptographic algorithms detected in the binary:", Result::NO_OPINION, "description");
+
+		// Look for common cryptography libraries
+		if (pe.find_imports(".*", "libssl(32)?.dll|libcrypto.dll")->size() > 0) {
+			res->add_information("Imports functions from OpenSSL.");
+		}
+		if (pe.find_imports(".*", "cryptopp.dll")->size() > 0) {
+			res->add_information("Imports functions from Crypto++");
+		}
+		if (pe.find_imports(".*", "botan.dll")->size() > 0) {
+			res->add_information("Imports functions from Botan");
+		}
+		if (pe.find_imports("Crypt(.*)")->size() > 0) {
+			res->add_information("Uses Microsoft's Cryptographic API");
+		}
+
+		return res;
 	}
 
-	boost::shared_ptr<std::string> get_id() { 
+	boost::shared_ptr<std::string> get_id() const { 
 		return boost::shared_ptr<std::string>(new std::string("findcrypt"));
 	}
 
-	boost::shared_ptr<std::string> get_description() { 
+	boost::shared_ptr<std::string> get_description() const { 
 		return boost::shared_ptr<std::string>(new std::string("Detects embedded cryptographic constants."));
 	}
 };

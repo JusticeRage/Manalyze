@@ -162,6 +162,16 @@ private:
 
 };
 
+/**
+ *	@brief	Predicate used for std::find_if, to find plugins matching a requested id.
+ *
+ *	@param	const std::string& s The name of the plugin to locate.
+ *	@param	pIPlugin p The plugin to test.
+ *
+ *	@return	Whether the plugin's ID matches the requested one.
+ */
+bool name_matches(const std::string& s, pIPlugin p);
+
 } // !namespace plugin
 
 #endif // !_PLUGIN_MANAGER_H_

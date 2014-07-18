@@ -24,6 +24,15 @@
 #include <boost/program_options.hpp>
 #include <boost/tokenizer.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/system/api_config.hpp>
+#include <boost/assign/list_of.hpp>
+
+#ifdef BOOST_WINDOWS_API
+# include <direct.h>
+# define chdir _chdir
+#else
+# include <unistd.h>
+#endif
 
 #include "plugin_framework/plugin_manager.h"
 #include "yara/yara_wrapper.h"
@@ -33,6 +42,7 @@
 #include "color.h"
 
 namespace po = boost::program_options;
+namespace bfs = boost::filesystem;
 
 /**
  *	@brief	Prints the help message of the program.
@@ -58,8 +68,8 @@ void print_help(po::options_description& desc, const std::string& argv_0)
 	}
 	std::cout << std::endl;
 
-	std::string filename = boost::filesystem::basename(argv_0);
-	std::string extension = boost::filesystem::extension(argv_0);
+	std::string filename = bfs::basename(argv_0);
+	std::string extension = bfs::extension(argv_0);
 	if (extension != "") {
 		filename += extension;
 	}
@@ -68,67 +78,7 @@ void print_help(po::options_description& desc, const std::string& argv_0)
 	std::cout << "  " << filename << " program.exe" << std::endl;
 	std::cout << "  " << filename << " -dresources -dexports -x out/ program.exe" << std::endl;
 	std::cout << "  " << filename << " --dump=imports,sections --hashes program.exe" << std::endl;
-	std::cout << "  " << filename << " -r malwares/ --plugins=peid,clamav --dump=all" << std::endl;
-}
-
-/**
- *	@brief	Parses and validates the command line options of the application.
- *
- *	@param	po::variables_map& vm The destination for parsed arguments
- *	@param	int argc The number of arguments
- *	@param	char**argv The raw arguments
- *
- *	@return	Whether the arguments are valid.
- */
-bool parse_args(po::variables_map& vm, int argc, char**argv)
-{
-	po::options_description desc("Usage");
-	desc.add_options()
-		("help,h", "Displays this message.")
-		("pe,p", po::value<std::vector<std::string> >(), "The PE to analyze. Also accepted as a positional argument. "
-			"Multiple files may be specified.")
-		("recursive,r", "Scan all files in a directory (subdirectories will be ignored).")
-		("dump,d", po::value<std::vector<std::string> >(), 
-			"Dumps PE information. Available choices are any combination of: "
-			"all, dos (dos header), pe (pe header), opt (pe optional header), sections, imports, "
-			"exports, resources, version, debug, tls, certificates, relocations")
-		("hashes", "Calculate various hashes of the file (may slow down the analysis!)")
-		("extract,x", po::value<std::string>(), "Extract the PE resources to the target directory.")
-		("plugins", po::value<std::vector<std::string> >(),
-			"Analyze the binary with additional plugins. (may slow down the analysis!)");
-
-
-	po::positional_options_description p;
-	p.add("pe", -1);
-
-	try
-	{
-		po::store(po::command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
-		po::notify(vm);
-	}
-	catch(po::error& e)	
-	{
-		PRINT_ERROR << "Could not parse command line (" << e.what() << ")." << std::endl << std::endl;
-		return false;
-	}
-
-	if (vm.count("help") || !vm.count("pe")) 
-	{
-		print_help(desc, argv[0]);
-		return false;
-	}
-
-	// Verify that all the input files exist.
-	std::vector<std::string> input_files = vm["pe"].as<std::vector<std::string> >();
-	for (std::vector<std::string>::iterator it = input_files.begin() ; it != input_files.end() ; ++it)
-	{
-		if (!boost::filesystem::exists(*it))
-		{
-			PRINT_ERROR << *it << " not found!" << std::endl;
-			return false;
-		}
-	}
-	return true;
+	std::cout << "  " << filename << " -r malwares/ --plugins=peid,clamav --dump all" << std::endl;
 }
 
 // ----------------------------------------------------------------------------
@@ -165,6 +115,135 @@ std::vector<std::string> tokenize_args(const std::vector<std::string>& args)
 // ----------------------------------------------------------------------------
 
 /**
+ *	@brief	Checks whether the given arguments are valid.
+ *
+ *	This consists in verifying that:
+ *	- All the requested categories for the "dump" command exist
+ *	- All the requested lugins exist
+ *	- All the input files exist
+ *
+ *	If an error is detected, the help message is displayed.
+ *
+ *	@param	po::variables_map& vm The parsed arguments.
+ *	@param	po::options_description& desc The description of the arguments (only so it can be
+ *			passed to print_help if needed).
+ *	@param	char** argv The raw arguments (only so it can be passed to print_help if needed).
+ *
+ *	@return	True if the arguments are all valid, false otherwise.
+ */
+bool validate_args(po::variables_map& vm, po::options_description& desc, char** argv)
+{
+	// Verify that the requested categories exist
+	if (vm.count("dump"))
+	{
+		std::vector<std::string> selected_categories = tokenize_args(vm["dump"].as<std::vector<std::string> >());
+		const std::vector<std::string> categories = boost::assign::list_of("all")("summary")("dos")("pe")("opt")("sections")
+			("imports")("exports")("resources")("version")("debug")("tls")("certificates")("relocations");
+		for (std::vector<std::string>::const_iterator it = selected_categories.begin() ; it != selected_categories.end() ; ++it)
+		{
+			std::vector<std::string>::const_iterator found = std::find(categories.begin(), categories.end(), *it);
+			if (found == categories.end()) 
+			{
+				print_help(desc, argv[0]);
+				std::cout << std::endl;
+				PRINT_ERROR << "category " << *it << " does not exist!" << std::endl;
+				return false;
+			}
+		}
+	}
+
+	// Verify that the requested plugins exist
+	if (vm.count("plugins")) 
+	{
+		std::vector<std::string> selected_plugins = tokenize_args(vm["plugins"].as<std::vector<std::string> >());
+		std::vector<plugin::pIPlugin> plugins = plugin::PluginManager::get_instance().get_plugins();
+		for (std::vector<std::string>::const_iterator it = selected_plugins.begin() ; it != selected_plugins.end() ; ++it)
+		{
+			if (*it == "all") {
+				continue;
+			}
+
+			std::vector<plugin::pIPlugin>::iterator found = 
+				std::find_if(plugins.begin(), plugins.end(), boost::bind(&plugin::name_matches, *it, _1));
+			if (found == plugins.end())
+			{
+				print_help(desc, argv[0]);
+				std::cout << std::endl;
+				PRINT_ERROR << "plugin " << *it << " does not exist!" << std::endl;
+				return false;
+			}
+		}
+	}
+
+	// Verify that all the input files exist.
+	std::vector<std::string> input_files = vm["pe"].as<std::vector<std::string> >();
+	for (std::vector<std::string>::iterator it = input_files.begin() ; it != input_files.end() ; ++it)
+	{
+		if (!bfs::exists(*it))
+		{
+			PRINT_ERROR << *it << " not found!" << std::endl;
+			return false;
+		}
+	}
+
+	return true;
+}
+
+// ----------------------------------------------------------------------------
+
+/**
+ *	@brief	Parses and validates the command line options of the application.
+ *
+ *	@param	po::variables_map& vm The destination for parsed arguments
+ *	@param	int argc The number of arguments
+ *	@param	char**argv The raw arguments
+ *
+ *	@return	Whether the arguments are valid.
+ */
+bool parse_args(po::variables_map& vm, int argc, char**argv)
+{
+	po::options_description desc("Usage");
+	desc.add_options()
+		("help,h", "Displays this message.")
+		("pe", po::value<std::vector<std::string> >(), "The PE to analyze. Also accepted as a positional argument. "
+			"Multiple files may be specified.")
+		("recursive,r", "Scan all files in a directory (subdirectories will be ignored).")
+		("dump,d", po::value<std::vector<std::string> >(), 
+			"Dumps PE information. Available choices are any combination of: "
+			"all, summary, dos (dos header), pe (pe header), opt (pe optional header), sections, "
+			"imports, exports, resources, version, debug, tls, certificates, relocations")
+		("hashes", "Calculate various hashes of the file (may slow down the analysis!)")
+		("extract,x", po::value<std::string>(), "Extract the PE resources to the target directory.")
+		("plugins,p", po::value<std::vector<std::string> >(),
+			"Analyze the binary with additional plugins. (may slow down the analysis!)");
+
+
+	po::positional_options_description p;
+	p.add("pe", -1);
+
+	try
+	{
+		po::store(po::command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
+		po::notify(vm);
+	}
+	catch(po::error& e)	
+	{
+		PRINT_ERROR << "Could not parse command line (" << e.what() << ")." << std::endl << std::endl;
+		return false;
+	}
+
+	if (vm.count("help") || !vm.count("pe")) 
+	{
+		print_help(desc, argv[0]);
+		return false;
+	}
+
+	return validate_args(vm, desc, argv);
+}
+
+// ----------------------------------------------------------------------------
+
+/**
  *	@brief	Dumps select information from a PE.
  *
  *	@param	const std::vector<std::string>& categories The types of information to dump.
@@ -176,6 +255,9 @@ std::vector<std::string> tokenize_args(const std::vector<std::string>& args)
 void handle_dump_option(const std::vector<std::string>& categories, bool compute_hashes, const sg::PE& pe)
 {
 	bool dump_all = (std::find(categories.begin(), categories.end(), "all") != categories.end());
+	if (dump_all || std::find(categories.begin(), categories.end(), "summary") != categories.end()) {
+		pe.dump_summary();
+	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "dos") != categories.end()) {
 		pe.dump_dos_header();
 	}
@@ -288,25 +370,93 @@ std::vector<std::string> get_input_files(po::variables_map& vm)
 		std::vector<std::string> input = vm["pe"].as<std::vector<std::string> >();
 		for (std::vector<std::string>::iterator it = input.begin() ; it != input.end() ; ++it)
 		{
-			if (!boost::filesystem::is_directory(*it)) {
-				targets.push_back(*it);
+			if (!bfs::is_directory(*it)) {
+				targets.push_back(bfs::absolute(*it).string());
 			}
 			else
 			{
-				boost::filesystem::directory_iterator end;
-				for (boost::filesystem::directory_iterator dit(*it) ; dit != end ; ++dit)
+				bfs::directory_iterator end;
+				for (bfs::directory_iterator dit(*it) ; dit != end ; ++dit)
 				{
-					if (!boost::filesystem::is_directory(*dit)) { // Ignore subdirectories
-						targets.push_back(dit->path().string());
+					if (!bfs::is_directory(*dit)) { // Ignore subdirectories
+						targets.push_back(bfs::absolute(dit->path()).string());
 					}
 				}
 			}
 		}
 	}
-	else {
-		targets = vm["pe"].as<std::vector<std::string> >();
+	else 
+	{
+		std::vector<std::string> vect = vm["pe"].as<std::vector<std::string> >();
+		for (std::vector<std::string>::const_iterator it = vect.begin() ; it != vect.end() ; ++it) 
+		{
+			if (!bfs::is_directory(*it)) {
+				targets.push_back(bfs::absolute(*it).string());
+			}
+			else {
+				PRINT_WARNING << *it << " is a directory. Skipping." << std::endl;
+			}
+		}
 	}
 	return targets;
+}
+
+// ----------------------------------------------------------------------------
+
+/**
+ *	@brief	Does the actual analysis
+ */
+void perform_analysis(const std::string& path,
+					  po::variables_map& vm,
+					  const std::string& extraction_directory,
+					  const std::vector<std::string> selected_categories,
+					  const std::vector<std::string> selected_plugins)
+{
+	sg::PE pe(path);
+
+	// Try to parse the PE
+	if (!pe.is_valid()) 
+	{
+		PRINT_ERROR << "Could not parse " << path << "!" << std::endl;
+		yara::Yara y = yara::Yara();
+		// In case of failure, we try to detect the file type to inform the user.
+		// Maybe he made a mistake and specified a wrong file?
+		if (bfs::exists(path) && 
+			!bfs::is_directory(path) && 
+			y.load_rules("yara_rules/magic.yara"))
+		{
+			yara::const_matches m = y.scan_file(*pe.get_path());
+			if (m->size() > 0) 
+			{
+				std::cerr << "Detected file type(s):" << std::endl;
+				for (yara::const_matches::element_type::const_iterator it = m->begin() ; it != m->end() ; ++it) {
+					std::cerr << "\t" << (*it)->operator[]("description") << std::endl;
+				}
+			}
+		}
+		std::cerr << std::endl;
+		return;
+	}
+
+	if (vm.count("dump")) {
+		handle_dump_option(selected_categories, vm.count("hashes") != 0, pe);
+	}
+	else { // No specific info required. Display the summary of the PE.
+		pe.dump_summary();
+	}
+
+
+	if (vm.count("extract")) { // Extract resources if requested
+		pe.extract_resources(extraction_directory);
+	}
+
+	if (vm.count("hashes")) {
+		pe.dump_hashes();
+	}
+
+	if (vm.count("plugins")) {
+		handle_plugins_option(selected_plugins, pe);
+	}
 }
 
 // ----------------------------------------------------------------------------
@@ -315,68 +465,38 @@ int main(int argc, char** argv)
 {
 	std::cout << "* SGStatic 0.9 *" << std::endl << std::endl;
 	po::variables_map vm;
+	std::string extraction_directory;
+	std::vector<std::string> selected_plugins, selected_categories;
+
+	// Load the dynamic plugins.
+	bfs::path working_dir(argv[0]);
+	working_dir = working_dir.parent_path();
+	plugin::PluginManager::get_instance().load_all(working_dir.string());
 
 	if (!parse_args(vm, argc, argv)) {
 		return -1;
 	}
 
-	// Load the dynamic plugins
-	plugin::PluginManager::get_instance().load_all(".");
-
-	// Perform analysis on all the input files
+	// Get all the paths now and make them absolute before changing the working directory
 	std::vector<std::string> targets = get_input_files(vm);
+	if (vm.count("extract")) {
+		extraction_directory = bfs::absolute(vm["extract"].as<std::string>()).string();
+	}
+	// Break complex arguments into a list once and for all.
+	if (vm.count("plugins")) {
+		selected_plugins = tokenize_args(vm["plugins"].as<std::vector<std::string> >());
+	}
+	if (vm.count("dump")) {
+		selected_categories = tokenize_args(vm["dump"].as<std::vector<std::string> >());
+	}
+
+	// Set the working directory to the binary's folder.
+	chdir(working_dir.string().c_str());
+
+	// Do the actual analysis on all the input files
 	for (std::vector<std::string>::iterator it = targets.begin() ; it != targets.end() ; ++it)
 	{
-		sg::PE pe(*it);
-		
-		// Try to parse the PE
-		if (!pe.is_valid()) 
-		{
-			PRINT_ERROR << "Could not parse " << *it << "!" << std::endl;
-			yara::Yara y = yara::Yara();
-			// In case of failure, we try to detect the file type to inform the user.
-			// Maybe he made a mistake and specified a wrong file?
-			if (boost::filesystem::exists(*it) && 
-				!boost::filesystem::is_directory(*it) && 
-				y.load_rules("yara_rules/magic.yara"))
-			{
-				yara::const_matches m = y.scan_file(*pe.get_path());
-				if (m->size() > 0) 
-				{
-					std::cerr << "Detected file type(s):" << std::endl;
-					for (yara::const_matches::element_type::const_iterator it = m->begin() ; it != m->end() ; ++it) {
-						std::cerr << "\t" << (*it)->operator[]("description") << std::endl;
-					}
-				}
-			}
-			std::cerr << std::endl;
-			continue;
-		}
-
-		if (vm.count("dump")) 
-		{
-			// Categories may be comma-separated, so we have to separate them.
-			std::vector<std::string> categories = tokenize_args(vm["dump"].as<std::vector<std::string> >());
-			handle_dump_option(categories, vm.count("hashes") != 0, pe);
-		}
-		else { // No specific info required. Display the summary of the PE.
-			pe.dump_summary();
-		}
-
-	
-		if (vm.count("extract")) { // Extract resources if requested
-			pe.extract_resources(vm["extract"].as<std::string>());
-		}
-
-		if (vm.count("hashes")) {
-			pe.dump_hashes();
-		}
-
-		if (vm.count("plugins")) 
-		{
-			std::vector<std::string> selected = tokenize_args(vm["plugins"].as<std::vector<std::string> >());
-			handle_plugins_option(selected, pe);
-		}
+		perform_analysis(*it, vm, extraction_directory, selected_categories, selected_plugins);
 
 		if (it != targets.end() - 1) {
 			std::cout << "--------------------------------------------------------------------------------" << std::endl << std::endl;
