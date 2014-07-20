@@ -38,6 +38,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin)
 include_directories(
 						${PROJECT_SOURCE_DIR}
 						${PROJECT_SOURCE_DIR}/external
+						${PROJECT_SOURCE_DIR}/plugins
 						${Boost_INCLUDE_DIRS}
                    )
 
@@ -64,6 +65,14 @@ if (WIN32)
 else()
 			target_link_libraries(sgstatic dl)
 endif()
+
+# VirusTotal plugin
+add_library(plugin_virustotal SHARED plugins/plugin_virustotal/plugin_virustotal.cpp 
+									 color.cpp # TODO: Share color.cpp
+									 plugins/plugin_virustotal/json_spirit/json_spirit_reader.cpp 
+									 plugins/plugin_virustotal/json_spirit/json_spirit_value.cpp 
+									 plugins/plugin_virustotal/json_spirit/json_spirit_writer.cpp)
+target_link_libraries(plugin_virustotal sgpe hash-library ${Boost_LIBRARIES})
 
 # yara dependency
 add_subdirectory(external/yara)
