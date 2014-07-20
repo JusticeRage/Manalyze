@@ -245,9 +245,8 @@ const_shared_strings PE::find_imports(const std::string& function_name_regexp,
 
 namespace hash {
 
-std::string hash_imports(const sg::PE& pe)
+pString hash_imports(const sg::PE& pe)
 {
-	MD5 md5;
 	std::stringstream ss;
 
 	sg::const_shared_strings dlls = pe.get_imported_dlls();
@@ -291,7 +290,9 @@ std::string hash_imports(const sg::PE& pe)
 		}
 	}
 
-	return md5(ss.str());
+	std::string data = ss.str();
+	std::vector<boost::uint8_t> bytes(data.begin(), data.end());
+	return hash::hash_bytes(*hash::ALL_DIGESTS[ALL_DIGESTS_MD5], bytes);
 }
 
 } // !namespace hash

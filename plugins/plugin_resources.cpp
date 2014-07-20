@@ -91,6 +91,13 @@ public:
 			res->add_information(ss.str());
 		}
 
+		if (res->get_level() > Result::NO_OPINION) {
+			res->set_summary("The PE is possibly a dropper.");
+		}
+		else if (res->get_information()->size() > 0) {
+			res->set_summary("The PE contains encrypted or compressed resources.");
+		}
+
 		return res;
 	}
 };

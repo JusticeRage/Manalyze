@@ -41,7 +41,7 @@ include_directories(
 						${Boost_INCLUDE_DIRS}
                    )
 
-add_library(sgpe SHARED pe.cpp nt_values.cpp utils.cpp imports.cpp dump.cpp resources.cpp section.cpp ssdeep.cpp hashes.cpp color.cpp)
+add_library(sgpe SHARED pe.cpp nt_values.cpp utils.cpp imports.cpp dump.cpp resources.cpp section.cpp color.cpp)
 
 add_executable(sgstatic main.cpp color.cpp
 			   plugin_framework/dynamic_library.cpp plugin_framework/plugin_manager.cpp # Plugin system
@@ -60,7 +60,7 @@ if (WIN32)
 			
 			# Windows only plugins:
 			add_library(plugin_authenticode SHARED plugins/plugin_authenticode.cpp)
-			target_link_libraries(plugin_authenticode sgpe hash-library ${Boost_LIBRARIES}) #TODO: Find a way to share this code.
+			target_link_libraries(plugin_authenticode sgpe hash-library ${Boost_LIBRARIES})
 else()
 			target_link_libraries(sgstatic dl)
 endif()
@@ -68,19 +68,15 @@ endif()
 # yara dependency
 add_subdirectory(external/yara)
 
-# SSDeep dependency
-add_subdirectory(external/ssdeep)
-
 # hash-library dependency
 add_subdirectory(external/hash-library)
 
-target_link_libraries(sgpe yara ssdeep hash-library ${Boost_LIBRARIES})
+target_link_libraries(sgpe yara hash-library ${Boost_LIBRARIES})
 
 target_link_libraries(
 						sgstatic 
 						sgpe
 						yara
-                        ssdeep
 						hash-library
 						${Boost_LIBRARIES}
                      )

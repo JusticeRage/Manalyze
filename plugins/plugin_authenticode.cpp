@@ -95,7 +95,7 @@ public:
 	}
 
 	pString get_description() const { 
-		return pString(new std::string("Checks if the digital signature (authenticode) of the PE is valid."));
+		return pString(new std::string("Checks if the digital signature of the PE is valid."));
 	}
 
 	pResult analyze(const sg::PE& pe) 

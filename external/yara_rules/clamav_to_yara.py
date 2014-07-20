@@ -11,6 +11,7 @@ Copyright (c) 2010 __MyCompanyName__. All rights reserved.
 
 Updated by JusticeRage in 03/2014: additional checking for malformed signatures and added metadata.
                           04/2014: BUGFIX: some cheks were only relevant at the entrypoint.
+                          07/2014:
 """
 
 import os
@@ -55,12 +56,9 @@ rule %s
 	"""
     rules = {}
     output = ""
-    data = open(opts.filename, 'rb').readlines()
-
-    if (opts.filename.endswith(".cvd") or opts.filename.endswith(".cld")) and data[0].find("ClamAV") == 0:
-        print "It seems you're passing a compressed database."
-        print "Try using sigtool -u to decompress first."
-        return
+    f = open(opts.filename, 'rb')
+    data = f.readlines()
+    f.close()
 
     print "[+] Read %d lines from %s" % (len(data), opts.filename)
 
@@ -92,7 +90,7 @@ rule %s
             rulename = rulename_regex.sub('_', name)
 
             # and cannot start with a number
-            rulename_regex = re.compile('(^[0-9]{1,})')
+            rulename_regex = re.compile(r'(^[0-9]+)')
             rulename = rulename_regex.sub('', rulename)
 
             # if the rule doesn't exist, create a dict entry
@@ -199,7 +197,7 @@ rule %s
 
             elif rules[rule][1].startswith("EOF"):
                 conds += " at filesize - %d" % int(rules[rule][1].split("-")[1])
-            elif rules[rule][1] != "*": # Direct offset
+            elif rules[rule][1] != "*":  # Direct offset
                 try:
                     conds += " at %d" % int(rules[rule][1])
                 except ValueError:
@@ -215,7 +213,7 @@ rule %s
 
     if len(output) > 0:
         print "\r\n[+] Wrote %d rules to %s\r\n" % (len(rules), opts.outfile)
-        fout = open(opts.outfile, 'wb')
+        fout = open(opts.outfile, 'ab')
         fout.write(output)
         fout.close()
     else:

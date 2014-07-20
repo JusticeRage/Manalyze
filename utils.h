@@ -31,8 +31,9 @@
 #include <boost/date_time.hpp>
 #include <boost/system/api_config.hpp>
 
+#include "hash-library/hashes.h"
+
 #include "color.h"
-#include "hashes.h"
 
 // Some miscellaneous functions are exported
 #if defined BOOST_WINDOWS_API

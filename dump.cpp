@@ -16,7 +16,8 @@
 */
 
 #include "pe.h"
-#include "hashes.h"
+#include "hash-library/hashes.h"
+#include "hash-library/ssdeep.h"
 #include "imports.h" // Declares the helper function used to hash imports
 
 namespace sg 
@@ -176,11 +177,11 @@ void PE::dump_section_table(std::ostream& sink, bool compute_hashes) const
 		sink << "Name\t\t\t" << *(*it)->get_name() << std::endl;
 		if (compute_hashes)
 		{
-			std::vector<std::string> hashes = hash::hash_bytes(hash::ALL_DIGESTS, *(*it)->get_raw_data());
-			sink << "MD5:\t\t\t" << hashes[ALL_DIGESTS_MD5] << std::endl;
-			sink << "SHA1:\t\t\t" << hashes[ALL_DIGESTS_SHA1] << std::endl;
-			sink << "SHA256:\t\t\t" << hashes[ALL_DIGESTS_SHA256] << std::endl;
-			sink << "SHA3:\t\t\t" << hashes[ALL_DIGESTS_SHA3] << std::endl;
+			const_shared_strings hashes = hash::hash_bytes(hash::ALL_DIGESTS, *(*it)->get_raw_data());
+			sink << "MD5:\t\t\t" << hashes->at(ALL_DIGESTS_MD5) << std::endl;
+			sink << "SHA1:\t\t\t" << hashes->at(ALL_DIGESTS_SHA1) << std::endl;
+			sink << "SHA256:\t\t\t" << hashes->at(ALL_DIGESTS_SHA256) << std::endl;
+			sink << "SHA3:\t\t\t" << hashes->at(ALL_DIGESTS_SHA3) << std::endl;
 		}
 		sink << "VirtualSize\t\t" << (*it)->get_virtual_size() << std::endl;
 		sink << "VirtualAddress\t\t" << (*it)->get_virtual_address() << std::endl;
@@ -272,11 +273,11 @@ void PE::dump_resources(std::ostream& sink, bool compute_hashes) const
 		}
 		if (compute_hashes)
 		{
-			std::vector<std::string> hashes = hash::hash_bytes(hash::ALL_DIGESTS, *(*it)->get_raw_data());
-			sink << "\tMD5:\t\t" << hashes[ALL_DIGESTS_MD5] << std::endl;
-			sink << "\tSHA1:\t\t" << hashes[ALL_DIGESTS_SHA1] << std::endl;
-			sink << "\tSHA256:\t\t" << hashes[ALL_DIGESTS_SHA256] << std::endl;
-			sink << "\tSHA3:\t\t" << hashes[ALL_DIGESTS_SHA3] << std::endl;
+			const_shared_strings hashes = hash::hash_bytes(hash::ALL_DIGESTS, *(*it)->get_raw_data());
+			sink << "\tMD5:\t\t" << hashes->at(ALL_DIGESTS_MD5) << std::endl;
+			sink << "\tSHA1:\t\t" << hashes->at(ALL_DIGESTS_SHA1) << std::endl;
+			sink << "\tSHA256:\t\t" << hashes->at(ALL_DIGESTS_SHA256) << std::endl;
+			sink << "\tSHA3:\t\t" << hashes->at(ALL_DIGESTS_SHA3) << std::endl;
 		}
 	}
 	sink << std::endl;
@@ -524,22 +525,17 @@ void PE::dump_summary(std::ostream& sink) const
 
 void PE::dump_hashes(std::ostream& sink) const
 {
-	MD5		md5_hash;
-	SHA1	sha1_hash;
-	SHA256	sha256_hash;
-	Keccak	sha3_hash;
-
-	std::vector<std::string> hashes = hash::hash_file(hash::ALL_DIGESTS, _path);
-	if (hashes.size() != hash::ALL_DIGESTS.size()) {
+	const_shared_strings hashes = hash::hash_file(hash::ALL_DIGESTS, _path);
+	if (hashes->size() != hash::ALL_DIGESTS.size()) {
 		return;
 	}
 
-	sink << "MD5:\t\t" << hashes[ALL_DIGESTS_MD5] << std::endl;
-	sink << "SHA1:\t\t" << hashes[ALL_DIGESTS_SHA1] << std::endl;
-	sink << "SHA256:\t\t" << hashes[ALL_DIGESTS_SHA256] << std::endl;
-	sink << "SHA3:\t\t" << hashes[ALL_DIGESTS_SHA3] << std::endl;
-	sink << "SSDeep:\t\t" << ssdeep::hash_file(_path) << std::endl;
-	sink << "Imports Hash:\t" << hash::hash_imports(*this) << std::endl;
+	sink << "MD5:\t\t" << hashes->at(ALL_DIGESTS_MD5) << std::endl;
+	sink << "SHA1:\t\t" << hashes->at(ALL_DIGESTS_SHA1) << std::endl;
+	sink << "SHA256:\t\t" << hashes->at(ALL_DIGESTS_SHA256) << std::endl;
+	sink << "SHA3:\t\t" << hashes->at(ALL_DIGESTS_SHA3) << std::endl;
+	sink << "SSDeep:\t\t" << *ssdeep::hash_file(_path) << std::endl;
+	sink << "Imports Hash:\t" << *hash::hash_imports(*this) << std::endl;
 
 	sink << std::endl;
 }

@@ -24,7 +24,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/assign.hpp>
 
-#include "hashes.h"
+#include "hash-library/hashes.h"
 #include "pe.h"
 
 namespace bfs = boost::filesystem;
@@ -39,7 +39,7 @@ namespace hash {
  *
  *	Implementation is located in imports.cpp.
  */
-std::string hash_imports(const sg::PE& pe);
+DECLSPEC pString hash_imports(const sg::PE& pe);
 
 } //namespace sg
 
