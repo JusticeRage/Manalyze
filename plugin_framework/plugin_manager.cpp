@@ -43,7 +43,7 @@ void PluginManager::load(const std::string& path)
 	pIPlugin test = plugin->instantiate_plugin();
 	if (test->get_api_version() != API_VERSION) 
 	{
-		PRINT_ERROR << "the plugin " << *test->get_id() << " is not compatible with this version of the API (expected: " 
+		PRINT_ERROR << "The plugin " << *test->get_id() << " is not compatible with this version of the API (expected: " 
 			<< API_VERSION << ", found: " << test->get_api_version() << ")!" << std::endl;
 		return;
 	}

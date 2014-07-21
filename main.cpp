@@ -35,6 +35,7 @@
 #endif
 
 #include "plugin_framework/plugin_manager.h"
+#include "config_parser.h"
 #include "yara/yara_wrapper.h"
 
 #include "pe.h"
@@ -119,7 +120,7 @@ std::vector<std::string> tokenize_args(const std::vector<std::string>& args)
  *
  *	This consists in verifying that:
  *	- All the requested categories for the "dump" command exist
- *	- All the requested lugins exist
+ *	- All the requested plugins exist
  *	- All the input files exist
  *
  *	If an error is detected, the help message is displayed.
@@ -296,10 +297,18 @@ void handle_dump_option(const std::vector<std::string>& categories, bool compute
 	}
 }
 
-void handle_plugins_option(const std::vector<std::string>& selected, const sg::PE& pe)
+// ----------------------------------------------------------------------------
+
+/**
+ *	@brief	Analyze the PE with each selected plugin.
+ *
+ *	@param	const std::vector<std::string>& selected The names of the selected plugins.
+ *	@param	const config& conf The configuration of the plugins.
+ *	@param	const sg::PE& pe The PE to analyze.
+ */
+void handle_plugins_option(const std::vector<std::string>& selected, const config& conf, const sg::PE& pe)
 {
 	bool all_plugins = std::find(selected.begin(), selected.end(), "all") != selected.end();
-	
 	std::vector<plugin::pIPlugin> plugins = plugin::PluginManager::get_instance().get_plugins();
 
 	for (std::vector<plugin::pIPlugin>::iterator it = plugins.begin() ; it != plugins.end() ; ++it) 
@@ -309,6 +318,7 @@ void handle_plugins_option(const std::vector<std::string>& selected, const sg::P
 			continue;
 		}
 
+		(*it)->set_config(conf.at(*(*it)->get_id()));
 		plugin::pResult res = (*it)->analyze(pe);
 		plugin::pInformation info = res->get_information();
 		plugin::pString summary = res->get_summary();
@@ -410,7 +420,8 @@ void perform_analysis(const std::string& path,
 					  po::variables_map& vm,
 					  const std::string& extraction_directory,
 					  const std::vector<std::string> selected_categories,
-					  const std::vector<std::string> selected_plugins)
+					  const std::vector<std::string> selected_plugins,
+					  const config& conf)
 {
 	sg::PE pe(path);
 
@@ -455,7 +466,7 @@ void perform_analysis(const std::string& path,
 	}
 
 	if (vm.count("plugins")) {
-		handle_plugins_option(selected_plugins, pe);
+		handle_plugins_option(selected_plugins, conf, pe);
 	}
 }
 
@@ -472,6 +483,9 @@ int main(int argc, char** argv)
 	bfs::path working_dir(argv[0]);
 	working_dir = working_dir.parent_path();
 	plugin::PluginManager::get_instance().load_all(working_dir.string());
+
+	// Load the configuration
+	config conf = parse_config((working_dir / "sgstatic.conf").string());
 
 	if (!parse_args(vm, argc, argv)) {
 		return -1;
@@ -496,7 +510,7 @@ int main(int argc, char** argv)
 	// Do the actual analysis on all the input files
 	for (std::vector<std::string>::iterator it = targets.begin() ; it != targets.end() ; ++it)
 	{
-		perform_analysis(*it, vm, extraction_directory, selected_categories, selected_plugins);
+		perform_analysis(*it, vm, extraction_directory, selected_categories, selected_plugins, conf);
 
 		if (it != targets.end() - 1) {
 			std::cout << "--------------------------------------------------------------------------------" << std::endl << std::endl;

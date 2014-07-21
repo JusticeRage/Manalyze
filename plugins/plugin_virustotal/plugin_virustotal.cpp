@@ -50,35 +50,7 @@ bool query_virus_total(const std::string& hash, const std::string& api_key, std:
 
 class VirusTotalPlugin : public IPlugin
 {
-private:
-	std::string _api_key;
-
 public:
-	VirusTotalPlugin()
-	{
-		FILE* f = fopen(".virustotal", "r");
-		if (f == NULL) {
-			PRINT_WARNING << "File .virustotal not found. No API key provided." << std::endl;
-		}
-		else
-		{
-			char read_key[65];
-			read_key[64] = '\0';
-			if (1 != fread(read_key, 64, 1, f)) {
-				PRINT_WARNING << "Could not read VirusTotal API key!" << std::endl;
-			}
-			else if (!strncmp(read_key, "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", 64)) {
-				PRINT_WARNING << "Please edit .virustotal with your VirusTotal API key!" << std::endl;
-			}
-			else {
-				_api_key = std::string(read_key);
-			}
-		}
-		if (f != NULL) {
-			fclose(f);
-		}
-	}
-
 	int get_api_version() { return 1; }
 	
 	pString get_id() const { 
@@ -93,14 +65,23 @@ public:
 	{
 		pResult res(new Result());
 
-		if (_api_key == "") { // No API key provided.
+		if (_config->at("api_key").empty()) // No API key provided.
+		{
+			PRINT_WARNING << "The VirusTotal API key was not found in the configuration file." << std::endl;
+			return res;
+		}
+		else if (_config->at("api_key") == "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+		{
+			// If you really can't be bothered, you can find a lot of keys with the following 
+			// GitHub dork: "https://www.virustotal.com/vtapi/v2"
+			PRINT_WARNING << "Please edit the configuration file with your VirusTotal API key." << std::endl;
 			return res;
 		}
 		
 		std::string sha256_hash = *hash::hash_file(*hash::ALL_DIGESTS[ALL_DIGESTS_SHA256], *pe.get_path());
 		std::string json;
 
-		if (!query_virus_total(sha256_hash, _api_key, json)) {
+		if (!query_virus_total(sha256_hash, _config->at("api_key"), json)) {
 			return res;
 		}
 

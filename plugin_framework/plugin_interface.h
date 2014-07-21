@@ -19,6 +19,7 @@
 #define _PLUGIN_INTERFACE_H_
 
 #include <string>
+#include <map>
 #include <boost/shared_ptr.hpp>
 #include <boost/system/api_config.hpp>
 
@@ -32,6 +33,9 @@
 #endif
 
 namespace plugin {
+
+typedef std::map<std::string, std::string> string_map;
+typedef boost::shared_ptr<const std::map<std::string, std::string> > shared_string_map;
 
 class IPlugin
 {
@@ -73,6 +77,13 @@ public:
 	 *			cross shared object boundaries.
 	 */
 	virtual boost::shared_ptr<std::string> get_description() const = 0;
+
+	void set_config(const string_map& config) { 
+		_config = shared_string_map(new string_map(config));
+	}
+
+protected:
+	shared_string_map _config;
 };
 
 typedef boost::shared_ptr<IPlugin> pIPlugin;

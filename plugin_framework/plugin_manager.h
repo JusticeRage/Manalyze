@@ -136,13 +136,14 @@ public:
 	 *	@brief	Returns a vector containing one of each registered plugins.
 	 *
 	 *	This function goes through the list of registered plugins ("register")
-	 *	and instantiates one of each plugin types for the function caller.
+	 *	and instantiates one of each plugin type for the function caller.
 	 *
 	 *	@return	A vector of plugins.
 	 */
 	std::vector<pIPlugin> get_plugins() 
 	{
 		std::vector<pIPlugin> res;
+
 		for (PluginRegister::iterator it = _plugins.begin() ; it != _plugins.end() ; ++it)
 		{
 			pIPlugin p = (*it)->get_plugin()->instantiate_plugin();
