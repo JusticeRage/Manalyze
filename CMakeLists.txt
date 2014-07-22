@@ -70,8 +70,7 @@ endif()
 add_library(plugin_virustotal SHARED plugins/plugin_virustotal/plugin_virustotal.cpp 
 									 color.cpp # TODO: Share color.cpp
 									 plugins/plugin_virustotal/json_spirit/json_spirit_reader.cpp 
-									 plugins/plugin_virustotal/json_spirit/json_spirit_value.cpp 
-									 plugins/plugin_virustotal/json_spirit/json_spirit_writer.cpp)
+									 plugins/plugin_virustotal/json_spirit/json_spirit_value.cpp)
 target_link_libraries(plugin_virustotal sgpe hash-library ${Boost_LIBRARIES})
 
 # yara dependency

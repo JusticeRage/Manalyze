@@ -318,7 +318,9 @@ void handle_plugins_option(const std::vector<std::string>& selected, const confi
 			continue;
 		}
 
-		(*it)->set_config(conf.at(*(*it)->get_id()));
+		if (conf.count(*(*it)->get_id())) {
+			(*it)->set_config(conf.at(*(*it)->get_id()));
+		}
 		plugin::pResult res = (*it)->analyze(pe);
 		plugin::pInformation info = res->get_information();
 		plugin::pString summary = res->get_summary();

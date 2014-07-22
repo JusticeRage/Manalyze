@@ -65,7 +65,7 @@ public:
 	{
 		pResult res(new Result());
 
-		if (_config->at("api_key").empty()) // No API key provided.
+		if (!_config->count("api_key")) // No API key provided.
 		{
 			PRINT_WARNING << "The VirusTotal API key was not found in the configuration file." << std::endl;
 			return res;
