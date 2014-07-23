@@ -111,7 +111,7 @@ def update_signatures(url):
     zlib_decompress("%s.tar.gz" % file_basename, "%s.tar" % file_basename)
     tar = tarfile.open("%s.tar" % file_basename)
     tar.extract("%s.ndb" % file_basename)
-    os.chmod("%s.ndb" % file_basename, 700)
+    os.chmod("%s.ndb" % file_basename, 644)
     tar.close()
     os.remove("%s.tar" % file_basename)
     subprocess.call([sys.executable, "./clamav_to_yara.py", "-f", "%s.ndb" % file_basename, "-o", "clamav.yara"])
@@ -143,4 +143,5 @@ try:
     os.remove("../../bin/yara_rules/clamav.yarac")
 except OSError:
     pass
+os.chmod("clamav.yara", 644)
 shutil.move("clamav.yara", "../../bin/yara_rules")

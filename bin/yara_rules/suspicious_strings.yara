@@ -186,7 +186,7 @@ rule Antivirus
         $a115 = "cpd.exe" nocase wide ascii
         $a116 = "cpf9x206.exe" nocase wide ascii
         $a117 = "cpfnt206.exe" nocase wide ascii
-        $a118 = "ctrl.exe" nocase wide ascii
+        $a118 = "ctrl.exe" nocase wide ascii fullword
         $a119 = "cv.exe" nocase wide ascii
         $a120 = "cwnb181.exe" nocase wide ascii
         $a121 = "cwntdwmo.exe" nocase wide ascii

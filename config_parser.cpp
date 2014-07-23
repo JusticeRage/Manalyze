@@ -19,7 +19,7 @@
 
 config parse_config(const std::string& config_file)
 {
-	std::ifstream input(config_file);
+	std::ifstream input(config_file.c_str());
 	config conf;
 
 	if (!input.is_open()) 
