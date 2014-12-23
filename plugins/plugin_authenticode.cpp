@@ -151,6 +151,10 @@ public:
 				res->set_level(Result::MALICIOUS);
 				res->set_summary("The PE's certificate was explicitly revoked by its issuer.");
 				break;
+			case CERT_E_EXPIRED:
+				res->set_level(Result::SUSPICIOUS);
+				res->set_summary("The PE's certificate has expired.");
+				break;
 			default:
 				std::stringstream ss;
 				ss << "Unknown error encountered while reading the signature (0x" << std::hex << retval << ").";

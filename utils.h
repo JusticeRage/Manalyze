@@ -28,7 +28,7 @@
 
 #include <boost/cstdint.hpp>
 #include <boost/shared_array.hpp>
-#include <boost/date_time.hpp>
+#include <boost/shared_ptr.hpp>
 #include <boost/system/api_config.hpp>
 
 #include "hash-library/hashes.h"
@@ -48,6 +48,8 @@
 
 namespace utils 
 {
+
+typedef boost::shared_ptr<std::string> pString;
 
 /**
  *	@brief	Reads a null-terminated ASCII string in a file.
@@ -99,25 +101,6 @@ std::string read_unicode_string(FILE* f, unsigned int max_bytes = 0);
  *	@return	Whether a string was successfully read.
  */
 bool read_string_at_offset(FILE* f, unsigned int offset, std::string& out, bool unicode = false);
-
-/**
- *	@brief	Converts a uint64 into a version number structured like X.X.X.X.
- *
- *	@param	boost::uint32_t msbytes The most significant bytes of the version number.
- *	@param	boost::uint32_t lsbytes The least significant bytes of the version number.
- *
- *	@return	A string containing the "translated" version number.
- */
-std::string uint64_to_version_number(boost::uint32_t msbytes, boost::uint32_t lsbytes);
-
-/**
- *	@brief	Converts a POSIX timestamp into a human-readable string.
- *
- *	@param	uint32_t epoch_timestamp The timestamp to convert.
- *
- *	@return	A human readable string representing the given timestamp.
- */
-std::string timestamp_to_string(boost::uint64_t epoch_timestamp);
 
 /**
  *	@brief	Calculates the entropy of a byte stream.

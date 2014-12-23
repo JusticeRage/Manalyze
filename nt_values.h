@@ -23,6 +23,7 @@
 #include <vector>
 #include <boost/assign.hpp>
 #include <boost/system/api_config.hpp>
+#include <boost/shared_ptr.hpp>
 
 #if defined BOOST_WINDOWS_API && !defined DECLSPEC
 	#ifdef SGPE_EXPORT
@@ -33,6 +34,10 @@
 #elif !defined BOOST_WINDOWS_API && !defined DECLSPEC
 	#define DECLSPEC
 #endif
+
+typedef boost::shared_ptr<std::vector<std::string> > shared_strings;
+typedef boost::shared_ptr<const std::vector<std::string> > const_shared_strings;
+typedef boost::shared_ptr<std::string> pString;
 
 // Directory Entries - copied from WinNT.h
 // There is no need for a map for this one: we won't have to translate the values back to their names.
@@ -85,7 +90,7 @@ extern const DECLSPEC flag_dict WIN_CERTIFICATE_TYPES;
  *
  *	@return	A list of matching flags.
  */
-std::vector<std::string> translate_to_flags(int value, const flag_dict& dict);
+DECLSPEC const_shared_strings translate_to_flags(int value, const flag_dict& dict);
 
 /**
  *	@brief	Looks up the flag corresponding to a given value, if any.
@@ -96,7 +101,7 @@ std::vector<std::string> translate_to_flags(int value, const flag_dict& dict);
  *
  *	@return	The corresponding flag, or "UNKNOWN" if no match is found.
  */
-std::string translate_to_flag(int value, const flag_dict& dict);
+DECLSPEC pString translate_to_flag(int value, const flag_dict& dict);
 
 } // !namespace nt
 

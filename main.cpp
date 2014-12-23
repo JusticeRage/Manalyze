@@ -41,6 +41,8 @@
 #include "pe.h"
 #include "resources.h"
 #include "color.h"
+#include "output_formatter.h"
+#include "dump.h"
 
 namespace po = boost::program_options;
 namespace bfs = boost::filesystem;
@@ -139,7 +141,7 @@ bool validate_args(po::variables_map& vm, po::options_description& desc, char** 
 	{
 		std::vector<std::string> selected_categories = tokenize_args(vm["dump"].as<std::vector<std::string> >());
 		const std::vector<std::string> categories = boost::assign::list_of("all")("summary")("dos")("pe")("opt")("sections")
-			("imports")("exports")("resources")("version")("debug")("tls")("certificates")("relocations");
+			("imports")("exports")("resources")("version")("debug")("tls");
 		for (std::vector<std::string>::const_iterator it = selected_categories.begin() ; it != selected_categories.end() ; ++it)
 		{
 			std::vector<std::string>::const_iterator found = std::find(categories.begin(), categories.end(), *it);
@@ -212,7 +214,7 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
 		("dump,d", po::value<std::vector<std::string> >(), 
 			"Dumps PE information. Available choices are any combination of: "
 			"all, summary, dos (dos header), pe (pe header), opt (pe optional header), sections, "
-			"imports, exports, resources, version, debug, tls, certificates, relocations")
+			"imports, exports, resources, version, debug, tls")
 		("hashes", "Calculate various hashes of the file (may slow down the analysis!)")
 		("extract,x", po::value<std::string>(), "Extract the PE resources to the target directory.")
 		("plugins,p", po::value<std::vector<std::string> >(),
@@ -255,46 +257,44 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
  */
 void handle_dump_option(const std::vector<std::string>& categories, bool compute_hashes, const sg::PE& pe)
 {
+	io::RawFormatter rf; // TODO : Should be given as argument
+
 	bool dump_all = (std::find(categories.begin(), categories.end(), "all") != categories.end());
 	if (dump_all || std::find(categories.begin(), categories.end(), "summary") != categories.end()) {
-		pe.dump_summary();
+		sg::dump_summary(pe, rf);
 	}
-	if (dump_all || std::find(categories.begin(), categories.end(), "dos") != categories.end()) {
-		pe.dump_dos_header();
+	if (dump_all || std::find(categories.begin(), categories.end(), "dos") != categories.end()) 
+	{
+		sg::dump_dos_header(pe, rf);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "pe") != categories.end()) {
-		pe.dump_pe_header();
+		sg::dump_pe_header(pe, rf);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "opt") != categories.end()) {
-		pe.dump_image_optional_header();
+		sg::dump_image_optional_header(pe, rf);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "sections") != categories.end()) {
-		pe.dump_section_table(std::cout, compute_hashes);
+		sg::dump_section_table(pe, rf, compute_hashes);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "imports") != categories.end()) {
-		pe.dump_imports();
+		sg::dump_imports(pe, rf);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "exports") != categories.end()) {
-		pe.dump_exports();
+		sg::dump_exports(pe, rf);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "resources") != categories.end()) {
-		pe.dump_resources(std::cout, compute_hashes);
+		sg::dump_resources(pe, rf, compute_hashes);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "version") != categories.end()) {
-		pe.dump_version_info();
+		sg::dump_version_info(pe, rf);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "debug") != categories.end()) {
-		pe.dump_debug_info();
-	}
-	if (dump_all || std::find(categories.begin(), categories.end(), "relocations") != categories.end()) {
-		pe.dump_relocations();
+		sg::dump_debug_info(pe, rf);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "tls") != categories.end()) {
-		pe.dump_tls();
+		sg::dump_tls(pe, rf);
 	}
-	if (dump_all || std::find(categories.begin(), categories.end(), "certificates") != categories.end()) {
-		pe.dump_certificates();
-	}
+	std::cout << rf.format();
 }
 
 // ----------------------------------------------------------------------------
@@ -455,7 +455,7 @@ void perform_analysis(const std::string& path,
 		handle_dump_option(selected_categories, vm.count("hashes") != 0, pe);
 	}
 	else { // No specific info required. Display the summary of the PE.
-		pe.dump_summary();
+		// TODO: Restore Summary
 	}
 
 
@@ -464,7 +464,7 @@ void perform_analysis(const std::string& path,
 	}
 
 	if (vm.count("hashes")) {
-		pe.dump_hashes();
+		// TODO: Restore hashes dump
 	}
 
 	if (vm.count("plugins")) {

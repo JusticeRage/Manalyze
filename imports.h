@@ -41,6 +41,6 @@ namespace hash {
  */
 DECLSPEC pString hash_imports(const sg::PE& pe);
 
-} //namespace sg
+} //namespace hash
 
 #endif

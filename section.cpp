@@ -89,7 +89,7 @@ bool is_address_in_section(boost::uint64_t rva, sg::pSection section, bool check
 		return section->get_virtual_address() <= rva && rva < section->get_virtual_address() + section->get_virtual_size();
 	}
 	else {
-		return section->get_virtual_address() <= rva && rva < section->get_virtual_address() + section->get_size_or_raw_data();
+		return section->get_virtual_address() <= rva && rva < section->get_virtual_address() + section->get_size_of_raw_data();
 	}
 }
 

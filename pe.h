@@ -54,11 +54,17 @@
 
 namespace sg {
 
+typedef boost::shared_ptr<Section> pSection;
 typedef boost::shared_ptr<std::vector<std::string> > shared_strings;
 typedef boost::shared_ptr<const std::vector<std::string> > const_shared_strings;
 typedef boost::shared_ptr<std::vector<pSection> > shared_sections;
 typedef boost::shared_ptr<std::vector<pResource> > shared_resources;
 typedef boost::shared_ptr<const std::vector<boost::uint8_t> > shared_bytes;
+typedef boost::shared_ptr<const std::vector<pexported_function> > shared_exports;
+typedef boost::shared_ptr<const std::vector<pdebug_directory_entry> > shared_debug_info;
+typedef boost::shared_ptr<const std::vector<pimage_base_relocation> > shared_relocations;
+typedef boost::shared_ptr<const image_tls_directory> shared_tls;
+typedef boost::shared_ptr<const std::vector<pwin_certificate> > shared_certificates;
 typedef boost::shared_ptr<std::string> pString;
 
 class PE
@@ -122,30 +128,44 @@ public:
 	DECLSPEC const_shared_strings find_imports(const std::string& function_name_regexp,
 											   const std::string& dll_name_regexp = ".*") const;
 
-	/**
-	 *	@brief	Functions used to display the detailed contents of the PE.
-	 *
-	 *	@param	std::ostream& sink	The stream into which the information should be written.
-	 *								Default is stdout.
-	 *
-	 *	Implementation is located in dump.cpp.
-	 */
-	DECLSPEC void dump_dos_header(std::ostream& sink = std::cout) const;
-	DECLSPEC void dump_pe_header(std::ostream& sink = std::cout) const;
-	DECLSPEC void dump_image_optional_header(std::ostream& sink = std::cout) const;
-	DECLSPEC void dump_section_table(std::ostream& sink = std::cout, bool compute_hashes = false) const;
-	DECLSPEC void dump_imports(std::ostream& sink = std::cout) const;
-	DECLSPEC void dump_exports(std::ostream& sink = std::cout) const;
-	DECLSPEC void dump_resources(std::ostream& sink = std::cout, bool compute_hashes = false) const;
-	DECLSPEC void dump_version_info(std::ostream& sink = std::cout) const;
-	DECLSPEC void dump_debug_info(std::ostream& sink = std::cout) const;
-	DECLSPEC void dump_relocations(std::ostream& sink = std::cout) const;
-	DECLSPEC void dump_tls(std::ostream& sink = std::cout) const;
-	DECLSPEC void dump_certificates(std::ostream& sink = std::cout) const;
-	DECLSPEC void dump_summary(std::ostream& sink = std::cout) const;
-	DECLSPEC void dump_hashes(std::ostream& sink = std::cout) const;
+	DECLSPEC dos_header get_dos_header() const {
+		return _h_dos;
+	}
 
-	DECLSPEC shared_resources get_resources() const { return shared_resources(new std::vector<pResource>(_resource_table)); }
+	DECLSPEC pe_header get_pe_header() const {
+		return _h_pe;
+	}
+
+	DECLSPEC image_optional_header get_image_optional_header() const {
+		return _ioh;
+	}
+
+	DECLSPEC shared_resources get_resources() const { 
+		return _initialized? shared_resources(new std::vector<pResource>(_resource_table)) : shared_resources(); 
+	}
+	
+	DECLSPEC shared_exports get_exports() const { 
+		return _initialized? shared_exports(new std::vector<pexported_function>(_exports)) : shared_exports(); 
+	}
+
+	DECLSPEC shared_debug_info get_debug_info() const { 
+		return _initialized? shared_debug_info(new std::vector<pdebug_directory_entry>(_debug_entries)) : 
+			shared_debug_info(); 
+	}
+
+	DECLSPEC shared_relocations get_relocations() const { 
+		return _initialized ? shared_relocations(new std::vector<pimage_base_relocation>(_relocations)) : 
+			shared_relocations(); 
+	}
+
+	DECLSPEC shared_tls get_tls() const {
+		return _initialized ? shared_tls(new image_tls_directory(_tls)) : shared_tls();
+	}
+
+	DECLSPEC shared_certificates get_certificates() const {
+		return _initialized ? shared_certificates(new shared_certificates::element_type(_certificates)) : 
+			shared_certificates(new shared_certificates::element_type());
+	}
 
 	/**
 	 *	@brief	Extracts the resources of the PE and writes them to the disk.
@@ -370,7 +390,7 @@ private:
 	std::vector<pexported_function>			_exports;
 	std::vector<pResource>					_resource_table;
 	std::vector<pdebug_directory_entry>		_debug_entries;
-	std::vector<pimage_base_relocation>		_relocations;
+	std::vector<pimage_base_relocation>		_relocations;		// Not displayed either, because of how big it is.
 	image_tls_directory						_tls;
 	std::vector<pwin_certificate>			_certificates;
 };

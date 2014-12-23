@@ -328,13 +328,13 @@ const flag_dict WIN_CERTIFICATE_TYPES =
 
 // ----------------------------------------------------------------------------
 
-std::vector<std::string> translate_to_flags(int value, const flag_dict& dict)
+const_shared_strings translate_to_flags(int value, const flag_dict& dict)
 {
-	std::vector<std::string> res;
+	shared_strings res = shared_strings(new std::vector<std::string>());
 	for (flag_dict::const_iterator it = dict.begin() ; it != dict.end() ; ++it)
 	{
 		if ((value & it->second) != 0) { // The flag is present in the value
-			res.push_back(it->first);
+			res->push_back(it->first);
 		}
 	}
 	return res;
@@ -342,15 +342,15 @@ std::vector<std::string> translate_to_flags(int value, const flag_dict& dict)
 
 // ----------------------------------------------------------------------------
 
-std::string translate_to_flag(int value, const flag_dict& dict)
+pString translate_to_flag(int value, const flag_dict& dict)
 {
 	for (flag_dict::const_iterator it = dict.begin() ; it != dict.end() ; ++it)
 	{
 		if (value == it->second) {
-			return it->first;
+			return pString(new std::string(it->first));
 		}
 	}
-	return "UNKNOWN";
+	return pString(new std::string("UNKNOWN"));
 }
 
 }

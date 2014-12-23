@@ -117,27 +117,6 @@ bool read_string_at_offset(FILE* f, unsigned int offset, std::string& out, bool 
 
 // ----------------------------------------------------------------------------
 
-std::string uint64_to_version_number(boost::uint32_t msbytes, boost::uint32_t lsbytes)
-{
-	std::stringstream ss;
-	ss << ((msbytes >> 16) & 0xFFFF) << "." << (msbytes & 0xFFFF) << ".";
-	ss << ((lsbytes >> 16) & 0xFFFF) << "." << (lsbytes & 0xFFFF);
-	return ss.str();
-}
-
-// ----------------------------------------------------------------------------
-
-std::string timestamp_to_string(boost::uint64_t epoch_timestamp)
-{
-	static std::locale loc(std::cout.getloc(), new boost::posix_time::time_facet("%Y-%b-%d %H:%M:%S%F %z"));
-	std::stringstream ss;
-	ss.imbue(loc);
-	ss << boost::posix_time::from_time_t(epoch_timestamp);
-	return ss.str();
-}
-
-// ----------------------------------------------------------------------------
-
 double DECLSPEC shannon_entropy(const std::vector<boost::uint8_t>& bytes)
 {
 	int frequency[256] = { 0 };

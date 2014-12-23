@@ -134,7 +134,7 @@ bool PE::_parse_resources(FILE* f)
 					type = (*it)->NameStr;
 				}
 				else { // Otherwise, it's a MAKERESOURCEINT constant.
-					type = nt::translate_to_flag((*it)->NameOrId, nt::RESOURCE_TYPES);
+					type = *nt::translate_to_flag((*it)->NameOrId, nt::RESOURCE_TYPES);
 				}
 
 				// Translate resource name
@@ -150,7 +150,7 @@ bool PE::_parse_resources(FILE* f)
 					language = (*it3)->NameStr;
 				}
 				else {
-					language = nt::translate_to_flag((*it3)->NameOrId, nt::LANG_IDS);
+					language = *nt::translate_to_flag((*it3)->NameOrId, nt::LANG_IDS);
 				}
 
 				offset = _rva_to_offset(entry.OffsetToData);
@@ -481,6 +481,7 @@ DECLSPEC pversion_info Resource::interpret_as()
 	if (sizeof(fixed_file_info) != fread(res->Value.get(), 1, sizeof(fixed_file_info), f) || res->Value->Signature != 0xfeef04bd)
 	{
 		PRINT_ERROR << "Could not read a VS_FIXED_FILE_INFO!" << std::endl;
+		res.reset();
 		goto END;
 	}
 
@@ -522,7 +523,7 @@ DECLSPEC pversion_info Resource::interpret_as()
 	// In the file, the language information is an int stored into a "unicode" string.
 	ss << std::hex << current_structure->Key;
 	ss >> language;
-	res->Language = nt::translate_to_flag((language >> 16) & 0xFFFF, nt::LANG_IDS);
+	res->Language = *nt::translate_to_flag((language >> 16) & 0xFFFF, nt::LANG_IDS);
 
 	bytes_read = ftell(f) - bytes_read;
 	if (current_structure->Length < bytes_read)

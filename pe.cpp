@@ -342,7 +342,9 @@ unsigned int PE::_rva_to_offset(boost::uint64_t rva) const
 			}
 		}
 
-		return 0; // No section matches the RVA.
+		if (section == NULL) {  // No section matches the RVA.
+			return 0;
+		}
 	}
 
 	// The sections have to be aligned on FileAlignment bytes.
@@ -623,8 +625,8 @@ bool PE::_parse_certificates(FILE* f)
 		// The certificate may point to garbage. Although other values than the ones defined in nt_values.h 
 		// are allowed by the PE specification (but which ones?), this is a good heuristic to determine 
 		// whether we have landed in random bytes.
-		if (nt::translate_to_flag(cert->CertificateType, nt::WIN_CERTIFICATE_TYPES) == "UNKNOWN" &&
-			nt::translate_to_flag(cert->Revision, nt::WIN_CERTIFICATE_REVISIONS) == "UNKNOWN")
+		if (*nt::translate_to_flag(cert->CertificateType, nt::WIN_CERTIFICATE_TYPES) == "UNKNOWN" &&
+			*nt::translate_to_flag(cert->Revision, nt::WIN_CERTIFICATE_REVISIONS) == "UNKNOWN")
 		{
 			PRINT_WARNING << "The WIN_CERTIFICATE appears to be invalid." << std::endl;
 			return true; // Recoverable error.

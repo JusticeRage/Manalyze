@@ -68,12 +68,12 @@ public:
 	 *	@return	A shared vector containing the raw bytes of the section. If an error occurs, the vector
 	 *			will be empty.
 	 */
-	shared_bytes get_raw_data() const;
+	DECLSPEC shared_bytes get_raw_data() const;
 
 	DECLSPEC pString		 get_name()						const { return pString(new std::string(_name)); }
 	DECLSPEC boost::uint32_t get_virtual_size()				const { return _virtual_size; }
 	DECLSPEC boost::uint32_t get_virtual_address()			const { return _virtual_address; }
-	DECLSPEC boost::uint32_t get_size_or_raw_data()			const { return _size_of_raw_data; }
+	DECLSPEC boost::uint32_t get_size_of_raw_data()			const { return _size_of_raw_data; }
 	DECLSPEC boost::uint32_t get_pointer_to_raw_data()		const { return _pointer_to_raw_data; }
 	DECLSPEC boost::uint32_t get_pointer_to_relocations()	const { return _pointer_to_relocations; }
 	DECLSPEC boost::uint32_t get_pointer_to_line_numbers()	const { return _pointer_to_line_numbers; }
