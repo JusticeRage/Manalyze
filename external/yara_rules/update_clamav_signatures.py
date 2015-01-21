@@ -79,9 +79,10 @@ def zlib_decompress(path, outpath):
     os.remove(path)
 
 
-def update_signatures(url):
-    # Download CVD file
-    download_file(url)
+def update_signatures(url, download):
+    # Download CVD file if necessary
+    if download:
+        download_file(url)
     file_name = url.split('/')[-1]
     file_basename = file_name.split('.')[-2]
 
@@ -111,7 +112,7 @@ def update_signatures(url):
     zlib_decompress("%s.tar.gz" % file_basename, "%s.tar" % file_basename)
     tar = tarfile.open("%s.tar" % file_basename)
     tar.extract("%s.ndb" % file_basename)
-    os.chmod("%s.ndb" % file_basename, 644)
+    os.chmod("%s.ndb" % file_basename, 0644)
     tar.close()
     os.remove("%s.tar" % file_basename)
     subprocess.call([sys.executable, "./clamav_to_yara.py", "-f", "%s.ndb" % file_basename, "-o", "clamav.yara"])
@@ -122,6 +123,7 @@ os.chdir(os.path.dirname(sys.argv[0]))
 
 parser = argparse.ArgumentParser(description="Updates ClamAV signatures for plugin_clamav.")
 parser.add_argument("--main", action="store_true", help="Update ClamAV's main signature file.")
+parser.add_argument("--skip-download", dest="skipdownload", action="store_false", help="Work with local copies of ClamAV signature files.")
 args = parser.parse_args()
 
 if not os.path.exists("clamav.main.yara"):
@@ -130,7 +132,7 @@ if not os.path.exists("clamav.main.yara"):
 if args.main:
     if os.path.exists("clamav.main.yara"):
         os.remove("clamav.main.yara")
-    update_signatures(URL_MAIN)
+    update_signatures(URL_MAIN, args.skipdownload)
     shutil.copy("clamav.yara", "clamav.main.yara")
 
 try:
@@ -138,10 +140,10 @@ try:
 except OSError:
     pass
 
-update_signatures(URL_DAILY)
+update_signatures(URL_DAILY, args.skipdownload)
 try:
     os.remove("../../bin/yara_rules/clamav.yarac")
 except OSError:
     pass
-os.chmod("clamav.yara", 644)
+os.chmod("clamav.yara", 0644)
 shutil.move("clamav.yara", "../../bin/yara_rules")

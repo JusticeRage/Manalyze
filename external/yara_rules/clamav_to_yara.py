@@ -10,8 +10,7 @@ Created by Matthew Richard on 2010-03-12.
 Copyright (c) 2010 __MyCompanyName__. All rights reserved.
 
 Updated by JusticeRage in 03/2014: additional checking for malformed signatures and added metadata.
-                          04/2014: BUGFIX: some cheks were only relevant at the entrypoint.
-                          07/2014:
+                          04/2014: BUGFIX: some checks were only relevant at the entrypoint.
 """
 
 import os
