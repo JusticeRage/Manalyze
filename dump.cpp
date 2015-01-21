@@ -45,7 +45,7 @@ void dump_dos_header(const sg::PE& pe, io::OutputFormatter& formatter)
 	dos_header->append(io::pNode(new io::OutputTreeNode("e_oeminfo", header.e_oeminfo, io::OutputTreeNode::HEX)));
 	dos_header->append(io::pNode(new io::OutputTreeNode("e_lfanew", header.e_lfanew, io::OutputTreeNode::HEX)));
 
-	formatter.add_data(dos_header);
+	formatter.add_data(dos_header, *pe.get_path());
 }
 
 // ----------------------------------------------------------------------------
@@ -65,7 +65,7 @@ void dump_pe_header(const sg::PE& pe, io::OutputFormatter& formatter)
 	pe_header->append(io::pNode(new io::OutputTreeNode("SizeOfOptionalHeader", header.SizeOfOptionalHeader, io::OutputTreeNode::HEX)));
 	pe_header->append(io::pNode(new io::OutputTreeNode("Characteristics", *nt::translate_to_flags(header.Characteristics, nt::PE_CHARACTERISTICS))));
 
-	formatter.add_data(pe_header);
+	formatter.add_data(pe_header, *pe.get_path());
 }
 
 // ----------------------------------------------------------------------------
@@ -127,7 +127,7 @@ void dump_image_optional_header(const sg::PE& pe, io::OutputFormatter& formatter
 	ioh_header->append(io::pNode(new io::OutputTreeNode("LoaderFlags", ioh.LoaderFlags, io::OutputTreeNode::HEX)));
 	ioh_header->append(io::pNode(new io::OutputTreeNode("NumberOfRvaAndSizes", ioh.NumberOfRvaAndSizes)));
 
-	formatter.add_data(ioh_header);
+	formatter.add_data(ioh_header, *pe.get_path());
 }
 
 // ----------------------------------------------------------------------------
@@ -164,7 +164,7 @@ void dump_section_table(const sg::PE& pe, io::OutputFormatter& formatter, bool c
 		section_list->append(section_node);
 	}
 
-	formatter.add_data(section_list);
+	formatter.add_data(section_list, *pe.get_path());
 }
 
 // ----------------------------------------------------------------------------
@@ -183,7 +183,7 @@ void dump_imports(const sg::PE& pe, io::OutputFormatter& formatter)
 		io::pNode dll(new io::OutputTreeNode(*it, *functions));
 		imports->append(dll);
 	}
-	formatter.add_data(imports);
+	formatter.add_data(imports, *pe.get_path());
 }
 
 // ----------------------------------------------------------------------------
@@ -209,7 +209,7 @@ void dump_exports(const sg::PE& pe, io::OutputFormatter& formatter)
 		exports_list->append(ex);
 	}
 
-	formatter.add_data(exports_list);
+	formatter.add_data(exports_list, *pe.get_path());
 }
 
 // ----------------------------------------------------------------------------
@@ -249,7 +249,7 @@ void dump_resources(const sg::PE& pe, io::OutputFormatter& formatter, bool compu
 
 		resource_list->append(res);
 	}
-	formatter.add_data(resource_list);
+	formatter.add_data(resource_list, *pe.get_path());
 }
 
 // ----------------------------------------------------------------------------
@@ -269,7 +269,7 @@ void dump_version_info(const sg::PE& pe, io::OutputFormatter& formatter)
 				continue;
 			}
 
-			boost::optional<io::pNode> existing_node = formatter.find_node("Version Info");
+			boost::optional<io::pNode> existing_node = formatter.find_node("Version Info", *pe.get_path());
 			io::pNode version_info_node;
 			if (existing_node) {
 				version_info_node = *existing_node;
@@ -300,7 +300,7 @@ void dump_version_info(const sg::PE& pe, io::OutputFormatter& formatter)
 			}
 
 			version_info_node->append(key_values);
-			formatter.add_data(version_info_node);
+			formatter.add_data(version_info_node, *pe.get_path());
 		}
 	}
 }
@@ -328,7 +328,7 @@ void dump_debug_info(const sg::PE& pe, io::OutputFormatter& formatter)
 		debug_info_list->append(debug_info_node);
 	}
 
-	formatter.add_data(debug_info_list);
+	formatter.add_data(debug_info_list, *pe.get_path());
 }
 
 // ----------------------------------------------------------------------------
@@ -352,7 +352,7 @@ void dump_tls(const sg::PE& pe, io::OutputFormatter& formatter)
 		callbacks.push_back(ss.str());
 	}
 	tls_node->append(io::pNode(new io::OutputTreeNode("Callbacks", callbacks)));
-	formatter.add_data(tls_node);
+	formatter.add_data(tls_node, *pe.get_path());
 }
 
 // ----------------------------------------------------------------------------
@@ -362,7 +362,7 @@ void dump_summary(const sg::PE& pe, io::OutputFormatter& formatter)
 	io::pNode summary(new io::OutputTreeNode("Summary", io::OutputTreeNode::LIST));
 
 	// Grab all detected languages
-	std::vector<std::string> languages;
+	std::set<std::string> languages;
 	sg::shared_resources res = pe.get_resources();
 	pversion_info vi;
 	for (std::vector<sg::pResource>::const_iterator it = res->begin() ; it != res->end() ; ++it)
@@ -373,39 +373,32 @@ void dump_summary(const sg::PE& pe, io::OutputFormatter& formatter)
 			if (vi == NULL) {
 				continue;
 			}
-			if (vi->Language != "UNKNOWN" 
-				&& std::find(languages.begin(), languages.end(), vi->Language) == languages.end()) 
-			{
-				languages.push_back(vi->Language); // Some language info is also present in the VERSION_INFO resource.
+			if (vi->Language != "UNKNOWN") {
+				languages.insert(vi->Language); // Some language info is also present in the VERSION_INFO resource.
 			}
 		}
 
-		if (*(*it)->get_language() != "UNKNOWN" 
-			&& std::find(languages.begin(), languages.end(), *(*it)->get_language()) == languages.end())
-		{
-			languages.push_back(*(*it)->get_language());
+		if (*(*it)->get_language() != "UNKNOWN") {
+			languages.insert(*(*it)->get_language());
 		}
 	}
 
 	// Get PDB location if it is present
-	std::vector<std::string> debug_files;
+	std::set<std::string> debug_files;
 	sg::shared_debug_info di = pe.get_debug_info();
 	for (std::vector<pdebug_directory_entry>::const_iterator it = di->begin() ; it != di->end() ; ++it)
 	{
-		if ((*it)->Filename != "" 
-			&& std::find(languages.begin(), languages.end(), vi->Language) == languages.end())
-		{
-			debug_files.push_back((*it)->Filename);
+		if ((*it)->Filename != "") {
+			debug_files.insert((*it)->Filename);
 		}
 	}
 
 	// Inform the user if some COFF debug information is present
 	sg::pe_header h = pe.get_pe_header();
 	if (h.NumberOfSymbols > 0 && h.PointerToSymbolTable != 0) {
-		debug_files.push_back("Embedded COFF debugging symbols");
+		debug_files.insert("Embedded COFF debugging symbols");
 	}
 
-	summary->append(io::pNode(new io::OutputTreeNode("File", *pe.get_path())));
 	summary->append(io::pNode(new io::OutputTreeNode("Architecture", *nt::translate_to_flag(h.Machine, nt::MACHINE_TYPES))));
 	sg::image_optional_header ioh = pe.get_image_optional_header();
 	summary->append(io::pNode(new io::OutputTreeNode("Subsystem", *nt::translate_to_flag(ioh.Subsystem, nt::SUBSYSTEMS))));
@@ -433,7 +426,7 @@ void dump_summary(const sg::PE& pe, io::OutputFormatter& formatter)
 		}
 	}
 
-	formatter.add_data(summary);
+	formatter.add_data(summary, *pe.get_path());
 }
 
 // ----------------------------------------------------------------------------
@@ -448,7 +441,7 @@ void dump_hashes(const sg::PE& pe, io::OutputFormatter& formatter)
 	hashes_node->append(io::pNode(new io::OutputTreeNode("SHA3", hashes->at(ALL_DIGESTS_SHA3))));
 	hashes_node->append(io::pNode(new io::OutputTreeNode("SSDeep", *ssdeep::hash_file(*pe.get_path()))));
 	hashes_node->append(io::pNode(new io::OutputTreeNode("Imports Hash", *hash::hash_imports(pe))));
-	formatter.add_data(hashes_node);
+	formatter.add_data(hashes_node, *pe.get_path());
 }
 
 } // !namespace sg

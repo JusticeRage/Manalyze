@@ -18,6 +18,9 @@ along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef _DUMP_H_
 #define _DUMP_H_
 
+#include <set>
+#include <vector>
+
 #include "output_formatter.h"
 #include "pe.h"
 #include "imports.h"

@@ -74,9 +74,19 @@ public:
 				res->add_information(ss.str());
 				res->raise_level(Result::SUSPICIOUS);
 			}
-		}
 
-		// TODO: Calculate entropy
+			if ((*it)->get_size_of_raw_data() == 0) { // TODO: Report this in a "structure" plugin?
+				continue;
+			}
+
+			double entropy = (*it)->get_entropy();
+			if (entropy > 7.)
+			{
+				std::stringstream ss;
+				ss << "Section " << *(*it)->get_name() << " has an unusually high entropy (" << entropy << ").";
+				res->raise_level(Result::SUSPICIOUS);
+			}
+		}
 
 		// A low number of imports indicates that the binary is packed.
 		sg::const_shared_strings imports = pe.find_imports(".*"); // Get all imports

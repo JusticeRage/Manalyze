@@ -480,7 +480,7 @@ DECLSPEC pversion_info Resource::interpret_as()
 	// 0xFEEF04BD is a magic located at the beginning of the VS_FIXED_FILE_INFO structure.
 	if (sizeof(fixed_file_info) != fread(res->Value.get(), 1, sizeof(fixed_file_info), f) || res->Value->Signature != 0xfeef04bd)
 	{
-		PRINT_ERROR << "Could not read a VS_FIXED_FILE_INFO!" << std::endl;
+		PRINT_ERROR << "Could not read a VS_FIXED_FILE_INFO!" << DEBUG_INFO << std::endl;
 		res.reset();
 		goto END;
 	}

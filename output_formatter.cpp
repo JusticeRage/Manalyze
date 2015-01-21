@@ -74,28 +74,36 @@ boost::optional<pNode> OutputTreeNode::find_node(const std::string& name) const
 
 // ----------------------------------------------------------------------------
 
-std::string RawFormatter::format()
+void RawFormatter::format(std::ostream& sink)
 {
-	std::stringstream ss;
-
 	if (_header != "") {
-		ss << _header << std::endl << std::endl;
+		sink << _header << std::endl << std::endl;
 	}
 
 	nodes n = _root->get_children();
-	for (nodes::const_iterator it = n.begin() ; it != n.end() ; ++it) // Category level
+	for (nodes::const_iterator it = n.begin() ; it != n.end() ; ++it) // File level
 	{
-		_dump_node(ss, *it, determine_max_width(*it));
+		_dump_node(sink, *it, determine_max_width(*it));
 	}
-
-	return ss.str();
 }
 
 // ----------------------------------------------------------------------------
 
-void RawFormatter::_dump_node(std::stringstream& sink, pNode node, int max_width, int level)
+void RawFormatter::_dump_node(std::ostream& sink, pNode node, int max_width, int level)
 {
-	if (level == 0) // Category level
+	if (node->get_name() == "Plugins") // Handle plugin output separately.
+	{
+		_dump_plugin_node(sink, node);
+		return;
+	}
+
+	if (level == 0) // File level
+	{
+		sink << "-------------------------------------------------------------------------------" << std::endl;
+		sink << node->get_name() << std::endl;
+		sink << "-------------------------------------------------------------------------------" << std::endl << std::endl;
+	}
+	else if (level == 1) // Category level
 	{
 		if (node->get_type() != OutputTreeNode::LIST)
 		{
@@ -104,7 +112,7 @@ void RawFormatter::_dump_node(std::stringstream& sink, pNode node, int max_width
 		}
 		sink << node->get_name() << ":" << std::endl << std::string(node->get_name().length() + 1, '-') << std::endl;
 	}
-	else if (level == 1) 
+	else if (level == 2) 
 	{
 		sink << node->get_name();
 		if (node->get_type() == OutputTreeNode::LIST) {
@@ -113,7 +121,7 @@ void RawFormatter::_dump_node(std::stringstream& sink, pNode node, int max_width
 	}
 	else 
 	{
-		sink << std::string((level - 1) * 4, ' ') << node->get_name();
+		sink << std::string((level - 2) * 4, ' ') << node->get_name();
 		if (node->get_type() == OutputTreeNode::LIST) {
 			sink << ":" << std::endl;
 		}
@@ -161,7 +169,7 @@ void RawFormatter::_dump_node(std::stringstream& sink, pNode node, int max_width
 							sink << ": " << std::string(max_width - node->get_name().length(), ' ') << *it << std::endl;
 						}
 						else {
-							sink << std::string(max_width + 2 + (level - 1) * 4, ' ') << *it << std::endl;
+							sink << std::string(max_width + 2 + (level - 2) * 4, ' ') << *it << std::endl;
 						}
 					}
 					else 
@@ -186,6 +194,65 @@ void RawFormatter::_dump_node(std::stringstream& sink, pNode node, int max_width
 				sink << ": " << node->to_string() << std::endl;
 			}
 			break;
+	}
+}
+
+// ----------------------------------------------------------------------------
+
+void RawFormatter::_dump_plugin_node(std::ostream& sink, pNode node)
+{
+	if (node->get_type() != OutputTreeNode::LIST)
+	{
+		PRINT_WARNING << "[RawFormatter] Plugins node is not a LIST!" << std::endl;
+		return;
+	}
+
+	nodes plugin_nodes = node->get_children();
+	for (nodes::const_iterator it = plugin_nodes.begin() ; it != plugin_nodes.end() ; ++it)
+	{
+		boost::optional<pNode> level = (*it)->find_node("level");
+		boost::optional<pNode> summary = (*it)->find_node("summary");
+		boost::optional<pNode> info = (*it)->find_node("plugin_output");
+		if (!info)
+		{
+			PRINT_WARNING << "[RawFormatter] No output for plugin " << (*it)->get_name() << "!" << std::endl;
+			continue;
+		}
+
+		if (level)
+		{
+			switch ((*level)->get_level())
+			{
+			case plugin::Result::NO_OPINION:
+				break;
+
+			case plugin::Result::MALICIOUS:
+				utils::print_colored_text("MALICIOUS", utils::RED, sink, "[ ", " ] ");
+				break;
+
+			case plugin::Result::SUSPICIOUS:
+				utils::print_colored_text("SUSPICIOUS", utils::YELLOW, sink, "[ ", " ] ");
+				break;
+
+			case plugin::Result::SAFE:
+				utils::print_colored_text("SAFE", utils::GREEN, sink, "[ ", " ] ");
+				break;
+			}
+		}
+
+		if (summary) {
+			sink << (*summary)->to_string() << std::endl;
+		}
+		else if ((*level)->get_level() != plugin::Result::NO_OPINION) {
+			sink << std::endl;
+		}
+		strings output = (*info)->get_strings();
+		for (std::vector<std::string>::iterator it2 = output.begin() ; it2 != output.end() ; ++it2) {
+			sink << "\t" << *it2 << std::endl;
+		}
+		if (summary || output.size() > 0) {
+			sink << std::endl;
+		}
 	}
 }
 

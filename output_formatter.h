@@ -19,9 +19,11 @@ along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
 #define _OUTPUT_FORMATTER_H_
 
 #include <sstream>
+#include <ostream>
 #include <vector>
 #include <tuple>
 #include <string>
+#include <set>
 
 #include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
@@ -29,11 +31,13 @@ along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
 #include <boost/date_time.hpp>
 
 #include "color.h"
+#include "plugin_framework/result.h" // Necessary to hold a threat level in a node.
 
 namespace io
 {
 
 typedef std::vector<std::string> strings;
+typedef std::set<std::string> string_set;
 typedef std::vector<std::pair<std::string, strings> > key_values;
 
 /**
@@ -45,7 +49,17 @@ public:
 	typedef boost::shared_ptr<OutputTreeNode> pNode;
 	typedef std::vector<pNode> nodes;
 
-	enum node_type { LIST, UINT32, UINT16, UINT64, FLOAT, DOUBLE, STRING, STRINGS };
+	enum node_type { LIST, UINT32, UINT16, UINT64, FLOAT, DOUBLE, STRING, STRINGS, THREAT_LEVEL };
+
+	/**
+	 *	@brief	Modifiers that control the way a node's content is displayed.
+	 *
+	 *	Formatters may chose to ignore some modifiers.
+	 *
+	 *	NONE		Nothing
+	 *	DEC			Print as a decimal number (for UINT64, UINT32 and UINT16)
+	 *	HEX			Print as an hexadecimal number (for UINT64, UINT32 and UINT16)
+	 */
 	enum display_modifier { NONE, DEC, HEX };
 
 	// ----------------------------------------------------------------------------
@@ -62,30 +76,40 @@ public:
 		: _name(name), _type(UINT64), _uint64_data(l), _modifier(mod)
 	{}
 
-	OutputTreeNode(const std::string& name, float f)
-		: _name(name), _type(FLOAT), _float_data(f), _modifier(NONE)
+	OutputTreeNode(const std::string& name, float f, display_modifier mod = NONE)
+		: _name(name), _type(FLOAT), _float_data(f), _modifier(mod)
 	{}
 
-	OutputTreeNode(const std::string& name, double d)
-		: _name(name), _type(DOUBLE), _double_data(d), _modifier(NONE)
+	OutputTreeNode(const std::string& name, double d, display_modifier mod = NONE)
+		: _name(name), _type(DOUBLE), _double_data(d), _modifier(mod)
 	{}
 
-	OutputTreeNode(const std::string& name, const std::string& s)
-		: _name(name), _type(STRING), _string_data(s), _modifier(NONE)
+	OutputTreeNode(const std::string& name, const std::string& s, display_modifier mod = NONE)
+		: _name(name), _type(STRING), _string_data(s), _modifier(mod)
 	{}
 
-	OutputTreeNode(const std::string& name, const nodes& nodes)
-		: _name(name), _type(LIST), _list_data(nodes), _modifier(NONE)
+	OutputTreeNode(const std::string& name, const nodes& nodes, display_modifier mod = NONE)
+		: _name(name), _type(LIST), _list_data(nodes), _modifier(mod)
 	{}
 
-	OutputTreeNode(const std::string& name, const strings& strs)
-		: _name(name), _type(STRINGS), _strings_data(strs), _modifier(NONE)
+	OutputTreeNode(const std::string& name, const strings& strs, display_modifier mod = NONE)
+		: _name(name), _type(STRINGS), _strings_data(strs), _modifier(mod)
+	{}
+
+	OutputTreeNode(const std::string& name, const string_set strs, display_modifier mod = NONE)
+		: _name(name), _type(STRINGS), _modifier(mod)
+	{
+		_strings_data = strings(strs.begin(), strs.end());
+	}
+
+	OutputTreeNode(const std::string& name, plugin::Result::LEVEL level, display_modifier mod = NONE)
+		: _name(name), _type(THREAT_LEVEL), _level_data(level), _modifier(mod)
 	{}
 
 	// ----------------------------------------------------------------------------
 
-	OutputTreeNode(const std::string& name, enum node_type type)
-		: _name(name), _type(type)
+	OutputTreeNode(const std::string& name, enum node_type type, enum display_modifier mod = NONE)
+		: _name(name), _type(type), _modifier(mod)
 	{
 		switch (type)
 		{
@@ -108,6 +132,12 @@ public:
 
 	node_type get_type() const {
 		return _type;
+	}
+
+	// ----------------------------------------------------------------------------
+
+	display_modifier get_modifier() const {
+		return _modifier;
 	}
 
 	// ----------------------------------------------------------------------------
@@ -151,12 +181,37 @@ public:
 			case DOUBLE:
 				ss << *_double_data;
 				break;
+			case THREAT_LEVEL:
+				ss << *_level_data;
+				break;
 			case LIST:
 			case STRINGS:
-				PRINT_WARNING << "[OutputFormatter] Called to_string() on a LIST or a STRINGS node!" << std::endl;
+				PRINT_WARNING << "[OutputFormatter] Called to_string() on a LIST or a STRINGS node!" << DEBUG_INFO << std::endl;
 				break;
 		}
 		return ss.str();
+	}
+
+	// ----------------------------------------------------------------------------
+
+	plugin::Result::LEVEL get_level() const 
+	{
+		if (_type != THREAT_LEVEL) 
+		{
+			PRINT_WARNING << "[OutputTreeNode] Tried to get a level, but is not a THREAT_LEVEL node!" << DEBUG_INFO << std::endl;
+			return plugin::Result::NO_OPINION;
+		}
+		return *_level_data;
+	}
+
+	strings get_strings() const
+	{
+		if (_type != STRINGS)
+		{
+			PRINT_WARNING << "[OutputTreeNode] Tried to get strings, but is not a STRINGS node!" << DEBUG_INFO << std::endl;
+			return strings();
+		}
+		return *_strings_data;
 	}
 
 	// ----------------------------------------------------------------------------
@@ -170,7 +225,7 @@ public:
 	{
 		if (_type != LIST) 
 		{
-			PRINT_WARNING << "[OutputFormatter] Tried to append a node, but is not a list of nodes!" << std::endl;
+			PRINT_WARNING << "[OutputFormatter] Tried to append a node, but is not a list of nodes!" << DEBUG_INFO << std::endl;
 			return;
 		}
 
@@ -280,6 +335,7 @@ private:
 	boost::optional<std::string>			_string_data;
 	boost::optional<nodes>					_list_data;
 	boost::optional<strings>				_strings_data;
+	boost::optional<plugin::Result::LEVEL>	_level_data;
 	display_modifier						_modifier;		// Additional info hinting at how the data should be displayed,
 															// i.e. hexadecimal or decimal for ints.
 
@@ -319,36 +375,62 @@ public:
 
 	// ----------------------------------------------------------------------------
 
-	void add_data(pNode n) {
-		// TODO: Add a level above "category" to support multiple analyzes.
-		if (_root->find_node(n->get_name())) {
-			PRINT_WARNING << "Multiple nodes using the name " << n->get_name() << " in a dictionary." << std::endl;
+	/**
+	 *	@brief	Appends data to the output.
+	 *
+	 *	@param	pNode n The data to append.
+	 *	@param	const std::string& file_path The path to the corresponding file.
+	 *
+	 *	The file_path parameter is used as a unique identifier for a particular analysis.
+	 */
+	void add_data(pNode n, const std::string& file_path)
+	{
+		boost::optional<pNode> file_node = _root->find_node(file_path);
+		if (file_node) 
+		{
+			if ((*file_node)->find_node(n->get_name())) {
+				PRINT_WARNING << "Multiple nodes using the name " << n->get_name() << " in a dictionary." << std::endl;
+			}
+			(*file_node)->append(n);
 		}
-		_root->append(n);
+		else
+		{
+			pNode new_file_node(new OutputTreeNode(file_path, OutputTreeNode::LIST));
+			new_file_node->append(n);
+			_root->append(new_file_node);
+		}
 	}
 
 	// ----------------------------------------------------------------------------
 
 	/**
-	*	@brief	Find a node in a list of nodes based on its name.
+	*	@brief	Find a node in a list of nodes based on its name, for a particular file.
 	*
 	*	The search will stop at the first occurrence of the name, so using duplicate
 	*	node names is not a good idea.
 	*
 	*	@param	const std::string& name The name of the node to locate.
+	*	@param	const std::string file_path The file whose analysis should be searched.
 	*
 	*	@return	A boost::optional which may contain the located node, if it was found.
 	*/
-	boost::optional<pNode> find_node(const std::string& name) {
-		return _root->find_node(name);
+	boost::optional<pNode> find_node(const std::string& name, const std::string file_path) 
+	{
+		boost::optional<pNode> file_node = _root->find_node(file_path);
+		if (!file_node) {
+			return boost::optional<pNode>();
+		}
+		return (*file_node)->find_node(name);
 	}
 
 	// ----------------------------------------------------------------------------
 
 	/**
-	 *	@brief	Returns a string containing the formatted data.
+	 *	@brief	Dumps the formatted data into target output stream.
+	 *
+	 *	@param	std::ostream& sink	The output stream.
 	 */
-	virtual std::string format() = 0;
+	virtual void format(std::ostream& sink) = 0;
 
 protected:
 	std::string _header;
@@ -360,7 +442,7 @@ class RawFormatter : public OutputFormatter
 {
 
 public:
-	virtual std::string format();
+	virtual void format(std::ostream& sink);
 
 private:
 	/**
@@ -372,7 +454,18 @@ private:
 	 *			printing purposes).
 	 *	@param	int level The hierarchical level of the node to dump (higher is deeper in the tree).
 	 */
-	void _dump_node(std::stringstream& sink, pNode node, int max_width = 0, int level = 0);
+	void _dump_node(std::ostream& sink, pNode node, int max_width = 0, int level = 0);
+
+	/**
+	 *	@brief	Special printing handling for plugin output.
+	 *
+	 *	The plugins' output needs special code to be printed in a more readable fashion than a 
+	 *	simple list of keys and values.
+	 *
+	 *	@param	std::stringstream& sink The stringstream into which the data should be written.
+	 *	@param	pNode node The node to dump.
+	 */
+	void _dump_plugin_node(std::ostream& sink, pNode node);
 
 };
 

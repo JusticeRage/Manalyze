@@ -124,6 +124,7 @@ std::vector<std::string> tokenize_args(const std::vector<std::string>& args)
  *	- All the requested categories for the "dump" command exist
  *	- All the requested plugins exist
  *	- All the input files exist
+ *	- The requester output formatter exists
  *
  *	If an error is detected, the help message is displayed.
  *
@@ -189,6 +190,20 @@ bool validate_args(po::variables_map& vm, po::options_description& desc, char** 
 		}
 	}
 
+	// Verify that the requested output formatter exists
+	if (vm.count("output"))
+	{
+		const std::vector<std::string> formatters = boost::assign::list_of("raw")("json");
+		std::vector<std::string>::const_iterator found = std::find(formatters.begin(), formatters.end(), vm["output"].as<std::string>());
+		if (found == formatters.end())
+		{
+			print_help(desc, argv[0]);
+			std::cout << std::endl;
+			PRINT_ERROR << "output formatter " << vm["output"].as<std::string>() << " does not exist!" << std::endl;
+			return false;
+		}
+	}
+
 	return true;
 }
 
@@ -211,8 +226,9 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
 		("pe", po::value<std::vector<std::string> >(), "The PE to analyze. Also accepted as a positional argument. "
 			"Multiple files may be specified.")
 		("recursive,r", "Scan all files in a directory (subdirectories will be ignored).")
+		("output,o", po::value<std::string>(), "The output format. May be 'raw' (default) or 'json'.")
 		("dump,d", po::value<std::vector<std::string> >(), 
-			"Dumps PE information. Available choices are any combination of: "
+			"Dump PE information. Available choices are any combination of: "
 			"all, summary, dos (dos header), pe (pe header), opt (pe optional header), sections, "
 			"imports, exports, resources, version, debug, tls")
 		("hashes", "Calculate various hashes of the file (may slow down the analysis!)")
@@ -249,52 +265,50 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
 /**
  *	@brief	Dumps select information from a PE.
  *
+ *	@param	io::OutputFormatter& formatter The object which will recieve the output.
  *	@param	const std::vector<std::string>& categories The types of information to dump.
  *			For the list of accepted categories, refer to the program help or the source
  *			below.
  *	@param	const sg::PE& pe The PE to dump.
  *	@param	bool compute_hashes Whether hashes should be calculated.
  */
-void handle_dump_option(const std::vector<std::string>& categories, bool compute_hashes, const sg::PE& pe)
-{
-	io::RawFormatter rf; // TODO : Should be given as argument
-
+void handle_dump_option(io::OutputFormatter& formatter, const std::vector<std::string>& categories, bool compute_hashes, const sg::PE& pe)
+{	
 	bool dump_all = (std::find(categories.begin(), categories.end(), "all") != categories.end());
 	if (dump_all || std::find(categories.begin(), categories.end(), "summary") != categories.end()) {
-		sg::dump_summary(pe, rf);
+		sg::dump_summary(pe, formatter);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "dos") != categories.end()) 
 	{
-		sg::dump_dos_header(pe, rf);
+		sg::dump_dos_header(pe, formatter);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "pe") != categories.end()) {
-		sg::dump_pe_header(pe, rf);
+		sg::dump_pe_header(pe, formatter);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "opt") != categories.end()) {
-		sg::dump_image_optional_header(pe, rf);
+		sg::dump_image_optional_header(pe, formatter);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "sections") != categories.end()) {
-		sg::dump_section_table(pe, rf, compute_hashes);
+		sg::dump_section_table(pe, formatter, compute_hashes);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "imports") != categories.end()) {
-		sg::dump_imports(pe, rf);
+		sg::dump_imports(pe, formatter);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "exports") != categories.end()) {
-		sg::dump_exports(pe, rf);
+		sg::dump_exports(pe, formatter);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "resources") != categories.end()) {
-		sg::dump_resources(pe, rf, compute_hashes);
+		sg::dump_resources(pe, formatter, compute_hashes);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "version") != categories.end()) {
-		sg::dump_version_info(pe, rf);
+		sg::dump_version_info(pe, formatter);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "debug") != categories.end()) {
-		sg::dump_debug_info(pe, rf);
+		sg::dump_debug_info(pe, formatter);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "tls") != categories.end()) {
-		sg::dump_tls(pe, rf);
+		sg::dump_tls(pe, formatter);
 	}
-	std::cout << rf.format();
 }
 
 // ----------------------------------------------------------------------------
@@ -302,14 +316,19 @@ void handle_dump_option(const std::vector<std::string>& categories, bool compute
 /**
  *	@brief	Analyze the PE with each selected plugin.
  *
+ *	@param	io::OutputFormatter& formatter The object which will recieve the output.
  *	@param	const std::vector<std::string>& selected The names of the selected plugins.
  *	@param	const config& conf The configuration of the plugins.
  *	@param	const sg::PE& pe The PE to analyze.
  */
-void handle_plugins_option(const std::vector<std::string>& selected, const config& conf, const sg::PE& pe)
+void handle_plugins_option(io::OutputFormatter& formatter,
+						   const std::vector<std::string>& selected,
+						   const config& conf,
+						   const sg::PE& pe)
 {
 	bool all_plugins = std::find(selected.begin(), selected.end(), "all") != selected.end();
 	std::vector<plugin::pIPlugin> plugins = plugin::PluginManager::get_instance().get_plugins();
+	io::pNode plugins_node(new io::OutputTreeNode("Plugins", io::OutputTreeNode::LIST));
 
 	for (std::vector<plugin::pIPlugin>::iterator it = plugins.begin() ; it != plugins.end() ; ++it) 
 	{
@@ -323,43 +342,21 @@ void handle_plugins_option(const std::vector<std::string>& selected, const confi
 		}
 		plugin::pResult res = (*it)->analyze(pe);
 		plugin::pInformation info = res->get_information();
-		plugin::pString summary = res->get_summary();
-
-		if (!info) {
+		if (!info || info->size() == 0) { // Plugin has no output.
 			continue;
 		}
-		switch (res->get_level())
-		{
-		case plugin::Result::NO_OPINION:
-			break;
+		plugin::pString summary = res->get_summary();
 
-		case plugin::Result::MALICIOUS:
-			utils::print_colored_text("MALICIOUS", utils::RED, std::cout, "[ ", " ] ");
-			break;
-
-		case plugin::Result::SUSPICIOUS:
-			utils::print_colored_text("SUSPICIOUS", utils::YELLOW, std::cout, "[ ", " ] ");
-			break;
-
-		case plugin::Result::SAFE:
-			utils::print_colored_text("SAFE", utils::GREEN, std::cout, "[ ", " ] ");
-			break;
-		}
-
+		io::pNode plugin_node(new io::OutputTreeNode(*(*it)->get_id(), io::OutputTreeNode::LIST));
+		plugin_node->append(io::pNode(new io::OutputTreeNode("level", res->get_level())));
+		plugin_node->append(io::pNode(new io::OutputTreeNode("plugin_output", *res->get_information())));
 		if (summary) {
-			std::cout << *summary << std::endl;
-		}
-		else if (res->get_level() != plugin::Result::NO_OPINION) {
-			std::cout << std::endl;
+			plugin_node->append(io::pNode(new io::OutputTreeNode("summary", *res->get_summary())));
 		}
 
-		for (std::vector<std::string>::iterator it2 = info->begin() ; it2 != info->end() ; ++it2) {
-			std::cout << "\t" << *it2 << std::endl;
-		}
-		if (summary || info->size() > 0) {
-			std::cout << std::endl;
-		}
+		plugins_node->append(plugin_node);
 	}
+	formatter.add_data(plugins_node, *pe.get_path());
 }
 
 // ----------------------------------------------------------------------------
@@ -372,18 +369,18 @@ void handle_plugins_option(const std::vector<std::string>& selected, const confi
  *
  *	@param	po::variables_map& vm The (parsed) arguments of the application.
  *
- *	@return	A vector containing all the files to analyze.
+ *	@return	A set (to weed out duplicates) containing all the files to analyze.
  */
-std::vector<std::string> get_input_files(po::variables_map& vm)
+std::set<std::string> get_input_files(po::variables_map& vm)
 {
-	std::vector<std::string> targets;
+	std::set<std::string> targets;
 	if (vm.count("recursive")) 
 	{
 		std::vector<std::string> input = vm["pe"].as<std::vector<std::string> >();
 		for (std::vector<std::string>::iterator it = input.begin() ; it != input.end() ; ++it)
 		{
 			if (!bfs::is_directory(*it)) {
-				targets.push_back(bfs::absolute(*it).string());
+				targets.insert(bfs::absolute(*it).string());
 			}
 			else
 			{
@@ -391,7 +388,7 @@ std::vector<std::string> get_input_files(po::variables_map& vm)
 				for (bfs::directory_iterator dit(*it) ; dit != end ; ++dit)
 				{
 					if (!bfs::is_directory(*dit)) { // Ignore subdirectories
-						targets.push_back(bfs::absolute(dit->path()).string());
+						targets.insert(bfs::absolute(dit->path()).string());
 					}
 				}
 			}
@@ -403,10 +400,10 @@ std::vector<std::string> get_input_files(po::variables_map& vm)
 		for (std::vector<std::string>::const_iterator it = vect.begin() ; it != vect.end() ; ++it) 
 		{
 			if (!bfs::is_directory(*it)) {
-				targets.push_back(bfs::absolute(*it).string());
+				targets.insert(bfs::absolute(*it).string());
 			}
 			else {
-				PRINT_WARNING << *it << " is a directory. Skipping." << std::endl;
+				PRINT_WARNING << *it << " is a directory. Skipping (use the -r option for recursive analyses)." << std::endl;
 			}
 		}
 	}
@@ -423,7 +420,8 @@ void perform_analysis(const std::string& path,
 					  const std::string& extraction_directory,
 					  const std::vector<std::string> selected_categories,
 					  const std::vector<std::string> selected_plugins,
-					  const config& conf)
+					  const config& conf,
+					  boost::shared_ptr<io::OutputFormatter> formatter)
 {
 	sg::PE pe(path);
 
@@ -452,10 +450,10 @@ void perform_analysis(const std::string& path,
 	}
 
 	if (vm.count("dump")) {
-		handle_dump_option(selected_categories, vm.count("hashes") != 0, pe);
+		handle_dump_option(*formatter, selected_categories, vm.count("hashes") != 0, pe);
 	}
 	else { // No specific info required. Display the summary of the PE.
-		// TODO: Restore Summary
+		dump_summary(pe, *formatter);
 	}
 
 
@@ -464,11 +462,11 @@ void perform_analysis(const std::string& path,
 	}
 
 	if (vm.count("hashes")) {
-		// TODO: Restore hashes dump
+		dump_hashes(pe, *formatter);
 	}
 
 	if (vm.count("plugins")) {
-		handle_plugins_option(selected_plugins, conf, pe);
+		handle_plugins_option(*formatter, selected_plugins, conf, pe);
 	}
 }
 
@@ -494,7 +492,7 @@ int main(int argc, char** argv)
 	}
 
 	// Get all the paths now and make them absolute before changing the working directory
-	std::vector<std::string> targets = get_input_files(vm);
+	std::set<std::string> targets = get_input_files(vm);
 	if (vm.count("extract")) {
 		extraction_directory = bfs::absolute(vm["extract"].as<std::string>()).string();
 	}
@@ -506,17 +504,28 @@ int main(int argc, char** argv)
 		selected_categories = tokenize_args(vm["dump"].as<std::vector<std::string> >());
 	}
 
+	// Instantiate the requested OutputFormatter
+	boost::shared_ptr<io::OutputFormatter> formatter;
+	if (vm.count("output"))
+	{
+		if (vm["output"].as<std::string>() == "raw") {
+			formatter.reset(new io::RawFormatter());
+		}
+		else if (vm["output"].as<std::string>() == "json") {
+			PRINT_ERROR << "JSON output not implemented yet :(" << std::endl;
+			return 1;
+		}
+	}
+	else { // Default: use the human-readable output.
+		formatter.reset(new io::RawFormatter());
+	}
+
 	// Set the working directory to the binary's folder.
 	chdir(working_dir.string().c_str());
 
 	// Do the actual analysis on all the input files
-	for (std::vector<std::string>::iterator it = targets.begin() ; it != targets.end() ; ++it)
-	{
-		perform_analysis(*it, vm, extraction_directory, selected_categories, selected_plugins, conf);
-
-		if (it != targets.end() - 1) {
-			std::cout << "--------------------------------------------------------------------------------" << std::endl << std::endl;
-		}
+	for (std::set<std::string>::iterator it = targets.begin() ; it != targets.end() ; ++it)	{
+		perform_analysis(*it, vm, extraction_directory, selected_categories, selected_plugins, conf, formatter);
 	}
 
 	if (vm.count("plugins")) 
@@ -524,6 +533,8 @@ int main(int argc, char** argv)
 		// Explicitly unload the plugins
 		plugin::PluginManager::get_instance().unload_all();
 	}
+
+	formatter->format(std::cout);
 
 	return 0;
 }

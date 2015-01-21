@@ -62,6 +62,16 @@ std::ostream& print_colored_text(const std::string& text,
 #define PRINT_ERROR utils::print_colored_text("!", utils::RED, std::cerr, "[", "] Error: ")
 #define PRINT_WARNING utils::print_colored_text("*", utils::YELLOW, std::cerr, "[", "] Warning: ")
 
+// TODO: Add these macros to all errors and warnings.
+#ifdef _DEBUG
+	#define DEBUG_INFO " (" << __FILE__ << ":" << __LINE__ << ")"
+	#define DEBUG_INFO_PE " (" << __FILE__ << ":" << __LINE__ << ", " << *pe.get_path() << ")"
+	#define DEBUG_INFO_INSIDEPE " (" << __FILE__ << ":" << __LINE__ << ", " << get_path() << ")"
+#else
+	#define DEBUG_INFO ""
+	#define DEBUG_INFO_PE ""
+	#define DEBUG_INFO_INSIDEPE ""
+#endif
 
 } //namespace utils
 

@@ -59,7 +59,7 @@ shared_bytes Section::get_raw_data() const
 	boost::shared_ptr<std::vector<boost::uint8_t> > res(new std::vector<boost::uint8_t>());
 	if (_size_of_raw_data == 0)
 	{
-		PRINT_WARNING << "Section " << _name << " has a size of 0!";
+		PRINT_WARNING << "Section " << _name << " has a size of 0!" << DEBUG_INFO << std::endl;
 		return res;
 	}
 	FILE* f = fopen(_path.c_str(), "rb");
