@@ -21,6 +21,19 @@ namespace io {
 
 // ----------------------------------------------------------------------------
 
+/**
+ *	@brief	Converts a string to lowercase and replaces spaces with underscores.
+ *
+ *	@param	std::string& s The string to sanitize.
+*/
+void json_sanitize(std::string& s)
+{
+	std::transform(s.begin(), s.end(), s.begin(), ::tolower);
+	std::replace(s.begin(), s.end(), ' ', '_');
+}
+
+// ----------------------------------------------------------------------------
+
 int determine_max_width(pNode node)
 {
 	if (node->get_type() != OutputTreeNode::LIST)
@@ -74,10 +87,13 @@ boost::optional<pNode> OutputTreeNode::find_node(const std::string& name) const
 
 // ----------------------------------------------------------------------------
 
-void RawFormatter::format(std::ostream& sink)
+void RawFormatter::format(std::ostream& sink, bool end_stream)
 {
-	if (_header != "") {
+	static bool print_header = true;
+	if (_header != "" && print_header) 
+	{
 		sink << _header << std::endl << std::endl;
+		print_header = false;
 	}
 
 	nodes n = _root->get_children();
@@ -85,6 +101,7 @@ void RawFormatter::format(std::ostream& sink)
 	{
 		_dump_node(sink, *it, determine_max_width(*it));
 	}
+	_root->clear(); // Free all the nodes that were already printed. Keeps the RAM in check for recursive analyses.
 }
 
 // ----------------------------------------------------------------------------
@@ -254,6 +271,83 @@ void RawFormatter::_dump_plugin_node(std::ostream& sink, pNode node)
 			sink << std::endl;
 		}
 	}
+}
+
+// ----------------------------------------------------------------------------
+
+void JsonFormatter::format(std::ostream& sink, bool end_stream)
+{
+	static bool print_header = true;
+	if (print_header)
+	{ 
+		sink << "{" << std::endl;
+		print_header = false;
+	}
+	
+	nodes n = _root->get_children();
+	for (nodes::const_iterator it = n.begin() ; it != n.end() ; ++it) // File level
+	{
+		_dump_node(sink, *it);
+	}
+
+	if (end_stream) {
+		sink << "}" << std::endl;
+	}
+	_root->clear(); // Free all the nodes that were already printed. Keeps the RAM in check for recursive analyses.
+}
+
+// ----------------------------------------------------------------------------
+
+void JsonFormatter::_dump_node(std::ostream& sink, pNode node, int level, bool append_comma)
+{
+	std::string name = node->get_name();
+	std::string data;
+	json_sanitize(name);
+
+	switch (node->get_type())
+	{
+		case OutputTreeNode::STRINGS:
+		{ // Separate scope because variable 'strs' is declared in here.
+			sink << std::string(level, '\t') << "\"" << name << "\": [" << std::endl;
+			strings strs = node->get_strings();
+			for (strings::const_iterator it = strs.begin() ; it != strs.end() ; ++it)
+			{
+				std::string str = *it;
+				boost::trim(str); // Delete unnecessary whitespace
+				sink << std::string(level + 1, '\t') << "\"" << str << "\"";
+				if (it != strs.end() - 1) {
+					sink << ",";
+				}
+				sink << std::endl;
+			}
+			sink << std::string(level, '\t') << "]";
+			break;
+		}
+		case OutputTreeNode::LIST:
+		{ // Separate scope because variable 'children' is declared in here.
+			sink << std::string(level, '\t') << "\"" << name << "\": {" << std::endl;
+			nodes children = node->get_children();
+			for (nodes::const_iterator it = children.begin() ; it != children.end() ; ++it)	{
+				_dump_node(sink, *it, level + 1, it != children.end() - 1); // Append a comma for all elements but the last.
+			}
+			sink << std::string(level, '\t') << "}";
+			break;
+		}
+		case OutputTreeNode::STRING:
+			data = node->to_string();
+			boost::trim(data); // Delete unnecessary whitespace
+			sink << std::string(level, '\t') << "\"" << name << "\": \"" << data << "\"";
+			break;
+		default:
+			data = node->to_string();
+			boost::trim(data); // Delete unnecessary whitespace
+			sink << std::string(level, '\t') << "\"" << name << "\": " << data;
+	}
+
+	if (append_comma) {
+		sink << ",";
+	}
+	sink << std::endl;
 }
 
 // ----------------------------------------------------------------------------

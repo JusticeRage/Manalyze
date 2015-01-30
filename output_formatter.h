@@ -24,11 +24,13 @@ along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
 #include <tuple>
 #include <string>
 #include <set>
+#include <algorithm>
 
 #include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/date_time.hpp>
+#include <boost/algorithm/string/trim.hpp>
 
 #include "color.h"
 #include "plugin_framework/result.h" // Necessary to hold a threat level in a node.
@@ -253,6 +255,21 @@ public:
 	// ----------------------------------------------------------------------------
 
 	/**
+	 *	@brief	Empties the contents of a LIST node.
+	 */
+	void clear()
+	{
+		if (_type != LIST)
+		{
+			PRINT_WARNING << "[OutputFormatter] Tried to clear a non-LIST node!" << std::endl;
+			return;
+		}
+		_list_data->clear();
+	}
+
+	// ----------------------------------------------------------------------------
+
+	/**
 	 *	@brief	Returns the data contained by a STRINGS node (a vector of strings).
 	 */
 	strings get_strings()
@@ -429,8 +446,13 @@ public:
 	 *	@brief	Dumps the formatted data into target output stream.
 	 *
 	 *	@param	std::ostream& sink	The output stream.
+	 *	@param	Whether the stream ends here. Set to false if more data should be appended later on.
+	 *
+	 *	This last parameter was added because writing the output at the end may cause too much information
+	 *	to be stored in the RAM. Using end_stream enables the caller to flush the formatter's data from time
+	 *	to time.
 	 */
-	virtual void format(std::ostream& sink) = 0;
+	virtual void format(std::ostream& sink, bool end_stream = true) = 0;
 
 protected:
 	std::string _header;
@@ -438,15 +460,18 @@ protected:
 	boost::shared_ptr<OutputTreeNode> _root; // The analysis data is contained in this field
 };
 
+/**
+ *	@brief	The default formatter. Displays the data as a human readable text.
+ */
 class RawFormatter : public OutputFormatter
 {
 
 public:
-	virtual void format(std::ostream& sink);
+	virtual void format(std::ostream& sink, bool end_stream = true);
 
 private:
 	/**
-	 *	@brief	(Possibly) Recursive function used to dump the contents of a tree.
+	 *	@brief	Recursive function used to dump the contents of a tree.
 	 *
 	 *	@param	std::stringstream& sink The stringstream into which the data should be written.
 	 *	@param	pNode node The node to dump.
@@ -467,6 +492,27 @@ private:
 	 */
 	void _dump_plugin_node(std::ostream& sink, pNode node);
 
+};
+
+/**
+*	@brief	Formatter that prints the analysis result in JSON.
+*/
+class JsonFormatter : public OutputFormatter
+{
+public:
+	virtual void format(std::ostream& sink, bool end_stream = true);
+
+private:
+	/**
+	 *	@brief	Function which dumps the contents of a single node into JSON notation.
+	 *
+	 *	@param	std::ostream& sink The target output stream.
+	 *	@param	pNode node The node to dump.
+	 *	@param	int level The indentation level.
+	 *	@param	bool append_comma Whether a comma should be appended at the end of the node contents
+				(useful when dumping lists).
+	 */
+	void _dump_node(std::ostream& sink, pNode node, int level = 1, bool append_comma = false);
 };
 
 // ----------------------------------------------------------------------------

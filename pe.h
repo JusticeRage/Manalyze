@@ -31,6 +31,7 @@
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/scoped_array.hpp>
+#include <boost/optional.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/regex.hpp>
 #include <boost/system/api_config.hpp>
@@ -128,15 +129,15 @@ public:
 	DECLSPEC const_shared_strings find_imports(const std::string& function_name_regexp,
 											   const std::string& dll_name_regexp = ".*") const;
 
-	DECLSPEC dos_header get_dos_header() const {
+	DECLSPEC boost::optional<dos_header> get_dos_header() const {
 		return _h_dos;
 	}
 
-	DECLSPEC pe_header get_pe_header() const {
+	DECLSPEC boost::optional<pe_header> get_pe_header() const {
 		return _h_pe;
 	}
 
-	DECLSPEC image_optional_header get_image_optional_header() const {
+	DECLSPEC boost::optional<image_optional_header> get_image_optional_header() const {
 		return _ioh;
 	}
 
@@ -159,7 +160,7 @@ public:
 	}
 
 	DECLSPEC shared_tls get_tls() const {
-		return _initialized ? shared_tls(new image_tls_directory(_tls)) : shared_tls();
+		return (_initialized && _tls) ? shared_tls(new image_tls_directory(*_tls)) : shared_tls();
 	}
 
 	DECLSPEC shared_certificates get_certificates() const {
@@ -379,19 +380,19 @@ private:
 	    -----------------------------------
 	    Those fields that are extremely close to the PE format and offer little abstraction.
 	*/
-	dos_header								_h_dos;
-	pe_header								_h_pe;
-	image_optional_header					_ioh;
+	boost::optional<dos_header>				_h_dos;
+	boost::optional<pe_header>				_h_pe;
+	boost::optional<image_optional_header>	_ioh;
 	std::vector<pcoff_symbol>				_coff_symbols;		// This debug information is parsed (crudely) but
 	std::vector<pString>					_coff_string_table;	// not displayed, because that's IDA's job.
 	std::vector<pSection>					_sections;
 	std::vector<pimage_library_descriptor>	_imports;
-	image_export_directory					_ied;
+	boost::optional<image_export_directory>	_ied;
 	std::vector<pexported_function>			_exports;
 	std::vector<pResource>					_resource_table;
 	std::vector<pdebug_directory_entry>		_debug_entries;
 	std::vector<pimage_base_relocation>		_relocations;		// Not displayed either, because of how big it is.
-	image_tls_directory						_tls;
+	boost::optional<image_tls_directory>	_tls;
 	std::vector<pwin_certificate>			_certificates;
 };
 

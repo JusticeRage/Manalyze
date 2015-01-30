@@ -33,12 +33,16 @@ yara::pYara Resource::_yara = yara::Yara::create();
 
 bool PE::_read_image_resource_directory(image_resource_directory& dir, FILE* f, unsigned int offset)
 {
+	if (!_ioh) {
+		return false;
+	}
+
 	if (offset)
 	{
-		offset = _rva_to_offset(_ioh.directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress) + offset;
+		offset = _rva_to_offset(_ioh->directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress) + offset;
 		if (!offset || fseek(f, offset, SEEK_SET))
 		{
-			PRINT_ERROR << "Could not reach an IMAGE_RESOURCE_DIRECTORY." << std::endl;
+			PRINT_ERROR << "Could not reach an IMAGE_RESOURCE_DIRECTORY." << DEBUG_INFO_INSIDEPE << std::endl;
 			return false;
 		}
 	}
@@ -47,7 +51,7 @@ bool PE::_read_image_resource_directory(image_resource_directory& dir, FILE* f, 
 	dir.Entries.clear();
 	if (size != fread(&dir, 1, size, f))
 	{
-		PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DIRECTORY." << std::endl;
+		PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DIRECTORY." << DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
 	}
 
@@ -58,7 +62,7 @@ bool PE::_read_image_resource_directory(image_resource_directory& dir, FILE* f, 
 		memset(entry.get(), 0, size);
 		if (size != fread(entry.get(), 1, size, f))
 		{
-			PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DIRECTORY_ENTRY." << std::endl;
+			PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DIRECTORY_ENTRY." << DEBUG_INFO_INSIDEPE << std::endl;
 			return false;
 		}
 
@@ -66,11 +70,11 @@ bool PE::_read_image_resource_directory(image_resource_directory& dir, FILE* f, 
 		if (entry->NameOrId & 0x80000000) 
 		{
 			// The offset of the string is relative 
-			unsigned int offset = _rva_to_offset(_ioh.directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress) 
+			unsigned int offset = _rva_to_offset(_ioh->directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress) 
 				+ (entry->NameOrId & 0x7FFFFFFF);
 			if (!offset || !utils::read_string_at_offset(f, offset, entry->NameStr, true))
 			{
-				PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DIRECTORY_ENTRY's name." << std::endl;
+				PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DIRECTORY_ENTRY's name." << DEBUG_INFO_INSIDEPE << std::endl;
 				return false;
 			}
 		}
@@ -85,6 +89,9 @@ bool PE::_read_image_resource_directory(image_resource_directory& dir, FILE* f, 
 
 bool PE::_parse_resources(FILE* f)
 {
+	if (!_ioh) {
+		return false;
+	}
 	if (!_reach_directory(f, IMAGE_DIRECTORY_ENTRY_RESOURCE))	{ // No resources.
 		return true;
 	}
@@ -110,16 +117,16 @@ bool PE::_parse_resources(FILE* f)
 				image_resource_data_entry entry;
 				memset(&entry, 0, sizeof(image_resource_data_entry));
 
-				unsigned int offset = _rva_to_offset(_ioh.directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress + ((*it3)->OffsetToData & 0x7FFFFFFF));
+				unsigned int offset = _rva_to_offset(_ioh->directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress + ((*it3)->OffsetToData & 0x7FFFFFFF));
 				if (!offset || fseek(f, offset, SEEK_SET))
 				{
-					PRINT_ERROR << "Could not reach an IMAGE_RESOURCE_DATA_ENTRY." << std::endl;
+					PRINT_ERROR << "Could not reach an IMAGE_RESOURCE_DATA_ENTRY." << DEBUG_INFO_INSIDEPE << std::endl;
 					return false;
 				}
 
 				if (sizeof(image_resource_data_entry) != fread(&entry, 1, sizeof(image_resource_data_entry), f))
 				{
-					PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DATA_ENTRY." << std::endl;
+					PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DATA_ENTRY." << DEBUG_INFO_INSIDEPE << std::endl;
 					return false;
 				}
 
@@ -163,10 +170,20 @@ bool PE::_parse_resources(FILE* f)
 					else {
 						std::cerr << name;
 					}
-					std::cerr << ". Trying to use the RVA as an offset..." << std::endl;
+					std::cerr << ". Trying to use the RVA as an offset..." << DEBUG_INFO_INSIDEPE << std::endl;
 					offset = entry.OffsetToData;
 				}
 				pResource res;
+				if (entry.Size == 0) 
+				{
+					if (name != "") {
+						PRINT_WARNING << "Resource " << name << " has a size of 0!" << DEBUG_INFO_INSIDEPE << std::endl;
+					}
+					else {
+						PRINT_WARNING << "Resource " << id << " has a size of 0!" << DEBUG_INFO_INSIDEPE << std::endl;
+					}
+					continue;
+				}
 				if (name != "")
 				{
 					res = pResource(new Resource(type,
@@ -199,12 +216,15 @@ bool PE::_parse_resources(FILE* f)
 
 bool PE::_parse_debug(FILE* f)
 {
+	if (!_ioh) {
+		return false;
+	}
 	if (!_reach_directory(f, IMAGE_DIRECTORY_ENTRY_DEBUG))	{ // No debug information.
 		return true;
 	}
 
 	unsigned int size = 6*sizeof(boost::uint32_t) + 2*sizeof(boost::uint16_t);
-	unsigned int number_of_entries = _ioh.directories[IMAGE_DIRECTORY_ENTRY_DEBUG].Size / size;
+	unsigned int number_of_entries = _ioh->directories[IMAGE_DIRECTORY_ENTRY_DEBUG].Size / size;
 
 	for (unsigned int i = 0 ; i < number_of_entries ; ++i)
 	{
@@ -212,7 +232,7 @@ bool PE::_parse_debug(FILE* f)
 		memset(debug.get(), 0, size);
 		if (size != fread(debug.get(), 1, size, f))
 		{
-			PRINT_ERROR << "Could not read the DEBUG_DIRECTORY_ENTRY" << std::endl;
+			PRINT_ERROR << "Could not read the DEBUG_DIRECTORY_ENTRY" << DEBUG_INFO_INSIDEPE << std::endl;
 			return false;
 		}
 
@@ -228,7 +248,7 @@ bool PE::_parse_debug(FILE* f)
 			if (pdb_size != fread(&pdb, 1, pdb_size, f) || 
 				(pdb.Signature != 0x53445352 && pdb.Signature != 0x3031424E)) // Signature: "RSDS" or "NB10"
 			{
-				PRINT_ERROR << "Could not read PDB file information of invalid magic number." << std::endl;
+				PRINT_ERROR << "Could not read PDB file information of invalid magic number." << DEBUG_INFO_INSIDEPE << std::endl;
 				return false;
 			}
 			pdb.PdbFileName = utils::read_ascii_string(f); // Not optimal, but it'll help if I decide to 
@@ -245,7 +265,7 @@ bool PE::_parse_debug(FILE* f)
 			fseek(f, debug->PointerToRawData, SEEK_SET);
 			if (misc_size != fread(&misc, 1, misc_size, f))
 			{
-				PRINT_ERROR << "Could not read DBG file information" << std::endl;
+				PRINT_ERROR << "Could not read DBG file information" << DEBUG_INFO_INSIDEPE << std::endl;
 				return false;
 			}
 			switch (misc.Unicode)
@@ -278,7 +298,16 @@ shared_bytes Resource::get_raw_data() const
 		goto END;
 	}
 	
-	res->resize(_size);
+	try {
+		res->resize(_size);
+	}
+	catch (const std::exception& e) 
+	{
+		PRINT_ERROR << "Failed to allocate enough space for resource " << *get_name() << "! (" << e.what() << ")"
+			<< DEBUG_INFO << std::endl;
+		res->resize(0);
+		return res;
+	}
 	read_bytes = fread(&(*res)[0], 1, _size, f);
 	if (read_bytes != _size) { // We got less bytes than expected: reduce the vector's size.
 		res->resize(read_bytes);
@@ -298,7 +327,7 @@ bool parse_version_info_header(vs_version_info_header& header, FILE* f)
 	memset(&header, 0, 3 * sizeof(boost::uint16_t));
 	if (3*sizeof(boost::uint16_t) != fread(&header, 1, 3*sizeof(boost::uint16_t), f))
 	{
-		PRINT_ERROR << "Could not read a VS_VERSION_INFO header!" << std::endl;
+		PRINT_ERROR << "Could not read a VS_VERSION_INFO header!" << DEBUG_INFO << std::endl;
 		return false;
 	}
 	header.Key = utils::read_unicode_string(f);
@@ -313,7 +342,7 @@ std::string Resource::interpret_as()
 {
 	if (_type != "RT_MANIFEST") 
 	{
-		PRINT_WARNING << "Resources of type " << _type << "cannot be interpreted as std::strings." << std::endl;
+		PRINT_WARNING << "Resources of type " << _type << "cannot be interpreted as std::strings." << DEBUG_INFO << std::endl;
 		return "";
 	}
 	shared_bytes manifest_bytes = get_raw_data();
@@ -328,7 +357,7 @@ std::vector<std::string> Resource::interpret_as()
 	std::vector<std::string> res;
 	if (_type != "RT_STRING") 
 	{
-		PRINT_WARNING << "Resources of type " << _type << " cannot be interpreted as vectors of strings." << std::endl;
+		PRINT_WARNING << "Resources of type " << _type << " cannot be interpreted as vectors of strings." << DEBUG_INFO << std::endl;
 		return res;
 	}
 
@@ -507,7 +536,7 @@ DECLSPEC pversion_info Resource::interpret_as()
 
 	if (current_structure->Key != "StringFileInfo") 
 	{
-		PRINT_ERROR << "StringFileInfo expected, read " << current_structure->Key << " instead." << std::endl;
+		PRINT_ERROR << "StringFileInfo expected, read " << current_structure->Key << " instead." << DEBUG_INFO << std::endl;
 		res.reset();
 		goto END;
 	}
@@ -528,7 +557,7 @@ DECLSPEC pversion_info Resource::interpret_as()
 	bytes_read = ftell(f) - bytes_read;
 	if (current_structure->Length < bytes_read)
 	{
-		PRINT_ERROR << "The StringTableInfo has an invalid size." << std::endl;
+		PRINT_ERROR << "The StringTableInfo has an invalid size." << DEBUG_INFO << std::endl;
 		res.reset();
 		goto END;
 	}
@@ -552,7 +581,8 @@ DECLSPEC pversion_info Resource::interpret_as()
 		if (bytes_remaining < bytes_read)
 		{
 			bytes_remaining = 0;
-			PRINT_WARNING << bytes_read - bytes_remaining << " excess bytes have been read from a StringFileInfo!" << std::endl;
+			PRINT_WARNING << bytes_read - bytes_remaining << " excess bytes have been read from a StringFileInfo!"
+				<< DEBUG_INFO << std::endl;
 		}
 		else {
 			bytes_remaining -= bytes_read;
@@ -645,7 +675,7 @@ std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, co
 		}
 		if (icon == NULL)
 		{
-			PRINT_ERROR << "Could not locate RT_ICON with ID " << directory->Entries[i]->Id << "!" << std::endl;
+			PRINT_ERROR << "Could not locate RT_ICON with ID " << directory->Entries[i]->Id << "!" << DEBUG_INFO << std::endl;
 			res.clear();
 			return res;
 		}
@@ -680,7 +710,7 @@ bool PE::extract_resources(const std::string& destination_folder)
 {
 	if (!bfs::exists(destination_folder) && !bfs::create_directory(destination_folder)) 
 	{
-		PRINT_ERROR << "Could not create directory " << destination_folder << "." << std::endl;
+		PRINT_ERROR << "Could not create directory " << destination_folder << "." << DEBUG_INFO << std::endl;
 		return false;
 	}
 
@@ -773,7 +803,7 @@ bool PE::extract_resources(const std::string& destination_folder)
 
 		if (data.size() == 0) 
 		{
-			std::cerr << "Warning: Resource " << *(*it)->get_name() << " is empty!" << std::endl;
+			PRINT_WARNING << "Resource " << *(*it)->get_name() << " is empty!"  << DEBUG_INFO << std::endl;
 			continue;
 		}
 
@@ -781,13 +811,13 @@ bool PE::extract_resources(const std::string& destination_folder)
 		f = fopen(destination_file.string().c_str(), "wb+");
 		if (f == NULL)
 		{
-			PRINT_ERROR << "Could not open " << destination_file << "." << std::endl;
+			PRINT_ERROR << "Could not open " << destination_file << "." << DEBUG_INFO << std::endl;
 			return false;
 		}
 		if (data.size() != fwrite(&data[0], 1, data.size(), f)) 
 		{
 			fclose(f);
-			PRINT_ERROR << "Could not write all the bytes for " << destination_file << "." << std::endl; 
+			PRINT_ERROR << "Could not write all the bytes for " << destination_file << "." << DEBUG_INFO << std::endl; 
 			return false;
 		}
 

@@ -23,7 +23,10 @@ namespace sg {
 
 void dump_dos_header(const sg::PE& pe, io::OutputFormatter& formatter)
 {
-	sg::dos_header header = pe.get_dos_header();
+	if (!pe.get_dos_header()) {
+		return;
+	}
+	sg::dos_header header = *pe.get_dos_header();
 	std::stringstream magic;
 	magic << header.e_magic[0] << header.e_magic[1];
 
@@ -52,7 +55,10 @@ void dump_dos_header(const sg::PE& pe, io::OutputFormatter& formatter)
 
 void dump_pe_header(const sg::PE& pe, io::OutputFormatter& formatter)
 {
-	sg::pe_header header = pe.get_pe_header();
+	if (!pe.get_pe_header()) {
+		return;
+	}
+	sg::pe_header header = *pe.get_pe_header();
 	io::pNode pe_header(new io::OutputTreeNode("PE Header", io::OutputTreeNode::LIST));
 	std::stringstream ss;
 	ss << header.Signature[0] << header.Signature[1];
@@ -72,7 +78,10 @@ void dump_pe_header(const sg::PE& pe, io::OutputFormatter& formatter)
 
 void dump_image_optional_header(const sg::PE& pe, io::OutputFormatter& formatter)
 {
-	sg::image_optional_header ioh = pe.get_image_optional_header();
+	if (!pe.get_image_optional_header()) {
+		return;
+	}
+	sg::image_optional_header ioh = *pe.get_image_optional_header();
 	io::pNode ioh_header(new io::OutputTreeNode("Image Optional Header", io::OutputTreeNode::LIST));
 
 	ioh_header->append(io::pNode(new io::OutputTreeNode("Magic", *nt::translate_to_flag(ioh.Magic, nt::IMAGE_OPTIONAL_HEADER_MAGIC))));
@@ -134,8 +143,11 @@ void dump_image_optional_header(const sg::PE& pe, io::OutputFormatter& formatter
 
 void dump_section_table(const sg::PE& pe, io::OutputFormatter& formatter, bool compute_hashes)
 {
-
 	sg::shared_sections sections = pe.get_sections();
+	if (sections->size() == 0) {
+		return;
+	}
+
 	io::pNode section_list(new io::OutputTreeNode("Section Table", io::OutputTreeNode::LIST));
 	
 	for (sg::shared_sections::element_type::const_iterator it = sections->begin(); it != sections->end(); ++it)
@@ -309,8 +321,11 @@ void dump_version_info(const sg::PE& pe, io::OutputFormatter& formatter)
 
 void dump_debug_info(const sg::PE& pe, io::OutputFormatter& formatter)
 {
-	io::pNode debug_info_list(new io::OutputTreeNode("Debug Info", io::OutputTreeNode::LIST));
 	sg::shared_debug_info di = pe.get_debug_info();
+	if (di->size() == 0) {
+		return;
+	}
+	io::pNode debug_info_list(new io::OutputTreeNode("Debug Info", io::OutputTreeNode::LIST));
 	for (shared_debug_info::element_type::const_iterator it = di->begin() ; it != di->end() ; ++it)
 	{
 		io::pNode debug_info_node(new io::OutputTreeNode(*nt::translate_to_flag((*it)->Type, nt::DEBUG_TYPES), io::OutputTreeNode::LIST));
@@ -335,8 +350,12 @@ void dump_debug_info(const sg::PE& pe, io::OutputFormatter& formatter)
 
 void dump_tls(const sg::PE& pe, io::OutputFormatter& formatter)
 {
-	io::pNode tls_node(new io::OutputTreeNode("TLS Callbacks", io::OutputTreeNode::LIST));
 	sg::shared_tls tls = pe.get_tls();
+	if (!tls) {
+		return;
+	}
+
+	io::pNode tls_node(new io::OutputTreeNode("TLS Callbacks", io::OutputTreeNode::LIST));	
 	tls_node->append(io::pNode(new io::OutputTreeNode("StartAddressOfRawData", tls->StartAddressOfRawData, io::OutputTreeNode::HEX)));
 	tls_node->append(io::pNode(new io::OutputTreeNode("EndAddressOfRawData", tls->EndAddressOfRawData, io::OutputTreeNode::HEX)));
 	tls_node->append(io::pNode(new io::OutputTreeNode("AddressOfIndex", tls->AddressOfIndex, io::OutputTreeNode::HEX)));
@@ -359,6 +378,10 @@ void dump_tls(const sg::PE& pe, io::OutputFormatter& formatter)
 
 void dump_summary(const sg::PE& pe, io::OutputFormatter& formatter)
 {
+	if (!pe.get_pe_header() || !pe.get_image_optional_header()) {
+		return;
+	}
+
 	io::pNode summary(new io::OutputTreeNode("Summary", io::OutputTreeNode::LIST));
 
 	// Grab all detected languages
@@ -394,13 +417,13 @@ void dump_summary(const sg::PE& pe, io::OutputFormatter& formatter)
 	}
 
 	// Inform the user if some COFF debug information is present
-	sg::pe_header h = pe.get_pe_header();
+	sg::pe_header h = *pe.get_pe_header();
 	if (h.NumberOfSymbols > 0 && h.PointerToSymbolTable != 0) {
 		debug_files.insert("Embedded COFF debugging symbols");
 	}
 
 	summary->append(io::pNode(new io::OutputTreeNode("Architecture", *nt::translate_to_flag(h.Machine, nt::MACHINE_TYPES))));
-	sg::image_optional_header ioh = pe.get_image_optional_header();
+	sg::image_optional_header ioh = *pe.get_image_optional_header();
 	summary->append(io::pNode(new io::OutputTreeNode("Subsystem", *nt::translate_to_flag(ioh.Subsystem, nt::SUBSYSTEMS))));
 	summary->append(io::pNode(new io::OutputTreeNode("Compilation Date", io::timestamp_to_string(h.TimeDateStamp))));
 
@@ -408,7 +431,7 @@ void dump_summary(const sg::PE& pe, io::OutputFormatter& formatter)
 		summary->append(io::pNode(new io::OutputTreeNode("Detected languages", languages)));
 	}
 
-	if (pe.get_tls()->Callbacks.size() > 0) 
+	if (pe.get_tls() && pe.get_tls()->Callbacks.size() > 0)
 	{
 		std::stringstream ss;
 		ss << pe.get_tls()->Callbacks.size() << " callback(s) detected.";

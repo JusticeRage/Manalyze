@@ -69,7 +69,16 @@ shared_bytes Section::get_raw_data() const
 		return res;
 	}
 
-	res->resize(_size_of_raw_data);
+	try {
+		res->resize(_size_of_raw_data);
+	}
+	catch (const std::exception& e)
+	{
+		PRINT_ERROR << "Failed to allocate enough space for section " << *get_name() << "! (" << e.what() << ")"
+			<< DEBUG_INFO << std::endl;
+		res->resize(0);
+		return res;
+	}
 
 	if (_size_of_raw_data != fread(&(*res)[0], 1, _size_of_raw_data, f)) 
 	{

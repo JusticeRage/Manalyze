@@ -23,6 +23,9 @@ namespace sg {
 
 bool PE::_parse_imports(FILE* f)
 {
+	if (!_ioh) { // Image Optional Header wasn't parsed successfully.
+		return false;
+	}
 	if (!_reach_directory(f, IMAGE_DIRECTORY_ENTRY_IMPORT))	{ // No imports
 		return true;
 	}
@@ -88,7 +91,7 @@ bool PE::_parse_imports(FILE* f)
 			import->Hint = 0;
 
 			// The field has a size of 8 for x64 PEs
-			int size_to_read = (_ioh.Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32+") ? 8 : 4);
+			int size_to_read = (_ioh->Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32+") ? 8 : 4);
 			if (size_to_read != fread(&(import->AddressOfData), 1, size_to_read, f))
 			{
 				PRINT_ERROR << "Could not read the IMPORT_LOOKUP_TABLE." << std::endl;

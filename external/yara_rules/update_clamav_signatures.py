@@ -142,6 +142,10 @@ except OSError:
 
 update_signatures(URL_DAILY, args.skipdownload)
 try:
+    os.remove("../../bin/yara_rules/clamav.yara")
+except OSError:
+    pass
+try:
     os.remove("../../bin/yara_rules/clamav.yarac")
 except OSError:
     pass

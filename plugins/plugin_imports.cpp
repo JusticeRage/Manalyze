@@ -71,7 +71,7 @@ void check_functions(const sg::PE& pe,
 					 pResult res)
 {
 	sg::const_shared_strings found_imports = pe.find_imports(regex);
-	if (found_imports->size() >= static_cast<unsigned int>(req))  // Safe cast: there are positive enum indexes
+	if (found_imports->size() >= static_cast<unsigned int>(req))  // Safe cast: these are positive enum indexes
 	{
 		res->raise_level(level);
 		res->add_information(description + ":");

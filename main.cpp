@@ -44,6 +44,8 @@
 #include "output_formatter.h"
 #include "dump.h"
 
+#define VERSION "0.9"
+
 namespace po = boost::program_options;
 namespace bfs = boost::filesystem;
 
@@ -124,7 +126,7 @@ std::vector<std::string> tokenize_args(const std::vector<std::string>& args)
  *	- All the requested categories for the "dump" command exist
  *	- All the requested plugins exist
  *	- All the input files exist
- *	- The requester output formatter exists
+ *	- The requested output formatter exists
  *
  *	If an error is detected, the help message is displayed.
  *
@@ -349,10 +351,10 @@ void handle_plugins_option(io::OutputFormatter& formatter,
 
 		io::pNode plugin_node(new io::OutputTreeNode(*(*it)->get_id(), io::OutputTreeNode::LIST));
 		plugin_node->append(io::pNode(new io::OutputTreeNode("level", res->get_level())));
-		plugin_node->append(io::pNode(new io::OutputTreeNode("plugin_output", *res->get_information())));
 		if (summary) {
 			plugin_node->append(io::pNode(new io::OutputTreeNode("summary", *res->get_summary())));
 		}
+		plugin_node->append(io::pNode(new io::OutputTreeNode("plugin_output", *res->get_information())));
 
 		plugins_node->append(plugin_node);
 	}
@@ -474,7 +476,9 @@ void perform_analysis(const std::string& path,
 
 int main(int argc, char** argv)
 {
-	std::cout << "* SGStatic 0.9 *" << std::endl << std::endl;
+	// TODO: Unit tests.
+
+	std::cerr << "* SGStatic " VERSION " *" << std::endl << std::endl;
 	po::variables_map vm;
 	std::string extraction_directory;
 	std::vector<std::string> selected_plugins, selected_categories;
@@ -512,8 +516,7 @@ int main(int argc, char** argv)
 			formatter.reset(new io::RawFormatter());
 		}
 		else if (vm["output"].as<std::string>() == "json") {
-			PRINT_ERROR << "JSON output not implemented yet :(" << std::endl;
-			return 1;
+			formatter.reset(new io::JsonFormatter());
 		}
 	}
 	else { // Default: use the human-readable output.
@@ -524,8 +527,13 @@ int main(int argc, char** argv)
 	chdir(working_dir.string().c_str());
 
 	// Do the actual analysis on all the input files
-	for (std::set<std::string>::iterator it = targets.begin() ; it != targets.end() ; ++it)	{
+	unsigned int count = 0;
+	for (std::set<std::string>::iterator it = targets.begin() ; it != targets.end() ; ++it)	
+	{
 		perform_analysis(*it, vm, extraction_directory, selected_categories, selected_plugins, conf, formatter);
+		if (++count % 1000 == 0) {
+			formatter->format(std::cout, false); // Flush the formatter from time to time, to avoid eating up all the RAM when analyzing gigs of files.
+		}
 	}
 
 	if (vm.count("plugins")) 
