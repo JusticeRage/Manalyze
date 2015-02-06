@@ -148,11 +148,11 @@ void dump_section_table(const sg::PE& pe, io::OutputFormatter& formatter, bool c
 		return;
 	}
 
-	io::pNode section_list(new io::OutputTreeNode("Section Table", io::OutputTreeNode::LIST));
+	io::pNode section_list(new io::OutputTreeNode("Sections", io::OutputTreeNode::LIST));
 	
 	for (sg::shared_sections::element_type::const_iterator it = sections->begin(); it != sections->end(); ++it)
 	{
-		io::pNode section_node(new io::OutputTreeNode("Section " + *(*it)->get_name(), io::OutputTreeNode::LIST));
+		io::pNode section_node(new io::OutputTreeNode(*(*it)->get_name(), io::OutputTreeNode::LIST));
 		if (compute_hashes)
 		{
 			const_shared_strings hashes = hash::hash_bytes(hash::ALL_DIGESTS, *(*it)->get_raw_data());

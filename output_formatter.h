@@ -144,6 +144,12 @@ public:
 
 	// ----------------------------------------------------------------------------
 
+	void set_modifier(display_modifier mod) {
+		_modifier = mod;
+	}
+
+	// ----------------------------------------------------------------------------
+
 	/**
 	 *	@brief	Returns a string representation of the data contained by the node.
 	 *
@@ -372,6 +378,8 @@ public:
 	OutputFormatter() {
 		_root = pNode(new OutputTreeNode("root", OutputTreeNode::LIST));
 	}
+
+	virtual ~OutputFormatter() {}
 
 	/**
 	 *	@brief	Changes the header of the formatter.

@@ -60,7 +60,6 @@ void print_help(po::options_description& desc, const std::string& argv_0)
 	std::cout << desc << std::endl; // Standard usage
 
 	// Plugin description
-	plugin::PluginManager::get_instance().load_all(".");
 	std::vector<plugin::pIPlugin> plugins = plugin::PluginManager::get_instance().get_plugins();
 
 	if (plugins.size() > 0) 
@@ -381,8 +380,15 @@ std::set<std::string> get_input_files(po::variables_map& vm)
 		std::vector<std::string> input = vm["pe"].as<std::vector<std::string> >();
 		for (std::vector<std::string>::iterator it = input.begin() ; it != input.end() ; ++it)
 		{
-			if (!bfs::is_directory(*it)) {
-				targets.insert(bfs::absolute(*it).string());
+			if (!bfs::is_directory(*it)) 
+			{
+				#if defined BOOST_WINDOWS_API
+					std::string path = bfs::absolute(*it).string();
+					std::replace(path.begin(), path.end(), '\\', '/');
+					targets.insert(path);
+				#else
+					targets.insert(bfs::absolute(*it).string());
+				#endif
 			}
 			else
 			{
@@ -390,7 +396,13 @@ std::set<std::string> get_input_files(po::variables_map& vm)
 				for (bfs::directory_iterator dit(*it) ; dit != end ; ++dit)
 				{
 					if (!bfs::is_directory(*dit)) { // Ignore subdirectories
+					#if defined BOOST_WINDOWS_API
+						std::string path = bfs::absolute(dit->path()).string();
+						std::replace(path.begin(), path.end(), '\\', '/');
+						targets.insert(path);
+					#else
 						targets.insert(bfs::absolute(dit->path()).string());
+					#endif
 					}
 				}
 			}
@@ -402,7 +414,13 @@ std::set<std::string> get_input_files(po::variables_map& vm)
 		for (std::vector<std::string>::const_iterator it = vect.begin() ; it != vect.end() ; ++it) 
 		{
 			if (!bfs::is_directory(*it)) {
-				targets.insert(bfs::absolute(*it).string());
+				#if defined BOOST_WINDOWS_API
+					std::string path = bfs::absolute(*it).string();
+					std::replace(path.begin(), path.end(), '\\', '/');
+					targets.insert(path);
+				#else
+					targets.insert(bfs::absolute(*it).string());
+				#endif
 			}
 			else {
 				PRINT_WARNING << *it << " is a directory. Skipping (use the -r option for recursive analyses)." << std::endl;
