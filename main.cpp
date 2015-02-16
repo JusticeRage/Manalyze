@@ -35,6 +35,11 @@
 #endif
 
 #include "plugin_framework/plugin_manager.h"
+
+// TODO: Remove when Yara doesn't mask min & max anymore
+#undef min
+#undef max
+
 #include "config_parser.h"
 #include "yara/yara_wrapper.h"
 

@@ -198,11 +198,6 @@ public:
 	}
 
 	/**
-	 * TODO: Not implemented yet.
-	 */
-	DECLSPEC shared_bytes get_raw_section_bytes(const std::string& section_name) const;
-
-	/**
 	 *	@brief	The delete operator. "new" had to be re-implemented in order to make it private.
 	 *
 	 *	@param	void* p	The memory to free.

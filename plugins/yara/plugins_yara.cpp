@@ -16,6 +16,12 @@
 */
 
 #include "yara/yara_wrapper.h"
+
+// TODO: Remove when Yara doesn't mask min & max anymore
+#undef min
+#undef max
+#undef get_object
+
 #include "plugin_framework/plugin_interface.h"
 #include "plugin_framework/auto_register.h"
 
@@ -61,8 +67,8 @@ public:
 				{
 					res->add_information((*it)->operator[](meta_field_name) + " String(s) found:");
 					std::set<std::string> found = (*it)->get_found_strings();
-					for (std::set<std::string>::iterator it = found.begin() ; it != found.end() ; ++it) {
-						res->add_information("\t" + *it);
+					for (std::set<std::string>::iterator it2 = found.begin() ; it2 != found.end() ; ++it2) {
+						res->add_information("\t" + *it2);
 					}
 				}
 			}

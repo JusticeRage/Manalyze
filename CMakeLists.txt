@@ -38,6 +38,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin)
 include_directories(
 						${PROJECT_SOURCE_DIR}
 						${PROJECT_SOURCE_DIR}/external
+						${PROJECT_SOURCE_DIR}/external/yara/include
 						${PROJECT_SOURCE_DIR}/plugins
 						${Boost_INCLUDE_DIRS}
                    )
@@ -63,6 +64,9 @@ if (WIN32)
 			add_library(plugin_authenticode SHARED plugins/plugin_authenticode.cpp)
 			target_link_libraries(plugin_authenticode sgpe hash-library ${Boost_LIBRARIES})
 else()
+            if (CMAKE_BUILD_TYPE MATCHES "[Dd][Ee][Bb][Uu][Gg]")
+                add_definitions("/D_DEBUG")
+            endif()
 			target_link_libraries(sgstatic dl)
 			set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif()

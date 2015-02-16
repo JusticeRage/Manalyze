@@ -58,7 +58,7 @@ public:
 	{}
 
 	Resource(const std::string&		type,
-			int						id,
+			boost::uint32_t			id,
 			const std::string&		language,
 			boost::uint32_t			codepage,
 			boost::uint32_t			size,

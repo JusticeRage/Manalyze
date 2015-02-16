@@ -21,6 +21,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <sstream>
 #include <boost/assign.hpp>
 #include <boost/system/api_config.hpp>
 #include <boost/shared_ptr.hpp>
@@ -71,6 +72,7 @@ extern const DECLSPEC flag_dict DLL_CHARACTERISTICS;
 extern const DECLSPEC flag_dict SECTION_CHARACTERISTICS;
 extern const DECLSPEC flag_dict RESOURCE_TYPES;
 extern const DECLSPEC flag_dict LANG_IDS;
+extern const DECLSPEC flag_dict CODEPAGES;
 extern const DECLSPEC flag_dict FIXEDFILEINFO_FILEFLAGS;
 extern const DECLSPEC flag_dict FIXEDFILEINFO_FILEOS;
 extern const DECLSPEC flag_dict FIXEDFILEINFO_FILETYPE;

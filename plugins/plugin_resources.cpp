@@ -20,6 +20,11 @@
 
 #include "yara/yara_wrapper.h"
 
+// TODO: Remove when Yara doesn't mask min & max anymore
+#undef min
+#undef max
+#undef get_object
+
 #include "plugin_framework/plugin_interface.h"
 #include "plugin_framework/auto_register.h"
 

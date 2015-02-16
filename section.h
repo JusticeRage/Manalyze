@@ -59,6 +59,8 @@ public:
 		    const std::string& path, 
 			const std::vector<pString>& coff_string_table = std::vector<pString>());
 
+    virtual ~Section() {}
+
 	/**
 	 *	@brief	Returns the raw bytes of the section.
 	 *

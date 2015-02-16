@@ -17,6 +17,10 @@
 
 #include "pe.h"
 
+// TODO: Remove when Yara doesn't mask min & max anymore
+#undef min
+#undef max
+
 namespace sg {
 
 PE::PE(const std::string& path)

@@ -214,7 +214,6 @@ void dump_exports(const sg::PE& pe, io::OutputFormatter& formatter)
 		io::pNode ex(new io::OutputTreeNode((*it)->Name, io::OutputTreeNode::LIST));
 		ex->append(io::pNode(new io::OutputTreeNode("Ordinal", (*it)->Ordinal)));
 		ex->append(io::pNode(new io::OutputTreeNode("Address", (*it)->Address, io::OutputTreeNode::HEX)));
-		ex->append(io::pNode(new io::OutputTreeNode("Name", (*it)->Name)));
 		if ((*it)->ForwardName != "") {
 			ex->append(io::pNode(new io::OutputTreeNode("ForwardName", (*it)->ForwardName)));
 		}
@@ -239,6 +238,7 @@ void dump_resources(const sg::PE& pe, io::OutputFormatter& formatter, bool compu
 		io::pNode res(new io::OutputTreeNode(*(*it)->get_name(), io::OutputTreeNode::LIST));
 		res->append(io::pNode(new io::OutputTreeNode("Type", *(*it)->get_type())));
 		res->append(io::pNode(new io::OutputTreeNode("Language", *(*it)->get_language())));
+        res->append(io::pNode(new io::OutputTreeNode("Codepage", *nt::translate_to_flag((*it)->get_codepage(), nt::CODEPAGES))));
 		res->append(io::pNode(new io::OutputTreeNode("Size", (*it)->get_size(), io::OutputTreeNode::HEX)));
 		res->append(io::pNode(new io::OutputTreeNode("Entropy", (*it)->get_entropy())));
 
@@ -396,12 +396,12 @@ void dump_summary(const sg::PE& pe, io::OutputFormatter& formatter)
 			if (vi == NULL) {
 				continue;
 			}
-			if (vi->Language != "UNKNOWN") {
+			if (!boost::starts_with(vi->Language, "UNKNOWN")) { // In debug builds, "UNKNOWN (0x1234ABCD)" is returned.
 				languages.insert(vi->Language); // Some language info is also present in the VERSION_INFO resource.
 			}
 		}
 
-		if (*(*it)->get_language() != "UNKNOWN") {
+		if (!boost::starts_with(*(*it)->get_language(), "UNKNOWN")) {
 			languages.insert(*(*it)->get_language());
 		}
 	}
@@ -444,8 +444,11 @@ void dump_summary(const sg::PE& pe, io::OutputFormatter& formatter)
 
 	if (vi != NULL)
 	{
-		for (std::vector<ppair>::const_iterator it = vi->StringTable.begin() ; it != vi->StringTable.end() ; ++it) {
-			summary->append(io::pNode(new io::OutputTreeNode((*it)->first, (*it)->second)));
+		for (std::vector<ppair>::const_iterator it = vi->StringTable.begin() ; it != vi->StringTable.end() ; ++it)
+        {
+            if ((*it)->first != "" || (*it)->second != "") {
+                summary->append(io::pNode(new io::OutputTreeNode((*it)->first, (*it)->second)));
+            }
 		}
 	}
 
