@@ -81,7 +81,14 @@ public:
 		std::string sha256_hash = *hash::hash_file(*hash::ALL_DIGESTS[ALL_DIGESTS_SHA256], *pe.get_path());
 		std::string json;
 
-		if (!query_virus_total(sha256_hash, _config->at("api_key"), json)) {
+		try {
+			if (!query_virus_total(sha256_hash, _config->at("api_key"), json)) {
+				return res;
+			}
+		}
+		catch (std::exception& e)
+		{
+			PRINT_ERROR << "Query to VirusTotal failed (" << e.what() << ")." << std::endl;
 			return res;
 		}
 

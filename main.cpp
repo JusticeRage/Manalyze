@@ -49,7 +49,7 @@
 #include "output_formatter.h"
 #include "dump.h"
 
-#define VERSION "0.9"
+#define SG_VERSION "0.9"
 
 namespace po = boost::program_options;
 namespace bfs = boost::filesystem;
@@ -229,6 +229,7 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
 	po::options_description desc("Usage");
 	desc.add_options()
 		("help,h", "Displays this message.")
+		("version,v", "Prints the program's version.")
 		("pe", po::value<std::vector<std::string> >(), "The PE to analyze. Also accepted as a positional argument. "
 			"Multiple files may be specified.")
 		("recursive,r", "Scan all files in a directory (subdirectories will be ignored).")
@@ -257,7 +258,17 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
 		return false;
 	}
 
-	if (vm.count("help") || !vm.count("pe")) 
+	if (vm.count("version"))
+	{
+		std::stringstream ss;
+		ss << "SGStatic " SG_VERSION " (Ivan Kwiatkowski, GPLv3 License) compiled with:" << std::endl;
+		ss << "* Boost " BOOST_LIB_VERSION " (Boost.org, Boost Software License)" << std::endl;
+		ss << "* Yara " << YR_MAJOR_VERSION << "." << YR_MINOR_VERSION << "." << YR_MICRO_VERSION << ". (Victor M. Alvarez, Apache 2.0 License)" << std::endl;
+		ss << "* hash-library " << HASH_LIBRARY_VERSION << " (Stephan Brumme, ZLib License)." << std::endl;
+		std::cout << ss.str();
+		return false;
+	}
+	else if (vm.count("help") || !vm.count("pe"))
 	{
 		print_help(desc, argv[0]);
 		return false;
@@ -501,7 +512,6 @@ int main(int argc, char** argv)
 {
 	// TODO: Unit tests.
 
-	std::cerr << "* SGStatic " VERSION " *" << std::endl << std::endl;
 	po::variables_map vm;
 	std::string extraction_directory;
 	std::vector<std::string> selected_plugins, selected_categories;
@@ -533,17 +543,13 @@ int main(int argc, char** argv)
 
 	// Instantiate the requested OutputFormatter
 	boost::shared_ptr<io::OutputFormatter> formatter;
-	if (vm.count("output"))
-	{
-		if (vm["output"].as<std::string>() == "raw") {
-			formatter.reset(new io::RawFormatter());
-		}
-		else if (vm["output"].as<std::string>() == "json") {
-			formatter.reset(new io::JsonFormatter());
-		}
+	if (vm.count("output") && vm["output"].as<std::string>() == "json") {
+		formatter.reset(new io::JsonFormatter());
 	}
-	else { // Default: use the human-readable output.
+	else // Default: use the human-readable output.
+	{
 		formatter.reset(new io::RawFormatter());
+		formatter->set_header("* SGStatic " SG_VERSION " *");
 	}
 
 	// Set the working directory to the binary's folder.
