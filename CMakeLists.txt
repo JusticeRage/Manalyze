@@ -2,6 +2,8 @@ cmake_minimum_required (VERSION 2.8)
 
 project (sgstatic)
 
+option(GitHub "GitHub" ON)
+
 if (WIN32)
 	set(Boost_USE_STATIC_LIBS ON)
 	set(Boost_USE_MULTITHREADED ON)  
@@ -9,10 +11,12 @@ if (WIN32)
 endif()
 
 find_package(Boost REQUIRED COMPONENTS regex system filesystem program_options)
-find_package(Git REQUIRED)
+if (GitHub STREQUAL ON)
+	find_package(Git REQUIRED)
+endif()
 
 # Download or update external projects
-if (EXISTS external/yara)
+if (EXISTS external/yara AND GitHub STREQUAL ON)
     message("Updating yara...")
     execute_process(COMMAND ${GIT_EXECUTABLE} --git-dir=external/yara/.git fetch)
     execute_process(COMMAND ${GIT_EXECUTABLE} --git-dir=external/yara/.git --work-tree=external/yara merge origin/master)
@@ -20,7 +24,7 @@ if (EXISTS external/yara)
     message("Updating hash-library...")
     execute_process(COMMAND ${GIT_EXECUTABLE} --git-dir=external/hash-library/.git fetch)
     execute_process(COMMAND ${GIT_EXECUTABLE} --git-dir=external/hash-library/.git --work-tree=external/hash-library merge origin/master)
-else()
+elseif (GitHub STREQUAL ON)
     message("Checking out yara...")
     execute_process(COMMAND ${GIT_EXECUTABLE} clone https://github.com/JusticeRage/yara.git external/yara)
     message("Checking out hash-library...")

@@ -37,7 +37,11 @@ def download_file(url):
     Source: https://stackoverflow.com/questions/22676/how-do-i-download-a-file-over-http-using-python
     """
     file_name = url.split('/')[-1]
-    u = urllib2.urlopen(url)
+    try:
+        u = urllib2.urlopen(url)
+    except urllib2.HTTPError as e:
+		print "Could not download %s ()." % (url, e)
+		sys.exit(1)
     outfile = open(file_name, 'wb')
     meta = u.info()
     file_size = int(meta.getheaders("Content-Length")[0])
@@ -124,8 +128,18 @@ os.chdir(os.path.dirname(sys.argv[0]))
 parser = argparse.ArgumentParser(description="Updates ClamAV signatures for plugin_clamav.")
 parser.add_argument("--main", action="store_true", help="Update ClamAV's main signature file.")
 parser.add_argument("--skip-download", dest="skipdownload", action="store_false", help="Work with local copies of ClamAV signature files.")
+parser.add_argument("--help,h", dest="help", action="store_true", help="Displays this message.")
 args = parser.parse_args()
 
+if args.help:
+	parser.print_help()
+	sys.exit(0)
+
+try:
+    os.remove("clamav.yara")
+except OSError:
+    pass
+	
 if not os.path.exists("clamav.main.yara"):
     args.main = True
 
@@ -134,11 +148,9 @@ if args.main:
         os.remove("clamav.main.yara")
     update_signatures(URL_MAIN, args.skipdownload)
     shutil.copy("clamav.yara", "clamav.main.yara")
-
-try:
-    os.remove("clamav.yara")
-except OSError:
-    pass
+else:
+    # Use the old clamav.main.yara as a base and append the daily rules to it.
+    shutil.copy("clamav.main.yara", "clamav.yara")
 
 update_signatures(URL_DAILY, args.skipdownload)
 try:
