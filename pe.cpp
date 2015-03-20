@@ -272,6 +272,13 @@ bool PE::_parse_image_optional_header(FILE* f)
 		return false;
 	}
 
+	// Reject malformed executables
+	if (ioh.FileAlignment == 0 || ioh.SectionAlignment == 0)
+	{
+		PRINT_ERROR << "FileAlignment or SectionAlignment is null: the PE is invalid." << std::endl;
+		return false;
+	}
+
 	// The next 4 values may be uint32s or uint64s depending on whether this is a PE32+ header.
 	// We store them in uint64s in any case.
 	if (ioh.Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32+"))

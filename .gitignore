@@ -39,6 +39,10 @@ CMakeCache.txt
 *.sdf
 *.opensdf
 *.suo
+*.ilk
 Win32
 Release
 Debug
+
+# Malwares
+*.mal
