@@ -44,5 +44,8 @@ Win32
 Release
 Debug
 
+# Intellij IDEA project files
+.idea
+
 # Malwares
 *.mal

@@ -53,7 +53,7 @@ public:
 			return res;
 		}
 
-		yara::const_matches m = _engine.scan_file(*pe.get_path());
+		yara::const_matches m = _engine.scan_file(*pe.get_path(), pe.create_sgpe_module_data());
 		if (m->size() > 0) 
 		{
 			res->set_level(level);

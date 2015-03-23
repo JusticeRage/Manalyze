@@ -40,8 +40,8 @@ def download_file(url):
     try:
         u = urllib2.urlopen(url)
     except urllib2.HTTPError as e:
-		print "Could not download %s ()." % (url, e)
-		sys.exit(1)
+        print "Could not download %s." % url, e
+        sys.exit(1)
     outfile = open(file_name, 'wb')
     meta = u.info()
     file_size = int(meta.getheaders("Content-Length")[0])
@@ -119,7 +119,10 @@ def update_signatures(url, download):
     os.chmod("%s.ndb" % file_basename, 0644)
     tar.close()
     os.remove("%s.tar" % file_basename)
-    subprocess.call([sys.executable, "./clamav_to_yara.py", "-f", "%s.ndb" % file_basename, "-o", "clamav.yara"])
+    if (url == URL_MAIN):
+        subprocess.call([sys.executable, "./clamav_to_yara.py", "-f", "%s.ndb" % file_basename, "-o", "clamav.yara", "--header"])
+    else:
+        subprocess.call([sys.executable, "./clamav_to_yara.py", "-f", "%s.ndb" % file_basename, "-o", "clamav.yara"])
     os.remove("%s.ndb" % file_basename)
 
 # Work in the script's directory
@@ -127,19 +130,20 @@ os.chdir(os.path.dirname(sys.argv[0]))
 
 parser = argparse.ArgumentParser(description="Updates ClamAV signatures for plugin_clamav.")
 parser.add_argument("--main", action="store_true", help="Update ClamAV's main signature file.")
-parser.add_argument("--skip-download", dest="skipdownload", action="store_false", help="Work with local copies of ClamAV signature files.")
+parser.add_argument("--skip-download", dest="skipdownload", action="store_false",
+                    help="Work with local copies of ClamAV signature files.")
 parser.add_argument("--help,h", dest="help", action="store_true", help="Displays this message.")
 args = parser.parse_args()
 
 if args.help:
-	parser.print_help()
-	sys.exit(0)
+    parser.print_help()
+    sys.exit(0)
 
 try:
     os.remove("clamav.yara")
 except OSError:
     pass
-	
+
 if not os.path.exists("clamav.main.yara"):
     args.main = True
 

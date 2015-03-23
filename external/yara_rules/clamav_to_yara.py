@@ -11,6 +11,7 @@ Copyright (c) 2010 __MyCompanyName__. All rights reserved.
 
 Updated by JusticeRage in 03/2014: additional checking for malformed signatures and added metadata.
                           04/2014: BUGFIX: some checks were only relevant at the entrypoint.
+                          03/2015: Rules are generated for the Yara SGPE module which supports sections.
 """
 
 import os
@@ -28,6 +29,8 @@ def main():
                       dest="verbose", help="verbose")
     parser.add_option("-s", "--search", action="store", dest="search",
                       type="string", help="search filter", default="")
+    parser.add_option("--header", action="store_true", dest="header",
+                      help="Append the file header", default="")
 
     (opts, args) = parser.parse_args()
 
@@ -107,7 +110,7 @@ rule %s
 
             if matches:
                 for match in matches:
-                    #print "\t\tfound %s" % (match[1])
+                    # print "\t\tfound %s" % (match[1])
                     start = int(match[1])
                     jump_regex = re.compile('(\{(%d)-\})' % (start))
                     if (start < 256):
@@ -126,7 +129,7 @@ rule %s
 
             if matches:
                 for match in matches:
-                    #print "\t\tfound %s - %s" % (match[1], match[2])
+                    # print "\t\tfound %s - %s" % (match[1], match[2])
                     start = int(match[1])
                     end = int(match[2])
                     jump_regex = re.compile('(\{(%d)-(%d)\})' % (start, end))
@@ -149,7 +152,7 @@ rule %s
 
             if matches:
                 for match in matches:
-                    #print "\t\tfound %s" % (match[1])
+                    # print "\t\tfound %s" % (match[1])
                     start = int(match[1])
                     jump_regex = re.compile('(\{(%d)\})' % (start))
                     if start < 256:
@@ -189,13 +192,18 @@ rule %s
 
                 extended_condition = rules[rule][1].split(sign)[1]
                 if "," in extended_condition:
-                    conds += " in (entrypoint%s%d..entrypoint%s%d)" \
-                             % (sign, int(extended_condition.split(",")[0]), sign, int(extended_condition.split(",")[1]))
+                    conds += " in (sgpe.ep%s%d..sgpe.ep%s%d)" \
+                             % (
+                        sign, int(extended_condition.split(",")[0]), sign, int(extended_condition.split(",")[1]))
                 else:
-                    conds += " at entrypoint %s %d" % (sign, int(extended_condition))
+                    if int(extended_condition) == 0:
+                        conds += " at sgpe.ep"
+                    else:
+                        conds += " at sgpe.ep %s %d" % (sign, int(extended_condition))
 
             elif rules[rule][1].startswith("EOF"):
                 conds += " at filesize - %d" % int(rules[rule][1].split("-")[1])
+
             elif rules[rule][1] != "*":  # Direct offset
                 try:
                     conds += " at %d" % int(rules[rule][1])
@@ -213,6 +221,8 @@ rule %s
     if len(output) > 0:
         print "\r\n[+] Wrote %d rules to %s\r\n" % (len(rules), opts.outfile)
         fout = open(opts.outfile, 'ab')
+        if opts.header:
+            fout.write("import \"sgpe\"\n")
         fout.write(output)
         fout.close()
     else:

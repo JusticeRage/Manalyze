@@ -43,6 +43,9 @@
 #include "section.h"	// Definition of the Section class
 #include "color.h"		// Allows changing the font color in the terminal
 
+// The structure used to communicate with the yara SGPE module.
+#include "yara/modules/sgpe_data.h"
+
 #if defined BOOST_WINDOWS_API && !defined DECLSPEC
 	#ifdef SGPE_EXPORT
 		#define DECLSPEC    __declspec(dllexport)
@@ -203,6 +206,16 @@ public:
 	 *	@param	void* p	The memory to free.
 	 */
 	void operator delete(void* p);
+
+	/**
+	 *	@brief	Creates the data used by the SGPE Yara module.
+	 *
+	 *	This extracts a few of the PE's parsed elements and stores them inside a module that the SGPE Yara module
+	 *	can use to do its work.
+	 *	The sgpe_data object contains address information (entry point, sections, ...). Passing them to Yara prevents
+	 *	me from using their built in PE parser (since sgstatic has already done all the work).
+	 */
+	DECLSPEC boost::shared_ptr<sgpe_data> create_sgpe_module_data() const;
 
 private:
 	/**
