@@ -17,9 +17,7 @@
 
 #include "yara/yara_wrapper.h"
 
-// TODO: Remove when Yara doesn't mask min & max anymore
-#undef min
-#undef max
+// TODO: Remove when Yara doesn't mask get_object anymore
 #undef get_object
 
 #include "plugin_framework/plugin_interface.h"
