@@ -27,8 +27,8 @@ import urllib2
 import argparse
 
 
-URL_MAIN = "http://db.local.clamav.net/main.cvd"
-URL_DAILY = "http://db.local.clamav.net/daily.cvd"
+URL_MAIN = "http://database.clamav.net/main.cvd"
+URL_DAILY = "http://database.clamav.net/daily.cvd"
 
 
 def download_file(url):
@@ -38,6 +38,8 @@ def download_file(url):
     """
     file_name = url.split('/')[-1]
     try:
+        request = urllib2.Request(url)
+        request.add_header("User-Agent", "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:35.0) Gecko/20100101 Firefox/38.0")
         u = urllib2.urlopen(url)
     except urllib2.HTTPError as e:
         print "Could not download %s." % url, e
@@ -119,25 +121,18 @@ def update_signatures(url, download):
     os.chmod("%s.ndb" % file_basename, 0644)
     tar.close()
     os.remove("%s.tar" % file_basename)
-    if (url == URL_MAIN):
-        subprocess.call([sys.executable, "./clamav_to_yara.py", "-f", "%s.ndb" % file_basename, "-o", "clamav.yara", "--header"])
-    else:
-        subprocess.call([sys.executable, "./clamav_to_yara.py", "-f", "%s.ndb" % file_basename, "-o", "clamav.yara"])
+    subprocess.call([sys.executable, "./parse_clamav.py", "-i", "%s.ndb" % file_basename, "-o", "clamav.yara"])
     os.remove("%s.ndb" % file_basename)
 
 # Work in the script's directory
-os.chdir(os.path.dirname(sys.argv[0]))
+if os.path.dirname(sys.argv[0]) != "":
+    os.chdir(os.path.dirname(sys.argv[0]))
 
 parser = argparse.ArgumentParser(description="Updates ClamAV signatures for plugin_clamav.")
 parser.add_argument("--main", action="store_true", help="Update ClamAV's main signature file.")
 parser.add_argument("--skip-download", dest="skipdownload", action="store_false",
                     help="Work with local copies of ClamAV signature files.")
-parser.add_argument("--help,h", dest="help", action="store_true", help="Displays this message.")
 args = parser.parse_args()
-
-if args.help:
-    parser.print_help()
-    sys.exit(0)
 
 try:
     os.remove("clamav.yara")
@@ -150,20 +145,21 @@ if not os.path.exists("clamav.main.yara"):
 if args.main:
     if os.path.exists("clamav.main.yara"):
         os.remove("clamav.main.yara")
+    with open("clamav.yara", "wb") as f:
+        f.write("import \"sgpe\"\n\n")  # Do not forget to import our module.
     update_signatures(URL_MAIN, args.skipdownload)
-    shutil.copy("clamav.yara", "clamav.main.yara")
+    shutil.copy("clamav.yara", "clamav.main.yara")  # Keep a copy to which we can append future daily signature files.
 else:
     # Use the old clamav.main.yara as a base and append the daily rules to it.
     shutil.copy("clamav.main.yara", "clamav.yara")
 
 update_signatures(URL_DAILY, args.skipdownload)
+
 try:
-    os.remove("../../bin/yara_rules/clamav.yara")
-except OSError:
-    pass
-try:
-    os.remove("../../bin/yara_rules/clamav.yarac")
+    os.remove("clamav.yarac")
 except OSError:
     pass
 os.chmod("clamav.yara", 0644)
-shutil.move("clamav.yara", "../../bin/yara_rules")
+
+# TODO: Support .hdb & .mdb (hashes of known malwares / sections) - http://resources.infosecinstitute.com/open-source-antivirus-clamav/
+# TODO: Support .ldb (logical signatures)? Seems hard :(

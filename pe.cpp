@@ -777,11 +777,13 @@ boost::shared_ptr<sgpe_data> PE::create_sgpe_module_data() const
 	boost::shared_ptr<sgpe_data> res(new sgpe_data, delete_sgpe_module_data);
 	res->entrypoint = _ioh->AddressOfEntryPoint;
 	res->number_of_sections = _sections.size();
-	res->sections = (boost::uint32_t*) malloc(res->number_of_sections * sizeof(boost::uint32_t));
+	res->sections = (sgpe_section*) malloc(res->number_of_sections * sizeof(sgpe_section));
 	if (res->sections != NULL)
 	{
-		for (boost::uint32_t i = 0 ; i < res->number_of_sections ; ++i) {
-			res->sections[i] = _sections[i]->get_pointer_to_raw_data();
+		for (boost::uint32_t i = 0 ; i < res->number_of_sections ; ++i) 
+		{
+			res->sections[i].section_start = _sections[i]->get_pointer_to_raw_data();
+			res->sections[i].section_size = _sections[i]->get_size_of_raw_data();
 		}
 	}
 	else
