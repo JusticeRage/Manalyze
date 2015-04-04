@@ -40,7 +40,7 @@ namespace io
 
 typedef std::vector<std::string> strings;
 typedef std::set<std::string> string_set;
-typedef std::vector<std::pair<std::string, strings> > key_values;
+typedef boost::shared_ptr<std::string> pString;
 
 /**
  *	@brief	A tree representing the data to output.
@@ -121,6 +121,8 @@ public:
 			case STRINGS:
 				_strings_data = strings();
 				break;
+			default:
+				break;
 		}
 	}
 
@@ -158,7 +160,7 @@ public:
 	 *
 	 *	@return	A string representation of the contained data.
 	 */
-	std::string to_string() const 
+	std::string to_string() const
 	{
 		if (_type == STRING) {
 			return *_string_data;
@@ -196,15 +198,17 @@ public:
 			case STRINGS:
 				PRINT_WARNING << "[OutputFormatter] Called to_string() on a LIST or a STRINGS node!" << DEBUG_INFO << std::endl;
 				break;
+			default:
+				PRINT_WARNING << "[OutputFormatter] No _to_string() implementation for " << _type << "!" << std::endl;
 		}
 		return ss.str();
 	}
 
 	// ----------------------------------------------------------------------------
 
-	plugin::Result::LEVEL get_level() const 
+	plugin::Result::LEVEL get_level() const
 	{
-		if (_type != THREAT_LEVEL) 
+		if (_type != THREAT_LEVEL)
 		{
 			PRINT_WARNING << "[OutputTreeNode] Tried to get a level, but is not a THREAT_LEVEL node!" << DEBUG_INFO << std::endl;
 			return plugin::Result::NO_OPINION;
@@ -231,7 +235,7 @@ public:
 	 */
 	void append(pNode node)
 	{
-		if (_type != LIST) 
+		if (_type != LIST)
 		{
 			PRINT_WARNING << "[OutputFormatter] Tried to append a node, but is not a list of nodes!" << DEBUG_INFO << std::endl;
 			return;
@@ -248,7 +252,7 @@ public:
 	/**
 	 *	@brief	Returns the data contained by a LIST node (a vector of nodes).
 	 */
-	nodes get_children() 
+	nodes get_children()
 	{
 		if (_type != LIST)
 		{
@@ -297,7 +301,7 @@ public:
 	 */
 	void append(const std::string& s)
 	{
-		if (_type != STRINGS) 
+		if (_type != STRINGS)
 		{
 			PRINT_WARNING << "[OutputFormatter] Tried to append a string, but is not a list of strings!" << std::endl;
 			return;
@@ -411,7 +415,7 @@ public:
 	void add_data(pNode n, const std::string& file_path)
 	{
 		boost::optional<pNode> file_node = _root->find_node(file_path);
-		if (file_node) 
+		if (file_node)
 		{
 			if ((*file_node)->find_node(n->get_name())) {
 				PRINT_WARNING << "Multiple nodes using the name " << n->get_name() << " in a dictionary." << std::endl;
@@ -439,7 +443,7 @@ public:
 	*
 	*	@return	A boost::optional which may contain the located node, if it was found.
 	*/
-	boost::optional<pNode> find_node(const std::string& name, const std::string file_path) 
+	boost::optional<pNode> find_node(const std::string& name, const std::string file_path)
 	{
 		boost::optional<pNode> file_node = _root->find_node(file_path);
 		if (!file_node) {
@@ -492,7 +496,7 @@ private:
 	/**
 	 *	@brief	Special printing handling for plugin output.
 	 *
-	 *	The plugins' output needs special code to be printed in a more readable fashion than a 
+	 *	The plugins' output needs special code to be printed in a more readable fashion than a
 	 *	simple list of keys and values.
 	 *
 	 *	@param	std::stringstream& sink The stringstream into which the data should be written.

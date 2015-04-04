@@ -24,9 +24,9 @@ namespace plugin {
 
 enum REQUIREMENT { AT_LEAST_ONE = 1, AT_LEAST_TWO = 2, AT_LEAST_THREE = 3 };
 
-std::string anti_debug = 
+std::string anti_debug =
 	"IsDebuggerPresent|FindWindow|ZwQuerySystemInformation|DbgBreakPoint|DbgPrint|"
-	"CheckRemoteDebuggerPresent|CreateToolhelp32Snapshot|Toolhelp32ReadProcessMemory|"	
+	"CheckRemoteDebuggerPresent|CreateToolhelp32Snapshot|Toolhelp32ReadProcessMemory|"
 	"OutputDebugString|SwitchToThread|NtQueryInformationProcess"	// Standard anti-debug API calls
 	"QueryPerformanceCounter";	// Techniques based on timing. GetTickCount ignored (too many false positives)
 
@@ -50,24 +50,24 @@ std::string packer_api = "VirtualAlloc|VirtualProtect";
 std::string temporary_files = "GetTempPath(A|W)|(Create|Write)File(A|W)";
 
 /**
- *	@brief	Checks the presence of some functions in the PE and updates the 
+ *	@brief	Checks the presence of some functions in the PE and updates the
  *			result accordingly.
  *
  *	@param	const sg::PE& pe The PE in which the imports should be looked for.
- *	@param	const std::string& regex The regular expression against which the 
+ *	@param	const std::string& regex The regular expression against which the
  *			imports should be matched.
  *	@param	Result::LEVEL level The severity level to set if the imports are found.
  *	@param	const std::string& description The description to add to the result if
  *			matching imports are found.
- *	@param	REQUIREMENT req A criteria indicating how much matching imports should 
+ *	@param	REQUIREMENT req A criteria indicating how much matching imports should
  *			be found before updating the result.
  *	@param	pResult res The result which will receive the information.
  */
 void check_functions(const sg::PE& pe,
-					 const std::string& regex, 
-					 Result::LEVEL level, 
-					 const std::string& description, 
-					 REQUIREMENT req, 
+					 const std::string& regex,
+					 Result::LEVEL level,
+					 const std::string& description,
+					 REQUIREMENT req,
 					 pResult res)
 {
 	sg::const_shared_strings found_imports = pe.find_imports(regex);
@@ -85,16 +85,16 @@ class ImportsPlugin : public IPlugin
 {
 public:
 	int get_api_version() { return 1; }
-	
-	pString get_id() const { 
+
+	pString get_id() const {
 		return pString(new std::string("imports"));
 	}
 
-	pString get_description() const { 
+	pString get_description() const {
 		return pString(new std::string("Looks for suspicious imports."));
 	}
 
-	pResult analyze(const sg::PE& pe) 
+	pResult analyze(const sg::PE& pe)
 	{
 		pResult res(new Result());
 		check_functions(pe, dynamic_import, Result::NO_OPINION, "[!] The program may be hiding some of its imports", AT_LEAST_TWO, res);
@@ -124,6 +124,8 @@ public:
 				break;
 			case Result::MALICIOUS:
 				res->set_summary("The PE contains functions mostly used by malwares.");
+				break;
+			default:
 				break;
 		}
 
