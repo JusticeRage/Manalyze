@@ -61,14 +61,14 @@ public:
 				std::string ext = matches->at(0)->operator[]("extension");
 				if (ext == ".exe" || ext == ".sys" || ext == ".cab")
 				{
-					res->raise_level(Result::MALICIOUS);
+					res->raise_level(MALICIOUS);
 					std::stringstream ss;
 					ss << "Resource " << *(*it)->get_name() << " detected as a " << matches->at(0)->operator[]("description") << ".";
 					res->add_information(ss.str());
 				}
 				else if (ext == ".pdf")
 				{
-					res->raise_level(Result::SUSPICIOUS);
+					res->raise_level(SUSPICIOUS);
 					std::stringstream ss;
 					ss << "Resource " << *(*it)->get_name() << " detected as a PDF document.";
 					res->add_information(ss.str());
@@ -90,11 +90,11 @@ public:
 		{
 			std::stringstream ss;
 			ss << "Resources amount for "  << ratio*100 << "% of the executable.";
-			res->raise_level(Result::SUSPICIOUS);
+			res->raise_level(SUSPICIOUS);
 			res->add_information(ss.str());
 		}
 
-		if (res->get_level() > Result::NO_OPINION) {
+		if (res->get_level() > NO_OPINION) {
 			res->set_summary("The PE is possibly a dropper.");
 		}
 		else if (res->get_information()->size() > 0) {

@@ -22,6 +22,8 @@
 #include <string>
 #include <boost/shared_ptr.hpp>
 
+#include "threat_level.h" // Contains the LEVEL enum.
+
 namespace plugin
 {
 
@@ -40,8 +42,6 @@ class Result
 {
 
 public:
-	enum LEVEL { SAFE, NO_OPINION, SUSPICIOUS, MALICIOUS };
-
 	Result() : _level(NO_OPINION),
 			   _data(new std::vector<std::string>())
 	{}

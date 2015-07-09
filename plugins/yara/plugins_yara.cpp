@@ -44,7 +44,7 @@ public:
 	 *
 	 *	@return	A pResult detailing the findings of the scan.
 	 */
-	pResult scan(const sg::PE& pe, const std::string& summary, Result::LEVEL level, const std::string& meta_field_name, bool show_strings = false)
+	pResult scan(const sg::PE& pe, const std::string& summary, LEVEL level, const std::string& meta_field_name, bool show_strings = false)
 	{
 		pResult res = pResult(new Result);
 		if (!_load_rules()) {
@@ -99,7 +99,7 @@ public:
 	ClamavPlugin() : YaraPlugin("yara_rules/clamav.yara") {}
 
 	pResult analyze(const sg::PE& pe) {
-		return scan(pe, "Matching ClamAV signature(s):", Result::MALICIOUS, "signature");
+		return scan(pe, "Matching ClamAV signature(s):", MALICIOUS, "signature");
 	}
 
 	pString get_id() const { 
@@ -117,7 +117,7 @@ public:
 	CompilerDetectionPlugin() : YaraPlugin("yara_rules/compilers.yara") {}
 
 	pResult analyze(const sg::PE& pe) {
-		return scan(pe, "Matching compiler(s):", Result::NO_OPINION, "description");
+		return scan(pe, "Matching compiler(s):", NO_OPINION, "description");
 	}
 
 	boost::shared_ptr<std::string> get_id() const { 
@@ -135,7 +135,7 @@ public:
 	PEiDPlugin() : YaraPlugin("yara_rules/peid.yara") {}
 
 	pResult analyze(const sg::PE& pe) {
-		return scan(pe, "PEiD Signature:", Result::SUSPICIOUS, "packer_name");
+		return scan(pe, "PEiD Signature:", SUSPICIOUS, "packer_name");
 	}
 
 	boost::shared_ptr<std::string> get_id() const { 
@@ -154,7 +154,7 @@ public:
 	SuspiciousStringsPlugin() : YaraPlugin("yara_rules/suspicious_strings.yara") {}
 
 	pResult analyze(const sg::PE& pe) {
-		return scan(pe, "Strings found in the binary may indicate undesirable behavior:", Result::SUSPICIOUS, "description", true);
+		return scan(pe, "Strings found in the binary may indicate undesirable behavior:", SUSPICIOUS, "description", true);
 	}
 
 	boost::shared_ptr<std::string> get_id() const { 
@@ -173,7 +173,7 @@ public:
 
 	pResult analyze(const sg::PE& pe) 
 	{
-		pResult res = scan(pe, "Cryptographic algorithms detected in the binary:", Result::NO_OPINION, "description");
+		pResult res = scan(pe, "Cryptographic algorithms detected in the binary:", NO_OPINION, "description");
 
 		// Look for common cryptography libraries
 		if (pe.find_imports(".*", "libssl(32)?.dll|libcrypto.dll")->size() > 0) {

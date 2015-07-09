@@ -109,7 +109,7 @@ public:
 			{
 				if (!it->value_.get_int()) // Response Code = 0: VT does not know the file.
 				{
-					res->set_level(Result::SUSPICIOUS); // Because VT knows all the files.
+					res->set_level(SUSPICIOUS); // Because VT knows all the files.
 					res->set_summary("This file has never been scanned on VirusTotal.");
 					return res;
 				}
@@ -157,13 +157,13 @@ public:
 		ss << "VirusTotal score: " << positives << "/" << total << " (Scanned on " << scan_date << ")";
 		res->set_summary(ss.str());
 		if (positives == 0) {
-			res->set_level(Result::SAFE);
+			res->set_level(SAFE);
 		}
 		else if (positives < 3) { // Allow reasonable doubt for paranoid AVs
-			res->set_level(Result::SUSPICIOUS);
+			res->set_level(SUSPICIOUS);
 		}
 		else {
-			res->set_level(Result::MALICIOUS);
+			res->set_level(MALICIOUS);
 		}
 
 		return res;

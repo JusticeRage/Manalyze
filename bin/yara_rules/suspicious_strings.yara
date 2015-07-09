@@ -47,7 +47,8 @@ rule Browsers
         $ff = "firefox.exe" nocase wide ascii
         $ff_key = "key3.db"
         $ff_log = "signons.sqlite"
-        $chrome = "chrome.exe" nocase wide ascii        
+        $chrome = "chrome.exe" nocase wide ascii       
+		// TODO: Add user-agent strings
     condition:
         any of them
 }

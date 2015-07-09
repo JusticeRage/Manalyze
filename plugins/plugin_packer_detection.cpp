@@ -62,7 +62,7 @@ public:
 				std::stringstream ss;
 				ss << "Unusual section name found: " << *(*it)->get_name();
 				res->add_information(ss.str());
-				res->raise_level(Result::SUSPICIOUS);
+				res->raise_level(SUSPICIOUS);
 			}
 
 			int characteristics = (*it)->get_characteristics();
@@ -72,7 +72,7 @@ public:
 				std::stringstream ss;
 				ss << "Section " << *(*it)->get_name() << " is both writable and executable.";
 				res->add_information(ss.str());
-				res->raise_level(Result::SUSPICIOUS);
+				res->raise_level(SUSPICIOUS);
 			}
 
 			if ((*it)->get_size_of_raw_data() == 0) { // TODO: Report this in a "structure" plugin?
@@ -84,7 +84,7 @@ public:
 			{
 				std::stringstream ss;
 				ss << "Section " << *(*it)->get_name() << " has an unusually high entropy (" << entropy << ").";
-				res->raise_level(Result::SUSPICIOUS);
+				res->raise_level(SUSPICIOUS);
 			}
 		}
 
@@ -95,10 +95,10 @@ public:
 			std::stringstream ss;
 			ss << "The PE only has " << imports->size() << " import(s).";
 			res->add_information(ss.str());
-			res->raise_level(Result::SUSPICIOUS);
+			res->raise_level(SUSPICIOUS);
 		}
 
-		if (res->get_level() != Result::NO_OPINION) {
+		if (res->get_level() != NO_OPINION) {
 			res->set_summary("The PE is possibly packed.");
 		}
 

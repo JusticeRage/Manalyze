@@ -126,11 +126,11 @@ public:
 		switch (retval)
 		{
 			case ERROR_SUCCESS:
-				res->set_level(Result::SAFE);
+				res->set_level(SAFE);
 				res->set_summary("The PE's digital signature is valid.");
 				break;
 			case TRUST_E_EXPLICIT_DISTRUST:
-				res->set_level(Result::MALICIOUS);
+				res->set_level(MALICIOUS);
 				res->set_summary("The PE's digital signature has been explicitly blacklisted.");
 			case TRUST_E_NOSIGNATURE:
 				error_code = ::GetLastError();
@@ -144,15 +144,15 @@ public:
 				res->set_summary("Unknown error encountered while reading the signature.");
 				break;
 			case TRUST_E_BAD_DIGEST:
-				res->set_level(Result::MALICIOUS);
+				res->set_level(MALICIOUS);
 				res->set_summary("The PE's digital signature is invalid.");
 				break;
 			case CERT_E_REVOKED:
-				res->set_level(Result::MALICIOUS);
+				res->set_level(MALICIOUS);
 				res->set_summary("The PE's certificate was explicitly revoked by its issuer.");
 				break;
 			case CERT_E_EXPIRED:
-				res->set_level(Result::SUSPICIOUS);
+				res->set_level(SUSPICIOUS);
 				res->set_summary("The PE's certificate has expired.");
 				break;
 			default:
@@ -162,7 +162,7 @@ public:
 				break;
 		}
 
-		if (res->get_level() != Result::NO_OPINION) {
+		if (res->get_level() != NO_OPINION) {
 			get_certificate_info(wide_path, res);
 		}
 		else { // No certificate: try to determine if the application should be signed.
@@ -591,7 +591,7 @@ void check_version_info(const sg::PE& pe, pResult res)
 			ss << "PE pretends to be from " << *(m->at(0)->get_found_strings().begin()) 
 				<< " but is not signed!";
 			res->set_summary(ss.str());
-			res->raise_level(Result::MALICIOUS);
+			res->raise_level(MALICIOUS);
 		}
 	}
 }

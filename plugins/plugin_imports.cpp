@@ -65,7 +65,7 @@ std::string temporary_files = "GetTempPath(A|W)|(Create|Write)File(A|W)";
  */
 void check_functions(const sg::PE& pe,
 					 const std::string& regex,
-					 Result::LEVEL level,
+					 LEVEL level,
 					 const std::string& description,
 					 REQUIREMENT req,
 					 pResult res)
@@ -97,32 +97,32 @@ public:
 	pResult analyze(const sg::PE& pe)
 	{
 		pResult res(new Result());
-		check_functions(pe, dynamic_import, Result::NO_OPINION, "[!] The program may be hiding some of its imports", AT_LEAST_TWO, res);
-		check_functions(pe, anti_debug, Result::SUSPICIOUS, "Functions which can be used for anti-debugging purposes", AT_LEAST_ONE, res);
-		check_functions(pe, vanilla_injection, Result::MALICIOUS, "Code injection capabilities", AT_LEAST_THREE, res);
-		check_functions(pe, "Reg(.*)(Key|Value)(.*)", Result::NO_OPINION, "Can access the registry", AT_LEAST_ONE, res);
-		check_functions(pe, process_creation_api, Result::NO_OPINION, "Possibly launches other programs", AT_LEAST_ONE, res);
-		check_functions(pe, "(Nt|Zw)(.*)", Result::SUSPICIOUS, "Uses Windows' Native API", AT_LEAST_TWO, res);
-		check_functions(pe, "Crypt(.*)", Result::NO_OPINION, "Uses Microsoft's cryptographic API", AT_LEAST_ONE, res);
-		check_functions(pe, temporary_files, Result::NO_OPINION, "Can create temporary files", AT_LEAST_TWO, res);
-		check_functions(pe, "Wlx(.*)", Result::MALICIOUS, "Possibly attempts GINA replacement", AT_LEAST_THREE, res);
-		check_functions(pe, keylogger_api, Result::MALICIOUS, "Uses functions commonly found in keyloggers", AT_LEAST_TWO, res);
-		check_functions(pe, packer_api, Result::SUSPICIOUS, "Memory manipulation functions often used by packers", AT_LEAST_TWO, res);
-		check_functions(pe, raw_socket_api, Result::SUSPICIOUS, "Leverages the raw socket API to access the Internet", AT_LEAST_ONE, res);
-		check_functions(pe, wininet_api, Result::NO_OPINION, "Has Internet access capabilities", AT_LEAST_ONE, res);
-		check_functions(pe, privilege_api, Result::MALICIOUS, "Functions related to the privilege level", AT_LEAST_ONE, res);
+		check_functions(pe, dynamic_import, NO_OPINION, "[!] The program may be hiding some of its imports", AT_LEAST_TWO, res);
+		check_functions(pe, anti_debug, SUSPICIOUS, "Functions which can be used for anti-debugging purposes", AT_LEAST_ONE, res);
+		check_functions(pe, vanilla_injection, MALICIOUS, "Code injection capabilities", AT_LEAST_THREE, res);
+		check_functions(pe, "Reg(.*)(Key|Value)(.*)", NO_OPINION, "Can access the registry", AT_LEAST_ONE, res);
+		check_functions(pe, process_creation_api, NO_OPINION, "Possibly launches other programs", AT_LEAST_ONE, res);
+		check_functions(pe, "(Nt|Zw)(.*)", SUSPICIOUS, "Uses Windows' Native API", AT_LEAST_TWO, res);
+		check_functions(pe, "Crypt(.*)", NO_OPINION, "Uses Microsoft's cryptographic API", AT_LEAST_ONE, res);
+		check_functions(pe, temporary_files, NO_OPINION, "Can create temporary files", AT_LEAST_TWO, res);
+		check_functions(pe, "Wlx(.*)", MALICIOUS, "Possibly attempts GINA replacement", AT_LEAST_THREE, res);
+		check_functions(pe, keylogger_api, MALICIOUS, "Uses functions commonly found in keyloggers", AT_LEAST_TWO, res);
+		check_functions(pe, packer_api, SUSPICIOUS, "Memory manipulation functions often used by packers", AT_LEAST_TWO, res);
+		check_functions(pe, raw_socket_api, SUSPICIOUS, "Leverages the raw socket API to access the Internet", AT_LEAST_ONE, res);
+		check_functions(pe, wininet_api, NO_OPINION, "Has Internet access capabilities", AT_LEAST_ONE, res);
+		check_functions(pe, privilege_api, MALICIOUS, "Functions related to the privilege level", AT_LEAST_ONE, res);
 
 		switch (res->get_level())
 		{
-			case Result::NO_OPINION:
+			case NO_OPINION:
 				if (res->get_information()->size() > 0) {
 					res->set_summary("The PE contains common functions which appear in legitimate applications.");
 				}
 				break;
-			case Result::SUSPICIOUS:
+			case SUSPICIOUS:
 				res->set_summary("The PE contains functions most legitimate programs don't use.");
 				break;
-			case Result::MALICIOUS:
+			case MALICIOUS:
 				res->set_summary("The PE contains functions mostly used by malwares.");
 				break;
 			default:

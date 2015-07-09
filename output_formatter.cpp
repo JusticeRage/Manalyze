@@ -21,59 +21,6 @@ namespace io {
 
 // ----------------------------------------------------------------------------
 
-int determine_max_width(pNode node)
-{
-	if (node->get_type() != OutputTreeNode::LIST)
-	{
-		PRINT_WARNING << "[RawFormatter] Tried to get the maximum width, but is not a list of nodes!" << std::endl;
-		return 0;
-	}
-	unsigned int max = 0;
-	nodes children = node->get_children();
-	for (nodes::const_iterator it = children.begin() ; it != children.end() ; ++it) 
-	{
-		if ((*it)->get_type() == OutputTreeNode::LIST) {
-			continue; // Ignore lists as they have no impact on alignment.
-		}
-
-		if ((*it)->get_name().length() > max) {
-			max = (*it)->get_name().length();
-		}
-	}
-	return max;
-}
-
-// ----------------------------------------------------------------------------
-
-boost::optional<pNode> OutputTreeNode::find_node(const std::string& name) const
-{
-	if (_type != LIST)
-	{
-		PRINT_WARNING << "[OutputFormatter] Tried to search for a node, but is not a list of nodes!" << std::endl;
-		return boost::optional<pNode>();
-	}
-	if (!_list_data || _list_data->size() == 0) {
-		return boost::optional<pNode>();
-	}
-
-	nodes::const_iterator it;
-	for (it = _list_data->begin(); it != _list_data->end(); ++it)
-	{
-		if ((*it)->get_name() == name) {
-			break;
-		}
-	}
-
-	if (it == _list_data->end()) {
-		return boost::optional<pNode>();
-	}
-	else {
-		return *it;
-	}
-}
-
-// ----------------------------------------------------------------------------
-
 void RawFormatter::format(std::ostream& sink, bool end_stream)
 {
 	static bool print_header = true;
@@ -227,18 +174,18 @@ void RawFormatter::_dump_plugin_node(std::ostream& sink, pNode node)
 		{
 			switch ((*level)->get_level())
 			{
-			case plugin::Result::NO_OPINION:
+			case plugin::NO_OPINION:
 				break;
 
-			case plugin::Result::MALICIOUS:
+			case plugin::MALICIOUS:
 				utils::print_colored_text("MALICIOUS", utils::RED, sink, "[ ", " ] ");
 				break;
 
-			case plugin::Result::SUSPICIOUS:
+			case plugin::SUSPICIOUS:
 				utils::print_colored_text("SUSPICIOUS", utils::YELLOW, sink, "[ ", " ] ");
 				break;
 
-			case plugin::Result::SAFE:
+			case plugin::SAFE:
 				utils::print_colored_text("SAFE", utils::GREEN, sink, "[ ", " ] ");
 				break;
 			}
@@ -247,7 +194,7 @@ void RawFormatter::_dump_plugin_node(std::ostream& sink, pNode node)
 		if (summary) {
 			sink << (*summary)->to_string() << std::endl;
 		}
-		else if ((*level)->get_level() != plugin::Result::NO_OPINION) {
+		else if ((*level)->get_level() != plugin::NO_OPINION) {
 			sink << std::endl;
 		}
 		strings output = (*info)->get_strings();

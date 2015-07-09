@@ -49,7 +49,7 @@ include_directories(
 
 add_library(sgpe SHARED pe.cpp nt_values.cpp utils.cpp imports.cpp resources.cpp section.cpp color.cpp)
 
-add_executable(sgstatic main.cpp color.cpp config_parser.cpp output_formatter.cpp dump.cpp
+add_executable(sgstatic main.cpp color.cpp config_parser.cpp output_formatter.cpp output_tree_node.cpp dump.cpp
 			   plugin_framework/dynamic_library.cpp plugin_framework/plugin_manager.cpp # Plugin system
 			   plugins/yara/plugins_yara.cpp plugins/plugin_packer_detection.cpp plugins/plugin_imports.cpp plugins/plugin_resources.cpp) # Bundled plugins
 
