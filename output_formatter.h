@@ -81,13 +81,13 @@ public:
 	 */
 	void add_data(pNode n, const std::string& file_path)
 	{
-		boost::optional<pNode> file_node = _root->find_node(file_path);
+		pNode file_node = _root->find_node(file_path);
 		if (file_node)
 		{
-			if ((*file_node)->find_node(n->get_name())) {
-				PRINT_WARNING << "Multiple nodes using the name " << n->get_name() << " in a dictionary." << std::endl;
+			if (file_node->find_node(*n->get_name())) {
+				PRINT_WARNING << "Multiple nodes using the name " << *n->get_name() << " in a dictionary." << std::endl;
 			}
-			(*file_node)->append(n);
+			file_node->append(n);
 		}
 		else
 		{
@@ -110,13 +110,13 @@ public:
 	*
 	*	@return	A boost::optional which may contain the located node, if it was found.
 	*/
-	boost::optional<pNode> find_node(const std::string& name, const std::string file_path)
+	pNode find_node(const std::string& name, const std::string file_path)
 	{
-		boost::optional<pNode> file_node = _root->find_node(file_path);
+		pNode file_node = _root->find_node(file_path);
 		if (!file_node) {
-			return boost::optional<pNode>();
+			return pNode();
 		}
-		return (*file_node)->find_node(name);
+		return file_node->find_node(name);
 	}
 
 	// ----------------------------------------------------------------------------
@@ -193,19 +193,6 @@ private:
 	 */
 	void _dump_node(std::ostream& sink, pNode node, int level = 1, bool append_comma = false);
 };
-
-// ----------------------------------------------------------------------------
-
-/**
- *	@brief	For LIST nodes, returns the size of the biggest child's name.
- *
- *	Used for pretty printing purposes with the RawFormatter.
- *
- *	@param	pNode node The (LIST) node to work on.
- *
- *	@return	The maximum size of the children's names.
- */
-int determine_max_width(pNode node);
 
 // ----------------------------------------------------------------------------
 

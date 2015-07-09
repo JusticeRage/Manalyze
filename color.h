@@ -28,6 +28,16 @@
 	#include <stdio.h>
 #endif
 
+#if defined BOOST_WINDOWS_API && !defined DECLSPEC_SGCOMMONS
+	#ifdef SGCOMMONS_EXPORT
+		#define DECLSPEC_SGCOMMONS    __declspec(dllexport)
+	#else
+		#define DECLSPEC_SGCOMMONS    __declspec(dllimport)
+	#endif
+#elif !defined BOOST_WINDOWS_API && !defined DECLSPEC_SGCOMMONS
+	#define DECLSPEC_SGCOMMONS
+#endif
+
 namespace utils
 {
 
@@ -53,7 +63,7 @@ void set_color(Color c);
  *
  *	@return	A reference to sink, so the operator "<<" can be chained.
  */
-std::ostream& print_colored_text(const std::string& text, 
+DECLSPEC_SGCOMMONS std::ostream& print_colored_text(const std::string& text,
 								 Color c, 
 								 std::ostream& sink = std::cout, 
 								 const std::string& prefix = "", 

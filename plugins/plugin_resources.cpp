@@ -43,7 +43,7 @@ public:
 
 	pResult analyze(const sg::PE& pe) 
 	{
-		pResult res(new Result());
+		pResult res = create_result();
 		yara::Yara y;
 
 		if (!y.load_rules("yara_rules/magic.yara")) {

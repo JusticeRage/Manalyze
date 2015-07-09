@@ -46,7 +46,7 @@ public:
 	 */
 	pResult scan(const sg::PE& pe, const std::string& summary, LEVEL level, const std::string& meta_field_name, bool show_strings = false)
 	{
-		pResult res = pResult(new Result);
+		pResult res = create_result();
 		if (!_load_rules()) {
 			return res;
 		}

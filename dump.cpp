@@ -281,10 +281,10 @@ void dump_version_info(const sg::PE& pe, io::OutputFormatter& formatter)
 				continue;
 			}
 
-			boost::optional<io::pNode> existing_node = formatter.find_node("Version Info", *pe.get_path());
+			io::pNode existing_node = formatter.find_node("Version Info", *pe.get_path());
 			io::pNode version_info_node;
 			if (existing_node) {
-				version_info_node = *existing_node;
+				version_info_node = existing_node;
 			}
 			else {
 				version_info_node = io::pNode(new io::OutputTreeNode("Version Info", io::OutputTreeNode::LIST));

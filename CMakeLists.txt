@@ -47,15 +47,19 @@ include_directories(
 						${Boost_INCLUDE_DIRS}
                    )
 
-add_library(sgpe SHARED pe.cpp nt_values.cpp utils.cpp imports.cpp resources.cpp section.cpp color.cpp)
+add_library(sgpe SHARED pe.cpp nt_values.cpp utils.cpp imports.cpp resources.cpp section.cpp)
 
-add_executable(sgstatic main.cpp color.cpp config_parser.cpp output_formatter.cpp output_tree_node.cpp dump.cpp
+add_library(sgcommons SHARED color.cpp output_tree_node.cpp)
+
+add_executable(sgstatic main.cpp config_parser.cpp output_formatter.cpp dump.cpp
 			   plugin_framework/dynamic_library.cpp plugin_framework/plugin_manager.cpp # Plugin system
 			   plugins/yara/plugins_yara.cpp plugins/plugin_packer_detection.cpp plugins/plugin_imports.cpp plugins/plugin_resources.cpp) # Bundled plugins
 
 if (WIN32)
 			add_definitions(/D_CRT_SECURE_NO_WARNINGS) # Please don't complain about fopen()
+			add_definitions(/D_WINSOCK_DEPRECATED_NO_WARNINGS) # Don't complain about ASIO's WSASocket functions either.
 			set_target_properties(sgpe PROPERTIES COMPILE_DEFINITIONS "SGPE_EXPORT") # Export the PE parsing functions
+			set_target_properties(sgcommons PROPERTIES COMPILE_DEFINITIONS "SGCOMMONS_EXPORT") # Export core functions
 			set (BUILD_SHARED_LIBS FALSE)
             set (CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -MTd")
             set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -MTd")
@@ -66,11 +70,11 @@ if (WIN32)
 			
 			# Windows only plugins:
 			add_library(plugin_authenticode SHARED plugins/plugin_authenticode.cpp)
-			target_link_libraries(plugin_authenticode sgpe hash-library ${Boost_LIBRARIES})
+			target_link_libraries(plugin_authenticode sgpe hash-library sgcommons ${Boost_LIBRARIES})
 else()
             if (CMAKE_BUILD_TYPE MATCHES "[Dd][Ee][Bb][Uu][Gg]")
                 add_definitions("/D_DEBUG")
-		set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
+				set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
             endif()
 			target_link_libraries(sgstatic dl)
 			set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
@@ -78,10 +82,9 @@ endif()
 
 # VirusTotal plugin
 add_library(plugin_virustotal SHARED plugins/plugin_virustotal/plugin_virustotal.cpp 
-									 color.cpp # TODO: Share color.cpp
 									 plugins/plugin_virustotal/json_spirit/json_spirit_reader.cpp 
 									 plugins/plugin_virustotal/json_spirit/json_spirit_value.cpp)
-target_link_libraries(plugin_virustotal sgpe hash-library ${Boost_LIBRARIES})
+target_link_libraries(plugin_virustotal sgpe hash-library sgcommons ${Boost_LIBRARIES})
 
 # yara dependency
 add_subdirectory(external/yara)
@@ -89,10 +92,11 @@ add_subdirectory(external/yara)
 # hash-library dependency
 add_subdirectory(external/hash-library)
 
-target_link_libraries(sgpe yara hash-library ${Boost_LIBRARIES})
+target_link_libraries(sgpe yara hash-library sgcommons ${Boost_LIBRARIES})
 
 target_link_libraries(
-						sgstatic 
+						sgstatic
+						sgcommons
 						sgpe
 						yara
 						hash-library

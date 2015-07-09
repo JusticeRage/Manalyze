@@ -96,7 +96,7 @@ public:
 
 	pResult analyze(const sg::PE& pe)
 	{
-		pResult res(new Result());
+		pResult res = create_result();
 		check_functions(pe, dynamic_import, NO_OPINION, "[!] The program may be hiding some of its imports", AT_LEAST_TWO, res);
 		check_functions(pe, anti_debug, SUSPICIOUS, "Functions which can be used for anti-debugging purposes", AT_LEAST_ONE, res);
 		check_functions(pe, vanilla_injection, MALICIOUS, "Code injection capabilities", AT_LEAST_THREE, res);
@@ -115,7 +115,7 @@ public:
 		switch (res->get_level())
 		{
 			case NO_OPINION:
-				if (res->get_information()->size() > 0) {
+				if (res->get_information() && res->get_information()->size() > 0) {
 					res->set_summary("The PE contains common functions which appear in legitimate applications.");
 				}
 				break;

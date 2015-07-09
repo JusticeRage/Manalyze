@@ -100,7 +100,7 @@ public:
 
 	pResult analyze(const sg::PE& pe) 
 	{
-		pResult res(new Result());
+		pResult res = create_result();
 		
 		WINTRUST_FILE_INFO file_info;
 		memset(&file_info, 0, sizeof(file_info));

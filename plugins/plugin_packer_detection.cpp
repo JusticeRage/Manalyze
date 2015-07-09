@@ -41,7 +41,7 @@ public:
 
 	pResult analyze(const sg::PE& pe) 
 	{
-		pResult res(new Result());
+		pResult res = create_result();
 		// Check the section names against a list of known names.
 		std::vector<std::string> common_names = boost::assign::list_of(".text")
 																	  (".data")

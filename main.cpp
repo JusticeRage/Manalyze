@@ -350,9 +350,11 @@ void handle_plugins_option(io::OutputFormatter& formatter,
 			continue;
 		}
 
+		// Forward relevant configuration elements to the plugin.
 		if (conf.count(*(*it)->get_id())) {
 			(*it)->set_config(conf.at(*(*it)->get_id()));
 		}
+
 		plugin::pResult res = (*it)->analyze(pe);
 		plugin::pInformation info = res->get_information();
 		if (!info || info->size() == 0) { // Plugin has no output.

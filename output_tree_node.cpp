@@ -20,7 +20,7 @@ along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
 namespace io
 {
 
-int determine_max_width(pNode node)
+unsigned int determine_max_width(pNode node)
 {
 	if (node->get_type() != OutputTreeNode::LIST)
 	{
@@ -28,15 +28,15 @@ int determine_max_width(pNode node)
 		return 0;
 	}
 	unsigned int max = 0;
-	nodes children = node->get_children();
-	for (nodes::const_iterator it = children.begin() ; it != children.end() ; ++it) 
+	pNodes children = node->get_children();
+	for (nodes::const_iterator it = children->begin() ; it != children->end() ; ++it) 
 	{
 		if ((*it)->get_type() == OutputTreeNode::LIST) {
 			continue; // Ignore lists as they have no impact on alignment.
 		}
 
-		if ((*it)->get_name().length() > max) {
-			max = (*it)->get_name().length();
+		if ((*it)->get_name()->length() > max) {
+			max = (*it)->get_name()->length();
 		}
 	}
 	return max;
@@ -44,27 +44,28 @@ int determine_max_width(pNode node)
 
 // ----------------------------------------------------------------------------
 
-boost::optional<pNode> OutputTreeNode::find_node(const std::string& name) const
+pNode OutputTreeNode::find_node(const std::string& name) const
 {
 	if (_type != LIST)
 	{
 		PRINT_WARNING << "[OutputFormatter] Tried to search for a node, but is not a list of nodes!" << std::endl;
-		return boost::optional<pNode>();
+		return pNode();
 	}
-	if (!_list_data || _list_data->size() == 0) {
-		return boost::optional<pNode>();
+
+	if (!_list_data || !*_list_data || (*_list_data)->size() == 0) {
+		return pNode();
 	}
 
 	nodes::const_iterator it;
-	for (it = _list_data->begin(); it != _list_data->end(); ++it)
+	for (it = (*_list_data)->begin(); it != (*_list_data)->end(); ++it)
 	{
-		if ((*it)->get_name() == name) {
+		if (*(*it)->get_name() == name) {
 			break;
 		}
 	}
 
-	if (it == _list_data->end()) {
-		return boost::optional<pNode>();
+	if (it == (*_list_data)->end()) {
+		return pNode();
 	}
 	else {
 		return *it;

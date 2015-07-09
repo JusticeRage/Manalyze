@@ -63,7 +63,7 @@ public:
 
 	pResult analyze(const sg::PE& pe) 
 	{
-		pResult res(new Result());
+		pResult res = create_result();
 
 		if (!_config->count("api_key")) // No API key provided.
 		{

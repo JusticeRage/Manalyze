@@ -82,6 +82,19 @@ public:
 		_config = shared_string_map(new string_map(config));
 	}
 
+	/**
+	 *	@brief	Creates a result object which can be used by a plugin.
+	 *
+	 *	Result's constructor has been made private because it needs to receive the plugin's name
+	 *	in order to fill its internal OutputTreeNode. This function hides the fact that the plugin
+	 *	name is forwarded.
+	 */
+	pResult create_result()
+	{
+		pResult res(new Result(*get_id()));
+		return res;
+	}
+
 protected:
 	shared_string_map _config;
 };

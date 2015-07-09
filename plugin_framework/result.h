@@ -21,8 +21,10 @@
 #include <vector>
 #include <string>
 #include <boost/shared_ptr.hpp>
+#include <boost/optional.hpp>
 
 #include "threat_level.h" // Contains the LEVEL enum.
+#include "output_tree_node.h"
 
 namespace plugin
 {
@@ -40,27 +42,90 @@ typedef boost::shared_ptr<std::vector<std::string> > pInformation;
  */
 class Result
 {
+	friend class IPlugin; // Result's constructor should only be called from IPlugin::make_result().
 
 public:
-	Result() : _level(NO_OPINION),
-			   _data(new std::vector<std::string>())
-	{}
-
-	void set_level(LEVEL level) { _level = level; }
-	void raise_level(LEVEL level) { if (level > _level) _level = level; }
-	LEVEL get_level() const		 { return _level;  }
-	void set_summary(const std::string& s) { _summary = pString(new std::string(s)); }
-	pString get_summary() const { return _summary; }
-
-	void  add_information(const std::string& info) {
-		_data->push_back(info);
+	void set_level(LEVEL level) 
+	{ 
+		io::pNode opt_level = _data->find_node("level");
+		if (!opt_level) // Should never happen.
+		{
+			PRINT_WARNING << "[Result] A result object has no level node. This should be investigated." << std::endl;
+			_data->append(io::pNode(new io::OutputTreeNode("level", level)));
+		}
+		else {
+			opt_level->update_value(level);
+		}
 	}
-	pInformation get_information() const { return _data; }
+
+	void raise_level(LEVEL level)
+	{ 
+		io::pNode opt_level = _data->find_node("level");
+		if (!opt_level) // Should never happen.
+		{
+			PRINT_WARNING << "[Result] A result object has no level node. This should be investigated." << std::endl;
+			_data->append(io::pNode(new io::OutputTreeNode("level", level)));
+		}
+		else
+		{
+			if (level > opt_level->get_level()) {
+				opt_level->update_value(level);
+			}
+		}
+	}
+
+	LEVEL get_level() const
+	{ 
+		io::pNode opt_level = _data->find_node("level");
+		if (!opt_level) // Should never happen.
+		{
+			PRINT_WARNING << "[Result] A result object has no level node. This should be investigated." << std::endl;
+			return NO_OPINION;
+		}
+		else {
+			return opt_level->get_level();
+		}
+	}
+	
+	void set_summary(const std::string& s) 
+	{ 
+		io::pNode opt_summary = _data->find_node("summary");
+		if (!opt_summary) {
+			_data->append(io::pNode(new io::OutputTreeNode("summary", s)));
+		}
+		else {
+			opt_summary->update_value(s);
+		}
+	}
+
+	pString get_summary() const 
+	{ 
+		io::pNode opt_summary = _data->find_node("summary");
+		if (!opt_summary) {
+			return pString();
+		}
+		else {
+			return opt_summary->to_string();
+		}
+	}
+
+	void  add_information(const std::string& info)
+	{
+		//TODO _data->push_back(info);
+	}
+
+	//TODO pInformation get_information() const { return _data; }
+	pInformation get_information() const { return pInformation(); }
 
 private:
-	LEVEL _level;
-	pString _summary;
-	pInformation _data;
+	Result(const std::string& plugin_name)
+	{
+		_data = io::pNode(new io::OutputTreeNode(plugin_name, io::OutputTreeNode::LIST));
+		_data->append(io::pNode(new io::OutputTreeNode("level", NO_OPINION)));
+		_data->append(io::pNode(new io::OutputTreeNode("info", io::OutputTreeNode::LIST)));
+	}
+
+	io::pNode _data;
 };
 typedef boost::shared_ptr<Result> pResult;
 

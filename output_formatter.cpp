@@ -30,8 +30,8 @@ void RawFormatter::format(std::ostream& sink, bool end_stream)
 		print_header = false;
 	}
 
-	nodes n = _root->get_children();
-	for (nodes::const_iterator it = n.begin() ; it != n.end() ; ++it) // File level
+	pNodes n = _root->get_children();
+	for (nodes::const_iterator it = n->begin() ; it != n->end() ; ++it) // File level
 	{
 		_dump_node(sink, *it, determine_max_width(*it));
 	}
@@ -42,7 +42,7 @@ void RawFormatter::format(std::ostream& sink, bool end_stream)
 
 void RawFormatter::_dump_node(std::ostream& sink, pNode node, int max_width, int level)
 {
-	if (node->get_name() == "Plugins") // Handle plugin output separately.
+	if (*node->get_name() == "Plugins") // Handle plugin output separately.
 	{
 		_dump_plugin_node(sink, node);
 		return;
@@ -51,7 +51,7 @@ void RawFormatter::_dump_node(std::ostream& sink, pNode node, int max_width, int
 	if (level == 0) // File level
 	{
 		sink << "-------------------------------------------------------------------------------" << std::endl;
-		sink << node->get_name() << std::endl;
+		sink << *node->get_name() << std::endl;
 		sink << "-------------------------------------------------------------------------------" << std::endl << std::endl;
 	}
 	else if (level == 1) // Category level
@@ -61,18 +61,18 @@ void RawFormatter::_dump_node(std::ostream& sink, pNode node, int max_width, int
 			PRINT_WARNING << "[RawFormatter] Root element of an analysis is not a list!" << std::endl;
 			return;
 		}
-		sink << node->get_name() << ":" << std::endl << std::string(node->get_name().length() + 1, '-') << std::endl;
+		sink << *node->get_name() << ":" << std::endl << std::string(node->get_name()->length() + 1, '-') << std::endl;
 	}
 	else if (level == 2) 
 	{
-		sink << node->get_name();
+		sink << *node->get_name();
 		if (node->get_type() == OutputTreeNode::LIST) {
 			sink << ":" << std::endl;
 		}
 	}
 	else 
 	{
-		sink << std::string((level - 2) * 4, ' ') << node->get_name();
+		sink << std::string((level - 2) * 4, ' ') << *node->get_name();
 		if (node->get_type() == OutputTreeNode::LIST) {
 			sink << ":" << std::endl;
 		}
@@ -83,8 +83,8 @@ void RawFormatter::_dump_node(std::ostream& sink, pNode node, int max_width, int
 		case OutputTreeNode::LIST:
 			{ // New scope to be able to declare the "children" variable.
 				// Determine children's max width
-				nodes children = node->get_children();
-				for (nodes::const_iterator it = children.begin(); it != children.end(); ++it) 
+				pNodes children = node->get_children();
+				for (nodes::const_iterator it = children->begin(); it != children->end(); ++it) 
 				{
 					// Dump all children with an increased indentation level.
 					if ((*it)->get_type() == OutputTreeNode::LIST) {
@@ -100,11 +100,11 @@ void RawFormatter::_dump_node(std::ostream& sink, pNode node, int max_width, int
 
 		case OutputTreeNode::STRINGS:
 			{ // New scope to be able to declare the "strs" variable.
-				strings strs = node->get_strings();
-				if (strs.size() == 0) // Special case : empty array of strings.
+				shared_strings strs = node->get_strings();
+				if (strs->size() == 0) // Special case : empty array of strings.
 				{
 					if (max_width > 0) {
-						sink << ": " << std::string(max_width - node->get_name().length(), ' ') << "(EMPTY)" << std::endl;
+						sink << ": " << std::string(max_width - node->get_name()->length(), ' ') << "(EMPTY)" << std::endl;
 					}
 					else {
 						sink << ": (EMPTY)" << std::endl;
@@ -112,12 +112,12 @@ void RawFormatter::_dump_node(std::ostream& sink, pNode node, int max_width, int
 					break;
 				}
 
-				for (strings::const_iterator it = strs.begin() ; it != strs.end() ; ++it)
+				for (strings::const_iterator it = strs->begin() ; it != strs->end() ; ++it)
 				{
 					if (max_width > 0) 
 					{
-						if (it == strs.begin()) {
-							sink << ": " << std::string(max_width - node->get_name().length(), ' ') << *it << std::endl;
+						if (it == strs->begin()) {
+							sink << ": " << std::string(max_width - node->get_name()->length(), ' ') << *it << std::endl;
 						}
 						else {
 							sink << std::string(max_width + 2 + (level - 2) * 4, ' ') << *it << std::endl;
@@ -125,7 +125,7 @@ void RawFormatter::_dump_node(std::ostream& sink, pNode node, int max_width, int
 					}
 					else 
 					{
-						if (it == strs.begin()) {
+						if (it == strs->begin()) {
 							sink << ": " << *it << std::endl;
 						}
 						else {
@@ -139,10 +139,10 @@ void RawFormatter::_dump_node(std::ostream& sink, pNode node, int max_width, int
 
 		default:
 			if (max_width > 0) {
-				sink << ": " << std::string(max_width - node->get_name().length(), ' ') << node->to_string() << std::endl;
+				sink << ": " << std::string(max_width - node->get_name()->length(), ' ') << *node->to_string() << std::endl;
 			}
 			else {
-				sink << ": " << node->to_string() << std::endl;
+				sink << ": " << *node->to_string() << std::endl;
 			}
 			break;
 	}
@@ -158,21 +158,21 @@ void RawFormatter::_dump_plugin_node(std::ostream& sink, pNode node)
 		return;
 	}
 
-	nodes plugin_nodes = node->get_children();
-	for (nodes::const_iterator it = plugin_nodes.begin() ; it != plugin_nodes.end() ; ++it)
+	pNodes plugin_nodes = node->get_children();
+	for (nodes::const_iterator it = plugin_nodes->begin() ; it != plugin_nodes->end() ; ++it)
 	{
-		boost::optional<pNode> level = (*it)->find_node("level");
-		boost::optional<pNode> summary = (*it)->find_node("summary");
-		boost::optional<pNode> info = (*it)->find_node("plugin_output");
+		pNode level = (*it)->find_node("level");
+		pNode summary = (*it)->find_node("summary");
+		pNode info = (*it)->find_node("plugin_output");
 		if (!info)
 		{
-			PRINT_WARNING << "[RawFormatter] No output for plugin " << (*it)->get_name() << "!" << std::endl;
+			PRINT_WARNING << "[RawFormatter] No output for plugin " << *(*it)->get_name() << "!" << std::endl;
 			continue;
 		}
 
 		if (level)
 		{
-			switch ((*level)->get_level())
+			switch (level->get_level())
 			{
 			case plugin::NO_OPINION:
 				break;
@@ -192,16 +192,16 @@ void RawFormatter::_dump_plugin_node(std::ostream& sink, pNode node)
 		}
 
 		if (summary) {
-			sink << (*summary)->to_string() << std::endl;
+			sink << *summary->to_string() << std::endl;
 		}
-		else if ((*level)->get_level() != plugin::NO_OPINION) {
+		else if (level->get_level() != plugin::NO_OPINION) {
 			sink << std::endl;
 		}
-		strings output = (*info)->get_strings();
-		for (std::vector<std::string>::iterator it2 = output.begin() ; it2 != output.end() ; ++it2) {
+		shared_strings output = info->get_strings();
+		for (std::vector<std::string>::iterator it2 = output->begin() ; it2 != output->end() ; ++it2) {
 			sink << "\t" << *it2 << std::endl;
 		}
-		if (summary || output.size() > 0) {
+		if (summary || output->size() > 0) {
 			sink << std::endl;
 		}
 	}
@@ -218,8 +218,8 @@ void JsonFormatter::format(std::ostream& sink, bool end_stream)
 		print_header = false;
 	}
 	
-	nodes n = _root->get_children();
-	for (nodes::const_iterator it = n.begin() ; it != n.end() ; ++it) // File level
+	pNodes n = _root->get_children();
+	for (nodes::const_iterator it = n->begin() ; it != n->end() ; ++it) // File level
 	{
 		_dump_node(sink, *it);
 	}
@@ -244,14 +244,14 @@ void JsonFormatter::_dump_node(std::ostream& sink, pNode node, int level, bool a
 	{
 		case OutputTreeNode::STRINGS:
 		{ // Separate scope because variable 'strs' is declared in here.
-			sink << std::string(level, '\t') << "\"" << node->get_name() << "\": [" << std::endl;
-			strings strs = node->get_strings();
-			for (strings::const_iterator it = strs.begin() ; it != strs.end() ; ++it)
+			sink << std::string(level, '\t') << "\"" << *node->get_name() << "\": [" << std::endl;
+			shared_strings strs = node->get_strings();
+			for (strings::const_iterator it = strs->begin() ; it != strs->end() ; ++it)
 			{
 				std::string str = *it;
 				boost::trim(str); // Delete unnecessary whitespace
 				sink << std::string(level + 1, '\t') << "\"" << str << "\"";
-				if (it != strs.end() - 1) {
+				if (it != strs->end() - 1) {
 					sink << ",";
 				}
 				sink << std::endl;
@@ -261,23 +261,23 @@ void JsonFormatter::_dump_node(std::ostream& sink, pNode node, int level, bool a
 		}
 		case OutputTreeNode::LIST:
 		{ // Separate scope because variable 'children' is declared in here.
-			sink << std::string(level, '\t') << "\"" << node->get_name() << "\": {" << std::endl;
-			nodes children = node->get_children();
-			for (nodes::const_iterator it = children.begin() ; it != children.end() ; ++it)	{
-				_dump_node(sink, *it, level + 1, it != children.end() - 1); // Append a comma for all elements but the last.
+			sink << std::string(level, '\t') << "\"" << *node->get_name() << "\": {" << std::endl;
+			pNodes children = node->get_children();
+			for (nodes::const_iterator it = children->begin() ; it != children->end() ; ++it)	{
+				_dump_node(sink, *it, level + 1, it != children->end() - 1); // Append a comma for all elements but the last.
 			}
 			sink << std::string(level, '\t') << "}";
 			break;
 		}
 		case OutputTreeNode::STRING:
-			data = node->to_string();
+			data = *node->to_string();
 			boost::trim(data); // Delete unnecessary whitespace
-			sink << std::string(level, '\t') << "\"" << node->get_name() << "\": \"" << data << "\"";
+			sink << std::string(level, '\t') << "\"" << *node->get_name() << "\": \"" << data << "\"";
 			break;
 		default:
-			data = node->to_string();
+			data = *node->to_string();
 			boost::trim(data); // Delete unnecessary whitespace
-			sink << std::string(level, '\t') << "\"" << node->get_name() << "\": " << data;
+			sink << std::string(level, '\t') << "\"" << *node->get_name() << "\": " << data;
 	}
 
 	if (append_comma) {
