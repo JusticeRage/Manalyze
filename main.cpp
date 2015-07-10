@@ -356,20 +356,17 @@ void handle_plugins_option(io::OutputFormatter& formatter,
 		}
 
 		plugin::pResult res = (*it)->analyze(pe);
-		plugin::pInformation info = res->get_information();
-		if (!info || info->size() == 0) { // Plugin has no output.
+		if (!res) 
+		{
+			PRINT_WARNING << "Plugin " << *(*it)->get_id() << " returned a NULL result!" << std::endl;
 			continue;
 		}
-		plugin::pString summary = res->get_summary();
 
-		io::pNode plugin_node(new io::OutputTreeNode(*(*it)->get_id(), io::OutputTreeNode::LIST));
-		plugin_node->append(io::pNode(new io::OutputTreeNode("level", res->get_level())));
-		if (summary) {
-			plugin_node->append(io::pNode(new io::OutputTreeNode("summary", *res->get_summary())));
+		io::pNode output = res->get_output();
+		if (!output || !res->get_information()->size()) {
+			continue;
 		}
-		plugin_node->append(io::pNode(new io::OutputTreeNode("plugin_output", *res->get_information())));
-
-		plugins_node->append(plugin_node);
+		plugins_node->append(output);
 	}
 	formatter.add_data(plugins_node, *pe.get_path());
 }

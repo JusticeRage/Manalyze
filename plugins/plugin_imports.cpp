@@ -74,10 +74,14 @@ void check_functions(const sg::PE& pe,
 	if (found_imports->size() >= static_cast<unsigned int>(req))  // Safe cast: these are positive enum indexes
 	{
 		res->raise_level(level);
-		res->add_information(description + ":");
+		io::pNode info = io::pNode(new io::OutputTreeNode(description,
+														  io::OutputTreeNode::STRINGS,
+														  io::OutputTreeNode::NEW_LINE));
+
 		for (std::vector<std::string>::const_iterator it = found_imports->begin() ; it != found_imports->end() ; ++it) {
-			res->add_information("\t" + *it);
+			info->append(*it);
 		}
+		res->add_information(info);
 	}
 }
 

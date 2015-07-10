@@ -76,8 +76,10 @@ public:
 	*	NONE		Nothing
 	*	DEC			Print as a decimal number (for UINT64, UINT32 and UINT16)
 	*	HEX			Print as an hexadecimal number (for UINT64, UINT32 and UINT16)
+	*	AFTER_NAME	Print as a column after the name (for STRINGS)
+	*	NEW_LINE	Print as a column after a new line (for STRINGS)
 	*/
-	enum display_modifier { NONE, DEC, HEX };
+	enum display_modifier { NONE, DEC, HEX, AFTER_NAME, NEW_LINE };
 
 	// ----------------------------------------------------------------------------
 
@@ -113,7 +115,7 @@ public:
 		: _name(new std::string(name)), _type(STRINGS), _strings_data(new boost::optional<strings>(strs)), _modifier(mod)
 	{}
 
-	DECLSPEC_SGCOMMONS OutputTreeNode(const std::string& name, const string_set& strs, display_modifier mod = NONE)
+	DECLSPEC_SGCOMMONS OutputTreeNode(const std::string& name, const string_set& strs, display_modifier mod = AFTER_NAME)
 		: _name(new std::string(name)), _type(STRINGS), _modifier(mod)
 	{
 		_strings_data = shared_opt_strings(new boost::optional<strings>(strings(strs.begin(), strs.end())));
@@ -125,21 +127,14 @@ public:
 
 	// ----------------------------------------------------------------------------
 
-	DECLSPEC_SGCOMMONS OutputTreeNode(const std::string& name, enum node_type type, enum display_modifier mod = NONE)
-		: _name(new std::string(name)), _type(type), _modifier(mod)
-	{
-		switch (type)
-		{
-		case LIST:
-			_list_data = shared_opt_nodes(new boost::optional<nodes>(nodes()));
-			break;
-		case STRINGS:
-			_strings_data = shared_opt_strings(new boost::optional<strings>(strings()));
-			break;
-		default:
-			break;
-		}
-	}
+	/**
+	 *	@brief	This constructor is used to create a LIST or STRINGS OutputTreeNode.
+	 *
+	 *	@param	const std::string& name The name of the node.
+	 *	@param	enum node_type type The type of the node.
+	 *	@param	enum display_modifier mod = NONE A modifier to alter the way the node is printed.
+	 */
+	DECLSPEC_SGCOMMONS OutputTreeNode(const std::string& name, enum node_type type, enum display_modifier mod = NONE);
 
 	// ----------------------------------------------------------------------------
 
@@ -175,87 +170,15 @@ public:
 	*
 	*	@return	A string representation of the contained data.
 	*/
-	DECLSPEC_SGCOMMONS pString to_string() const
-	{
-		if (_type == STRING) {
-			return pString(new std::string(**_string_data));
-		}
-
-		std::stringstream ss;
-		if (_modifier == HEX) {
-			ss << std::hex << "0x";
-		}
-		else if (_modifier == DEC) {
-			ss << std::dec;
-		}
-
-		switch (_type)
-		{
-		case UINT32:
-			ss << **_uint32_data;
-			break;
-		case UINT16:
-			ss << **_uint16_data;
-			break;
-		case UINT64:
-			ss << **_uint64_data;
-			break;
-		case FLOAT:
-			ss << **_float_data;
-			break;
-		case DOUBLE:
-			ss << **_double_data;
-			break;
-		case THREAT_LEVEL:
-			ss << **_level_data;
-			break;
-		case LIST:
-		case STRINGS:
-			PRINT_WARNING << "[OutputTreeNode] Called to_string() on a LIST or a STRINGS node!" << DEBUG_INFO << std::endl;
-			break;
-		default:
-			PRINT_WARNING << "[OutputTreeNode] No _to_string() implementation for " << _type << "!" << std::endl;
-		}
-		return pString(new std::string(ss.str()));
-	}
+	DECLSPEC_SGCOMMONS pString to_string() const;
 
 	// ----------------------------------------------------------------------------
 
-	DECLSPEC_SGCOMMONS plugin::LEVEL get_level() const
-	{
-		if (_type != THREAT_LEVEL)
-		{
-			PRINT_WARNING << "[OutputTreeNode] Tried to get a level, but is not a THREAT_LEVEL node!" << DEBUG_INFO << std::endl;
-			return plugin::NO_OPINION;
-		}
-
-		if (!_level_data || !*_level_data)
-		{
-			PRINT_WARNING << "[OutputTreeNode] A THREAT_LEVEL node's data is empty!" << DEBUG_INFO << std::endl;
-			return plugin::NO_OPINION;
-		}
-
-		return **_level_data;
-	}
+	DECLSPEC_SGCOMMONS plugin::LEVEL get_level() const;
 
 	// ----------------------------------------------------------------------------
 
-	DECLSPEC_SGCOMMONS shared_strings get_strings() const
-	{
-		if (_type != STRINGS)
-		{
-			PRINT_WARNING << "[OutputTreeNode] Tried to get strings, but is not a STRINGS node!" << DEBUG_INFO << std::endl;
-			return shared_strings();
-		}
-
-		if (!_strings_data || !*_strings_data)
-		{
-			PRINT_WARNING << "[OutputTreeNode] A STRINGS node's data is empty!" << DEBUG_INFO << std::endl;
-			return shared_strings();
-		}
-
-		return shared_strings(new strings(**_strings_data));
-	}
+	DECLSPEC_SGCOMMONS shared_strings get_strings() const;
 
 	// ----------------------------------------------------------------------------
 
@@ -264,119 +187,43 @@ public:
 	*
 	*	@param	pNode node	The list to append.
 	*/
-	DECLSPEC_SGCOMMONS void append(pNode node)
-	{
-		if (_type != LIST)
-		{
-			PRINT_WARNING << "[OutputTreeNode] Tried to append a node, but is not a list of nodes!" << DEBUG_INFO << std::endl;
-			return;
-		}
-
-		if (!_list_data || !*_list_data) {
-			_list_data = shared_opt_nodes(new boost::optional<nodes>(nodes()));
-		}
-		(*_list_data)->push_back(node);
-	}
+	DECLSPEC_SGCOMMONS void append(pNode node);
 
 	// ----------------------------------------------------------------------------
 
 	/**
 	*	@brief	Returns the data contained by a LIST node (a vector of nodes).
 	*/
-	DECLSPEC_SGCOMMONS pNodes get_children()
-	{
-		if (_type != LIST)
-		{
-			PRINT_WARNING << "[OutputTreeNode] Tried to get the children of a non-LIST node!" << std::endl;
-			return pNodes();
-		}
-		if (!_list_data || !*_list_data)
-		{
-			PRINT_WARNING << "[OutputTreeNode] A LIST node's data is empty!" << std::endl;
-			return pNodes();
-		}
+	DECLSPEC_SGCOMMONS pNodes get_children();
 
-		return pNodes(new nodes(**_list_data));
-	}
+	// ----------------------------------------------------------------------------
+
+	/**
+	 *	@brief	Returns the size of a LIST node.
+	 */
+	DECLSPEC_SGCOMMONS unsigned int size();
 
 	// ----------------------------------------------------------------------------
 
 	/**
 	*	@brief	Empties the contents of a LIST node.
 	*/
-	DECLSPEC_SGCOMMONS void clear()
-	{
-		if (_type != LIST)
-		{
-			PRINT_WARNING << "[OutputTreeNode] Tried to clear a non-LIST node!" << std::endl;
-			return;
-		}
-
-		if (!_list_data || !*_list_data)
-		{
-			PRINT_WARNING << "[OutputTreeNode] A LIST node's data is empty!" << std::endl;
-			return;
-		}
-
-		(*_list_data)->clear();
-	}
+	DECLSPEC_SGCOMMONS void clear();
 
 	// ----------------------------------------------------------------------------
 
-	DECLSPEC_SGCOMMONS void update_value(const std::string& s)
-	{
-		if (_type != STRING)
-		{
-			PRINT_WARNING << "[OutputTreeNode] Tried to set a string in a non-STRING node!" << std::endl;
-			return;
-		}
-		if (!_string_data || !*_string_data)
-		{
-			PRINT_WARNING << "[OutputTreeNode] A STRING node's data is empty!" << std::endl;
-			return;
-		}
-
-		*_string_data = boost::optional<std::string>(s);
-	}
+	DECLSPEC_SGCOMMONS void update_value(const std::string& s);
 
 	// ----------------------------------------------------------------------------
 
-	DECLSPEC_SGCOMMONS void update_value(plugin::LEVEL level)
-	{
-		if (_type != THREAT_LEVEL)
-		{
-			PRINT_WARNING << "[OutputTreeNode] Tried to set a LEVEL in a non-THREAT_LEVEL node!" << std::endl;
-			return;
-		}
-		if (!_level_data || !*_level_data)
-		{
-			PRINT_WARNING << "[OutputTreeNode] A LEVEL node's data is empty!" << std::endl;
-			return;
-		}
-
-		*_level_data = boost::optional<plugin::LEVEL>(level);
-	}
+	DECLSPEC_SGCOMMONS void update_value(plugin::LEVEL level);
 
 	// ----------------------------------------------------------------------------
 
 	/**
 	*	@brief	Returns the data contained by a STRINGS node (a vector of strings).
 	*/
-	DECLSPEC_SGCOMMONS shared_strings get_strings()
-	{
-		if (_type != STRINGS)
-		{
-			PRINT_WARNING << "[OutputTreeNode] Tried to get the strings of a non-STRING node!" << std::endl;
-			return shared_strings();
-		}
-		if (!_strings_data || !*_strings_data)
-		{
-			PRINT_WARNING << "[OutputTreeNode] A STRINGS node's data is empty!" << std::endl;
-			return shared_strings();
-		}
-
-		return shared_strings(new strings(**_strings_data));
-	}
+	DECLSPEC_SGCOMMONS shared_strings get_strings();
 
 	// ----------------------------------------------------------------------------
 
@@ -385,19 +232,7 @@ public:
 	*
 	*	@param	const std::string& s The string to append.
 	*/
-	DECLSPEC_SGCOMMONS void append(const std::string& s)
-	{
-		if (_type != STRINGS)
-		{
-			PRINT_WARNING << "[OutputTreeNode] Tried to append a string, but is not a list of strings!" << std::endl;
-			return;
-		}
-
-		if (!_strings_data || !*_strings_data) {
-			_strings_data = shared_opt_strings(new boost::optional<strings>(strings()));
-		}
-		(*_strings_data)->push_back(s);
-	}
+	DECLSPEC_SGCOMMONS void append(const std::string& s);
 
 	// ----------------------------------------------------------------------------
 
@@ -406,21 +241,7 @@ public:
 	*
 	*	@param	const strings& strs The strings to append.
 	*/
-	DECLSPEC_SGCOMMONS void append(const strings& strs)
-	{
-		if (_type != STRINGS)
-		{
-			PRINT_WARNING << "[OutputTreeNode] Tried to append strings, but is not a list of strings!" << std::endl;
-			return;
-		}
-
-		if (!_strings_data || !*_strings_data) {
-			_strings_data = shared_opt_strings(new boost::optional<strings>(strings(strs)));
-		}
-		else {
-			(*_strings_data)->insert((*_strings_data)->end(), strs.begin(), strs.end());
-		}
-	}
+	DECLSPEC_SGCOMMONS void append(const strings& strs);
 
 	// ----------------------------------------------------------------------------
 
@@ -450,7 +271,7 @@ private:
 	shared_opt_strings	_strings_data;
 	shared_opt_level	_level_data;
 	display_modifier	_modifier;		// Additional info hinting at how the data should be displayed,
-										// i.e. hexadecimal or decimal for ints.
+										// i.e. hexadecimal or decimal for integers.
 
 };
 

@@ -74,4 +74,267 @@ pNode OutputTreeNode::find_node(const std::string& name) const
 
 // ----------------------------------------------------------------------------
 
+OutputTreeNode::OutputTreeNode(const std::string& name,
+												  enum node_type type,
+												  enum display_modifier mod)
+	: _name(new std::string(name)), _type(type), _modifier(mod)
+{
+	switch (type)
+	{
+	case LIST:
+		_list_data = shared_opt_nodes(new boost::optional<nodes>(nodes()));
+		break;
+	case STRINGS:
+		_strings_data = shared_opt_strings(new boost::optional<strings>(strings()));
+		break;
+	default:
+		PRINT_WARNING << "[OutputTreeNode] Please use specialized constructors for types other than LIST or STRINGS!" 
+			<< std::endl;
+		break;
+	}
 }
+
+// ----------------------------------------------------------------------------
+
+pString OutputTreeNode::to_string() const
+{
+	if (_type == STRING) {
+		return pString(new std::string(**_string_data));
+	}
+
+	std::stringstream ss;
+	if (_modifier == HEX) {
+		ss << std::hex << "0x";
+	}
+	else if (_modifier == DEC) {
+		ss << std::dec;
+	}
+
+	switch (_type)
+	{
+	case UINT32:
+		ss << **_uint32_data;
+		break;
+	case UINT16:
+		ss << **_uint16_data;
+		break;
+	case UINT64:
+		ss << **_uint64_data;
+		break;
+	case FLOAT:
+		ss << **_float_data;
+		break;
+	case DOUBLE:
+		ss << **_double_data;
+		break;
+	case THREAT_LEVEL:
+		ss << **_level_data;
+		break;
+	case LIST:
+	case STRINGS:
+		PRINT_WARNING << "[OutputTreeNode] Called to_string() on a LIST or a STRINGS node!" << DEBUG_INFO << std::endl;
+		break;
+	default:
+		PRINT_WARNING << "[OutputTreeNode] No _to_string() implementation for " << _type << "!" << std::endl;
+	}
+	return pString(new std::string(ss.str()));
+}
+
+// ----------------------------------------------------------------------------
+
+plugin::LEVEL OutputTreeNode::get_level() const
+{
+	if (_type != THREAT_LEVEL)
+	{
+		PRINT_WARNING << "[OutputTreeNode] Tried to get a level, but is not a THREAT_LEVEL node!" << DEBUG_INFO << std::endl;
+		return plugin::NO_OPINION;
+	}
+
+	if (!_level_data || !*_level_data)
+	{
+		PRINT_WARNING << "[OutputTreeNode] A THREAT_LEVEL node's data is empty!" << DEBUG_INFO << std::endl;
+		return plugin::NO_OPINION;
+	}
+
+	return **_level_data;
+}
+
+// ----------------------------------------------------------------------------
+
+shared_strings OutputTreeNode::get_strings() const
+{
+	if (_type != STRINGS)
+	{
+		PRINT_WARNING << "[OutputTreeNode] Tried to get strings, but is not a STRINGS node!" << DEBUG_INFO << std::endl;
+		return shared_strings();
+	}
+
+	if (!_strings_data || !*_strings_data)
+	{
+		PRINT_WARNING << "[OutputTreeNode] A STRINGS node's data is empty!" << DEBUG_INFO << std::endl;
+		return shared_strings();
+	}
+
+	return shared_strings(new strings(**_strings_data));
+}
+
+// ----------------------------------------------------------------------------
+
+void OutputTreeNode::append(pNode node)
+{
+	if (_type != LIST)
+	{
+		PRINT_WARNING << "[OutputTreeNode] Tried to append a node, but is not a list of nodes!" << DEBUG_INFO << std::endl;
+		return;
+	}
+
+	if (!_list_data || !*_list_data) {
+		_list_data = shared_opt_nodes(new boost::optional<nodes>(nodes()));
+	}
+	(*_list_data)->push_back(node);
+}
+
+// ----------------------------------------------------------------------------
+
+pNodes OutputTreeNode::get_children()
+{
+	if (_type != LIST)
+	{
+		PRINT_WARNING << "[OutputTreeNode] Tried to get the children of a non-LIST node!" << std::endl;
+		return pNodes();
+	}
+	if (!_list_data || !*_list_data)
+	{
+		PRINT_WARNING << "[OutputTreeNode] A LIST node's data is empty!" << std::endl;
+		return pNodes();
+	}
+
+	return pNodes(new nodes(**_list_data));
+}
+
+// ----------------------------------------------------------------------------
+
+unsigned int OutputTreeNode::size()
+{
+	if (_type != LIST)
+	{
+		PRINT_WARNING << "[OutputTreeNode] Tried to get the children of a non-LIST node!" << std::endl;
+		return 0;
+	}
+	if (!_list_data || !*_list_data)
+	{
+		PRINT_WARNING << "[OutputTreeNode] A LIST node's data is empty!" << std::endl;
+		return 0;
+	}
+
+	return (*_list_data)->size();
+}
+
+// ----------------------------------------------------------------------------
+
+void OutputTreeNode::clear()
+{
+	if (_type != LIST)
+	{
+		PRINT_WARNING << "[OutputTreeNode] Tried to clear a non-LIST node!" << std::endl;
+		return;
+	}
+
+	if (!_list_data || !*_list_data)
+	{
+		PRINT_WARNING << "[OutputTreeNode] A LIST node's data is empty!" << std::endl;
+		return;
+	}
+
+	(*_list_data)->clear();
+}
+
+// ----------------------------------------------------------------------------
+
+void OutputTreeNode::update_value(const std::string& s)
+{
+	if (_type != STRING)
+	{
+		PRINT_WARNING << "[OutputTreeNode] Tried to set a string in a non-STRING node!" << std::endl;
+		return;
+	}
+	if (!_string_data || !*_string_data)
+	{
+		PRINT_WARNING << "[OutputTreeNode] A STRING node's data is empty!" << std::endl;
+		return;
+	}
+
+	*_string_data = boost::optional<std::string>(s);
+}
+
+// ----------------------------------------------------------------------------
+
+void OutputTreeNode::update_value(plugin::LEVEL level)
+{
+	if (_type != THREAT_LEVEL)
+	{
+		PRINT_WARNING << "[OutputTreeNode] Tried to set a LEVEL in a non-THREAT_LEVEL node!" << std::endl;
+		return;
+	}
+	if (!_level_data || !*_level_data)
+	{
+		PRINT_WARNING << "[OutputTreeNode] A LEVEL node's data is empty!" << std::endl;
+		return;
+	}
+
+	*_level_data = boost::optional<plugin::LEVEL>(level);
+}
+
+// ----------------------------------------------------------------------------
+
+shared_strings OutputTreeNode::get_strings()
+{
+	if (_type != STRINGS)
+	{
+		PRINT_WARNING << "[OutputTreeNode] Tried to get the strings of a non-STRING node!" << std::endl;
+		return shared_strings();
+	}
+	if (!_strings_data || !*_strings_data)
+	{
+		PRINT_WARNING << "[OutputTreeNode] A STRINGS node's data is empty!" << std::endl;
+		return shared_strings();
+	}
+
+	return shared_strings(new strings(**_strings_data));
+}
+
+// ----------------------------------------------------------------------------
+
+void OutputTreeNode::append(const std::string& s)
+{
+	if (_type != STRINGS)
+	{
+		PRINT_WARNING << "[OutputTreeNode] Tried to append a string, but is not a list of strings!" << std::endl;
+		return;
+	}
+
+	if (!_strings_data || !*_strings_data) {
+		_strings_data = shared_opt_strings(new boost::optional<strings>(strings()));
+	}
+	(*_strings_data)->push_back(s);
+}
+
+// ----------------------------------------------------------------------------
+
+void OutputTreeNode::append(const strings& strs)
+{
+	if (_type != STRINGS)
+	{
+		PRINT_WARNING << "[OutputTreeNode] Tried to append strings, but is not a list of strings!" << std::endl;
+		return;
+	}
+
+	if (!_strings_data || !*_strings_data) {
+		_strings_data = shared_opt_strings(new boost::optional<strings>(strings(strs)));
+	}
+	else {
+		(*_strings_data)->insert((*_strings_data)->end(), strs.begin(), strs.end());
+	}
+}
+
+} // !namespace io

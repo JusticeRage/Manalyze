@@ -114,9 +114,14 @@ void RawFormatter::_dump_node(std::ostream& sink, pNode node, int max_width, int
 
 				for (strings::const_iterator it = strs->begin() ; it != strs->end() ; ++it)
 				{
+					if (node->get_modifier() == OutputTreeNode::NEW_LINE) {
+						max_width = 0; // Ignore max width if we print after a line break: alignment is based on level only.
+					}
+
 					if (max_width > 0) 
 					{
-						if (it == strs->begin()) {
+						if (it == strs->begin()) 
+						{
 							sink << ": " << std::string(max_width - node->get_name()->length(), ' ') << *it << std::endl;
 						}
 						else {
@@ -125,11 +130,26 @@ void RawFormatter::_dump_node(std::ostream& sink, pNode node, int max_width, int
 					}
 					else 
 					{
-						if (it == strs->begin()) {
-							sink << ": " << *it << std::endl;
+						if (it == strs->begin()) 
+						{
+							if (node->get_modifier() == OutputTreeNode::NEW_LINE)
+							{
+								sink << ":" << std::endl;
+								// Increase level by one. Since we're printing after a line break, add a TAB  for readability.
+								sink << std::string((level - 1) * 4, ' ') << *it << std::endl;
+							}
+							else {
+								sink << ": " << *it << std::endl;
+							}
 						}
 						else {
-							sink << ": " << *it << std::endl;
+							if (node->get_modifier() == OutputTreeNode::NEW_LINE)
+							{
+								sink << std::string((level - 1) * 4, ' ') << *it << std::endl;
+							}
+							else {
+								sink << std::string((level - 2) * 4, ' ') << *it << std::endl;
+							}
 						}
 					}
 				}
@@ -197,9 +217,20 @@ void RawFormatter::_dump_plugin_node(std::ostream& sink, pNode node)
 		else if (level->get_level() != plugin::NO_OPINION) {
 			sink << std::endl;
 		}
-		shared_strings output = info->get_strings();
-		for (std::vector<std::string>::iterator it2 = output->begin() ; it2 != output->end() ; ++it2) {
-			sink << "\t" << *it2 << std::endl;
+
+		pNodes output = info->get_children();
+		for (pNodes::element_type::const_iterator it2 = output->begin() ; it2 != output->end() ; ++it2)
+		{
+			switch ((*it2)->get_type())
+			{
+				case OutputTreeNode::STRINGS:
+				case OutputTreeNode::LIST:
+					_dump_node(sink, *it2, io::determine_max_width(info), 3);
+					break;
+				default:
+					sink << "\t" << *(*it2)->to_string() << std::endl;
+					break;
+			}
 		}
 		if (summary || output->size() > 0) {
 			sink << std::endl;
