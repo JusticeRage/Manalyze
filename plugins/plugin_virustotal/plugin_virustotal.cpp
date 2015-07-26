@@ -144,8 +144,7 @@ public:
 						else if (it3->name_ == "result")
 						{
 							std::stringstream av_result;
-							av_result << it2->name_ << ": " << it3->value_.get_str();
-							res->add_information(av_result.str());
+							res->add_information(it2->name_, it3->value_.get_str());
 							break; // The information has been found, ignore whatever is left
 						}
 					}

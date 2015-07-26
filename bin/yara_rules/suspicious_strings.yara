@@ -18,7 +18,7 @@
 rule System_Tools
 {
     meta:
-        description = "Contains references to system / monitoring tools."
+        description = "Contains references to system / monitoring tools"
         author = "JusticeRage"
     strings:
         $a0 = "wireshark.exe" nocase wide ascii
@@ -40,7 +40,7 @@ rule System_Tools
 rule Browsers
 {
     meta:
-        description = "Contains references to internet browsers."
+        description = "Contains references to internet browsers"
         author = "JusticeRage"
     strings:
         $ie = "iexplore.exe" nocase wide ascii
@@ -56,7 +56,7 @@ rule Browsers
 rule RE_Tools
 {
     meta:
-        description = "Contains references to debugging or reversing tools."
+        description = "Contains references to debugging or reversing tools"
         author = "JusticeRage"
     strings:
         $a0 = /ida(q)?(64)?.exe/ nocase wide ascii
@@ -72,7 +72,7 @@ rule RE_Tools
 rule Antivirus
 {
     meta:
-        description = "Contains references to security software."
+        description = "Contains references to security software"
         author = "Jerome Athias"
         source = "Metasploit's killav.rb script"
 
@@ -518,7 +518,7 @@ rule Antivirus
 rule VM_Generic_Detection : AntiVM
 {
     meta:
-        description = "Tries to detect virtualized environments."
+        description = "Tries to detect virtualized environments"
     strings:
         $a0 = "HARDWARE\\DEVICEMAP\\Scsi\\Scsi Port 0\\Scsi Bus 0\\Target Id 0\\Logical Unit Id 0" nocase wide ascii
         $a1 = "HARDWARE\\Description\\System" nocase wide ascii
@@ -530,7 +530,7 @@ rule VM_Generic_Detection : AntiVM
 rule VMWare_Detection : AntiVM
 {
     meta:
-        description = "Looks for VMWare presence."
+        description = "Looks for VMWare presence"
         author = "Cuckoo project"
 
     strings:
@@ -570,6 +570,9 @@ rule VMWare_Detection : AntiVM
         $vmware_mac_4a = "00-1C-14" nocase wide ascii
         $vmware_mac_4b = "00:1C:14" nocase wide ascii
         $vmware_mac_4c = "001C14" nocase wide ascii
+		
+		// PCI Vendor IDs, from Hacking Team's leak
+		$virtualbox_vid_1 = "VEN_15ad" nocase wide ascii
 
     condition:
         any of them
@@ -578,7 +581,7 @@ rule VMWare_Detection : AntiVM
 rule Sandboxie_Detection : AntiVM
 {
     meta:
-        description = "Looks for Sandboxie presence."
+        description = "Looks for Sandboxie presence"
         author = "JusticeRage"
 
     strings:
@@ -592,7 +595,7 @@ rule Sandboxie_Detection : AntiVM
 rule VirtualPC_Detection : AntiVM
 {
     meta:
-        description = "Looks for VirtualPC presence."
+        description = "Looks for VirtualPC presence"
         author = "Cuckoo project"
 
     strings:
@@ -609,7 +612,7 @@ rule VirtualPC_Detection : AntiVM
 rule VirtualBox_Detection : AntiVM
 {
     meta:
-        description = "Looks for VirtualBox presence."
+        description = "Looks for VirtualBox presence"
         author = "Cuckoo project"
     strings:
         $virtualbox1 = "VBoxHook.dll" nocase wide ascii
@@ -627,6 +630,9 @@ rule VirtualBox_Detection : AntiVM
         $virtualbox_mac_1a = "08-00-27"
         $virtualbox_mac_1b = "08:00:27"
         $virtualbox_mac_1c = "080027"
+		
+		// PCI Vendor IDs, from Hacking Team's leak
+		$virtualbox_vid_1 = "VEN_80EE" nocase wide ascii
     condition:
         any of them
 }
@@ -634,11 +640,14 @@ rule VirtualBox_Detection : AntiVM
 rule Parallels_Detection : AntiVM
 {
     meta:
-        description = "Looks for Parallels presence."
+        description = "Looks for Parallels presence"
     strings:
         $a0 = "magi"
         $a1 = "c!nu"
         $a2 = "mber"
+		
+		// PCI Vendor IDs, from Hacking Team's leak
+		$parallels_vid_1 = "VEN_80EE" nocase wide ascii
     condition:
         all of them
 }
@@ -646,7 +655,7 @@ rule Parallels_Detection : AntiVM
 rule Qemu_Detection : AntiVM
 {
     meta:
-        description = "Looks for Qemu presence."
+        description = "Looks for Qemu presence"
     strings:
         $a0 = "qemu" nocase wide ascii
     condition:
@@ -656,7 +665,7 @@ rule Qemu_Detection : AntiVM
 rule Dropper_Strings
 {
     meta:
-        description = "May have dropper capabilities."
+        description = "May have dropper capabilities"
         author = "JusticeRage"
     strings:
         $a0 = "CurrentVersion\\Run" nocase wide ascii
@@ -671,7 +680,7 @@ rule Dropper_Strings
 rule AutoIT_compiled_script
 {
     meta:
-        description = "Is an AutoIT compiled script."
+        description = "Is an AutoIT compiled script"
         author = "JusticeRage"
     strings:
         $a0 = "AutoIt Error" ascii wide
@@ -683,7 +692,7 @@ rule AutoIT_compiled_script
 rule Misc_Suspicious_Strings
 {
     meta:
-        description = "Miscellaneous malware strings."
+        description = "Miscellaneous malware strings"
         author = "JusticeRage"
     strings:
         $a0 = "backdoor" nocase ascii wide

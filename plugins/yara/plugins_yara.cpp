@@ -63,11 +63,14 @@ public:
 				}
 				else
 				{
-					res->add_information((*it)->operator[](meta_field_name) + " String(s) found:");
+					io::pNode output = io::pNode(new io::OutputTreeNode((*it)->operator[](meta_field_name), 
+						io::OutputTreeNode::STRINGS, io::OutputTreeNode::NEW_LINE));
+					
 					std::set<std::string> found = (*it)->get_found_strings();
 					for (std::set<std::string>::iterator it2 = found.begin() ; it2 != found.end() ; ++it2) {
-						res->add_information("\t" + *it2);
+						output->append(*it2);
 					}
+					res->add_information(output);
 				}
 			}
 		}

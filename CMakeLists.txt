@@ -49,7 +49,7 @@ include_directories(
 
 add_library(sgpe SHARED pe.cpp nt_values.cpp utils.cpp imports.cpp resources.cpp section.cpp)
 
-add_library(sgcommons SHARED color.cpp output_tree_node.cpp)
+add_library(sgcommons SHARED color.cpp output_tree_node.cpp plugin_framework/result.cpp)
 
 add_executable(sgstatic main.cpp config_parser.cpp output_formatter.cpp dump.cpp
 			   plugin_framework/dynamic_library.cpp plugin_framework/plugin_manager.cpp # Plugin system

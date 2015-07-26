@@ -46,19 +46,7 @@ class Result
 	friend class IPlugin; // Result's constructor should only be called from IPlugin::make_result().
 
 public:
-	void set_level(LEVEL level) 
-	{ 
-		io::pNode opt_level = _data->find_node("level");
-		if (!opt_level) // Should never happen.
-		{
-			PRINT_WARNING << "[Result] A result object has no level node. This should be investigated." 
-				<< DEBUG_INFO << std::endl;
-			_data->append(io::pNode(new io::OutputTreeNode("level", level)));
-		}
-		else {
-			opt_level->update_value(level);
-		}
-	}
+	DECLSPEC_SGCOMMONS void set_level(LEVEL level);
 
 	/**
 	 *	@brief	This function is simply a setter which only sets the value if the new one is higher than
@@ -66,58 +54,13 @@ public:
 	 *
 	 *	@param	LEVEL level	The level to set.
 	 */
-	void raise_level(LEVEL level)
-	{ 
-		io::pNode opt_level = _data->find_node("level");
-		if (!opt_level) // Should never happen.
-		{
-			PRINT_WARNING << "[Result] A result object has no level node. This should be investigated." 
-				<< DEBUG_INFO << std::endl;
-			_data->append(io::pNode(new io::OutputTreeNode("level", level)));
-		}
-		else
-		{
-			if (level > opt_level->get_level()) {
-				opt_level->update_value(level);
-			}
-		}
-	}
+	DECLSPEC_SGCOMMONS void raise_level(LEVEL level);
 
-	LEVEL get_level() const
-	{ 
-		io::pNode opt_level = _data->find_node("level");
-		if (!opt_level) // Should never happen.
-		{
-			PRINT_WARNING << "[Result] A result object has no level node. This should be investigated." 
-				<< DEBUG_INFO << std::endl;
-			return NO_OPINION;
-		}
-		else {
-			return opt_level->get_level();
-		}
-	}
+	DECLSPEC_SGCOMMONS LEVEL get_level() const;
 	
-	void set_summary(const std::string& s) 
-	{ 
-		io::pNode opt_summary = _data->find_node("summary");
-		if (!opt_summary) {
-			_data->append(io::pNode(new io::OutputTreeNode("summary", s)));
-		}
-		else {
-			opt_summary->update_value(s);
-		}
-	}
+	DECLSPEC_SGCOMMONS void set_summary(const std::string& s);
 
-	pString get_summary() const 
-	{ 
-		io::pNode opt_summary = _data->find_node("summary");
-		if (!opt_summary) {
-			return pString();
-		}
-		else {
-			return opt_summary->to_string();
-		}
-	}
+	DECLSPEC_SGCOMMONS pString get_summary() const;
 
 	/**
 	 *	@brief	Add any kind of information to a result. This should primarily be used with strings, but
@@ -126,20 +69,10 @@ public:
 	 *	@param	T t The object to add to the result output.
 	 */
 	template<class T>
-	void add_information(T t) 
+	void add_information(T t)
 	{
 		io::pNode output = get_information();
-		output->append(io::pNode(new io::OutputTreeNode(_create_node_name(), t)));
-	}
-
-	/**
-	 *	@brief	Template specialization for nodes.
-	 */
-	template<>
-	void add_information(io::pNode node)
-	{
-		io::pNode output = get_information();
-		output->append(node);
+		output->append(io::pNode(new io::OutputTreeNode(_create_node_name(), t, io::OutputTreeNode::HIDE_NAME)));
 	}
 
 	/**
@@ -166,47 +99,28 @@ public:
 	 *
 	 *	@returns	A pointer to a node which is never NULL. The node may be empty however.
 	 */
-	io::pNode get_information() const 
-	{
-		io::pNode output = _data->find_node("plugin_output");
-		if (!output)
-		{
-			PRINT_WARNING << "[Result] A result object's output data wasn't initialized!" 
-				<< DEBUG_INFO << std::endl;
-			output = io::pNode(new io::OutputTreeNode("plugin_output", io::OutputTreeNode::LIST));
-			_data->append(output);
-		}
-		return output;
-	}
+	DECLSPEC_SGCOMMONS io::pNode get_information() const;
 
 private:
-	Result(const std::string& plugin_name)
-	{
-		_data = io::pNode(new io::OutputTreeNode(plugin_name, io::OutputTreeNode::LIST));
-		_data->append(io::pNode(new io::OutputTreeNode("level", NO_OPINION)));
-		_data->append(io::pNode(new io::OutputTreeNode("plugin_output", io::OutputTreeNode::LIST)));
-	}
+	// Constructor is made private, so only IPlugin::make_result() calls it.
+	DECLSPEC_SGCOMMONS Result(const std::string& plugin_name);
 
 	/**
 	 *	@brief	Creates an node name to use when information is appended to _data.
 	 *
 	 *	The name of the node is simply an index, because we do not intend to print it in most cases.
 	 */
-	std::string _create_node_name()
-	{		
-		std::stringstream ss;
-		if (_data->get_children()) {
-			ss << _data->get_children()->size();
-		}
-		else {
-			ss << 0;
-		}
-		return ss.str();
-	}
+	DECLSPEC_SGCOMMONS std::string _create_node_name();
 
 	io::pNode _data;
 };
 typedef boost::shared_ptr<Result> pResult;
+
+/**
+*	@brief	Template specialization for io::pNodes.
+*/
+template<>
+DECLSPEC_SGCOMMONS void Result::add_information(io::pNode node);
 
 } // !namespace plugin
 

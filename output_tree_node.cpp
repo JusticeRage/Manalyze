@@ -75,8 +75,8 @@ pNode OutputTreeNode::find_node(const std::string& name) const
 // ----------------------------------------------------------------------------
 
 OutputTreeNode::OutputTreeNode(const std::string& name,
-												  enum node_type type,
-												  enum display_modifier mod)
+							   enum node_type type,
+							   enum display_modifier mod)
 	: _name(new std::string(name)), _type(type), _modifier(mod)
 {
 	switch (type)

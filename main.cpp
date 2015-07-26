@@ -368,6 +368,7 @@ void handle_plugins_option(io::OutputFormatter& formatter,
 		}
 		plugins_node->append(output);
 	}
+	
 	formatter.add_data(plugins_node, *pe.get_path());
 }
 
@@ -560,13 +561,13 @@ int main(int argc, char** argv)
 		}
 	}
 
+	formatter->format(std::cout);
+
 	if (vm.count("plugins")) 
 	{
 		// Explicitly unload the plugins
 		plugin::PluginManager::get_instance().unload_all();
 	}
-
-	formatter->format(std::cout);
 
 	return 0;
 }

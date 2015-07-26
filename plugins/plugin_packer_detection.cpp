@@ -17,7 +17,10 @@
 
 #include <sstream>
 #include <algorithm>
+#include <map>
+#include <string>
 #include <boost/assign/list_of.hpp>
+#include <boost/regex.hpp>
 
 #include "plugin_framework/plugin_interface.h"
 #include "plugin_framework/auto_register.h"
@@ -25,6 +28,23 @@
 #include "nt_values.h"
 
 namespace plugin {
+
+// Check the section names against a list of known names.
+const std::vector<std::string> common_names = boost::assign::list_of(".text")
+																	(".data")
+																	(".rdata")
+																	(".rsrc")
+																	(".idata")
+																	(".edata")
+																	(".pdata")
+																	(".reloc")
+																	(".bss")
+																	(".tls");
+
+// Also check for known packer section names (i.e. UPX0, etc.)
+const std::map<std::string, std::string> KNOWN_PACKER_SECTIONS =
+	boost::assign::map_list_of ("\\.ndata",	 "The PE is an NSIS installer.")
+							   ("upx[0-9]", "The PE is packed with UPX.");
 
 class PackerDetectionPlugin : public IPlugin
 {
@@ -42,23 +62,22 @@ public:
 	pResult analyze(const sg::PE& pe) 
 	{
 		pResult res = create_result();
-		// Check the section names against a list of known names.
-		std::vector<std::string> common_names = boost::assign::list_of(".text")
-																	  (".data")
-																	  (".rdata")
-																	  (".rsrc")
-																	  (".idata")
-																	  (".edata")
-																	  (".pdata")
-																	  (".reloc")
-																	  (".bss")
-																	  (".tls");
 
 		sg::shared_sections sections = pe.get_sections();
 		for (sg::shared_sections::element_type::const_iterator it = sections->begin() ; it != sections->end() ; ++it)
 		{
 			if (common_names.end() == std::find(common_names.begin(), common_names.end(), *(*it)->get_name())) 
 			{
+				// Check section name against known packer section names and set summary accordingly.
+				for (std::map<std::string, std::string>::const_iterator it2 = KNOWN_PACKER_SECTIONS.begin() ; 
+					it2 != KNOWN_PACKER_SECTIONS.end() ; ++it2)
+				{
+					boost::regex e(it2->first, boost::regex::icase);
+					if (boost::regex_match(*(*it)->get_name(), e)) {
+						res->set_summary(it2->second);
+					}
+				}
+
 				std::stringstream ss;
 				ss << "Unusual section name found: " << *(*it)->get_name();
 				res->add_information(ss.str());
@@ -98,7 +117,7 @@ public:
 			res->raise_level(SUSPICIOUS);
 		}
 
-		if (res->get_level() != NO_OPINION) {
+		if (res->get_level() != NO_OPINION && res->get_summary() == NULL) {
 			res->set_summary("The PE is possibly packed.");
 		}
 

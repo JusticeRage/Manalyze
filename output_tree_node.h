@@ -78,8 +78,9 @@ public:
 	*	HEX			Print as an hexadecimal number (for UINT64, UINT32 and UINT16)
 	*	AFTER_NAME	Print as a column after the name (for STRINGS)
 	*	NEW_LINE	Print as a column after a new line (for STRINGS)
+	*	HIDE_NAME	Do not print the node's name (for STRING)
 	*/
-	enum display_modifier { NONE, DEC, HEX, AFTER_NAME, NEW_LINE };
+	enum display_modifier { NONE, DEC, HEX, AFTER_NAME, NEW_LINE, HIDE_NAME };
 
 	// ----------------------------------------------------------------------------
 

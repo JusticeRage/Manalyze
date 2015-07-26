@@ -343,8 +343,7 @@ void GetCertNameString_wrapper(PCCERT_CONTEXT context, DWORD type, DWORD flags, 
 		goto END;
 	}
 
-	ss << description << ": " << name;
-	result->add_information(ss.str());
+	result->add_information(description, name);
 
 END:
 	free(name);

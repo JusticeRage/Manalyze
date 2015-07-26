@@ -31,6 +31,7 @@ void RawFormatter::format(std::ostream& sink, bool end_stream)
 	}
 
 	pNodes n = _root->get_children();
+	
 	for (nodes::const_iterator it = n->begin() ; it != n->end() ; ++it) // File level
 	{
 		_dump_node(sink, *it, determine_max_width(*it));
@@ -99,65 +100,11 @@ void RawFormatter::_dump_node(std::ostream& sink, pNode node, int max_width, int
 			break;
 
 		case OutputTreeNode::STRINGS:
-			{ // New scope to be able to declare the "strs" variable.
-				shared_strings strs = node->get_strings();
-				if (strs->size() == 0) // Special case : empty array of strings.
-				{
-					if (max_width > 0) {
-						sink << ": " << std::string(max_width - node->get_name()->length(), ' ') << "(EMPTY)" << std::endl;
-					}
-					else {
-						sink << ": (EMPTY)" << std::endl;
-					}
-					break;
-				}
-
-				for (strings::const_iterator it = strs->begin() ; it != strs->end() ; ++it)
-				{
-					if (node->get_modifier() == OutputTreeNode::NEW_LINE) {
-						max_width = 0; // Ignore max width if we print after a line break: alignment is based on level only.
-					}
-
-					if (max_width > 0) 
-					{
-						if (it == strs->begin()) 
-						{
-							sink << ": " << std::string(max_width - node->get_name()->length(), ' ') << *it << std::endl;
-						}
-						else {
-							sink << std::string(max_width + 2 + (level - 2) * 4, ' ') << *it << std::endl;
-						}
-					}
-					else 
-					{
-						if (it == strs->begin()) 
-						{
-							if (node->get_modifier() == OutputTreeNode::NEW_LINE)
-							{
-								sink << ":" << std::endl;
-								// Increase level by one. Since we're printing after a line break, add a TAB  for readability.
-								sink << std::string((level - 1) * 4, ' ') << *it << std::endl;
-							}
-							else {
-								sink << ": " << *it << std::endl;
-							}
-						}
-						else {
-							if (node->get_modifier() == OutputTreeNode::NEW_LINE)
-							{
-								sink << std::string((level - 1) * 4, ' ') << *it << std::endl;
-							}
-							else {
-								sink << std::string((level - 2) * 4, ' ') << *it << std::endl;
-							}
-						}
-					}
-				}
-				
-				break;
-			}
+			_dump_strings_node(sink, node, max_width, level);
+			break;
 
 		default:
+			// TODO: Respect the HIDE_NAME modifier
 			if (max_width > 0) {
 				sink << ": " << std::string(max_width - node->get_name()->length(), ' ') << *node->to_string() << std::endl;
 			}
@@ -228,12 +175,74 @@ void RawFormatter::_dump_plugin_node(std::ostream& sink, pNode node)
 					_dump_node(sink, *it2, io::determine_max_width(info), 3);
 					break;
 				default:
-					sink << "\t" << *(*it2)->to_string() << std::endl;
+					if ((*it2)->get_modifier() == OutputTreeNode::HIDE_NAME) {
+						sink << "\t" << *(*it2)->to_string() << std::endl;
+					}
+					else {
+						sink << "\t" << *(*it2)->get_name() << ": " << *(*it2)->to_string() << std::endl;
+					}
 					break;
 			}
 		}
 		if (summary || output->size() > 0) {
 			sink << std::endl;
+		}
+	}
+}
+
+void RawFormatter::_dump_strings_node(std::ostream& sink, pNode node, int max_width, int level)
+{
+	shared_strings strs = node->get_strings();
+	if (strs->size() == 0) // Special case : empty array of strings.
+	{
+		if (max_width > 0) {
+			sink << ": " << std::string(max_width - node->get_name()->length(), ' ') << "(EMPTY)" << std::endl;
+		}
+		else {
+			sink << ": (EMPTY)" << std::endl;
+		}
+		return;
+	}
+
+	for (strings::const_iterator it = strs->begin() ; it != strs->end() ; ++it)
+	{
+		if (node->get_modifier() == OutputTreeNode::NEW_LINE) {
+			max_width = 0; // Ignore max width if we print after a line break: alignment is based on level only.
+		}
+
+		if (max_width > 0)
+		{
+			if (it == strs->begin())
+			{
+				sink << ": " << std::string(max_width - node->get_name()->length(), ' ') << *it << std::endl;
+			}
+			else {
+				sink << std::string(max_width + 2 + (level - 2) * 4, ' ') << *it << std::endl;
+			}
+		}
+		else
+		{
+			if (it == strs->begin())
+			{
+				if (node->get_modifier() == OutputTreeNode::NEW_LINE)
+				{
+					sink << ":" << std::endl;
+					// Increase level by one. Since we're printing after a line break, add a TAB  for readability.
+					sink << std::string((level - 1) * 4, ' ') << *it << std::endl;
+				}
+				else {
+					sink << ": " << *it << std::endl;
+				}
+			}
+			else {
+				if (node->get_modifier() == OutputTreeNode::NEW_LINE)
+				{
+					sink << std::string((level - 1) * 4, ' ') << *it << std::endl;
+				}
+				else {
+					sink << std::string((level - 2) * 4, ' ') << *it << std::endl;
+				}
+			}
 		}
 	}
 }
@@ -263,7 +272,7 @@ void JsonFormatter::format(std::ostream& sink, bool end_stream)
 
 // ----------------------------------------------------------------------------
 
-void JsonFormatter::_dump_node(std::ostream& sink, pNode node, int level, bool append_comma)
+void JsonFormatter::_dump_node(std::ostream& sink, pNode node, int level, bool append_comma, bool print_name)
 {
 	if (node->get_modifier() == OutputTreeNode::HEX) { // Hexadecimal notation is not compatible with this formatter
 		node->set_modifier(OutputTreeNode::NONE);	   // ({ "my_int": 0xABC } isn't valid JSON).
@@ -275,7 +284,12 @@ void JsonFormatter::_dump_node(std::ostream& sink, pNode node, int level, bool a
 	{
 		case OutputTreeNode::STRINGS:
 		{ // Separate scope because variable 'strs' is declared in here.
-			sink << std::string(level, '\t') << "\"" << *node->get_name() << "\": [" << std::endl;
+			if (print_name) {
+				sink << std::string(level, '\t') << "\"" << *node->get_name() << "\": [" << std::endl;
+			}
+			else {
+				sink << std::string(level, '\t') << "[" << std::endl;
+			}
 			shared_strings strs = node->get_strings();
 			for (strings::const_iterator it = strs->begin() ; it != strs->end() ; ++it)
 			{
@@ -292,7 +306,13 @@ void JsonFormatter::_dump_node(std::ostream& sink, pNode node, int level, bool a
 		}
 		case OutputTreeNode::LIST:
 		{ // Separate scope because variable 'children' is declared in here.
-			sink << std::string(level, '\t') << "\"" << *node->get_name() << "\": {" << std::endl;
+			
+			if (print_name) {
+				sink << std::string(level, '\t') << "\"" << *node->get_name() << "\": {" << std::endl;
+			}
+			else {
+				sink << std::string(level, '\t') << "{" << std::endl;
+			}
 			pNodes children = node->get_children();
 			for (nodes::const_iterator it = children->begin() ; it != children->end() ; ++it)	{
 				_dump_node(sink, *it, level + 1, it != children->end() - 1); // Append a comma for all elements but the last.
@@ -303,12 +323,22 @@ void JsonFormatter::_dump_node(std::ostream& sink, pNode node, int level, bool a
 		case OutputTreeNode::STRING:
 			data = *node->to_string();
 			boost::trim(data); // Delete unnecessary whitespace
-			sink << std::string(level, '\t') << "\"" << *node->get_name() << "\": \"" << data << "\"";
+			if (print_name) {
+				sink << std::string(level, '\t') << "\"" << *node->get_name() << "\": \"" << data << "\"";
+			}
+			else {
+				sink << std::string(level, '\t') << "\"" << data << "\"";
+			}
 			break;
 		default:
 			data = *node->to_string();
 			boost::trim(data); // Delete unnecessary whitespace
-			sink << std::string(level, '\t') << "\"" << *node->get_name() << "\": " << data;
+			if (print_name) {
+				sink << std::string(level, '\t') << "\"" << *node->get_name() << "\": " << data;
+			}
+			else {
+				sink << std::string(level, '\t') << data;
+			}
 	}
 
 	if (append_comma) {

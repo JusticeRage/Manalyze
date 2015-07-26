@@ -154,7 +154,7 @@ private:
 	 *
 	 *	@param	std::stringstream& sink The stringstream into which the data should be written.
 	 *	@param	pNode node The node to dump.
-	 *	@param	int max_width For LIST nodes, the size of the children's biggest name (for pretty
+	 *	@param	int max_width The size of the children's biggest name of the parent node (for pretty
 	 *			printing purposes).
 	 *	@param	int level The hierarchical level of the node to dump (higher is deeper in the tree).
 	 */
@@ -170,6 +170,17 @@ private:
 	 *	@param	pNode node The node to dump.
 	 */
 	void _dump_plugin_node(std::ostream& sink, pNode node);
+
+	/**
+	*	@brief	Display function specific to STRINGS node.
+	*
+	*	@param	std::stringstream& sink The stringstream into which the data should be written.
+	*	@param	pNode node The node to dump.
+	*	@param	int max_width The size of the children's biggest name of the parent node (for pretty
+	*			printing purposes).
+	*	@param	int level The hierarchical level of the node to dump (higher is deeper in the tree).
+	*/
+	void _dump_strings_node(std::ostream& sink, pNode node, int max_width = 0, int level = 0);
 
 };
 
@@ -190,8 +201,10 @@ private:
 	 *	@param	int level The indentation level.
 	 *	@param	bool append_comma Whether a comma should be appended at the end of the node contents
 				(useful when dumping lists).
+	 *	@param	bool print_name Whether the name of the node should be displayed (useful when printing 
+	 *			inside JSON lists).
 	 */
-	void _dump_node(std::ostream& sink, pNode node, int level = 1, bool append_comma = false);
+	void _dump_node(std::ostream& sink, pNode node, int level = 1, bool append_comma = false, bool print_name = true);
 };
 
 // ----------------------------------------------------------------------------
