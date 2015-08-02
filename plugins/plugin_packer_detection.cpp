@@ -50,26 +50,26 @@ class PackerDetectionPlugin : public IPlugin
 {
 public:
 	int get_api_version() { return 1; }
-	
-	pString get_id() const { 
+
+	pString get_id() const {
 		return pString(new std::string("packer"));
 	}
 
-	pString get_description() const { 
+	pString get_description() const {
 		return pString(new std::string("Tries to structurally detect packer presence."));
 	}
 
-	pResult analyze(const sg::PE& pe) 
+	pResult analyze(const sg::PE& pe)
 	{
 		pResult res = create_result();
 
 		sg::shared_sections sections = pe.get_sections();
 		for (sg::shared_sections::element_type::const_iterator it = sections->begin() ; it != sections->end() ; ++it)
 		{
-			if (common_names.end() == std::find(common_names.begin(), common_names.end(), *(*it)->get_name())) 
+			if (common_names.end() == std::find(common_names.begin(), common_names.end(), *(*it)->get_name()))
 			{
 				// Check section name against known packer section names and set summary accordingly.
-				for (std::map<std::string, std::string>::const_iterator it2 = KNOWN_PACKER_SECTIONS.begin() ; 
+				for (std::map<std::string, std::string>::const_iterator it2 = KNOWN_PACKER_SECTIONS.begin() ;
 					it2 != KNOWN_PACKER_SECTIONS.end() ; ++it2)
 				{
 					boost::regex e(it2->first, boost::regex::icase);
@@ -109,7 +109,24 @@ public:
 
 		// A low number of imports indicates that the binary is packed.
 		sg::const_shared_strings imports = pe.find_imports(".*"); // Get all imports
-		if (imports->size() < 10) // TODO: How much is too low?
+
+		// Read the minimum import number from the configuration
+		int min_imports;
+		if (!_config->count("min_imports")) {
+			min_imports = 10;
+		}
+		else {
+			try {
+				min_imports = std::stoi(_config->at("min_imports"));
+			}
+			catch (std::invalid_argument)
+            {
+                PRINT_WARNING << "Could not parse packer.min_imports in the configuration file." << std::endl;
+				min_imports = 10;
+			}
+		}
+
+		if (imports->size() < min_imports)
 		{
 			std::stringstream ss;
 			ss << "The PE only has " << imports->size() << " import(s).";
