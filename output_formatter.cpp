@@ -24,14 +24,14 @@ namespace io {
 void RawFormatter::format(std::ostream& sink, bool end_stream)
 {
 	static bool print_header = true;
-	if (_header != "" && print_header) 
+	if (_header != "" && print_header)
 	{
 		sink << _header << std::endl << std::endl;
 		print_header = false;
 	}
 
 	pNodes n = _root->get_children();
-	
+
 	for (nodes::const_iterator it = n->begin() ; it != n->end() ; ++it) // File level
 	{
 		_dump_node(sink, *it, determine_max_width(*it));
@@ -64,14 +64,14 @@ void RawFormatter::_dump_node(std::ostream& sink, pNode node, int max_width, int
 		}
 		sink << *node->get_name() << ":" << std::endl << std::string(node->get_name()->length() + 1, '-') << std::endl;
 	}
-	else if (level == 2) 
+	else if (level == 2)
 	{
 		sink << *node->get_name();
 		if (node->get_type() == OutputTreeNode::LIST) {
 			sink << ":" << std::endl;
 		}
 	}
-	else 
+	else
 	{
 		sink << std::string((level - 2) * 4, ' ') << *node->get_name();
 		if (node->get_type() == OutputTreeNode::LIST) {
@@ -85,7 +85,7 @@ void RawFormatter::_dump_node(std::ostream& sink, pNode node, int max_width, int
 			{ // New scope to be able to declare the "children" variable.
 				// Determine children's max width
 				pNodes children = node->get_children();
-				for (nodes::const_iterator it = children->begin(); it != children->end(); ++it) 
+				for (nodes::const_iterator it = children->begin(); it != children->end(); ++it)
 				{
 					// Dump all children with an increased indentation level.
 					if ((*it)->get_type() == OutputTreeNode::LIST) {
@@ -253,11 +253,11 @@ void JsonFormatter::format(std::ostream& sink, bool end_stream)
 {
 	static bool print_header = true;
 	if (print_header)
-	{ 
+	{
 		sink << "{" << std::endl;
 		print_header = false;
 	}
-	
+
 	pNodes n = _root->get_children();
 	for (nodes::const_iterator it = n->begin() ; it != n->end() ; ++it) // File level
 	{
@@ -285,7 +285,7 @@ void JsonFormatter::_dump_node(std::ostream& sink, pNode node, int level, bool a
 		case OutputTreeNode::STRINGS:
 		{ // Separate scope because variable 'strs' is declared in here.
 			if (print_name) {
-				sink << std::string(level, '\t') << "\"" << *node->get_name() << "\": [" << std::endl;
+				sink << std::string(level, '\t') << "\"" << utils::escape(*node->get_name()) << "\": [" << std::endl;
 			}
 			else {
 				sink << std::string(level, '\t') << "[" << std::endl;
@@ -295,7 +295,7 @@ void JsonFormatter::_dump_node(std::ostream& sink, pNode node, int level, bool a
 			{
 				std::string str = *it;
 				boost::trim(str); // Delete unnecessary whitespace
-				sink << std::string(level + 1, '\t') << "\"" << str << "\"";
+				sink << std::string(level + 1, '\t') << "\"" << utils::escape(str) << "\"";
 				if (it != strs->end() - 1) {
 					sink << ",";
 				}
@@ -306,9 +306,9 @@ void JsonFormatter::_dump_node(std::ostream& sink, pNode node, int level, bool a
 		}
 		case OutputTreeNode::LIST:
 		{ // Separate scope because variable 'children' is declared in here.
-			
+
 			if (print_name) {
-				sink << std::string(level, '\t') << "\"" << *node->get_name() << "\": {" << std::endl;
+				sink << std::string(level, '\t') << "\"" << utils::escape(*node->get_name()) << "\": {" << std::endl;
 			}
 			else {
 				sink << std::string(level, '\t') << "{" << std::endl;
@@ -324,17 +324,18 @@ void JsonFormatter::_dump_node(std::ostream& sink, pNode node, int level, bool a
 			data = *node->to_string();
 			boost::trim(data); // Delete unnecessary whitespace
 			if (print_name) {
-				sink << std::string(level, '\t') << "\"" << *node->get_name() << "\": \"" << data << "\"";
+				sink << std::string(level, '\t') << "\"" << utils::escape(*node->get_name()) << "\": \""
+					 << utils::escape(data) << "\"";
 			}
 			else {
-				sink << std::string(level, '\t') << "\"" << data << "\"";
+				sink << std::string(level, '\t') << "\"" << utils::escape(data) << "\"";
 			}
 			break;
 		default:
-			data = *node->to_string();
+			data = utils::escape(*node->to_string());
 			boost::trim(data); // Delete unnecessary whitespace
 			if (print_name) {
-				sink << std::string(level, '\t') << "\"" << *node->get_name() << "\": " << data;
+				sink << std::string(level, '\t') << "\"" << utils::escape(*node->get_name()) << "\": " << data;
 			}
 			else {
 				sink << std::string(level, '\t') << data;

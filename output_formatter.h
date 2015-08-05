@@ -31,10 +31,12 @@ along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
 #include <boost/cstdint.hpp>
 #include <boost/date_time.hpp>
 #include <boost/algorithm/string/trim.hpp>
+#include <boost/spirit/include/karma.hpp>
 
 #include "output_tree_node.h"
 #include "color.h"
 #include "plugin_framework/result.h" // Necessary to hold a threat level in a node.
+#include "utils.h" // Contains the string literal escape function
 
 namespace io
 {
@@ -201,7 +203,7 @@ private:
 	 *	@param	int level The indentation level.
 	 *	@param	bool append_comma Whether a comma should be appended at the end of the node contents
 				(useful when dumping lists).
-	 *	@param	bool print_name Whether the name of the node should be displayed (useful when printing 
+	 *	@param	bool print_name Whether the name of the node should be displayed (useful when printing
 	 *			inside JSON lists).
 	 */
 	void _dump_node(std::ostream& sink, pNode node, int level = 1, bool append_comma = false, bool print_name = true);

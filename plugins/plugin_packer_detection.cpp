@@ -39,7 +39,8 @@ const std::vector<std::string> common_names = boost::assign::list_of(".text")
 																	(".pdata")
 																	(".reloc")
 																	(".bss")
-																	(".tls");
+																	(".tls")
+																	(".sxdata"); // Apparently related to SafeSEH.
 
 // Also check for known packer section names (i.e. UPX0, etc.)
 const std::map<std::string, std::string> KNOWN_PACKER_SECTIONS =
@@ -115,7 +116,8 @@ public:
 		if (!_config->count("min_imports")) {
 			min_imports = 10;
 		}
-		else {
+		else
+        {
 			try {
 				min_imports = std::stoi(_config->at("min_imports"));
 			}
