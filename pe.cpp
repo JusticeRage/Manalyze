@@ -1,18 +1,18 @@
 /*
-    This file is part of Spike Guard.
+    This file is part of Manalyze.
 
-    Spike Guard is free software: you can redistribute it and/or modify
+    Manalyze is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Spike Guard is distributed in the hope that it will be useful,
+    Manalyze is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
+    along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "pe.h"
@@ -27,7 +27,7 @@ PE::PE(const std::string& path)
 	: _path(path), _initialized(false)
 {
 	FILE* f = fopen(_path.c_str(), "rb");
-	if (f == NULL) 
+	if (f == NULL)
 	{
 		PRINT_ERROR << "Could not open " << _path << "." << std::endl;
 		goto END;
@@ -69,7 +69,7 @@ boost::shared_ptr<PE> PE::create(const std::string& path) {
 
 void* PE::operator new(size_t size)
 {
-	void* p = malloc(size); 
+	void* p = malloc(size);
 	if (p == NULL)
 		throw std::bad_alloc();
 	return p;
@@ -182,7 +182,7 @@ bool PE::_parse_coff_symbols(FILE* f)
 			return false;
 		}
 
-		if (sym->SectionNumber > _sections.size()) 
+		if (sym->SectionNumber > _sections.size())
 		{
 			PRINT_WARNING << "COFF symbol's section number is bigger than the number of sections!" << DEBUG_INFO_INSIDEPE << std::endl;
 			continue;
@@ -196,7 +196,7 @@ bool PE::_parse_coff_symbols(FILE* f)
 	boost::uint32_t count = 0;
 	fread(&st_size, 4, 1, f);
 	if (st_size > get_filesize() - ftell(f)) // Weak error check, but I couldn't find a better one in the PE spec.
-	{ 
+	{
 		PRINT_WARNING << "COFF String Table's reported size is bigger than the remaining bytes!" << DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
 	}
@@ -230,7 +230,7 @@ bool PE::_parse_image_optional_header(FILE* f)
 
 	if (fseek(f, _h_dos->e_lfanew + sizeof(pe_header), SEEK_SET))
 	{
-		PRINT_ERROR << "Could not reach the Image Optional Header (fseek to offset " 
+		PRINT_ERROR << "Could not reach the Image Optional Header (fseek to offset "
 			<<  _h_dos->e_lfanew + sizeof(pe_header) << " failed)." << std::endl;
 		return false;
 	}
@@ -334,7 +334,7 @@ bool PE::_parse_section_table(FILE* f)
 
 	if (fseek(f, _h_dos->e_lfanew + sizeof(pe_header) + _h_pe->SizeOfOptionalHeader, SEEK_SET))
 	{
-		PRINT_ERROR << "Could not reach the Section Table (fseek to offset " 
+		PRINT_ERROR << "Could not reach the Section Table (fseek to offset "
 			<<  _h_dos->e_lfanew + sizeof(pe_header) + _h_pe->SizeOfOptionalHeader << " failed)." << std::endl;
 		return false;
 	}
@@ -360,7 +360,7 @@ unsigned int PE::_rva_to_offset(boost::uint64_t rva) const
 {
 	if (!_ioh) // Image Optional Header was not parsed.
 	{
-		PRINT_ERROR << "Tried to convert a RVA into an offset, but ImageOptionalHeader was not parsed!" 
+		PRINT_ERROR << "Tried to convert a RVA into an offset, but ImageOptionalHeader was not parsed!"
 			<< DEBUG_INFO_INSIDEPE << std::endl;
 		return 0;
 	}
@@ -381,7 +381,7 @@ unsigned int PE::_rva_to_offset(boost::uint64_t rva) const
 		}
 	}
 
-	if (section == NULL) 
+	if (section == NULL)
 	{
 		// No section found. Maybe the VirsualSize is erroneous? Try with the RawSizeOfData.
 		for (std::vector<pSection>::const_iterator it = _sections.begin() ; it != _sections.end() ; ++it)
@@ -415,7 +415,7 @@ unsigned int PE::_rva_to_offset(boost::uint64_t rva) const
 
 // ----------------------------------------------------------------------------
 
-unsigned int PE::_va_to_offset(boost::uint64_t va) const 
+unsigned int PE::_va_to_offset(boost::uint64_t va) const
 {
 	if (!_ioh) // Image Optional Header was not parsed.
 	{
@@ -469,10 +469,10 @@ bool PE::_reach_directory(FILE* f, int directory) const
 
 bool PE::_parse_directories(FILE* f)
 {
-	return _parse_imports(f) && 
-		   _parse_exports(f) && 
-		   _parse_resources(f) && 
-		   _parse_debug(f) && 
+	return _parse_imports(f) &&
+		   _parse_exports(f) &&
+		   _parse_resources(f) &&
+		   _parse_debug(f) &&
 		   _parse_relocations(f) &&
 		   _parse_tls(f) &&
 		   _parse_certificates(f);
@@ -515,7 +515,7 @@ bool PE::_parse_exports(FILE* f)
 		PRINT_ERROR << "Could not read the exported DLL name." << std::endl;
 		return false;
 	}
-	
+
 	// Get the address and ordinal of each exported function
 	offset = _rva_to_offset(ied.AddressOfFunctions);
 	if (!offset || fseek(f, offset, SEEK_SET))
@@ -713,14 +713,14 @@ bool PE::_parse_certificates(FILE* f)
 	{
 		pwin_certificate cert = pwin_certificate(new win_certificate);
 		memset(cert.get(), 0, header_size);
-		if (header_size != fread(cert.get(), 1, header_size, f)) 
+		if (header_size != fread(cert.get(), 1, header_size, f))
 		{
 			PRINT_WARNING << "Could not read a WIN_CERTIFICATE's header." << std::endl;
 			return true; // Recoverable error.
 		}
 
-		// The certificate may point to garbage. Although other values than the ones defined in nt_values.h 
-		// are allowed by the PE specification (but which ones?), this is a good heuristic to determine 
+		// The certificate may point to garbage. Although other values than the ones defined in nt_values.h
+		// are allowed by the PE specification (but which ones?), this is a good heuristic to determine
 		// whether we have landed in random bytes.
 		if (*nt::translate_to_flag(cert->CertificateType, nt::WIN_CERTIFICATE_TYPES) == "UNKNOWN" &&
 			*nt::translate_to_flag(cert->Revision, nt::WIN_CERTIFICATE_REVISIONS) == "UNKNOWN")
@@ -735,13 +735,13 @@ bool PE::_parse_certificates(FILE* f)
 		}
 		catch (const std::exception& e)
 		{
-			PRINT_ERROR << "Failed to allocate enough space for a certificate! (" << e.what() << ")" 
+			PRINT_ERROR << "Failed to allocate enough space for a certificate! (" << e.what() << ")"
 				<< DEBUG_INFO_INSIDEPE << std::endl;
 			cert->Certificate.resize(0);
 			return false;
 		}
-		
-		if (cert->Length < remaining_bytes || 
+
+		if (cert->Length < remaining_bytes ||
 			cert->Length - header_size != fread(&(cert->Certificate[0]), 1, cert->Length - header_size, f))
 		{
 			PRINT_ERROR << "Could not read a WIN_CERTIFICATE's data." << std::endl;
@@ -765,22 +765,22 @@ bool PE::_parse_certificates(FILE* f)
 // ----------------------------------------------------------------------------
 
 // Provide a destructor for the shared_ptr.
-void delete_sgpe_module_data(sgpe_data* data)
+void delete_manape_module_data(manape_data* data)
 {
 	if (data->sections != NULL) {
 		free(data->sections);
 	}
 }
 
-boost::shared_ptr<sgpe_data> PE::create_sgpe_module_data() const
+boost::shared_ptr<manape_data> PE::create_manape_module_data() const
 {
-	boost::shared_ptr<sgpe_data> res(new sgpe_data, delete_sgpe_module_data);
+	boost::shared_ptr<manape_data> res(new manape_data, delete_manape_module_data);
 	res->entrypoint = _ioh->AddressOfEntryPoint;
 	res->number_of_sections = _sections.size();
-	res->sections = (sgpe_section*) malloc(res->number_of_sections * sizeof(sgpe_section));
+	res->sections = (manape_section*) malloc(res->number_of_sections * sizeof(manape_section));
 	if (res->sections != NULL)
 	{
-		for (boost::uint32_t i = 0 ; i < res->number_of_sections ; ++i) 
+		for (boost::uint32_t i = 0 ; i < res->number_of_sections ; ++i)
 		{
 			res->sections[i].section_start = _sections[i]->get_pointer_to_raw_data();
 			res->sections[i].section_size = _sections[i]->get_size_of_raw_data();
@@ -788,7 +788,7 @@ boost::shared_ptr<sgpe_data> PE::create_sgpe_module_data() const
 	}
 	else
 	{
-		PRINT_WARNING << "Not enough memory to allocate data for the SGPE module!" << std::endl;
+		PRINT_WARNING << "Not enough memory to allocate data for the MANAPE module!" << std::endl;
 		res->number_of_sections = 0;
 	}
 	return res;

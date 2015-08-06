@@ -1,18 +1,18 @@
 /*
-    This file is part of Spike Guard.
+    This file is part of Manalyze.
 
-    Spike Guard is free software: you can redistribute it and/or modify
+    Manalyze is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Spike Guard is distributed in the hope that it will be useful,
+    Manalyze is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
+    along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "pe.h"
@@ -54,7 +54,7 @@ bool PE::_parse_imports(FILE* f)
 		if (!utils::read_string_at_offset(f, offset, iid->NameStr))
 		{
 			// It seems that the Windows loader doesn't give up if such a thing happens.
-			if (_imports.size() > 0) 
+			if (_imports.size() > 0)
 			{
 				PRINT_WARNING << "Could not read an import's name." << std::endl;
 				break; // Try to continue the parsing with the available imports.
@@ -183,7 +183,7 @@ const_shared_strings PE::get_imported_functions(const std::string& dll) const
 			if ((*it)->Name != "") {
 				destination->push_back((*it)->Name);
 			}
-			else 
+			else
 			{
 				std::stringstream ss;
 				ss << "#" << ((*it)->AddressOfData & 0x7FFF);

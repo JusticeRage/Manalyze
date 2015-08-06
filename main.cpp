@@ -1,18 +1,18 @@
 /*
-    This file is part of Spike Guard.
+    This file is part of Manalyze.
 
-    Spike Guard is free software: you can redistribute it and/or modify
+    Manalyze is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Spike Guard is distributed in the hope that it will be useful,
+    Manalyze is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
+    along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <iostream>
@@ -45,7 +45,7 @@
 #include "output_formatter.h"
 #include "dump.h"
 
-#define SG_VERSION "0.9"
+#define MANALYZE_VERSION "0.9"
 
 namespace po = boost::program_options;
 namespace bfs = boost::filesystem;
@@ -63,9 +63,9 @@ void print_help(po::options_description& desc, const std::string& argv_0)
 	// Plugin description
 	std::vector<plugin::pIPlugin> plugins = plugin::PluginManager::get_instance().get_plugins();
 
-	if (plugins.size() > 0) 
+	if (plugins.size() > 0)
 	{
-		std::cout << "Available plugins:" << std::endl;			
+		std::cout << "Available plugins:" << std::endl;
 		for (std::vector<plugin::pIPlugin>::iterator it = plugins.begin() ; it != plugins.end() ; ++it) {
 			std::cout << "  - " << *(*it)->get_id() << ": " << *(*it)->get_description() << std::endl;
 		}
@@ -109,7 +109,7 @@ std::vector<std::string> tokenize_args(const std::vector<std::string>& args)
 		boost::tokenizer<boost::char_separator<char> > tokens(*it, sep);
 		for (boost::tokenizer<boost::char_separator<char> >::iterator tok_iter = tokens.begin();
 			tok_iter != tokens.end();
-			++tok_iter) 
+			++tok_iter)
 		{
 			tokenized_args.push_back(*tok_iter);
 		}
@@ -148,7 +148,7 @@ bool validate_args(po::variables_map& vm, po::options_description& desc, char** 
 		for (std::vector<std::string>::const_iterator it = selected_categories.begin() ; it != selected_categories.end() ; ++it)
 		{
 			std::vector<std::string>::const_iterator found = std::find(categories.begin(), categories.end(), *it);
-			if (found == categories.end()) 
+			if (found == categories.end())
 			{
 				print_help(desc, argv[0]);
 				std::cout << std::endl;
@@ -159,7 +159,7 @@ bool validate_args(po::variables_map& vm, po::options_description& desc, char** 
 	}
 
 	// Verify that the requested plugins exist
-	if (vm.count("plugins")) 
+	if (vm.count("plugins"))
 	{
 		std::vector<std::string> selected_plugins = tokenize_args(vm["plugins"].as<std::vector<std::string> >());
 		std::vector<plugin::pIPlugin> plugins = plugin::PluginManager::get_instance().get_plugins();
@@ -169,7 +169,7 @@ bool validate_args(po::variables_map& vm, po::options_description& desc, char** 
 				continue;
 			}
 
-			std::vector<plugin::pIPlugin>::iterator found = 
+			std::vector<plugin::pIPlugin>::iterator found =
 				std::find_if(plugins.begin(), plugins.end(), boost::bind(&plugin::name_matches, *it, _1));
 			if (found == plugins.end())
 			{
@@ -230,7 +230,7 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
 			"Multiple files may be specified.")
 		("recursive,r", "Scan all files in a directory (subdirectories will be ignored).")
 		("output,o", po::value<std::string>(), "The output format. May be 'raw' (default) or 'json'.")
-		("dump,d", po::value<std::vector<std::string> >(), 
+		("dump,d", po::value<std::vector<std::string> >(),
 			"Dump PE information. Available choices are any combination of: "
 			"all, summary, dos (dos header), pe (pe header), opt (pe optional header), sections, "
 			"imports, exports, resources, version, debug, tls")
@@ -248,7 +248,7 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
 		po::store(po::command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
 		po::notify(vm);
 	}
-	catch(po::error& e)	
+	catch(po::error& e)
 	{
 		PRINT_ERROR << "Could not parse command line (" << e.what() << ")." << std::endl << std::endl;
 		return false;
@@ -257,7 +257,7 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
 	if (vm.count("version"))
 	{
 		std::stringstream ss;
-		ss << "SGStatic " SG_VERSION " (Ivan Kwiatkowski, GPLv3 License) compiled with:" << std::endl;
+		ss << "Manalyze " MANALYZE_VERSION " (Ivan Kwiatkowski, GPLv3 License) compiled with:" << std::endl;
 		ss << "* Boost " BOOST_LIB_VERSION " (Boost.org, Boost Software License)" << std::endl;
 		ss << "* Yara " << YR_MAJOR_VERSION << "." << YR_MINOR_VERSION << "." << YR_MICRO_VERSION << ". (Victor M. Alvarez, Apache 2.0 License)" << std::endl;
 		ss << "* hash-library " << HASH_LIBRARY_VERSION << " (Stephan Brumme, ZLib License)." << std::endl;
@@ -286,12 +286,12 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
  *	@param	bool compute_hashes Whether hashes should be calculated.
  */
 void handle_dump_option(io::OutputFormatter& formatter, const std::vector<std::string>& categories, bool compute_hashes, const sg::PE& pe)
-{	
+{
 	bool dump_all = (std::find(categories.begin(), categories.end(), "all") != categories.end());
 	if (dump_all || std::find(categories.begin(), categories.end(), "summary") != categories.end()) {
 		sg::dump_summary(pe, formatter);
 	}
-	if (dump_all || std::find(categories.begin(), categories.end(), "dos") != categories.end()) 
+	if (dump_all || std::find(categories.begin(), categories.end(), "dos") != categories.end())
 	{
 		sg::dump_dos_header(pe, formatter);
 	}
@@ -343,7 +343,7 @@ void handle_plugins_option(io::OutputFormatter& formatter,
 	std::vector<plugin::pIPlugin> plugins = plugin::PluginManager::get_instance().get_plugins();
 	io::pNode plugins_node(new io::OutputTreeNode("Plugins", io::OutputTreeNode::LIST));
 
-	for (std::vector<plugin::pIPlugin>::iterator it = plugins.begin() ; it != plugins.end() ; ++it) 
+	for (std::vector<plugin::pIPlugin>::iterator it = plugins.begin() ; it != plugins.end() ; ++it)
 	{
 		// Verify that the plugin was selected
 		if (!all_plugins && std::find(selected.begin(), selected.end(), *(*it)->get_id()) == selected.end()) {
@@ -356,7 +356,7 @@ void handle_plugins_option(io::OutputFormatter& formatter,
 		}
 
 		plugin::pResult res = (*it)->analyze(pe);
-		if (!res) 
+		if (!res)
 		{
 			PRINT_WARNING << "Plugin " << *(*it)->get_id() << " returned a NULL result!" << std::endl;
 			continue;
@@ -368,7 +368,7 @@ void handle_plugins_option(io::OutputFormatter& formatter,
 		}
 		plugins_node->append(output);
 	}
-	
+
 	formatter.add_data(plugins_node, *pe.get_path());
 }
 
@@ -377,7 +377,7 @@ void handle_plugins_option(io::OutputFormatter& formatter,
 /**
  *	@brief	Returns all the input files of the application
  *
- *	When the recursive option is specified, this function returns all the files in 
+ *	When the recursive option is specified, this function returns all the files in
  *	the requested directory (or directories).
  *
  *	@param	po::variables_map& vm The (parsed) arguments of the application.
@@ -387,12 +387,12 @@ void handle_plugins_option(io::OutputFormatter& formatter,
 std::set<std::string> get_input_files(po::variables_map& vm)
 {
 	std::set<std::string> targets;
-	if (vm.count("recursive")) 
+	if (vm.count("recursive"))
 	{
 		std::vector<std::string> input = vm["pe"].as<std::vector<std::string> >();
 		for (std::vector<std::string>::iterator it = input.begin() ; it != input.end() ; ++it)
 		{
-			if (!bfs::is_directory(*it)) 
+			if (!bfs::is_directory(*it))
 			{
 				#if defined BOOST_WINDOWS_API
 					std::string path = bfs::absolute(*it).string();
@@ -420,10 +420,10 @@ std::set<std::string> get_input_files(po::variables_map& vm)
 			}
 		}
 	}
-	else 
+	else
 	{
 		std::vector<std::string> vect = vm["pe"].as<std::vector<std::string> >();
-		for (std::vector<std::string>::const_iterator it = vect.begin() ; it != vect.end() ; ++it) 
+		for (std::vector<std::string>::const_iterator it = vect.begin() ; it != vect.end() ; ++it)
 		{
 			if (!bfs::is_directory(*it)) {
 				#if defined BOOST_WINDOWS_API
@@ -458,18 +458,18 @@ void perform_analysis(const std::string& path,
 	sg::PE pe(path);
 
 	// Try to parse the PE
-	if (!pe.is_valid()) 
+	if (!pe.is_valid())
 	{
 		PRINT_ERROR << "Could not parse " << path << "!" << std::endl;
 		yara::Yara y = yara::Yara();
 		// In case of failure, we try to detect the file type to inform the user.
 		// Maybe he made a mistake and specified a wrong file?
-		if (bfs::exists(path) && 
-			!bfs::is_directory(path) && 
+		if (bfs::exists(path) &&
+			!bfs::is_directory(path) &&
 			y.load_rules("yara_rules/magic.yara"))
 		{
 			yara::const_matches m = y.scan_file(*pe.get_path());
-			if (m->size() > 0) 
+			if (m && m->size() > 0)
 			{
 				std::cerr << "Detected file type(s):" << std::endl;
 				for (yara::const_matches::element_type::const_iterator it = m->begin() ; it != m->end() ; ++it) {
@@ -518,7 +518,7 @@ int main(int argc, char** argv)
 	plugin::PluginManager::get_instance().load_all(working_dir.string());
 
 	// Load the configuration
-	config conf = parse_config((working_dir / "sgstatic.conf").string());
+	config conf = parse_config((working_dir / "manalyze.conf").string());
 
 	if (!parse_args(vm, argc, argv)) {
 		return -1;
@@ -545,7 +545,7 @@ int main(int argc, char** argv)
 	else // Default: use the human-readable output.
 	{
 		formatter.reset(new io::RawFormatter());
-		formatter->set_header("* SGStatic " SG_VERSION " *");
+		formatter->set_header("* Manalyze " MANALYZE_VERSION " *");
 	}
 
 	// Set the working directory to the binary's folder.
@@ -553,7 +553,7 @@ int main(int argc, char** argv)
 
 	// Do the actual analysis on all the input files
 	unsigned int count = 0;
-	for (std::set<std::string>::iterator it = targets.begin() ; it != targets.end() ; ++it)	
+	for (std::set<std::string>::iterator it = targets.begin() ; it != targets.end() ; ++it)
 	{
 		perform_analysis(*it, vm, extraction_directory, selected_categories, selected_plugins, conf, formatter);
 		if (++count % 1000 == 0) {
@@ -563,7 +563,7 @@ int main(int argc, char** argv)
 
 	formatter->format(std::cout);
 
-	if (vm.count("plugins")) 
+	if (vm.count("plugins"))
 	{
 		// Explicitly unload the plugins
 		plugin::PluginManager::get_instance().unload_all();

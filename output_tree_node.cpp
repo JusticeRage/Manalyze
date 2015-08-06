@@ -1,18 +1,18 @@
 /*
-This file is part of Spike Guard.
+This file is part of Manalyze.
 
-Spike Guard is free software: you can redistribute it and/or modify
+Manalyze is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-Spike Guard is distributed in the hope that it will be useful,
+Manalyze is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
+along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "output_tree_node.h"
@@ -29,7 +29,7 @@ unsigned int determine_max_width(pNode node)
 	}
 	unsigned int max = 0;
 	pNodes children = node->get_children();
-	for (nodes::const_iterator it = children->begin() ; it != children->end() ; ++it) 
+	for (nodes::const_iterator it = children->begin() ; it != children->end() ; ++it)
 	{
 		if ((*it)->get_type() == OutputTreeNode::LIST) {
 			continue; // Ignore lists as they have no impact on alignment.
@@ -88,7 +88,7 @@ OutputTreeNode::OutputTreeNode(const std::string& name,
 		_strings_data = shared_opt_strings(new boost::optional<strings>(strings()));
 		break;
 	default:
-		PRINT_WARNING << "[OutputTreeNode] Please use specialized constructors for types other than LIST or STRINGS!" 
+		PRINT_WARNING << "[OutputTreeNode] Please use specialized constructors for types other than LIST or STRINGS!"
 			<< std::endl;
 		break;
 	}

@@ -1,20 +1,20 @@
 #!/usr/bin/env python
 
 """
-    This file is part of Spike Guard.
+    This file is part of Manalyze.
 
-    Spike Guard is free software: you can redistribute it and/or modify
+    Manalyze is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Spike Guard is distributed in the hope that it will be useful,
+    Manalyze is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
+    along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import sys
@@ -146,7 +146,7 @@ if args.main:
     if os.path.exists("clamav.main.yara"):
         os.remove("clamav.main.yara")
     with open("clamav.yara", "wb") as f:
-        f.write("import \"sgpe\"\n\n")  # Do not forget to import our module.
+        f.write("import \"manape\"\n\n")  # Do not forget to import our module.
     update_signatures(URL_MAIN, args.skipdownload)
     shutil.copy("clamav.yara", "clamav.main.yara")  # Keep a copy to which we can append future daily signature files.
 else:

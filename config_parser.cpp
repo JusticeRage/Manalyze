@@ -1,18 +1,18 @@
 /*
-    This file is part of Spike Guard.
+    This file is part of Manalyze.
 
-    Spike Guard is free software: you can redistribute it and/or modify
+    Manalyze is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Spike Guard is distributed in the hope that it will be useful,
+    Manalyze is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
+    along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "config_parser.h"
@@ -22,7 +22,7 @@ config parse_config(const std::string& config_file)
 	std::ifstream input(config_file.c_str());
 	config conf;
 
-	if (!input.is_open()) 
+	if (!input.is_open())
 	{
 		PRINT_WARNING << "Could not read configuration file (" << config_file << ")." << std::endl;
 		return conf;
@@ -33,16 +33,16 @@ config parse_config(const std::string& config_file)
 	{
 		std::string plugin_name, plugin_attribute, attribute_value;
 
-		if (line.empty() || 
-			qi::parse(line.begin(), 
-					  line.end(), 
+		if (line.empty() ||
+			qi::parse(line.begin(),
+					  line.end(),
 					  (qi::char_('#') >> +qi::char_) | +boost::spirit::ascii::space)) // Line starting with '#' or made of spaces
 		{
 			continue;
 		}
 		else if (
 			qi::phrase_parse(
-				line.begin(), 
+				line.begin(),
 				line.end(),
 				(+~qi::char_('.') >> '.' >> +~qi::char_('=') >> '=' >> +qi::char_),
 				boost::spirit::ascii::space,
@@ -50,7 +50,7 @@ config parse_config(const std::string& config_file)
 		{
 			conf[plugin_name][plugin_attribute] = attribute_value;
 		}
-		else 
+		else
 		{
 			PRINT_WARNING << "Could not parse \"" << line << "\" in " << config_file << "." << std::endl;
 		}

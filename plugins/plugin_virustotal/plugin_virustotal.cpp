@@ -1,18 +1,18 @@
 /*
-    This file is part of Spike Guard.
+    This file is part of Manalyze.
 
-    Spike Guard is free software: you can redistribute it and/or modify
+    Manalyze is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Spike Guard is distributed in the hope that it will be useful,
+    Manalyze is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
+    along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <boost/system/api_config.hpp>
@@ -52,16 +52,16 @@ class VirusTotalPlugin : public IPlugin
 {
 public:
 	int get_api_version() { return 1; }
-	
-	pString get_id() const { 
+
+	pString get_id() const {
 		return pString(new std::string("virustotal"));
 	}
 
-	pString get_description() const { 
+	pString get_description() const {
 		return pString(new std::string("Checks existing AV results on VirusTotal."));
 	}
 
-	pResult analyze(const sg::PE& pe) 
+	pResult analyze(const sg::PE& pe)
 	{
 		pResult res = create_result();
 
@@ -72,12 +72,12 @@ public:
 		}
 		else if (_config->at("api_key") == "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 		{
-			// If you really can't be bothered, you can find a lot of keys with the following 
+			// If you really can't be bothered, you can find a lot of keys with the following
 			// GitHub dork: "https://www.virustotal.com/vtapi/v2"
 			PRINT_WARNING << "Please edit the configuration file with your VirusTotal API key." << std::endl;
 			return res;
 		}
-		
+
 		std::string sha256_hash = *hash::hash_file(*hash::ALL_DIGESTS[ALL_DIGESTS_SHA256], *pe.get_path());
 		std::string json;
 
@@ -94,7 +94,7 @@ public:
 
 		// Parse the JSON.
 		js::Value val;
-		if (!js::read(json, val) || val.type() != js::obj_type) 
+		if (!js::read(json, val) || val.type() != js::obj_type)
 		{
 			PRINT_ERROR << "Could not parse JSON retrieved from VirusTotal!" << std::endl;
 			return res;
@@ -105,7 +105,7 @@ public:
 		std::string scan_date;
 		for (js::Object::const_iterator it = root.begin() ; it != root.end() ; ++it)
 		{
-			if (it->name_ == "response_code") 
+			if (it->name_ == "response_code")
 			{
 				if (!it->value_.get_int()) // Response Code = 0: VT does not know the file.
 				{
@@ -189,7 +189,7 @@ bool query_virus_total(const std::string& hash, const std::string& api_key, std:
 		socket.close();
 		socket.connect(*endpoint_iterator++, error);
 	}
-	if (error) 
+	if (error)
 	{
 		PRINT_ERROR << "Could not resolve www.virustotal.com (plugin_virustotal)!" << std::endl;
 		return false;

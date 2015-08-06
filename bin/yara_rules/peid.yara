@@ -1,4 +1,4 @@
-import "sgpe"
+import "manape"
 
 rule __PseudoSigner_0_1__JDPack_1_x___JDProtect_0_9______Anorganix
 {
@@ -8,10 +8,10 @@ strings:
     	$a0 = { 60 E8 22 00 00 00 5D 8B D5 81 ED 90 90 90 90 2B 95 90 90 90 90 81 EA 06 90 90 90 89 95 90 90 90 90 83 BD 45 00 01 00 01 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ACProtect_UltraProtect_1_0X_2_0X____RiSco
 {
 meta:
@@ -21,10 +21,10 @@ strings:
 	$a1 = { 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 4B 45 52 4E 45 4C 33 32 2E 44 4C 4C 00 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule Themida_1_2_0_1__compressed_____Oreans_Technologies__h_
 {
 meta:
@@ -34,10 +34,10 @@ strings:
 	$a1 = { B8 00 00 ?? ?? 60 0B C0 74 58 E8 00 00 00 00 58 05 43 00 00 00 80 38 E9 75 03 61 EB 35 E8 00 00 00 00 58 25 00 F0 FF FF 33 FF 66 BB 19 5A 66 83 C3 34 66 39 18 75 12 0F B7 50 3C 03 D0 BB E9 44 00 00 83 C3 67 39 1A 74 07 2D 00 10 00 00 EB DA 8B F8 B8 ?? ?? ?? 00 03 C7 B9 ?? ?? ?? 00 03 CF EB 0A B8 ?? ?? ?? ?? B9 5A ?? ?? ?? 50 51 E8 84 00 00 00 E8 00 00 00 00 58 2D 26 00 00 00 B9 EF 01 00 00 C6 00 E9 83 E9 05 89 48 01 61 E9 AF 01 00 00 02 00 00 00 91 00 00 00 00 00 00 00 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule nSPack_2_x_3_x__NET____North_Star_Liu_Xing_Ping
 {
 meta:
@@ -46,10 +46,10 @@ strings:
     	$a0 = { FF 25 A4 ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Morphine_v1_2___v1_3
 {
 meta:
@@ -61,7 +61,7 @@ condition:
     	$a0
 }
 
-    
+
 rule SEA_AXE_v2_2
 {
 meta:
@@ -70,10 +70,10 @@ strings:
     	$a0 = { FC BC ?? ?? 0E 1F A3 ?? ?? E8 ?? ?? A1 ?? ?? 8B ?? ?? ?? 2B C3 8E C0 B1 03 D3 E3 8B CB BF ?? ?? 8B F7 F3 A5 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule GameGuard_v2006_5_x_x____dll_
 {
 meta:
@@ -82,10 +82,10 @@ strings:
     	$a0 = { 31 FF 74 06 61 E9 4A 4D 50 30 BA 4C 00 00 00 80 7C 24 08 01 0F 85 ?? 01 00 00 60 BE 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_V1_18_Dll__LZMA_4_30_____ap0x
 {
 meta:
@@ -94,10 +94,10 @@ strings:
     	$a0 = { 80 7C 24 08 01 0F 85 ?? 01 00 00 60 E8 00 00 00 00 8B 2C 24 83 C4 04 8D B5 ?? ?? ?? ?? 8D 9D ?? ?? ?? ?? 33 FF E8 9F 01 00 00 6A ?? 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 6A ?? FF 95 AA 0A 00 00 89 85 F9 0A 00 00 EB 14 60 FF B5 F9 0A 00 00 FF 34 37 FF 74 37 04 FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__PE_Pack_0_99_____Anorganix
 {
 meta:
@@ -106,10 +106,10 @@ strings:
     	$a0 = { 60 E8 11 00 00 00 5D 83 ED 06 80 BD E0 04 90 90 01 0F 84 F2 FF CC 0A E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_V1_3_0_X____Obsidium_Software___Sign_by_fly
 {
 meta:
@@ -118,10 +118,10 @@ strings:
     	$a0 = { EB 03 ?? ?? ?? E8 2E 00 00 00 EB 04 ?? ?? ?? ?? EB 04 ?? ?? ?? ?? 8B ?? ?? ?? EB 04 ?? ?? ?? ?? 83 ?? ?? ?? ?? ?? ?? EB 01 ?? 33 C0 EB 04 ?? ?? ?? ?? C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ST_Protector_V1_5____Silent_Software
 {
 meta:
@@ -133,7 +133,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PCrypt_v3_51
 {
 meta:
@@ -142,10 +142,10 @@ strings:
     	$a0 = { 50 43 52 59 50 54 FF 76 33 2E 35 31 00 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PESpin_0_3____Cyberbob__h_
 {
 meta:
@@ -157,7 +157,7 @@ condition:
     	$a0
 }
 
-    
+
 rule ExeJoiner_1_0____Yoda_f2f
 {
 meta:
@@ -167,10 +167,10 @@ strings:
 	$a1 = { 68 00 10 40 00 68 04 01 00 00 E8 39 03 00 00 05 00 10 40 00 C6 00 5C 68 04 01 00 00 68 04 11 40 00 6A 00 E8 1A 03 00 00 6A 00 68 80 00 00 00 6A 03 6A 00 6A 01 68 00 00 00 80 68 04 11 40 00 E8 EC 02 00 00 83 F8 FF 0F 84 83 02 00 00 A3 08 12 40 00 6A 00 50 E8 E2 02 00 00 83 F8 FF 0F 84 6D 02 00 00 A3 0C 12 40 00 8B D8 83 EB 04 6A 00 6A 00 53 FF 35 08 12 40 00 E8 E3 02 00 00 6A 00 68 3C 12 40 00 6A 04 68 1E 12 40 00 FF 35 08 12 40 00 E8 C4 02 00 00 83 EB 04 6A 00 6A 00 53 FF 35 08 12 40 00 E8 B7 02 00 00 6A 00 68 3C 12 40 00 6A 04 68 1A 12 40 00 FF 35 08 12 40 00 E8 98 02 00 00 83 EB 04 6A 00 6A 00 53 FF 35 08 12 40 00 E8 8B 02 00 00 6A 00 68 3C 12 40 00 6A 04 68 34 12 40 00 FF 35 08 12 40 00 E8 6C 02 00 00 83 EB 04 6A 00 6A 00 53 FF 35 08 12 40 00 E8 5F 02 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Vx__Quake_518
 {
 meta:
@@ -179,10 +179,10 @@ strings:
     	$a0 = { 1E 06 8C C8 8E D8 ?? ?? ?? ?? ?? ?? ?? B8 21 35 CD 21 81 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SafeDisc_v4
 {
 meta:
@@ -194,7 +194,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Free_Pascal_v1_0_10__win32_GUI_
 {
 meta:
@@ -206,7 +206,7 @@ condition:
     	$a0
 }
 
-    
+
 rule ASPack_v1_01b
 {
 meta:
@@ -215,10 +215,10 @@ strings:
     	$a0 = { 60 E8 ?? ?? ?? ?? 5D 81 ED D2 2A 44 ?? B8 CC 2A 44 ?? 03 C5 2B 85 A5 2E 44 ?? 89 85 B1 2E 44 ?? 80 BD 9C 2E 44 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__XCR_0_11______Anorganix
 {
 meta:
@@ -227,10 +227,10 @@ strings:
     	$a0 = { 60 8B F0 33 DB 83 C3 01 83 C0 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_3_7x____Silicon_Realms_Toolworks
 {
 meta:
@@ -239,10 +239,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 50 51 EB 0F ?? EB 0F ?? EB 07 ?? EB 0F ?? EB 08 FD EB 0B F2 EB F5 EB F6 F2 EB 08 FD EB E9 F3 EB E4 FC ?? 59 58 50 51 EB 0F ?? EB 0F ?? EB 07 ?? EB 0F ?? EB 08 FD EB 0B F2 EB F5 EB F6 F2 EB 08 FD EB E9 F3 EB E4 FC ?? 59 58 50 51 EB 0F ?? EB 0F ?? EB 07 ?? EB 0F ?? EB 08 FD EB 0B F2 EB F5 EB F6 F2 EB 08 FD EB E9 F3 EB E4 FC ?? 59 58 60 33 C9 75 02 EB 15 ?? 33 C9 75 18 7A 0C 70 0E EB 0D ?? 72 0E 79 F1 ?? ?? ?? 79 09 74 F0 ?? 87 DB 7A F0 ?? ?? 61 50 51 EB 0F ?? EB 0F ?? EB 07 ?? EB 0F ?? EB 08 FD EB 0B F2 EB F5 EB F6 F2 EB 08 FD EB E9 F3 EB E4 FC ?? 59 58 60 9C 33 C0 E8 09 00 00 00 E8 E8 23 00 00 00 7A 23 ?? 8B 04 24 EB 03 7A 29 ?? C6 00 90 C3 ?? 70 F0 87 D2 71 07 ?? ?? 40 8B DB 7A 11 EB 08 ?? EB F7 EB C3 ?? 7A E9 70 DA 7B D1 71 F3 ?? 7B F3 71 D6 ?? 9D 61 83 ED 06 B8 3B 01 00 00 03 C5 33 DB 81 C3 01 01 01 01 31 18 81 38 78 54 00 00 74 04 31 18 EB EC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule APEX_C__BLT_Apex_4_0_____500mhz
 {
 meta:
@@ -251,10 +251,10 @@ strings:
     	$a0 = { 68 ?? ?? ?? ?? B9 FF FF FF 00 01 D0 F7 E2 72 01 48 E2 F7 B9 FF 00 00 00 8B 34 24 80 36 FD 46 E2 FA C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule eXPressor_v1_4_5_1____CGSoftLabs__h_
 {
 meta:
@@ -264,10 +264,10 @@ strings:
 	$a1 = { 55 8B EC 83 EC 58 53 56 57 83 65 DC 00 F3 EB 0C 65 58 50 72 2D 76 2E 31 2E 34 2E 00 A1 00 ?? ?? ?? 05 00 ?? ?? ?? A3 08 ?? ?? ?? A1 08 ?? ?? ?? B9 81 ?? ?? ?? 2B 48 18 89 0D 0C ?? ?? ?? 83 3D 10 ?? ?? ?? 00 74 16 A1 08 ?? ?? ?? 8B 0D 0C ?? ?? ?? 03 48 14 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Vx__Eddie_based_1745
 {
 meta:
@@ -276,10 +276,10 @@ strings:
     	$a0 = { E8 ?? ?? 5E 81 EE ?? ?? FC ?? 2E ?? ?? ?? ?? 4D 5A ?? ?? FA ?? 8B E6 81 ?? ?? ?? FB ?? 3B ?? ?? ?? ?? ?? 50 06 ?? 56 1E 8B FE 33 C0 ?? 50 8E D8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__PE_Intro_1_0_____Anorganix
 {
 meta:
@@ -288,10 +288,10 @@ strings:
     	$a0 = { 8B 04 24 9C 60 E8 14 00 00 00 5D 81 ED 0A 45 40 90 80 BD 67 44 40 90 90 0F 85 48 FF ED 0A E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MEW_11_SE_1_0____Northfox
 {
 meta:
@@ -303,7 +303,7 @@ condition:
     	$a0
 }
 
-    
+
 rule WinKript_1_0____Mr__Crimson__h_
 {
 meta:
@@ -315,7 +315,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Native_UD_Packer_1_1__Modded_Poison_Ivy_Shellcode_____okkixot
 {
 meta:
@@ -324,10 +324,10 @@ strings:
     	$a0 = { 31 C0 31 DB 31 C9 EB 0E 6A 00 6A 00 6A 00 6A 00 FF 15 28 41 40 00 FF 15 94 40 40 00 89 C7 68 88 13 00 00 FF 15 98 40 40 00 FF 15 94 40 40 00 81 C7 88 13 00 00 39 F8 73 05 E9 84 00 00 00 6A 40 68 00 10 00 00 FF 35 04 30 40 00 6A 00 FF 15 A4 40 40 00 89 C7 FF 35 04 30 40 00 68 CA 10 40 00 50 FF 15 A8 40 40 00 6A 40 68 00 10 00 00 FF 35 08 30 40 00 6A 00 FF 15 A4 40 40 00 89 C6 68 00 30 40 00 FF 35 04 30 40 00 57 FF 35 08 30 40 00 50 6A 02 FF 15 4E 41 40 00 6A 00 6A 00 6A 00 56 6A 00 6A 00 FF 15 9C 40 40 00 50 6A 00 6A 00 6A 11 50 FF 15 4A 41 40 00 58 6A FF 50 FF 15 AC 40 40 00 6A 00 FF 15 A0 40 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PAK_SFX_Archive
 {
 meta:
@@ -336,10 +336,10 @@ strings:
     	$a0 = { 55 8B EC 83 ?? ?? A1 ?? ?? 2E ?? ?? ?? 2E ?? ?? ?? ?? ?? 8C D7 8E C7 8D ?? ?? BE ?? ?? FC AC 3C 0D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PackItBitch_V1_0___archphase
 {
 meta:
@@ -348,10 +348,10 @@ strings:
     	$a0 = { 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 4B 45 52 4E 45 4C 33 32 2E 44 4C 4C 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 4C 6F 61 64 4C 69 62 72 61 72 79 41 00 00 00 47 65 74 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECryptor_2_0_2_1____www_strongbit_com___Sign_By_haggar
 {
 meta:
@@ -363,7 +363,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_1__Pack_Master_1_0__PEX_Clone_______Anorganix
 {
 meta:
@@ -372,10 +372,10 @@ strings:
     	$a0 = { 60 E8 01 01 00 00 E8 83 C4 04 E8 01 90 90 90 E9 5D 81 ED D3 22 40 90 E8 04 02 90 90 E8 EB 08 EB 02 CD 20 FF 24 24 9A 66 BE 47 46 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 FF FF E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SVK_Protector_v1_051
 {
 meta:
@@ -384,10 +384,10 @@ strings:
     	$a0 = { 60 EB 03 C7 84 E8 EB 03 C7 84 9A E8 00 00 00 00 5D 81 ED 10 00 00 00 EB 03 C7 84 E9 64 A0 23 00 00 00 EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __Six_to_Four__v1_0
 {
 meta:
@@ -396,10 +396,10 @@ strings:
     	$a0 = { 50 55 4C 50 83 ?? ?? FC BF ?? ?? BE ?? ?? B5 ?? 57 F3 A5 C3 33 ED }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_v0_7_3beta____ap0x__h_
 {
 meta:
@@ -411,7 +411,7 @@ condition:
     	$a0
 }
 
-    
+
 rule BobPack_v1_00____BoB___BobSoft
 {
 meta:
@@ -420,10 +420,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 0C 24 89 CD 83 E9 06 81 ED ?? ?? ?? ?? E8 3D 00 00 00 89 85 ?? ?? ?? ?? 89 C2 B8 5D 0A 00 00 8D 04 08 E8 E4 00 00 00 8B 70 04 01 D6 E8 76 00 00 00 E8 51 01 00 00 E8 01 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_v0_1x___v0_2x____Dwing
 {
 meta:
@@ -432,9 +432,9 @@ strings:
     	$a0 = { BE 88 01 ?? ?? AD 8B F8 95 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
-    
+
 rule PolyBox_D____Anskya
 {
 meta:
@@ -446,7 +446,7 @@ condition:
     	$a0
 }
 
-    
+
 rule XWD_graphics_format
 {
 meta:
@@ -458,7 +458,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_2__JDPack_1_x___JDProtect_0_9______Anorganix
 {
 meta:
@@ -467,10 +467,10 @@ strings:
     	$a0 = { 60 E8 22 00 00 00 5D 8B D5 81 ED 90 90 90 90 2B 95 90 90 90 90 81 EA 06 90 90 90 89 95 90 90 90 90 83 BD 45 00 01 00 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule STNPEE_1_13
 {
 meta:
@@ -479,10 +479,10 @@ strings:
     	$a0 = { 55 57 56 52 51 53 E8 00 00 00 00 5D 8B D5 81 ED 97 3B 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule AcidCrypt
 {
 meta:
@@ -492,10 +492,10 @@ strings:
 	$a1 = { 60 B9 ?? ?? ?? 00 BA ?? ?? ?? 00 BE ?? ?? ?? 00 02 38 40 4E 75 FA 8B C2 8A 18 32 DF C0 CB }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__FSG_1_0______Anorganix
 {
 meta:
@@ -504,10 +504,10 @@ strings:
     	$a0 = { 90 90 90 90 68 ?? ?? ?? ?? 67 64 FF 36 00 00 67 64 89 26 00 00 F1 90 90 90 90 BB D0 01 40 00 BF 00 10 40 00 BE 90 90 90 90 53 E8 0A 00 00 00 02 D2 75 05 8A 16 46 12 D2 C3 FC B2 80 A4 6A 02 5B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXE_Shield_V0_5____Smoke
 {
 meta:
@@ -517,10 +517,10 @@ strings:
 	$a1 = { E8 04 00 00 00 83 60 EB 0C 5D EB 05 45 55 EB 04 B8 EB F9 00 C3 E8 00 00 00 00 5D 81 ED BC 1A 40 00 EB 01 00 8D B5 46 1B 40 00 BA B3 0A 00 00 EB 01 00 8D 8D F9 25 40 00 8B 09 E8 14 00 00 00 83 EB 01 00 8B FE E8 00 00 00 00 58 83 C0 07 50 C3 00 EB 04 58 40 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PESpin_1_3x____Cyberbob
 {
 meta:
@@ -529,10 +529,10 @@ strings:
     	$a0 = { EB 01 ?? 60 E8 00 00 00 00 8B 1C 24 83 C3 12 81 2B E8 B1 06 00 FE 4B FD 82 2C 24 88 DF 46 00 0B E4 74 9E 75 01 C7 81 73 04 D7 7A F7 2F 81 73 19 77 00 43 B7 F6 C3 6B B7 00 00 F9 FF E3 C9 C2 08 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_Inliner_v1_0_by_GPcH
 {
 meta:
@@ -545,7 +545,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule ASProtect_1_23_RC4_build_08_07__dll_____Alexey_Solodovnikov__h_
 {
 meta:
@@ -557,7 +557,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Hide_Protect_1_016____SoftWar_Company
 {
 meta:
@@ -566,10 +566,10 @@ strings:
     	$a0 = { 90 90 90 E9 D8 ?? 05 00 95 ?? 53 00 95 4A 50 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ExeSplitter_1_2____Bill_Prisoner___TPOC
 {
 meta:
@@ -581,7 +581,7 @@ condition:
     	$a0
 }
 
-    
+
 rule RLPack_Full_Edition_1_17__aPLib_
 {
 meta:
@@ -590,10 +590,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 8D B5 74 1F 00 00 8D 9D 1E 03 00 00 33 FF ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? EB 0F FF 74 37 04 FF 34 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ExeShield_Protector_V3_6____www_exeshield_com
 {
 meta:
@@ -602,10 +602,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? 00 50 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 33 C0 89 08 50 45 43 6F 6D 70 61 63 74 32 00 CE 1E 42 AF F8 D6 CC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule nPack_1_1_150_2006_Beta____NEOx
 {
 meta:
@@ -615,10 +615,10 @@ strings:
 	$a1 = { 83 3D ?? ?? ?? ?? ?? 75 05 E9 01 00 00 00 C3 E8 41 00 00 00 B8 ?? ?? ?? ?? 2B 05 ?? ?? ?? ?? A3 ?? ?? ?? ?? E8 5E 00 00 00 E8 E0 01 00 00 E8 EC 06 00 00 E8 F7 05 00 00 A1 ?? ?? ?? ?? C7 05 ?? ?? ?? ?? ?? ?? ?? ?? 01 05 ?? ?? ?? ?? FF 35 ?? ?? ?? ?? C3 C3 56 57 68 ?? ?? ?? ?? FF 15 ?? ?? ?? ?? 8B 35 ?? ?? ?? ?? 8B F8 68 ?? ?? ?? ?? 57 FF D6 68 ?? ?? ?? ?? 57 A3 ?? ?? ?? ?? FF D6 5F A3 ?? ?? ?? ?? 5E C3 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule C_I_Crypt_V0_1____FearlesS
 {
 meta:
@@ -627,10 +627,10 @@ strings:
     	$a0 = { 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 6B 65 72 6E 65 6C 33 32 2E 64 6C 6C 00 00 47 65 74 50 72 6F 63 41 64 64 72 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ocBat2Exe_1_0____OC
 {
 meta:
@@ -639,10 +639,10 @@ strings:
     	$a0 = { 55 8B EC B9 08 00 00 00 6A 00 6A 00 49 75 F9 53 56 57 B8 58 3C 40 00 E8 6C FA FF FF 33 C0 55 68 8A 3F 40 00 64 FF 30 64 89 20 6A 00 6A 00 6A 03 6A 00 6A 01 68 00 00 00 80 8D 55 EC 33 C0 E8 81 E9 FF FF 8B 45 EC E8 41 F6 FF FF 50 E8 F3 FA FF FF 8B F8 83 FF FF 0F 84 83 02 00 00 6A 02 6A 00 6A EE 57 E8 FC FA FF FF 6A 00 68 60 99 4F 00 6A 12 68 18 57 40 00 57 E8 E0 FA FF FF 83 3D 60 99 4F 00 12 0F 85 56 02 00 00 8D 45 E4 50 8D 45 E0 BA 18 57 40 00 B9 40 42 0F 00 E8 61 F4 FF FF 8B 45 E0 B9 12 00 00 00 BA 01 00 00 00 E8 3B F6 FF FF 8B 45 E4 8D 55 E8 E8 04 FB ?? ?? ?? ?? E8 B8 58 99 4F 00 E8 67 F3 FF FF 33 C0 A3 60 99 4F 00 8D 45 DC 50 B9 05 00 00 00 BA 01 00 00 00 A1 58 99 4F 00 E8 04 F6 FF FF 8B 45 DC BA A4 3F 40 00 E8 E3 F4 FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upx_Lock_1_0___1_2_____CyberDoom___Team_X___BoB___BobSoft
 {
 meta:
@@ -651,10 +651,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED 48 12 40 00 60 E8 2B 03 00 00 61 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule nSpack_V1_3____LiuXingPing
 {
 meta:
@@ -663,10 +663,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 5D B8 B3 85 40 00 2D AC 85 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Shrink_v1_0
 {
 meta:
@@ -675,9 +675,9 @@ strings:
     	$a0 = { 50 9C FC BE ?? ?? BF ?? ?? 57 B9 ?? ?? F3 A4 8B ?? ?? ?? BE ?? ?? BF ?? ?? F3 A4 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
-    
+
 rule PseudoSigner_0_2___BJFNT_1_2_
 {
 meta:
@@ -686,10 +686,10 @@ strings:
     	$a0 = { EB 02 69 B1 83 EC 04 EB 03 CD 20 EB EB 01 EB 9C EB 01 EB EB 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__PEX_0_99______Anorganix
 {
 meta:
@@ -698,10 +698,10 @@ strings:
     	$a0 = { 60 E8 01 00 00 00 55 83 C4 04 E8 01 00 00 00 90 5D 81 FF FF FF 00 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_0_20_beta____Dwing
 {
 meta:
@@ -710,10 +710,10 @@ strings:
     	$a0 = { BE 88 01 40 00 AD 8B F8 95 A5 33 C0 33 C9 AB 48 AB F7 D8 B1 04 F3 AB C1 E0 0A B5 ?? F3 AB AD 50 97 51 58 8D 54 85 5C FF 16 72 5A 2C 03 73 02 B0 00 3C 07 72 02 2C 03 50 0F B6 5F FF C1 E3 ?? B3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ZipWorxSecureEXE_v2_5____ZipWORX_Technologies_LLC__h_
 {
 meta:
@@ -723,10 +723,10 @@ strings:
 	$a1 = { E9 B8 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 53 65 63 75 72 65 45 58 45 20 45 78 65 63 75 74 61 62 6C 65 20 46 69 6C 65 20 50 72 6F 74 65 63 74 6F 72 0D 0A 43 6F 70 79 72 69 67 68 74 28 63 29 20 32 30 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule MSLRH_0_32a__fake_nSPack_1_3_____emadicius
 {
 meta:
@@ -738,7 +738,7 @@ condition:
     	$a0
 }
 
-    
+
 rule UPX_2_93__LZMA_
 {
 meta:
@@ -747,10 +747,10 @@ strings:
     	$a0 = { 60 BE ?? ?? ?? ?? 8D BE ?? ?? ?? ?? 57 89 E5 8D 9C 24 ?? ?? ?? ?? 31 C0 50 39 DC 75 FB 46 46 53 68 ?? ?? ?? ?? 57 83 C3 04 53 68 ?? ?? ?? ?? 56 83 C3 04 53 50 C7 03 03 00 02 00 90 90 90 90 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_v1_10__Eng_____dulek_xt_____Borland_Delphi___Microsoft_Visual_C___
 {
 meta:
@@ -761,10 +761,10 @@ strings:
 	$a2 = { C1 C8 10 EB 01 0F BF 03 74 66 77 C1 E9 1D 68 83 ?? ?? 77 EB 02 CD 20 5E EB 02 CD 20 2B F7 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
-    
+
 rule UPX_0_50___0_70
 {
 meta:
@@ -773,10 +773,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 58 83 E8 3D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PluginToExe_v1_00____BoB___BobSoft
 {
 meta:
@@ -785,10 +785,10 @@ strings:
     	$a0 = { E8 00 00 00 00 29 C0 5D 81 ED D1 40 40 00 50 FF 95 B8 40 40 00 89 85 09 40 40 00 FF 95 B4 40 40 00 89 85 11 40 40 00 50 FF 95 C0 40 40 00 8A 08 80 F9 22 75 07 50 FF 95 C4 40 40 00 89 85 0D 40 40 00 8B 9D 09 40 40 00 60 6A 00 6A 01 53 81 C3 ?? ?? ?? 00 FF D3 61 6A 00 68 44 69 45 50 FF B5 0D 40 40 00 6A 00 81 C3 ?? ?? ?? 00 FF D3 83 C4 10 FF 95 B0 40 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Packman_v1_0____Brandon_LaCombe
 {
 meta:
@@ -797,10 +797,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5B 8D 5B C6 01 1B 8B 13 8D 73 14 6A 08 59 01 16 AD 49 75 FA 8B E8 C6 06 E9 8B 43 0C 89 46 01 6A 04 68 00 10 00 00 FF 73 08 51 FF 55 08 8B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule WIBU_Key_V4_10A____WIBU_SYSTEMS_AG___Sign_by_fly
 {
 meta:
@@ -809,10 +809,10 @@ strings:
     	$a0 = { F7 05 ?? ?? ?? ?? FF 00 00 00 75 12 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule nBinder_v3_6_1
 {
 meta:
@@ -824,7 +824,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Unknown_encryptor__1_
 {
 meta:
@@ -833,10 +833,10 @@ strings:
     	$a0 = { EB ?? 2E 90 ?? ?? 8C DB 8C CA 8E DA FA 8B EC BE ?? ?? BC ?? ?? BF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEtite_v2_2____www_un4seen_com_petite
 {
 meta:
@@ -845,10 +845,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? ?? 68 ?? ?? ?? ?? 64 FF 35 ?? ?? ?? ?? 64 89 25 ?? ?? ?? ?? 66 9C 60 50 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Sun_Icon_Graphics_format
 {
 meta:
@@ -860,7 +860,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Themida_WinLicense_V1_8_2_0______Oreans_Technologies___Sign_by_fly
 {
 meta:
@@ -869,10 +869,10 @@ strings:
     	$a0 = { B8 00 00 00 00 60 0B C0 74 68 E8 00 00 00 00 58 05 ?? 00 00 00 80 38 E9 75 ?? 61 EB ?? DB 2D ?? ?? ?? ?? FF FF FF FF FF FF FF FF 3D 40 E8 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Pohernah_Crypter_V1_0_1____Kas
 {
 meta:
@@ -881,10 +881,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED F1 26 40 00 8B BD 18 28 40 00 8B 8D 20 28 40 00 B8 38 28 40 00 01 E8 80 30 05 83 F9 00 74 71 81 7F 1C AB 00 00 00 75 62 8B 57 0C 03 95 1C 28 40 00 31 C0 51 31 C9 66 B9 FA 00 66 83 F9 00 74 49 8B 57 0C 03 95 1C 28 40 00 8B 85 24 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MEW_11_SE_v1_2____Northfox_HCC_
 {
 meta:
@@ -893,10 +893,10 @@ strings:
     	$a0 = { E9 ?? ?? ?? FF 0C ?? ?? 00 00 00 00 00 00 00 00 00 ?? ?? ?? 00 0C ?? ?? 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Inno_Installer_v5_1_2
 {
 meta:
@@ -908,7 +908,7 @@ condition:
     	$a0
 }
 
-    
+
 rule AntiDote_1_4_SE____SIS_Team
 {
 meta:
@@ -917,10 +917,10 @@ strings:
     	$a0 = { 68 90 03 00 00 E8 C6 FD FF FF 68 90 03 00 00 E8 BC FD FF FF 68 90 03 00 00 E8 B2 FD FF FF 50 E8 AC FD FF FF 50 E8 A6 FD FF FF 68 69 D6 00 00 E8 9C FD FF FF 50 E8 96 FD FF FF 50 E8 90 FD FF FF 83 C4 20 E8 78 FF FF FF 84 C0 74 4F 68 04 01 00 00 68 10 22 60 00 6A 00 FF 15 08 10 60 00 68 90 03 00 00 E8 68 FD FF FF 68 69 D6 00 00 E8 5E FD FF FF 50 E8 58 FD FF FF 50 E8 52 FD FF FF E8 DD FE FF FF 50 68 A4 10 60 00 68 94 10 60 00 68 10 22 60 00 E8 58 FD FF FF 83 C4 20 33 C0 C2 10 00 8B 4C 24 08 56 8B 74 24 08 33 D2 8B C6 F7 F1 8B C6 85 D2 74 08 33 D2 F7 F1 40 0F AF C1 5E C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__MEW_11_SE_1_0______Anorganix
 {
 meta:
@@ -929,10 +929,10 @@ strings:
     	$a0 = { E9 09 00 00 00 00 00 00 02 00 00 00 0C 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Reg2Exe_2_25___by_Jan_Vorel
 {
 meta:
@@ -942,10 +942,10 @@ strings:
 	$a1 = { 68 68 00 00 00 68 00 00 00 00 68 70 7D 40 00 E8 AE 20 00 00 83 C4 0C 68 00 00 00 00 E8 AF 52 00 00 A3 74 7D 40 00 68 00 00 00 00 68 00 10 00 00 68 00 00 00 00 E8 9C 52 00 00 A3 70 7D 40 00 E8 24 50 00 00 E8 E2 48 00 00 E8 44 34 00 00 E8 54 28 00 00 E8 98 27 00 00 E8 93 20 00 00 68 01 00 00 00 68 D0 7D 40 00 68 00 00 00 00 8B 15 D0 7D 40 00 E8 89 8F 00 00 B8 00 00 10 00 68 01 00 00 00 E8 9A 8F 00 00 FF 35 A4 7F 40 00 68 00 01 00 00 E8 3A 23 00 00 8D 0D A8 7D 40 00 5A E8 5E 1F 00 00 FF 35 A8 7D 40 00 68 00 01 00 00 E8 2A 52 00 00 A3 B4 7D 40 00 FF 35 A4 7F 40 00 FF 35 B4 7D 40 00 FF 35 A8 7D 40 00 E8 5C 0C 00 00 8D 0D A0 7D 40 00 5A E8 26 1F 00 00 FF 35 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PCShrink_v0_40b
 {
 meta:
@@ -954,10 +954,10 @@ strings:
     	$a0 = { 9C 60 BD ?? ?? ?? ?? 01 ?? ?? ?? ?? ?? FF ?? ?? ?? ?? ?? 6A ?? FF ?? ?? ?? ?? ?? 50 50 2D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_Scrambler_RC_v1_x
 {
 meta:
@@ -966,10 +966,10 @@ strings:
     	$a0 = { 90 61 BE ?? ?? ?? ?? 8D BE ?? ?? ?? ?? 57 83 CD FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Pe123_v2006_4_12
 {
 meta:
@@ -978,10 +978,10 @@ strings:
     	$a0 = { 8B C0 60 9C E8 01 00 00 00 C3 53 E8 72 00 00 00 50 E8 1C 03 00 00 8B D8 FF D3 5B C3 8B C0 E8 00 00 00 00 58 83 C0 05 C3 8B C0 55 8B EC 60 8B 4D 10 8B 7D 0C 8B 75 08 F3 A4 61 5D C2 0C 00 E8 00 00 00 00 58 83 E8 05 C3 8B C0 E8 00 00 00 00 58 83 C0 05 C3 8B C0 E8 00 00 00 00 58 C1 E8 0C C1 E0 0C 66 81 38 4D 5A 74 0C 2D 00 10 00 00 66 81 38 4D 5A 75 F4 C3 E8 00 00 00 00 58 83 E8 05 C3 8B C0 55 8B EC 81 C4 4C FE FF FF 53 6A 40 8D 85 44 FF FF FF 50 E8 BC FF FF FF 50 E8 8A FF FF FF 68 F8 00 00 00 8D 85 4C FE FF FF 50 E8 A5 FF FF FF 03 45 80 50 E8 70 FF FF FF E8 97 FF FF FF 03 85 CC FE FF FF 83 C0 34 89 45 FC E8 86 FF FF FF 03 85 CC FE FF FF 83 C0 38 89 45 8C 60 8B 45 FC 8B 00 89 45 F8 89 45 9C 8B 45 8C 8B 00 89 45 88 89 45 98 E8 0D 00 00 00 6B 65 72 6E 65 6C 33 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEiD_Bundle_V1_02_DLL____BoB___BobSoft
 {
 meta:
@@ -990,10 +990,10 @@ strings:
     	$a0 = { 83 7C 24 08 01 0F 85 ?? ?? ?? ?? 60 E8 9C 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 41 00 08 00 39 00 08 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 80 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule DIET_v1_00__v1_00d
 {
 meta:
@@ -1002,10 +1002,10 @@ strings:
     	$a0 = { BF ?? ?? 3B FC 72 ?? B4 4C CD 21 BE ?? ?? B9 ?? ?? FD F3 A5 FC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule yoda_s_Protector_v1_01____Ashkbiz_Danehkar__h_
 {
 meta:
@@ -1014,10 +1014,10 @@ strings:
     	$a0 = { 55 8B EC 53 56 57 E8 03 00 00 00 EB 01 ?? E8 86 00 00 00 E8 03 00 00 00 EB 01 ?? E8 79 00 00 00 E8 03 00 00 00 EB 01 ?? E8 A4 00 00 00 E8 03 00 00 00 EB 01 ?? E8 97 00 00 00 E8 03 00 00 00 EB 01 ?? E8 2D 00 00 00 E8 03 00 00 00 EB 01 ?? 60 E8 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_v0_32_beta____Dwing
 {
 meta:
@@ -1026,10 +1026,10 @@ strings:
     	$a0 = { E9 ?? ?? ?? ?? 42 79 44 77 69 6E 67 40 00 00 00 50 45 00 00 4C 01 02 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 32 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SVK_Protector_v1_11
 {
 meta:
@@ -1038,10 +1038,10 @@ strings:
     	$a0 = { 60 E8 ?? ?? ?? ?? 5D 81 ED 06 ?? ?? ?? 64 A0 23 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEBundle_v3_10
 {
 meta:
@@ -1053,7 +1053,7 @@ condition:
     	$a0
 }
 
-    
+
 rule __PseudoSigner_0_2__XCR_0_11______Anorganix
 {
 meta:
@@ -1062,10 +1062,10 @@ strings:
     	$a0 = { 60 8B F0 33 DB 83 C3 01 83 C0 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule VMProtect_V1_X____PolyTech
 {
 meta:
@@ -1077,7 +1077,7 @@ condition:
     	$a0
 }
 
-    
+
 rule HACKSTOP_v1_13
 {
 meta:
@@ -1086,10 +1086,10 @@ strings:
     	$a0 = { 52 B8 ?? ?? 1E CD 21 86 E0 3D ?? ?? 73 ?? CD 20 0E 1F B4 09 E8 ?? ?? 24 ?? EA }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule WinUpack_v0_30_beta____By_Dwing__h_
 {
 meta:
@@ -1101,7 +1101,7 @@ condition:
     	$a0
 }
 
-    
+
 rule SimplePack_V1_X__Method1_____bagie
 {
 meta:
@@ -1110,10 +1110,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5B 8D 5B FA BD ?? ?? ?? ?? 8B 7D 3C 8D 74 3D 00 8D BE F8 00 00 00 0F B7 76 06 4E 8B 47 10 09 C0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule HACKSTOP_v1_19
 {
 meta:
@@ -1122,10 +1122,10 @@ strings:
     	$a0 = { 52 BA ?? ?? 5A EB ?? 9A ?? ?? ?? ?? 30 CD 21 ?? ?? ?? D6 02 ?? ?? CD 20 0E 1F 52 BA ?? ?? 5A EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule HACKSTOP_v1_18
 {
 meta:
@@ -1134,10 +1134,10 @@ strings:
     	$a0 = { 52 BA ?? ?? 5A EB ?? 9A ?? ?? ?? ?? 30 CD 21 ?? ?? ?? FD 02 ?? ?? CD 20 0E 1F 52 BA ?? ?? 5A EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RAR_Configuration_file
 {
 meta:
@@ -1149,7 +1149,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Upack_v0_24___v0_28alpha____Sign_by_hot_UNP
 {
 meta:
@@ -1158,10 +1158,10 @@ strings:
     	$a0 = { BE 88 01 40 00 AD ?? ?? 95 AD 91 F3 A5 AD }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__DEF_1_0______Anorganix
 {
 meta:
@@ -1170,10 +1170,10 @@ strings:
     	$a0 = { BE 00 01 40 00 6A 05 59 80 7E 07 00 74 11 8B 46 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 83 C1 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Hide_PE_1_01____BGCorp
 {
 meta:
@@ -1182,10 +1182,10 @@ strings:
     	$a0 = { BA ?? ?? ?? 00 B8 ?? ?? ?? ?? 89 02 83 C2 04 B8 ?? ?? ?? ?? 89 02 83 C2 04 B8 ?? ?? ?? ?? 89 02 83 C2 F8 FF E2 0D 0A 2D 3D 5B 20 48 69 64 65 50 45 20 62 79 20 42 47 43 6F 72 70 20 5D 3D 2D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v0_971___v0_976
 {
 meta:
@@ -1194,10 +1194,10 @@ strings:
     	$a0 = { EB 06 68 C3 9C 60 E8 5D 55 5B 81 ED 8B 85 01 85 66 C7 85 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Libraries_by_John_Socha
 {
 meta:
@@ -1206,10 +1206,10 @@ strings:
     	$a0 = { BB ?? ?? 8E DB 2E 89 ?? ?? ?? 8D ?? ?? ?? 25 ?? ?? FA 8E D3 8B E0 FB 26 A1 A3 ?? ?? B4 30 CD 21 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_V1_94____Markus_Oberhumer___Laszlo_Molnar___John_Reiser
 {
 meta:
@@ -1221,7 +1221,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Unnamed_Scrambler_2_0____p0ke
 {
 meta:
@@ -1231,10 +1231,10 @@ strings:
 	$a1 = { 55 8B EC B9 0A 00 00 00 6A 00 6A 00 49 75 F9 53 56 57 B8 1C 2F 40 00 E8 C8 F1 FF FF 33 C0 55 68 FB 33 40 00 64 FF 30 64 89 20 BA 0C 34 40 00 B8 E4 54 40 00 E8 EF FE FF FF 8B D8 85 DB 75 07 6A 00 E8 5A F2 FF FF BA E8 54 40 00 8B C3 8B 0D E4 54 40 00 E8 74 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule Crypter_3_1____SLESH
 {
 meta:
@@ -1243,10 +1243,10 @@ strings:
     	$a0 = { 68 FF 64 24 F0 68 58 58 58 58 FF D4 50 8B 40 F2 05 B0 95 F6 95 0F 85 01 81 BB FF 68 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_v0_32a__fake_MSVC___6_0_DLL_____emadicius__h_
 {
 meta:
@@ -1255,10 +1255,10 @@ strings:
     	$a0 = { 55 8B EC 53 8B 5D 08 56 8B 75 0C 57 8B 7D 10 85 F6 5F 5E 5B 5D EB 05 E8 EB 04 40 00 EB FA E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 50 E8 02 00 00 00 29 5A 58 6B C0 03 E8 02 00 00 00 29 5A 83 C4 04 58 74 04 75 02 EB 02 EB 01 81 0F 31 50 0F 31 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule _________________2_2b_Anti____xiaohui
 {
 meta:
@@ -1267,10 +1267,10 @@ strings:
     	$a0 = { EB F4 11 55 07 8B EC B8 14 80 0E 03 E8 D1 09 00 0A 57 33 D2 FF 75 18 B9 E8 1F DE 16 81 C0 8D BD EE 7F FB F8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NeoLite_v2_00
 {
 meta:
@@ -1279,10 +1279,10 @@ strings:
     	$a0 = { 8B 44 24 04 23 05 ?? ?? ?? ?? 50 E8 ?? ?? ?? ?? 83 C4 04 FE 05 ?? ?? ?? ?? 0B C0 74 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PE_Spin_v0_b
 {
 meta:
@@ -1292,10 +1292,10 @@ strings:
 	$a1 = { EB 01 68 60 E8 00 00 00 00 8B 1C 24 83 C3 12 81 2B E8 B1 06 00 FE 4B FD 82 2C 24 72 C8 46 00 0B E4 74 9E 75 01 C7 81 73 04 D7 7A F7 2F 81 73 19 77 00 43 B7 F6 C3 6B B7 00 00 F9 FF E3 C9 C2 08 00 A3 68 72 01 FF 5D 33 C9 41 E2 26 E8 01 00 00 00 EA 5A 33 C9 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Armadillo_v1_71
 {
 meta:
@@ -1305,10 +1305,10 @@ strings:
 	$a1 = { 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 64 A1 }
 
 condition:
-    	$a0 at sgpe.ep or $a1
+    	$a0 at manape.ep or $a1
 }
 
-    
+
 rule Xtreme_Protector_v1_06
 {
 meta:
@@ -1319,10 +1319,10 @@ strings:
 	$a2 = { B8 ?? ?? ?? 00 B9 75 ?? ?? 00 50 51 E8 05 00 00 00 E9 4A 01 00 00 60 8B 74 24 24 8B 7C 24 28 FC B2 80 8A 06 46 88 07 47 BB 02 00 00 00 02 D2 75 05 8A 16 46 12 D2 73 EA 02 D2 75 05 8A 16 46 12 D2 73 4F 33 C0 02 D2 75 05 8A 16 46 12 D2 0F 83 DF 00 00 00 02 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
-    
+
 rule Armadillo_v1_77
 {
 meta:
@@ -1331,10 +1331,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 B0 71 40 00 68 6C 37 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v2_xx
 {
 meta:
@@ -1346,7 +1346,7 @@ condition:
     	$a0
 }
 
-    
+
 rule NsPacK_V3_4_V3_5____LiuXingPing
 {
 meta:
@@ -1355,10 +1355,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 5D 83 ED 07 8D 85 ?? ?? ?? ?? 80 38 01 0F 84 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PUNiSHER_V1_5____FEUERRADER
 {
 meta:
@@ -1370,7 +1370,7 @@ condition:
     	$a0
 }
 
-    
+
 rule AverCryptor_1_0____os1r1s
 {
 meta:
@@ -1379,10 +1379,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED 75 17 40 00 8B BD 9C 18 40 00 8B 8D A4 18 40 00 B8 BC 18 40 00 03 C5 80 30 05 83 F9 00 74 71 81 7F 1C AB 00 00 00 75 62 8B 57 0C 03 95 A0 18 40 00 33 C0 51 33 C9 66 B9 FA 00 66 83 F9 00 74 49 8B 57 0C 03 95 A0 18 40 00 8B 85 A8 18 40 00 83 F8 02 75 06 81 C2 00 02 00 00 51 8B 4F 10 83 F8 02 75 06 81 E9 00 02 00 00 57 BF C8 00 00 00 8B F1 E8 27 00 00 00 8B C8 5F B8 BC 18 40 00 03 C5 E8 24 00 00 00 59 49 EB B1 59 83 C7 28 49 EB 8A 8B 85 98 18 40 00 89 44 24 1C 61 FF E0 56 57 4F F7 D7 23 F7 8B C6 5F 5E C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SuperDAT
 {
 meta:
@@ -1391,10 +1391,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 40 F3 42 00 68 A4 BF 42 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 53 56 57 89 65 E8 FF 15 08 F2 42 00 33 D2 8A D4 89 15 60 42 43 00 8B C8 81 E1 FF 00 00 00 89 0D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Themida____Oreans_Technologies_2004
 {
 meta:
@@ -1403,10 +1403,10 @@ strings:
     	$a0 = { B8 00 00 00 00 60 0B C0 74 58 E8 00 00 00 00 58 05 43 00 00 00 80 38 E9 75 03 61 EB 35 E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SoftProtect____www_softprotect_by_ru
 {
 meta:
@@ -1415,10 +1415,10 @@ strings:
     	$a0 = { E8 ?? ?? ?? ?? 8D ?? ?? ?? ?? ?? C7 00 00 00 00 00 E8 ?? ?? ?? ?? E8 ?? ?? ?? ?? 8D ?? ?? ?? ?? ?? 50 E8 ?? ?? ?? ?? 83 ?? ?? ?? ?? ?? 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule DiskDupe__c__MSD_Users_file
 {
 meta:
@@ -1430,7 +1430,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PEcrypt___by_archphase
 {
 meta:
@@ -1440,10 +1440,10 @@ strings:
 	$a1 = { 55 8B EC 83 C4 E0 53 56 33 C0 89 45 E4 89 45 E0 89 45 EC ?? ?? ?? ?? 64 82 40 00 E8 7C C7 FF FF 33 C0 55 68 BE 84 40 00 64 FF 30 64 89 20 68 CC 84 40 00 ?? ?? ?? ?? 00 A1 10 A7 40 00 50 E8 1D C8 FF FF 8B D8 85 DB 75 39 E8 3A C8 FF FF 6A 00 6A 00 68 A0 A9 40 00 68 00 04 00 00 50 6A 00 68 00 13 00 00 E8 FF C7 FF FF 6A 00 68 E0 84 40 00 A1 A0 A9 40 00 50 6A 00 E8 ?? ?? ?? ?? E9 7D 01 00 00 53 A1 10 A7 40 00 50 E8 42 C8 FF FF 8B F0 85 F6 75 18 6A 00 68 E0 84 40 00 68 E4 84 40 00 6A 00 E8 71 C8 FF FF E9 53 01 00 00 53 6A 00 E8 2C C8 FF FF A3 ?? ?? ?? ?? 83 3D 48 A8 40 00 00 75 18 6A 00 68 E0 84 40 00 68 F8 84 40 00 6A 00 E8 43 C8 FF FF E9 25 01 00 00 56 E8 F8 C7 FF FF A3 4C A8 40 00 A1 48 A8 40 00 E8 91 A1 FF FF 8B D8 8B 15 48 A8 40 00 85 D2 7C 16 42 33 C0 8B 0D 4C A8 40 00 03 C8 8A 09 8D 34 18 88 0E 40 4A 75 ED 8B 15 48 A8 40 00 85 D2 7C 32 42 33 C0 8D 34 18 8A 0E 80 F9 01 75 05 C6 06 FF EB 1C 8D 0C 18 8A 09 84 ?? ?? ?? ?? ?? 00 EB 0E 8B 0D 4C A8 40 00 03 C8 0F B6 09 49 88 0E 40 4A 75 D1 8D ?? ?? ?? ?? E8 A5 A3 FF FF 8B 45 E8 8D 55 EC E8 56 D5 FF FF 8D 45 EC BA 18 85 40 00 E8 79 BA FF FF 8B 45 EC E8 39 BB FF FF 8B D0 B8 54 A8 40 00 E8 31 A6 FF FF BA 01 00 00 00 B8 54 A8 40 00 E8 12 A9 FF FF E8 DD A1 FF FF 68 50 A8 40 00 8B D3 8B 0D 48 A8 40 00 B8 54 A8 40 00 E8 56 A7 FF FF E8 C1 A1 FF FF }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PESHiELD_v0_2___v0_2b___v0_2b2
 {
 meta:
@@ -1452,10 +1452,10 @@ strings:
     	$a0 = { 60 E8 ?? ?? ?? ?? 41 4E 41 4B 49 4E 5D 83 ED 06 EB 02 EA 04 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_0_32a__fake_WWPack32_1_x_____emadicius
 {
 meta:
@@ -1466,7 +1466,7 @@ strings:
 condition:
     	$a0
 }
-    
+
 rule Vx__MTE__non_encrypted_
 {
 meta:
@@ -1475,10 +1475,10 @@ strings:
     	$a0 = { F7 D9 80 E1 FE 75 02 49 49 97 A3 ?? ?? 03 C1 24 FE 75 02 48 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule WWPACK_v3_00__v3_01__Relocations_pack_
 {
 meta:
@@ -1487,10 +1487,10 @@ strings:
     	$a0 = { BE ?? ?? BA ?? ?? BF ?? ?? B9 ?? ?? 8C CD 8E DD 81 ED ?? ?? 06 06 8B DD 2B DA 8B D3 FC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SCRAM__vC5
 {
 meta:
@@ -1499,10 +1499,10 @@ strings:
     	$a0 = { B8 ?? ?? 50 9D 9C 58 25 ?? ?? 75 ?? BA ?? ?? B4 09 CD 21 CD 20 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule LamerStop_v1_0c__c__Stefan_Esser
 {
 meta:
@@ -1511,10 +1511,10 @@ strings:
     	$a0 = { E8 ?? ?? 05 ?? ?? CD 21 33 C0 8E C0 26 ?? ?? ?? 2E ?? ?? ?? 26 ?? ?? ?? 2E ?? ?? ?? BA ?? ?? FA }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule BeRoEXEPacker_v1_00__LZBRR_
 {
 meta:
@@ -1523,10 +1523,10 @@ strings:
     	$a0 = { 60 BE ?? ?? ?? ?? BF ?? ?? ?? ?? FC B2 80 33 DB A4 B3 02 E8 ?? ?? ?? ?? 73 F6 33 C9 E8 ?? ?? ?? ?? 73 1C 33 C0 E8 ?? ?? ?? ?? 73 23 B3 02 41 B0 10 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECryptor_2_2_4____Strongbit_SoftComplete_Development
 {
 meta:
@@ -1538,7 +1538,7 @@ condition:
     	$a0
 }
 
-    
+
 rule AntiDote_1_0_Beta____SIS_Team
 {
 meta:
@@ -1547,10 +1547,10 @@ strings:
     	$a0 = { E8 BB FF FF FF 84 C0 74 2F 68 04 01 00 00 68 C0 23 60 00 6A 00 FF 15 08 10 60 00 E8 40 FF FF FF 50 68 78 11 60 00 68 68 11 60 00 68 C0 23 60 00 E8 AB FD FF FF 83 C4 10 33 C0 C2 10 00 90 90 90 8B 4C 24 08 56 8B 74 24 08 33 D2 8B C6 F7 F1 8B C6 85 D2 74 08 33 D2 F7 F1 40 0F AF C1 5E C3 90 8B 44 24 04 53 55 56 8B 48 3C 57 03 C8 33 D2 8B 79 54 8B 71 38 8B C7 F7 F6 85 D2 74 0C 8B C7 33 D2 F7 F6 8B F8 47 0F AF FE 33 C0 33 DB 66 8B 41 14 8D 54 08 18 33 C0 66 8B 41 06 89 54 24 14 8D 68 FF 85 ED 7C 37 33 C0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Themida_WinLicense_V1_0_0_0_V1_8_0_0____Oreans_Technologies___Sign_by_fly
 {
 meta:
@@ -1559,10 +1559,10 @@ strings:
     	$a0 = { B8 00 00 00 00 60 0B C0 74 58 E8 00 00 00 00 58 05 ?? 00 00 00 80 38 E9 75 ?? 61 EB ?? E8 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SimplePack_1_11_Method_1____bagie_TMX_
 {
 meta:
@@ -1571,10 +1571,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5B 8D 5B FA BD 00 00 ?? ?? 8B 7D 3C 8D 74 3D 00 8D BE F8 00 00 00 0F B7 76 06 4E 8B 47 10 09 C0 74 55 0F B7 47 22 09 C0 74 4D 6A 04 68 00 10 00 00 FF 77 10 6A 00 FF 93 38 03 00 00 50 56 57 89 EE 03 77 0C 8B 4F 10 89 C7 89 C8 C1 E9 02 FC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PcShare______________________v4_0____________________
 {
 meta:
@@ -1583,10 +1583,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 90 34 40 00 68 B6 28 40 00 64 A1 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_1_3_0_4____Obsidium_Software__h_
 {
 meta:
@@ -1598,7 +1598,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Software_Compress_v1_2____BG_Software_Protect_Technologies
 {
 meta:
@@ -1607,10 +1607,10 @@ strings:
     	$a0 = { E9 BE 00 00 00 60 8B 74 24 24 8B 7C 24 28 FC B2 80 33 DB A4 B3 02 E8 6D 00 00 00 73 F6 33 C9 E8 64 00 00 00 73 1C 33 C0 E8 5B 00 00 00 73 23 B3 02 41 B0 10 E8 4F 00 00 00 12 C0 73 F7 75 3F AA EB D4 E8 4D 00 00 00 2B CB 75 10 E8 42 00 00 00 EB 28 AC D1 E8 74 4D 13 C9 EB 1C 91 48 C1 E0 08 AC E8 2C 00 00 00 3D 00 7D 00 00 73 0A 80 FC 05 73 06 83 F8 7F 77 02 41 41 95 8B C5 B3 01 56 8B F7 2B F0 F3 A4 5E EB 8E 02 D2 75 05 8A 16 46 12 D2 C3 33 C9 41 E8 EE FF FF FF 13 C9 E8 E7 FF FF FF 72 F2 C3 2B 7C 24 28 89 7C 24 1C 61 C3 60 FF 74 24 24 6A 40 FF 95 1A 0F 41 00 89 44 24 1C 61 C2 04 00 E8 00 00 00 00 81 2C 24 3A 10 41 00 5D E8 00 00 00 00 81 2C 24 31 01 00 00 8B 85 2A 0F 41 00 29 04 24 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__Microsoft_Visual_C___5_0___MFC______Anorganix
 {
 meta:
@@ -1619,10 +1619,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 64 A1 00 00 00 00 50 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_v0_32a____emadicius__h_
 {
 meta:
@@ -1635,7 +1635,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule PECompact_v1_40___v1_45
 {
 meta:
@@ -1644,10 +1644,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 0F A0 40 ?? 87 DD 8B 85 A6 A0 40 ?? 01 85 03 A0 40 ?? 66 C7 85 ?? A0 40 ?? 90 90 01 85 9E A0 40 ?? BB C3 11 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule fEaRzCrypter_v1_0____fEaRz
 {
 meta:
@@ -1656,10 +1656,10 @@ strings:
     	$a0 = { 55 8B EC B9 09 00 00 00 6A 00 6A 00 49 75 ?? 53 56 57 B8 ?? ?? ?? ?? E8 ?? ?? ?? ?? 33 C0 55 68 ?? ?? ?? ?? 64 FF 30 64 89 20 BA ?? ?? ?? ?? B8 ?? ?? ?? ?? E8 ?? ?? ?? ?? 8B D8 85 DB 75 ?? 6A 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Thinstall_Embedded_V2_0X____Jitit
 {
 meta:
@@ -1668,10 +1668,10 @@ strings:
     	$a0 = { B8 EF BE AD DE 50 6A 00 FF 15 ?? ?? ?? ?? E9 AD FF FF FF 8B C1 8B 4C 24 04 89 88 29 04 00 00 C7 40 0C 01 00 00 00 0F B6 49 01 D1 E9 89 48 10 C7 40 14 80 00 00 00 C2 04 00 8B 44 24 04 C7 41 0C 01 00 00 00 89 81 29 04 00 00 0F B6 40 01 D1 E8 89 41 10 C7 41 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__LCC_Win32_DLL_____Anorganix
 {
 meta:
@@ -1680,10 +1680,10 @@ strings:
     	$a0 = { 55 89 E5 53 56 57 83 7D 0C 01 75 05 E8 17 90 90 90 FF 75 10 FF 75 0C FF 75 08 A1 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PE_Spin_v0_4x
 {
 meta:
@@ -1695,7 +1695,7 @@ condition:
     	$a0
 }
 
-    
+
 rule NsPack_v3_1____North_Star__h_
 {
 meta:
@@ -1704,10 +1704,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 5D 83 ED 07 8D 9D ?? ?? FF FF 8A 03 3C 00 74 10 8D 9D ?? ?? FF FF 8A 03 3C 01 0F 84 42 02 00 00 C6 03 01 8B D5 2B 95 ?? ?? FF FF 89 95 ?? ?? FF FF 01 95 ?? ?? FF FF 8D B5 ?? ?? FF FF 01 16 60 6A 40 68 00 10 00 00 68 00 10 00 00 6A 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__NorthStar_PE_Shrinker_1_3_____Anorganix
 {
 meta:
@@ -1716,10 +1716,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 5D B8 B3 85 40 00 2D AC 85 40 00 2B E8 8D B5 00 00 00 00 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Turbo_C_1988
 {
 meta:
@@ -1728,10 +1728,10 @@ strings:
     	$a0 = { 8C D8 BB ?? ?? 8E DB 8C D3 8B CC FA 8E ?? ?? ?? BC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule WinKript_v1_0____Mr__Crimson__h_
 {
 meta:
@@ -1741,10 +1741,10 @@ strings:
 	$a1 = { 33 C0 8B B8 00 ?? ?? ?? 8B 90 04 ?? ?? ?? 85 FF 74 1B 33 C9 50 EB 0C 8A 04 39 C0 C8 04 34 1B 88 04 39 41 3B CA 72 F0 58 83 C0 08 EB D5 61 E9 ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule EXE_Shield_V0_6____SMoKE
 {
 meta:
@@ -1755,10 +1755,10 @@ strings:
 	$a2 = { E8 04 00 00 00 83 60 EB 0C 5D EB 05 45 55 EB 04 B8 EB F9 00 C3 E8 00 00 00 00 5D 81 ED D4 1A 40 00 EB 01 00 8D B5 5E 1B 40 00 BA A1 0B 00 00 EB 01 00 8D 8D FF 26 40 00 8B 09 E8 14 00 00 00 83 EB 01 00 8B FE E8 00 00 00 00 58 83 C0 07 50 C3 00 EB 04 58 40 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2
+    	$a0 at manape.ep or $a1 at manape.ep or $a2
 }
 
-    
+
 rule Private_exe_Protector_V2_0____SetiSoft_Team___Sign_by_fly
 {
 meta:
@@ -1770,7 +1770,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Vx__Trivial_25
 {
 meta:
@@ -1779,10 +1779,10 @@ strings:
     	$a0 = { B4 4E FE C6 CD 21 B8 ?? 3D BA ?? 00 CD 21 93 B4 40 CD }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Aluwain_v8_09
 {
 meta:
@@ -1791,10 +1791,10 @@ strings:
     	$a0 = { 8B EC 1E E8 ?? ?? 9D 5E }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Microsoft_Visual_C___v4_2_DLL
 {
 meta:
@@ -1803,10 +1803,10 @@ strings:
     	$a0 = { 53 B8 ?? ?? ?? ?? 8B ?? ?? ?? 56 57 85 DB 55 75 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NsPack_v2_3____North_Star__h_
 {
 meta:
@@ -1818,7 +1818,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PEiD_Bundle_v1_01_____BoB___BobSoft
 {
 meta:
@@ -1827,10 +1827,10 @@ strings:
     	$a0 = { 60 E8 23 02 00 00 8B 44 24 04 52 48 66 31 C0 66 81 38 4D 5A 75 F5 8B 50 3C 81 3C 02 50 45 00 00 75 E9 5A C2 04 00 60 89 DD 89 C3 8B 45 3C 8B 54 28 78 01 EA 52 8B 52 20 01 EA 31 C9 41 8B 34 8A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule BamBam_v0_01
 {
 meta:
@@ -1843,7 +1843,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule eXPressor_v1_2____CGSoftLabs
 {
 meta:
@@ -1855,7 +1855,7 @@ condition:
     	$a0
 }
 
-    
+
 rule __PseudoSigner_0_2__CodeSafe_2_0______Anorganix
 {
 meta:
@@ -1864,10 +1864,10 @@ strings:
     	$a0 = { 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 0B 83 EC 10 53 56 57 E8 C4 01 00 85 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RCryptor_v1_3b____Vaska
 {
 meta:
@@ -1876,10 +1876,10 @@ strings:
     	$a0 = { 61 83 EF 4F 60 68 ?? ?? ?? ?? FF D7 B8 ?? ?? ?? ?? 3D ?? ?? ?? ?? 74 06 80 30 ?? 40 EB F3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__PE_Protect_0_9_____Anorganix
 {
 meta:
@@ -1888,10 +1888,10 @@ strings:
     	$a0 = { 52 51 55 57 64 67 A1 30 00 85 C0 78 0D E8 07 00 00 00 58 83 C0 07 C6 90 C3 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPack_0_11
 {
 meta:
@@ -1903,7 +1903,7 @@ condition:
     	$a0
 }
 
-    
+
 rule UPack_Alt_Stub____Dwing
 {
 meta:
@@ -1912,10 +1912,10 @@ strings:
     	$a0 = { 60 E8 09 00 00 00 C3 F6 00 00 E9 06 02 00 00 33 C9 5E 87 0E E3 F4 2B F1 8B DE AD 2B D8 AD }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__PESHiELD_0_25_
 {
 meta:
@@ -1924,10 +1924,10 @@ strings:
     	$a0 = { 60 E8 2B 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 CC CC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Stony_Brook_Pascal__v7_0
 {
 meta:
@@ -1936,10 +1936,10 @@ strings:
     	$a0 = { 31 ED 9A ?? ?? ?? ?? 55 89 E5 81 EC ?? ?? B8 ?? ?? 0E 50 9A ?? ?? ?? ?? BE ?? ?? 1E 0E BF ?? ?? 1E 07 1F FC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__Microsoft_Visual_C___7_0_DLL______Anorganix
 {
 meta:
@@ -1948,10 +1948,10 @@ strings:
     	$a0 = { 55 8D 6C 01 00 81 EC 00 00 00 00 8B 45 90 83 F8 01 56 0F 84 00 00 00 00 85 C0 0F 84 ?? ?? ?? ?? E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Petite_v2_1__2_
 {
 meta:
@@ -1960,10 +1960,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? ?? 6A 00 68 ?? ?? ?? ?? 64 ?? ?? ?? ?? ?? ?? 64 ?? ?? ?? ?? ?? ?? 66 9C 60 50 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule eXPressor_v1_3____CGSoftLabs
 {
 meta:
@@ -1975,7 +1975,7 @@ condition:
     	$a0
 }
 
-    
+
 rule diProtector_V1_X____diProtector_Software
 {
 meta:
@@ -1984,10 +1984,10 @@ strings:
     	$a0 = { 01 00 A0 E3 14 00 00 EB 00 00 20 E0 44 10 9F E5 03 2A A0 E3 40 30 A0 E3 AE 00 00 EB 30 00 8F E5 00 20 A0 E1 3A 0E 8F E2 00 00 80 E2 1C 10 9F E5 20 30 8F E2 0E 00 00 EB 14 00 9F E5 14 10 9F E5 7F 20 A0 E3 C5 00 00 EB 04 C0 8F E2 00 F0 9C E5 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule CipherWall_Self_Extrator_Decryptor__GUI__v1_5
 {
 meta:
@@ -1997,10 +1997,10 @@ strings:
 	$a1 = { 90 61 BE 00 10 42 00 8D BE 00 00 FE FF C7 87 C0 20 02 00 F9 89 C7 6A 57 83 CD FF EB 0E 90 90 90 90 8A 06 46 88 07 47 01 DB 75 07 8B 1E 83 EE FC 11 DB 72 ED B8 01 00 00 00 01 DB 75 07 8B 1E 83 EE FC 11 DB 11 C0 01 DB 73 EF 75 09 8B 1E 83 EE FC 11 DB 73 E4 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule VX__Tibs_Zhelatin__StormWorm__variant
 {
 meta:
@@ -2009,10 +2009,10 @@ strings:
     	$a0 = { FF 74 24 1C 58 8D 80 ?? ?? 77 04 50 68 62 34 35 04 E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Thinstall_3_035____Jtit
 {
 meta:
@@ -2021,10 +2021,10 @@ strings:
     	$a0 = { 9C 60 68 53 74 41 6C 68 54 68 49 6E E8 00 00 00 00 58 BB 37 1F 00 00 2B C3 50 68 ?? ?? ?? ?? 68 00 28 00 00 68 04 01 00 00 E8 BA FE FF FF E9 90 FF FF FF CC CC CC CC CC CC CC 55 8B EC 83 C4 F4 FC 53 57 56 8B 75 08 8B 7D 0C C7 45 FC 08 00 00 00 33 DB BA 00 00 00 80 43 33 C0 E8 19 01 00 00 73 0E 8B 4D F8 E8 27 01 00 00 02 45 F7 AA EB E9 E8 04 01 00 00 0F 82 96 00 00 00 E8 F9 00 00 00 73 5B B9 04 00 00 00 E8 05 01 00 00 48 74 DE 0F 89 C6 00 00 00 E8 DF 00 00 00 73 1B 55 BD 00 01 00 00 E8 DF 00 00 00 88 07 47 4D 75 F5 E8 C7 00 00 00 72 E9 5D EB A2 B9 01 00 00 00 E8 D0 00 00 00 83 C0 07 89 45 F8 C6 45 F7 00 83 F8 08 74 89 E8 B1 00 00 00 88 45 F7 E9 7C FF FF FF B9 07 00 00 00 E8 AA 00 00 00 50 33 C9 B1 02 E8 A0 00 00 00 8B C8 41 41 58 0B C0 74 04 8B D8 EB 5E 83 F9 02 74 6A 41 E8 88 00 00 00 89 45 FC E9 48 FF FF FF E8 87 00 00 00 49 E2 09 8B C3 E8 7D 00 00 00 EB 3A 49 8B C1 55 8B 4D FC 8B E8 33 C0 D3 E5 E8 5D 00 00 00 0B C5 5D 8B D8 E8 5F 00 00 00 3D 00 00 01 00 73 14 3D FF 37 00 00 73 0E 3D 7F 02 00 00 73 08 83 F8 7F 77 04 41 41 41 41 56 8B F7 2B F0 F3 A4 5E E9 F0 FE FF FF 33 C0 EB 05 8B C7 2B 45 0C 5E 5F 5B C9 C2 08 00 03 D2 75 08 8B 16 83 C6 04 F9 13 D2 C3 B9 08 00 00 00 E8 01 00 00 00 C3 33 C0 E8 E1 FF FF FF 13 C0 E2 F7 C3 33 C9 41 E8 D4 FF FF FF 13 C9 E8 CD FF FF FF 72 F2 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Patch_Creation_Wizard_1_2_Memory_Patch
 {
 meta:
@@ -2036,7 +2036,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Vx__Danish_tiny
 {
 meta:
@@ -2045,10 +2045,10 @@ strings:
     	$a0 = { 33 C9 B4 4E CD 21 73 02 FF ?? BA ?? 00 B8 ?? 3D CD 21 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NsPacK_V3_6____LiuXingPing
 {
 meta:
@@ -2057,10 +2057,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 5D 83 ED 07 8D ?? ?? ?? ?? ?? 83 38 01 0F 84 47 02 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule VProtector_V1_0__Build_2004_12_13
 {
 meta:
@@ -2069,10 +2069,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 1A 89 40 00 68 56 89 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 E8 03 00 00 00 C7 84 00 58 EB 01 E9 83 C0 07 50 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RCryptor_2_0____Vaska
 {
 meta:
@@ -2081,10 +2081,10 @@ strings:
     	$a0 = { F7 D1 83 F1 FF 6A 00 F7 D1 83 F1 FF 81 04 24 ?? ?? ?? ?? F7 D1 83 F1 FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_1_2_0_0____Obsidium_Software
 {
 meta:
@@ -2093,10 +2093,10 @@ strings:
     	$a0 = { EB 02 ?? ?? E8 3F 1E 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PE_Encrypt_1_0____Liwuyue
 {
 meta:
@@ -2105,10 +2105,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 D0 53 56 57 8D 75 FC 8B 44 24 30 25 00 00 FF FF 81 38 4D 5A 90 00 74 07 2D 00 10 00 00 EB F1 89 45 FC E8 C8 FF FF FF 2D 0F 05 00 00 89 45 F4 8B 06 8B 40 3C 03 06 8B 40 78 03 06 8B C8 8B 51 20 03 16 8B 59 24 03 1E 89 5D F0 8B 59 1C 03 1E 89 5D EC 8B 41 18 8B C8 49 85 C9 72 5A 41 33 C0 8B D8 C1 E3 02 03 DA 8B 3B 03 3E 81 3F 47 65 74 50 75 40 8B DF 83 C3 04 81 3B 72 6F 63 41 75 33 8B DF 83 C3 08 81 3B 64 64 72 65 75 26 83 C7 0C 66 81 3F 73 73 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule CRYPT_Version_1_7__c__Dismember__EXE_
 {
 meta:
@@ -2117,10 +2117,10 @@ strings:
     	$a0 = { 0E 17 9C 58 F6 ?? ?? 74 ?? E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PolyCrypt_PE___2_1_4b_2_1_5____JLab_Software_Creations__h_oep_
 {
 meta:
@@ -2132,7 +2132,7 @@ condition:
     	$a0
 }
 
-    
+
 rule ASPack_v1_08_01____Alexey_Solodovnikov
 {
 meta:
@@ -2141,10 +2141,10 @@ strings:
     	$a0 = { 60 EB ?? 5D EB ?? FF ?? ?? ?? ?? ?? E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Hide_Protect_V1_0X___SoftWar_Company
 {
 meta:
@@ -2153,10 +2153,10 @@ strings:
     	$a0 = { 90 90 90 E9 D8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SimbiOZ_PolyCryptor_v_xx___Extranger
 {
 meta:
@@ -2165,10 +2165,10 @@ strings:
     	$a0 = { 55 60 E8 00 00 00 00 5D 81 ED ?? ?? ?? ?? 8D 85 ?? ?? ?? ?? 68 ?? ?? ?? ?? 50 E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PESpin_v0_1____Cyberbob__h_
 {
 meta:
@@ -2178,10 +2178,10 @@ strings:
 	$a1 = { EB 01 68 60 E8 00 00 00 00 8B 1C 24 83 C3 12 81 2B E8 B1 06 00 FE 4B FD 82 2C 24 5C CB 46 00 0B E4 74 9E 75 01 C7 81 73 04 D7 7A F7 2F 81 73 19 77 00 43 B7 F6 C3 6B B7 00 00 F9 FF E3 C9 C2 08 00 A3 68 72 01 FF 5D 33 C9 41 E2 17 EB 07 EA EB 01 EB EB 0D FF }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule nPack_V1_1_200_2006_Beta____NEOx__uinC
 {
 meta:
@@ -2190,10 +2190,10 @@ strings:
     	$a0 = { 83 3D 40 ?? ?? ?? 00 75 05 E9 01 00 00 00 C3 E8 41 00 00 00 B8 80 ?? ?? ?? 2B 05 08 ?? ?? ?? A3 3C ?? ?? ?? E8 5E 00 00 00 E8 EC 01 00 00 E8 F8 06 00 00 E8 03 06 00 00 A1 3C ?? ?? ?? C7 05 40 ?? ?? ?? 01 00 00 00 01 05 00 ?? ?? ?? FF 35 00 ?? ?? ?? C3 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Unpacked_BS_SFX_Archive_v1_9
 {
 meta:
@@ -2202,10 +2202,10 @@ strings:
     	$a0 = { 1E 33 C0 50 B8 ?? ?? 8E D8 FA 8E D0 BC ?? ?? FB B8 ?? ?? CD 21 3C 03 73 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule CodeCrypt_v0_14b
 {
 meta:
@@ -2214,10 +2214,10 @@ strings:
     	$a0 = { E9 C5 02 00 00 EB 02 83 3D 58 EB 02 FF 1D 5B EB 02 0F C7 5F }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PE_Pack_v0_99
 {
 meta:
@@ -2226,10 +2226,10 @@ strings:
     	$a0 = { 60 E8 ?? ?? ?? ?? 5D 83 ED 06 80 BD E0 04 ?? ?? 01 0F 84 F2 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule mPack_0_0_3____DeltaAziz
 {
 meta:
@@ -2239,10 +2239,10 @@ strings:
 	$a1 = { 55 8B EC 83 C4 F0 33 C0 89 45 F0 B8 A8 76 00 10 E8 67 C4 FF FF 33 C0 55 68 C2 78 00 10 64 FF 30 64 89 20 8D 55 F0 33 C0 E8 93 C8 FF FF 8B 45 F0 E8 87 CB FF FF A3 08 A5 00 10 33 C0 55 68 A5 78 00 10 64 FF 30 64 89 20 A1 08 A5 00 10 E8 FA C9 FF FF 83 F8 FF }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Vx__Grazie_883
 {
 meta:
@@ -2251,10 +2251,10 @@ strings:
     	$a0 = { 1E 0E 1F 50 06 BF 70 03 B4 1A BA 70 03 CD 21 B4 47 B2 00 BE 32 04 CD 21 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEEncrypt_v4_0b__JunkCode_
 {
 meta:
@@ -2263,10 +2263,10 @@ strings:
     	$a0 = { 66 ?? ?? 00 66 83 ?? 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__Borland_C___DLL__Method_2__
 {
 meta:
@@ -2275,10 +2275,10 @@ strings:
     	$a0 = { EB 10 66 62 3A 43 2B 2B 48 4F 4F 4B 90 E9 90 90 90 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__Eddie_2100
 {
 meta:
@@ -2287,10 +2287,10 @@ strings:
     	$a0 = { E8 ?? ?? 4F 4F 0E E8 ?? ?? 47 47 1E FF ?? ?? CB E8 ?? ?? 84 C0 ?? ?? 50 53 56 57 1E 06 B4 51 CD 21 8E C3 ?? ?? ?? ?? ?? ?? ?? 8B F2 B4 2F CD 21 AC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vcasm_Protector_1_0e____vcasm
 {
 meta:
@@ -2299,10 +2299,10 @@ strings:
     	$a0 = { EB 0A 5B 56 50 72 6F 74 65 63 74 5D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PESpin_v1_3beta____Cyberbob__h_
 {
 meta:
@@ -2312,10 +2312,10 @@ strings:
 	$a1 = { EB 01 68 60 E8 00 00 00 00 8B 1C 24 83 C3 12 81 2B E8 B1 06 00 FE 4B FD 82 2C 24 71 DF 46 00 0B E4 74 9E 75 01 C7 81 73 04 D7 7A F7 2F 81 73 19 77 00 43 B7 F6 C3 6B B7 00 00 F9 FF E3 C9 C2 08 00 A3 68 72 01 FF 5D 33 C9 41 E2 17 EB 07 EA EB 01 EB EB 0D FF E8 01 00 00 00 EA 5A 83 EA 0B FF E2 EB 04 9A EB 04 00 EB FB FF 8B 95 ?? 4E 40 00 8B 42 3C 03 C2 89 85 ?? 4E 40 00 EB 02 12 77 F9 72 08 73 0E F9 83 04 24 17 C3 E8 04 00 00 00 0F F5 73 11 EB 06 9A 72 ED 1F EB 07 F5 72 0E F5 72 F8 68 EB EC 83 04 24 07 F5 FF 34 24 C3 41 C1 E1 07 8B 0C 01 03 CA E8 03 00 00 00 EB 04 9A EB FB 00 83 04 24 0C C3 3B 8B 59 10 03 DA 8B 1B 89 9D ?? 4E 40 00 53 8F 85 ?? 4C 40 00 EB 07 FA EB 01 FF EB 04 E3 EB F8 69 8B 59 38 03 DA 8B 3B 89 BD ?? 4F 40 00 8D 5B 04 8B 1B 89 9D ?? 4F 40 00 E8 00 00 00 00 58 01 68 05 68 BC 65 0F E2 B8 77 CE 2F B1 35 73 CE 2F B1 03 E0 F7 D8 81 2C 04 13 37 CF E1 FF 64 24 FC FF 25 10 BB ?? 00 00 00 B9 84 12 00 00 8D BD ?? 4F 40 00 4F EB 07 FA EB 01 FF EB 04 E3 EB F8 69 30 1C 39 FE CB 49 9C }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PE_Crypt32_v1_02
 {
 meta:
@@ -2324,10 +2324,10 @@ strings:
     	$a0 = { E8 00 00 00 00 5B 83 ?? ?? EB ?? 52 4E 44 21 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Petite_v2_2____www_un4seen_com_petite
 {
 meta:
@@ -2337,10 +2337,10 @@ strings:
 	$a1 = { B8 00 ?0 4? 00 6? 00 ?? ?? 0? ?? ?? ?? ?? ?? 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1
+    	$a0 at manape.ep or $a1
 }
 
-    
+
 rule yoda_s_Protector_1_01____Ashkbiz_Danehkar__h_
 {
 meta:
@@ -2352,7 +2352,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PELOCKnt_2_04
 {
 meta:
@@ -2361,10 +2361,10 @@ strings:
     	$a0 = { EB 03 CD 20 C7 1E EB 03 CD 20 EA 9C EB 02 EB 01 EB 01 EB 60 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__ACME__Clonewar_Mutant_
 {
 meta:
@@ -2373,10 +2373,10 @@ strings:
     	$a0 = { FC AD 3D FF FF 74 20 E6 42 8A C4 E6 42 E4 61 0C 03 E6 61 AD B9 40 1F E2 FE }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule VProtector_1_1X____vcasm
 {
 meta:
@@ -2385,10 +2385,10 @@ strings:
     	$a0 = { EB 0B 5B 56 50 72 6F 74 65 63 74 5D 00 E8 24 00 00 00 8B 44 24 04 8B 00 3D 04 00 00 80 75 08 8B 64 24 08 EB 04 58 EB 0C E9 64 8F 05 00 00 00 00 74 F3 75 F1 EB 24 64 FF 35 00 00 00 00 EB 12 FF 9C 74 03 75 01 E9 81 0C 24 00 01 00 00 9D 90 EB F4 64 89 25 00 00 00 00 EB E6 E8 16 00 00 00 8B 5C 24 0C 8B A3 C4 00 00 00 64 8F 05 00 00 00 00 83 C4 04 EB 14 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 33 C9 99 F7 F1 E9 E8 03 00 00 00 C7 84 00 58 EB 01 E9 83 C0 07 50 C3 FF 35 E8 16 00 00 00 8B 5C 24 0C 8B A3 C4 00 00 00 64 8F 05 00 00 00 00 83 C4 04 EB 14 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 33 C9 99 F7 F1 E9 E8 03 00 00 00 C7 84 00 58 EB 01 E9 83 C0 07 50 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule X_PEOR_v0_99b
 {
 meta:
@@ -2398,10 +2398,10 @@ strings:
 	$a1 = { E8 00 00 00 00 5D 8B CD 81 ED 7A 29 40 00 89 AD 0F 6D 40 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PCShrink_0_71_beta
 {
 meta:
@@ -2410,10 +2410,10 @@ strings:
     	$a0 = { 01 AD 54 3A 40 00 FF B5 50 3A 40 00 6A 40 FF 95 88 3A 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v2_85
 {
 meta:
@@ -2422,10 +2422,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 68 ?? ?? ?? 68 ?? ?? ?? ?? 64 A1 ?? ?? ?? ?? 50 64 89 25 ?? ?? ?? ?? 83 EC 58 53 56 57 89 65 E8 FF 15 28 ?? ?? ?? 33 D2 8A D4 89 15 24 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_V1_3_3_3____Obsidium_Software
 {
 meta:
@@ -2434,10 +2434,10 @@ strings:
     	$a0 = { EB 02 ?? ?? E8 29 00 00 00 EB 03 ?? ?? ?? EB 03 ?? ?? ?? 8B ?? 24 0C EB 01 ?? 83 ?? B8 00 00 00 28 EB 03 ?? ?? ?? 33 C0 EB 01 ?? C3 EB 04 ?? ?? ?? ?? EB 02 ?? ?? 64 67 FF 36 00 00 EB 04 ?? ?? ?? ?? 64 67 89 26 00 00 EB 02 ?? ?? EB 04 ?? ?? ?? ?? 50 EB 04 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule kkrunchy_0_23_alpha____Ryd
 {
 meta:
@@ -2446,10 +2446,10 @@ strings:
     	$a0 = { BD 08 ?? ?? 00 C7 45 00 ?? ?? ?? 00 FF 4D 08 C6 45 0C 05 8D 7D 14 31 C0 B4 04 89 C1 F3 AB BF ?? ?? ?? 00 57 BE ?? ?? ?? 00 31 C9 41 FF 4D 0C 8D 9C 8D A0 00 00 00 FF D6 10 C9 73 F3 FF 45 0C 91 AA 83 C9 FF 8D 5C 8D 18 FF D6 74 DD E3 17 8D 5D 1C FF D6 74 10 8D 9D A0 08 00 00 E8 ?? 00 00 00 8B 45 10 EB 42 8D 9D A0 04 00 00 E8 ?? 00 00 00 49 49 78 40 8D 5D 20 74 03 83 C3 40 31 D2 42 E8 ?? 00 00 00 8D 0C 48 F6 C2 10 74 F3 41 91 8D 9D A0 08 00 00 E8 ?? 00 00 00 3D 00 08 00 00 83 D9 FF 83 F8 60 83 D9 FF 89 45 10 56 89 FE 29 C6 F3 A4 5E EB 90 BE ?? ?? ?? 00 BB ?? ?? ?? 00 55 46 AD 85 C0 74 ?? 97 56 FF 13 85 C0 74 16 95 AC 84 C0 75 FB 38 06 74 E8 78 ?? 56 55 FF 53 04 AB 85 C0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Crunch_5___Fusion_4____Bit_Arts
 {
 meta:
@@ -2458,10 +2458,10 @@ strings:
     	$a0 = { EB 15 03 00 00 00 06 00 00 00 00 00 00 00 00 00 00 00 68 00 00 00 00 55 E8 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule XPack_1_67__com_
 {
 meta:
@@ -2470,10 +2470,10 @@ strings:
     	$a0 = { E9 53 00 FF FD FF FB FF F9 FF BC 03 00 8B E5 4C 4C C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule REC_Small_v1_02
 {
 meta:
@@ -2482,10 +2482,10 @@ strings:
     	$a0 = { 8C D8 1E E8 ?? ?? 83 ?? ?? 5D B9 ?? ?? 81 ?? ?? ?? 40 8E D8 2B DB B2 ?? ?? ?? FE C2 43 83 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__CodeSafe_2_0______Anorganix
 {
 meta:
@@ -2494,10 +2494,10 @@ strings:
     	$a0 = { 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 0B 83 EC 10 53 56 57 E8 C4 01 00 85 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule WebCops__DLL
 {
 meta:
@@ -2506,10 +2506,10 @@ strings:
     	$a0 = { A8 BE 58 DC D6 CC C4 63 4A 0F E0 02 BB CE F3 5C 50 23 FB 62 E7 3D 2B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule mucki_s_protector_II____mucki
 {
 meta:
@@ -2519,10 +2519,10 @@ strings:
 	$a1 = { E8 24 00 00 00 8B 4C 24 0C C7 01 17 00 01 00 C7 81 B8 00 00 00 00 00 00 00 31 C0 89 41 14 89 41 18 80 6A 00 E8 85 C0 74 12 64 8B 3D 18 00 00 00 8B 7F 30 0F B6 47 02 85 C0 74 01 C3 C7 04 24 ?? ?? ?? ?? BE ?? ?? ?? ?? B9 ?? ?? ?? ?? 8A 06 F6 D0 88 06 46 E2 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule ASPack_v1_02b
 {
 meta:
@@ -2532,10 +2532,10 @@ strings:
 	$a1 = { 60 E8 ?? ?? ?? ?? 5D 81 ED 96 78 43 ?? B8 90 78 43 ?? 03 C5 2B 85 7D 7C 43 ?? 89 85 89 7C 43 ?? 80 BD 74 7C 43 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule ASPack_v1_02a
 {
 meta:
@@ -2544,10 +2544,10 @@ strings:
     	$a0 = { 60 E8 ?? ?? ?? ?? 5D 81 ED 3E D9 43 ?? B8 38 ?? ?? ?? 03 C5 2B 85 0B DE 43 ?? 89 85 17 DE 43 ?? 80 BD 01 DE 43 ?? ?? 75 15 FE 85 01 DE 43 ?? E8 1D ?? ?? ?? E8 79 02 ?? ?? E8 12 03 ?? ?? 8B 85 03 DE 43 ?? 03 85 17 DE 43 ?? 89 44 24 1C 61 FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASPack_v2_1
 {
 meta:
@@ -2556,10 +2556,10 @@ strings:
     	$a0 = { 60 E8 72 05 00 00 EB 33 87 DB 90 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ExeShield_Cryptor_1_3RC____Tom_Commander
 {
 meta:
@@ -2568,10 +2568,10 @@ strings:
     	$a0 = { 55 8B EC 53 56 57 60 E8 00 00 00 00 5D 81 ED 8C 21 40 00 B9 51 2D 40 00 81 E9 E6 21 40 00 8B D5 81 C2 E6 21 40 00 8D 3A 8B F7 33 C0 EB 04 90 EB 01 C2 AC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Alex_Protector_1_0_beta_2_by_Alex
 {
 meta:
@@ -2581,10 +2581,10 @@ strings:
 	$a1 = { 60 E8 00 00 00 00 5D 81 ED 06 10 40 00 E8 24 00 00 00 EB 01 E9 8B 44 24 0C EB 03 EB 03 C7 EB FB E8 01 00 00 00 A8 83 C4 04 83 80 B8 00 00 00 02 33 C0 EB 01 E9 C3 58 83 C4 04 EB 03 EB 03 C7 EB FB E8 01 00 00 00 A8 83 C4 04 50 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 EB 01 E9 FF FF 60 EB 03 EB 03 C7 EB FB E8 01 00 00 00 A8 83 C4 04 0F 31 8B D8 EB 03 EB 03 C7 EB FB E8 01 00 00 00 A8 83 C4 04 8B CA EB 03 EB 03 C7 EB FB E8 01 00 00 00 A8 83 C4 04 0F 31 2B C3 EB 03 EB 03 C7 EB FB E8 01 00 00 00 A8 83 C4 04 1B D1 0F 31 03 C3 EB 03 EB 03 C7 EB FB E8 01 00 00 00 A8 83 C4 04 13 D1 0F 31 2B C3 EB 03 EB 03 C7 EB FB E8 01 00 00 00 A8 83 C4 04 EB 05 68 F0 0F C7 C8 EB 03 EB 03 C7 EB FB E8 01 00 00 00 A8 83 C4 04 1B D1 EB 03 EB 03 C7 EB FB E8 01 00 00 00 A8 83 C4 04 85 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule UPX_2_90__LZMA_____Markus_Oberhumer__Laszlo_Molnar___John_Reiser
 {
 meta:
@@ -2594,10 +2594,10 @@ strings:
 	$a1 = { 60 BE ?? ?? ?? ?? 8D BE ?? ?? ?? ?? 57 83 CD FF EB 10 90 90 90 90 90 90 8A 06 46 88 07 47 01 DB 75 07 8B 1E 83 EE FC 11 DB 72 ED B8 01 00 00 00 01 DB 75 07 8B 1E 83 EE FC 11 DB 11 C0 01 DB }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__Lockless_Intro_Pack______Anorganix
 {
 meta:
@@ -2606,10 +2606,10 @@ strings:
     	$a0 = { 2C E8 EB 1A 90 90 5D 8B C5 81 ED F6 73 90 90 2B 85 90 90 90 90 83 E8 06 89 85 FF 01 EC AD E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PocketPC_ARM__h_
 {
 meta:
@@ -2618,10 +2618,10 @@ strings:
     	$a0 = { F0 41 2D E9 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? A0 E1 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 50 E3 ?? 00 00 0A ?? ?? ?? ?? ?? ?? A0 ?? ?? ?? ?? ?? ?? ?? A0 ?? ?? ?? A0 E1 00 80 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? A0 E1 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule WARNING____TROJAN____ADinjector
 {
 meta:
@@ -2630,10 +2630,10 @@ strings:
     	$a0 = { 90 61 BE 00 20 44 00 8D BE 00 F0 FB FF C7 87 9C E0 04 00 6A F0 8A 5E 57 83 CD FF EB 0E }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_3_01__3_05
 {
 meta:
@@ -2645,7 +2645,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Thinstall_Virtualization_Suite_V3_049_V3_080____Thinstall_Company___Sign_by_fly
 {
 meta:
@@ -2654,10 +2654,10 @@ strings:
     	$a0 = { 9C 60 68 53 74 41 6C 68 54 68 49 6E E8 00 00 00 00 58 BB 37 1F 00 00 2B C3 50 68 ?? ?? ?? ?? 68 00 2C 00 00 68 04 01 00 00 E8 BA FE FF FF E9 90 FF FF FF CC CC CC CC CC CC CC 55 8B EC 83 C4 F4 FC 53 57 56 8B 75 08 8B 7D 0C C7 45 FC 08 00 00 00 33 DB BA 00 00 00 80 43 33 C0 E8 19 01 00 00 73 0E 8B 4D F8 E8 27 01 00 00 02 45 F7 AA EB E9 E8 04 01 00 00 0F 82 96 00 00 00 E8 F9 00 00 00 73 5B B9 04 00 00 00 E8 05 01 00 00 48 74 DE 0F 89 C6 00 00 00 E8 DF 00 00 00 73 1B 55 BD 00 01 00 00 E8 DF 00 00 00 88 07 47 4D 75 F5 E8 C7 00 00 00 72 E9 5D EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule D1NS1G____D1N
 {
 meta:
@@ -2669,7 +2669,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Armadillo_v2_xx__CopyMem_II_
 {
 meta:
@@ -2678,10 +2678,10 @@ strings:
     	$a0 = { 6A ?? 8B B5 ?? ?? ?? ?? C1 E6 04 8B 85 ?? ?? ?? ?? 25 07 ?? ?? 80 79 05 48 83 C8 F8 40 33 C9 8A 88 ?? ?? ?? ?? 8B 95 ?? ?? ?? ?? 81 E2 07 ?? ?? 80 79 05 4A 83 CA F8 42 33 C0 8A 82 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PESpin_1_3beta____Cyberbob__h_
 {
 meta:
@@ -2693,7 +2693,7 @@ condition:
     	$a0
 }
 
-    
+
 rule tElock_v0_92a
 {
 meta:
@@ -2702,10 +2702,10 @@ strings:
     	$a0 = { E9 7E E9 FF FF 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__Code_Lock______Anorganix
 {
 meta:
@@ -2714,10 +2714,10 @@ strings:
     	$a0 = { 43 4F 44 45 2D 4C 4F 43 4B 2E 4F 43 58 00 01 28 01 50 4B 47 05 4C 3F B4 04 4D 4C 47 4B E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule nPack_V1_1_250_2006_Beta____NEOx__uinC
 {
 meta:
@@ -2726,10 +2726,10 @@ strings:
     	$a0 = { 83 3D 04 ?? ?? ?? 00 75 05 E9 01 00 00 00 C3 E8 46 00 00 00 E8 73 00 00 00 B8 2E ?? ?? ?? 2B 05 08 ?? ?? ?? A3 00 ?? ?? ?? E8 9C 00 00 00 E8 04 02 00 00 E8 FB 06 00 00 E8 1B 06 00 00 A1 00 ?? ?? ?? C7 05 04 ?? ?? ?? 01 00 00 00 01 05 00 ?? ?? ?? FF 35 00 ?? ?? ?? C3 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_Full_Edition_1_17_iBox__LZMA_____Ap0x
 {
 meta:
@@ -2738,10 +2738,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 8D B5 67 30 00 00 8D 9D 66 03 00 00 33 FF ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 6A 40 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 6A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule VProtector_1_3X____vcasm
 {
 meta:
@@ -2751,10 +2751,10 @@ strings:
 	$a1 = { 00 00 00 00 00 ?? ?? ?? ?? 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 6B 65 72 6E 65 6C 33 32 2E 64 6C 6C 00 00 00 00 47 65 74 50 72 6F 63 41 64 64 72 65 73 73 00 00 00 47 65 74 4D 6F 64 75 6C 65 48 61 6E 64 6C 65 41 00 00 00 4C 6F 61 64 4C 69 62 72 61 72 79 41 00 60 8B B4 24 24 00 00 00 8B BC 24 28 00 00 00 FC C6 C2 80 33 DB A4 C6 C3 02 E8 A9 00 00 00 0F 83 F1 FF FF FF 33 C9 E8 9C 00 00 00 0F 83 2D 00 00 00 33 C0 E8 8F 00 00 00 0F 83 37 00 00 00 C6 C3 02 41 C6 C0 10 E8 7D 00 00 00 10 C0 0F 83 F3 FF FF FF }
 
 condition:
-    	$a0 at sgpe.ep or $a1
+    	$a0 at manape.ep or $a1
 }
 
-    
+
 rule ASProtect_V2_X_DLL____Alexey_Solodovnikov
 {
 meta:
@@ -2763,10 +2763,10 @@ strings:
     	$a0 = { 60 E8 03 00 00 00 E9 ?? ?? 5D 45 55 C3 E8 01 00 00 00 EB 5D BB ?? ?? ?? ?? 03 DD }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__Slowload
 {
 meta:
@@ -2775,10 +2775,10 @@ strings:
     	$a0 = { 03 D6 B4 40 CD 21 B8 02 42 33 D2 33 C9 CD 21 8B D6 B9 78 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PE_Crypt32__Console_v1_0__v1_01__v1_02_
 {
 meta:
@@ -2787,10 +2787,10 @@ strings:
     	$a0 = { E8 00 00 00 00 5B 83 EB 05 EB 04 52 4E 44 21 EB 02 CD 20 EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_v0_76_1__pe_exe
 {
 meta:
@@ -2799,10 +2799,10 @@ strings:
     	$a0 = { 60 BE ?? ?? ?? ?? 8D ?? ?? ?? ?? ?? 66 ?? ?? ?? ?? ?? ?? 57 83 ?? ?? 31 DB EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Hying_s_PE_Armor_0_75_exe____Hying__CCG_
 {
 meta:
@@ -2814,7 +2814,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Alloy_4_x____PGWare_LLC
 {
 meta:
@@ -2824,10 +2824,10 @@ strings:
 	$a1 = { 9C 60 E8 02 00 00 00 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 07 30 40 00 87 DD 6A 04 68 00 10 00 00 68 00 02 00 00 6A 00 FF 95 A8 33 40 00 0B C0 0F 84 F6 01 00 00 89 85 2E 33 40 00 83 BD E8 32 40 00 01 74 0D 83 BD E4 32 40 00 01 74 2A 8B F8 EB 3E 68 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule MSLRH_0_32a__fake_PC_Guard_4_xx_____emadicius
 {
 meta:
@@ -2839,7 +2839,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_2__CD_Cops_II_
 {
 meta:
@@ -2848,10 +2848,10 @@ strings:
     	$a0 = { 53 60 BD 90 90 90 90 8D 45 90 8D 5D 90 E8 00 00 00 00 8D 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Thinstall_V2_7X____Jitit
 {
 meta:
@@ -2860,10 +2860,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 58 BB ?? ?? ?? ?? 2B C3 50 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Inno_Setup_Module_v1_09a
 {
 meta:
@@ -2872,10 +2872,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 C0 53 56 57 33 C0 89 45 F0 89 45 C4 89 45 C0 E8 A7 7F FF FF E8 FA 92 FF FF E8 F1 B3 FF FF 33 C0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NsPack_1_4_by_North_Star__Liu_Xing_Ping_
 {
 meta:
@@ -2887,7 +2887,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_2__PE_Intro_1_0______Anorganix
 {
 meta:
@@ -2896,10 +2896,10 @@ strings:
     	$a0 = { 8B 04 24 9C 60 E8 14 00 00 00 5D 81 ED 0A 45 40 90 80 BD 67 44 40 90 90 0F 85 48 FF ED 0A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__PE_Pack_0_99_
 {
 meta:
@@ -2908,10 +2908,10 @@ strings:
     	$a0 = { 60 E8 11 00 00 00 5D 83 ED 06 80 BD E0 04 90 90 01 0F 84 F2 FF CC 0A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLP_v0_7_3beta____ap0x__h_
 {
 meta:
@@ -2923,7 +2923,7 @@ condition:
     	$a0
 }
 
-    
+
 rule dUP_2_x_Patcher_____www_diablo2oo2_cjb_net
 {
 meta:
@@ -2935,7 +2935,7 @@ condition:
     	$a0
 }
 
-    
+
 rule __PseudoSigner_0_1__Neolite_2_0______Anorganix
 {
 meta:
@@ -2944,10 +2944,10 @@ strings:
     	$a0 = { E9 A6 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECryptor_V2_2X____softcomplete_com
 {
 meta:
@@ -2959,7 +2959,7 @@ condition:
     	$a0
 }
 
-    
+
 rule AZProtect_0x0001____AlexZ_aka_AZCRC
 {
 meta:
@@ -2968,10 +2968,10 @@ strings:
     	$a0 = { EB 70 FC 60 8C 80 4D 11 00 70 25 81 00 40 0D 91 BB 60 8C 80 4D 11 00 70 21 81 1D 61 0D 81 00 40 CE 60 8C 80 4D 11 00 70 25 81 25 81 25 81 25 81 29 61 41 81 31 61 1D 61 00 40 B7 30 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule eXPressor_V1_4_5_1____CGSoftLabs
 {
 meta:
@@ -2981,10 +2981,10 @@ strings:
 	$a1 = { 55 8B EC 83 EC ?? 53 56 57 83 65 ?? 00 F3 EB 0C }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule RLPack_V1_0_beta____ap0x
 {
 meta:
@@ -2993,10 +2993,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8D 64 24 04 8B 6C 24 FC 8D B5 4C 02 00 00 8D 9D 13 01 00 00 33 FF EB 0F FF 74 37 04 FF 34 37 FF D3 83 C4 08 83 C7 08 83 3C 37 00 75 EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PE_Protect_0_9_by_Cristoph_Gabler_1998
 {
 meta:
@@ -3008,7 +3008,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PE_Intro_v1_0
 {
 meta:
@@ -3017,10 +3017,10 @@ strings:
     	$a0 = { 8B 04 24 9C 60 E8 ?? ?? ?? ?? 5D 81 ED 0A 45 40 ?? 80 BD 67 44 40 ?? ?? 0F 85 48 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Pksmart_1_0b
 {
 meta:
@@ -3029,10 +3029,10 @@ strings:
     	$a0 = { BA ?? ?? 8C C8 8B C8 03 C2 81 ?? ?? ?? 51 B9 ?? ?? 51 1E 8C D3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RatPacker__Glue__stub
 {
 meta:
@@ -3042,10 +3042,10 @@ strings:
 	$a1 = { 40 20 FF ?? ?? ?? ?? ?? ?? ?? ?? BE ?? 60 40 ?? 8D BE ?? B0 FF FF }
 
 condition:
-    	$a0 at sgpe.ep or $a1
+    	$a0 at manape.ep or $a1
 }
 
-    
+
 rule R_SC_s_Process_Patcher_v1_5_1
 {
 meta:
@@ -3058,7 +3058,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule ASProtect_v1_23_RC1
 {
 meta:
@@ -3067,10 +3067,10 @@ strings:
     	$a0 = { 68 01 ?? ?? 00 E8 01 00 00 00 C3 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule yzpack_V2_0____UsAr
 {
 meta:
@@ -3079,10 +3079,10 @@ strings:
     	$a0 = { 25 ?? ?? ?? ?? 61 87 CC 55 45 45 55 81 ED CA 00 00 00 55 A4 B3 02 FF 14 24 73 F8 33 C9 FF 14 24 73 18 33 C0 FF 14 24 73 1F B3 02 41 B0 10 FF 14 24 12 C0 73 F9 75 3C AA EB DC FF 54 24 04 2B CB 75 0F FF 54 24 08 EB 27 AC D1 E8 74 30 13 C9 EB 1B 91 48 C1 E0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__Neolite_2_0______Anorganix
 {
 meta:
@@ -3091,10 +3091,10 @@ strings:
     	$a0 = { E9 A6 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 00 01 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_V1_3_0_4____Obsidium_Software
 {
 meta:
@@ -3103,10 +3103,10 @@ strings:
     	$a0 = { EB 02 ?? ?? E8 ?? 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule LZEXE_v0_91__v1_00a__2_
 {
 meta:
@@ -3115,10 +3115,10 @@ strings:
     	$a0 = { BF ?? ?? 06 89 F9 0E 41 1F 8C CB 89 FE }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_v0_60___v0_61
 {
 meta:
@@ -3127,10 +3127,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 58 83 E8 3D 50 8D B8 ?? ?? ?? FF 57 8D B0 E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEQuake_0_06___forgat
 {
 meta:
@@ -3142,7 +3142,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Vcasm_Protector_V1_X____vcasm
 {
 meta:
@@ -3151,10 +3151,10 @@ strings:
     	$a0 = { EB ?? 5B 56 50 72 6F 74 65 63 74 5D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule yoda_s_Protector_1_0x___Ashkbiz_Danehkar
 {
 meta:
@@ -3163,10 +3163,10 @@ strings:
     	$a0 = { 55 8B EC 53 56 57 E8 03 00 00 00 EB 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EEXE_Version_1_12
 {
 meta:
@@ -3175,9 +3175,9 @@ strings:
     	$a0 = { B4 30 CD 21 3C 03 73 ?? BA 1F 00 0E 1F B4 09 CD 21 B8 FF 4C CD 21 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
-    
+
 rule Thinstall_2_403____Jitit
 {
 meta:
@@ -3189,7 +3189,7 @@ condition:
     	$a0
 }
 
-    
+
 rule nSpack_V2_x____LiuXingPing
 {
 meta:
@@ -3201,7 +3201,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Upack_0_38_beta____Dwing
 {
 meta:
@@ -3213,7 +3213,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PESpin_0_7____Cyberbob__h_
 {
 meta:
@@ -3225,7 +3225,7 @@ condition:
     	$a0
 }
 
-    
+
 rule __PseudoSigner_0_1__PENinja_1_31______Anorganix
 {
 meta:
@@ -3234,10 +3234,10 @@ strings:
     	$a0 = { 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Exe_Locker_1_0____IonIce
 {
 meta:
@@ -3246,10 +3246,10 @@ strings:
     	$a0 = { E8 00 00 00 00 60 8B 6C 24 20 81 ED 05 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ProActivate_V1_0X____TurboPower_Software_Company
 {
 meta:
@@ -3258,10 +3258,10 @@ strings:
     	$a0 = { 55 8B EC B9 0E 00 00 00 6A 00 6A 00 49 75 F9 51 53 56 57 B8 ?? ?? ?? ?? 90 90 90 90 90 33 C0 55 68 ?? ?? ?? ?? 64 FF 30 64 89 20 A1 ?? ?? ?? ?? 83 C0 05 A3 ?? ?? ?? ?? C7 05 ?? ?? ?? ?? 0D 00 00 00 E8 85 E2 FF FF 81 3D ?? ?? ?? ?? 21 7E 7E 40 75 7A 81 3D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Encapsulated_Postscript_graphics_file_v3_0_EPSF_3_0
 {
 meta:
@@ -3273,7 +3273,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Upack_v0_32_Beta____Sign_by_hot_UNP
 {
 meta:
@@ -3286,7 +3286,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule ANDpakk2_0_18___by_Dmitry__quot_AND_quot__Andreev
 {
 meta:
@@ -3295,10 +3295,10 @@ strings:
     	$a0 = { FC BE D4 00 40 00 BF 00 ?? ?? 00 57 83 CD FF 33 C9 F9 EB 05 A4 02 DB 75 05 8A 1E 46 12 DB 72 F4 33 C0 40 02 DB 75 05 8A 1E 46 12 DB 13 C0 02 DB 75 05 8A 1E 46 12 DB 72 0E 48 02 DB 75 05 8A 1E 46 12 DB 13 C0 EB DC 83 E8 03 72 0F C1 E0 08 AC 83 F0 FF 74 4D D1 F8 8B E8 EB 09 02 DB 75 05 8A 1E 46 12 DB 13 C9 02 DB 75 05 8A 1E 46 12 DB 13 C9 75 1A 41 02 DB 75 05 8A 1E 46 12 DB 13 C9 02 DB 75 05 8A 1E 46 12 DB 73 EA 83 C1 02 81 FD 00 FB FF FF 83 D1 01 56 8D 34 2F F3 A4 5E E9 73 FF FF FF C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule WebCops__EXE_____LINK_Data_Security
 {
 meta:
@@ -3307,10 +3307,10 @@ strings:
     	$a0 = { EB 03 05 EB 02 EB FC 55 EB 03 EB 04 05 EB FB EB 53 E8 04 00 00 00 72 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Pe123_2006_4_4
 {
 meta:
@@ -3322,7 +3322,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Enigma_protector_1_10_1_11____Vladimir_Sukhov
 {
 meta:
@@ -3334,7 +3334,7 @@ condition:
     	$a0
 }
 
-    
+
 rule RJoiner_1_2a____Vaska
 {
 meta:
@@ -3344,10 +3344,10 @@ strings:
 	$a1 = { 55 8B EC 81 EC 0C 01 00 00 8D 85 F4 FE FF FF 56 50 68 04 01 00 00 FF 15 0C 10 40 00 94 90 94 8D 85 F4 FE FF FF 50 FF 15 08 10 40 00 94 90 94 BE 00 20 40 00 94 90 94 83 3E FF 74 7D 53 57 33 DB 8D 7E 04 94 90 94 53 68 80 00 00 00 6A 02 53 6A 01 68 00 00 00 C0 57 FF 15 04 10 40 00 89 45 F8 94 90 94 8B 06 8D 74 06 04 94 90 94 8D 45 FC 53 50 8D 46 04 FF 36 50 FF 75 F8 FF 15 00 10 40 00 94 90 94 FF 75 F8 FF 15 10 10 40 00 94 90 94 8D 85 F4 FE FF FF 6A 0A 50 53 57 68 20 10 40 00 53 FF 15 18 10 40 00 94 90 94 8B 06 8D 74 06 04 94 90 94 83 3E FF 75 89 5F 5B 33 C0 5E C9 C2 10 00 CC CC 24 11 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Armadillo_v4_30___4_40____Silicon_Realms_Toolworks
 {
 meta:
@@ -3360,7 +3360,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule PEiD_Bundle_V1_01____BoB___BobSoft
 {
 meta:
@@ -3369,10 +3369,10 @@ strings:
     	$a0 = { 60 E8 23 02 00 00 8B 44 24 04 52 48 66 31 C0 66 81 38 4D 5A 75 F5 8B 50 3C 81 3C 02 50 45 00 00 75 E9 5A C2 04 00 60 89 DD 89 C3 8B 45 3C 8B 54 28 78 01 EA 52 8B 52 20 01 EA 31 C9 41 8B 34 8A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASPack_v1_07b__DLL_
 {
 meta:
@@ -3381,10 +3381,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D ?? ?? ?? ?? ?? ?? B8 ?? ?? ?? ?? 03 C5 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule LY_WGKX____www_szleyu_com
 {
 meta:
@@ -3396,7 +3396,7 @@ condition:
     	$a0
 }
 
-    
+
 rule TheHyper_s_protector____TheHyper__h_
 {
 meta:
@@ -3407,10 +3407,10 @@ strings:
 	$a2 = { 55 8B EC 83 EC 14 8B FC E8 14 00 00 00 ?? ?? 01 01 ?? ?? 01 01 ?? ?? ?? 00 ?? ?? 01 01 ?? ?? 02 01 5E E8 0D 00 00 00 6B 65 72 6E 65 6C 33 32 2E 64 6C 6C 00 8B 46 04 FF 10 8B D8 E8 0D 00 00 00 56 69 72 74 75 61 6C 41 6C 6C 6F 63 00 53 8B 06 FF 10 89 07 E8 0C 00 00 00 56 69 72 74 75 61 6C 46 72 65 65 00 53 8B 06 FF 10 89 47 04 E8 0F 00 00 00 47 65 74 50 72 6F 63 65 73 73 48 65 61 70 00 53 8B 06 FF 10 89 47 08 E8 0A 00 00 00 48 65 61 70 41 6C 6C 6F 63 00 53 8B 06 FF 10 89 47 0C E8 09 00 00 00 48 65 61 70 46 72 65 65 00 53 8B 06 FF 10 89 47 10 57 FF 76 08 FF 76 0C FF 56 10 8B E5 5D }
 
 condition:
-    	$a0 or $a1 at sgpe.ep or $a2 at sgpe.ep
+    	$a0 or $a1 at manape.ep or $a2 at manape.ep
 }
 
-    
+
 rule Pelles_C_4_50_DLL__X86_CRT_LIB_
 {
 meta:
@@ -3422,7 +3422,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Vx__Igor
 {
 meta:
@@ -3431,10 +3431,10 @@ strings:
     	$a0 = { 1E B8 CD 7B CD 21 81 FB CD 7B 75 03 E9 87 00 33 DB 0E 1F 8C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule yoda_s_Protector_V1_0b____Ashkbiz_Danehkar___Sign_by_fly
 {
 meta:
@@ -3443,10 +3443,10 @@ strings:
     	$a0 = { 55 8B EC 53 56 57 60 E8 00 00 00 00 5D 81 ED 4C 32 40 00 E8 03 00 00 00 EB 01 ?? B9 EA 47 40 00 81 E9 E9 32 40 00 8B D5 81 C2 E9 32 40 00 8D 3A 8B F7 33 C0 E8 04 00 00 00 90 EB 01 ?? E8 03 00 00 00 EB 01 ?? AC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FreeCryptor_0_1__build_002_____GlOFF
 {
 meta:
@@ -3458,7 +3458,7 @@ condition:
     	$a0
 }
 
-    
+
 rule FSG_v1_10__Eng_____bart_xt____WinRAR_SFX
 {
 meta:
@@ -3468,10 +3468,10 @@ strings:
 	$a1 = { EB 01 02 EB 02 CD 20 B8 80 ?? 42 00 EB 01 55 BE F4 00 00 00 13 DF 13 D8 0F B6 38 D1 F3 F7 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule ENIGMA_Protector_V1_1_CracKed_By__shoooo___fly____Sukhov_Vladimir
 {
 meta:
@@ -3480,10 +3480,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 83 C5 FA 81 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule aPack_v0_98b__DS___ES_not_saved_
 {
 meta:
@@ -3495,7 +3495,7 @@ condition:
     	$a0
 }
 
-    
+
 rule DJoin_v0_7_public__RC4_encryption_____drmist
 {
 meta:
@@ -3504,10 +3504,10 @@ strings:
     	$a0 = { C6 05 ?? ?? 40 00 00 C6 05 ?? ?? 40 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 ?? ?? ?? ?? 00 ?? ?? ?? ?? ?? 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_v0_32a__fake_Microsoft_Visual_C_______emadicius__h_
 {
 meta:
@@ -3516,10 +3516,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 CA 37 41 00 68 06 38 41 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 64 8F 05 00 00 00 00 83 C4 0C 5D EB 05 E8 EB 04 40 00 EB FA E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 50 E8 02 00 00 00 29 5A 58 6B C0 03 E8 02 00 00 00 29 5A 83 C4 04 58 74 04 75 02 EB 02 EB 01 81 0F 31 50 0F 31 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 2B 04 24 74 04 75 02 EB 02 EB 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule WebCops__DLL_____LINK_Data_Security
 {
 meta:
@@ -3528,10 +3528,10 @@ strings:
     	$a0 = { A8 BE 58 DC D6 CC C4 63 4A 0F E0 02 BB CE F3 5C 50 23 FB 62 E7 3D 2B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Warning__may_be_SimbyOZ_polycryptor_by_3xpl01t_ver_2_xx__25_03_2007_22_00_
 {
 meta:
@@ -3540,10 +3540,10 @@ strings:
     	$a0 = { 57 57 8D 7C 24 04 50 B8 00 D0 17 13 AB 58 5F C3 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MicroJoiner_1_5____coban2k
 {
 meta:
@@ -3552,10 +3552,10 @@ strings:
     	$a0 = { BF 05 10 40 00 83 EC 30 8B EC E8 C8 FF FF FF E8 C3 FF FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule eXpressor_v1_1____CGSoftLabs
 {
 meta:
@@ -3564,10 +3564,10 @@ strings:
     	$a0 = { E9 15 13 00 00 E9 F0 12 00 00 E9 58 12 00 00 E9 AF 0C 00 00 E9 AE 02 00 00 E9 B4 0B 00 00 E9 E0 0C 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule XCR_v0_11
 {
 meta:
@@ -3576,10 +3576,10 @@ strings:
     	$a0 = { 60 8B F0 33 DB 83 C3 01 83 C0 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule XCR_v0_13
 {
 meta:
@@ -3588,10 +3588,10 @@ strings:
     	$a0 = { 93 71 08 ?? ?? ?? ?? ?? ?? ?? ?? 8B D8 78 E2 ?? ?? ?? ?? 9C 33 C3 ?? ?? ?? ?? 60 79 CE ?? ?? ?? ?? E8 01 ?? ?? ?? ?? 83 C4 04 E8 AB FF FF FF ?? ?? ?? ?? 2B E8 ?? ?? ?? ?? 03 C5 FF 30 ?? ?? ?? ?? C6 ?? EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule XCR_v0_12
 {
 meta:
@@ -3600,10 +3600,10 @@ strings:
     	$a0 = { 60 9C E8 ?? ?? ?? ?? 8B DD 5D 81 ED ?? ?? ?? ?? 89 9D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UnderGround_Crypter___by_Booster2000
 {
 meta:
@@ -3612,10 +3612,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 F0 B8 74 3C 00 11 E8 94 F9 FF FF E8 BF FE FF FF E8 0A F3 FF FF 8B C0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Packanoid_v1____Arkanoid
 {
 meta:
@@ -3624,10 +3624,10 @@ strings:
     	$a0 = { BF ?? ?? ?? ?? BE ?? ?? ?? ?? E8 9D 00 00 00 B8 ?? ?? ?? ?? 8B 30 8B 78 04 BB ?? ?? ?? ?? 8B 43 04 91 E3 1F 51 FF D6 56 96 8B 13 8B 02 91 E3 0D 52 51 56 FF D7 5A 89 02 83 C2 04 EB EE 83 C3 08 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Thinstall_Virtualization_Suite_3_035_3_043____Thinstall_Company
 {
 meta:
@@ -3636,10 +3636,10 @@ strings:
     	$a0 = { 9C 60 68 53 74 41 6C 68 54 68 49 6E E8 00 00 00 00 58 BB 37 1F 00 00 2B C3 50 68 ?? ?? ?? ?? 68 00 28 00 00 68 04 01 00 00 E8 BA FE FF FF E9 90 FF FF FF CC CC CC CC CC CC CC 55 8B EC 83 C4 F4 FC 53 57 56 8B 75 08 8B 7D 0C C7 45 FC 08 00 00 00 33 DB BA 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule VcAsm_Protector_V1_0X___VcAsm
 {
 meta:
@@ -3648,10 +3648,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 E8 03 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SkD_Undetectabler_3__No_FSG_2_Method_____SkD
 {
 meta:
@@ -3660,10 +3660,10 @@ strings:
     	$a0 = { 55 8B EC 81 EC 10 02 00 00 68 00 02 00 00 8D 85 F8 FD FF FF 50 6A 00 FF 15 38 10 00 01 50 FF 15 3C 10 00 01 8D 8D F8 FD FF FF 51 E8 4F FB FF FF 83 C4 04 8B 15 ?? 16 00 01 52 A1 ?? 16 00 01 50 E8 50 FF FF FF 83 C4 08 A3 ?? 16 00 01 C7 85 F4 FD FF FF 00 00 00 00 EB 0F 8B 8D F4 FD FF FF 83 C1 01 89 8D F4 FD FF FF 8B 95 F4 FD FF FF 3B 15 ?? 16 00 01 73 1C 8B 85 F4 FD FF FF 8B 0D ?? 16 00 01 8D 54 01 07 81 FA 74 10 00 01 75 02 EB 02 EB C7 8B 85 F4 FD FF FF 50 E8 ?? 00 00 00 83 C4 04 89 85 F0 FD FF FF 8B 8D F0 FD FF FF 89 4D FC C7 45 F8 00 00 00 00 EB 09 8B 55 F8 83 C2 01 89 55 F8 8B 45 F8 3B 85 F4 FD FF FF 73 15 8B 4D FC 03 4D F8 8B 15 ?? 16 00 01 03 55 F8 8A 02 88 01 EB D7 83 3D ?? 16 00 01 00 74 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PE_Ninja_v1_0_____DzA_kRAker_TNT
 {
 meta:
@@ -3672,10 +3672,10 @@ strings:
     	$a0 = { BE 5B 2A 40 00 BF 35 12 00 00 E8 40 12 00 00 3D 22 83 A3 C6 0F 85 67 0F 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Thinstall_2_4x___2_5x____Jitit_Software
 {
 meta:
@@ -3684,10 +3684,10 @@ strings:
     	$a0 = { 55 8B EC B8 ?? ?? ?? ?? BB ?? ?? ?? ?? 50 E8 00 00 00 00 58 2D ?? ?? ?? ?? B9 ?? ?? ?? ?? BA ?? ?? ?? ?? BE ?? ?? ?? ?? BF ?? ?? ?? ?? BD ?? ?? ?? ?? 03 E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule mkfpack____llydd
 {
 meta:
@@ -3699,7 +3699,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_2__ASProtect______Anorganix
 {
 meta:
@@ -3708,10 +3708,10 @@ strings:
     	$a0 = { 60 90 90 90 90 90 90 5D 90 90 90 90 90 90 90 90 90 90 90 03 DD }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_0_32a__fake_PEtite_2_1_____emadicius
 {
 meta:
@@ -3723,7 +3723,7 @@ condition:
     	$a0
 }
 
-    
+
 rule ExeBundle_v3_0__standard_loader_
 {
 meta:
@@ -3732,10 +3732,10 @@ strings:
     	$a0 = { 00 00 00 00 60 BE 00 B0 42 00 8D BE 00 60 FD FF C7 87 B0 E4 02 00 31 3C 4B DF 57 83 CD FF EB 0E 90 90 90 90 8A 06 46 88 07 47 01 DB 75 07 8B 1E 83 EE FC 11 DB 72 ED B8 01 00 00 00 01 DB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule VIRUS___I_Worm_KLEZ
 {
 meta:
@@ -3747,7 +3747,7 @@ condition:
     	$a0
 }
 
-    
+
 rule UPX_Shit_v0_1____500mhz
 {
 meta:
@@ -3760,10 +3760,10 @@ strings:
 	$a4 = { E8 00 00 00 00 5E 83 C6 14 AD 89 C7 AD 89 C1 AD 30 07 47 E2 FB AD FF E0 C3 00 ?? ?? 00 ?? ?? ?? 00 ?? ?? ?? ?? ?? ?? ?? 00 55 50 58 2D 53 68 69 74 20 76 30 2E 31 20 2D 20 77 77 77 2E 62 6C 61 63 6B 6C 6F 67 69 63 2E 6E 65 74 20 2D 20 63 6F 64 65 20 62 79 20 5B 35 30 30 6D 68 7A 5D }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep or $a3 at sgpe.ep or $a4 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep or $a3 at manape.ep or $a4 at manape.ep
 }
 
-    
+
 rule PassEXE_v2_0
 {
 meta:
@@ -3772,10 +3772,10 @@ strings:
     	$a0 = { 06 1E 0E 0E 07 1F BE ?? ?? B9 ?? ?? 87 14 81 ?? ?? ?? EB ?? C7 ?? ?? ?? 84 00 87 ?? ?? ?? FB 1F 58 4A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule nPack_v1_1_250_Beta____NEOx
 {
 meta:
@@ -3785,10 +3785,10 @@ strings:
 	$a1 = { 83 3D 04 ?? ?? ?? 00 75 05 E9 01 00 00 00 C3 E8 46 00 00 00 E8 73 00 00 00 B8 2E ?? ?? ?? 2B 05 08 ?? ?? ?? A3 00 ?? ?? ?? E8 9C 00 00 00 E8 04 02 00 00 E8 FB 06 00 00 E8 1B 06 00 00 A1 00 ?? ?? ?? C7 05 04 ?? ?? ?? 01 00 00 00 01 05 00 ?? ?? ?? FF 35 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule EXECryptor_2_2_6__minimum_protection_
 {
 meta:
@@ -3797,10 +3797,10 @@ strings:
     	$a0 = { 50 68 ?? ?? ?? ?? 58 81 E0 ?? ?? ?? ?? E9 ?? ?? ?? 00 87 0C 24 59 E8 ?? ?? ?? 00 89 45 F8 E9 ?? ?? ?? ?? 0F 83 ?? ?? ?? 00 E9 ?? ?? ?? ?? 87 14 24 5A 57 68 ?? ?? ?? ?? E9 ?? ?? ?? ?? 58 81 C0 ?? ?? ?? ?? 2B 05 ?? ?? ?? ?? 81 C8 ?? ?? ?? ?? 81 E0 ?? ?? ?? ?? E9 ?? ?? ?? 00 C3 E9 ?? ?? ?? ?? C3 BF ?? ?? ?? ?? 81 CB ?? ?? ?? ?? BA ?? ?? ?? ?? 52 E9 ?? ?? ?? 00 E8 ?? ?? ?? 00 E9 ?? ?? ?? 00 E9 ?? ?? ?? ?? 87 34 24 5E 66 8B 00 66 25 ?? ?? E9 ?? ?? ?? ?? 8B CD 87 0C 24 8B EC 51 89 EC 5D 8B 05 ?? ?? ?? ?? 09 C0 E9 ?? ?? ?? ?? 59 81 C1 ?? ?? ?? ?? C1 C1 ?? 23 0D ?? ?? ?? ?? 81 F9 ?? ?? ?? ?? E9 ?? ?? ?? ?? C3 E9 ?? ?? ?? 00 13 D0 0B F9 E9 ?? ?? ?? ?? 51 E8 ?? ?? ?? ?? 8B 64 24 08 31 C0 64 8F 05 00 00 00 00 5A E9 ?? ?? ?? ?? 3C A4 0F 85 ?? ?? ?? 00 8B 45 FC 66 81 38 ?? ?? 0F 84 05 00 00 00 E9 ?? ?? ?? ?? 0F 84 ?? ?? ?? ?? E9 ?? ?? ?? ?? 87 3C 24 5F 31 DB 31 C9 31 D2 68 ?? ?? ?? ?? E9 ?? ?? ?? ?? 89 45 FC 33 C0 89 45 F4 83 7D FC 00 E9 ?? ?? ?? ?? 53 52 8B D1 87 14 24 81 C0 ?? ?? ?? ?? 0F 88 ?? ?? ?? ?? 3B CB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_v0_31_beta____Dwing
 {
 meta:
@@ -3809,10 +3809,10 @@ strings:
     	$a0 = { E9 ?? ?? ?? ?? 42 79 44 77 69 6E 67 40 00 00 00 50 45 00 00 4C 01 02 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 31 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule _MSLRH__v0_1____emadicius
 {
 meta:
@@ -3824,7 +3824,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_2__Lockless_Intro_Pack______Anorganix
 {
 meta:
@@ -3833,10 +3833,10 @@ strings:
     	$a0 = { 2C E8 EB 1A 90 90 5D 8B C5 81 ED F6 73 90 90 2B 85 90 90 90 90 83 E8 06 89 85 FF 01 EC AD }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule T_PACK_v0_5c__m1
 {
 meta:
@@ -3845,10 +3845,10 @@ strings:
     	$a0 = { 68 ?? ?? FD 60 BE ?? ?? BF ?? ?? B9 ?? ?? F3 A4 8B F7 BF ?? ?? FC 46 E9 8E FE }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule T_PACK_v0_5c__m2
 {
 meta:
@@ -3857,10 +3857,10 @@ strings:
     	$a0 = { 68 ?? ?? FD 60 BE ?? ?? BF ?? ?? B9 ?? ?? F3 A4 8B F7 BF ?? ?? FC 46 E9 CE FD }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_Full_Edition_1_17_DLL__LZMA_
 {
 meta:
@@ -3869,10 +3869,10 @@ strings:
     	$a0 = { 80 7C 24 08 01 0F 85 ?? ?? ?? ?? 60 E8 00 00 00 00 8B 2C 24 83 C4 04 8D B5 5A 0A 00 00 8D 9D 40 02 00 00 33 FF E8 ?? ?? ?? ?? 6A 40 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 6A 00 FF 95 EB 09 00 00 89 85 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_v0_10___v0_12Beta____Sign_by_hot_UNP
 {
 meta:
@@ -3881,10 +3881,10 @@ strings:
     	$a0 = { BE 48 01 ?? ?? ?? ?? ?? 95 A5 33 C0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule _________________2_2b____Shoooo
 {
 meta:
@@ -3893,10 +3893,10 @@ strings:
     	$a0 = { 68 ?? ?? ?? ?? E8 01 00 00 00 C3 C3 11 55 07 8B EC B8 14 80 0E 03 E8 D1 09 00 0A 57 33 D2 FF 75 18 B9 E8 1F DE 16 81 C0 8D BD EE 7F FB F8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v1_34___v1_40b1
 {
 meta:
@@ -3905,10 +3905,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 0F 80 40 ?? 87 DD 8B 85 A6 80 40 ?? 01 85 03 80 40 ?? 66 C7 85 ?? 00 80 ?? 40 90 90 01 85 9E 80 ?? 40 BB F8 10 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule eXPressor_v1_4____CGSoftLabs
 {
 meta:
@@ -3920,7 +3920,7 @@ condition:
     	$a0
 }
 
-    
+
 rule FSG_v2_0
 {
 meta:
@@ -3932,7 +3932,7 @@ condition:
     	$a0
 }
 
-    
+
 rule SimplePack_1_21_build_09_09__Method2_____bagie
 {
 meta:
@@ -3944,7 +3944,7 @@ condition:
     	$a0
 }
 
-    
+
 rule MarjinZ_EXE_Scrambler_SE___by_MarjinZ
 {
 meta:
@@ -3956,7 +3956,7 @@ condition:
     	$a0
 }
 
-    
+
 rule The_aPE_Inline_Patch_Basic__Advanced__Stealth_
 {
 meta:
@@ -3965,10 +3965,10 @@ strings:
     	$a0 = { B9 ?? ?? ?? 00 E8 ?? ?? 00 00 89 01 68 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Unnamed_Scrambler_2_5A____p0ke
 {
 meta:
@@ -3978,10 +3978,10 @@ strings:
 	$a1 = { 55 8B EC B9 0B 00 00 00 6A 00 6A 00 49 75 F9 51 53 56 57 B8 6C 3E 40 00 E8 F7 EA FF FF 33 C0 55 68 60 44 40 00 64 FF 30 64 89 20 BA 70 44 40 00 B8 B8 6C 40 00 E8 62 F3 FF FF 8B D8 85 DB 75 07 6A 00 E8 A1 EB FF FF BA E8 64 40 00 8B C3 8B 0D B8 6C 40 00 E8 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule Packman_0_0_0_1____Bubbasoft__h_
 {
 meta:
@@ -3994,7 +3994,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule SimplePack_V1_1X__Method2_____bagie___Sign_by_fly
 {
 meta:
@@ -4006,7 +4006,7 @@ condition:
     	$a0
 }
 
-    
+
 rule EXECryptor_2_1_17____Strongbit_SoftComplete_Development__h_
 {
 meta:
@@ -4019,7 +4019,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule diPacker_1_x____diProtector_Software
 {
 meta:
@@ -4028,10 +4028,10 @@ strings:
     	$a0 = { 0F 00 2D E9 01 00 A0 E3 68 01 00 EB 8C 00 00 EB 2B 00 00 EB 00 00 20 E0 1C 10 8F E2 8E 20 8F E2 00 30 A0 E3 67 01 00 EB 0F 00 BD E8 00 C0 8F E2 00 F0 9C E5 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PC_Guard_for_Win32_v5_00____SofPro_Blagoje_Ceklic__h_
 {
 meta:
@@ -4041,10 +4041,10 @@ strings:
 	$a1 = { FC 55 50 E8 00 00 00 00 5D 60 E8 03 00 00 00 83 EB 0E EB 01 0C 58 EB 01 35 40 EB 01 36 FF E0 0B 61 B8 ?? ?? ?? 00 EB 01 E3 60 E8 03 00 00 00 D2 EB 0B 58 EB 01 48 40 EB 01 35 FF E0 E7 61 2B E8 9C EB 01 D5 9D EB 01 0B 58 60 E8 03 00 00 00 83 EB 0E EB 01 0C }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__NorthStar_PE_Shrinker_1_3______Anorganix
 {
 meta:
@@ -4053,10 +4053,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 5D B8 B3 85 40 00 2D AC 85 40 00 2B E8 8D B5 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EncryptPE_V2_2004_6_16_V2_2006_6_30____WFS
 {
 meta:
@@ -4065,10 +4065,10 @@ strings:
     	$a0 = { 60 9C 64 FF 35 00 00 00 00 E8 73 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_Alternative_stub
 {
 meta:
@@ -4077,10 +4077,10 @@ strings:
     	$a0 = { 01 DB 07 8B 1E 83 EE FC 11 DB ED B8 01 00 00 00 01 DB 07 8B 1E 83 EE FC 11 DB 11 C0 01 DB 73 0B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASPack_v1_03b
 {
 meta:
@@ -4089,10 +4089,10 @@ strings:
     	$a0 = { 60 E8 ?? ?? ?? ?? 5D 81 ED AE 98 43 ?? B8 A8 98 43 ?? 03 C5 2B 85 18 9D 43 ?? 89 85 24 9D 43 ?? 80 BD 0E 9D 43 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule COMPACK_v5_1
 {
 meta:
@@ -4101,10 +4101,10 @@ strings:
     	$a0 = { BD ?? ?? 50 06 8C CB 03 DD 8C D2 4B 8E DB BE ?? ?? BF ?? ?? 8E C2 B9 ?? ?? F3 A5 4A 4D 75 ?? 8B F7 8E DA 0E 07 06 16 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Morphine_v2_7____Holy_Father___Ratter_29A__h_
 {
 meta:
@@ -4116,7 +4116,7 @@ condition:
     	$a0
 }
 
-    
+
 rule BGI_Stroked_Font_v_1_1
 {
 meta:
@@ -4128,7 +4128,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Unknown_Joiner__sign_from_pinch_26_03_2007_02_12_
 {
 meta:
@@ -4137,10 +4137,10 @@ strings:
     	$a0 = { 44 90 4C 90 B9 DE 00 00 00 BA 00 10 40 00 83 C2 03 44 90 4C B9 07 00 00 00 44 90 4C 33 C9 C7 05 08 30 40 00 00 00 00 00 90 68 00 01 00 00 68 21 30 40 00 6A 00 E8 C5 02 00 00 90 6A 00 68 80 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PCIENC_Cryptor
 {
 meta:
@@ -4152,7 +4152,7 @@ condition:
     	$a0
 }
 
-    
+
 rule EXEStealth_2_76_Unregistered____WebtoolMaster
 {
 meta:
@@ -4164,7 +4164,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Shegerd_Dongle_V4_78____MS_Co_
 {
 meta:
@@ -4173,10 +4173,10 @@ strings:
     	$a0 = { E8 32 00 00 00 B8 ?? ?? ?? ?? 8B 18 C1 CB 05 89 DA 36 8B 4C 24 0C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule North_Star_PE_Shrinker_v1_3_by_Liuxingping
 {
 meta:
@@ -4189,7 +4189,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule __PseudoSigner_0_1__Armadillo_3_00______Anorganix
 {
 meta:
@@ -4198,10 +4198,10 @@ strings:
     	$a0 = { 60 E8 2A 00 00 00 5D 50 51 EB 0F B9 EB 0F B8 EB 07 B9 EB 0F 90 EB 08 FD EB 0B F2 EB F5 EB F6 F2 EB 08 FD EB E9 F3 EB E4 FC E9 59 58 50 51 EB 85 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NsPacK_V3_7____LiuXingPing
 {
 meta:
@@ -4210,10 +4210,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 5D 83 ED 07 8D ?? ?? ?? ?? ?? 80 39 01 0F ?? ?? ?? 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__Gleam_1_00______Anorganix
 {
 meta:
@@ -4222,10 +4222,10 @@ strings:
     	$a0 = { 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 0B 83 EC 0C 53 56 57 E8 24 02 00 FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_v1_33__Eng_____dulek_xt
 {
 meta:
@@ -4236,10 +4236,10 @@ strings:
 	$a2 = { BE A4 01 40 00 AD 93 AD 97 AD 56 96 B2 80 A4 B6 80 FF 13 73 F9 33 C9 FF 13 73 16 33 C0 FF 13 73 1F B6 80 41 B0 10 FF 13 12 C0 73 FA 75 3C AA EB E0 FF 53 08 02 F6 83 D9 01 75 0E FF 53 04 EB 26 AC D1 E8 74 2F 13 C9 EB 1A 91 48 C1 E0 08 AC FF 53 04 3D 00 7D 00 00 73 0A 80 FC 05 73 06 83 F8 7F 77 02 41 41 95 8B C5 B6 00 56 8B F7 2B F0 F3 A4 5E EB 9D 8B D6 5E AD 48 74 0A 79 02 AD 50 56 8B F2 97 EB 87 AD 93 5E 46 AD 97 56 FF 13 95 AC 84 C0 75 FB FE 0E 74 F0 79 05 46 AD 50 EB 09 FE 0E 0F 84 ?? ?? ?? FF 56 55 FF 53 04 AB EB E0 33 C9 41 FF 13 13 C9 FF 13 72 F8 C3 02 D2 75 05 8A 16 46 12 D2 C3 ?? ?? ?? 00 00 00 00 00 00 00 00 00 54 01 00 00 ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 61 01 00 00 6F 01 00 00 00 00 00 00 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
-    
+
 rule Crunch_PE_v5_0
 {
 meta:
@@ -4251,7 +4251,7 @@ condition:
     	$a0
 }
 
-    
+
 rule FreeJoiner_Small__build_033_____GlOFF
 {
 meta:
@@ -4260,10 +4260,10 @@ strings:
     	$a0 = { 50 66 33 C3 66 8B C1 58 E8 AC FD FF FF 6A 00 E8 0D 00 00 00 CC FF 25 78 10 40 00 FF 25 7C 10 40 00 FF 25 80 10 40 00 FF 25 84 10 40 00 FF 25 88 10 40 00 FF 25 8C 10 40 00 FF 25 90 10 40 00 FF 25 94 10 40 00 FF 25 98 10 40 00 FF 25 9C 10 40 00 FF 25 A0 10 40 00 FF 25 A4 10 40 00 FF 25 AC 10 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__NorthStar_PE_Shrinker_1_3______Anorganix
 {
 meta:
@@ -4272,10 +4272,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 5D B8 B3 85 40 00 2D AC 85 40 00 2B E8 8D B5 00 00 00 00 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule BeRoEXEPacker_V1_00____BeRo
 {
 meta:
@@ -4288,7 +4288,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule PC_Shrinker_v0_20
 {
 meta:
@@ -4297,10 +4297,10 @@ strings:
     	$a0 = { E8 E8 01 ?? ?? 60 01 AD B3 27 40 ?? 68 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__FSG_1_0______Anorganix
 {
 meta:
@@ -4309,10 +4309,10 @@ strings:
     	$a0 = { 90 90 90 90 68 ?? ?? ?? ?? 67 64 FF 36 00 00 67 64 89 26 00 00 F1 90 90 90 90 BB D0 01 40 00 BF 00 10 40 00 BE 90 90 90 90 53 E8 0A 00 00 00 02 D2 75 05 8A 16 46 12 D2 C3 FC B2 80 A4 6A 02 5B E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PC_Shrinker_v0_29
 {
 meta:
@@ -4321,10 +4321,10 @@ strings:
     	$a0 = { BD ?? ?? ?? ?? 01 AD 55 39 40 ?? 8D B5 35 39 40 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__Lockless_Intro_Pack_____Anorganix
 {
 meta:
@@ -4333,10 +4333,10 @@ strings:
     	$a0 = { 2C E8 EB 1A 90 90 5D 8B C5 81 ED F6 73 90 90 2B 85 90 90 90 90 83 E8 06 89 85 FF 01 EC AD E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_v1_18_Basic_DLL__LZMA_____Ap0x
 {
 meta:
@@ -4345,10 +4345,10 @@ strings:
     	$a0 = { 80 7C 24 08 01 0F 85 ?? ?? ?? ?? 60 E8 00 00 00 00 8B 2C 24 83 C4 04 8D B5 21 0B 00 00 8D 9D FF 02 00 00 33 FF E8 9F 01 00 00 6A 40 68 00 10 00 00 68 00 20 0C 00 6A 00 FF 95 AA 0A 00 00 89 85 F9 0A 00 00 EB 14 60 FF B5 F9 0A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__Involuntary_1349
 {
 meta:
@@ -4357,10 +4357,10 @@ strings:
     	$a0 = { BA ?? ?? B9 ?? ?? 8C DD ?? 8C C8 ?? 8E D8 8E C0 33 F6 8B FE FC ?? ?? AD ?? 33 C2 AB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule yzPack_1_0____UsAr
 {
 meta:
@@ -4369,10 +4369,10 @@ strings:
     	$a0 = { 60 33 C0 8D 48 07 50 E2 FD 8B EC 64 8B 40 30 78 0C 8B 40 0C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EP_v1_0
 {
 meta:
@@ -4382,10 +4382,10 @@ strings:
 	$a1 = { 50 83 C0 17 8B F0 97 33 C0 33 C9 B1 24 AC 86 C4 AC AA 86 C4 AA E2 F6 00 B8 40 00 03 00 3C 40 D2 33 8B 66 14 50 70 8B 8D 34 02 44 8B 18 10 48 70 03 BA 0C ?? ?? ?? ?? C0 33 FE 8B 30 AC 30 D0 C1 F0 10 C2 D0 30 F0 30 C2 C1 AA 10 42 42 CA C1 E2 04 5F E9 5E B1 C0 30 ?? 68 ?? ?? F3 00 C3 AA }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PESpin_v0_7____Cyberbob
 {
 meta:
@@ -4394,10 +4394,10 @@ strings:
     	$a0 = { EB 01 68 60 E8 00 00 00 00 8B 1C 24 83 C3 12 81 2B E8 B1 06 00 FE 4B FD 82 2C 24 83 D5 46 00 0B E4 74 9E 75 01 C7 81 73 04 D7 7A F7 2F 81 73 19 77 00 43 B7 F6 C3 6B B7 00 00 F9 FF E3 C9 C2 08 00 A3 68 72 01 FF 5D 33 C9 41 E2 17 EB 07 EA EB 01 EB EB 0D FF E8 01 00 00 00 EA 5A 83 EA 0B FF E2 EB 04 9A EB 04 00 EB FB FF 8B 95 88 39 40 00 8B 42 3C 03 C2 89 85 92 39 40 00 EB 01 DB 41 C1 E1 07 8B 0C 01 03 CA E8 03 00 00 00 EB 04 9A EB FB 00 83 04 24 0C C3 3B 8B 59 10 03 DA 8B 1B 89 9D A6 39 40 00 53 8F 85 4A 38 40 00 BB ?? 00 00 00 B9 EC 0A 00 00 8D BD 36 3A 40 00 4F EB 01 AB 30 1C 39 FE CB E2 F9 EB 01 C8 68 CB 00 00 00 59 8D BD 56 44 40 00 E8 03 00 00 00 EB 04 FA EB FB 68 83 04 24 0C C3 8D C0 0C 39 02 E2 FA E8 02 00 00 00 FF 15 5A 8D 85 B3 5F 56 00 BB 54 13 0B 00 D1 E3 2B C3 FF E0 E8 01 00 00 00 68 E8 1A 00 00 00 8D 34 28 B9 08 00 00 00 B8 ?? ?? ?? ?? 2B C9 83 C9 15 0F A3 C8 0F 83 81 00 00 00 8D B4 0D 99 39 40 00 8B D6 B9 10 00 00 00 AC 84 C0 74 06 C0 4E FF 03 E2 F5 E8 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule AntiDote_V1_x____SIS_Team
 {
 meta:
@@ -4406,10 +4406,10 @@ strings:
     	$a0 = { 68 ?? ?? 00 00 E8 ?? FD FF FF 68 ?? ?? 00 00 E8 ?? FD FF FF 68 90 03 00 00 E8 ?? FD FF FF ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? E8 ?? FD FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PE_Armor_0_46____Hying
 {
 meta:
@@ -4419,10 +4419,10 @@ strings:
 	$a1 = { E8 AA 00 00 00 2D ?? ?? ?? 00 00 00 00 00 00 00 00 3D }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule ASPack_v1_08_01
 {
 meta:
@@ -4436,10 +4436,10 @@ strings:
 	$a5 = { 90 90 90 75 ?? 90 E9 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep or $a3 at sgpe.ep or $a4 at sgpe.ep or $a5 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep or $a3 at manape.ep or $a4 at manape.ep or $a5 at manape.ep
 }
 
-    
+
 rule ASPack_v1_08_02
 {
 meta:
@@ -4450,10 +4450,10 @@ strings:
 	$a2 = { 90 75 01 90 E9 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
-    
+
 rule ASPack_v1_08_03
 {
 meta:
@@ -4465,10 +4465,10 @@ strings:
 	$a3 = { 60 E8 00 00 00 00 5D 81 ED 0A 4A 44 00 BB 04 4A 44 00 03 DD 2B 9D B1 50 44 00 83 BD AC 50 44 00 00 89 9D BB 4E }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep or $a3 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep or $a3 at manape.ep
 }
 
-    
+
 rule ASPack_v1_08_04
 {
 meta:
@@ -4478,10 +4478,10 @@ strings:
 	$a1 = { 60 E8 41 06 00 00 EB 41 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__Code_Lock_____Anorganix
 {
 meta:
@@ -4490,10 +4490,10 @@ strings:
     	$a0 = { 43 4F 44 45 2D 4C 4F 43 4B 2E 4F 43 58 00 01 28 01 50 4B 47 05 4C 3F B4 04 4D 4C 47 4B E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_V1_12_V1_14__aPlib_0_43_____ap0x___Sign_by_fly
 {
 meta:
@@ -4502,10 +4502,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 8D B5 ?? ?? ?? ?? 8D 9D ?? ?? ?? ?? 33 FF EB 0F FF ?? ?? ?? FF ?? ?? ?? D3 83 C4 ?? 83 C7 ?? 83 3C 37 00 75 EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EPW_v1_30
 {
 meta:
@@ -4514,10 +4514,10 @@ strings:
     	$a0 = { 06 57 1E 56 55 52 51 53 50 2E 8C 06 08 00 8C C0 83 C0 10 2E }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule fds0ft_c0m_pr0tect_v0_4b
 {
 meta:
@@ -4526,10 +4526,10 @@ strings:
     	$a0 = { 8C CA 2E ?? ?? ?? ?? B4 30 8B ?? ?? ?? 8B ?? ?? ?? 8E DA A3 ?? ?? 8C ?? ?? ?? 89 ?? ?? ?? 89 ?? ?? ?? EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule yzpack_V2_0____UsAr___Sign_by_fly
 {
 meta:
@@ -4538,10 +4538,10 @@ strings:
     	$a0 = { 25 ?? ?? ?? ?? 61 87 CC 55 45 45 55 81 ED CA 00 00 00 55 A4 B3 02 FF 14 24 73 F8 33 C9 FF 14 24 73 18 33 C0 FF 14 24 73 1F B3 02 41 B0 10 FF 14 24 12 C0 73 F9 75 3C AA EB DC FF 54 24 04 2B CB 75 0F FF 54 24 08 EB 27 AC D1 E8 74 30 13 C9 EB 1B 91 48 C1 E0 08 AC FF 54 24 08 3D 00 7D 00 00 73 0A 80 FC 05 73 06 83 F8 7F 77 02 41 41 95 8B C5 B3 01 56 8B F7 2B F0 F3 A4 5E EB 99 BD ?? ?? ?? ?? FF 65 28 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Name_of_the_Packer_v1_0
 {
 meta:
@@ -4550,10 +4550,10 @@ strings:
     	$a0 = { 50 E8 ?? ?? ?? ?? 58 25 ?? F0 FF FF 8B C8 83 C1 60 51 83 C0 40 83 EA 06 52 FF 20 9D C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__Eddie_2000
 {
 meta:
@@ -4562,10 +4562,10 @@ strings:
     	$a0 = { E8 ?? ?? 5E 81 EE ?? ?? FC 2E ?? ?? ?? ?? 2E ?? ?? ?? ?? 4D 5A ?? ?? FA 8B E6 81 C4 ?? ?? FB 3B ?? ?? ?? ?? ?? 50 06 56 1E 8B FE 33 C0 50 8E D8 C5 ?? ?? ?? B4 30 CD 21 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EncryptPE_2_2004_8_10___2_2005_3_14____WFS
 {
 meta:
@@ -4574,10 +4574,10 @@ strings:
     	$a0 = { 60 9C 64 FF 35 00 00 00 00 E8 7A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule CodeCrypt_v0_15b
 {
 meta:
@@ -4586,10 +4586,10 @@ strings:
     	$a0 = { E9 31 03 00 00 EB 02 83 3D 58 EB 02 FF 1D 5B EB 02 0F C7 5F }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule yoda_s_Protector_1_02____Ashkibiz_Danehlar
 {
 meta:
@@ -4598,10 +4598,10 @@ strings:
     	$a0 = { E8 03 00 00 00 EB 01 ?? BB 55 00 00 00 E8 03 00 00 00 EB 01 ?? E8 8F 00 00 00 E8 03 00 00 00 EB 01 ?? E8 82 00 00 00 E8 03 00 00 00 EB 01 ?? E8 B8 00 00 00 E8 03 00 00 00 EB 01 ?? E8 AB 00 00 00 E8 03 00 00 00 EB 01 ?? 83 FB 55 E8 03 00 00 00 EB 01 ?? 75 2E E8 03 00 00 00 EB 01 ?? C3 60 E8 00 00 00 00 5D 81 ED 23 3F 42 00 8B D5 81 C2 72 3F 42 00 52 E8 01 00 00 00 C3 C3 E8 03 00 00 00 EB 01 ?? E8 0E 00 00 00 E8 D1 FF FF FF C3 E8 03 00 00 00 EB 01 ?? 33 C0 64 FF 30 64 89 20 CC C3 E8 03 00 00 00 EB 01 ?? 33 C0 64 FF 30 64 89 20 4B CC C3 E8 03 00 00 00 EB 01 ?? 33 DB B9 3A 66 42 00 81 E9 1D 40 42 00 8B D5 81 C2 1D 40 42 00 8D 3A 8B F7 33 C0 E8 03 00 00 00 EB 01 ?? E8 17 00 00 00 90 90 90 E9 C3 1F 00 00 33 C0 64 FF 30 64 89 20 43 CC C3 90 EB 01 ?? AC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule USERNAME_v3_00
 {
 meta:
@@ -4610,10 +4610,10 @@ strings:
     	$a0 = { FB 2E ?? ?? ?? ?? 2E ?? ?? ?? ?? 2E ?? ?? ?? ?? 2E ?? ?? ?? ?? 8C C8 2B C1 8B C8 2E ?? ?? ?? ?? 2E ?? ?? ?? ?? 33 C0 8E D8 06 0E 07 FC 33 F6 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SDProtect__________________________Randy_Li
 {
 meta:
@@ -4625,7 +4625,7 @@ condition:
     	$a0
 }
 
-    
+
 rule tElock_v0_98____tHE_EGOiSTE__h_
 {
 meta:
@@ -4635,10 +4635,10 @@ strings:
 	$a1 = { E9 25 E4 FF FF 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? ?? 00 00 00 00 ?? ?? ?? ?? 00 00 00 00 ?? ?? ?? ?? 00 00 00 00 ?? ?? ?? ?? 00 00 00 00 6B 65 72 6E 65 6C 33 32 2E 64 6C 6C 00 75 73 65 72 33 32 2E 64 6C 6C 00 00 00 47 65 74 4D 6F 64 75 6C 65 48 61 6E 64 6C 65 41 00 00 00 4D 65 73 73 61 67 65 42 6F 78 41 00 00 00 00 00 00 00 00 00 00 00 00 08 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Cracked_by_AutoHack__1_
 {
 meta:
@@ -4647,10 +4647,10 @@ strings:
     	$a0 = { FA 50 51 57 56 1E 06 2E 80 3E ?? ?? ?? 74 ?? 8E 06 ?? ?? 2B FF FC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEQuake_V0_06____forgat
 {
 meta:
@@ -4659,10 +4659,10 @@ strings:
     	$a0 = { E8 A5 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEiD_Bundle_v1_04____BoB___BobSoft
 {
 meta:
@@ -4671,10 +4671,10 @@ strings:
     	$a0 = { 60 E8 A0 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 36 ?? ?? ?? 2E ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 80 00 00 00 00 4B 65 72 6E 65 6C 33 32 2E 44 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule IMP_Packer_1_0____Mahdi_Hezavehi__IMPOSTER_
 {
 meta:
@@ -4686,7 +4686,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Anticrack_Software_Protector_v1_09__ACProtect_
 {
 meta:
@@ -4696,10 +4696,10 @@ strings:
 	$a1 = { 60 ?? ?? ?? ?? ?? ?? ?? ?? ?? E8 01 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 ?? ?? ?? 04 ?? ?? ?? ?? ?? ?? 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 01 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule yoda_s_Protector_v1_02___exe__scr__com_____Ashkbiz_Danehkar__h_
 {
 meta:
@@ -4708,10 +4708,10 @@ strings:
     	$a0 = { E8 03 00 00 00 EB 01 ?? BB 55 00 00 00 E8 03 00 00 00 EB 01 ?? E8 8F 00 00 00 E8 03 00 00 00 EB 01 ?? E8 82 00 00 00 E8 03 00 00 00 EB 01 ?? E8 B8 00 00 00 E8 03 00 00 00 EB 01 ?? E8 AB 00 00 00 E8 03 00 00 00 EB 01 ?? 83 FB 55 E8 03 00 00 00 EB 01 ?? 75 2E E8 03 00 00 00 EB 01 ?? C3 60 E8 00 00 00 00 5D 81 ED 23 3F 42 00 8B D5 81 C2 72 3F 42 00 52 E8 01 00 00 00 C3 C3 E8 03 00 00 00 EB 01 ?? E8 0E 00 00 00 E8 D1 FF FF FF C3 E8 03 00 00 00 EB 01 ?? 33 C0 64 FF 30 64 89 20 CC C3 E8 03 00 00 00 EB 01 ?? 33 C0 64 FF 30 64 89 20 4B CC C3 E8 03 00 00 00 EB 01 ?? 33 DB B9 35 66 42 00 81 E9 1D 40 42 00 8B D5 81 C2 1D 40 42 00 8D 3A 8B F7 33 C0 E8 03 00 00 00 EB 01 ?? E8 17 00 00 00 90 90 90 E9 BE 1F 00 00 33 C0 64 FF 30 64 89 20 43 CC C3 90 EB 01 ?? AC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Software_Compress_v1_2____BG_Software_Protect_Technologies__h_
 {
 meta:
@@ -4720,10 +4720,10 @@ strings:
     	$a0 = { E9 BE 00 00 00 60 8B 74 24 24 8B 7C 24 28 FC B2 80 33 DB A4 B3 02 E8 6D 00 00 00 73 F6 33 C9 E8 64 00 00 00 73 1C 33 C0 E8 5B 00 00 00 73 23 B3 02 41 B0 10 E8 4F 00 00 00 12 C0 73 F7 75 3F AA EB D4 E8 4D 00 00 00 2B CB 75 10 E8 42 00 00 00 EB 28 AC D1 E8 74 4D 13 C9 EB 1C 91 48 C1 E0 08 AC E8 2C 00 00 00 3D 00 7D 00 00 73 0A 80 FC 05 73 06 83 F8 7F 77 02 41 41 95 8B C5 B3 01 56 8B F7 2B F0 F3 A4 5E EB 8E 02 D2 75 05 8A 16 46 12 D2 C3 33 C9 41 E8 EE FF FF FF 13 C9 E8 E7 FF FF FF 72 F2 C3 2B 7C 24 28 89 7C 24 1C 61 C3 60 FF 74 24 24 6A 40 FF 95 1A 0F 41 00 89 44 24 1C 61 C2 04 00 E8 00 00 00 00 81 2C 24 3A 10 41 00 5D E8 00 00 00 00 81 2C 24 31 01 00 00 8B 85 2A 0F 41 00 29 04 24 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vterminal_V1_0X____Lei_Peng
 {
 meta:
@@ -4732,10 +4732,10 @@ strings:
     	$a0 = { E8 00 00 00 00 58 05 ?? ?? ?? ?? 9C 50 C2 04 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Pohernah_1_0_0___by_Kas
 {
 meta:
@@ -4745,10 +4745,10 @@ strings:
 	$a1 = { 58 60 E8 00 00 00 00 5D 81 ED 20 25 40 00 8B BD 86 25 40 00 8B 8D 8E 25 40 00 6B C0 05 83 F0 04 89 85 92 25 40 00 83 F9 00 74 2D 81 7F 1C AB 00 00 00 75 1E 8B 77 0C 03 B5 8A 25 40 00 31 C0 3B 47 10 74 0E 50 8B 85 92 25 40 00 30 06 58 40 46 EB ED 83 C7 28 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Upack_V0_36____Dwing
 {
 meta:
@@ -4758,10 +4758,10 @@ strings:
 	$a1 = { BE ?? ?? ?? ?? FF 36 E9 C3 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__DEF_1_0_____Anorganix
 {
 meta:
@@ -4770,10 +4770,10 @@ strings:
     	$a0 = { BE 00 01 40 00 6A 05 59 80 7E 07 00 74 11 8B 46 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 83 C1 01 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_v0_32a__fake_PECompact_1_4x_____emadicius__h_
 {
 meta:
@@ -4782,10 +4782,10 @@ strings:
     	$a0 = { EB 06 68 2E A8 00 00 C3 9C 60 E8 02 00 00 00 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 3F 90 40 00 61 9D EB 05 E8 EB 04 40 00 EB FA E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 50 E8 02 00 00 00 29 5A 58 6B C0 03 E8 02 00 00 00 29 5A 83 C4 04 58 74 04 75 02 EB 02 EB 01 81 0F 31 50 0F 31 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEncrypt_v1_0
 {
 meta:
@@ -4794,10 +4794,10 @@ strings:
     	$a0 = { 60 9C BE 00 10 40 00 8B FE B9 28 03 00 00 BB 78 56 34 12 AD 33 C3 AB E2 FA 9D 61 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule VProtector_V1_1A_V1_2____vcasm
 {
 meta:
@@ -4806,10 +4806,10 @@ strings:
     	$a0 = { 00 00 56 69 72 74 75 61 6C 41 6C 6C 6F 63 00 00 00 00 00 76 63 61 73 6D 5F 70 72 6F 74 65 63 74 5F 32 30 30 35 5F 33 5F 31 38 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 33 F6 E8 10 00 00 00 8B 64 24 08 64 8F 05 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NTkrnl_Secure_Suite____NTkrnl_Team__Blue_
 {
 meta:
@@ -4821,7 +4821,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PKLITE_v1_12__v1_15__v1_20__1_
 {
 meta:
@@ -4830,10 +4830,10 @@ strings:
     	$a0 = { B8 ?? ?? BA ?? ?? 05 ?? ?? 3B 06 ?? ?? 73 ?? 2D ?? ?? FA 8E D0 FB 2D ?? ?? 8E C0 50 B9 ?? ?? 33 FF 57 BE ?? ?? FC F3 A5 CB B4 09 BA ?? ?? CD 21 CD 20 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH
 {
 meta:
@@ -4843,10 +4843,10 @@ strings:
 	$a1 = { 60 EB 05 E8 EB 04 40 00 EB FA E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 0F 31 50 0F 31 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 2B 04 24 74 04 75 02 EB 02 EB 01 81 83 C4 04 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 3D FF 0F 00 00 EB 01 68 EB 02 CD 20 EB 01 E8 76 1B EB 01 68 EB 02 CD 20 EB 01 E8 CC 66 B8 FE 00 74 04 75 02 EB 02 EB 01 81 66 E7 64 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 0F 31 50 0F 31 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 2B 04 24 74 04 75 02 EB 02 EB 01 81 }
 
 condition:
-    	$a0 at sgpe.ep or $a1
+    	$a0 at manape.ep or $a1
 }
 
-    
+
 rule Go32Stub_v_2_00T_DOS_Extender
 {
 meta:
@@ -4855,10 +4855,10 @@ strings:
     	$a0 = { 0E 1F 8C 1E ?? ?? 8C 06 ?? ?? FC B4 30 CD 21 3C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PENinja_modified
 {
 meta:
@@ -4867,10 +4867,10 @@ strings:
     	$a0 = { 5D 8B C5 81 ED B2 2C 40 00 2B 85 94 3E 40 00 2D 71 02 00 00 89 85 98 3E 40 00 0F B6 B5 9C 3E 40 00 8B FD }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Unknown_Protected_Mode_compiler__2_
 {
 meta:
@@ -4879,10 +4879,10 @@ strings:
     	$a0 = { FA FC 0E 1F E8 ?? ?? 8C C0 66 0F B7 C0 66 C1 E0 ?? 66 67 A3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_v1_10__Eng_____dulek_xt_____Microsoft_Visual_C___5_0___6_0_
 {
 meta:
@@ -4891,10 +4891,10 @@ strings:
     	$a0 = { 33 D2 0F BE D2 EB 01 C7 EB 01 D8 8D 05 80 ?? ?? ?? EB 02 CD 20 EB 01 F8 BE F4 00 00 00 EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule _MSLRH__v0_32a____emadicius__h_
 {
 meta:
@@ -4906,7 +4906,7 @@ condition:
     	$a0
 }
 
-    
+
 rule yoda_s_Protector_1_0x____Ashkbiz_Danehkar
 {
 meta:
@@ -4915,10 +4915,10 @@ strings:
     	$a0 = { 55 8B EC 53 56 57 E8 03 00 00 00 EB 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Ady_s_Glue_1_10
 {
 meta:
@@ -4927,10 +4927,10 @@ strings:
     	$a0 = { 2E ?? ?? ?? ?? 0E 1F BF ?? ?? 33 DB 33 C0 AC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEncrypt_v3_1
 {
 meta:
@@ -4939,10 +4939,10 @@ strings:
     	$a0 = { E9 ?? ?? ?? 00 F0 0F C6 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEncrypt_v3_0
 {
 meta:
@@ -4951,10 +4951,10 @@ strings:
     	$a0 = { E8 00 00 00 00 5D 81 ED 05 10 40 00 8D B5 24 10 40 00 8B FE B9 0F 00 00 00 BB ?? ?? ?? ?? AD 33 C3 E2 FA }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule App_Encryptor____Silent_Team
 {
 meta:
@@ -4963,10 +4963,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED 1F 1F 40 00 B9 7B 09 00 00 8D BD 67 1F 40 00 8B F7 AC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EncryptPE_V2_2006_1_15____WFS
 {
 meta:
@@ -4978,7 +4978,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PE_Lock_NT_v2_04
 {
 meta:
@@ -4987,10 +4987,10 @@ strings:
     	$a0 = { EB ?? CD ?? ?? ?? ?? ?? CD ?? ?? ?? ?? ?? EB ?? EB ?? EB ?? EB ?? CD ?? ?? ?? ?? ?? E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 50 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PE_Lock_NT_v2_01
 {
 meta:
@@ -4999,10 +4999,10 @@ strings:
     	$a0 = { EB 03 CD 20 EB EB 01 EB 1E EB 01 EB EB 02 CD 20 9C EB 03 CD }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PE_Lock_NT_v2_03
 {
 meta:
@@ -5011,10 +5011,10 @@ strings:
     	$a0 = { EB 02 C7 85 1E EB 03 CD 20 C7 9C EB 02 69 B1 60 EB 02 EB 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule yoda_s_Protector_v1_03_3___exe__scr__com_____Ashkbiz_Danehkar__h_
 {
 meta:
@@ -5024,10 +5024,10 @@ strings:
 	$a1 = { E8 03 00 00 00 EB 01 ?? BB 55 00 00 00 E8 03 00 00 00 EB 01 ?? E8 8E 00 00 00 E8 03 00 00 00 EB 01 ?? E8 81 00 00 00 E8 03 00 00 00 EB 01 ?? E8 B7 00 00 00 E8 03 00 00 00 EB 01 ?? E8 AA 00 00 00 E8 03 00 00 00 EB 01 ?? 83 FB 55 E8 03 00 00 00 EB 01 ?? 75 2D E8 03 00 00 00 EB 01 ?? 60 E8 00 00 00 00 5D 81 ED 07 E2 40 00 8B D5 81 C2 56 E2 40 00 52 E8 01 00 00 00 C3 C3 E8 03 00 00 00 EB 01 ?? E8 0E 00 00 00 E8 D1 FF FF FF C3 E8 03 00 00 00 EB 01 ?? 33 C0 64 FF 30 64 89 20 CC C3 E8 03 00 00 00 EB 01 ?? 33 C0 64 FF 30 64 89 20 4B CC C3 E8 03 00 00 00 EB 01 ?? 33 DB B9 4B 0C 41 00 81 E9 01 E3 40 00 8B D5 81 C2 01 E3 40 00 8D 3A 8B F7 33 C0 E8 03 00 00 00 EB 01 ?? E8 17 00 00 00 90 90 90 E9 9C 22 00 00 33 C0 64 FF 30 64 89 20 43 CC C3 CC CC CC CC AC }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule VProtector_V1_1____vcasm
 {
 meta:
@@ -5036,10 +5036,10 @@ strings:
     	$a0 = { B8 1A ED 41 00 B9 EC EB 41 00 50 51 E8 74 00 00 00 E8 51 6A 00 00 58 83 E8 10 B9 B3 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FreeBASIC_0_16b
 {
 meta:
@@ -5049,10 +5049,10 @@ strings:
 	$a1 = { 55 89 E5 83 EC 08 C7 04 24 01 00 00 00 FF 15 ?? ?? ?? 00 E8 88 FF FF FF 89 EC 31 C0 5D C3 89 F6 55 89 E5 83 EC 08 C7 04 24 02 00 00 00 FF 15 ?? ?? ?? 00 E8 68 FF FF FF 89 EC 31 C0 5D C3 89 F6 55 89 E5 83 EC 08 8B 45 08 89 04 24 FF 15 ?? ?? ?? 00 89 EC 5D C3 8D 76 00 8D BC 27 00 00 00 00 55 89 E5 83 EC 08 8B 45 08 89 04 24 FF 15 ?? ?? ?? 00 89 EC 5D C3 90 90 90 90 90 90 90 90 90 90 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule UCEXE_v2_3__v2_4
 {
 meta:
@@ -5061,10 +5061,10 @@ strings:
     	$a0 = { 50 1E 0E 1F FC 33 F6 E8 ?? ?? 16 07 33 F6 33 FF B9 ?? ?? F3 A5 06 B8 ?? ?? 50 CB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Neolite_v2_0
 {
 meta:
@@ -5073,10 +5073,10 @@ strings:
     	$a0 = { E9 A6 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PolyEnE_V0_01_____Lennart_Hedlund
 {
 meta:
@@ -5088,7 +5088,7 @@ condition:
     	$a0
 }
 
-    
+
 rule __PseudoSigner_0_2__MinGW_GCC_2_x______Anorganix
 {
 meta:
@@ -5097,10 +5097,10 @@ strings:
     	$a0 = { 55 89 E5 E8 02 00 00 00 C9 C3 90 90 45 58 45 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Thinstall_2_628____Jtit__h_
 {
 meta:
@@ -5109,10 +5109,10 @@ strings:
     	$a0 = { E8 00 00 00 00 58 BB 34 1D 00 00 2B C3 50 68 00 00 40 00 68 00 40 00 00 68 BC 00 00 00 E8 C3 FE FF FF E9 99 FF FF FF CC CC CC CC CC CC CC CC CC CC 55 8B EC 83 C4 F4 FC 53 57 56 8B 75 08 8B 7D 0C C7 45 FC 08 00 00 00 33 DB BA 00 00 00 80 43 33 C0 E8 19 01 00 00 73 0E 8B 4D F8 E8 27 01 00 00 02 45 F7 AA EB E9 E8 04 01 00 00 0F 82 96 00 00 00 E8 F9 00 00 00 73 5B B9 04 00 00 00 E8 05 01 00 00 48 74 DE 0F 89 C6 00 00 00 E8 DF 00 00 00 73 1B 55 BD 00 01 00 00 E8 DF 00 00 00 88 07 47 4D 75 F5 E8 C7 00 00 00 72 E9 5D EB A2 B9 01 00 00 00 E8 D0 00 00 00 83 C0 07 89 45 F8 C6 45 F7 00 83 F8 08 74 89 E8 B1 00 00 00 88 45 F7 E9 7C FF FF FF B9 07 00 00 00 E8 AA 00 00 00 50 33 C9 B1 02 E8 A0 00 00 00 8B C8 41 41 58 0B C0 74 04 8B D8 EB 5E 83 F9 02 74 6A 41 E8 88 00 00 00 89 45 FC E9 48 FF FF FF E8 87 00 00 00 49 E2 09 8B C3 E8 7D 00 00 00 EB 3A 49 8B C1 55 8B 4D FC 8B E8 33 C0 D3 E5 E8 5D 00 00 00 0B C5 5D 8B D8 E8 5F 00 00 00 3D 00 00 01 00 73 14 3D FF 37 00 00 73 0E 3D 7F 02 00 00 73 08 83 F8 7F 77 04 41 41 41 41 56 8B F7 2B F0 F3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PE_Protect_0_9
 {
 meta:
@@ -5124,7 +5124,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Simple_UPX_Cryptor_v30_4_2005__One_layer_encryption
 {
 meta:
@@ -5133,10 +5133,10 @@ strings:
     	$a0 = { 60 B8 ?? ?? ?? 00 B9 ?? 01 00 00 80 34 08 ?? E2 FA 61 68 ?? ?? ?? 00 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_1_20_Basic_Edition__aPLib_____Ap0x
 {
 meta:
@@ -5145,10 +5145,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 83 7C 24 28 01 75 0C 8B 44 24 24 89 85 92 05 00 00 EB 0C 8B 85 8E 05 00 00 89 85 92 05 00 00 8D B5 BA 05 00 00 8D 9D 41 04 00 00 33 FF E8 38 01 00 00 EB 1B 8B 85 92 05 00 00 FF 74 37 04 01 04 24 FF 34 37 01 04 24 FF D3 83 C4 08 83 C7 08 83 3C 37 00 75 DF 83 BD 9E 05 00 00 00 74 0E 83 BD A2 05 00 00 00 74 05 E8 D6 01 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Petite_1_4_____c_1998_99_Ian_Luck__h_
 {
 meta:
@@ -5158,10 +5158,10 @@ strings:
 	$a1 = { 66 9C 60 50 8B D8 03 00 68 54 BC 00 00 6A 00 FF 50 14 8B CC 8D A0 54 BC 00 00 50 8B C3 8D 90 ?? 16 00 00 68 00 00 ?? ?? 51 50 80 04 24 08 50 80 04 24 42 50 80 04 24 61 50 80 04 24 9D 50 80 04 24 BB 83 3A 00 0F 84 D8 14 00 00 8B 44 24 18 F6 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PrincessSandy_v1_0_eMiNENCE_Process_Patcher_Patch
 {
 meta:
@@ -5174,7 +5174,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule vfp_exeNc_V5_00____Wang_JianGuo
 {
 meta:
@@ -5183,10 +5183,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 50 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 CC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_1_18_Dll__aPlib_0_43_____ap0x
 {
 meta:
@@ -5195,10 +5195,10 @@ strings:
     	$a0 = { 80 7C 24 08 01 0F 85 5C 01 00 00 60 E8 00 00 00 00 8B 2C 24 83 C4 ?? 8D B5 1A 04 00 00 8D 9D C1 02 00 00 33 FF E8 61 01 00 00 EB 0F FF 74 37 04 FF 34 37 FF D3 83 C4 ?? 83 C7 ?? 83 3C 37 00 75 EB 83 BD 06 04 00 00 00 74 0E 83 BD 0A 04 00 00 00 74 05 E8 D7 01 00 00 8D 74 37 04 53 6A ?? 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 6A ?? FF 95 A7 03 00 00 89 85 16 04 00 00 5B FF B5 16 04 00 00 56 FF D3 83 C4 ?? 8B B5 16 04 00 00 8B C6 EB 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FreeBasic_0_14
 {
 meta:
@@ -5207,10 +5207,10 @@ strings:
     	$a0 = { 55 89 E5 83 EC 08 C7 04 24 ?? 00 00 00 FF 15 ?? ?? ?? 00 E8 ?? FF FF FF 89 EC 31 C0 5D C3 89 F6 55 89 E5 83 EC 08 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 55 89 E5 83 EC 08 8B 45 08 89 04 24 FF 15 ?? ?? ?? 00 89 EC 5D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECryptor_2_xx__max__compressed_resources_____www_strongbit_com___Sign_By_haggar
 {
 meta:
@@ -5222,7 +5222,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Spalsher_1_0___3_0____Amok
 {
 meta:
@@ -5231,10 +5231,10 @@ strings:
     	$a0 = { 9C 60 8B 44 24 24 E8 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule yoda_s_Crypter_1_3____Ashkbiz_Danehkar
 {
 meta:
@@ -5244,10 +5244,10 @@ strings:
 	$a1 = { 55 8B EC 53 56 57 60 E8 00 00 00 00 5D 81 ED 6C 28 40 00 B9 5D 34 40 00 81 E9 C6 28 40 00 8B D5 81 C2 C6 28 40 00 8D 3A 8B F7 33 C0 EB 04 90 EB 01 C2 AC }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule HPA
 {
 meta:
@@ -5256,10 +5256,10 @@ strings:
     	$a0 = { E8 ?? ?? 5E 8B D6 83 ?? ?? 83 ?? ?? 06 0E 1E 0E 1F 33 FF 8C D3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SVKP_v1_43____Pavol_Cerven__h_
 {
 meta:
@@ -5268,10 +5268,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED 06 00 00 00 EB 05 B8 49 DC CE 05 64 A0 23 00 00 00 EB 03 C7 84 E8 84 C0 EB 03 C7 84 E9 75 67 B9 49 00 00 00 8D B5 C5 02 00 00 56 80 06 44 46 E2 FA 8B 8D C1 02 00 00 5E 55 51 6A 00 56 FF 95 2D 67 00 00 59 5D 40 85 C0 75 3C 80 3E 00 74 03 46 EB F8 46 E2 E3 8B C5 8B 4C 24 20 2B 85 BD 02 00 00 89 85 B9 02 00 00 80 BD B4 02 00 00 01 75 06 8B 8D 2D 67 00 00 89 8D B5 02 00 00 8D 85 0E 03 00 00 8B DD FF E0 55 68 10 10 00 00 8D 85 B4 00 00 00 50 8D 85 B4 01 00 00 50 6A 00 FF 95 39 67 00 00 5D 6A FF FF 95 31 67 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_2_x____Bitsum_Technologies
 {
 meta:
@@ -5283,7 +5283,7 @@ condition:
     	$a0
 }
 
-    
+
 rule WWPACK_v3_05c4__Modified_
 {
 meta:
@@ -5292,10 +5292,10 @@ strings:
     	$a0 = { B8 ?? ?? 8C CA 03 D0 8C C9 81 C1 ?? ?? 51 B9 ?? ?? 51 06 06 B1 ?? 51 8C D3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PeCompact2_2_53_2_76_____BitSum_Technologies
 {
 meta:
@@ -5307,7 +5307,7 @@ condition:
     	$a0
 }
 
-    
+
 rule BlackEnergy_DDoS_Bot_Crypter
 {
 meta:
@@ -5316,10 +5316,10 @@ strings:
     	$a0 = { 55 ?? ?? 81 EC 1C 01 00 00 53 56 57 6A 04 BE 00 30 00 00 56 FF 35 00 20 11 13 6A 00 E8 ?? 03 00 00 ?? ?? 83 C4 10 ?? FF 89 7D F4 0F }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Packman_0_0_0_1____Bubbasoft
 {
 meta:
@@ -5328,10 +5328,10 @@ strings:
     	$a0 = { 0F 85 ?? FF FF FF 8D B3 ?? ?? ?? ?? EB 3D 8B 46 0C 03 C3 50 FF 55 00 56 8B 36 0B F6 75 02 8B F7 03 F3 03 FB EB 1B D1 C1 D1 E9 73 05 0F B7 C9 EB 05 03 CB 8D 49 02 50 51 50 FF 55 04 AB 58 83 C6 04 8B 0E 85 C9 75 DF 5E 83 C6 14 8B 7E 10 85 FF 75 BC 8D 8B 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule LTC_v1_3
 {
 meta:
@@ -5340,10 +5340,10 @@ strings:
     	$a0 = { 54 E8 00 00 00 00 5D 8B C5 81 ED F6 73 40 00 2B 85 87 75 40 00 83 E8 06 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NoodleCrypt_2_00__Eng_____NoodleSpa
 {
 meta:
@@ -5354,7 +5354,7 @@ strings:
 condition:
     	$a0
 }
-    
+
 rule Vx__Keypress_1212
 {
 meta:
@@ -5363,10 +5363,10 @@ strings:
     	$a0 = { E8 ?? ?? E8 ?? ?? E8 ?? ?? E8 ?? ?? ?? ?? E8 ?? ?? ?? ?? E8 ?? ?? ?? ?? EA ?? ?? ?? ?? 1E 33 DB 8E DB BB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_v1_1_1_1
 {
 meta:
@@ -5375,10 +5375,10 @@ strings:
     	$a0 = { EB 02 ?? ?? E8 E7 1C 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Stone_s_PE_Encruptor_v1_13
 {
 meta:
@@ -5387,10 +5387,10 @@ strings:
     	$a0 = { 55 57 56 52 51 53 E8 ?? ?? ?? ?? 5D 8B D5 81 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule USSR_V0_31____SpiritST
 {
 meta:
@@ -5402,7 +5402,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PEZip_1_0_by_BaGIE
 {
 meta:
@@ -5414,7 +5414,7 @@ condition:
     	$a0
 }
 
-    
+
 rule DBPE_vx_xx
 {
 meta:
@@ -5423,10 +5423,10 @@ strings:
     	$a0 = { EB 20 ?? ?? 40 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 9C 55 57 56 52 51 53 9C E8 ?? ?? ?? ?? 5D 81 ED }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_4_40____Silicon_Realms_Toolworks
 {
 meta:
@@ -5435,10 +5435,10 @@ strings:
     	$a0 = { 31 2E 31 2E 34 00 00 00 C2 E0 94 BE 93 FC DE C6 B6 24 83 F7 D2 A4 92 77 40 27 CF EB D8 6F 50 B4 B5 29 24 FA 45 08 04 52 D5 1B D2 8C 8A 1E 6E FF 8C 5F 42 89 F1 83 B1 27 C5 69 57 FC 55 0A DD 44 BE 2A 02 97 6B 65 15 AA 31 E9 28 7D 49 1B DF B5 5D 08 A8 BA A8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__Borland_Delphi_3_0______Anorganix
 {
 meta:
@@ -5447,10 +5447,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 90 90 90 90 68 ?? ?? ?? ?? 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 00 01 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FreeJoiner_1_5_2__Stub_engine_1_6_____GlOFF
 {
 meta:
@@ -5459,10 +5459,10 @@ strings:
     	$a0 = { E8 46 FD FF FF 50 E8 0C 00 00 00 FF 25 08 20 40 00 FF 25 0C 20 40 00 FF 25 10 20 40 00 FF 25 14 20 40 00 FF 25 18 20 40 00 FF 25 1C 20 40 00 FF 25 20 20 40 00 FF 25 24 20 40 00 FF 25 28 20 40 00 FF 25 00 20 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Histogram_graphics_file
 {
 meta:
@@ -5474,7 +5474,7 @@ condition:
     	$a0
 }
 
-    
+
 rule eXPressor_v1_2_0b
 {
 meta:
@@ -5487,7 +5487,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule Trivial173_by_SMT_SMF
 {
 meta:
@@ -5496,10 +5496,10 @@ strings:
     	$a0 = { EB ?? ?? 28 54 72 69 76 69 61 6C 31 37 33 20 62 79 20 53 4D 54 2F 53 4D 46 29 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule nPack_1_1_250_2006_Beta____NEOx__uinC_
 {
 meta:
@@ -5511,7 +5511,7 @@ condition:
     	$a0
 }
 
-    
+
 rule SimplePack_V1_0X____bagie
 {
 meta:
@@ -5520,10 +5520,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5B 8D 5B FA 6A 00 FF 93 ?? ?? 00 00 89 C5 8B 7D 3C 8D 74 3D 00 8D BE F8 00 00 00 8B 86 88 00 00 00 09 C0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RCryptor_v1_3b_____Vaska
 {
 meta:
@@ -5533,10 +5533,10 @@ strings:
 	$a1 = { 61 83 EF 4F 60 68 ?? ?? ?? ?? FF D7 B8 ?? ?? ?? ?? 3D ?? ?? ?? ?? 74 06 80 30 ?? 40 EB F3 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Trainer_Creation_Kit_5_Trainer
 {
 meta:
@@ -5548,7 +5548,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Thinstall_Virtualization_Suite_V3_049_V3_080____Thinstall_Company
 {
 meta:
@@ -5557,10 +5557,10 @@ strings:
     	$a0 = { 9C 60 68 53 74 41 6C 68 54 68 49 6E E8 00 00 00 00 58 BB 37 1F 00 00 2B C3 50 68 ?? ?? ?? ?? 68 00 2C 00 00 68 04 01 00 00 E8 BA FE FF FF E9 90 FF FF FF CC CC CC CC CC CC CC 55 8B EC 83 C4 F4 FC 53 57 56 8B 75 08 8B 7D 0C C7 45 FC 08 00 00 00 33 DB BA 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEncrypt_2_0____junkcode
 {
 meta:
@@ -5570,10 +5570,10 @@ strings:
 	$a1 = { EB 25 00 00 F7 BF 00 00 00 00 00 00 00 00 00 00 12 00 E8 00 56 69 72 74 75 61 6C 50 72 6F 74 65 63 74 00 00 00 00 00 E8 00 00 00 00 5D 81 ED 2C 10 40 00 8D B5 14 10 40 00 E8 33 00 00 00 89 85 10 10 40 00 BF 00 00 40 00 8B F7 03 7F 3C 8B 4F 54 51 56 8D 85 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule ASProtect_v1_1_BRS
 {
 meta:
@@ -5582,10 +5582,10 @@ strings:
     	$a0 = { 60 E9 ?? 05 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEtite_v2_2
 {
 meta:
@@ -5594,10 +5594,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? ?? 68 ?? ?? ?? ?? 64 FF 35 ?? ?? ?? ?? 64 89 25 ?? ?? ?? ?? 66 9C 60 50 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEtite_v2_0
 {
 meta:
@@ -5606,10 +5606,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? ?? 66 9C 60 50 8B D8 03 ?? 68 54 BC ?? ?? 6A ?? FF 50 18 8B CC 8D A0 54 BC ?? ?? 8B C3 8D 90 E0 15 ?? ?? 68 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEtite_v2_1
 {
 meta:
@@ -5618,10 +5618,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? ?? 6A ?? 68 ?? ?? ?? ?? 64 FF 35 ?? ?? ?? ?? 64 89 25 ?? ?? ?? ?? 66 9C 60 50 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_v0_32a____emadicius
 {
 meta:
@@ -5633,7 +5633,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_1__ExeSmasher_____Anorganix
 {
 meta:
@@ -5642,10 +5642,10 @@ strings:
     	$a0 = { 9C FE 03 90 60 BE 90 90 41 90 8D BE 90 10 FF FF 57 83 CD FF EB 10 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 FE 0B E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SVK_Protector_v1_32__Eng_____Pavol_Cerven
 {
 meta:
@@ -5655,10 +5655,10 @@ strings:
 	$a1 = { 60 E8 00 00 00 00 5D 81 ED 06 00 00 00 EB 05 B8 06 36 42 00 64 A0 23 00 00 00 EB 03 C7 84 E8 84 C0 EB 03 C7 84 E9 75 67 B9 49 00 00 00 8D B5 C5 02 00 00 56 80 06 44 46 E2 FA 8B 8D C1 02 00 00 5E 55 51 6A 00 56 FF 95 0C 61 00 00 59 5D 40 85 C0 75 3C 80 3E 00 74 03 46 EB F8 46 E2 E3 8B C5 8B 4C 24 20 2B 85 BD 02 00 00 89 85 B9 02 00 00 80 BD B4 02 00 00 01 75 06 8B 8D 0C 61 00 00 89 8D B5 02 00 00 8D 85 0E 03 00 00 8B DD FF E0 55 68 10 10 00 00 8D 85 B4 00 00 00 50 8D 85 B4 01 00 00 50 6A 00 FF 95 18 61 00 00 5D 6A FF FF 95 10 61 00 00 44 65 62 75 67 67 65 72 20 6F 72 20 74 6F 6F 6C 20 66 6F 72 20 6D 6F 6E 69 74 6F 72 69 6E 67 20 64 65 74 65 63 74 65 64 21 21 21 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PassLock_2000_v1_0__Eng_____Moonlight_Software
 {
 meta:
@@ -5669,10 +5669,10 @@ strings:
 	$a2 = { 55 8B EC 53 56 57 BB 00 50 40 00 66 2E F7 05 34 20 40 00 04 00 0F 85 98 00 00 00 E8 1F 01 00 00 C7 43 60 01 00 00 00 8D 83 E4 01 00 00 50 FF 15 F0 61 40 00 83 EC 44 C7 04 24 44 00 00 00 C7 44 24 2C 00 00 00 00 54 FF 15 E8 61 40 00 B8 0A 00 00 00 F7 44 24 2C 01 00 00 00 74 05 0F B7 44 24 30 83 C4 44 89 43 56 FF 15 D0 61 40 00 E8 9E 00 00 00 89 43 4C FF 15 D4 61 40 00 89 43 48 6A 00 FF 15 E4 61 40 00 89 43 5C E8 F9 00 00 00 E8 AA 00 00 00 B8 FF 00 00 00 72 0D 53 E8 96 00 00 00 5B FF 4B 10 FF 4B 18 5F 5E 5B 5D 50 FF 15 C8 61 40 00 C3 83 7D 0C 01 75 3F E8 81 00 00 00 8D 83 E4 01 00 00 50 FF 15 F0 61 40 00 FF 15 D0 61 40 00 E8 3A 00 00 00 89 43 4C FF 15 D4 61 40 00 89 43 48 8B 45 08 89 43 5C E8 9A 00 00 00 E8 4B 00 00 00 72 11 66 FF 43 5A 8B 45 0C 89 43 60 53 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
-    
+
 rule MEGALITE_v1_20a
 {
 meta:
@@ -5681,10 +5681,10 @@ strings:
     	$a0 = { B8 ?? ?? BA ?? ?? 05 ?? ?? 3B 2D 73 ?? 72 ?? B4 09 BA ?? ?? CD 21 CD 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule DEF_1_0____bart_xt
 {
 meta:
@@ -5694,10 +5694,10 @@ strings:
 	$a1 = { BE ?? ?? 40 00 6A ?? 59 80 7E 07 00 74 11 8B 46 0C 05 00 00 40 00 8B 56 10 30 10 40 4A 75 FA 83 C6 28 E2 E4 68 ?? ?? 40 00 C3 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__NorthStar_PE_Shrinker_1_3_
 {
 meta:
@@ -5706,10 +5706,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 5D B8 B3 85 40 00 2D AC 85 40 00 2B E8 8D B5 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_1_3_0_17____Obsidium_software
 {
 meta:
@@ -5719,10 +5719,10 @@ strings:
 	$a1 = { EB 02 ?? ?? E8 28 00 00 00 EB 04 ?? ?? ?? ?? EB 01 ?? 8B 54 24 0C EB 01 ?? 83 82 B8 00 00 00 25 EB 02 ?? ?? 33 C0 EB 03 ?? ?? ?? C3 EB 03 ?? ?? ?? EB 02 ?? ?? 64 67 FF 36 00 00 EB 01 ?? 64 67 89 26 00 00 EB 03 ?? ?? ?? EB 04 ?? ?? ?? ?? 50 EB 04 ?? ?? ?? ?? 33 C0 EB 02 ?? ?? 8B 00 EB 04 ?? ?? ?? ?? C3 EB 01 ?? E9 FA 00 00 00 EB 03 ?? ?? ?? E8 D5 FF FF FF EB 04 ?? ?? ?? ?? EB 02 ?? ?? 58 EB 03 ?? ?? ?? EB 01 ?? 64 67 8F 06 00 00 EB 04 ?? ?? ?? ?? 83 C4 04 EB 02 ?? ?? E8 4F 26 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Sexe_Crypter_1_1___by_santasdad
 {
 meta:
@@ -5731,10 +5731,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 EC 53 56 57 33 C0 89 45 EC B8 D8 39 00 10 E8 30 FA FF FF 33 C0 55 68 D4 3A 00 10 64 FF 30 64 89 ?? ?? ?? ?? E4 3A 00 10 A1 00 57 00 10 50 E8 CC FA FF FF 8B D8 53 A1 00 57 00 10 50 E8 FE FA FF FF 8B F8 53 A1 00 57 00 10 50 E8 C8 FA FF FF 8B D8 53 E8 C8 FA FF FF 8B F0 85 F6 74 26 8B D7 4A B8 14 57 00 10 E8 AD F6 FF FF B8 14 57 00 10 E8 9B F6 FF FF 8B CF 8B D6 E8 DA FA FF FF 53 E8 84 FA FF FF 8D 4D EC BA F8 3A 00 10 A1 14 57 00 10 E8 0A FB FF FF 8B 55 EC B8 14 57 00 10 E8 65 F5 FF FF B8 14 57 00 10 E8 63 F6 FF FF E8 52 FC FF FF 33 C0 5A 59 59 64 89 10 68 DB 3A 00 10 8D 45 EC E8 ED F4 FF FF C3 E9 83 EF FF FF EB F0 5F 5E 5B E8 ED F3 FF FF 00 53 45 54 54 49 4E 47 53 00 00 00 00 FF FF FF FF 12 00 00 00 6B 75 74 68 37 36 67 62 62 67 36 37 34 76 38 38 67 79 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule WWPACK_v3_05c4__Extractable___Virus_Shield_
 {
 meta:
@@ -5743,10 +5743,10 @@ strings:
     	$a0 = { 03 05 40 1A B8 ?? ?? 8C CA 03 D0 8C C9 81 C1 ?? ?? 51 B9 ?? ?? 51 06 06 B1 ?? 51 8C D3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__Predator_2448
 {
 meta:
@@ -5755,10 +5755,10 @@ strings:
     	$a0 = { 0E 1F BF ?? ?? B8 ?? ?? B9 ?? ?? 49 ?? ?? ?? ?? 2A C1 4F 4F ?? ?? F9 CC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Themida_1_2_0_1____Oreans_Technologies__h_
 {
 meta:
@@ -5771,7 +5771,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule RLPack_V1_18__aPlib_0_43_____ap0x
 {
 meta:
@@ -5780,10 +5780,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 ?? 8D B5 1A 04 00 00 8D 9D C1 02 00 00 33 FF E8 61 01 00 00 EB 0F FF 74 37 04 FF 34 37 FF D3 83 C4 ?? 83 C7 ?? 83 3C 37 00 75 EB 83 BD 06 04 00 00 00 74 0E 83 BD 0A 04 00 00 00 74 05 E8 D7 01 00 00 8D 74 37 04 53 6A ?? 68 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__DxPack_1_0_____Anorganix
 {
 meta:
@@ -5792,10 +5792,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 8B FD 81 ED 90 90 90 90 2B B9 00 00 00 00 81 EF 90 90 90 90 83 BD 90 90 90 90 90 0F 84 00 00 00 00 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__Watcom_C_C___DLL_
 {
 meta:
@@ -5804,10 +5804,10 @@ strings:
     	$a0 = { 53 56 57 55 8B 74 24 14 8B 7C 24 18 8B 6C 24 1C 83 FF 03 0F 87 01 00 00 00 F1 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_0_32a__fake_PEBundle_2_0x___2_4x_____emadicius
 {
 meta:
@@ -5819,7 +5819,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Armadillo_v4_20____Silicon_Realms_Toolworks
 {
 meta:
@@ -5831,7 +5831,7 @@ condition:
     	$a0
 }
 
-    
+
 rule __PseudoSigner_0_1__Microsoft_Visual_C___6_0__Debug_Version_______Anorganix
 {
 meta:
@@ -5840,10 +5840,10 @@ strings:
     	$a0 = { 55 8B EC 51 90 90 90 01 01 90 90 90 90 68 ?? ?? ?? ?? 90 90 90 90 90 90 90 90 90 90 90 90 00 01 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 00 01 90 90 90 90 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule codeCrypter_0_31____Tibbar
 {
 meta:
@@ -5852,10 +5852,10 @@ strings:
     	$a0 = { 50 58 53 5B 90 BB ?? ?? ?? 00 FF E3 90 CC CC CC 55 8B EC 5D C3 CC CC CC CC CC CC CC CC CC CC CC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_v0_76_1__dos_exe_
 {
 meta:
@@ -5864,10 +5864,10 @@ strings:
     	$a0 = { B9 ?? ?? BE ?? ?? 89 F7 1E A9 ?? ?? 8C C8 05 ?? ?? 8E D8 05 ?? ?? 8E C0 FD F3 A5 FC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__Armadillo_3_00_
 {
 meta:
@@ -5876,10 +5876,10 @@ strings:
     	$a0 = { 60 E8 2A 00 00 00 5D 50 51 EB 0F B9 EB 0F B8 EB 07 B9 EB 0F 90 EB 08 FD EB 0B F2 EB F5 EB F6 F2 EB 08 FD EB E9 F3 EB E4 FC E9 59 58 50 51 EB 85 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule LamCrypt_1_0____LaZaRuS
 {
 meta:
@@ -5891,7 +5891,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PUNiSHER_V1_5_Demo___FEUERRADER
 {
 meta:
@@ -5900,10 +5900,10 @@ strings:
     	$a0 = { EB 04 83 A4 BC CE 60 EB 04 80 BC 04 11 E8 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v2_60b2
 {
 meta:
@@ -5912,12 +5912,12 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 90 ?? ?? ?? 68 24 ?? ?? ?? 64 A1 ?? ?? ?? ?? 50 64 89 25 ?? ?? ?? ?? 83 EC 58 53 56 57 89 65 E8 FF 15 60 ?? ?? ?? 33 D2 8A D4 89 15 3C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
 
-    
+
+
 rule Armadillo_v2_60b1
 {
 meta:
@@ -5926,10 +5926,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 50 ?? ?? ?? 68 74 ?? ?? ?? 64 A1 ?? ?? ?? ?? 50 64 89 25 ?? ?? ?? ?? 83 EC 58 53 56 57 89 65 E8 FF 15 58 ?? ?? ?? 33 D2 8A D4 89 15 FC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__PENightMare_2_Beta_
 {
 meta:
@@ -5938,10 +5938,10 @@ strings:
     	$a0 = { 60 E9 10 00 00 00 EF 40 03 A7 07 8F 07 1C 37 5D 43 A7 04 B9 2C 3A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule nPack_1_1_300_2006_Beta____NEOx
 {
 meta:
@@ -5950,10 +5950,10 @@ strings:
     	$a0 = { 83 3D ?? ?? ?? ?? ?? 75 05 E9 01 00 00 00 C3 E8 46 00 00 00 E8 73 00 00 00 B8 ?? ?? ?? ?? 2B 05 ?? ?? ?? ?? A3 ?? ?? ?? ?? E8 9C 00 00 00 E8 2D 02 00 00 E8 DD 06 00 00 E8 2C 06 00 00 A1 ?? ?? ?? ?? C7 05 ?? ?? ?? ?? ?? ?? ?? ?? 01 05 ?? ?? ?? ?? FF 35 ?? ?? ?? ?? C3 C3 56 57 68 ?? ?? ?? ?? FF 15 ?? ?? ?? ?? 8B 35 ?? ?? ?? ?? 8B F8 68 ?? ?? ?? ?? 57 FF D6 68 ?? ?? ?? ?? 57 A3 ?? ?? ?? ?? FF D6 5F A3 ?? ?? ?? ?? 5E C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__Morphine_1_2______Anorganix
 {
 meta:
@@ -5962,10 +5962,10 @@ strings:
     	$a0 = { 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 06 00 90 90 90 90 90 90 90 90 EB 08 E8 90 00 00 00 66 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 51 66 90 90 90 59 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 02 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 02 E2 90 90 90 EB 08 82 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 02 00 01 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Winkript_v1_0
 {
 meta:
@@ -5974,10 +5974,10 @@ strings:
     	$a0 = { 33 C0 8B B8 00 ?? ?? ?? 8B 90 04 ?? ?? ?? 85 FF 74 1B 33 C9 50 EB 0C 8A 04 39 C0 C8 04 34 1B 88 04 39 41 3B CA 72 F0 58 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Apex_3_0_alpha____500mhz
 {
 meta:
@@ -5989,7 +5989,7 @@ condition:
     	$a0
 }
 
-    
+
 rule CrypKey_v5___v6
 {
 meta:
@@ -5998,10 +5998,10 @@ strings:
     	$a0 = { E8 ?? ?? ?? ?? 58 83 E8 05 50 5F 57 8B F7 81 EF ?? ?? ?? ?? 83 C6 39 BA ?? ?? ?? ?? 8B DF B9 0B ?? ?? ?? 8B 06 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule WWPACK_v3_05c4__Extractable_
 {
 meta:
@@ -6010,10 +6010,10 @@ strings:
     	$a0 = { 03 05 00 1A B8 ?? ?? 8C CA 03 D0 8C C9 81 C1 ?? ?? 51 B9 ?? ?? 51 06 06 B1 ?? 51 8C D3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECryptor_2_3_9_DLL__compressed_resources_
 {
 meta:
@@ -6022,10 +6022,10 @@ strings:
     	$a0 = { 50 68 ?? ?? ?? ?? 58 C1 C0 0F E9 ?? ?? ?? 00 87 04 24 58 89 45 FC E9 ?? ?? ?? FF FF 05 ?? ?? ?? ?? E9 ?? ?? ?? 00 C1 C3 18 E9 ?? ?? ?? ?? 8B 55 08 09 42 F8 E9 ?? ?? ?? FF 83 7D F0 01 0F 85 ?? ?? ?? ?? E9 ?? ?? ?? 00 87 34 24 5E 8B 45 FC 33 D2 56 8B F2 E9 ?? ?? ?? 00 BA ?? ?? ?? ?? E8 ?? ?? ?? 00 A3 ?? ?? ?? ?? C3 E9 ?? ?? ?? 00 C3 83 C4 04 C3 E9 ?? ?? ?? FF 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 E8 ?? ?? ?? 00 E9 ?? ?? ?? FF C1 C2 03 81 CA ?? ?? ?? ?? 81 C2 ?? ?? ?? ?? 03 C2 5A E9 ?? ?? ?? FF 81 E7 ?? ?? ?? ?? 81 EF ?? ?? ?? ?? 81 C7 ?? ?? ?? ?? 89 07 E9 ?? ?? ?? ?? 0F 89 ?? ?? ?? ?? 87 14 24 5A 50 C1 C8 10 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_v1_18_Basic__LZMA_____Ap0x
 {
 meta:
@@ -6034,10 +6034,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 8D B5 21 0B 00 00 8D 9D FF 02 00 00 33 FF E8 9F 01 00 00 6A 40 68 00 10 00 00 68 00 20 0C 00 6A 00 FF 95 AA 0A 00 00 89 85 F9 0A 00 00 EB 14 60 FF B5 F9 0A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_v1_2_5_0____Obsidium_Software__h_
 {
 meta:
@@ -6046,10 +6046,10 @@ strings:
     	$a0 = { E8 0E 00 00 00 8B 54 24 0C 83 82 B8 00 00 00 0D 33 C0 C3 64 67 FF 36 00 00 64 67 89 26 00 00 50 33 C0 8B 00 C3 E9 FA 00 00 00 E8 D5 FF FF FF 58 64 67 8F 06 00 00 83 C4 04 E8 2B 13 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__Macromedia_Flash_Projector_6_0______Anorganix
 {
 meta:
@@ -6058,10 +6058,10 @@ strings:
     	$a0 = { 90 90 90 90 68 ?? ?? ?? ?? 67 64 FF 36 00 00 67 64 89 26 00 00 F1 90 90 90 90 83 EC 44 56 FF 15 24 81 49 00 8B F0 8A 06 3C 22 75 1C 8A 46 01 46 3C 22 74 0C 84 C0 74 08 8A 46 01 46 3C 22 75 F4 80 3E 22 75 0F 46 EB 0C E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_2_90__LZMA_
 {
 meta:
@@ -6072,10 +6072,10 @@ strings:
 	$a2 = { 60 BE ?? ?? ?? ?? 8D BE ?? ?? ?? ?? 57 83 CD FF EB 10 90 90 90 90 90 90 8A 06 46 88 07 47 01 DB 75 07 8B 1E 83 EE FC 11 DB 72 ED B8 01 00 00 00 01 DB 75 07 8B 1E 83 EE FC 11 DB 11 C0 01 DB }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__Borland_Delphi_DLL______Anorganix
 {
 meta:
@@ -6084,10 +6084,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 B4 B8 90 90 90 90 E8 00 00 00 00 E8 00 00 00 00 8D 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule yoda_s_Protector_v1_03_2___exe__scr__com_____Ashkbiz_Danehkar__h_
 {
 meta:
@@ -6097,10 +6097,10 @@ strings:
 	$a1 = { E8 03 00 00 00 EB 01 ?? BB 55 00 00 00 E8 03 00 00 00 EB 01 ?? E8 8F 00 00 00 E8 03 00 00 00 EB 01 ?? E8 82 00 00 00 E8 03 00 00 00 EB 01 ?? E8 B8 00 00 00 E8 03 00 00 00 EB 01 ?? E8 AB 00 00 00 E8 03 00 00 00 EB 01 ?? 83 FB 55 E8 03 00 00 00 EB 01 ?? 75 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule R_SC_s_Process_Patcher_1_4
 {
 meta:
@@ -6112,7 +6112,7 @@ condition:
     	$a0
 }
 
-    
+
 rule RCryptor_v1_5_____Vaska
 {
 meta:
@@ -6121,10 +6121,10 @@ strings:
     	$a0 = { 83 2C 24 4F 68 ?? ?? ?? ?? FF 54 24 04 83 44 24 04 4F }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule WWPACK_v3_05c4__Unextractable___Password_checking_
 {
 meta:
@@ -6133,10 +6133,10 @@ strings:
     	$a0 = { 03 05 80 1B B8 ?? ?? 8C CA 03 D0 8C C9 81 C1 ?? ?? 51 B9 ?? ?? 51 06 06 B1 ?? 51 8C D3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule LSI_C_86_Run_Time_Libray
 {
 meta:
@@ -6145,10 +6145,10 @@ strings:
     	$a0 = { B8 ?? ?? 8E C0 06 17 BC ?? ?? 26 8C ?? ?? ?? B4 30 CD 21 26 A3 ?? ?? FC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_Modifier_v0_1x
 {
 meta:
@@ -6157,10 +6157,10 @@ strings:
     	$a0 = { 50 BE ?? ?? ?? ?? 8D BE ?? ?? ?? ?? 57 83 CD }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v1_68___v1_84
 {
 meta:
@@ -6169,10 +6169,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 3F 90 40 87 DD 8B 85 E6 90 40 01 85 33 90 40 66 C7 85 90 40 90 90 01 85 DA 90 40 01 85 DE 90 40 01 85 E2 90 40 BB 7B 11 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule JAM_v2_11
 {
 meta:
@@ -6181,10 +6181,10 @@ strings:
     	$a0 = { 50 06 16 07 BE ?? ?? 8B FE B9 ?? ?? FD FA F3 2E A5 FB 06 BD ?? ?? 55 CB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FreeJoiner_1_5_3__Stub_engine_1_7_1_____GlOFF
 {
 meta:
@@ -6194,10 +6194,10 @@ strings:
 	$a1 = { E8 02 FD FF FF 6A 00 E8 0D 00 00 00 CC FF 25 80 10 40 00 FF 25 84 10 40 00 FF 25 88 10 40 00 FF 25 8C 10 40 00 FF 25 90 10 40 00 FF 25 94 10 40 00 FF 25 98 10 40 00 FF 25 9C 10 40 00 FF 25 A0 10 40 00 FF 25 A8 10 40 00 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule tElock_v1_00
 {
 meta:
@@ -6206,10 +6206,10 @@ strings:
     	$a0 = { E9 E5 E2 FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__PEX_0_99______Anorganix
 {
 meta:
@@ -6218,10 +6218,10 @@ strings:
     	$a0 = { 60 E8 01 00 00 00 55 83 C4 04 E8 01 00 00 00 90 5D 81 FF FF FF 00 01 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PUNiSHER_V1_5_Demo____FEUERRADER
 {
 meta:
@@ -6230,10 +6230,10 @@ strings:
     	$a0 = { EB 04 83 A4 BC CE 60 EB 04 80 BC 04 11 E8 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Crinkler_V0_1_V0_2____Rune_L_H_Stubbe_and_Aske_Simon_Christensen
 {
 meta:
@@ -6242,10 +6242,10 @@ strings:
     	$a0 = { B9 ?? ?? ?? ?? 01 C0 68 ?? ?? ?? ?? 6A 00 58 50 6A 00 5F 48 5D BB 03 00 00 00 BE ?? ?? ?? ?? E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_0_32a__fake_PECompact_1_4x_____emadicius
 {
 meta:
@@ -6257,7 +6257,7 @@ condition:
     	$a0
 }
 
-    
+
 rule nSPack_2_x_3_x__NET___North_Star_Liu_Xing_Ping
 {
 meta:
@@ -6266,10 +6266,10 @@ strings:
     	$a0 = { FF 25 A4 ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule DalKrypt_1_0___by_DalKiT
 {
 meta:
@@ -6279,10 +6279,10 @@ strings:
 	$a1 = { 68 00 10 40 00 58 68 ?? ?? ?? 00 5F 33 DB EB 0D 8A 14 03 80 EA 07 80 F2 04 88 14 03 43 81 FB ?? ?? ?? 00 72 EB FF E7 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PKLITE_v1_00__v1_03
 {
 meta:
@@ -6291,10 +6291,10 @@ strings:
     	$a0 = { B8 ?? ?? BA ?? ?? 8C DB 03 D8 3B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule WARNING____TROJAN____XiaoHui
 {
 meta:
@@ -6303,10 +6303,10 @@ strings:
     	$a0 = { 60 9C E8 00 00 00 00 5D B8 ?? 85 40 00 2D ?? 85 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Reflexive_Arcade_Wrapper
 {
 meta:
@@ -6316,10 +6316,10 @@ strings:
 	$a1 = { 55 8B EC 6A FF 68 98 68 42 00 68 14 FA 41 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 53 56 57 89 65 E8 FF 15 F8 50 42 00 33 D2 8A D4 89 15 3C E8 42 00 8B C8 81 E1 FF 00 00 00 89 0D 38 E8 42 00 C1 E1 08 03 CA 89 0D 34 E8 42 00 C1 E8 10 A3 30 E8 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule FreeJoiner_1_5_3__Stub_engine_1_7_____GlOFF
 {
 meta:
@@ -6328,10 +6328,10 @@ strings:
     	$a0 = { E8 33 FD FF FF 50 E8 0D 00 00 00 CC FF 25 08 20 40 00 FF 25 0C 20 40 00 FF 25 10 20 40 00 FF 25 14 20 40 00 FF 25 18 20 40 00 FF 25 1C 20 40 00 FF 25 20 20 40 00 FF 25 24 20 40 00 FF 25 28 20 40 00 FF 25 00 20 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__Ste_lth_PE_1_01_
 {
 meta:
@@ -6340,10 +6340,10 @@ strings:
     	$a0 = { 0B C0 0B C0 0B C0 0B C0 0B C0 0B C0 0B C0 0B C0 BA ?? ?? ?? ?? FF E2 BA E0 10 40 00 B8 68 24 1A 40 89 02 83 C2 03 B8 40 00 E8 EE 89 02 83 C2 FD FF E2 2D 3D 5B 20 48 69 64 65 50 45 20 5D 3D 2D 90 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule beria_v0_07_public_WIP_____symbiont__h_
 {
 meta:
@@ -6352,10 +6352,10 @@ strings:
     	$a0 = { 83 EC 18 53 8B 1D 00 30 ?? ?? 55 56 57 68 30 07 00 00 33 ED 55 FF D3 8B F0 3B F5 74 0D 89 AE 20 07 00 00 E8 88 0F 00 00 EB 02 33 F6 6A 10 55 89 35 30 40 ?? ?? FF D3 8B F0 3B F5 74 09 89 2E E8 3C FE FF FF EB 02 33 F6 6A 18 55 89 35 D8 43 ?? ?? FF D3 8B F0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SDProtector_Basic_Pro_Edition_1_10____Randy_Li__h_
 {
 meta:
@@ -6365,10 +6365,10 @@ strings:
 	$a1 = { 55 8B EC 6A FF 68 1D 32 13 05 68 88 88 88 08 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 58 64 A3 00 00 00 00 58 58 58 58 8B E8 50 83 EC 08 64 A1 00 00 00 00 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 83 C4 08 50 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 64 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Sc_Obfuscator____SuperCRacker___Sign_by_fly
 {
 meta:
@@ -6377,10 +6377,10 @@ strings:
     	$a0 = { 60 33 C9 8B 1D ?? ?? ?? ?? 03 1D ?? ?? ?? ?? 8A 04 19 84 C0 74 09 3C ?? 74 05 34 ?? 88 04 19 41 3B 0D ?? ?? ?? ?? 75 E7 A1 ?? ?? ?? ?? 01 05 ?? ?? ?? ?? 61 FF 25 ?? ?? ?? ?? 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_V1_2____Obsidium_Software
 {
 meta:
@@ -6389,10 +6389,10 @@ strings:
     	$a0 = { EB 02 ?? ?? E8 77 1E 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule _MSLRH__v0_31a
 {
 meta:
@@ -6404,7 +6404,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PEtite_v1_4
 {
 meta:
@@ -6414,10 +6414,10 @@ strings:
 	$a1 = { 66 9C 60 50 8B D8 03 00 68 54 BC 00 00 6A 00 FF 50 14 8B CC }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule tElock_v0_42
 {
 meta:
@@ -6426,10 +6426,10 @@ strings:
     	$a0 = { C1 EE 00 66 8B C9 EB 01 EB 60 EB 01 EB 9C E8 00 00 00 00 5E 83 C6 52 8B FE 68 79 01 59 EB 01 EB AC 54 E8 03 5C EB 08 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__Kuku_448
 {
 meta:
@@ -6438,10 +6438,10 @@ strings:
     	$a0 = { AE 75 ED E2 F8 89 3E ?? ?? BA ?? ?? 0E 07 BF ?? ?? EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEtite_v1_3
 {
 meta:
@@ -6450,10 +6450,10 @@ strings:
     	$a0 = { 66 9C 60 50 8D 88 ?? F0 ?? ?? 8D 90 04 16 ?? ?? 8B DC 8B E1 68 ?? ?? ?? ?? 53 50 80 04 24 08 50 80 04 24 42 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEtite_v1_2
 {
 meta:
@@ -6462,10 +6462,10 @@ strings:
     	$a0 = { 9C 60 E8 CA ?? ?? ?? 03 ?? 04 ?? 05 ?? 06 ?? 07 ?? 08 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Petite_1_4_____c_1998_99_Ian_Luck
 {
 meta:
@@ -6474,10 +6474,10 @@ strings:
     	$a0 = { 66 9C 60 50 8B D8 03 00 68 54 BC 00 00 6A 00 FF 50 14 8B CC 8D A0 54 BC 00 00 50 8B C3 8D 90 ?? 16 00 00 68 00 00 ?? ?? 51 50 80 04 24 08 50 80 04 24 42 50 80 04 24 61 50 80 04 24 9D 50 80 04 24 BB 83 3A 00 0F 84 D8 14 00 00 8B 44 24 18 F6 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_Full_Edition_1_17__LZMA_____Ap0x
 {
 meta:
@@ -6486,10 +6486,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 8D B5 73 26 00 00 8D 9D 58 03 00 00 33 FF ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 6A 40 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 6A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_0_32a__fake_PE_Lock_NT_2_04_____emadicius
 {
 meta:
@@ -6501,7 +6501,7 @@ condition:
     	$a0
 }
 
-    
+
 rule ACProtect_1_4x____RISCO_soft
 {
 meta:
@@ -6514,7 +6514,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule __PseudoSigner_0_2__PE_Pack_0_99______Anorganix
 {
 meta:
@@ -6523,10 +6523,10 @@ strings:
     	$a0 = { 60 E8 11 00 00 00 5D 83 ED 06 80 BD E0 04 90 90 01 0F 84 F2 FF CC 0A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__MinGW_GCC_2_x_____Anorganix
 {
 meta:
@@ -6535,10 +6535,10 @@ strings:
     	$a0 = { 55 89 E5 E8 02 00 00 00 C9 C3 90 90 45 58 45 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Mew_11_SE_v1_2__Eng_____Northfox
 {
 meta:
@@ -6547,10 +6547,10 @@ strings:
     	$a0 = { E9 ?? ?? ?? FF 0C ?? ?? 00 00 00 00 00 00 00 00 00 ?? ?? ?? 00 0C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SoftSentry_v3_0
 {
 meta:
@@ -6559,10 +6559,10 @@ strings:
     	$a0 = { 55 8B EC 83 EC ?? 53 56 57 E9 B0 06 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UltraPro_V1_0____SafeNet
 {
 meta:
@@ -6571,10 +6571,10 @@ strings:
     	$a0 = { A1 ?? ?? ?? ?? 85 C0 0F 85 3B 06 00 00 55 56 C7 05 ?? ?? ?? ?? 01 00 00 00 FF 15 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1_____Anorganix
 {
 meta:
@@ -6583,10 +6583,10 @@ strings:
     	$a0 = { 90 90 90 90 68 ?? ?? ?? ?? 67 64 FF 36 00 00 67 64 89 26 00 00 F1 90 90 90 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule CauseWay_DOS_Extender_v3_25
 {
 meta:
@@ -6595,10 +6595,10 @@ strings:
     	$a0 = { FA 16 1F 26 ?? ?? ?? 83 ?? ?? 8E D0 FB 06 16 07 BE ?? ?? 8B FE B9 ?? ?? F3 A4 07 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Embed_PE_v1_13____cyclotron
 {
 meta:
@@ -6607,10 +6607,10 @@ strings:
     	$a0 = { 83 EC 50 60 68 5D B9 52 5A E8 2F 99 00 00 DC 99 F3 57 05 68 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SVKP_v1_32____Pavol_Cerven__h_
 {
 meta:
@@ -6619,10 +6619,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED 06 00 00 00 EB 05 B8 06 36 42 00 64 A0 23 00 00 00 EB 03 C7 84 E8 84 C0 EB 03 C7 84 E9 75 67 B9 49 00 00 00 8D B5 C5 02 00 00 56 80 06 44 46 E2 FA 8B 8D C1 02 00 00 5E 55 51 6A 00 56 FF 95 0C 61 00 00 59 5D 40 85 C0 75 3C 80 3E 00 74 03 46 EB F8 46 E2 E3 8B C5 8B 4C 24 20 2B 85 BD 02 00 00 89 85 B9 02 00 00 80 BD B4 02 00 00 01 75 06 8B 8D 0C 61 00 00 89 8D B5 02 00 00 8D 85 0E 03 00 00 8B DD FF E0 55 68 10 10 00 00 8D 85 B4 00 00 00 50 8D 85 B4 01 00 00 50 6A 00 FF 95 18 61 00 00 5D 6A FF FF 95 10 61 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PESpin_v0_3____Cyberbob__h_
 {
 meta:
@@ -6631,10 +6631,10 @@ strings:
     	$a0 = { EB 01 68 60 E8 00 00 00 00 8B 1C 24 83 C3 12 81 2B E8 B1 06 00 FE 4B FD 82 2C 24 B7 CD 46 00 0B E4 74 9E 75 01 C7 81 73 04 D7 7A F7 2F 81 73 19 77 00 43 B7 F6 C3 6B B7 00 00 F9 FF E3 C9 C2 08 00 A3 68 72 01 FF 5D 33 C9 41 E2 17 EB 07 EA EB 01 EB EB 0D FF E8 01 00 00 00 EA 5A 83 EA 0B FF E2 8B 95 CB 2C 40 00 8B 42 3C 03 C2 89 85 D5 2C 40 00 41 C1 E1 07 8B 0C 01 03 CA 8B 59 10 03 DA 8B 1B 89 9D E9 2C 40 00 53 8F 85 B6 2B 40 00 BB ?? 00 00 00 B9 75 0A 00 00 8D BD 7E 2D 40 00 4F 30 1C 39 FE CB E2 F9 68 3C 01 00 00 59 8D BD B6 36 40 00 C0 0C 39 02 E2 FA E8 02 00 00 00 FF 15 5A 8D 85 1F 53 56 00 BB 54 13 0B 00 D1 E3 2B C3 FF E0 E8 01 00 00 00 68 E8 1A 00 00 00 8D 34 28 B9 08 00 00 00 B8 ?? ?? ?? ?? 2B C9 83 C9 15 0F A3 C8 0F 83 81 00 00 00 8D B4 0D DC 2C 40 00 8B D6 B9 10 00 00 00 AC 84 C0 74 06 C0 4E FF 03 E2 F5 E8 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule y0da_s_Crypter_v1_x___Modified
 {
 meta:
@@ -6643,10 +6643,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED ?? ?? ?? ?? B9 ?? ?? 00 00 8D BD ?? ?? ?? ?? 8B F7 AC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_V1_3_1_1____Obsidium_Software
 {
 meta:
@@ -6655,10 +6655,10 @@ strings:
     	$a0 = { EB 02 ?? ?? E8 27 00 00 00 EB 02 ?? ?? EB 03 ?? ?? ?? 8B 54 24 0C EB 01 ?? 83 82 B8 00 00 00 22 EB 04 ?? ?? ?? ?? 33 C0 EB 01 ?? C3 EB 02 ?? ?? EB 02 ?? ?? 64 67 FF 36 00 00 EB 04 ?? ?? ?? ?? 64 67 89 26 00 00 EB 01 ?? EB 03 ?? ?? ?? 50 EB 03 ?? ?? ?? 33 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_1_3_3_8____Obsidium_Software
 {
 meta:
@@ -6668,10 +6668,10 @@ strings:
 	$a1 = { EB 04 ?? ?? ?? ?? E8 28 00 00 00 EB 01 ?? EB 01 ?? 8B 54 24 0C EB 04 ?? ?? ?? ?? 83 82 B8 00 00 00 ?? EB 04 ?? ?? ?? ?? 33 C0 EB 03 ?? ?? ?? C3 EB 01 ?? EB 01 ?? 64 67 FF 36 00 00 EB 03 ?? ?? ?? 64 67 89 26 00 00 EB 02 ?? ?? EB 01 ?? 50 EB 04 ?? ?? ?? ?? 33 C0 EB 02 ?? ?? 8B 00 EB 03 ?? ?? ?? C3 EB 03 ?? ?? ?? E9 FA 00 00 00 EB 03 ?? ?? ?? E8 D5 FF FF FF EB 02 ?? ?? EB 04 ?? ?? ?? ?? 58 EB 04 ?? ?? ?? ?? EB 02 ?? ?? 64 67 8F 06 00 00 EB 04 ?? ?? ?? ?? 83 C4 04 EB 04 ?? ?? ?? ?? E8 57 27 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Excalibur_1_03____forgot
 {
 meta:
@@ -6680,10 +6680,10 @@ strings:
     	$a0 = { E9 00 00 00 00 60 E8 14 00 00 00 5D 81 ED 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FreeJoiner_Small__build_023_____GlOFF
 {
 meta:
@@ -6692,10 +6692,10 @@ strings:
     	$a0 = { E8 E1 FD FF FF 6A 00 E8 0C 00 00 00 FF 25 78 10 40 00 FF 25 7C 10 40 00 FF 25 80 10 40 00 FF 25 84 10 40 00 FF 25 88 10 40 00 FF 25 8C 10 40 00 FF 25 90 10 40 00 FF 25 94 10 40 00 FF 25 98 10 40 00 FF 25 9C 10 40 00 FF 25 A0 10 40 00 FF 25 A4 10 40 00 FF 25 AC 10 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Private_Personal_Packer__PPP__1_0_2____ConquestOfTroy_com
 {
 meta:
@@ -6705,10 +6705,10 @@ strings:
 	$a1 = { E8 17 00 00 00 E8 68 00 00 00 FF 35 2C 37 00 10 E8 ED 01 00 00 6A 00 E8 2E 04 00 00 E8 41 04 00 00 A3 74 37 00 10 6A 64 E8 5F 04 00 00 E8 30 04 00 00 A3 78 37 00 10 6A 64 E8 4E 04 00 00 E8 1F 04 00 00 A3 7C 37 00 10 A1 74 37 00 10 8B 1D 78 37 00 10 2B D8 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule ASPack_v1_04b
 {
 meta:
@@ -6717,10 +6717,10 @@ strings:
     	$a0 = { 60 E8 ?? ?? ?? ?? 5D 81 ED ?? ?? ?? ?? B8 ?? ?? ?? ?? 03 C5 2B 85 ?? 12 9D ?? 89 85 1E 9D ?? ?? 80 BD 08 9D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__Borland_C___1999______Anorganix
 {
 meta:
@@ -6729,10 +6729,10 @@ strings:
     	$a0 = { EB 10 66 62 3A 43 2B 2B 48 4F 4F 4B 90 E9 90 90 90 90 A1 ?? ?? ?? ?? A3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__NorthStar_PE_Shrinker_1_3______Anorganix
 {
 meta:
@@ -6741,10 +6741,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 5D B8 B3 85 40 00 2D AC 85 40 00 2B E8 8D B5 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule E2C_by_DoP
 {
 meta:
@@ -6753,10 +6753,10 @@ strings:
     	$a0 = { BE ?? ?? BF ?? ?? B9 ?? ?? FC 57 F3 A5 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule WWPACK_v3_02__v3_02a__Extractable_
 {
 meta:
@@ -6765,10 +6765,10 @@ strings:
     	$a0 = { B8 ?? ?? 8C CA 03 D0 8C C9 81 C1 ?? ?? 51 33 C9 B1 ?? 51 06 06 BB ?? ?? 53 8C D3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_1_20__Eng_____dulek_xt_____Microsoft_Visual_C___6_0___7_0_
 {
 meta:
@@ -6780,7 +6780,7 @@ condition:
     	$a0
 }
 
-    
+
 rule _EP_ExE_Pack__V1_4_lite_b2____6aHguT___g_l_u_k
 {
 meta:
@@ -6789,10 +6789,10 @@ strings:
     	$a0 = { 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? ?? 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 4B 45 52 4E 45 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule tElock_0_99____tE_
 {
 meta:
@@ -6801,10 +6801,10 @@ strings:
     	$a0 = { E9 5E DF FF FF 00 00 00 ?? ?? ?? ?? E5 ?? ?? 00 00 00 00 00 00 00 00 00 05 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Unnamed_Scrambler_1_1C____p0ke
 {
 meta:
@@ -6814,10 +6814,10 @@ strings:
 	$a1 = { 55 8B EC 83 C4 E4 53 56 33 C0 89 45 E4 89 45 E8 89 45 EC B8 C0 47 00 10 E8 4F F3 FF FF BE 5C 67 00 10 33 C0 55 68 D2 4A 00 10 64 FF 30 64 89 20 E8 EB DE FF FF E8 C6 F8 FF FF BA E0 4A 00 10 B8 CC 67 00 10 E8 5F F8 FF FF 8B D8 8B D6 8B C3 8B 0D CC 67 00 10 E8 3A DD FF FF 8B 46 50 8B D0 B8 D4 67 00 10 E8 5B EF FF FF B8 D4 67 00 10 E8 09 EF FF FF 8B D0 8D 46 14 8B 4E 50 E8 14 DD FF FF 8B 46 48 8B D0 B8 D8 67 00 ?? ?? ?? ?? ?? FF B8 D8 67 00 10 E8 E3 EE FF FF 8B D0 8B C6 8B 4E 48 E8 EF DC FF FF FF 76 5C FF 76 58 FF 76 64 FF 76 60 B9 D4 67 00 10 8B 15 D8 67 00 10 A1 D4 67 00 10 E8 76 F6 FF FF A1 D4 67 00 10 E8 5C EE FF FF 8B D0 B8 CC 67 00 10 E8 CC F7 FF FF 8B D8 B8 DC 67 00 10 }
 
 condition:
-    	$a0 at sgpe.ep or $a1
+    	$a0 at manape.ep or $a1
 }
 
-    
+
 rule NsPack_3_1_by_North_Star__Liu_Xing_Ping_
 {
 meta:
@@ -6826,10 +6826,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 5D 83 ED 07 8D 9D ?? ?? FF FF 8A 03 3C 00 74 10 8D 9D ?? ?? FF FF 8A 03 3C 01 0F 84 42 02 00 00 C6 03 01 8B D5 2B 95 ?? ?? FF FF 89 95 ?? ?? FF FF 01 95 ?? ?? FF FF 8D B5 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_V1_3_2_2____Obsidium_Software
 {
 meta:
@@ -6838,10 +6838,10 @@ strings:
     	$a0 = { EB 04 ?? ?? ?? ?? E8 2A 00 00 00 EB 03 ?? ?? ?? EB 04 ?? ?? ?? ?? 8B 54 24 0C EB 02 ?? ?? 83 82 B8 00 00 00 26 EB 04 ?? ?? ?? ?? 33 C0 EB 02 ?? ?? C3 EB 01 ?? EB 03 ?? ?? ?? 64 67 FF 36 00 00 EB 02 ?? ?? 64 67 89 26 00 00 EB 02 ?? ?? EB 01 ?? 50 EB 04 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule COP_v1_0__c__1988
 {
 meta:
@@ -6850,10 +6850,10 @@ strings:
     	$a0 = { BF ?? ?? BE ?? ?? B9 ?? ?? AC 32 ?? ?? ?? AA E2 ?? 8B ?? ?? ?? EB ?? 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEncrypt_1_0____JunkCode
 {
 meta:
@@ -6862,10 +6862,10 @@ strings:
     	$a0 = { 60 9C BE 00 10 40 00 8B FE B9 ?? ?? ?? ?? BB 78 56 34 12 AD 33 C3 AB E2 FA 9D 61 E9 ?? ?? ?? FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SimplePack_V1_0X____bagie___Sign_by_fly
 {
 meta:
@@ -6874,10 +6874,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5B 8D 5B FA 6A 00 FF 93 ?? ?? 00 00 89 C5 8B 7D 3C 8D 74 3D 00 8D BE F8 00 00 00 8B 86 88 00 00 00 09 C0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__ZCode_1_01______Anorganix
 {
 meta:
@@ -6886,10 +6886,10 @@ strings:
     	$a0 = { E9 12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 E9 FB FF FF FF C3 68 00 00 00 00 64 FF 35 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RosAsm_2050a____Betov
 {
 meta:
@@ -6901,7 +6901,7 @@ condition:
     	$a0
 }
 
-    
+
 rule RCryptor_1_6c_by_Vaska__UsAr_sign_21_03_2007_22_25_
 {
 meta:
@@ -6910,10 +6910,10 @@ strings:
     	$a0 = { 8B C7 03 04 24 2B C7 80 38 50 0F 85 1B 8B 1F FF 68 40 A1 14 13 B8 00 10 14 13 3D 24 C0 14 13 74 06 80 30 F2 40 EB F3 B8 8C 20 18 13 3D B9 27 18 13 74 06 80 30 E8 40 EB F3 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ExeJoiner_1_0____Yoda
 {
 meta:
@@ -6922,10 +6922,10 @@ strings:
     	$a0 = { 68 00 10 40 00 68 04 01 00 00 E8 39 03 00 00 05 00 10 40 00 C6 00 5C 68 04 01 00 00 68 04 11 40 00 6A 00 E8 1A 03 00 00 6A 00 68 80 00 00 00 6A 03 6A 00 6A 01 68 00 00 00 80 68 04 11 40 00 E8 EC 02 00 00 83 F8 FF 0F 84 83 02 00 00 A3 08 12 40 00 6A 00 50 E8 E2 02 00 00 83 F8 FF 0F 84 6D 02 00 00 A3 0C 12 40 00 8B D8 83 EB 04 6A 00 6A 00 53 FF 35 08 12 40 00 E8 E3 02 00 00 6A 00 68 3C 12 40 00 6A 04 68 1E 12 40 00 FF 35 08 12 40 00 E8 C4 02 00 00 83 EB 04 6A 00 6A 00 53 FF 35 08 12 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__REALBasic_
 {
 meta:
@@ -6934,10 +6934,10 @@ strings:
     	$a0 = { 55 89 E5 90 90 90 90 90 90 90 90 90 90 50 90 90 90 90 90 00 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__FSG_1_31_
 {
 meta:
@@ -6946,10 +6946,10 @@ strings:
     	$a0 = { BE 90 90 90 00 BF 90 90 90 00 BB 90 90 90 00 53 BB 90 90 90 00 B2 80 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FASM_1_5x
 {
 meta:
@@ -6961,7 +6961,7 @@ condition:
     	$a0
 }
 
-    
+
 rule GHF_Protector___GPcH
 {
 meta:
@@ -6970,10 +6970,10 @@ strings:
     	$a0 = { 60 68 ?? ?? ?? ?? B8 ?? ?? ?? ?? FF 10 68 ?? ?? ?? ?? 50 B8 ?? ?? ?? ?? FF 10 68 00 A0 00 00 6A 40 FF D0 89 05 ?? ?? ?? ?? 89 C7 BE ?? ?? ?? ?? 60 FC B2 80 31 DB A4 B3 02 E8 6D 00 00 00 73 F6 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_1_2_5_0____Obsidium_Software
 {
 meta:
@@ -6983,10 +6983,10 @@ strings:
 	$a1 = { E8 0E 00 00 00 8B 54 24 0C 83 82 B8 00 00 00 0D 33 C0 C3 64 67 FF 36 00 00 64 67 89 26 00 00 50 33 C0 8B 00 C3 E9 FA 00 00 00 E8 D5 FF FF FF 58 64 67 8F 06 00 00 83 C4 04 E8 2B 13 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule UPolyX_V0_1____Delikon
 {
 meta:
@@ -6998,7 +6998,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Open_Source_Code_Crypter____p0ke
 {
 meta:
@@ -7008,10 +7008,10 @@ strings:
 	$a1 = { 55 8B EC B9 09 00 00 00 6A 00 6A 00 49 75 F9 53 56 57 B8 34 44 40 00 E8 28 F8 FF FF 33 C0 55 68 9F 47 40 00 64 FF 30 64 89 20 BA B0 47 40 00 B8 1C 67 40 00 E8 07 FD FF FF 8B D8 85 DB 75 07 6A 00 E8 C2 F8 FF FF BA 28 67 40 00 8B C3 8B 0D 1C 67 40 00 E8 F0 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule FixupPak_v1_20
 {
 meta:
@@ -7021,10 +7021,10 @@ strings:
 	$a1 = { 55 E8 00 00 00 00 5D 81 ED ?? ?? 00 00 BE 00 ?? 00 00 03 F5 BA 00 00 ?? ?? 2B D5 8B DD 33 C0 AC 3C 00 74 3D 3C 01 74 0E 3C 02 74 0E 3C 03 74 0D 03 D8 29 13 EB E7 66 AD EB F6 AD EB F3 AC 0F B6 C8 3C 00 74 06 3C 01 74 09 EB 0A 66 AD 0F B7 C8 EB 03 AD 8B C8 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule kryptor_6
 {
 meta:
@@ -7033,10 +7033,10 @@ strings:
     	$a0 = { E8 03 ?? ?? ?? E9 EB 68 58 33 D2 74 02 E9 E9 40 42 75 02 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule kryptor_5
 {
 meta:
@@ -7045,10 +7045,10 @@ strings:
     	$a0 = { E8 03 ?? ?? ?? E9 EB 6C 58 40 FF E0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Unknown_packer__03_
 {
 meta:
@@ -7057,10 +7057,10 @@ strings:
     	$a0 = { 06 1E 57 56 50 53 51 52 BD ?? ?? 0E 1F 8C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule VIRUS___I_Worm_Hybris
 {
 meta:
@@ -7072,7 +7072,7 @@ condition:
     	$a0
 }
 
-    
+
 rule UPX__com
 {
 meta:
@@ -7081,10 +7081,10 @@ strings:
     	$a0 = { B9 ?? ?? BE ?? ?? BF C0 FF FD }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__Microsoft_Visual_C___6_20_
 {
 meta:
@@ -7093,10 +7093,10 @@ strings:
     	$a0 = { 90 90 90 90 68 ?? ?? ?? ?? 67 64 FF 36 00 00 67 64 89 26 00 00 F1 90 90 90 90 55 8B EC 83 EC 50 53 56 57 BE 90 90 90 90 8D 7D F4 A5 A5 66 A5 8B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule StarForce_Protection_Driver____Protection_Technology
 {
 meta:
@@ -7105,10 +7105,10 @@ strings:
     	$a0 = { 57 68 ?? 0D 01 00 68 00 ?? ?? 00 E8 50 ?? FF FF 68 ?? ?? ?? 00 68 ?? ?? ?? 00 68 ?? ?? ?? 00 68 ?? ?? ?? 00 68 ?? ?? ?? 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Wise_Installer_Stub_1_10_1029_1
 {
 meta:
@@ -7120,7 +7120,7 @@ condition:
     	$a0
 }
 
-    
+
 rule iLUCRYPT_v4_018__exe_
 {
 meta:
@@ -7129,10 +7129,10 @@ strings:
     	$a0 = { 8B EC FA C7 ?? ?? ?? ?? 4C 4C C3 FB BF ?? ?? B8 ?? ?? 2E ?? ?? D1 C8 4F 81 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule AdFlt2
 {
 meta:
@@ -7141,10 +7141,10 @@ strings:
     	$a0 = { 68 00 01 9C 0F A0 0F A8 60 FD 6A 00 0F A1 BE ?? ?? AD }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule eXPressor_PacK_V1_5_0_X____CGSoftLabs___Sign_by_fly
 {
 meta:
@@ -7153,10 +7153,10 @@ strings:
     	$a0 = { 55 8B EC 81 EC ?? ?? ?? ?? 53 56 57 83 A5 ?? ?? ?? ?? ?? F3 EB 0C 65 58 50 72 2D 76 2E 31 2E 35 2E 00 83 7D 0C ?? 75 23 8B 45 08 A3 ?? ?? ?? ?? 6A 04 68 00 10 00 00 68 20 03 00 00 6A 00 FF 15 ?? ?? ?? ?? A3 ?? ?? ?? ?? EB 04 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule CrypKey_V6_1X_DLL____CrypKey__Canada__Inc_
 {
 meta:
@@ -7165,10 +7165,10 @@ strings:
     	$a0 = { 83 3D ?? ?? ?? ?? 00 75 34 68 ?? ?? ?? ?? E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Private_EXE_v2_0a
 {
 meta:
@@ -7178,10 +7178,10 @@ strings:
 	$a1 = { 53 E8 00 00 00 00 5B 8B C3 2D }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule Vx__Hafen_809
 {
 meta:
@@ -7190,10 +7190,10 @@ strings:
     	$a0 = { E8 ?? ?? 1C ?? 81 EE ?? ?? 50 1E 06 8C C8 8E D8 06 33 C0 8E C0 26 ?? ?? ?? 07 3D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__GRUNT_2_Family
 {
 meta:
@@ -7202,10 +7202,10 @@ strings:
     	$a0 = { 48 E2 F7 C3 51 53 52 E8 DD FF 5A 5B 59 C3 B9 00 00 E2 FE C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UNITA3__tm__by_Sanitary_Equipment_Research
 {
 meta:
@@ -7214,10 +7214,10 @@ strings:
     	$a0 = { E8 ?? ?? 4D 5A 3E }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__XCR_0_11______Anorganix
 {
 meta:
@@ -7226,10 +7226,10 @@ strings:
     	$a0 = { 60 8B F0 33 DB 83 C3 01 83 C0 01 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Shrinker_3_4
 {
 meta:
@@ -7241,7 +7241,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Shrinker_3_3
 {
 meta:
@@ -7253,7 +7253,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Shrinker_3_2
 {
 meta:
@@ -7265,7 +7265,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Alex_Protector_0_4_beta_1_by_Alex
 {
 meta:
@@ -7277,7 +7277,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PE_Protector_0_9_3_____CRYPToCRACk
 {
 meta:
@@ -7286,10 +7286,10 @@ strings:
     	$a0 = { 5B 81 E3 00 FF FF FF 66 81 3B 4D 5A 75 33 8B F3 03 73 3C 81 3E 50 45 00 00 75 26 0F B7 46 18 8B C8 69 C0 AD 0B 00 00 F7 E0 2D AB 5D 41 4B 69 C9 DE C0 00 00 03 C1 75 09 83 EC 04 0F 85 DD 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vcasm_Protector_1_1___1_2____vcasm
 {
 meta:
@@ -7298,10 +7298,10 @@ strings:
     	$a0 = { EB 0B 5B 56 50 72 6F 74 65 63 74 5D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_V1_3_3_4____Obsidium_Software
 {
 meta:
@@ -7310,10 +7310,10 @@ strings:
     	$a0 = { EB 02 ?? ?? E8 29 00 00 00 EB 03 ?? ?? ?? EB 02 ?? ?? 8B 54 24 0C EB 03 ?? ?? ?? 83 82 B8 00 00 00 25 EB 02 ?? ?? 33 C0 EB 02 ?? ?? C3 EB 03 ?? ?? ?? EB 01 ?? 64 67 FF 36 00 00 EB 02 ?? ?? 64 67 89 26 00 00 EB 02 ?? ?? EB 04 ?? ?? ?? ?? 50 EB 02 ?? ?? 33 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule AHpack_0_1____FEUERRADER
 {
 meta:
@@ -7322,10 +7322,10 @@ strings:
     	$a0 = { 60 68 54 ?? ?? ?? B8 48 ?? ?? ?? FF 10 68 B3 ?? ?? ?? 50 B8 44 ?? ?? ?? FF 10 68 00 ?? ?? ?? 6A 40 FF D0 89 05 CA ?? ?? ?? 89 C7 BE 00 10 ?? ?? 60 FC B2 80 31 DB A4 B3 02 E8 6D 00 00 00 73 F6 31 C9 E8 64 00 00 00 73 1C 31 C0 E8 5B 00 00 00 73 23 B3 02 41 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Zortech_C_v3_0
 {
 meta:
@@ -7334,10 +7334,10 @@ strings:
     	$a0 = { FA FC B8 ?? ?? ?? 8C C8 8E D8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RCryptor_v2_0__Hide_EP______Vaska
 {
 meta:
@@ -7346,10 +7346,10 @@ strings:
     	$a0 = { F7 D1 83 F1 FF 6A 00 F7 D1 83 F1 FF 81 04 24 DC 20 ?? 00 F7 D1 83 F1 FF E8 00 00 00 00 F7 D1 83 F1 FF C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_v1_20__Eng_____dulek_xt_____Microsoft_Visual_C___6_0___7_0_
 {
 meta:
@@ -7359,10 +7359,10 @@ strings:
 	$a1 = { EB 02 CD 20 EB 01 91 8D 35 80 ?? ?? 00 33 C2 68 83 93 7E 7D 0C A4 5B 23 C3 68 77 93 7E 7D EB 01 FA 5F E8 02 00 00 00 F7 FB 58 33 DF EB 01 3F E8 02 00 00 00 11 88 58 0F B6 16 EB 02 CD 20 EB 02 86 2F 2A D3 EB 02 CD 20 80 EA 2F EB 01 52 32 D3 80 E9 CD 80 EA 73 8B CF 81 C2 96 44 EB 04 EB 02 CD 20 88 16 E8 02 00 00 00 44 A2 59 46 E8 01 00 00 00 AD 59 4B 80 C1 13 83 FB 00 75 B2 F7 D9 96 8F 80 4D 0C 4C 91 50 1C 0C 50 8A ?? ?? ?? 50 E9 34 16 50 4C 4C 0E 7E 9B 49 C6 32 02 3E 7E 7B 5E 8C C5 6B 50 3F 0E 0F 38 C8 95 18 D1 65 11 2C B8 87 28 C3 4C 0B 3C AC D9 2D 15 4E 8F 1C 40 4F 28 98 3E 10 C1 45 DB 8F 06 3F EC 48 61 4C 50 50 81 DF C3 20 34 84 10 10 0C 1F 68 DC FF 24 8C 4D 29 F5 1D 2C BF 74 CF F0 24 C0 08 2E 0C 0C 10 51 0C 91 10 10 81 16 D0 54 4B D7 42 C3 54 CB C9 4E }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule KGB_SFX
 {
 meta:
@@ -7371,7 +7371,7 @@ strings:
     	$a0 = { 60 BE 00 A0 46 00 8D BE 00 70 F9 FF 57 83 CD FF EB 10 90 90 90 90 90 90 8A 06 46 88 07 47 01 DB 75 07 8B 1E 83 EE FC 11 DB 72 ED B8 01 00 00 00 01 DB 75 07 8B 1E 83 EE FC 11 DB 11 C0 01 DB 73 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
 
@@ -7384,10 +7384,10 @@ strings:
 	$a1 = { EB 01 ?? E8 2A 00 00 00 EB 04 ?? ?? ?? ?? EB 02 ?? ?? 8B 54 24 0C EB 03 ?? ?? ?? 83 82 B8 00 00 00 21 EB 02 ?? ?? 33 C0 EB 03 ?? ?? ?? C3 EB 02 ?? ?? EB 01 ?? 64 67 FF 36 00 00 EB 01 ?? 64 67 89 26 00 00 EB 02 ?? ?? EB 03 ?? ?? ?? 50 EB 04 ?? ?? ?? ?? 33 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule RLPack_V1_19__LZMA_4_30_____ap0x___Sign_by_fly
 {
 meta:
@@ -7396,10 +7396,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 83 7C 24 28 01 75 0C 8B 44 24 24 89 85 49 0B 00 00 EB 0C 8B 85 45 0B 00 00 89 85 49 0B 00 00 8D B5 6D 0B 00 00 8D 9D 2F 03 00 00 33 FF 6A 40 68 00 10 00 00 68 00 20 0C 00 6A 00 FF 95 DA 0A 00 00 89 85 41 0B 00 00 E8 76 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Enigma_Protector_1_1X_1_3X____Sukhov_Vladimir___Serge_N__Markin
 {
 meta:
@@ -7408,10 +7408,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 F0 B8 00 10 40 00 E8 01 00 00 00 9A 83 C4 10 8B E5 5D E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Pohernah_1_0_3___by_Kas
 {
 meta:
@@ -7420,10 +7420,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED 2A 27 40 00 31 C0 40 83 F0 06 40 3D 40 1F 00 00 75 07 BE 6A 27 40 00 EB 02 EB EB 8B 85 9E 28 40 00 83 F8 01 75 17 31 C0 01 EE 3D 99 00 00 00 74 0C 8B 8D 86 28 40 00 30 0E 40 46 EB ED }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Private_EXE_Protector_1_8
 {
 meta:
@@ -7433,10 +7433,10 @@ strings:
 	$a1 = { BB DC EE 0D 76 D9 D0 8D 16 85 D8 90 D9 D0 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule Upack_V0_1X_V0_2X____Dwing
 {
 meta:
@@ -7445,10 +7445,10 @@ strings:
     	$a0 = { BE 88 01 ?? ?? AD 8B F8 95 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule vprotector_1_3____vcasm
 {
 meta:
@@ -7457,10 +7457,10 @@ strings:
     	$a0 = { E9 B9 16 00 00 55 8B EC 81 EC 74 04 00 00 57 68 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v1_80
 {
 meta:
@@ -7469,10 +7469,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 E8 C1 00 00 68 F4 86 00 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v1_83
 {
 meta:
@@ -7481,10 +7481,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 E0 C1 40 00 68 64 84 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v1_82
 {
 meta:
@@ -7493,10 +7493,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 E0 C1 40 00 68 74 81 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Freshbind_v2_0____gFresh
 {
 meta:
@@ -7505,10 +7505,10 @@ strings:
     	$a0 = { 64 A1 00 00 00 00 55 89 E5 6A FF 68 1C A0 41 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v1_84
 {
 meta:
@@ -7517,10 +7517,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 E8 C1 40 00 68 F4 86 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_0_12_beta___Dwing
 {
 meta:
@@ -7529,10 +7529,10 @@ strings:
     	$a0 = { BE 48 01 40 00 AD ?? ?? ?? A5 ?? C0 33 C9 ?? ?? ?? ?? ?? ?? ?? F3 AB ?? ?? 0A ?? ?? ?? ?? AD 50 97 51 ?? 87 F5 58 8D 54 86 5C ?? D5 72 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? B6 5F FF C1 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SDProtector_Basic_Pro_Edition_1_10____Randy_Li
 {
 meta:
@@ -7541,10 +7541,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 1D 32 13 05 68 88 88 88 08 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 58 64 A3 00 00 00 00 58 58 58 58 8B E8 50 83 EC 08 64 A1 00 00 00 00 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 83 C4 08 50 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 64 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_V2_X___Bitsum_Technologies
 {
 meta:
@@ -7553,10 +7553,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? ?? 50 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 33 C0 89 08 50 45 43 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__VBOX_4_3_MTE______Anorganix
 {
 meta:
@@ -7565,10 +7565,10 @@ strings:
     	$a0 = { 0B C0 0B C0 0B C0 0B C0 0B C0 0B C0 0B C0 0B C0 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__Einstein
 {
 meta:
@@ -7577,10 +7577,10 @@ strings:
     	$a0 = { 00 42 CD 21 72 31 B9 6E 03 33 D2 B4 40 CD 21 72 19 3B C1 75 15 B8 00 42 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NTkrnl_Secure_Suite_V0_1_DLL____NTkrnl_Software
 {
 meta:
@@ -7592,7 +7592,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_1__XCR_0_11______Anorganix
 {
 meta:
@@ -7601,10 +7601,10 @@ strings:
     	$a0 = { 60 8B F0 33 DB 83 C3 01 83 C0 01 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__32Lite_0_03_____Anorganix
 {
 meta:
@@ -7613,10 +7613,10 @@ strings:
     	$a0 = { 60 06 FC 1E 07 BE 90 90 90 90 6A 04 68 90 10 90 90 68 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule HASP_HL_Protection_V1_X____Aladdin
 {
 meta:
@@ -7625,10 +7625,10 @@ strings:
     	$a0 = { 55 8B EC 53 56 57 60 8B C4 A3 ?? ?? ?? ?? B8 ?? ?? ?? ?? 2B 05 ?? ?? ?? ?? A3 ?? ?? ?? ?? 83 3D ?? ?? ?? ?? 00 74 15 8B 0D ?? ?? ?? ?? 51 FF 15 ?? ?? ?? ?? 83 C4 04 E9 A5 00 00 00 68 ?? ?? ?? ?? FF 15 ?? ?? ?? ?? A3 ?? ?? ?? ?? 68 ?? ?? ?? ?? FF 15 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECryptor_2_0_2_1____www_strongbit_com
 {
 meta:
@@ -7637,10 +7637,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 F4 56 57 53 BE ?? ?? ?? ?? B8 00 00 ?? ?? 89 45 FC 89 C2 8B 46 0C 09 C0 0F 84 ?? 00 00 00 01 D0 89 C3 50 FF 15 94 ?? ?? ?? 09 C0 0F 85 0F 00 00 00 53 FF 15 98 ?? ?? ?? 09 C0 0F 84 ?? 00 00 00 89 45 F8 6A 00 8F 45 F4 8B 06 09 C0 8B 55 FC 0F }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASProtect_v1_23_RC4_build_08_07__dll_____Alexey_Solodovnikov__h_
 {
 meta:
@@ -7650,10 +7650,10 @@ strings:
 	$a1 = { 60 E8 03 00 00 00 E9 EB 04 5D 45 55 C3 E8 01 00 00 00 EB 5D BB ED FF FF FF 03 DD 81 EB 00 ?? ?? ?? 80 7D 4D 01 75 0C 8B 74 24 28 83 FE 01 89 5D 4E 75 31 8D 45 53 50 53 FF B5 D5 09 00 00 8D 45 35 50 E9 82 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__MinGW_GCC_2_x______Anorganix
 {
 meta:
@@ -7662,10 +7662,10 @@ strings:
     	$a0 = { 55 89 E5 E8 02 00 00 00 C9 C3 90 90 45 58 45 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule tElock_0_98_Special_Build____forgot___heXer
 {
 meta:
@@ -7674,10 +7674,10 @@ strings:
     	$a0 = { E9 99 D7 FF FF 00 00 00 ?? ?? ?? ?? AA ?? ?? 00 00 00 00 00 00 00 00 00 CA }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PESpin_1_1____Cyberbob__h_
 {
 meta:
@@ -7689,7 +7689,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Borland_Pascal_v7_0_for_Windows
 {
 meta:
@@ -7698,10 +7698,10 @@ strings:
     	$a0 = { 9A FF FF 00 00 9A FF FF 00 00 55 89 E5 31 C0 9A FF FF 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PENightMare_2_Beta
 {
 meta:
@@ -7710,10 +7710,10 @@ strings:
     	$a0 = { 60 E9 ?? ?? ?? ?? EF 40 03 A7 07 8F 07 1C 37 5D 43 A7 04 B9 2C 3A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Petite_v2_1__1_
 {
 meta:
@@ -7722,10 +7722,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? ?? 68 ?? ?? ?? ?? 64 ?? ?? ?? ?? ?? ?? 64 ?? ?? ?? ?? ?? ?? 66 9C 60 50 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLP_0_7_3beta____ap0x__h_
 {
 meta:
@@ -7737,7 +7737,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Vx__Uddy_2617
 {
 meta:
@@ -7746,10 +7746,10 @@ strings:
     	$a0 = { 2E ?? ?? ?? ?? ?? 2E ?? ?? ?? ?? ?? 2E ?? ?? ?? 8C C8 8E D8 8C ?? ?? ?? 2B ?? ?? ?? 03 ?? ?? ?? A3 ?? ?? A1 ?? ?? A3 ?? ?? A1 ?? ?? A3 ?? ?? 8C C8 2B ?? ?? ?? 03 ?? ?? ?? A3 ?? ?? B8 AB 9C CD 2F 3D 76 98 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Exe_Locker_v1_0_____IonIce
 {
 meta:
@@ -7758,10 +7758,10 @@ strings:
     	$a0 = { E8 00 00 00 00 60 8B 6C 24 20 81 ED 05 00 00 00 3E 8F 85 6C 00 00 00 3E 8F 85 68 00 00 00 3E 8F 85 64 00 00 00 3E 8F 85 60 00 00 00 3E 8F 85 5C 00 00 00 3E 8F 85 58 00 00 00 3E 8F 85 54 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule CryptCom_v1_1
 {
 meta:
@@ -7770,10 +7770,10 @@ strings:
     	$a0 = { BF ?? ?? 57 BE ?? ?? ?? B9 ?? ?? F3 A4 C3 8B ?? ?? ?? 8B ?? ?? ?? BF ?? ?? 57 BE ?? ?? ?? AD 33 C2 AB E2 ?? C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Special_EXE_Pasword_Protector_v1_01__Eng_____Pavol_Cerven
 {
 meta:
@@ -7784,10 +7784,10 @@ strings:
 	$a2 = { 60 E8 00 00 00 00 5D 81 ED 06 00 00 00 89 AD 8C 01 00 00 8B C5 2B 85 FE 75 00 00 89 85 3E }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__XCR_0_11_____Anorganix
 {
 meta:
@@ -7796,10 +7796,10 @@ strings:
     	$a0 = { 60 8B F0 33 DB 83 C3 01 83 C0 01 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__DxPack_1_0______Anorganix
 {
 meta:
@@ -7808,10 +7808,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 8B FD 81 ED 90 90 90 90 2B B9 00 00 00 00 81 EF 90 90 90 90 83 BD 90 90 90 90 90 0F 84 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__WATCOM_C_C___EXE______Anorganix
 {
 meta:
@@ -7820,10 +7820,10 @@ strings:
     	$a0 = { E9 00 00 00 00 90 90 90 90 57 41 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RCryptor_v1_1_____Vaska
 {
 meta:
@@ -7836,7 +7836,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule SDProtector_1_1x____Randy_Li
 {
 meta:
@@ -7845,10 +7845,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 1D 32 13 05 68 88 88 88 08 64 A1 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v2_53
 {
 meta:
@@ -7858,10 +7858,10 @@ strings:
 	$a1 = { 55 8B EC 6A FF 68 40 ?? ?? ?? 68 54 ?? ?? ?? 64 A1 ?? ?? ?? ?? 50 64 89 25 ?? ?? ?? ?? 83 EC 58 53 56 57 89 65 E8 FF 15 58 ?? ?? ?? 33 D2 8A D4 89 15 EC }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Armadillo_v2_52
 {
 meta:
@@ -7871,10 +7871,10 @@ strings:
 	$a1 = { 55 8B EC 6A FF 68 ?? ?? ?? ?? E0 ?? ?? ?? ?? 68 D4 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 53 56 57 89 65 E8 FF ?? ?? ?? 15 38 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Packman_v0_0_0_1
 {
 meta:
@@ -7883,10 +7883,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 58 8D A8 ?? ?? FF FF 8D 98 ?? ?? ?? FF 8D ?? ?? 01 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v2_50
 {
 meta:
@@ -7895,10 +7895,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 B8 ?? ?? ?? 68 F8 ?? ?? ?? 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 53 56 57 89 65 E8 FF 15 20 ?? ?? ?? 33 D2 8A D4 89 15 D0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule tElock_0_98____tHE_EGOiSTE__h_
 {
 meta:
@@ -7910,7 +7910,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Minke_V1_0_1____Codius___Sign_by_fly
 {
 meta:
@@ -7922,7 +7922,7 @@ condition:
     	$a0
 }
 
-    
+
 rule AsCrypt_v0_1____SToRM____3
 {
 meta:
@@ -7934,7 +7934,7 @@ condition:
     	$a0
 }
 
-    
+
 rule SimplePack_1_X__Method2_____bagie
 {
 meta:
@@ -7946,7 +7946,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PolyCrypt_PE___2_1_4b_2_1_5____JLab_Software_Creations__h_signed_
 {
 meta:
@@ -7958,7 +7958,7 @@ condition:
     	$a0
 }
 
-    
+
 rule UPX_v0_71___v0_72
 {
 meta:
@@ -7967,10 +7967,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 83 CD FF 31 DB 5E 8D BE FA ?? ?? FF 57 66 81 87 ?? ?? ?? ?? ?? ?? 81 C6 B3 01 ?? ?? EB 0A ?? ?? ?? ?? 8A 06 46 88 07 47 01 DB 75 07 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule WWPACK_v3_05c4__Unextractable_
 {
 meta:
@@ -7979,10 +7979,10 @@ strings:
     	$a0 = { 03 05 00 1B B8 ?? ?? 8C CA 03 D0 8C C9 81 C1 ?? ?? 51 B9 ?? ?? 51 06 06 B1 ?? 51 8C D3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ChinaProtect____dummy_____Sign_By_fly
 {
 meta:
@@ -7994,7 +7994,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Obsidium_v1_0_0_61
 {
 meta:
@@ -8003,10 +8003,10 @@ strings:
     	$a0 = { E8 AF 1C 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_1_3_0_0____Obsidium_Software
 {
 meta:
@@ -8015,10 +8015,10 @@ strings:
     	$a0 = { EB 04 ?? ?? ?? ?? E8 29 00 00 00 EB 02 ?? ?? EB 01 ?? 8B 54 24 0C EB 02 ?? ?? 83 82 B8 00 00 00 22 EB 02 ?? ?? 33 C0 EB 04 ?? ?? ?? ?? C3 EB 04 ?? ?? ?? ?? EB 04 ?? ?? ?? ?? 64 67 FF 36 00 00 EB 04 ?? ?? ?? ?? 64 67 89 26 00 00 EB 04 ?? ?? ?? ?? EB 01 ?? 50 EB 03 ?? ?? ?? 33 C0 EB 02 ?? ?? 8B 00 EB 01 ?? C3 EB 04 ?? ?? ?? ?? E9 FA 00 00 00 EB 01 ?? E8 D5 FF FF FF EB 02 ?? ?? EB 03 ?? ?? ?? 58 EB 04 ?? ?? ?? ?? EB 01 ?? 64 67 8F 06 00 00 EB 02 ?? ?? 83 C4 04 EB 02 ?? ?? E8 47 26 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Crunch_5_Fusion_4
 {
 meta:
@@ -8030,7 +8030,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Obsidium_1_3_0_13____Obsidium_Software
 {
 meta:
@@ -8040,10 +8040,10 @@ strings:
 	$a1 = { EB 01 ?? E8 26 00 00 00 EB 02 ?? ?? EB 02 ?? ?? 8B 54 24 0C EB 01 ?? 83 82 B8 00 00 00 21 EB 04 ?? ?? ?? ?? 33 C0 EB 02 ?? ?? C3 EB 01 ?? EB 04 ?? ?? ?? ?? 64 67 FF 36 00 00 EB 02 ?? ?? 64 67 89 26 00 00 EB 01 ?? EB 03 ?? ?? ?? 50 EB 01 ?? 33 C0 EB 03 ?? ?? ?? 8B 00 EB 02 ?? ?? C3 EB 02 ?? ?? E9 FA 00 00 00 EB 01 ?? E8 D5 FF FF FF EB 03 ?? ?? ?? EB 02 ?? ?? 58 EB 03 ?? ?? ?? EB 04 ?? ?? ?? ?? 64 67 8F 06 00 00 EB 03 ?? ?? ?? 83 C4 04 EB 03 ?? ?? ?? E8 13 26 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule FSG_v1_10__Eng_____dulek_xt_____MASM32_
 {
 meta:
@@ -8052,10 +8052,10 @@ strings:
     	$a0 = { EB 01 DB E8 02 00 00 00 86 43 5E 8D 1D D0 75 CF 83 C1 EE 1D 68 50 ?? 8F 83 EB 02 3D 0F 5A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Protection_Plus_vx_x
 {
 meta:
@@ -8065,10 +8065,10 @@ strings:
 	$a1 = { 50 60 29 C0 64 FF 30 E8 ?? ?? ?? ?? 5D 83 ED 3C 89 E8 89 A5 14 ?? ?? ?? 2B 85 1C ?? ?? ?? 89 85 1C ?? ?? ?? 8D 85 27 03 ?? ?? 50 8B ?? 85 C0 0F 85 C0 ?? ?? ?? 8D BD 5B 03 ?? ?? 8D B5 43 03 ?? ?? E8 DD ?? ?? ?? 89 85 1F 03 ?? ?? 6A 40 68 ?? 10 ?? ?? 8B 85 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__MinGW_GCC_2_x______Anorganix
 {
 meta:
@@ -8077,10 +8077,10 @@ strings:
     	$a0 = { 55 89 E5 E8 02 00 00 00 C9 C3 90 90 45 58 45 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_v0_37_beta____Dwing
 {
 meta:
@@ -8090,10 +8090,10 @@ strings:
 	$a1 = { BE B0 11 ?? ?? AD 50 FF 76 34 EB 7C 48 01 ?? ?? 0B 01 4C 6F 61 64 4C 69 62 72 61 72 79 41 00 00 18 10 00 00 10 00 00 00 00 ?? ?? ?? 00 00 ?? ?? 00 10 00 00 00 02 00 00 04 00 00 00 00 00 37 00 04 00 00 00 00 00 00 00 00 ?? ?? ?? 00 02 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule DSHIELD
 {
 meta:
@@ -8102,10 +8102,10 @@ strings:
     	$a0 = { 06 E8 ?? ?? 5E 83 EE ?? 16 17 9C 58 B9 ?? ?? 25 ?? ?? 2E }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Code_Virtualizer_V1_3_1_0____Oreans_Technologies___Sign_by_fly
 {
 meta:
@@ -8117,7 +8117,7 @@ condition:
     	$a0
 }
 
-    
+
 rule AntiDote_V1_2____SIS_Team___Sign_by_fly
 {
 meta:
@@ -8129,7 +8129,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_1____Anorganix
 {
 meta:
@@ -8138,10 +8138,10 @@ strings:
     	$a0 = { 90 90 90 90 68 ?? ?? ?? ?? 67 64 FF 36 00 00 67 64 89 26 00 00 F1 90 90 90 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECryptor_v1_4_0_1
 {
 meta:
@@ -8150,10 +8150,10 @@ strings:
     	$a0 = { E8 24 00 00 00 8B 4C 24 0C C7 01 17 00 01 00 C7 81 B8 00 00 00 00 ?? ?? 00 31 C0 89 41 14 89 41 18 80 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsiduim_1_3_0_4____Obsiduim_Software
 {
 meta:
@@ -8162,10 +8162,10 @@ strings:
     	$a0 = { EB 02 ?? ?? E8 25 00 00 00 EB 04 ?? ?? ?? ?? EB 01 ?? 8B 54 24 0C EB 01 ?? 83 82 B8 00 00 00 23 EB 01 ?? 33 C0 EB 02 ?? ?? C3 EB 02 ?? ?? EB 04 ?? ?? ?? ?? 64 67 FF 36 00 00 EB 03 ?? ?? ?? 64 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__Borland_Delphi_3_0_
 {
 meta:
@@ -8174,10 +8174,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 90 90 90 90 68 ?? ?? ?? ?? 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PowerBASIC_CC_4_0
 {
 meta:
@@ -8186,10 +8186,10 @@ strings:
     	$a0 = { 55 8B EC 53 56 57 BB 00 ?? 40 00 66 2E F7 05 ?? ?? 40 00 04 00 75 05 E9 68 05 00 00 E9 6E 03 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Crypto_Lock_2_02__Eng_____Ryan_Thian
 {
 meta:
@@ -8199,10 +8199,10 @@ strings:
 	$a1 = { 60 BE ?? 90 40 00 8D BE ?? ?? FF FF 57 83 CD FF EB 10 90 90 90 90 90 90 8A 06 46 88 07 47 01 DB 75 07 8B 1E 83 EE FC 11 DB 72 ED B8 01 00 00 00 01 DB 75 07 8B 1E 83 EE FC 11 DB 11 C0 01 DB 73 EF 75 09 8B 1E 83 EE FC 11 DB 73 E4 31 C9 83 E8 03 72 0D C1 E0 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule nPack_V1_1_200_2006_Beta____NEOx__uinC_
 {
 meta:
@@ -8211,10 +8211,10 @@ strings:
     	$a0 = { 83 3D 40 ?? ?? ?? 00 75 05 E9 01 00 00 00 C3 E8 41 00 00 00 B8 80 ?? ?? ?? 2B 05 08 ?? ?? ?? A3 3C ?? ?? ?? E8 5E 00 00 00 E8 EC 01 00 00 E8 F8 06 00 00 E8 03 06 00 00 A1 3C ?? ?? ?? C7 05 40 ?? ?? ?? 01 00 00 00 01 05 00 ?? ?? ?? FF 35 00 ?? ?? ?? C3 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Turbo_Profiler_Areas_file
 {
 meta:
@@ -8226,7 +8226,7 @@ condition:
     	$a0
 }
 
-    
+
 rule aPack_v0_98b__DS_ES_not_saved_
 {
 meta:
@@ -8238,7 +8238,7 @@ condition:
     	$a0
 }
 
-    
+
 rule EXECryptor_2_xx__max__compressed_resources_____www_strongbit_com
 {
 meta:
@@ -8247,10 +8247,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 EC FC 53 57 56 89 45 FC 89 55 F8 89 C6 89 D7 66 81 3E 4A 43 0F 85 23 01 00 00 83 C6 0A C7 45 F4 08 00 00 00 31 DB BA 00 00 00 80 43 31 C0 E8 11 01 00 00 73 0E 8B 4D F0 E8 1F 01 00 00 02 45 EF AA EB E9 E8 FC 00 00 00 0F 82 97 00 00 00 E8 F1 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v3_01___v3_50a____Silicon_Realms_Toolworks
 {
 meta:
@@ -8259,10 +8259,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 50 51 EB 0F ?? EB 0F ?? EB 07 ?? EB 0F ?? EB 08 FD EB 0B F2 EB F5 EB F6 F2 EB 08 FD EB E9 F3 EB E4 FC ?? 59 58 50 51 EB 0F ?? EB 0F ?? EB 07 ?? EB 0F ?? EB 08 FD EB 0B F2 EB F5 EB F6 F2 EB 08 FD EB E9 F3 EB E4 FC ?? 59 58 50 51 EB 0F ?? EB 0F ?? EB 07 ?? EB 0F ?? EB 08 FD EB 0B F2 EB F5 EB F6 F2 EB 08 FD EB E9 F3 EB E4 FC ?? 59 58 60 33 C9 75 02 EB 15 ?? 33 C9 75 18 7A 0C 70 0E EB 0D ?? 72 0E 79 F1 ?? ?? ?? 79 09 74 F0 ?? 87 DB 7A F0 ?? ?? 61 50 51 EB 0F ?? EB 0F ?? EB 07 ?? EB 0F ?? EB 08 FD EB 0B F2 EB F5 EB F6 F2 EB 08 FD EB E9 F3 EB E4 FC ?? 59 58 60 9C 33 C0 E8 09 00 00 00 E8 E8 23 00 00 00 7A 23 ?? 8B 04 24 EB 03 7A 29 ?? C6 00 90 C3 ?? 70 F0 87 D2 71 07 ?? ?? 40 8B DB 7A 11 EB 08 ?? EB F7 EB C3 ?? 7A E9 70 DA 7B D1 71 F3 ?? 7B F3 71 D6 ?? 9D 61 83 ED 06 33 FF 47 60 33 C9 75 02 EB 15 ?? 33 C9 75 18 7A 0C 70 0E EB 0D ?? 72 0E 79 F1 ?? ?? ?? 79 09 74 F0 EB 87 ?? 7A F0 ?? ?? 61 8B 9C BD B8 43 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_v2_0____bart_xt
 {
 meta:
@@ -8271,10 +8271,10 @@ strings:
     	$a0 = { 87 25 ?? ?? ?? 00 61 94 55 A4 B6 80 FF 13 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Sentinel_SuperPro__Automatic_Protection__6_4_0____Safenet
 {
 meta:
@@ -8286,7 +8286,7 @@ condition:
     	$a0
 }
 
-    
+
 rule ZipWorxSecureEXE_2_5____ZipWORX_Technologies_LLC__h_
 {
 meta:
@@ -8298,7 +8298,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Private_EXE_Protector_1_8____SetiSoft
 {
 meta:
@@ -8310,7 +8310,7 @@ condition:
     	$a0
 }
 
-    
+
 rule ASPack_v1_05b
 {
 meta:
@@ -8319,10 +8319,10 @@ strings:
     	$a0 = { 60 E8 ?? ?? ?? ?? 5D 81 ED CE 3A 44 ?? B8 C8 3A 44 ?? 03 C5 2B 85 B5 3E 44 ?? 89 85 C1 3E 44 ?? 80 BD AC 3E 44 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v2_50b3
 {
 meta:
@@ -8331,10 +8331,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 B8 ?? ?? ?? 68 F8 ?? ?? ?? 64 A1 ?? ?? ?? ?? 50 64 89 25 ?? ?? ?? ?? 83 EC 58 53 56 57 89 65 E8 FF 15 20 ?? ?? ?? 33 D2 8A D4 89 15 D0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__VOB_ProtectCD_5_
 {
 meta:
@@ -8343,10 +8343,10 @@ strings:
     	$a0 = { 36 3E 26 8A C0 60 E8 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__ASProtect______Anorganix
 {
 meta:
@@ -8355,10 +8355,10 @@ strings:
     	$a0 = { 60 90 90 90 90 90 90 5D 90 90 90 90 90 90 90 90 90 90 90 03 DD E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Fusion_1_0____jaNooNi
 {
 meta:
@@ -8367,10 +8367,10 @@ strings:
     	$a0 = { 68 04 30 40 00 68 04 30 40 00 E8 09 03 00 00 68 04 30 40 00 E8 C7 02 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NsPack_v2_3____North_Star
 {
 meta:
@@ -8382,7 +8382,7 @@ condition:
     	$a0
 }
 
-    
+
 rule ASProtect_SKE_2_3____Alexey_Solodovnikov__h_
 {
 meta:
@@ -8394,7 +8394,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Gleam_1_00
 {
 meta:
@@ -8406,7 +8406,7 @@ condition:
     	$a0
 }
 
-    
+
 rule eXPressor_1_4_5_1____CGSoftLabs__h_
 {
 meta:
@@ -8418,7 +8418,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Trainer_Creation_Kit_v5_Trainer
 {
 meta:
@@ -8431,7 +8431,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule ARM_Protector_v0_1_by_SMoKE
 {
 meta:
@@ -8444,7 +8444,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule NsPacK_V3_3____LiuXingPing
 {
 meta:
@@ -8453,10 +8453,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 5D 83 ED 07 8D 85 ?? ?? ?? ?? 80 38 00 74 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule with_added__PK__signature
 {
 meta:
@@ -8465,10 +8465,10 @@ strings:
     	$a0 = { C7 ?? ?? ?? ?? ?? 8C D8 05 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_1_20__Eng_____dulek_xt_____Borland_Delphi___Microsoft_Visual_C___
 {
 meta:
@@ -8480,7 +8480,7 @@ condition:
     	$a0
 }
 
-    
+
 rule SC_Obfuscator____SuperCRacker
 {
 meta:
@@ -8489,10 +8489,10 @@ strings:
     	$a0 = { 60 33 C9 8B 1D 00 ?? ?? ?? 03 1D 08 ?? ?? ?? 8A 04 19 84 C0 74 09 3C ?? 74 05 34 ?? 88 04 19 41 3B 0D 04 ?? ?? ?? 75 E7 A1 08 ?? ?? ?? 01 05 0C ?? ?? ?? 61 FF 25 0C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Special_EXE_Pasword_Protector_1_01__Eng_____Pavol_Cerven
 {
 meta:
@@ -8501,10 +8501,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED 06 00 00 00 89 AD 8C 01 00 00 8B C5 2B 85 FE 75 00 00 89 85 3E 77 00 00 8D 95 C6 77 00 00 8D 8D FF 77 00 00 55 68 00 20 00 00 51 52 6A 00 FF 95 04 7A 00 00 5D 6A 00 FF 95 FC 79 00 00 8D 8D 60 78 00 00 8D 95 85 01 00 00 55 68 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule yoda_s_Protector_V1_03_2____Ashkbiz_Danehkar___Sign_by_fly
 {
 meta:
@@ -8513,10 +8513,10 @@ strings:
     	$a0 = { E8 03 00 00 00 EB 01 ?? BB 55 00 00 00 E8 03 00 00 00 EB 01 ?? E8 8F 00 00 00 E8 03 00 00 00 EB 01 ?? E8 82 00 00 00 E8 03 00 00 00 EB 01 ?? E8 B8 00 00 00 E8 03 00 00 00 EB 01 ?? E8 AB 00 00 00 E8 03 00 00 00 EB 01 ?? 83 FB 55 E8 03 00 00 00 EB 01 ?? 75 2E E8 03 00 00 00 EB 01 ?? C3 60 E8 00 00 00 00 5D 81 ED 94 73 42 00 8B D5 81 C2 E3 73 42 00 52 E8 01 00 00 00 C3 C3 E8 03 00 00 00 EB 01 ?? E8 0E 00 00 00 E8 D1 FF FF FF C3 E8 03 00 00 00 EB 01 ?? 33 C0 64 FF 30 64 89 20 CC C3 E8 03 00 00 00 EB 01 ?? 33 C0 64 FF 30 64 89 20 4B CC C3 E8 03 00 00 00 EB 01 ?? 33 DB B9 BF A4 42 00 81 E9 8E 74 42 00 8B D5 81 C2 8E 74 42 00 8D 3A 8B F7 33 C0 E8 03 00 00 00 EB 01 ?? E8 17 00 00 00 90 90 90 E9 63 29 00 00 33 C0 64 FF 30 64 89 20 43 CC C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_v0_32a__fake_PEX_0_99_____emadicius__h_
 {
 meta:
@@ -8525,10 +8525,10 @@ strings:
     	$a0 = { 60 E8 01 00 00 00 E8 83 C4 04 E8 01 00 00 00 E9 5D 81 ED FF 22 40 00 61 EB 05 E8 EB 04 40 00 EB FA E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 50 E8 02 00 00 00 29 5A 58 6B C0 03 E8 02 00 00 00 29 5A 83 C4 04 58 74 04 75 02 EB 02 EB 01 81 0F 31 50 0F 31 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 2B 04 24 74 04 75 02 EB 02 EB 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule GHF_Protector__pack_only_____GPcH
 {
 meta:
@@ -8541,10 +8541,10 @@ strings:
 	$a4 = { 60 68 ?? ?? ?? ?? B8 ?? ?? ?? ?? FF 10 68 ?? ?? ?? ?? 50 B8 ?? ?? ?? ?? FF 10 68 00 00 00 00 6A 40 FF D0 89 05 ?? ?? ?? ?? 89 C7 BE ?? ?? ?? ?? 60 FC B2 80 31 DB A4 B3 02 E8 6D 00 00 00 73 F6 31 C9 E8 64 00 00 00 73 1C 31 C0 E8 5B 00 00 00 73 23 B3 02 41 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep or $a3 at sgpe.ep or $a4
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep or $a3 at manape.ep or $a4
 }
 
-    
+
 rule Noodlecrypt2____r_sc
 {
 meta:
@@ -8553,10 +8553,10 @@ strings:
     	$a0 = { EB 01 9A E8 76 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__REALBasic______Anorganix
 {
 meta:
@@ -8565,10 +8565,10 @@ strings:
     	$a0 = { 55 89 E5 90 90 90 90 90 90 90 90 90 90 50 90 90 90 90 90 00 01 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule beria_v0_07_public_WIP____symbiont__h_
 {
 meta:
@@ -8577,10 +8577,10 @@ strings:
     	$a0 = { 83 EC 18 53 8B 1D 00 30 ?? ?? 55 56 57 68 30 07 00 00 33 ED 55 FF D3 8B F0 3B F5 74 0D 89 AE 20 07 00 00 E8 88 0F 00 00 EB 02 33 F6 6A 10 55 89 35 30 40 ?? ?? FF D3 8B F0 3B F5 74 09 89 2E E8 3C FE FF FF EB 02 33 F6 6A 18 55 89 35 D8 43 ?? ?? FF D3 8B F0 3B F5 74 37 8B 46 0C 3B C5 8B 3D 04 30 ?? ?? 89 2E 89 6E 04 89 6E 08 74 06 50 FF D7 89 6E 0C 8B 46 10 3B C5 74 06 50 FF D7 89 6E 10 8B 46 14 3B C5 74 0A 50 FF D7 89 6E 14 EB 02 33 F6 6A 10 55 89 35 A4 40 ?? ?? FF D3 8B F0 3B F5 74 09 E8 08 12 00 00 8B C6 EB 02 33 C0 8B 48 08 8B 51 04 8B 09 8B 35 30 30 ?? ?? A3 D4 43 ?? ?? 8B 00 03 D0 52 03 C8 51 FF D6 8B 3D 24 30 ?? ?? 50 FF D7 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Hying_s_PE_Armor_0_76____Hying__CCG
 {
 meta:
@@ -8592,7 +8592,7 @@ condition:
     	$a0
 }
 
-    
+
 rule tElock_v0_51
 {
 meta:
@@ -8601,10 +8601,10 @@ strings:
     	$a0 = { C1 EE 00 66 8B C9 EB 01 EB 60 EB 01 EB 9C E8 00 00 00 00 5E 83 C6 5E 8B FE 68 79 01 59 EB 01 EB AC 54 E8 03 5C EB 08 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NeoLite_v2_0
 {
 meta:
@@ -8613,10 +8613,10 @@ strings:
     	$a0 = { E9 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 4E 65 6F 4C 69 74 65 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_4_30a____Silicon_Realms_Toolworks
 {
 meta:
@@ -8625,10 +8625,10 @@ strings:
     	$a0 = { 44 64 65 44 61 74 61 20 69 6E 69 74 69 61 6C 69 7A 65 64 20 28 41 4E 53 49 29 2C 20 61 70 70 20 73 74 72 69 6E 67 73 20 61 72 65 20 27 25 73 27 20 61 6E 64 20 27 25 73 27 00 00 00 44 64 65 44 61 74 61 20 69 6E 69 74 69 61 6C 69 7A 65 64 20 28 55 4E 49 43 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Com4mail_v1_0
 {
 meta:
@@ -8637,10 +8637,10 @@ strings:
     	$a0 = { 42 45 47 49 4E 3D 3D 3D 74 66 75 64 23 6F 66 5F 43 6F 6D 34 4D 61 69 6C 5F 66 69 6C 65 23 0D 0A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__VOB_ProtectCD_5______Anorganix
 {
 meta:
@@ -8649,10 +8649,10 @@ strings:
     	$a0 = { 36 3E 26 8A C0 60 E8 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECryptor_vx_x_x_x
 {
 meta:
@@ -8661,10 +8661,10 @@ strings:
     	$a0 = { E8 24 ?? ?? ?? 8B 4C 24 0C C7 01 17 ?? 01 ?? C7 81 B8 ?? ?? ?? ?? ?? ?? ?? 31 C0 89 41 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RCryptor_v1_3___v1_4_____Vaska
 {
 meta:
@@ -8674,10 +8674,10 @@ strings:
 	$a1 = { 55 8B EC 8B 44 24 04 83 E8 4F 68 ?? ?? ?? ?? FF D0 58 59 50 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Unknown_packer__02_
 {
 meta:
@@ -8686,10 +8686,10 @@ strings:
     	$a0 = { FA 8C DE 8C CF 8E DF 8E C7 83 C7 ?? BB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Goat_s_PE_Mutilator_1_6
 {
 meta:
@@ -8699,10 +8699,10 @@ strings:
 	$a1 = { E8 EA 0B 00 00 ?? ?? ?? 8B 1C 79 F6 63 D8 8D 22 B0 BF F6 49 08 C3 02 BD 3B 6C 29 46 13 28 5D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule RCryptor_V1_5____Vaska___Sign_by_fly
 {
 meta:
@@ -8711,10 +8711,10 @@ strings:
     	$a0 = { 83 2C 24 4F 68 ?? ?? ?? ?? FF 54 24 04 83 44 24 04 4F B8 ?? ?? ?? ?? 3D ?? ?? ?? ?? 74 06 80 30 ?? ?? EB F3 B8 ?? ?? ?? ?? 3D ?? ?? ?? ?? 74 06 80 30 ?? 40 EB F3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule WinUpack_v0_39_final____By_Dwing_c_2005
 {
 meta:
@@ -8723,10 +8723,10 @@ strings:
     	$a0 = { BE B0 11 ?? ?? AD 50 FF 76 34 EB 7C 48 01 ?? ?? 0B 01 4C 6F 61 64 4C 69 62 72 61 72 79 41 00 00 18 10 00 00 10 00 00 00 00 ?? ?? ?? 00 00 ?? ?? 00 10 00 00 00 02 00 00 04 00 00 00 00 00 39 00 04 00 00 00 00 00 00 00 00 ?? ?? ?? 00 02 00 00 00 00 00 00 ?? 00 00 ?? 00 00 ?? 00 00 ?? ?? 00 00 00 10 00 00 10 00 00 00 00 00 00 0A 00 00 00 00 00 00 00 00 00 00 00 EE ?? ?? ?? 14 00 00 00 00 ?? ?? ?? ?? ?? ?? 00 FF 76 38 AD 50 8B 3E BE F0 ?? ?? ?? 6A 27 59 F3 A5 FF 76 04 83 C8 FF 8B DF AB EB 1C 00 00 00 00 47 65 74 50 72 6F 63 41 64 64 72 65 73 73 00 00 ?? ?? ?? ?? ?? 00 00 00 40 AB 40 B1 04 F3 AB C1 E0 0A B5 ?? F3 AB 8B 7E 0C 57 51 E9 ?? ?? ?? ?? 56 10 E2 E3 B1 04 D3 E0 03 E8 8D 53 18 33 C0 55 40 51 D3 E0 8B EA 91 FF 56 4C 99 59 D1 E8 13 D2 E2 FA 5D 03 EA 45 59 89 6B 08 56 8B F7 2B F5 F3 A4 AC 5E B1 80 AA 3B 7E 34 0F 82 AC FE FF FF 58 5F 59 E3 1B 8A 07 47 04 18 3C 02 73 F7 8B 07 3C ?? 75 F3 B0 00 0F C8 03 46 38 2B C7 AB E2 E5 5E 5D 59 46 AD 85 C0 74 1F 51 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_1_10__Eng_____dulek_xt_____Borland_Delphi___Borland_C___
 {
 meta:
@@ -8735,10 +8735,10 @@ strings:
     	$a0 = { 2B C2 E8 02 00 00 00 95 4A 59 8D 3D 52 F1 2A E8 C1 C8 1C BE 2E ?? ?? 18 EB 02 AB A0 03 F7 EB 02 CD 20 68 F4 00 00 00 0B C7 5B 03 CB 8A 06 8A 16 E8 02 00 00 00 8D 46 59 EB 01 A4 02 D3 EB 02 CD 20 02 D3 E8 02 00 00 00 57 AB 58 81 C2 AA 87 AC B9 0F BE C9 80 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PeCompact_2_xx_____BitSum_Technologies
 {
 meta:
@@ -8747,10 +8747,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? ?? 50 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 33 C0 89 08 50 45 43 6F 6D 70 61 63 74 32 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_1_3_3_7__2007_06_23_____Obsidium_Software
 {
 meta:
@@ -8759,10 +8759,10 @@ strings:
     	$a0 = { EB 02 ?? ?? E8 27 00 00 00 EB 03 ?? ?? ?? EB 01 ?? 8B 54 24 0C EB 03 ?? ?? ?? 83 82 B8 00 00 00 23 EB 03 ?? ?? ?? 33 C0 EB 02 ?? ?? C3 EB 01 ?? EB 03 ?? ?? ?? 64 67 FF 36 00 00 EB 04 ?? ?? ?? ?? 64 67 89 26 00 00 EB 01 ?? EB 01 ?? 50 EB 02 ?? ?? 33 C0 EB 01 ?? 8B 00 EB 04 ?? ?? ?? ?? C3 EB 02 ?? ?? E9 FA 00 00 00 EB 04 ?? ?? ?? ?? E8 D5 FF FF FF EB 01 ?? EB 01 ?? 58 EB 04 ?? ?? ?? ?? EB 01 ?? 64 67 8F 06 00 00 EB 02 ?? ?? 83 C4 04 EB 01 ?? E8 F7 26 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Unnamed_Scrambler_1_2C___1_2D____p0ke
 {
 meta:
@@ -8772,10 +8772,10 @@ strings:
 	$a1 = { 55 8B EC B9 05 00 00 00 6A 00 6A 00 49 75 F9 51 53 56 57 B8 ?? 3A ?? ?? E8 ?? EC FF FF 33 C0 55 68 ?? ?? ?? ?? 64 FF 30 64 89 20 E8 ?? D7 FF FF E8 ?? ?? FF FF B8 20 ?? ?? ?? 33 C9 BA 04 01 00 00 E8 ?? DB FF FF 68 04 01 00 00 68 20 ?? ?? ?? 6A 00 FF 15 10 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule FSG_1_10__Eng_____dulek_xt_____Borland_Delphi___Microsoft_Visual_C___
 {
 meta:
@@ -8784,10 +8784,10 @@ strings:
     	$a0 = { 1B DB E8 02 00 00 00 1A 0D 5B 68 80 ?? ?? 00 E8 01 00 00 00 EA 5A 58 EB 02 CD 20 68 F4 00 00 00 EB 02 CD 20 5E 0F B6 D0 80 CA 5C 8B 38 EB 01 35 EB 02 DC 97 81 EF F7 65 17 43 E8 02 00 00 00 97 CB 5B 81 C7 B2 8B A1 0C 8B D1 83 EF 17 EB 02 0C 65 83 EF 43 13 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NTPacker_V2_X____ErazerZ___Sign_by_fly
 {
 meta:
@@ -8799,7 +8799,7 @@ condition:
     	$a0
 }
 
-    
+
 rule VBOX_v4_3_MTE
 {
 meta:
@@ -8808,10 +8808,10 @@ strings:
     	$a0 = { 0B C0 0B C0 0B C0 0B C0 0B C0 0B C0 0B C0 0B C0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ENIGMA_Protector_V1_1___Sukhov_Vladimir
 {
 meta:
@@ -8820,10 +8820,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 83 ?? ?? 81 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RCryptor_v1_6d____Vaska
 {
 meta:
@@ -8832,10 +8832,10 @@ strings:
     	$a0 = { 60 90 61 61 80 7F F0 45 90 60 0F 85 1B 8B 1F FF 68 ?? ?? ?? ?? B8 ?? ?? ?? ?? 90 3D ?? ?? ?? ?? 74 06 80 30 ?? 40 EB F3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PCPEC__alpha_
 {
 meta:
@@ -8844,10 +8844,10 @@ strings:
     	$a0 = { 53 51 52 56 57 55 E8 ?? ?? ?? ?? 5D 8B CD 81 ?? ?? ?? ?? ?? 2B ?? ?? ?? ?? ?? 83 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v2_5_Retail____Bitsum_Technologies
 {
 meta:
@@ -8856,10 +8856,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? 01 50 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 33 C0 89 08 50 45 43 6F 6D 70 61 63 74 32 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule eXPressor_v1_5_0_1__Options____Light__Full_support__CGSoftLabs
 {
 meta:
@@ -8868,10 +8868,10 @@ strings:
     	$a0 = { 55 8B EC 81 EC ?? 02 00 00 53 56 57 83 A5 ?? FD FF FF 00 F3 EB 0C 65 58 50 72 2D 76 2E 31 2E 35 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v2_0
 {
 meta:
@@ -8880,10 +8880,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? ?? 50 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 33 C0 89 08 50 45 43 6F 6D 70 61 63 74 32 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule _MSLRH__v0_32a____emadicius
 {
 meta:
@@ -8895,7 +8895,7 @@ condition:
     	$a0
 }
 
-    
+
 rule FSG_1_33__Eng_____dulek_xt
 {
 meta:
@@ -8904,10 +8904,10 @@ strings:
     	$a0 = { BE A4 01 40 00 AD 93 AD 97 AD 56 96 B2 80 A4 B6 80 FF 13 73 F9 33 C9 FF 13 73 16 33 C0 FF 13 73 1F B6 80 41 B0 10 FF 13 12 C0 73 FA 75 3C AA EB E0 FF 53 08 02 F6 83 D9 01 75 0E FF 53 04 EB 26 AC D1 E8 74 2F 13 C9 EB 1A 91 48 C1 E0 08 AC FF 53 04 3D 00 7D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PeStubOEP_v1_x
 {
 meta:
@@ -8921,7 +8921,7 @@ condition:
     	$a0 or $a1 or $a2
 }
 
-    
+
 rule UnoPiX_0_75____BaGiE
 {
 meta:
@@ -8930,10 +8930,10 @@ strings:
     	$a0 = { 60 E8 07 00 00 00 61 68 ?? ?? 40 00 C3 83 04 24 18 C3 20 83 B8 ED 20 37 EF C6 B9 79 37 9E 61 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SCAN__AV
 {
 meta:
@@ -8942,10 +8942,10 @@ strings:
     	$a0 = { 1E 0E 1F B8 ?? ?? 8E C0 26 8A 1E ?? ?? 80 ?? ?? 72 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PE_Protect_v0_9
 {
 meta:
@@ -8955,10 +8955,10 @@ strings:
 	$a1 = { 52 51 55 57 64 67 A1 30 00 85 C0 78 0D E8 ?? ?? ?? ?? 58 83 C0 07 C6 ?? C3 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule Upack_V0_3X____Dwing
 {
 meta:
@@ -8967,10 +8967,10 @@ strings:
     	$a0 = { 60 E8 09 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? 33 C9 5E 87 0E }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ACE_Archive
 {
 meta:
@@ -8982,7 +8982,7 @@ condition:
     	$a0
 }
 
-    
+
 rule EXECryptor_v1_5_3
 {
 meta:
@@ -8994,7 +8994,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_2___BJFNT_1_1b_
 {
 meta:
@@ -9003,10 +9003,10 @@ strings:
     	$a0 = { EB 01 EA 9C EB 01 EA 53 EB 01 EA 51 EB 01 EA 52 EB 01 EA 56 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FreeCryptor_0_2__build_002_____GlOFF
 {
 meta:
@@ -9018,7 +9018,7 @@ condition:
     	$a0
 }
 
-    
+
 rule DMark_Database_file
 {
 meta:
@@ -9030,7 +9030,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PC_Guard_5_00d
 {
 meta:
@@ -9042,7 +9042,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Code_Virtualizer_V1_3_1_0____Oreans_Technologies
 {
 meta:
@@ -9051,10 +9051,10 @@ strings:
     	$a0 = { 60 9C FC E8 00 00 00 00 5F 81 EF ?? ?? ?? ?? 8B C7 81 C7 ?? ?? ?? ?? 3B 47 2C 75 02 EB 2E 89 47 2C B9 A7 00 00 00 EB 05 01 44 8F ?? 49 0B C9 75 F7 83 7F 40 00 74 15 8B 77 40 03 F0 EB 09 8B 1E 03 D8 01 03 83 C6 04 83 3E 00 75 F2 8B 74 24 24 8B DE 03 F0 B9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule CodeCrypt_v0_16b___v0_163b
 {
 meta:
@@ -9063,10 +9063,10 @@ strings:
     	$a0 = { E9 2E 03 00 00 EB 02 83 3D 58 EB 02 FF 1D 5B EB 02 0F C7 5F }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Password_Protector_for_the_UPX_0_30____g0d
 {
 meta:
@@ -9075,10 +9075,10 @@ strings:
     	$a0 = { C8 50 01 00 60 E8 EC 00 00 00 00 47 65 74 4D 6F 64 75 6C 65 48 61 6E 64 6C 65 41 00 00 55 53 45 52 33 32 2E 64 6C 6C 00 44 69 61 6C 6F 67 42 6F 78 49 6E 64 69 72 65 63 74 50 61 72 61 6D 41 00 53 65 6E 64 4D 65 73 73 61 67 65 41 00 45 6E 64 44 69 61 6C 6F }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASPack_v1_08
 {
 meta:
@@ -9089,10 +9089,10 @@ strings:
 	$a2 = { 90 90 90 75 01 FF E9 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
-    
+
 rule ASProtect_vx_x
 {
 meta:
@@ -9102,10 +9102,10 @@ strings:
 	$a1 = { 90 60 ?? ?? ?? 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Simple_UPX_Cryptor_v30_4_2005__multi_layer_encryption
 {
 meta:
@@ -9115,10 +9115,10 @@ strings:
 	$a1 = { 60 B8 ?? ?? ?? 00 B9 18 00 00 00 80 34 08 ?? E2 FA 61 68 ?? ?? ?? 00 C3 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Password_Protector__c__MiniSoft_1992
 {
 meta:
@@ -9127,10 +9127,10 @@ strings:
     	$a0 = { 06 0E 0E 07 1F E8 00 00 5B 83 EB 08 BA 27 01 03 D3 E8 3C 02 BA EA }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__ASProtect_____Anorganix
 {
 meta:
@@ -9139,10 +9139,10 @@ strings:
     	$a0 = { 60 90 90 90 90 90 90 5D 90 90 90 90 90 90 90 90 90 90 90 03 DD E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_v1_10__Eng_____dulek_xt_____Borland_Delphi___Microsoft_Visual_C_____ASM_
 {
 meta:
@@ -9151,10 +9151,10 @@ strings:
     	$a0 = { EB 02 CD 20 EB 02 CD 20 EB 02 CD 20 C1 E6 18 BB 80 ?? ?? 00 EB 02 82 B8 EB 01 10 8D 05 F4 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_1_3_3_9____Obsidium_Software
 {
 meta:
@@ -9164,10 +9164,10 @@ strings:
 	$a1 = { EB 02 ?? ?? E8 29 00 00 00 EB 03 ?? ?? ?? EB 01 ?? 8B 54 24 0C EB 04 ?? ?? ?? ?? 83 82 B8 00 00 00 28 EB 02 ?? ?? 33 C0 EB 02 ?? ?? C3 EB 03 ?? ?? ?? EB 04 ?? ?? ?? ?? 64 67 FF 36 00 00 EB 03 ?? ?? ?? 64 67 89 26 00 00 EB 01 ?? EB 01 ?? 50 EB 03 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule FSG_v1_10__Eng_____dulek_xt_____Microsoft_Visual_C___6_0___7_0_
 {
 meta:
@@ -9183,10 +9183,10 @@ strings:
 	$a7 = { 0B D0 8B DA E8 02 00 00 00 40 A0 5A EB 01 9D B8 80 ?? ?? 00 EB 02 CD 20 03 D3 8D 35 F4 00 00 00 EB 01 35 EB 01 88 80 CA 7C 80 F3 74 8B 38 EB 02 AC BA 03 DB E8 01 00 00 00 A5 5B C1 C2 0B 81 C7 DA 10 0A 4E EB 01 08 2B D1 83 EF 14 EB 02 CD 20 33 D3 83 EF 27 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep or $a3 at sgpe.ep or $a4 at sgpe.ep or $a5 at sgpe.ep or $a6 at sgpe.ep or $a7 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep or $a3 at manape.ep or $a4 at manape.ep or $a5 at manape.ep or $a6 at manape.ep or $a7 at manape.ep
 }
 
-    
+
 rule FSG_v1_10__Eng_____dulek_xt
 {
 meta:
@@ -9198,10 +9198,10 @@ strings:
 	$a3 = { BB D0 01 40 ?? BF ?? 10 40 ?? BE }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep or $a3 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep or $a3 at manape.ep
 }
 
-    
+
 rule Exe_Locker_v1_0____IonIce
 {
 meta:
@@ -9210,10 +9210,10 @@ strings:
     	$a0 = { E8 00 00 00 00 60 8B 6C 24 20 81 ED 05 00 00 00 3E 8F 85 6C 00 00 00 3E 8F 85 68 00 00 00 3E 8F 85 64 00 00 00 3E 8F 85 60 00 00 00 3E 8F 85 5C 00 00 00 3E 8F 85 58 00 00 00 3E 8F 85 54 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECryptor_2_x____SoftComplete_Developement
 {
 meta:
@@ -9225,7 +9225,7 @@ condition:
     	$a0
 }
 
-    
+
 rule E________________________________
 {
 meta:
@@ -9234,10 +9234,10 @@ strings:
     	$a0 = { 55 8B EC B8 ?? ?? ?? ?? E8 ?? ?? ?? ?? 53 56 57 0F 31 8B D8 0F 31 8B D0 2B D3 C1 EA 10 B8 ?? ?? ?? ?? 0F 6E C0 B8 ?? ?? ?? ?? 0F 6E C8 0F F5 C1 0F 7E C0 0F 77 03 C2 ?? ?? ?? ?? ?? FF E0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ACProtect_v1_90g____Risco_software_Inc_
 {
 meta:
@@ -9246,10 +9246,10 @@ strings:
     	$a0 = { 60 0F 87 02 00 00 00 1B F8 E8 01 00 00 00 73 83 04 24 06 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__WATCOM_C_C___EXE______Anorganix
 {
 meta:
@@ -9258,10 +9258,10 @@ strings:
     	$a0 = { E9 00 00 00 00 90 90 90 90 57 41 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASProtect_2_0
 {
 meta:
@@ -9273,7 +9273,7 @@ condition:
     	$a0
 }
 
-    
+
 rule RLPack_V1_11____ap0x___Sign_by_fly
 {
 meta:
@@ -9282,10 +9282,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 8D B5 4A 02 00 00 8D 9D 11 01 00 00 33 FF EB 0F FF 74 37 04 FF 34 37 FF D3 83 C4 08 83 C7 08 83 3C 37 00 75 EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__Crunch_PE_Heuristic______Anorganix
 {
 meta:
@@ -9294,10 +9294,10 @@ strings:
     	$a0 = { 55 E8 0E 00 00 00 5D 83 ED 06 8B C5 55 60 89 AD ?? ?? ?? ?? 2B 85 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_1_3_3_7____Obsidium_Software
 {
 meta:
@@ -9306,10 +9306,10 @@ strings:
     	$a0 = { EB 02 ?? ?? E8 2C 00 00 00 EB 04 ?? ?? ?? ?? EB 04 ?? ?? ?? ?? 8B 54 24 0C EB 02 ?? ?? 83 82 B8 00 00 00 27 EB 04 ?? ?? ?? ?? 33 C0 EB 02 ?? ?? C3 EB 02 ?? ?? EB 03 ?? ?? ?? 64 67 FF 36 00 00 EB 04 ?? ?? ?? ?? 64 67 89 26 00 00 EB 03 ?? ?? ?? EB 01 ?? 50 EB 02 ?? ?? 33 C0 EB 02 ?? ?? 8B 00 EB 04 ?? ?? ?? ?? C3 EB 02 ?? ?? E9 FA 00 00 00 EB 04 ?? ?? ?? ?? E8 D5 FF FF FF EB 02 ?? ?? EB 04 ?? ?? ?? ?? 58 EB 04 ?? ?? ?? ?? EB 03 ?? ?? ?? 64 67 8F 06 00 00 EB 01 ?? 83 C4 04 EB 03 ?? ?? ?? E8 23 27 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEX_v0_99
 {
 meta:
@@ -9318,10 +9318,10 @@ strings:
     	$a0 = { 60 E8 01 ?? ?? ?? ?? 83 C4 04 E8 01 ?? ?? ?? ?? 5D 81 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule VProtector_V1_0D____vcasm
 {
 meta:
@@ -9330,10 +9330,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 CA 31 41 00 68 06 32 41 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 E8 03 00 00 00 C7 84 00 58 EB 01 E9 83 C0 07 50 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_V1_15_V1_17__aPlib_0_43_____ap0x___Sign_by_fly
 {
 meta:
@@ -9342,10 +9342,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 8D B5 ?? ?? ?? ?? 8D 9D ?? ?? ?? ?? 33 FF E8 45 01 00 00 EB 0F FF 74 37 04 FF 34 37 FF D3 83 C4 08 83 C7 08 83 3C 37 00 75 EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Crunch_PE_v3_0_x_x
 {
 meta:
@@ -9354,10 +9354,10 @@ strings:
     	$a0 = { EB 10 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 55 E8 ?? ?? ?? ?? 5D 81 ED 18 ?? ?? ?? 8B C5 55 60 9C 2B 85 ?? ?? ?? ?? 89 85 ?? ?? ?? ?? FF 74 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule eXPressor_v1_4____CGSoftLabs__h_
 {
 meta:
@@ -9366,10 +9366,10 @@ strings:
     	$a0 = { 55 8B EC 83 EC ?? 53 56 57 EB 0C 45 78 50 72 2D 76 2E 31 2E 34 2E 2E B8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PocketPC_SHA
 {
 meta:
@@ -9378,10 +9378,10 @@ strings:
     	$a0 = { 86 2F 96 2F A6 2F B6 2F 22 4F 43 68 53 6B 63 6A 73 69 F0 7F 0B D0 0B 40 09 00 09 D0 B3 65 A3 66 93 67 0B 40 83 64 03 64 04 D0 0B 40 09 00 10 7F 26 4F F6 6B F6 6A F6 69 0B 00 F6 68 ?? ?? ?? 00 ?? ?? ?? 00 ?? ?? ?? 00 22 4F F0 7F 0A D0 06 D4 06 D5 0B 40 09 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Pelles_C_2_x_4_x_DLL____Pelle_Orinius
 {
 meta:
@@ -9390,10 +9390,10 @@ strings:
     	$a0 = { 55 89 E5 53 56 57 8B 5D 0C 8B 75 10 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Zurenava_DOS_Extender_v0_45__v0_49
 {
 meta:
@@ -9402,10 +9402,10 @@ strings:
     	$a0 = { BE ?? ?? BF ?? ?? B9 ?? ?? 56 FC F3 A5 5F E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Ding_Boy_s_PE_lock_v0_07
 {
 meta:
@@ -9414,10 +9414,10 @@ strings:
     	$a0 = { 55 57 56 52 51 53 E8 00 00 00 00 5D 8B D5 81 ED 23 35 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PS_AdobeFont_v_1_0
 {
 meta:
@@ -9429,7 +9429,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PocketPC_ARM
 {
 meta:
@@ -9439,10 +9439,10 @@ strings:
 	$a1 = { F0 40 2D E9 00 40 A0 E1 01 50 A0 E1 02 60 A0 E1 03 70 A0 E1 ?? 00 00 EB 07 30 A0 E1 06 20 A0 E1 05 10 A0 E1 04 00 A0 E1 ?? ?? ?? EB F0 40 BD E8 ?? 00 00 EA ?? 40 2D E9 ?? ?? 9F E5 ?? ?? ?? ?? ?? 00 ?? ?? ?? ?? ?? ?? ?? ?? 9F E5 00 ?? ?? ?? ?? 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__CD_Cops_II_____Anorganix
 {
 meta:
@@ -9451,10 +9451,10 @@ strings:
     	$a0 = { 53 60 BD 90 90 90 90 8D 45 90 8D 5D 90 E8 00 00 00 00 8D 01 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ENIGMA_Protector_V1_12___Sukhov_Vladimir
 {
 meta:
@@ -9463,10 +9463,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 83 C5 FA 81 ED ?? ?? ?? 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? E8 01 00 00 00 9A 83 C4 04 EB 02 FF 35 60 E8 24 00 00 00 00 00 FF EB 02 CD 20 8B 44 24 0C 83 80 B8 00 00 00 03 31 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule yP_1_0b_by_Ashkbiz_Danehkar
 {
 meta:
@@ -9478,7 +9478,7 @@ condition:
     	$a0
 }
 
-    
+
 rule iPBProtect_v0_1_3
 {
 meta:
@@ -9491,7 +9491,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule App_Protector____Silent_Team
 {
 meta:
@@ -9501,10 +9501,10 @@ strings:
 	$a1 = { E9 97 00 00 00 0D 0A 53 69 6C 65 6E 74 20 54 65 61 6D 20 41 70 70 20 50 72 6F 74 65 63 74 6F 72 0D 0A 43 72 65 61 74 65 64 20 62 79 20 53 69 6C 65 6E 74 20 53 6F 66 74 77 61 72 65 0D 0A 54 68 65 6E 6B 7A 20 74 6F 20 44 6F 63 68 74 6F 72 20 58 0D 0A 0D 0A }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule SecurePE_1_X____www_deepzone_org
 {
 meta:
@@ -9513,10 +9513,10 @@ strings:
     	$a0 = { 8B 04 24 E8 00 00 00 00 5D 81 ED 4C 2F 40 00 89 85 61 2F 40 00 8D 9D 65 2F 40 00 53 C3 00 00 00 00 8D B5 BA 2F 40 00 8B FE BB 65 2F 40 00 B9 C6 01 00 00 AD 2B C3 C1 C0 03 33 C3 AB 43 81 FB 8E 2F 40 00 75 05 BB 65 2F 40 00 E2 E7 89 AD 1A 31 40 00 89 AD 55 34 40 00 89 AD 68 34 40 00 8D 85 BA 2F 40 00 50 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Soft_Defender_v1_1x____Randy_Li
 {
 meta:
@@ -9525,10 +9525,10 @@ strings:
     	$a0 = { 74 07 75 05 ?? ?? ?? ?? ?? 74 1F 75 1D ?? 68 ?? ?? ?? 00 59 9C 50 74 0A 75 08 ?? 59 C2 04 00 ?? ?? ?? E8 F4 FF FF FF ?? ?? ?? 78 0F 79 0D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule HQR_data_file
 {
 meta:
@@ -9540,7 +9540,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Armadillo_v4_00_0053____Silicon_Realms_Toolworks
 {
 meta:
@@ -9552,7 +9552,7 @@ condition:
     	$a0
 }
 
-    
+
 rule VMProtect_0_7x___0_8____PolyTech
 {
 meta:
@@ -9564,7 +9564,7 @@ condition:
     	$a0
 }
 
-    
+
 rule N_Joiner_0_1__Asm_Version_____NEX
 {
 meta:
@@ -9573,10 +9573,10 @@ strings:
     	$a0 = { 6A 00 68 00 14 40 00 68 00 10 40 00 6A 00 E8 14 00 00 00 6A 00 E8 13 00 00 00 CC FF 25 AC 12 40 00 FF 25 B0 12 40 00 FF 25 B4 12 40 00 FF 25 B8 12 40 00 FF 25 BC 12 40 00 FF 25 C0 12 40 00 FF 25 C4 12 40 00 FF 25 C8 12 40 00 FF 25 CC 12 40 00 FF 25 D0 12 40 00 FF 25 D4 12 40 00 FF 25 D8 12 40 00 FF 25 DC 12 40 00 FF 25 E4 12 40 00 FF 25 EC 12 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Morphine_V3_3____Holy_Father___Ratter_29A
 {
 meta:
@@ -9588,7 +9588,7 @@ condition:
     	$a0
 }
 
-    
+
 rule UPX_V2_00_V2_90____Markus_Oberhumer__amp__Laszlo_Molnar__amp__John_Reiser
 {
 meta:
@@ -9600,7 +9600,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Upack_v0_38_beta____Dwing
 {
 meta:
@@ -9610,10 +9610,10 @@ strings:
 	$a1 = { BE B0 11 ?? ?? AD 50 FF 76 34 EB 7C 48 01 ?? ?? 0B 01 4C 6F 61 64 4C 69 62 72 61 72 79 41 00 00 18 10 00 00 10 00 00 00 00 ?? ?? ?? 00 00 ?? ?? 00 10 00 00 00 02 00 00 04 00 00 00 00 00 38 00 04 00 00 00 00 00 00 00 00 ?? ?? ?? 00 02 00 00 00 00 00 00 ?? 00 00 ?? 00 00 ?? 00 00 ?? ?? 00 00 00 10 00 00 10 00 00 00 00 00 00 0A 00 00 00 00 00 00 00 00 00 00 00 EE ?? ?? ?? 14 00 00 00 00 ?? ?? ?? ?? ?? ?? 00 FF 76 38 AD 50 8B 3E BE F0 ?? ?? ?? 6A 27 59 F3 A5 FF 76 04 83 C8 FF 8B DF AB EB 1C 00 00 00 00 47 65 74 50 72 6F 63 41 64 64 72 65 73 73 00 00 ?? ?? ?? ?? ?? 00 00 00 40 AB 40 B1 04 F3 AB C1 E0 0A B5 ?? F3 AB 8B 7E 0C 57 51 E9 ?? ?? ?? ?? E3 B1 04 D3 E0 03 E8 8D 53 18 33 C0 55 40 51 D3 E0 8B EA 91 FF 56 4C 33 D2 59 D1 E8 13 D2 E2 FA 5D 03 EA 45 59 89 6B 08 56 8B F7 2B F5 F3 A4 AC 5E B1 80 AA 3B 7E 34 0F 82 97 FE FF FF 58 5F 59 E3 1B 8A 07 47 04 18 3C 02 73 F7 8B 07 3C ?? 75 F1 B0 00 0F C8 03 46 38 2B C7 AB E2 E5 5E 5D 59 51 59 46 AD 85 C0 74 1F }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__PENightMare_2_Beta______Anorganix
 {
 meta:
@@ -9622,10 +9622,10 @@ strings:
     	$a0 = { 60 E9 10 00 00 00 EF 40 03 A7 07 8F 07 1C 37 5D 43 A7 04 B9 2C 3A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v2_20b1
 {
 meta:
@@ -9634,10 +9634,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 30 12 41 00 68 A4 A5 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPolyX_0_x____Delikon
 {
 meta:
@@ -9646,10 +9646,10 @@ strings:
     	$a0 = { 81 FD 00 FB FF FF 83 D1 ?? 8D 14 2F 83 FD FC 76 ?? 8A 02 42 88 07 47 49 75 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_V1_19_Dll__aPlib_0_43_____ap0x___Sign_by_fly
 {
 meta:
@@ -9658,10 +9658,10 @@ strings:
     	$a0 = { 80 7C 24 08 01 0F 85 89 01 00 00 60 E8 00 00 00 00 8B 2C 24 83 C4 04 83 7C 24 28 01 75 0C 8B 44 24 24 89 85 3C 04 00 00 EB 0C 8B 85 38 04 00 00 89 85 3C 04 00 00 8D B5 60 04 00 00 8D 9D EB 02 00 00 33 FF E8 52 01 00 00 EB 1B 8B 85 3C 04 00 00 FF 74 37 04 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Copy_Protector_v2_0
 {
 meta:
@@ -9670,10 +9670,10 @@ strings:
     	$a0 = { 2E A2 ?? ?? 53 51 52 1E 06 B4 ?? 1E 0E 1F BA ?? ?? CD 21 1F }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v1_90
 {
 meta:
@@ -9682,10 +9682,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 10 F2 40 00 68 64 9A 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ENIGMA_Protector_V1_1_V1_2___Sukhov_Vladimir
 {
 meta:
@@ -9694,10 +9694,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 83 ED 06 81 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SafeDisc_4
 {
 meta:
@@ -9709,7 +9709,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Enigma_Protector_1_X____Sukhov_Vladimir___Serge_N__Markin
 {
 meta:
@@ -9719,10 +9719,10 @@ strings:
 	$a1 = { 00 00 00 56 69 72 74 75 61 6C 41 6C 6C 6F 63 00 00 00 56 69 72 74 75 61 6C 46 72 65 65 00 00 00 47 65 74 4D 6F 64 75 6C 65 48 61 6E 64 6C 65 41 00 00 00 47 65 74 50 72 6F 63 41 64 64 72 65 73 73 00 00 00 45 78 69 74 50 72 6F 63 65 73 73 00 00 00 4C 6F 61 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule Blade_Joiner_v1_5
 {
 meta:
@@ -9731,10 +9731,10 @@ strings:
     	$a0 = { 55 8B EC 81 C4 E4 FE FF FF 53 56 57 33 C0 89 45 F0 89 85 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_FullEdition_V1_1X____ap0x_____Sign_By_fly
 {
 meta:
@@ -9746,7 +9746,7 @@ condition:
     	$a0
 }
 
-    
+
 rule ____________EXE_____________________________________________________
 {
 meta:
@@ -9755,10 +9755,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 E4 53 56 57 33 C0 89 45 E4 89 45 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule VProtector_V1_0A____vcasm
 {
 meta:
@@ -9767,10 +9767,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 8A 8E 40 00 68 C6 8E 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 E8 03 00 00 00 C7 84 00 58 EB 01 E9 83 C0 07 50 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECryptor_2_2_2_3__protected_IAT_____www_strongbit_com
 {
 meta:
@@ -9779,10 +9779,10 @@ strings:
     	$a0 = { CC ?? ?? ?? 00 00 00 00 FF FF FF FF 3C ?? ?? ?? B4 ?? ?? ?? 08 ?? ?? ?? 00 00 00 00 FF FF FF FF E8 ?? ?? ?? 04 ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 6B 65 72 6E 65 6C 33 32 2E 64 6C 6C 00 00 00 00 00 00 47 65 74 4D 6F 64 75 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_V1_2_5_8_V1_3_3_X____Obsidium_Software___Sign_by_fly
 {
 meta:
@@ -9791,10 +9791,10 @@ strings:
     	$a0 = { EB 01 ?? E8 ?? 00 00 00 EB 02 ?? ?? EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_Modified_Stub_c____Farb_rausch_Consumer_Consulting
 {
 meta:
@@ -9804,10 +9804,10 @@ strings:
 	$a1 = { 60 BE ?? ?? ?? ?? 8D BE ?? ?? ?? ?? 57 83 CD FF FC B2 80 E8 00 00 00 00 5B 83 C3 66 A4 FF D3 73 FB 31 C9 FF D3 73 14 31 C0 FF D3 73 1D 41 B0 10 FF D3 10 C0 73 FA 75 3C AA EB E2 E8 4A 00 00 00 49 E2 10 E8 40 00 00 00 EB 28 AC D1 E8 74 45 11 C9 EB 1C 91 48 C1 E0 08 AC E8 2A 00 00 00 3D 00 7D 00 00 73 0A 80 FC 05 73 06 83 F8 7F 77 02 41 41 95 89 E8 56 89 FE 29 C6 F3 A4 5E EB 9F 00 D2 75 05 8A 16 46 10 D2 C3 31 C9 41 FF D3 11 C9 FF D3 72 F8 C3 31 C0 31 DB 31 C9 5E 89 F7 B9 ?? ?? ?? ?? 8A 07 47 2C E8 3C 01 77 F7 80 3F 0E 75 F2 8B 07 8A 5F 04 66 C1 E8 08 C1 C0 10 86 C4 29 F8 80 EB E8 01 F0 89 07 83 C7 05 89 D8 E2 D9 8D BE ?? ?? ?? ?? 8B 07 09 C0 74 45 8B 5F 04 8D 84 30 ?? ?? ?? ?? 01 F3 50 83 C7 08 FF 96 ?? ?? ?? ?? 95 8A 07 47 08 C0 74 DC 89 F9 79 07 0F B7 07 47 50 47 B9 57 48 F2 AE 55 FF 96 ?? ?? ?? ?? 09 C0 74 07 89 03 83 C3 04 EB D8 FF 96 ?? ?? ?? ?? 61 E9 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__LCC_Win32_DLL______Anorganix
 {
 meta:
@@ -9816,10 +9816,10 @@ strings:
     	$a0 = { 55 89 E5 53 56 57 83 7D 0C 01 75 05 E8 17 90 90 90 FF 75 10 FF 75 0C FF 75 08 A1 ?? ?? ?? ?? E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PLINK86_1984__1985
 {
 meta:
@@ -9828,10 +9828,10 @@ strings:
     	$a0 = { FA 8C C7 8C D6 8B CC BA ?? ?? 8E C2 26 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule eXPressor_v1_3____CGSoftLabs__h_
 {
 meta:
@@ -9840,10 +9840,10 @@ strings:
     	$a0 = { 55 8B EC 83 EC ?? 53 56 57 EB 0C 45 78 50 72 2D 76 2E 31 2E 33 2E 2E B8 ?? ?? ?? ?? 2B 05 ?? ?? ?? ?? A3 ?? ?? ?? ?? 83 3D ?? ?? ?? ?? 00 74 13 A1 ?? ?? ?? ?? 03 05 ?? ?? ?? ?? 89 ?? ?? E9 ?? ?? 00 00 C7 05 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_v0_70
 {
 meta:
@@ -9854,10 +9854,10 @@ strings:
 	$a2 = { 8C CB B9 ?? ?? BE ?? ?? 89 F7 1E A9 ?? ?? 8D ?? ?? ?? 8E D8 05 ?? ?? 8E C0 FD F3 A5 FC 2E ?? ?? ?? ?? 73 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
-    
+
 rule UPX_v0_72
 {
 meta:
@@ -9866,10 +9866,10 @@ strings:
     	$a0 = { 60 E8 ?? ?? ?? ?? 83 ?? ?? 31 DB 5E 8D ?? ?? ?? ?? ?? 57 66 ?? ?? ?? ?? ?? ?? ?? ?? 81 ?? ?? ?? ?? ?? EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Themida_1_0_x_x___1_8_0_0__compressed_engine_____Oreans_Technologies
 {
 meta:
@@ -9879,10 +9879,10 @@ strings:
 	$a1 = { B8 ?? ?? ?? ?? 60 0B C0 74 58 E8 00 00 00 00 58 05 43 00 00 00 80 38 E9 75 03 61 EB 35 E8 00 00 00 00 58 25 00 F0 FF FF 33 FF 66 BB 19 5A 66 83 C3 34 66 39 18 75 12 0F B7 50 3C 03 D0 BB E9 44 00 00 83 C3 67 39 1A 74 07 2D 00 10 00 00 EB DA 8B F8 B8 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Armadillo_v1_9x
 {
 meta:
@@ -9891,10 +9891,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 98 ?? ?? ?? 68 10 ?? ?? ?? 64 A1 ?? ?? ?? ?? 50 64 89 25 ?? ?? ?? ?? 83 EC 58 53 56 57 89 65 E8 FF 15 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule kryptor_9
 {
 meta:
@@ -9903,10 +9903,10 @@ strings:
     	$a0 = { 60 E8 ?? ?? ?? ?? 5E B9 ?? ?? ?? ?? 2B C0 02 04 0E D3 C0 49 79 F8 41 8D 7E 2C 33 46 ?? 66 B9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v2_00b2_2_00b3
 {
 meta:
@@ -9915,10 +9915,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 00 F2 40 00 68 C4 A0 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Unnamed_Scrambler_2_5_1_Beta_2____2_5_2____p0ke
 {
 meta:
@@ -9928,10 +9928,10 @@ strings:
 	$a1 = { 55 8B EC B9 ?? 00 00 00 6A 00 6A 00 49 75 F9 53 56 57 B8 ?? ?? 40 00 E8 ?? EA FF FF 33 C0 55 68 ?? ?? 40 00 64 FF 30 64 89 20 BA ?? ?? 40 00 B8 ?? ?? 40 00 E8 63 F3 FF FF 8B D8 85 DB 75 07 6A 00 E8 ?? ?? FF FF BA ?? ?? 40 00 8B C3 8B 0D ?? ?? 40 00 E8 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule EmbedPE_V1_00_V1_24____cyclotron
 {
 meta:
@@ -9940,10 +9940,10 @@ strings:
     	$a0 = { 00 00 00 00 ?? ?? ?? ?? 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 4B 45 52 4E 45 4C 33 32 2E }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__Necropolis_1963
 {
 meta:
@@ -9952,10 +9952,10 @@ strings:
     	$a0 = { B4 30 CD 21 3C 03 ?? ?? B8 00 12 CD 2F 3C FF B8 ?? ?? ?? ?? B4 4A BB 40 01 CD 21 ?? ?? FA 0E 17 BC ?? ?? E8 ?? ?? FB A1 ?? ?? 0B C0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Petite_2_1
 {
 meta:
@@ -9967,7 +9967,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PKLITE_v1_50__1_
 {
 meta:
@@ -9976,10 +9976,10 @@ strings:
     	$a0 = { 50 B8 ?? ?? BA ?? ?? 05 ?? ?? 3B 06 ?? ?? 72 ?? B4 ?? BA ?? ?? CD 21 B8 ?? ?? CD 21 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule WinZip_32_bit_SFX_v6_x_module
 {
 meta:
@@ -9988,10 +9988,10 @@ strings:
     	$a0 = { FF 15 ?? ?? ?? 00 B1 22 38 08 74 02 B1 20 40 80 38 00 74 10 38 08 74 06 40 80 38 00 75 F6 80 38 00 74 01 40 33 C9 ?? ?? ?? ?? FF 15 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__PE_Protect_0_9______Anorganix
 {
 meta:
@@ -10000,10 +10000,10 @@ strings:
     	$a0 = { 52 51 55 57 64 67 A1 30 00 85 C0 78 0D E8 07 00 00 00 58 83 C0 07 C6 90 C3 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Turbo_C_1987
 {
 meta:
@@ -10012,10 +10012,10 @@ strings:
     	$a0 = { FB 8C CA 2E 89 16 ?? ?? B4 30 CD 21 8B 2E ?? ?? 8B 1E ?? ?? 8E DA }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Video_Lan_Client
 {
 meta:
@@ -10024,10 +10024,10 @@ strings:
     	$a0 = { 55 89 E5 83 EC 08 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule CrackStop_v1_01__c__Stefan_Esser_1997
 {
 meta:
@@ -10036,10 +10036,10 @@ strings:
     	$a0 = { B4 48 BB FF FF B9 EB 27 8B EC CD 21 FA FC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NTkrnl_Secure_Suite_V0_1____NTkrnl_Software
 {
 meta:
@@ -10051,7 +10051,7 @@ condition:
     	$a0
 }
 
-    
+
 rule UPX_v2_0____Markus__Laszlo___Reiser__h_
 {
 meta:
@@ -10064,7 +10064,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule PseudoSigner_0_2__Microsoft_Visual_Basic_5_0___6_0______Anorganix
 {
 meta:
@@ -10073,10 +10073,10 @@ strings:
     	$a0 = { 68 ?? ?? ?? ?? E8 0A 00 00 00 00 00 00 00 00 00 30 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ACProtect_v1_41
 {
 meta:
@@ -10085,10 +10085,10 @@ strings:
     	$a0 = { 60 76 03 77 01 7B 74 03 75 01 78 47 87 EE E8 01 00 00 00 76 83 C4 04 85 EE EB 01 7F 85 F2 EB 01 79 0F 86 01 00 00 00 FC EB 01 78 79 02 87 F2 61 51 8F 05 19 38 01 01 60 EB 01 E9 E9 01 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__Microsoft_Visual_C___7_0_DLL_____Anorganix
 {
 meta:
@@ -10097,10 +10097,10 @@ strings:
     	$a0 = { 55 8D 6C 01 00 81 EC 00 00 00 00 8B 45 90 83 F8 01 56 0F 84 00 00 00 00 85 C0 0F 84 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASPR_Stripper_v2_x_unpacked
 {
 meta:
@@ -10109,10 +10109,10 @@ strings:
     	$a0 = { BB ?? ?? ?? ?? E9 ?? ?? ?? ?? 60 9C FC BF ?? ?? ?? ?? B9 ?? ?? ?? ?? F3 AA 9D 61 C3 55 8B EC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v3_01__v3_05
 {
 meta:
@@ -10122,10 +10122,10 @@ strings:
 	$a1 = { 60 E8 00 00 00 00 5D 50 51 EB 0F B9 EB 0F B8 EB 07 B9 EB 0F 90 EB 08 FD EB 0B F2 EB F5 EB F6 F2 EB 08 FD EB E9 F3 EB E4 FC E9 59 58 50 51 EB 0F B9 EB 0F B8 EB 07 B9 EB 0F 90 EB 08 FD EB 0B F2 EB F5 EB F6 F2 EB 08 FD EB E9 F3 EB E4 FC E9 59 58 50 51 EB 0F }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Encapsulated_Postscript_graphics_file_v2_0_EPSF_1_2
 {
 meta:
@@ -10137,7 +10137,7 @@ condition:
     	$a0
 }
 
-    
+
 rule ENIGMA_Protector_V1_0_V1_2___Sukhov_Vladimir
 {
 meta:
@@ -10146,10 +10146,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 83 ?? ?? 81 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule _EPack_V1_4_lite_final____6aHguT
 {
 meta:
@@ -10158,10 +10158,10 @@ strings:
     	$a0 = { 33 C0 8B C0 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? E8 ?? 00 00 00 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? E8 ?? 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXEStealth_v2_75a____WebtoolMaster__h_
 {
 meta:
@@ -10170,10 +10170,10 @@ strings:
     	$a0 = { EB 58 53 68 61 72 65 77 61 72 65 2D 56 65 72 73 69 6F 6E 20 45 78 65 53 74 65 61 6C 74 68 2C 20 63 6F 6E 74 61 63 74 20 73 75 70 70 6F 72 74 40 77 65 62 74 6F 6F 6C 6D 61 73 74 65 72 2E 63 6F 6D 20 2D 20 77 77 77 2E 77 65 62 74 6F 6F 6C 6D 61 73 74 65 72 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule CopyControl_v3_03
 {
 meta:
@@ -10182,10 +10182,10 @@ strings:
     	$a0 = { CC 90 90 EB 0B 01 50 51 52 53 54 61 33 61 2D 35 CA D1 07 52 D1 A1 3C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXELOCK_666_1_5
 {
 meta:
@@ -10194,10 +10194,10 @@ strings:
     	$a0 = { BA ?? ?? BF ?? ?? EB ?? EA ?? ?? ?? ?? 79 ?? 7F ?? 7E ?? 1C ?? 48 78 ?? E3 ?? 45 14 ?? 5A E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UG2002_Cruncher_v0_3b3
 {
 meta:
@@ -10206,10 +10206,10 @@ strings:
     	$a0 = { 60 E8 ?? ?? ?? ?? 5D 81 ED ?? ?? ?? ?? E8 0D ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 58 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_V2_X____Bitsum_Technologies
 {
 meta:
@@ -10218,10 +10218,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? ?? 50 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 33 C0 89 08 50 45 43 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Petite_1_2_____c_1998_Ian_Luck
 {
 meta:
@@ -10230,10 +10230,10 @@ strings:
     	$a0 = { 66 9C 60 E8 CA 00 00 00 03 00 04 00 05 00 06 00 07 00 08 00 09 00 0A 00 0B 00 0D 00 0F 00 11 00 13 00 17 00 1B 00 1F 00 23 00 2B 00 33 00 3B 00 43 00 53 00 63 00 73 00 83 00 A3 00 C3 00 E3 00 02 01 00 00 00 00 00 00 00 00 00 00 00 00 01 01 01 01 02 02 02 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_4_10____Silicon_Realms_Toolworks
 {
 meta:
@@ -10245,7 +10245,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Anskya_Binder_v1_1____Anskya
 {
 meta:
@@ -10254,10 +10254,10 @@ strings:
     	$a0 = { BE ?? ?? ?? 00 BB F8 11 40 00 33 ED 83 EE 04 39 2E 74 11 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PeX_v0_99__Eng_____bart_CrackPl
 {
 meta:
@@ -10267,10 +10267,10 @@ strings:
 	$a1 = { E9 F5 00 00 00 0D 0A C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 0D 0A 20 50 65 58 20 28 63 29 20 62 79 20 62 61 72 74 5E 43 72 61 63 6B 50 6C 20 62 65 74 61 20 72 65 6C 65 61 73 65 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 0D 0A C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 0D 0A 60 E8 01 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule ENIGMA_Protector____Sukhov_Vladimir
 {
 meta:
@@ -10282,7 +10282,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Vx__Hymn_1865
 {
 meta:
@@ -10291,10 +10291,10 @@ strings:
     	$a0 = { E8 ?? ?? 5E 83 EE 4C FC 2E ?? ?? ?? ?? 4D 5A ?? ?? FA 8B E6 81 ?? ?? ?? FB 3B ?? ?? ?? ?? ?? 2E ?? ?? ?? ?? ?? 50 06 56 1E 0E 1F B8 00 C5 CD 21 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Pe123__v2006_4_12
 {
 meta:
@@ -10303,10 +10303,10 @@ strings:
     	$a0 = { 8B C0 60 9C E8 01 00 00 00 C3 53 E8 72 00 00 00 50 E8 1C 03 00 00 8B D8 FF D3 5B C3 8B C0 E8 00 00 00 00 58 83 C0 05 C3 8B C0 55 8B EC 60 8B 4D 10 8B 7D 0C 8B 75 08 F3 A4 61 5D C2 0C 00 E8 00 00 00 00 58 83 E8 05 C3 8B C0 E8 00 00 00 00 58 83 C0 05 C3 8B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEBundle_v2_0b5___v2_3
 {
 meta:
@@ -10315,10 +10315,10 @@ strings:
     	$a0 = { 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB ?? ?? 40 ?? 87 DD 01 AD ?? ?? ?? ?? 01 AD }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v2_52_beta2
 {
 meta:
@@ -10327,10 +10327,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 ?? ?? ?? ?? B0 ?? ?? ?? ?? 68 60 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 53 56 57 89 65 E8 FF ?? ?? ?? 15 24 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_v0_39_final____Dwing__h_
 {
 meta:
@@ -10339,10 +10339,10 @@ strings:
     	$a0 = { BE B0 11 ?? ?? AD 50 FF 76 34 EB 7C 48 01 ?? ?? 0B 01 4C 6F 61 64 4C 69 62 72 61 72 79 41 00 00 18 10 00 00 10 00 00 00 00 ?? ?? ?? 00 00 ?? ?? 00 10 00 00 00 02 00 00 04 00 00 00 00 00 39 00 04 00 00 00 00 00 00 00 00 ?? ?? ?? 00 02 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule North_Star_PE_Shrinker_1_3____Liuxingping
 {
 meta:
@@ -10351,10 +10351,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 5D B8 B3 85 40 00 2D AC 85 40 00 2B E8 8D B5 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PE_Diminisher_V0_1____Teraphy
 {
 meta:
@@ -10363,10 +10363,10 @@ strings:
     	$a0 = { 53 51 52 56 57 55 E8 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_V1_0_beta____ap0x___Sign_by_fly
 {
 meta:
@@ -10375,10 +10375,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8D 64 24 04 8B 6C 24 FC 8D B5 4C 02 00 00 8D 9D 13 01 00 00 33 FF EB 0F FF 74 37 04 FF 34 37 FF D3 83 C4 08 83 C7 08 83 3C 37 00 75 EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NTkrnl_Secure_Suite____NTkrnl_team__h_
 {
 meta:
@@ -10389,10 +10389,10 @@ strings:
 	$a2 = { 34 10 00 00 28 10 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 41 10 00 00 50 10 00 00 00 00 00 00 4B 65 72 6E 65 6C 33 32 2E 64 6C 6C 00 00 00 4C 6F 61 64 4C 69 62 72 61 72 79 41 00 00 00 47 65 74 50 72 6F 63 41 64 64 72 65 73 73 }
 
 condition:
-    	$a0 or $a1 or $a2 at sgpe.ep
+    	$a0 or $a1 or $a2 at manape.ep
 }
 
-    
+
 rule Vx__GRUNT_4_Family
 {
 meta:
@@ -10401,10 +10401,10 @@ strings:
     	$a0 = { E8 1C 00 8D 9E 41 01 40 3E 8B 96 14 03 B9 EA 00 87 DB F7 D0 31 17 83 C3 02 E2 F7 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Crunch_4_0
 {
 meta:
@@ -10416,7 +10416,7 @@ condition:
     	$a0
 }
 
-    
+
 rule hmimys_Packer_1_0
 {
 meta:
@@ -10425,10 +10425,10 @@ strings:
     	$a0 = { E8 BA 00 00 00 03 00 00 00 00 ?? ?? 00 00 10 40 00 ?? ?? ?? 00 ?? ?? ?? 00 00 ?? ?? 00 ?? ?? ?? 00 ?? ?? ?? 00 ?? ?? ?? 00 ?? ?? ?? 00 ?? ?? ?? 00 ?? 00 00 00 00 00 00 00 ?? ?? ?? 00 00 00 00 00 00 00 00 00 ?? ?? ?? 00 ?? ?? ?? 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Themida_1_8_x_x____Oreans_Technologies
 {
 meta:
@@ -10438,10 +10438,10 @@ strings:
 	$a1 = { B8 ?? ?? ?? ?? 60 0B C0 74 68 E8 00 00 00 00 58 05 53 00 00 00 80 38 E9 75 13 61 EB 45 DB 2D 37 ?? ?? ?? FF FF FF FF FF FF FF FF 3D 40 E8 00 00 00 00 58 25 00 F0 FF FF 33 FF 66 BB 19 5A 66 83 C3 34 66 39 18 75 12 0F B7 50 3C 03 D0 BB E9 44 00 00 83 C3 67 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule MSLRH_0_32a__fake_MSVC___6_0_DLL_____emadicius
 {
 meta:
@@ -10453,7 +10453,7 @@ condition:
     	$a0
 }
 
-    
+
 rule yoda_s_Protector_1_03_1____Ashkibiz_Danehlar
 {
 meta:
@@ -10462,10 +10462,10 @@ strings:
     	$a0 = { E8 03 00 00 00 EB 01 ?? BB 55 00 00 00 E8 03 00 00 00 EB 01 ?? E8 8F 00 00 00 E8 03 00 00 00 EB 01 ?? E8 82 00 00 00 E8 03 00 00 00 EB 01 ?? E8 B8 00 00 00 E8 03 00 00 00 EB 01 ?? E8 AB 00 00 00 E8 03 00 00 00 EB 01 ?? 83 FB 55 E8 03 00 00 00 EB 01 ?? 75 2E E8 03 00 00 00 EB 01 ?? C3 60 E8 00 00 00 00 5D 81 ED 74 72 42 00 8B D5 81 C2 C3 72 42 00 52 E8 01 00 00 00 C3 C3 E8 03 00 00 00 EB 01 ?? E8 0E 00 00 00 E8 D1 FF FF FF C3 E8 03 00 00 00 EB 01 ?? 33 C0 64 FF 30 64 89 20 CC C3 E8 03 00 00 00 EB 01 ?? 33 C0 64 FF 30 64 89 20 4B CC C3 E8 03 00 00 00 EB 01 ?? 33 DB B9 3F A9 42 00 81 E9 6E 73 42 00 8B D5 81 C2 6E 73 42 00 8D 3A 8B F7 33 C0 E8 03 00 00 00 EB 01 ?? E8 17 00 00 00 90 90 90 E9 98 2E 00 00 33 C0 64 FF 30 64 89 20 43 CC C3 90 EB 01 ?? AC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECryptor_2_0_2_1__protected_IAT_____www_strongbit_com
 {
 meta:
@@ -10474,10 +10474,10 @@ strings:
     	$a0 = { A4 ?? ?? ?? 00 00 00 00 FF FF FF FF 3C ?? ?? ?? 94 ?? ?? ?? D8 ?? ?? ?? 00 00 00 00 FF FF FF FF B8 ?? ?? ?? D4 ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 6B 65 72 6E 65 6C 33 32 2E 64 6C 6C 00 00 00 00 00 00 47 65 74 4D 6F 64 75 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Alex_Protector_1_0____Alex
 {
 meta:
@@ -10486,10 +10486,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED 06 10 40 00 E8 24 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Feokt
 {
 meta:
@@ -10498,10 +10498,10 @@ strings:
     	$a0 = { 89 25 A8 11 40 00 BF ?? ?? ?? 00 31 C0 B9 ?? ?? ?? 00 29 F9 FC F3 AA ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_1_20__Eng_____dulek_xt_____Microsoft_Visual_C___6_0_
 {
 meta:
@@ -10513,7 +10513,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Hying_s_PE_Armor_0_75_exe____Hying__CCG___h_
 {
 meta:
@@ -10525,7 +10525,7 @@ condition:
     	$a0
 }
 
-    
+
 rule EXECryptor_2_3_9__minimum_protection_____www_strongbit_com
 {
 meta:
@@ -10537,7 +10537,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PackItBitch_V1_0___archphase___Sign_by_fly
 {
 meta:
@@ -10549,7 +10549,7 @@ condition:
     	$a0
 }
 
-    
+
 rule SVK_Protector_1_3x__Eng_____Pavol_Cerven
 {
 meta:
@@ -10561,7 +10561,7 @@ condition:
     	$a0
 }
 
-    
+
 rule SLR__OPTLINK_
 {
 meta:
@@ -10570,10 +10570,10 @@ strings:
     	$a0 = { BF ?? ?? 8E DF FA 8E D7 81 C4 ?? ?? FB B4 30 CD 21 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__Kuku_886
 {
 meta:
@@ -10582,10 +10582,10 @@ strings:
     	$a0 = { 06 1E 50 8C C8 8E D8 BA 70 03 B8 24 25 CD 21 ?? ?? ?? ?? ?? 90 B4 2F CD 21 53 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_V0_31____emadicius
 {
 meta:
@@ -10594,10 +10594,10 @@ strings:
     	$a0 = { 60 D1 CB 0F CA C1 CA E0 D1 CA 0F C8 EB 01 F1 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule CICompress_1_0
 {
 meta:
@@ -10609,7 +10609,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Goats_Mutilator_v1_6____Goat__e0f
 {
 meta:
@@ -10618,10 +10618,10 @@ strings:
     	$a0 = { E8 EA 0B 00 00 ?? ?? ?? 8B 1C 79 F6 63 D8 8D 22 B0 BF F6 49 08 C3 02 BD 3B 6C 29 46 13 28 5D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NsPack_3_4____North_Star
 {
 meta:
@@ -10631,10 +10631,10 @@ strings:
 	$a1 = { 9C 60 E8 00 00 00 00 5D 83 ED 07 8D 85 ?? ?? FF FF 80 38 01 0F 84 42 02 00 00 C6 00 01 8B D5 2B 95 ?? ?? FF FF 89 95 ?? ?? FF FF 01 95 ?? ?? FF FF 8D B5 ?? ?? FF FF 01 16 60 6A 40 68 00 10 00 00 68 00 10 00 00 6A 00 FF 95 ?? ?? FF FF 85 C0 0F 84 6A 03 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule ActiveMARK_5_x____Trymedia_Systems_Inc___h_
 {
 meta:
@@ -10648,7 +10648,7 @@ condition:
     	$a0 or $a1 or $a2
 }
 
-    
+
 rule RLPack_1_18__LZMA_4_30_____ap0x
 {
 meta:
@@ -10657,10 +10657,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 ?? 8D B5 21 0B 00 00 8D 9D FF 02 00 00 33 FF E8 9F 01 00 00 6A ?? 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 6A 00 FF 95 AA 0A 00 00 89 85 F9 0A 00 00 EB 14 60 FF B5 F9 0A 00 00 FF 34 37 FF 74 37 04 FF D3 61 83 C7 ?? 83 3C 37 00 75 E6 83 BD 0D 0B 00 00 00 74 0E 83 BD 11 0B 00 00 00 74 05 E8 F6 01 00 00 8D 74 37 04 53 6A ?? 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 6A 00 FF 95 AA 0A 00 00 89 85 1D 0B 00 00 5B 60 FF B5 F9 0A 00 00 56 FF B5 1D 0B 00 00 FF D3 61 8B B5 1D 0B 00 00 8B C6 EB 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__Code_Lock_
 {
 meta:
@@ -10669,10 +10669,10 @@ strings:
     	$a0 = { 43 4F 44 45 2D 4C 4F 43 4B 2E 4F 43 58 00 01 28 01 50 4B 47 05 4C 3F B4 04 4D 4C 47 4B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEiD_Bundle_v1_00___v1_01_____BoB___BobSoft
 {
 meta:
@@ -10681,10 +10681,10 @@ strings:
     	$a0 = { 60 E8 ?? 02 00 00 8B 44 24 04 52 48 66 31 C0 66 81 38 4D 5A 75 F5 8B 50 3C 81 3C 02 50 45 00 00 75 E9 5A C2 04 00 60 89 DD 89 C3 8B 45 3C 8B 54 28 78 01 EA 52 8B 52 20 01 EA 31 C9 41 8B 34 8A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__DEF_1_0______Anorganix
 {
 meta:
@@ -10693,10 +10693,10 @@ strings:
     	$a0 = { BE 00 01 40 00 6A 05 59 80 7E 07 00 74 11 8B 46 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 83 C1 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__Crunch_PE_Heuristic_____Anorganix
 {
 meta:
@@ -10705,9 +10705,9 @@ strings:
     	$a0 = { 55 E8 0E 00 00 00 5D 83 ED 06 8B C5 55 60 89 AD ?? ?? ?? ?? 2B 85 00 00 00 00 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
-    
+
 rule SPLayer_v0_08
 {
 meta:
@@ -10719,7 +10719,7 @@ condition:
     	$a0
 }
 
-    
+
 rule UPXShit_0_06
 {
 meta:
@@ -10728,10 +10728,10 @@ strings:
     	$a0 = { B8 ?? ?? 43 00 B9 15 00 00 00 80 34 08 ?? E2 FA E9 D6 FF FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule tElock_v0_60
 {
 meta:
@@ -10740,10 +10740,10 @@ strings:
     	$a0 = { E9 00 00 00 00 60 E8 00 00 00 00 58 83 C0 08 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PKLITE_v1_12__v1_15__v1_20__2_
 {
 meta:
@@ -10752,10 +10752,10 @@ strings:
     	$a0 = { B8 ?? ?? BA ?? ?? 3B C4 73 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NoodleCrypt_v2_0
 {
 meta:
@@ -10765,10 +10765,10 @@ strings:
 	$a1 = { EB 01 9A E8 3D 00 00 00 EB 01 9A E8 EB 01 00 00 EB 01 9A E8 2C 04 00 00 EB 01 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule tElock_v0_98b2
 {
 meta:
@@ -10777,10 +10777,10 @@ strings:
     	$a0 = { E9 1B E4 FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__LCC_Win32_DLL______Anorganix
 {
 meta:
@@ -10789,10 +10789,10 @@ strings:
     	$a0 = { 55 89 E5 53 56 57 83 7D 0C 01 75 05 E8 17 90 90 90 FF 75 10 FF 75 0C FF 75 08 A1 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__Ste_lth_PE_1_01______Anorganix
 {
 meta:
@@ -10801,10 +10801,10 @@ strings:
     	$a0 = { 0B C0 0B C0 0B C0 0B C0 0B C0 0B C0 0B C0 0B C0 BA ?? ?? ?? ?? FF E2 BA E0 10 40 00 B8 68 24 1A 40 89 02 83 C2 03 B8 40 00 E8 EE 89 02 83 C2 FD FF E2 2D 3D 5B 20 48 69 64 65 50 45 20 5D 3D 2D 90 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule pex_V0_99____params
 {
 meta:
@@ -10813,10 +10813,10 @@ strings:
     	$a0 = { E9 F5 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PKLITE_v1_14__v1_15__v1_20__3_
 {
 meta:
@@ -10825,10 +10825,10 @@ strings:
     	$a0 = { B8 ?? ?? BA ?? ?? 05 ?? ?? 3B ?? ?? ?? 72 ?? B4 09 BA ?? 01 CD 21 CD 20 4E 6F }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__Sonik_Youth
 {
 meta:
@@ -10837,9 +10837,9 @@ strings:
     	$a0 = { 8A 16 02 00 8A 07 32 C2 88 07 43 FE C2 81 FB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
-    
+
 rule VProtector_0_X_1_2X____vcasm
 {
 meta:
@@ -10851,7 +10851,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Thinstall_V2_736____Jitit
 {
 meta:
@@ -10860,10 +10860,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 58 BB F3 1C 00 00 2B C3 50 68 00 00 40 00 68 00 26 00 00 68 CC 00 00 00 E8 C1 FE FF FF E9 97 FF FF FF CC CC CC CC CC CC CC CC CC CC CC 55 8B EC 83 C4 F4 FC 53 57 56 8B 75 08 8B 7D 0C C7 45 FC 08 00 00 00 33 DB BA 00 00 00 80 43 33 C0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NsPacK_V3_0____LiuXingPing
 {
 meta:
@@ -10872,10 +10872,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 5D B8 07 00 00 00 2B E8 8D B5 ?? ?? ?? ?? 66 8B 06 66 83 F8 00 74 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule CipherWall_Self_Extrator_Decryptor__Console__1_5
 {
 meta:
@@ -10887,7 +10887,7 @@ condition:
     	$a0
 }
 
-    
+
 rule MSLRH_0_32a__fake_Neolite_2_0_____emadicius
 {
 meta:
@@ -10899,7 +10899,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Obsidium_1_3_3_2____Obsidium_Software
 {
 meta:
@@ -10909,10 +10909,10 @@ strings:
 	$a1 = { EB 01 ?? E8 2B 00 00 00 EB 02 ?? ?? EB 02 ?? ?? 8B 54 24 0C EB 03 ?? ?? ?? 83 82 B8 00 00 00 24 EB 04 ?? ?? ?? ?? 33 C0 EB 04 ?? ?? ?? ?? C3 EB 02 ?? ?? EB 01 ?? 64 67 FF 36 00 00 EB 03 ?? ?? ?? 64 67 89 26 00 00 EB 01 ?? EB 02 ?? ?? 50 EB 02 ?? ?? 33 C0 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Anti007_V2_7_V3_5____NsPacK_Private
 {
 meta:
@@ -10921,10 +10921,10 @@ strings:
     	$a0 = { 00 00 00 4C 6F 61 64 4C 69 62 72 61 72 79 41 00 00 00 47 65 74 50 72 6F 63 41 64 64 72 65 73 73 00 00 00 56 69 72 74 75 61 6C 50 72 6F 74 65 63 74 00 00 00 56 69 72 74 75 61 6C 41 6C 6C 6F 63 00 00 00 56 69 72 74 75 61 6C 46 72 65 65 00 00 00 47 65 74 54 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_v1_00__Eng_____dulek_xt
 {
 meta:
@@ -10934,10 +10934,10 @@ strings:
 	$a1 = { BB D0 01 40 00 BF 00 10 40 00 BE ?? ?? ?? 00 53 E8 0A 00 00 00 02 D2 75 05 8A 16 46 12 D2 C3 FC B2 80 A4 6A 02 5B FF 14 24 73 F7 33 C9 FF 14 24 73 18 33 C0 FF 14 24 73 21 B3 02 41 B0 10 FF 14 24 12 C0 73 F9 75 3F AA EB DC E8 43 00 00 00 2B CB 75 10 E8 38 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule ASPack_v1_06b
 {
 meta:
@@ -10948,10 +10948,10 @@ strings:
 	$a2 = { 90 90 90 75 00 E9 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
-    
+
 rule PEiD_Bundle_v1_02___v1_04____BoB___BobSoft
 {
 meta:
@@ -10960,10 +10960,10 @@ strings:
     	$a0 = { 60 E8 ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 36 ?? ?? ?? 2E ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 80 00 00 00 00 4B 65 72 6E 65 6C 33 32 2E 44 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RCryptor_V1_6d____Vaska___Sign_by_fly
 {
 meta:
@@ -10972,10 +10972,10 @@ strings:
     	$a0 = { 60 90 61 61 80 7F F0 45 90 60 0F 85 1B 8B 1F FF 68 ?? ?? ?? ?? B8 ?? ?? ?? ?? 90 3D ?? ?? ?? ?? 74 06 80 30 ?? 40 EB F3 B8 ?? ?? ?? ?? 90 3D ?? ?? ?? ?? 74 06 80 30 ?? 40 EB F3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PKLITE32_1_1____PKWARE_Inc_
 {
 meta:
@@ -10984,10 +10984,10 @@ strings:
     	$a0 = { 68 ?? ?? ?? 00 68 ?? ?? ?? 00 68 00 00 00 00 E8 ?? ?? ?? ?? E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__MinGW_GCC_2_x______Anorganix
 {
 meta:
@@ -10996,10 +10996,10 @@ strings:
     	$a0 = { 55 89 E5 E8 02 00 00 00 C9 C3 90 90 45 58 45 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_0_32a__fake_EXE32Pack_1_3x_____emadicius
 {
 meta:
@@ -11011,7 +11011,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PECompact_v2_0_beta____Jeremy_Collake
 {
 meta:
@@ -11020,10 +11020,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? ?? 05 ?? ?? ?? ?? 50 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 CC 90 90 90 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule AZProtect
 {
 meta:
@@ -11032,10 +11032,10 @@ strings:
     	$a0 = { EB 70 FC 60 8C 80 4D 11 00 70 25 81 00 40 0D 91 BB 60 8C 80 4D 11 00 70 21 81 1D 61 0D 81 00 40 CE 60 8C 80 4D 11 00 70 25 81 25 81 25 81 25 81 29 61 41 81 31 61 1D 61 00 40 B7 30 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule APatch_GUI_v1_1
 {
 meta:
@@ -11044,10 +11044,10 @@ strings:
     	$a0 = { 52 31 C0 E8 FF FF FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule TMT_Pascal_v0_40
 {
 meta:
@@ -11056,10 +11056,10 @@ strings:
     	$a0 = { 0E 1F 06 8C 06 ?? ?? 26 A1 ?? ?? A3 ?? ?? 8E C0 66 33 FF 66 33 C9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__LCC_Win32_1_x______Anorganix
 {
 meta:
@@ -11068,10 +11068,10 @@ strings:
     	$a0 = { 64 A1 01 00 00 00 55 89 E5 6A FF 68 ?? ?? ?? ?? 68 9A 10 40 90 50 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_v0_62__DLL
 {
 meta:
@@ -11080,10 +11080,10 @@ strings:
     	$a0 = { 80 7C 24 08 01 0F 85 95 01 00 00 60 E8 00 00 00 00 58 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_v1_20__Eng_____dulek_xt_____Microsoft_Visual_C___6_0_
 {
 meta:
@@ -11093,10 +11093,10 @@ strings:
 	$a1 = { C1 E0 06 EB 02 CD 20 EB 01 27 EB 01 24 BE 80 ?? 42 00 49 EB 01 99 8D 1D F4 00 00 00 EB 01 5C F7 D8 1B CA EB 01 31 8A 16 80 E9 41 EB 01 C2 C1 E0 0A EB 01 A1 81 EA A8 8C 18 A1 34 46 E8 01 00 00 00 62 59 32 D3 C1 C9 02 EB 01 68 80 F2 1A 0F BE C9 F7 D1 2A D3 EB 02 42 C0 EB 01 08 88 16 80 F1 98 80 C9 28 46 91 EB 02 C0 55 4B EB 01 55 34 44 0B DB 75 AD E8 01 00 00 00 9D 59 0B C6 EB 01 6C E9 D2 C3 82 C2 03 C2 B2 82 C2 00 ?? ?? 7C C2 6F DA BC C2 C2 C2 CC 1C 3D CF 4C D8 84 D0 0C FD F0 42 77 0D 66 F1 AC C1 DE CE 97 BA D7 EB C3 AE DE 91 AA D5 02 0D 1E EE 3F 23 77 C4 01 72 12 C1 0E 1E 14 82 37 AB 39 01 88 C9 DE CA 07 C2 C2 C2 17 79 49 B2 DA 0A C2 C2 C2 A9 EA 6E 91 AA 2E 03 CF 7B 9F CE 51 FA 6D A2 AA 56 8A E4 C2 C2 C2 07 C2 47 C2 C2 17 B8 42 C6 8D 31 88 45 BA 3D 2B BC }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__PESHiELD_0_25_____Anorganix
 {
 meta:
@@ -11105,10 +11105,10 @@ strings:
     	$a0 = { 60 E8 2B 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 CC CC E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__Necropolis
 {
 meta:
@@ -11117,10 +11117,10 @@ strings:
     	$a0 = { 50 FC AD 33 C2 AB 8B D0 E2 F8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Themida_WinLicense_V1_0_0_0_V1_8_0_0___Oreans_Technologies
 {
 meta:
@@ -11129,10 +11129,10 @@ strings:
     	$a0 = { B8 00 00 00 00 60 0B C0 74 58 E8 00 00 00 00 58 05 ?? 00 00 00 80 38 E9 75 ?? 61 EB ?? E8 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule REC_v0_34__3
 {
 meta:
@@ -11141,10 +11141,10 @@ strings:
     	$a0 = { 06 1E B4 30 CD 21 3C 02 73 ?? 33 C0 06 50 CB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPXFreak_v0_1__Borland_Delphi_____HMX0101
 {
 meta:
@@ -11154,10 +11154,10 @@ strings:
 	$a1 = { BE ?? ?? ?? ?? 83 C6 01 FF E6 00 00 00 ?? ?? ?? 00 03 00 00 00 ?? ?? ?? ?? 00 10 00 00 00 00 ?? ?? ?? ?? 00 00 ?? F6 ?? 00 B2 4F 45 00 ?? F9 ?? 00 EF 4F 45 00 ?? F6 ?? 00 8C D1 42 00 ?? 56 ?? 00 ?? ?? ?? 00 ?? ?? ?? 00 ?? ?? ?? 00 ?? 24 ?? 00 ?? ?? ?? 00 34 50 45 00 ?? ?? ?? 00 FF FF 00 00 ?? 24 ?? 00 ?? 24 ?? 00 ?? ?? ?? 00 40 00 00 C0 00 00 ?? ?? ?? ?? 00 00 ?? 00 00 00 ?? 1E ?? 00 ?? F7 ?? 00 A6 4E 43 00 ?? 56 ?? 00 AD D1 42 00 ?? F7 ?? 00 A1 D2 42 00 ?? 56 ?? 00 0B 4D 43 00 ?? F7 ?? 00 ?? F7 ?? 00 ?? 56 ?? 00 ?? ?? ?? ?? ?? 00 00 00 ?? ?? ?? ?? ?? ?? ?? 77 ?? ?? ?? 00 ?? ?? ?? 00 ?? ?? ?? 77 ?? ?? 00 00 ?? ?? ?? 00 ?? ?? ?? ?? ?? ?? 00 00 ?? ?? ?? 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 ?? ?? ?? ?? 00 00 00 00 ?? ?? ?? 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Fuck_n_Joy_v1_0c____UsAr
 {
 meta:
@@ -11167,10 +11167,10 @@ strings:
 	$a1 = { 60 E8 00 00 00 00 5D 81 ED D8 05 40 00 FF 74 24 20 E8 8C 02 00 00 0B C0 0F 84 2C 01 00 00 89 85 6C 08 40 00 8D 85 2F 08 40 00 50 FF B5 6C 08 40 00 E8 EF 02 00 00 0B C0 0F 84 0C 01 00 00 89 85 3B 08 40 00 8D 85 3F 08 40 00 50 FF B5 6C 08 40 00 E8 CF 02 00 00 0B C0 0F 84 EC 00 00 00 89 85 4D 08 40 00 8D 85 51 08 40 00 50 FF B5 6C 08 40 00 E8 AF 02 00 00 0B C0 0F 84 CC 00 00 00 89 85 5C 08 40 00 8D 85 67 07 40 00 E8 7B 02 00 00 8D B5 C4 07 40 00 56 6A 64 FF 95 74 07 40 00 46 80 3E 00 75 FA C7 06 74 6D 70 2E 83 C6 04 C7 06 65 78 65 00 8D 85 36 07 40 00 E8 4C 02 00 00 33 DB 53 53 6A 02 53 53 68 00 00 00 40 8D 85 C4 07 40 00 50 FF 95 74 07 40 00 89 85 78 07 40 00 8D 85 51 07 40 00 E8 21 02 00 00 6A 00 8D 85 7C 07 40 00 50 68 00 ?? ?? 00 8D 85 F2 09 40 00 50 FF }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule ExeShield_3_6____www_exeshield_com
 {
 meta:
@@ -11179,10 +11179,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? 00 50 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 33 C0 89 08 50 45 43 6F 6D 70 61 63 74 32 00 CE 1E 42 AF F8 D6 CC E9 FB C8 4F 1B 22 7C B4 C8 0D BD 71 A9 C8 1F 5F B1 29 8F 11 73 8F 00 D1 88 87 A9 3F 4D 00 6C 3C BF C0 80 F7 AD 35 23 EB 84 82 6F }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PESHiELD_v0_1b_MTE
 {
 meta:
@@ -11191,10 +11191,10 @@ strings:
     	$a0 = { E8 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? B9 1B 01 ?? ?? D1 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule WARNING____TROJAN____HuiGeZi
 {
 meta:
@@ -11203,10 +11203,10 @@ strings:
     	$a0 = { 55 8B EC 81 C4 ?? FE FF FF 53 56 57 33 C0 89 85 ?? FE FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASPack_v2_000
 {
 meta:
@@ -11215,10 +11215,10 @@ strings:
     	$a0 = { 60 E8 70 05 00 00 EB 4C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASPack_v2_001
 {
 meta:
@@ -11227,10 +11227,10 @@ strings:
     	$a0 = { 60 E8 72 05 00 00 EB 4C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule _BJFnt_v1_3
 {
 meta:
@@ -11240,10 +11240,10 @@ strings:
 	$a1 = { EB 03 3A 4D 3A 1E EB 02 CD 20 9C EB 02 CD 20 EB 02 CD 20 60 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule yoda_s_Protector_1_02___exe__scr__com_____Ashkbiz_Danehkar__h_
 {
 meta:
@@ -11255,7 +11255,7 @@ condition:
     	$a0
 }
 
-    
+
 rule CICompress_v1_0
 {
 meta:
@@ -11265,10 +11265,10 @@ strings:
 	$a1 = { 6A 04 68 00 10 00 00 FF 35 9C 14 40 00 6A 00 FF 15 38 10 40 00 A3 FC 10 40 00 97 BE 00 20 40 00 E8 71 00 00 00 3B 05 9C 14 40 00 75 61 6A 00 6A 20 6A 02 6A 00 6A 03 68 00 00 00 C0 68 94 10 40 00 FF 15 2C 10 40 00 A3 F8 10 40 00 6A 00 68 F4 10 40 00 FF 35 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule ORiEN_V2_12____Fisun_A_V_
 {
 meta:
@@ -11277,10 +11277,10 @@ strings:
     	$a0 = { E9 5D 01 00 00 CE D1 CE CD 0D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SoftSentry_v2_11
 {
 meta:
@@ -11289,10 +11289,10 @@ strings:
     	$a0 = { 55 8B EC 83 EC ?? 53 56 57 E9 50 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__PEX_0_99_____Anorganix
 {
 meta:
@@ -11301,10 +11301,10 @@ strings:
     	$a0 = { 60 E8 01 00 00 00 55 83 C4 04 E8 01 00 00 00 90 5D 81 FF FF FF 00 01 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NME_1_1_Public___by_redlime
 {
 meta:
@@ -11314,10 +11314,10 @@ strings:
 	$a1 = { 55 8B EC 83 C4 F0 53 56 B8 30 35 14 13 E8 9A E6 FF FF 33 C0 55 68 6C 36 14 13 64 FF 30 64 89 20 B8 08 5C 14 13 BA 84 36 14 13 E8 7D E2 FF FF E8 C0 EA FF FF 8B 15 CC 45 14 13 A1 C8 45 14 13 E8 04 F8 FF FF 8B 15 D0 45 14 13 A1 C8 45 14 13 E8 F4 F7 FF FF 8B 15 CC 45 14 13 A1 C8 45 14 13 E8 2C F9 FF FF A3 F8 5A 14 13 8B 15 D0 45 14 13 A1 C8 45 14 13 E8 17 F9 FF FF A3 FC 5A 14 13 B8 04 5C 14 13 E8 20 FB FF FF 8B D8 85 DB 74 48 B8 00 5B 14 13 8B 15 C4 45 14 13 E8 1E E7 FF FF A1 04 5C 14 13 E8 A8 DA FF FF ?? ?? ?? ?? 5C 14 13 50 8B CE 8B D3 B8 00 5B 14 13 ?? ?? ?? ?? FF 8B C6 E8 DF FB FF FF 8B C6 E8 9C DA FF FF B8 00 5B 14 13 E8 72 E7 FF FF 33 C0 5A 59 59 64 89 10 68 73 36 14 13 C3 E9 0F DF FF FF EB F8 5E 5B E8 7E E0 FF FF 00 00 FF FF FF FF 0C 00 00 00 4E 4D 45 20 31 2E 31 20 53 74 75 62 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Unknown_packer__05_
 {
 meta:
@@ -11326,10 +11326,10 @@ strings:
     	$a0 = { FA BB ?? ?? B9 ?? ?? 87 E5 87 27 03 E3 91 8A CB 80 E1 ?? D3 C4 91 33 E3 87 27 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__Crunch_PE_Heuristic______Anorganix
 {
 meta:
@@ -11338,10 +11338,10 @@ strings:
     	$a0 = { 55 E8 0E 00 00 00 5D 83 ED 06 8B C5 55 60 89 AD ?? ?? ?? ?? 2B 85 00 00 00 00 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__REALBasic______Anorganix
 {
 meta:
@@ -11350,10 +11350,10 @@ strings:
     	$a0 = { 55 89 E5 90 90 90 90 90 90 90 90 90 90 50 90 90 90 90 90 00 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__DxPack_1_0______Anorganix
 {
 meta:
@@ -11362,10 +11362,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 8B FD 81 ED 90 90 90 90 2B B9 00 00 00 00 81 EF 90 90 90 90 83 BD 90 90 90 90 90 0F 84 00 00 00 00 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_v1_20__Eng_____dulek_xt_____MASM32___TASM32_
 {
 meta:
@@ -11375,10 +11375,10 @@ strings:
 	$a1 = { 33 C2 2C FB 8D 3D 7E 45 B4 80 E8 02 00 00 00 8A 45 58 68 02 ?? 8C 7F EB 02 CD 20 5E 80 C9 16 03 F7 EB 02 40 B0 68 F4 00 00 00 80 F1 2C 5B C1 E9 05 0F B6 C9 8A 16 0F B6 C9 0F BF C7 2A D3 E8 02 00 00 00 99 4C 58 80 EA 53 C1 C9 16 2A D3 E8 02 00 00 00 9D CE 58 80 EA 33 C1 E1 12 32 D3 48 80 C2 26 EB 02 CD 20 88 16 F7 D8 46 EB 01 C0 4B 40 8D 0D 00 00 00 00 3B D9 75 B7 EB 01 14 EB 01 0A CF C5 93 53 90 DA 96 67 54 8D CC ?? ?? 51 8E 18 74 53 82 83 80 47 B4 D2 41 FB 64 31 6A AF 7D 89 BC 0A 91 D7 83 37 39 43 50 A2 32 DC 81 32 3A 4B 97 3D D9 63 1F 55 42 F0 45 32 60 9A 28 51 61 4B 38 4B 12 E4 49 C4 99 09 47 F9 42 8C 48 51 4E 70 CF B8 12 2B 78 09 06 07 17 55 D6 EA 10 8D 3F 28 E5 02 0E A2 58 B8 D6 0F A8 E5 10 EB E8 F1 23 EF 61 E5 E2 54 EA A9 2A 22 AF 17 A1 23 97 9A 1C }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Code_Lock_vx_x
 {
 meta:
@@ -11387,10 +11387,10 @@ strings:
     	$a0 = { 43 4F 44 45 2D 4C 4F 43 4B 2E 4F 43 58 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule GP_Install_v5_0_3_32
 {
 meta:
@@ -11402,7 +11402,7 @@ condition:
     	$a0
 }
 
-    
+
 rule iPBProtect_0_1_3
 {
 meta:
@@ -11414,7 +11414,7 @@ condition:
     	$a0
 }
 
-    
+
 rule __PseudoSigner_0_2__LCC_Win32_1_x______Anorganix
 {
 meta:
@@ -11423,10 +11423,10 @@ strings:
     	$a0 = { 64 A1 01 00 00 00 55 89 E5 6A FF 68 ?? ?? ?? ?? 68 9A 10 40 90 50 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SVK_Protector_v1_32
 {
 meta:
@@ -11435,10 +11435,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED 06 00 00 00 EB 05 B8 06 36 42 00 64 A0 23 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ILUCRYPT_v4_015__exe
 {
 meta:
@@ -11447,10 +11447,10 @@ strings:
     	$a0 = { 8B EC FA C7 46 F7 ?? ?? 42 81 FA ?? ?? 75 F9 FF 66 F7 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Ding_Boy_s_PE_lock_Phantasm_v0_8
 {
 meta:
@@ -11459,10 +11459,10 @@ strings:
     	$a0 = { 55 57 56 52 51 53 E8 00 00 00 00 5D 8B D5 81 ED 0D 39 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_v1_10__Eng_____dulek_xt_____Borland_C___1999_
 {
 meta:
@@ -11471,10 +11471,10 @@ strings:
     	$a0 = { EB 02 CD 20 2B C8 68 80 ?? ?? 00 EB 02 1E BB 5E EB 02 CD 20 68 B1 2B 6E 37 40 5B 0F B6 C9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__PENightMare_2_Beta______Anorganix
 {
 meta:
@@ -11483,10 +11483,10 @@ strings:
     	$a0 = { 60 E9 10 00 00 00 EF 40 03 A7 07 8F 07 1C 37 5D 43 A7 04 B9 2C 3A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PMODE_W_v_1_12__1_16__1_21__1_33_DOS_extender
 {
 meta:
@@ -11495,10 +11495,10 @@ strings:
     	$a0 = { FC 16 07 BF ?? ?? 8B F7 57 B9 ?? ?? F3 A5 06 1E 07 1F 5F BE ?? ?? 06 0E A4 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPack_v0_11
 {
 meta:
@@ -11511,7 +11511,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule PseudoSigner_0_2__FSG_1_31______Anorganix
 {
 meta:
@@ -11520,10 +11520,10 @@ strings:
     	$a0 = { BE 90 90 90 00 BF 90 90 90 00 BB 90 90 90 00 53 BB 90 90 90 00 B2 80 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Anti007_V2_6____LiuXingPing___Sign_by_fly
 {
 meta:
@@ -11535,7 +11535,7 @@ condition:
     	$a0
 }
 
-    
+
 rule RCryptor_v1_______Vaska
 {
 meta:
@@ -11545,10 +11545,10 @@ strings:
 	$a1 = { 90 58 90 50 90 8B 00 90 3C 50 90 58 0F 85 67 D6 EF 11 50 68 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PKLITE_v1_20
 {
 meta:
@@ -11557,10 +11557,10 @@ strings:
     	$a0 = { B8 ?? ?? BA ?? ?? 05 ?? ?? 3B 06 ?? ?? 72 ?? B4 09 BA ?? ?? CD 21 B4 4C CD 21 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__Morphine_1_2______Anorganix
 {
 meta:
@@ -11569,10 +11569,10 @@ strings:
     	$a0 = { 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 06 00 90 90 90 90 90 90 90 90 EB 08 E8 90 00 00 00 66 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 51 66 90 90 90 59 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_4_20____Silicon_Realms_Toolworks
 {
 meta:
@@ -11584,7 +11584,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Cryptic_2_0____Tughack
 {
 meta:
@@ -11593,10 +11593,10 @@ strings:
     	$a0 = { B8 00 00 40 00 BB ?? ?? ?? 00 B9 00 10 00 00 BA ?? ?? ?? 00 03 D8 03 C8 03 D1 3B CA 74 06 80 31 ?? 41 EB F6 FF E3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NsPack_V1_4____LiuXingPing
 {
 meta:
@@ -11605,10 +11605,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 5D B8 B1 85 40 00 2D AA 85 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule _MSLRH__v32a____emadicius
 {
 meta:
@@ -11617,10 +11617,10 @@ strings:
     	$a0 = { EB 05 E8 EB 04 40 00 EB FA E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 50 E8 02 00 00 00 29 5A 58 6B C0 03 E8 02 00 00 00 29 5A 83 C4 04 58 74 04 75 02 EB 02 EB 01 81 0F 31 50 0F 31 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 2B 04 24 74 04 75 02 EB 02 EB 01 81 83 C4 04 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 3D FF 0F 00 00 EB 01 68 EB 02 CD 20 EB 01 E8 76 1B EB 01 68 EB 02 CD 20 EB 01 E8 CC 66 B8 FE 00 74 04 75 02 EB 02 EB 01 81 66 E7 64 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 0F 31 50 0F 31 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule LaunchAnywhere_4_0_0_1
 {
 meta:
@@ -11632,7 +11632,7 @@ condition:
     	$a0
 }
 
-    
+
 rule DxPack_V0_86____Dxd
 {
 meta:
@@ -11641,10 +11641,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 8B FD 81 ED 06 10 40 00 2B BD 94 12 40 00 81 EF 06 00 00 00 83 BD 14 13 40 00 01 0F 84 2F 01 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_0_32a__fake_MSVC___7_0_DLL_Method_3_____emadicius
 {
 meta:
@@ -11656,7 +11656,7 @@ condition:
     	$a0
 }
 
-    
+
 rule hying_s_PE_Armor____hying_CCG
 {
 meta:
@@ -11665,10 +11665,10 @@ strings:
     	$a0 = { E8 AA 00 00 00 2D ?? ?? ?? 00 00 00 00 00 00 00 00 3D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_V0_37_V0_39____Dwing
 {
 meta:
@@ -11677,10 +11677,10 @@ strings:
     	$a0 = { BE ?? ?? ?? ?? AD 50 FF ?? ?? EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SDProtector_1_x____Randy_Li
 {
 meta:
@@ -11690,10 +11690,10 @@ strings:
 	$a1 = { 55 8B EC 6A FF 68 1D 32 13 05 68 88 88 88 08 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 58 64 A3 00 00 00 00 58 58 58 58 8B E8 E8 3B 00 00 00 E8 01 00 00 00 FF 58 05 53 00 00 00 51 8B 4C 24 10 89 81 B8 00 00 00 B8 55 01 00 00 89 41 20 33 C0 89 41 04 89 41 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Themida_WinLicense_V1_8_0_2_______Oreans_Technologies
 {
 meta:
@@ -11702,10 +11702,10 @@ strings:
     	$a0 = { B8 00 00 00 00 60 0B C0 74 68 E8 00 00 00 00 58 05 ?? 00 00 00 80 38 E9 75 ?? 61 EB ?? DB 2D ?? ?? ?? ?? FF FF FF FF FF FF FF FF 3D 40 E8 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_V1_2_X____Obsidium_Software
 {
 meta:
@@ -11714,10 +11714,10 @@ strings:
     	$a0 = { E8 0E 00 00 00 33 C0 8B 54 24 0C 83 82 B8 00 00 00 0D C3 64 67 FF 36 00 00 64 67 89 26 00 00 50 33 C0 8B 00 C3 E9 FA 00 00 00 E8 D5 FF FF FF 58 64 67 8F 06 00 00 83 C4 04 E8 2B 13 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule JDPack_V2_00____JDPack
 {
 meta:
@@ -11726,10 +11726,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 ?? ?? ?? E8 01 00 00 00 ?? ?? ?? ?? ?? ?? 05 00 00 00 00 83 C4 0C 5D 60 E8 00 00 00 00 5D 8B D5 64 FF 35 00 00 00 00 EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ICrypt_1_0___by_BuGGz
 {
 meta:
@@ -11739,10 +11739,10 @@ strings:
 	$a1 = { 55 8B EC 83 C4 EC 53 56 57 33 C0 89 45 EC B8 70 3B 00 10 E8 3C FA FF FF 33 C0 55 68 6C 3C 00 10 64 FF 30 64 89 20 6A 0A 68 7C 3C 00 10 A1 50 56 00 10 50 E8 D8 FA FF FF 8B D8 53 A1 50 56 00 10 50 E8 0A FB FF FF 8B F8 53 A1 50 56 00 10 50 E8 D4 FA FF FF 8B }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule UPX_v1_03___v1_04_Modified
 {
 meta:
@@ -11751,10 +11751,10 @@ strings:
     	$a0 = { 01 DB ?? 07 8B 1E 83 EE FC 11 DB 8A 07 ?? EB B8 01 00 00 00 01 DB ?? 07 8B 1E 83 EE FC 11 DB 11 C0 01 DB 73 EF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule _EP_ExE_Pack__V1_0____6aHguT___g_l_u_k
 {
 meta:
@@ -11763,10 +11763,10 @@ strings:
     	$a0 = { 60 68 ?? ?? ?? ?? B8 ?? ?? ?? ?? FF 10 68 ?? ?? ?? ?? 50 B8 ?? ?? ?? ?? FF 10 68 ?? ?? ?? ?? 6A 40 FF D0 89 05 ?? ?? ?? ?? 89 C7 BE ?? ?? ?? ?? 60 FC B2 80 31 DB A4 B3 02 E8 6D 00 00 00 73 F6 31 C9 E8 64 00 00 00 73 1C 31 C0 E8 5B 00 00 00 73 23 B3 02 41 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule aPack_v0_98b____Jibz
 {
 meta:
@@ -11778,7 +11778,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_1__Microsoft_Visual_C___6_0__Debug_Version__
 {
 meta:
@@ -11787,10 +11787,10 @@ strings:
     	$a0 = { 55 8B EC 51 90 90 90 01 01 90 90 90 90 68 ?? ?? ?? ?? 90 90 90 90 90 90 90 90 90 90 90 90 00 01 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 00 01 90 90 90 90 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_v0_62
 {
 meta:
@@ -11800,10 +11800,10 @@ strings:
 	$a1 = { 60 E8 00 00 00 00 58 83 E8 3D 50 8D B8 ?? ?? ?? FF 57 66 81 87 ?? ?? ?? ?? ?? ?? 8D B0 F0 01 ?? ?? 83 CD FF 31 DB 90 90 90 EB 08 90 90 8A 06 46 88 07 47 01 DB 75 07 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Obsidium_1_3_1_1____Obsidium_Software
 {
 meta:
@@ -11812,10 +11812,10 @@ strings:
     	$a0 = { EB 02 ?? ?? E8 27 00 00 00 EB 02 ?? ?? EB 03 ?? ?? ?? 8B 54 24 0C EB 01 ?? 83 82 B8 00 00 00 22 EB 04 ?? ?? ?? ?? 33 C0 EB 01 ?? C3 EB 02 ?? ?? EB 02 ?? ?? 64 67 FF 36 00 00 EB 04 ?? ?? ?? ?? 64 67 89 26 00 00 EB 01 ?? EB 03 ?? ?? ?? 50 EB 03 ?? ?? ?? 33 C0 EB 01 ?? 8B 00 EB 03 ?? ?? ?? C3 EB 01 ?? E9 FA 00 00 00 EB 03 ?? ?? ?? E8 D5 FF FF FF EB 01 ?? EB 03 ?? ?? ?? 58 EB 03 ?? ?? ?? EB 01 ?? 64 67 8F 06 00 00 EB 01 ?? 83 C4 04 EB 03 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Packanoid_1_0____ackanoid
 {
 meta:
@@ -11825,10 +11825,10 @@ strings:
 	$a1 = { BF 00 ?? 40 00 BE ?? ?? ?? 00 E8 9D 00 00 00 B8 ?? ?? ?? 00 8B 30 8B 78 04 BB ?? ?? ?? 00 8B 43 04 91 E3 1F 51 FF D6 56 96 8B 13 8B 02 91 E3 0D 52 51 56 FF D7 5A 89 02 83 C2 04 EB EE 83 C3 08 5E EB DB B9 ?? ?? 00 00 BE 00 ?? ?? 00 EB 01 00 BF ?? ?? ?? 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule ARM_Protector_0_3___by_SMoKE
 {
 meta:
@@ -11840,7 +11840,7 @@ condition:
     	$a0
 }
 
-    
+
 rule CrypKey_V5_6_X____Kenonic_Controls_Ltd_
 {
 meta:
@@ -11849,10 +11849,10 @@ strings:
     	$a0 = { E8 ?? ?? ?? ?? E8 ?? ?? ?? ?? 83 F8 00 75 07 6A 00 E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECryptor_2_3_9_DLL__minimum_protection_
 {
 meta:
@@ -11861,10 +11861,10 @@ strings:
     	$a0 = { 51 68 ?? ?? ?? ?? 87 2C 24 8B CD 5D 81 E1 ?? ?? ?? ?? E9 ?? ?? ?? 00 89 45 F8 51 68 ?? ?? ?? ?? 59 81 F1 ?? ?? ?? ?? 0B 0D ?? ?? ?? ?? 81 E9 ?? ?? ?? ?? E9 ?? ?? ?? 00 81 C2 ?? ?? ?? ?? E8 ?? ?? ?? 00 87 0C 24 59 51 64 8B 05 30 00 00 00 8B 40 0C 8B 40 0C E9 ?? ?? ?? 00 F7 D6 2B D5 E9 ?? ?? ?? 00 87 3C 24 8B CF 5F 87 14 24 1B CA E9 ?? ?? ?? 00 83 C4 08 68 ?? ?? ?? ?? E9 ?? ?? ?? 00 C3 E9 ?? ?? ?? 00 E9 ?? ?? ?? 00 50 8B C5 87 04 24 8B EC 51 0F 88 ?? ?? ?? 00 FF 05 ?? ?? ?? ?? E9 ?? ?? ?? 00 87 0C 24 59 99 03 04 24 E9 ?? ?? ?? 00 C3 81 D5 ?? ?? ?? ?? 9C E9 ?? ?? ?? 00 81 FA ?? ?? ?? ?? E9 ?? ?? ?? 00 C1 C3 15 81 CB ?? ?? ?? ?? 81 F3 ?? ?? ?? ?? 81 C3 ?? ?? ?? ?? 87 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v3_00a
 {
 meta:
@@ -11873,10 +11873,10 @@ strings:
     	$a0 = { 60 E8 ?? ?? ?? ?? 5D 50 51 EB 0F B9 EB 0F B8 EB 07 B9 EB 0F 90 EB 08 FD EB 0B F2 EB F5 EB F6 F2 EB 08 FD EB E9 F3 EB E4 FC E9 59 58 50 51 EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_v0_32a__fake_ASPack_2_12_____emadicius__h_
 {
 meta:
@@ -11886,10 +11886,10 @@ strings:
 	$a1 = { 60 E8 03 00 00 00 E9 EB 04 5D 45 55 C3 E8 01 00 00 00 EB 5D BB ED FF FF FF 03 DD 81 EB 00 A0 02 EB 05 E8 EB 04 40 00 EB FA E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 50 E8 02 00 00 00 29 5A 58 6B C0 03 E8 02 00 00 00 29 5A 83 C4 04 58 74 04 75 02 EB 02 EB 01 81 0F 31 50 0F 31 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule bambam_V0_01____bedrock___Sign_by_fly
 {
 meta:
@@ -11898,10 +11898,10 @@ strings:
     	$a0 = { 6A 14 E8 9A 05 00 00 8B D8 53 68 ?? ?? ?? ?? E8 6C FD FF FF B9 05 00 00 00 8B F3 BF ?? ?? ?? ?? 53 F3 A5 E8 8D 05 00 00 8B 3D ?? ?? ?? ?? A1 ?? ?? ?? ?? 66 8B 15 ?? ?? ?? ?? B9 ?? ?? ?? ?? 2B CF 89 45 E8 89 0D ?? ?? ?? ?? 66 89 55 EC 8B 41 3C 33 D2 03 C1 83 C4 10 66 8B 48 06 66 8B 50 14 81 E1 FF FF 00 00 8D 5C 02 18 8D 41 FF 85 C0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SimplePack_V1_21_build_09_09__Method2_____bagie
 {
 meta:
@@ -11910,10 +11910,10 @@ strings:
     	$a0 = { 4D 5A 90 EB 01 00 52 E9 8A 01 00 00 50 45 00 00 4C 01 02 00 00 00 00 00 00 00 00 00 00 00 00 00 E0 00 0F 03 0B 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0C 00 00 00 00 ?? ?? ?? 00 10 00 00 00 02 00 00 01 00 00 00 00 00 00 00 04 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_2_00_3_0X____Markus_Oberhumer__amp__Laszlo_Molnar__amp__John_Reiser
 {
 meta:
@@ -11925,7 +11925,7 @@ condition:
     	$a0
 }
 
-    
+
 rule EXECryptor_v1_5_1_x
 {
 meta:
@@ -11934,10 +11934,10 @@ strings:
     	$a0 = { E8 24 ?? ?? ?? 8B 4C 24 0C C7 01 17 ?? 01 ?? C7 81 B8 ?? ?? ?? ?? ?? ?? ?? 31 C0 89 41 14 89 41 18 80 A1 C1 ?? ?? ?? FE C3 31 C0 64 FF 30 64 89 20 CC C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_V1_18_Basic_Edition__aPlib_0_43_____ap0x
 {
 meta:
@@ -11946,10 +11946,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 8D B5 1A 04 00 00 8D 9D C1 02 00 00 33 FF E8 61 01 00 00 EB 0F FF 74 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PC_Guard_for_Win32_5_00____SofPro_Blagoje_Ceklic__h_
 {
 meta:
@@ -11961,7 +11961,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_2__CD_Cops_II______Anorganix
 {
 meta:
@@ -11970,10 +11970,10 @@ strings:
     	$a0 = { 53 60 BD 90 90 90 90 8D 45 90 8D 5D 90 E8 00 00 00 00 8D 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule HASP_HL_Protection_V1_X____Aladdin___Sign_by_fly
 {
 meta:
@@ -11982,10 +11982,10 @@ strings:
     	$a0 = { 55 8B EC 53 56 57 60 8B C4 A3 ?? ?? ?? ?? B8 ?? ?? ?? ?? 2B 05 ?? ?? ?? ?? A3 ?? ?? ?? ?? 83 3D ?? ?? ?? ?? 00 74 15 8B 0D ?? ?? ?? ?? 51 FF 15 ?? ?? ?? ?? 83 C4 04 E9 A5 00 00 00 68 ?? ?? ?? ?? FF 15 ?? ?? ?? ?? A3 ?? ?? ?? ?? 68 ?? ?? ?? ?? FF 15 ?? ?? ?? ?? A3 ?? ?? ?? ?? 8B 15 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_1_31____dulek_xt
 {
 meta:
@@ -11994,10 +11994,10 @@ strings:
     	$a0 = { BE ?? ?? ?? 00 BF ?? ?? ?? 00 BB ?? ?? ?? 00 53 BB ?? ?? ?? 00 B2 80 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_V1_25____Obsidium_Software
 {
 meta:
@@ -12006,10 +12006,10 @@ strings:
     	$a0 = { E8 0E 00 00 00 8B 54 24 0C 83 82 B8 00 00 00 0D 33 C0 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PackItBitch_1_0____archphase
 {
 meta:
@@ -12021,7 +12021,7 @@ condition:
     	$a0
 }
 
-    
+
 rule DBPE_v2_33
 {
 meta:
@@ -12030,10 +12030,10 @@ strings:
     	$a0 = { EB 20 ?? ?? 40 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 9C 55 57 56 52 51 53 9C E8 ?? ?? ?? ?? 5D 81 ED ?? ?? ?? ?? 9C 6A 10 73 0B EB 02 C1 51 E8 06 ?? ?? ?? C4 11 73 F7 5B CD 83 C4 04 EB 02 99 EB FF 0C 24 71 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Sentinel_SuperPro__Automatic_Protection__6_4_1____Safenet
 {
 meta:
@@ -12045,7 +12045,7 @@ condition:
     	$a0
 }
 
-    
+
 rule __PseudoSigner_0_2__Video_Lan_Client______Anorganix
 {
 meta:
@@ -12054,10 +12054,10 @@ strings:
     	$a0 = { 55 89 E5 83 EC 08 90 90 90 90 90 90 90 90 90 90 90 90 90 90 01 FF FF 01 01 01 00 01 90 90 90 90 90 90 90 90 90 90 90 90 90 90 00 01 00 01 00 01 90 90 00 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v1_84
 {
 meta:
@@ -12066,10 +12066,10 @@ strings:
     	$a0 = { 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule E_S_O__Eclipse_Operating_System_v_2_08___DOS_Extender
 {
 meta:
@@ -12078,10 +12078,10 @@ strings:
     	$a0 = { 8C C8 8E D8 BA ?? ?? E8 ?? ?? BB ?? ?? 8C C0 2B D8 B4 4A CD 21 BA ?? ?? 73 ?? E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__WATCOM_C_C___EXE______Anorganix
 {
 meta:
@@ -12090,10 +12090,10 @@ strings:
     	$a0 = { E9 00 00 00 00 90 90 90 90 57 41 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __VMProtect_v1_25_____PolyTech
 {
 meta:
@@ -12922,10 +12922,10 @@ strings:
 	$a820 = { 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? 89 EC 5A 5D 5F 5B 5D 58 5E 5A 59 9D C3 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep or $a3 at sgpe.ep or $a4 at sgpe.ep or $a5 at sgpe.ep or $a6 at sgpe.ep or $a7 at sgpe.ep or $a8 at sgpe.ep or $a9 at sgpe.ep or $a10 at sgpe.ep or $a11 at sgpe.ep or $a12 at sgpe.ep or $a13 at sgpe.ep or $a14 at sgpe.ep or $a15 at sgpe.ep or $a16 at sgpe.ep or $a17 at sgpe.ep or $a18 at sgpe.ep or $a19 at sgpe.ep or $a20 at sgpe.ep or $a21 at sgpe.ep or $a22 at sgpe.ep or $a23 at sgpe.ep or $a24 at sgpe.ep or $a25 at sgpe.ep or $a26 at sgpe.ep or $a27 at sgpe.ep or $a28 at sgpe.ep or $a29 at sgpe.ep or $a30 at sgpe.ep or $a31 at sgpe.ep or $a32 at sgpe.ep or $a33 at sgpe.ep or $a34 at sgpe.ep or $a35 at sgpe.ep or $a36 at sgpe.ep or $a37 at sgpe.ep or $a38 at sgpe.ep or $a39 at sgpe.ep or $a40 at sgpe.ep or $a41 at sgpe.ep or $a42 at sgpe.ep or $a43 at sgpe.ep or $a44 at sgpe.ep or $a45 at sgpe.ep or $a46 at sgpe.ep or $a47 at sgpe.ep or $a48 at sgpe.ep or $a49 at sgpe.ep or $a50 at sgpe.ep or $a51 at sgpe.ep or $a52 at sgpe.ep or $a53 at sgpe.ep or $a54 at sgpe.ep or $a55 at sgpe.ep or $a56 at sgpe.ep or $a57 at sgpe.ep or $a58 at sgpe.ep or $a59 at sgpe.ep or $a60 at sgpe.ep or $a61 at sgpe.ep or $a62 at sgpe.ep or $a63 at sgpe.ep or $a64 at sgpe.ep or $a65 at sgpe.ep or $a66 at sgpe.ep or $a67 at sgpe.ep or $a68 at sgpe.ep or $a69 at sgpe.ep or $a70 at sgpe.ep or $a71 at sgpe.ep or $a72 at sgpe.ep or $a73 at sgpe.ep or $a74 at sgpe.ep or $a75 at sgpe.ep or $a76 at sgpe.ep or $a77 at sgpe.ep or $a78 at sgpe.ep or $a79 at sgpe.ep or $a80 at sgpe.ep or $a81 at sgpe.ep or $a82 at sgpe.ep or $a83 at sgpe.ep or $a84 at sgpe.ep or $a85 at sgpe.ep or $a86 at sgpe.ep or $a87 at sgpe.ep or $a88 at sgpe.ep or $a89 at sgpe.ep or $a90 at sgpe.ep or $a91 at sgpe.ep or $a92 at sgpe.ep or $a93 at sgpe.ep or $a94 at sgpe.ep or $a95 at sgpe.ep or $a96 at sgpe.ep or $a97 at sgpe.ep or $a98 at sgpe.ep or $a99 at sgpe.ep or $a100 at sgpe.ep or $a101 at sgpe.ep or $a102 at sgpe.ep or $a103 at sgpe.ep or $a104 at sgpe.ep or $a105 at sgpe.ep or $a106 at sgpe.ep or $a107 at sgpe.ep or $a108 at sgpe.ep or $a109 at sgpe.ep or $a110 at sgpe.ep or $a111 at sgpe.ep or $a112 at sgpe.ep or $a113 at sgpe.ep or $a114 at sgpe.ep or $a115 at sgpe.ep or $a116 at sgpe.ep or $a117 at sgpe.ep or $a118 at sgpe.ep or $a119 at sgpe.ep or $a120 at sgpe.ep or $a121 at sgpe.ep or $a122 at sgpe.ep or $a123 at sgpe.ep or $a124 at sgpe.ep or $a125 at sgpe.ep or $a126 at sgpe.ep or $a127 at sgpe.ep or $a128 at sgpe.ep or $a129 at sgpe.ep or $a130 at sgpe.ep or $a131 at sgpe.ep or $a132 at sgpe.ep or $a133 at sgpe.ep or $a134 at sgpe.ep or $a135 at sgpe.ep or $a136 at sgpe.ep or $a137 at sgpe.ep or $a138 at sgpe.ep or $a139 at sgpe.ep or $a140 at sgpe.ep or $a141 at sgpe.ep or $a142 at sgpe.ep or $a143 at sgpe.ep or $a144 at sgpe.ep or $a145 at sgpe.ep or $a146 at sgpe.ep or $a147 at sgpe.ep or $a148 at sgpe.ep or $a149 at sgpe.ep or $a150 at sgpe.ep or $a151 at sgpe.ep or $a152 at sgpe.ep or $a153 at sgpe.ep or $a154 at sgpe.ep or $a155 at sgpe.ep or $a156 at sgpe.ep or $a157 at sgpe.ep or $a158 at sgpe.ep or $a159 at sgpe.ep or $a160 at sgpe.ep or $a161 at sgpe.ep or $a162 at sgpe.ep or $a163 at sgpe.ep or $a164 at sgpe.ep or $a165 at sgpe.ep or $a166 at sgpe.ep or $a167 at sgpe.ep or $a168 at sgpe.ep or $a169 at sgpe.ep or $a170 at sgpe.ep or $a171 at sgpe.ep or $a172 at sgpe.ep or $a173 at sgpe.ep or $a174 at sgpe.ep or $a175 at sgpe.ep or $a176 at sgpe.ep or $a177 at sgpe.ep or $a178 at sgpe.ep or $a179 at sgpe.ep or $a180 at sgpe.ep or $a181 at sgpe.ep or $a182 at sgpe.ep or $a183 at sgpe.ep or $a184 at sgpe.ep or $a185 at sgpe.ep or $a186 at sgpe.ep or $a187 at sgpe.ep or $a188 at sgpe.ep or $a189 at sgpe.ep or $a190 at sgpe.ep or $a191 at sgpe.ep or $a192 at sgpe.ep or $a193 at sgpe.ep or $a194 at sgpe.ep or $a195 at sgpe.ep or $a196 at sgpe.ep or $a197 at sgpe.ep or $a198 at sgpe.ep or $a199 at sgpe.ep or $a200 at sgpe.ep or $a201 at sgpe.ep or $a202 at sgpe.ep or $a203 at sgpe.ep or $a204 at sgpe.ep or $a205 at sgpe.ep or $a206 at sgpe.ep or $a207 at sgpe.ep or $a208 at sgpe.ep or $a209 at sgpe.ep or $a210 at sgpe.ep or $a211 at sgpe.ep or $a212 at sgpe.ep or $a213 at sgpe.ep or $a214 at sgpe.ep or $a215 at sgpe.ep or $a216 at sgpe.ep or $a217 at sgpe.ep or $a218 at sgpe.ep or $a219 at sgpe.ep or $a220 at sgpe.ep or $a221 at sgpe.ep or $a222 at sgpe.ep or $a223 at sgpe.ep or $a224 at sgpe.ep or $a225 at sgpe.ep or $a226 at sgpe.ep or $a227 at sgpe.ep or $a228 at sgpe.ep or $a229 at sgpe.ep or $a230 at sgpe.ep or $a231 at sgpe.ep or $a232 at sgpe.ep or $a233 at sgpe.ep or $a234 at sgpe.ep or $a235 at sgpe.ep or $a236 at sgpe.ep or $a237 at sgpe.ep or $a238 at sgpe.ep or $a239 at sgpe.ep or $a240 at sgpe.ep or $a241 at sgpe.ep or $a242 at sgpe.ep or $a243 at sgpe.ep or $a244 at sgpe.ep or $a245 at sgpe.ep or $a246 at sgpe.ep or $a247 at sgpe.ep or $a248 at sgpe.ep or $a249 at sgpe.ep or $a250 at sgpe.ep or $a251 at sgpe.ep or $a252 at sgpe.ep or $a253 at sgpe.ep or $a254 at sgpe.ep or $a255 at sgpe.ep or $a256 at sgpe.ep or $a257 at sgpe.ep or $a258 at sgpe.ep or $a259 at sgpe.ep or $a260 at sgpe.ep or $a261 at sgpe.ep or $a262 at sgpe.ep or $a263 at sgpe.ep or $a264 at sgpe.ep or $a265 at sgpe.ep or $a266 at sgpe.ep or $a267 at sgpe.ep or $a268 at sgpe.ep or $a269 at sgpe.ep or $a270 at sgpe.ep or $a271 at sgpe.ep or $a272 at sgpe.ep or $a273 at sgpe.ep or $a274 at sgpe.ep or $a275 at sgpe.ep or $a276 at sgpe.ep or $a277 at sgpe.ep or $a278 at sgpe.ep or $a279 at sgpe.ep or $a280 at sgpe.ep or $a281 at sgpe.ep or $a282 at sgpe.ep or $a283 at sgpe.ep or $a284 at sgpe.ep or $a285 at sgpe.ep or $a286 at sgpe.ep or $a287 at sgpe.ep or $a288 at sgpe.ep or $a289 at sgpe.ep or $a290 at sgpe.ep or $a291 at sgpe.ep or $a292 at sgpe.ep or $a293 at sgpe.ep or $a294 at sgpe.ep or $a295 at sgpe.ep or $a296 at sgpe.ep or $a297 at sgpe.ep or $a298 at sgpe.ep or $a299 at sgpe.ep or $a300 at sgpe.ep or $a301 at sgpe.ep or $a302 at sgpe.ep or $a303 at sgpe.ep or $a304 at sgpe.ep or $a305 at sgpe.ep or $a306 at sgpe.ep or $a307 at sgpe.ep or $a308 at sgpe.ep or $a309 at sgpe.ep or $a310 at sgpe.ep or $a311 at sgpe.ep or $a312 at sgpe.ep or $a313 at sgpe.ep or $a314 at sgpe.ep or $a315 at sgpe.ep or $a316 at sgpe.ep or $a317 at sgpe.ep or $a318 at sgpe.ep or $a319 at sgpe.ep or $a320 at sgpe.ep or $a321 at sgpe.ep or $a322 at sgpe.ep or $a323 at sgpe.ep or $a324 at sgpe.ep or $a325 at sgpe.ep or $a326 at sgpe.ep or $a327 at sgpe.ep or $a328 at sgpe.ep or $a329 at sgpe.ep or $a330 at sgpe.ep or $a331 at sgpe.ep or $a332 at sgpe.ep or $a333 at sgpe.ep or $a334 at sgpe.ep or $a335 at sgpe.ep or $a336 at sgpe.ep or $a337 at sgpe.ep or $a338 at sgpe.ep or $a339 at sgpe.ep or $a340 at sgpe.ep or $a341 at sgpe.ep or $a342 at sgpe.ep or $a343 at sgpe.ep or $a344 at sgpe.ep or $a345 at sgpe.ep or $a346 at sgpe.ep or $a347 at sgpe.ep or $a348 at sgpe.ep or $a349 at sgpe.ep or $a350 at sgpe.ep or $a351 at sgpe.ep or $a352 at sgpe.ep or $a353 at sgpe.ep or $a354 at sgpe.ep or $a355 at sgpe.ep or $a356 at sgpe.ep or $a357 at sgpe.ep or $a358 at sgpe.ep or $a359 at sgpe.ep or $a360 at sgpe.ep or $a361 at sgpe.ep or $a362 at sgpe.ep or $a363 at sgpe.ep or $a364 at sgpe.ep or $a365 at sgpe.ep or $a366 at sgpe.ep or $a367 at sgpe.ep or $a368 at sgpe.ep or $a369 at sgpe.ep or $a370 at sgpe.ep or $a371 at sgpe.ep or $a372 at sgpe.ep or $a373 at sgpe.ep or $a374 at sgpe.ep or $a375 at sgpe.ep or $a376 at sgpe.ep or $a377 at sgpe.ep or $a378 at sgpe.ep or $a379 at sgpe.ep or $a380 at sgpe.ep or $a381 at sgpe.ep or $a382 at sgpe.ep or $a383 at sgpe.ep or $a384 at sgpe.ep or $a385 at sgpe.ep or $a386 at sgpe.ep or $a387 at sgpe.ep or $a388 at sgpe.ep or $a389 at sgpe.ep or $a390 at sgpe.ep or $a391 at sgpe.ep or $a392 at sgpe.ep or $a393 at sgpe.ep or $a394 at sgpe.ep or $a395 at sgpe.ep or $a396 at sgpe.ep or $a397 at sgpe.ep or $a398 at sgpe.ep or $a399 at sgpe.ep or $a400 at sgpe.ep or $a401 at sgpe.ep or $a402 at sgpe.ep or $a403 at sgpe.ep or $a404 at sgpe.ep or $a405 at sgpe.ep or $a406 at sgpe.ep or $a407 at sgpe.ep or $a408 at sgpe.ep or $a409 at sgpe.ep or $a410 at sgpe.ep or $a411 at sgpe.ep or $a412 at sgpe.ep or $a413 at sgpe.ep or $a414 at sgpe.ep or $a415 at sgpe.ep or $a416 at sgpe.ep or $a417 at sgpe.ep or $a418 at sgpe.ep or $a419 at sgpe.ep or $a420 at sgpe.ep or $a421 at sgpe.ep or $a422 at sgpe.ep or $a423 at sgpe.ep or $a424 at sgpe.ep or $a425 at sgpe.ep or $a426 at sgpe.ep or $a427 at sgpe.ep or $a428 at sgpe.ep or $a429 at sgpe.ep or $a430 at sgpe.ep or $a431 at sgpe.ep or $a432 at sgpe.ep or $a433 at sgpe.ep or $a434 at sgpe.ep or $a435 at sgpe.ep or $a436 at sgpe.ep or $a437 at sgpe.ep or $a438 at sgpe.ep or $a439 at sgpe.ep or $a440 at sgpe.ep or $a441 at sgpe.ep or $a442 at sgpe.ep or $a443 at sgpe.ep or $a444 at sgpe.ep or $a445 at sgpe.ep or $a446 at sgpe.ep or $a447 at sgpe.ep or $a448 at sgpe.ep or $a449 at sgpe.ep or $a450 at sgpe.ep or $a451 at sgpe.ep or $a452 at sgpe.ep or $a453 at sgpe.ep or $a454 at sgpe.ep or $a455 at sgpe.ep or $a456 at sgpe.ep or $a457 at sgpe.ep or $a458 at sgpe.ep or $a459 at sgpe.ep or $a460 at sgpe.ep or $a461 at sgpe.ep or $a462 at sgpe.ep or $a463 at sgpe.ep or $a464 at sgpe.ep or $a465 at sgpe.ep or $a466 at sgpe.ep or $a467 at sgpe.ep or $a468 at sgpe.ep or $a469 at sgpe.ep or $a470 at sgpe.ep or $a471 at sgpe.ep or $a472 at sgpe.ep or $a473 at sgpe.ep or $a474 at sgpe.ep or $a475 at sgpe.ep or $a476 at sgpe.ep or $a477 at sgpe.ep or $a478 at sgpe.ep or $a479 at sgpe.ep or $a480 at sgpe.ep or $a481 at sgpe.ep or $a482 at sgpe.ep or $a483 at sgpe.ep or $a484 at sgpe.ep or $a485 at sgpe.ep or $a486 at sgpe.ep or $a487 at sgpe.ep or $a488 at sgpe.ep or $a489 at sgpe.ep or $a490 at sgpe.ep or $a491 at sgpe.ep or $a492 at sgpe.ep or $a493 at sgpe.ep or $a494 at sgpe.ep or $a495 at sgpe.ep or $a496 at sgpe.ep or $a497 at sgpe.ep or $a498 at sgpe.ep or $a499 at sgpe.ep or $a500 at sgpe.ep or $a501 at sgpe.ep or $a502 at sgpe.ep or $a503 at sgpe.ep or $a504 at sgpe.ep or $a505 at sgpe.ep or $a506 at sgpe.ep or $a507 at sgpe.ep or $a508 at sgpe.ep or $a509 at sgpe.ep or $a510 at sgpe.ep or $a511 at sgpe.ep or $a512 at sgpe.ep or $a513 at sgpe.ep or $a514 at sgpe.ep or $a515 at sgpe.ep or $a516 at sgpe.ep or $a517 at sgpe.ep or $a518 at sgpe.ep or $a519 at sgpe.ep or $a520 at sgpe.ep or $a521 at sgpe.ep or $a522 at sgpe.ep or $a523 at sgpe.ep or $a524 at sgpe.ep or $a525 at sgpe.ep or $a526 at sgpe.ep or $a527 at sgpe.ep or $a528 at sgpe.ep or $a529 at sgpe.ep or $a530 at sgpe.ep or $a531 at sgpe.ep or $a532 at sgpe.ep or $a533 at sgpe.ep or $a534 at sgpe.ep or $a535 at sgpe.ep or $a536 at sgpe.ep or $a537 at sgpe.ep or $a538 at sgpe.ep or $a539 at sgpe.ep or $a540 at sgpe.ep or $a541 at sgpe.ep or $a542 at sgpe.ep or $a543 at sgpe.ep or $a544 at sgpe.ep or $a545 at sgpe.ep or $a546 at sgpe.ep or $a547 at sgpe.ep or $a548 at sgpe.ep or $a549 at sgpe.ep or $a550 at sgpe.ep or $a551 at sgpe.ep or $a552 at sgpe.ep or $a553 at sgpe.ep or $a554 at sgpe.ep or $a555 at sgpe.ep or $a556 at sgpe.ep or $a557 at sgpe.ep or $a558 at sgpe.ep or $a559 at sgpe.ep or $a560 at sgpe.ep or $a561 at sgpe.ep or $a562 at sgpe.ep or $a563 at sgpe.ep or $a564 at sgpe.ep or $a565 at sgpe.ep or $a566 at sgpe.ep or $a567 at sgpe.ep or $a568 at sgpe.ep or $a569 at sgpe.ep or $a570 at sgpe.ep or $a571 at sgpe.ep or $a572 at sgpe.ep or $a573 at sgpe.ep or $a574 at sgpe.ep or $a575 at sgpe.ep or $a576 at sgpe.ep or $a577 at sgpe.ep or $a578 at sgpe.ep or $a579 at sgpe.ep or $a580 at sgpe.ep or $a581 at sgpe.ep or $a582 at sgpe.ep or $a583 at sgpe.ep or $a584 at sgpe.ep or $a585 at sgpe.ep or $a586 at sgpe.ep or $a587 at sgpe.ep or $a588 at sgpe.ep or $a589 at sgpe.ep or $a590 at sgpe.ep or $a591 at sgpe.ep or $a592 at sgpe.ep or $a593 at sgpe.ep or $a594 at sgpe.ep or $a595 at sgpe.ep or $a596 at sgpe.ep or $a597 at sgpe.ep or $a598 at sgpe.ep or $a599 at sgpe.ep or $a600 or $a601 at sgpe.ep or $a602 at sgpe.ep or $a603 at sgpe.ep or $a604 at sgpe.ep or $a605 at sgpe.ep or $a606 at sgpe.ep or $a607 at sgpe.ep or $a608 at sgpe.ep or $a609 at sgpe.ep or $a610 at sgpe.ep or $a611 at sgpe.ep or $a612 at sgpe.ep or $a613 at sgpe.ep or $a614 at sgpe.ep or $a615 at sgpe.ep or $a616 at sgpe.ep or $a617 at sgpe.ep or $a618 at sgpe.ep or $a619 at sgpe.ep or $a620 at sgpe.ep or $a621 at sgpe.ep or $a622 at sgpe.ep or $a623 at sgpe.ep or $a624 at sgpe.ep or $a625 at sgpe.ep or $a626 at sgpe.ep or $a627 at sgpe.ep or $a628 at sgpe.ep or $a629 at sgpe.ep or $a630 at sgpe.ep or $a631 at sgpe.ep or $a632 at sgpe.ep or $a633 at sgpe.ep or $a634 at sgpe.ep or $a635 at sgpe.ep or $a636 at sgpe.ep or $a637 at sgpe.ep or $a638 at sgpe.ep or $a639 at sgpe.ep or $a640 at sgpe.ep or $a641 at sgpe.ep or $a642 at sgpe.ep or $a643 at sgpe.ep or $a644 at sgpe.ep or $a645 at sgpe.ep or $a646 at sgpe.ep or $a647 at sgpe.ep or $a648 at sgpe.ep or $a649 at sgpe.ep or $a650 at sgpe.ep or $a651 at sgpe.ep or $a652 at sgpe.ep or $a653 at sgpe.ep or $a654 at sgpe.ep or $a655 at sgpe.ep or $a656 at sgpe.ep or $a657 at sgpe.ep or $a658 at sgpe.ep or $a659 at sgpe.ep or $a660 at sgpe.ep or $a661 at sgpe.ep or $a662 at sgpe.ep or $a663 at sgpe.ep or $a664 at sgpe.ep or $a665 at sgpe.ep or $a666 at sgpe.ep or $a667 at sgpe.ep or $a668 at sgpe.ep or $a669 at sgpe.ep or $a670 at sgpe.ep or $a671 at sgpe.ep or $a672 at sgpe.ep or $a673 at sgpe.ep or $a674 at sgpe.ep or $a675 at sgpe.ep or $a676 at sgpe.ep or $a677 at sgpe.ep or $a678 at sgpe.ep or $a679 at sgpe.ep or $a680 at sgpe.ep or $a681 at sgpe.ep or $a682 at sgpe.ep or $a683 at sgpe.ep or $a684 at sgpe.ep or $a685 at sgpe.ep or $a686 at sgpe.ep or $a687 at sgpe.ep or $a688 at sgpe.ep or $a689 at sgpe.ep or $a690 at sgpe.ep or $a691 at sgpe.ep or $a692 at sgpe.ep or $a693 at sgpe.ep or $a694 at sgpe.ep or $a695 at sgpe.ep or $a696 at sgpe.ep or $a697 at sgpe.ep or $a698 at sgpe.ep or $a699 at sgpe.ep or $a700 at sgpe.ep or $a701 at sgpe.ep or $a702 at sgpe.ep or $a703 at sgpe.ep or $a704 at sgpe.ep or $a705 at sgpe.ep or $a706 at sgpe.ep or $a707 at sgpe.ep or $a708 at sgpe.ep or $a709 at sgpe.ep or $a710 at sgpe.ep or $a711 at sgpe.ep or $a712 at sgpe.ep or $a713 at sgpe.ep or $a714 at sgpe.ep or $a715 at sgpe.ep or $a716 at sgpe.ep or $a717 at sgpe.ep or $a718 at sgpe.ep or $a719 at sgpe.ep or $a720 at sgpe.ep or $a721 at sgpe.ep or $a722 at sgpe.ep or $a723 at sgpe.ep or $a724 at sgpe.ep or $a725 at sgpe.ep or $a726 at sgpe.ep or $a727 at sgpe.ep or $a728 at sgpe.ep or $a729 at sgpe.ep or $a730 at sgpe.ep or $a731 at sgpe.ep or $a732 at sgpe.ep or $a733 at sgpe.ep or $a734 at sgpe.ep or $a735 at sgpe.ep or $a736 at sgpe.ep or $a737 at sgpe.ep or $a738 at sgpe.ep or $a739 at sgpe.ep or $a740 at sgpe.ep or $a741 at sgpe.ep or $a742 at sgpe.ep or $a743 at sgpe.ep or $a744 at sgpe.ep or $a745 at sgpe.ep or $a746 at sgpe.ep or $a747 at sgpe.ep or $a748 at sgpe.ep or $a749 at sgpe.ep or $a750 at sgpe.ep or $a751 at sgpe.ep or $a752 at sgpe.ep or $a753 at sgpe.ep or $a754 at sgpe.ep or $a755 at sgpe.ep or $a756 at sgpe.ep or $a757 at sgpe.ep or $a758 at sgpe.ep or $a759 at sgpe.ep or $a760 at sgpe.ep or $a761 at sgpe.ep or $a762 at sgpe.ep or $a763 at sgpe.ep or $a764 at sgpe.ep or $a765 at sgpe.ep or $a766 at sgpe.ep or $a767 at sgpe.ep or $a768 at sgpe.ep or $a769 at sgpe.ep or $a770 at sgpe.ep or $a771 at sgpe.ep or $a772 at sgpe.ep or $a773 at sgpe.ep or $a774 at sgpe.ep or $a775 at sgpe.ep or $a776 at sgpe.ep or $a777 at sgpe.ep or $a778 at sgpe.ep or $a779 at sgpe.ep or $a780 at sgpe.ep or $a781 at sgpe.ep or $a782 at sgpe.ep or $a783 at sgpe.ep or $a784 at sgpe.ep or $a785 at sgpe.ep or $a786 at sgpe.ep or $a787 at sgpe.ep or $a788 at sgpe.ep or $a789 at sgpe.ep or $a790 at sgpe.ep or $a791 at sgpe.ep or $a792 at sgpe.ep or $a793 at sgpe.ep or $a794 at sgpe.ep or $a795 at sgpe.ep or $a796 at sgpe.ep or $a797 at sgpe.ep or $a798 at sgpe.ep or $a799 at sgpe.ep or $a800 at sgpe.ep or $a801 at sgpe.ep or $a802 at sgpe.ep or $a803 at sgpe.ep or $a804 at sgpe.ep or $a805 at sgpe.ep or $a806 at sgpe.ep or $a807 at sgpe.ep or $a808 at sgpe.ep or $a809 at sgpe.ep or $a810 at sgpe.ep or $a811 at sgpe.ep or $a812 at sgpe.ep or $a813 at sgpe.ep or $a814 at sgpe.ep or $a815 at sgpe.ep or $a816 at sgpe.ep or $a817 at sgpe.ep or $a818 at sgpe.ep or $a819 at sgpe.ep or $a820 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep or $a3 at manape.ep or $a4 at manape.ep or $a5 at manape.ep or $a6 at manape.ep or $a7 at manape.ep or $a8 at manape.ep or $a9 at manape.ep or $a10 at manape.ep or $a11 at manape.ep or $a12 at manape.ep or $a13 at manape.ep or $a14 at manape.ep or $a15 at manape.ep or $a16 at manape.ep or $a17 at manape.ep or $a18 at manape.ep or $a19 at manape.ep or $a20 at manape.ep or $a21 at manape.ep or $a22 at manape.ep or $a23 at manape.ep or $a24 at manape.ep or $a25 at manape.ep or $a26 at manape.ep or $a27 at manape.ep or $a28 at manape.ep or $a29 at manape.ep or $a30 at manape.ep or $a31 at manape.ep or $a32 at manape.ep or $a33 at manape.ep or $a34 at manape.ep or $a35 at manape.ep or $a36 at manape.ep or $a37 at manape.ep or $a38 at manape.ep or $a39 at manape.ep or $a40 at manape.ep or $a41 at manape.ep or $a42 at manape.ep or $a43 at manape.ep or $a44 at manape.ep or $a45 at manape.ep or $a46 at manape.ep or $a47 at manape.ep or $a48 at manape.ep or $a49 at manape.ep or $a50 at manape.ep or $a51 at manape.ep or $a52 at manape.ep or $a53 at manape.ep or $a54 at manape.ep or $a55 at manape.ep or $a56 at manape.ep or $a57 at manape.ep or $a58 at manape.ep or $a59 at manape.ep or $a60 at manape.ep or $a61 at manape.ep or $a62 at manape.ep or $a63 at manape.ep or $a64 at manape.ep or $a65 at manape.ep or $a66 at manape.ep or $a67 at manape.ep or $a68 at manape.ep or $a69 at manape.ep or $a70 at manape.ep or $a71 at manape.ep or $a72 at manape.ep or $a73 at manape.ep or $a74 at manape.ep or $a75 at manape.ep or $a76 at manape.ep or $a77 at manape.ep or $a78 at manape.ep or $a79 at manape.ep or $a80 at manape.ep or $a81 at manape.ep or $a82 at manape.ep or $a83 at manape.ep or $a84 at manape.ep or $a85 at manape.ep or $a86 at manape.ep or $a87 at manape.ep or $a88 at manape.ep or $a89 at manape.ep or $a90 at manape.ep or $a91 at manape.ep or $a92 at manape.ep or $a93 at manape.ep or $a94 at manape.ep or $a95 at manape.ep or $a96 at manape.ep or $a97 at manape.ep or $a98 at manape.ep or $a99 at manape.ep or $a100 at manape.ep or $a101 at manape.ep or $a102 at manape.ep or $a103 at manape.ep or $a104 at manape.ep or $a105 at manape.ep or $a106 at manape.ep or $a107 at manape.ep or $a108 at manape.ep or $a109 at manape.ep or $a110 at manape.ep or $a111 at manape.ep or $a112 at manape.ep or $a113 at manape.ep or $a114 at manape.ep or $a115 at manape.ep or $a116 at manape.ep or $a117 at manape.ep or $a118 at manape.ep or $a119 at manape.ep or $a120 at manape.ep or $a121 at manape.ep or $a122 at manape.ep or $a123 at manape.ep or $a124 at manape.ep or $a125 at manape.ep or $a126 at manape.ep or $a127 at manape.ep or $a128 at manape.ep or $a129 at manape.ep or $a130 at manape.ep or $a131 at manape.ep or $a132 at manape.ep or $a133 at manape.ep or $a134 at manape.ep or $a135 at manape.ep or $a136 at manape.ep or $a137 at manape.ep or $a138 at manape.ep or $a139 at manape.ep or $a140 at manape.ep or $a141 at manape.ep or $a142 at manape.ep or $a143 at manape.ep or $a144 at manape.ep or $a145 at manape.ep or $a146 at manape.ep or $a147 at manape.ep or $a148 at manape.ep or $a149 at manape.ep or $a150 at manape.ep or $a151 at manape.ep or $a152 at manape.ep or $a153 at manape.ep or $a154 at manape.ep or $a155 at manape.ep or $a156 at manape.ep or $a157 at manape.ep or $a158 at manape.ep or $a159 at manape.ep or $a160 at manape.ep or $a161 at manape.ep or $a162 at manape.ep or $a163 at manape.ep or $a164 at manape.ep or $a165 at manape.ep or $a166 at manape.ep or $a167 at manape.ep or $a168 at manape.ep or $a169 at manape.ep or $a170 at manape.ep or $a171 at manape.ep or $a172 at manape.ep or $a173 at manape.ep or $a174 at manape.ep or $a175 at manape.ep or $a176 at manape.ep or $a177 at manape.ep or $a178 at manape.ep or $a179 at manape.ep or $a180 at manape.ep or $a181 at manape.ep or $a182 at manape.ep or $a183 at manape.ep or $a184 at manape.ep or $a185 at manape.ep or $a186 at manape.ep or $a187 at manape.ep or $a188 at manape.ep or $a189 at manape.ep or $a190 at manape.ep or $a191 at manape.ep or $a192 at manape.ep or $a193 at manape.ep or $a194 at manape.ep or $a195 at manape.ep or $a196 at manape.ep or $a197 at manape.ep or $a198 at manape.ep or $a199 at manape.ep or $a200 at manape.ep or $a201 at manape.ep or $a202 at manape.ep or $a203 at manape.ep or $a204 at manape.ep or $a205 at manape.ep or $a206 at manape.ep or $a207 at manape.ep or $a208 at manape.ep or $a209 at manape.ep or $a210 at manape.ep or $a211 at manape.ep or $a212 at manape.ep or $a213 at manape.ep or $a214 at manape.ep or $a215 at manape.ep or $a216 at manape.ep or $a217 at manape.ep or $a218 at manape.ep or $a219 at manape.ep or $a220 at manape.ep or $a221 at manape.ep or $a222 at manape.ep or $a223 at manape.ep or $a224 at manape.ep or $a225 at manape.ep or $a226 at manape.ep or $a227 at manape.ep or $a228 at manape.ep or $a229 at manape.ep or $a230 at manape.ep or $a231 at manape.ep or $a232 at manape.ep or $a233 at manape.ep or $a234 at manape.ep or $a235 at manape.ep or $a236 at manape.ep or $a237 at manape.ep or $a238 at manape.ep or $a239 at manape.ep or $a240 at manape.ep or $a241 at manape.ep or $a242 at manape.ep or $a243 at manape.ep or $a244 at manape.ep or $a245 at manape.ep or $a246 at manape.ep or $a247 at manape.ep or $a248 at manape.ep or $a249 at manape.ep or $a250 at manape.ep or $a251 at manape.ep or $a252 at manape.ep or $a253 at manape.ep or $a254 at manape.ep or $a255 at manape.ep or $a256 at manape.ep or $a257 at manape.ep or $a258 at manape.ep or $a259 at manape.ep or $a260 at manape.ep or $a261 at manape.ep or $a262 at manape.ep or $a263 at manape.ep or $a264 at manape.ep or $a265 at manape.ep or $a266 at manape.ep or $a267 at manape.ep or $a268 at manape.ep or $a269 at manape.ep or $a270 at manape.ep or $a271 at manape.ep or $a272 at manape.ep or $a273 at manape.ep or $a274 at manape.ep or $a275 at manape.ep or $a276 at manape.ep or $a277 at manape.ep or $a278 at manape.ep or $a279 at manape.ep or $a280 at manape.ep or $a281 at manape.ep or $a282 at manape.ep or $a283 at manape.ep or $a284 at manape.ep or $a285 at manape.ep or $a286 at manape.ep or $a287 at manape.ep or $a288 at manape.ep or $a289 at manape.ep or $a290 at manape.ep or $a291 at manape.ep or $a292 at manape.ep or $a293 at manape.ep or $a294 at manape.ep or $a295 at manape.ep or $a296 at manape.ep or $a297 at manape.ep or $a298 at manape.ep or $a299 at manape.ep or $a300 at manape.ep or $a301 at manape.ep or $a302 at manape.ep or $a303 at manape.ep or $a304 at manape.ep or $a305 at manape.ep or $a306 at manape.ep or $a307 at manape.ep or $a308 at manape.ep or $a309 at manape.ep or $a310 at manape.ep or $a311 at manape.ep or $a312 at manape.ep or $a313 at manape.ep or $a314 at manape.ep or $a315 at manape.ep or $a316 at manape.ep or $a317 at manape.ep or $a318 at manape.ep or $a319 at manape.ep or $a320 at manape.ep or $a321 at manape.ep or $a322 at manape.ep or $a323 at manape.ep or $a324 at manape.ep or $a325 at manape.ep or $a326 at manape.ep or $a327 at manape.ep or $a328 at manape.ep or $a329 at manape.ep or $a330 at manape.ep or $a331 at manape.ep or $a332 at manape.ep or $a333 at manape.ep or $a334 at manape.ep or $a335 at manape.ep or $a336 at manape.ep or $a337 at manape.ep or $a338 at manape.ep or $a339 at manape.ep or $a340 at manape.ep or $a341 at manape.ep or $a342 at manape.ep or $a343 at manape.ep or $a344 at manape.ep or $a345 at manape.ep or $a346 at manape.ep or $a347 at manape.ep or $a348 at manape.ep or $a349 at manape.ep or $a350 at manape.ep or $a351 at manape.ep or $a352 at manape.ep or $a353 at manape.ep or $a354 at manape.ep or $a355 at manape.ep or $a356 at manape.ep or $a357 at manape.ep or $a358 at manape.ep or $a359 at manape.ep or $a360 at manape.ep or $a361 at manape.ep or $a362 at manape.ep or $a363 at manape.ep or $a364 at manape.ep or $a365 at manape.ep or $a366 at manape.ep or $a367 at manape.ep or $a368 at manape.ep or $a369 at manape.ep or $a370 at manape.ep or $a371 at manape.ep or $a372 at manape.ep or $a373 at manape.ep or $a374 at manape.ep or $a375 at manape.ep or $a376 at manape.ep or $a377 at manape.ep or $a378 at manape.ep or $a379 at manape.ep or $a380 at manape.ep or $a381 at manape.ep or $a382 at manape.ep or $a383 at manape.ep or $a384 at manape.ep or $a385 at manape.ep or $a386 at manape.ep or $a387 at manape.ep or $a388 at manape.ep or $a389 at manape.ep or $a390 at manape.ep or $a391 at manape.ep or $a392 at manape.ep or $a393 at manape.ep or $a394 at manape.ep or $a395 at manape.ep or $a396 at manape.ep or $a397 at manape.ep or $a398 at manape.ep or $a399 at manape.ep or $a400 at manape.ep or $a401 at manape.ep or $a402 at manape.ep or $a403 at manape.ep or $a404 at manape.ep or $a405 at manape.ep or $a406 at manape.ep or $a407 at manape.ep or $a408 at manape.ep or $a409 at manape.ep or $a410 at manape.ep or $a411 at manape.ep or $a412 at manape.ep or $a413 at manape.ep or $a414 at manape.ep or $a415 at manape.ep or $a416 at manape.ep or $a417 at manape.ep or $a418 at manape.ep or $a419 at manape.ep or $a420 at manape.ep or $a421 at manape.ep or $a422 at manape.ep or $a423 at manape.ep or $a424 at manape.ep or $a425 at manape.ep or $a426 at manape.ep or $a427 at manape.ep or $a428 at manape.ep or $a429 at manape.ep or $a430 at manape.ep or $a431 at manape.ep or $a432 at manape.ep or $a433 at manape.ep or $a434 at manape.ep or $a435 at manape.ep or $a436 at manape.ep or $a437 at manape.ep or $a438 at manape.ep or $a439 at manape.ep or $a440 at manape.ep or $a441 at manape.ep or $a442 at manape.ep or $a443 at manape.ep or $a444 at manape.ep or $a445 at manape.ep or $a446 at manape.ep or $a447 at manape.ep or $a448 at manape.ep or $a449 at manape.ep or $a450 at manape.ep or $a451 at manape.ep or $a452 at manape.ep or $a453 at manape.ep or $a454 at manape.ep or $a455 at manape.ep or $a456 at manape.ep or $a457 at manape.ep or $a458 at manape.ep or $a459 at manape.ep or $a460 at manape.ep or $a461 at manape.ep or $a462 at manape.ep or $a463 at manape.ep or $a464 at manape.ep or $a465 at manape.ep or $a466 at manape.ep or $a467 at manape.ep or $a468 at manape.ep or $a469 at manape.ep or $a470 at manape.ep or $a471 at manape.ep or $a472 at manape.ep or $a473 at manape.ep or $a474 at manape.ep or $a475 at manape.ep or $a476 at manape.ep or $a477 at manape.ep or $a478 at manape.ep or $a479 at manape.ep or $a480 at manape.ep or $a481 at manape.ep or $a482 at manape.ep or $a483 at manape.ep or $a484 at manape.ep or $a485 at manape.ep or $a486 at manape.ep or $a487 at manape.ep or $a488 at manape.ep or $a489 at manape.ep or $a490 at manape.ep or $a491 at manape.ep or $a492 at manape.ep or $a493 at manape.ep or $a494 at manape.ep or $a495 at manape.ep or $a496 at manape.ep or $a497 at manape.ep or $a498 at manape.ep or $a499 at manape.ep or $a500 at manape.ep or $a501 at manape.ep or $a502 at manape.ep or $a503 at manape.ep or $a504 at manape.ep or $a505 at manape.ep or $a506 at manape.ep or $a507 at manape.ep or $a508 at manape.ep or $a509 at manape.ep or $a510 at manape.ep or $a511 at manape.ep or $a512 at manape.ep or $a513 at manape.ep or $a514 at manape.ep or $a515 at manape.ep or $a516 at manape.ep or $a517 at manape.ep or $a518 at manape.ep or $a519 at manape.ep or $a520 at manape.ep or $a521 at manape.ep or $a522 at manape.ep or $a523 at manape.ep or $a524 at manape.ep or $a525 at manape.ep or $a526 at manape.ep or $a527 at manape.ep or $a528 at manape.ep or $a529 at manape.ep or $a530 at manape.ep or $a531 at manape.ep or $a532 at manape.ep or $a533 at manape.ep or $a534 at manape.ep or $a535 at manape.ep or $a536 at manape.ep or $a537 at manape.ep or $a538 at manape.ep or $a539 at manape.ep or $a540 at manape.ep or $a541 at manape.ep or $a542 at manape.ep or $a543 at manape.ep or $a544 at manape.ep or $a545 at manape.ep or $a546 at manape.ep or $a547 at manape.ep or $a548 at manape.ep or $a549 at manape.ep or $a550 at manape.ep or $a551 at manape.ep or $a552 at manape.ep or $a553 at manape.ep or $a554 at manape.ep or $a555 at manape.ep or $a556 at manape.ep or $a557 at manape.ep or $a558 at manape.ep or $a559 at manape.ep or $a560 at manape.ep or $a561 at manape.ep or $a562 at manape.ep or $a563 at manape.ep or $a564 at manape.ep or $a565 at manape.ep or $a566 at manape.ep or $a567 at manape.ep or $a568 at manape.ep or $a569 at manape.ep or $a570 at manape.ep or $a571 at manape.ep or $a572 at manape.ep or $a573 at manape.ep or $a574 at manape.ep or $a575 at manape.ep or $a576 at manape.ep or $a577 at manape.ep or $a578 at manape.ep or $a579 at manape.ep or $a580 at manape.ep or $a581 at manape.ep or $a582 at manape.ep or $a583 at manape.ep or $a584 at manape.ep or $a585 at manape.ep or $a586 at manape.ep or $a587 at manape.ep or $a588 at manape.ep or $a589 at manape.ep or $a590 at manape.ep or $a591 at manape.ep or $a592 at manape.ep or $a593 at manape.ep or $a594 at manape.ep or $a595 at manape.ep or $a596 at manape.ep or $a597 at manape.ep or $a598 at manape.ep or $a599 at manape.ep or $a600 or $a601 at manape.ep or $a602 at manape.ep or $a603 at manape.ep or $a604 at manape.ep or $a605 at manape.ep or $a606 at manape.ep or $a607 at manape.ep or $a608 at manape.ep or $a609 at manape.ep or $a610 at manape.ep or $a611 at manape.ep or $a612 at manape.ep or $a613 at manape.ep or $a614 at manape.ep or $a615 at manape.ep or $a616 at manape.ep or $a617 at manape.ep or $a618 at manape.ep or $a619 at manape.ep or $a620 at manape.ep or $a621 at manape.ep or $a622 at manape.ep or $a623 at manape.ep or $a624 at manape.ep or $a625 at manape.ep or $a626 at manape.ep or $a627 at manape.ep or $a628 at manape.ep or $a629 at manape.ep or $a630 at manape.ep or $a631 at manape.ep or $a632 at manape.ep or $a633 at manape.ep or $a634 at manape.ep or $a635 at manape.ep or $a636 at manape.ep or $a637 at manape.ep or $a638 at manape.ep or $a639 at manape.ep or $a640 at manape.ep or $a641 at manape.ep or $a642 at manape.ep or $a643 at manape.ep or $a644 at manape.ep or $a645 at manape.ep or $a646 at manape.ep or $a647 at manape.ep or $a648 at manape.ep or $a649 at manape.ep or $a650 at manape.ep or $a651 at manape.ep or $a652 at manape.ep or $a653 at manape.ep or $a654 at manape.ep or $a655 at manape.ep or $a656 at manape.ep or $a657 at manape.ep or $a658 at manape.ep or $a659 at manape.ep or $a660 at manape.ep or $a661 at manape.ep or $a662 at manape.ep or $a663 at manape.ep or $a664 at manape.ep or $a665 at manape.ep or $a666 at manape.ep or $a667 at manape.ep or $a668 at manape.ep or $a669 at manape.ep or $a670 at manape.ep or $a671 at manape.ep or $a672 at manape.ep or $a673 at manape.ep or $a674 at manape.ep or $a675 at manape.ep or $a676 at manape.ep or $a677 at manape.ep or $a678 at manape.ep or $a679 at manape.ep or $a680 at manape.ep or $a681 at manape.ep or $a682 at manape.ep or $a683 at manape.ep or $a684 at manape.ep or $a685 at manape.ep or $a686 at manape.ep or $a687 at manape.ep or $a688 at manape.ep or $a689 at manape.ep or $a690 at manape.ep or $a691 at manape.ep or $a692 at manape.ep or $a693 at manape.ep or $a694 at manape.ep or $a695 at manape.ep or $a696 at manape.ep or $a697 at manape.ep or $a698 at manape.ep or $a699 at manape.ep or $a700 at manape.ep or $a701 at manape.ep or $a702 at manape.ep or $a703 at manape.ep or $a704 at manape.ep or $a705 at manape.ep or $a706 at manape.ep or $a707 at manape.ep or $a708 at manape.ep or $a709 at manape.ep or $a710 at manape.ep or $a711 at manape.ep or $a712 at manape.ep or $a713 at manape.ep or $a714 at manape.ep or $a715 at manape.ep or $a716 at manape.ep or $a717 at manape.ep or $a718 at manape.ep or $a719 at manape.ep or $a720 at manape.ep or $a721 at manape.ep or $a722 at manape.ep or $a723 at manape.ep or $a724 at manape.ep or $a725 at manape.ep or $a726 at manape.ep or $a727 at manape.ep or $a728 at manape.ep or $a729 at manape.ep or $a730 at manape.ep or $a731 at manape.ep or $a732 at manape.ep or $a733 at manape.ep or $a734 at manape.ep or $a735 at manape.ep or $a736 at manape.ep or $a737 at manape.ep or $a738 at manape.ep or $a739 at manape.ep or $a740 at manape.ep or $a741 at manape.ep or $a742 at manape.ep or $a743 at manape.ep or $a744 at manape.ep or $a745 at manape.ep or $a746 at manape.ep or $a747 at manape.ep or $a748 at manape.ep or $a749 at manape.ep or $a750 at manape.ep or $a751 at manape.ep or $a752 at manape.ep or $a753 at manape.ep or $a754 at manape.ep or $a755 at manape.ep or $a756 at manape.ep or $a757 at manape.ep or $a758 at manape.ep or $a759 at manape.ep or $a760 at manape.ep or $a761 at manape.ep or $a762 at manape.ep or $a763 at manape.ep or $a764 at manape.ep or $a765 at manape.ep or $a766 at manape.ep or $a767 at manape.ep or $a768 at manape.ep or $a769 at manape.ep or $a770 at manape.ep or $a771 at manape.ep or $a772 at manape.ep or $a773 at manape.ep or $a774 at manape.ep or $a775 at manape.ep or $a776 at manape.ep or $a777 at manape.ep or $a778 at manape.ep or $a779 at manape.ep or $a780 at manape.ep or $a781 at manape.ep or $a782 at manape.ep or $a783 at manape.ep or $a784 at manape.ep or $a785 at manape.ep or $a786 at manape.ep or $a787 at manape.ep or $a788 at manape.ep or $a789 at manape.ep or $a790 at manape.ep or $a791 at manape.ep or $a792 at manape.ep or $a793 at manape.ep or $a794 at manape.ep or $a795 at manape.ep or $a796 at manape.ep or $a797 at manape.ep or $a798 at manape.ep or $a799 at manape.ep or $a800 at manape.ep or $a801 at manape.ep or $a802 at manape.ep or $a803 at manape.ep or $a804 at manape.ep or $a805 at manape.ep or $a806 at manape.ep or $a807 at manape.ep or $a808 at manape.ep or $a809 at manape.ep or $a810 at manape.ep or $a811 at manape.ep or $a812 at manape.ep or $a813 at manape.ep or $a814 at manape.ep or $a815 at manape.ep or $a816 at manape.ep or $a817 at manape.ep or $a818 at manape.ep or $a819 at manape.ep or $a820 at manape.ep
 }
 
-    
+
 rule tElock_0_99_Special_Build____heXer___forgot
 {
 meta:
@@ -12937,7 +12937,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PeCompact_2_53_DLL____BitSum_Technologies
 {
 meta:
@@ -12946,10 +12946,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? ?? 50 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 33 C0 89 08 50 45 43 6F 6D 70 61 63 74 32 00 00 00 00 08 0C 00 48 E1 01 56 57 53 55 8B 5C 24 1C 85 DB 0F 84 AB 21 E8 BD 0E E6 60 0D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PeX_0_99__Eng_____bart_CrackPl
 {
 meta:
@@ -12961,7 +12961,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_1__JDPack_1_x___JDProtect_0_9_____Anorganix
 {
 meta:
@@ -12970,10 +12970,10 @@ strings:
     	$a0 = { 60 E8 22 00 00 00 5D 8B D5 81 ED 90 90 90 90 2B 95 90 90 90 90 81 EA 06 90 90 90 89 95 90 90 90 90 83 BD 45 00 01 00 01 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SDProtector_Pro_Edition_1_16____Randy_Li
 {
 meta:
@@ -12985,7 +12985,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Private_EXE_Protector_2_0____SetiSoft
 {
 meta:
@@ -12995,10 +12995,10 @@ strings:
 	$a1 = { 89 ?? ?? 38 00 00 00 8B ?? 00 00 00 00 81 ?? ?? ?? ?? ?? 89 ?? 00 00 00 00 81 ?? 04 00 00 00 81 ?? 04 00 00 00 81 ?? 00 00 00 00 0F 85 D6 FF FF FF }
 
 condition:
-    	$a0 at sgpe.ep or $a1
+    	$a0 at manape.ep or $a1
 }
 
-    
+
 rule ENIGMA_Protector_V1_X___Sukhov_Vladimir
 {
 meta:
@@ -13010,7 +13010,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PEBundle_v2_44
 {
 meta:
@@ -13019,10 +13019,10 @@ strings:
     	$a0 = { 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB ?? ?? 40 ?? 87 DD 83 BD }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ORiEN_2_11__DEMO_
 {
 meta:
@@ -13034,7 +13034,7 @@ condition:
     	$a0
 }
 
-    
+
 rule RLPack_1_20_Basic_Edition__LZMA_____Ap0x
 {
 meta:
@@ -13043,10 +13043,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 83 7C 24 28 01 75 0C 8B 44 24 24 89 85 9C 0C 00 00 EB 0C 8B 85 98 0C 00 00 89 85 9C 0C 00 00 8D B5 C4 0C 00 00 8D 9D 82 04 00 00 33 FF 6A 40 68 00 10 00 00 68 00 20 0C 00 6A 00 FF 95 2D 0C 00 00 89 85 94 0C 00 00 E8 59 01 00 00 EB 20 60 8B 85 9C 0C 00 00 FF B5 94 0C 00 00 FF 34 37 01 04 24 FF 74 37 04 01 04 24 FF D3 61 83 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__MEW_11_SE_1_0______Anorganix
 {
 meta:
@@ -13055,10 +13055,10 @@ strings:
     	$a0 = { E9 09 00 00 00 00 00 00 02 00 00 00 0C 90 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ENIGMA_Protector_V1_X____Sukhov_Vladimir
 {
 meta:
@@ -13070,7 +13070,7 @@ condition:
     	$a0
 }
 
-    
+
 rule __PseudoSigner_0_2__Code_Lock______Anorganix
 {
 meta:
@@ -13079,10 +13079,10 @@ strings:
     	$a0 = { 43 4F 44 45 2D 4C 4F 43 4B 2E 4F 43 58 00 01 28 01 50 4B 47 05 4C 3F B4 04 4D 4C 47 4B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__Crunch_PE_Heuristic______Anorganix
 {
 meta:
@@ -13091,10 +13091,10 @@ strings:
     	$a0 = { 55 E8 0E 00 00 00 5D 83 ED 06 8B C5 55 60 89 AD ?? ?? ?? ?? 2B 85 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PESpin_v1_1____Cyberbob__h_
 {
 meta:
@@ -13105,10 +13105,10 @@ strings:
 	$a2 = { EB 01 68 60 E8 00 00 00 00 8B 1C 24 83 C3 12 81 2B E8 B1 06 00 FE 4B FD 82 2C 24 7D DE 46 00 0B E4 74 9E 75 01 C7 81 73 04 D7 7A F7 2F 81 73 19 77 00 43 B7 F6 C3 6B B7 00 00 F9 FF E3 C9 C2 08 00 A3 68 72 01 FF 5D 33 C9 41 E2 17 EB 07 EA EB 01 EB EB 0D FF E8 01 00 00 00 EA 5A 83 EA 0B FF E2 EB 04 9A EB 04 00 EB FB FF 8B 95 C3 4B 40 00 8B 42 3C 03 C2 89 85 CD 4B 40 00 EB 02 12 77 F9 72 08 73 0E F9 83 04 24 17 C3 E8 04 00 00 00 0F F5 73 11 EB 06 9A 72 ED 1F EB 07 F5 72 0E F5 72 F8 68 EB EC 83 04 24 07 F5 FF 34 24 C3 41 C1 E1 07 8B 0C 01 03 CA E8 03 00 00 00 EB 04 9A EB FB 00 83 04 24 0C C3 3B 8B 59 10 03 DA 8B 1B 89 9D E1 4B 40 00 53 8F 85 D7 49 40 00 BB ?? 00 00 00 B9 FE 11 00 00 8D BD 71 4C 40 00 4F EB 07 FA EB 01 FF EB 04 E3 EB F8 69 30 1C 39 FE CB 49 9C C1 2C 24 06 F7 14 24 83 24 24 01 50 52 B8 83 B2 DC 12 05 44 4D 23 ED F7 64 24 08 8D 84 28 BD 2D 40 00 89 44 24 08 5A 58 8D 64 24 04 FF 64 24 FC FF EA EB 01 C8 E8 01 00 00 00 68 58 FE 48 1F 0F 84 94 02 00 00 75 01 9A 81 70 03 E8 98 68 EA 83 C0 21 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
-    
+
 rule FSG_v1_10__Eng_____dulek_xt_____Microsoft_Visual_Basic_5_0___6_0_
 {
 meta:
@@ -13117,10 +13117,10 @@ strings:
     	$a0 = { C1 CB 10 EB 01 0F B9 03 74 F6 EE 0F B6 D3 8D 05 83 ?? ?? EF 80 F3 F6 2B C1 EB 01 DE 68 77 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__LTC_1_3_____Anorganix
 {
 meta:
@@ -13129,10 +13129,10 @@ strings:
     	$a0 = { 54 E8 00 00 00 00 5D 8B C5 81 ED F6 73 40 00 2B 85 87 75 40 00 83 E8 06 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Werus_Crypter_1_0____Kas
 {
 meta:
@@ -13145,7 +13145,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule LGLZ_v1_04b
 {
 meta:
@@ -13154,10 +13154,10 @@ strings:
     	$a0 = { FC 1E 06 0E 8C C8 ?? ?? ?? ?? BA ?? ?? 03 C2 8B D8 05 ?? ?? 8E DB 8E C0 33 F6 33 FF B9 ?? ?? F3 A5 4B 48 4A 79 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SimplePack_1_11_Method_2_NT_____bagie_TMX___h_
 {
 meta:
@@ -13166,10 +13166,10 @@ strings:
     	$a0 = { 4D 5A 90 EB 01 00 52 E9 89 01 00 00 50 45 00 00 4C 01 02 00 00 00 00 00 00 00 00 00 00 00 00 00 E0 00 0F 03 0B 01 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 40 00 00 C0 4B 45 52 4E 45 4C 33 32 2E 44 4C 4C 00 00 00 4C 6F 61 64 4C 69 62 72 61 72 79 41 00 00 00 00 47 65 74 50 72 6F 63 41 64 64 72 65 73 73 00 00 00 00 56 69 72 74 75 61 6C 50 72 6F 74 65 63 74 00 00 EB 01 CD 64 A1 30 00 00 00 EB 01 CD 8B 48 0C E3 6F EB 01 CD 05 AC 00 00 00 EB 01 CD 66 81 38 93 08 EB 01 CD 75 0A EB 01 CD B8 38 FF FF FF EB 14 EB 01 CD 66 81 38 28 0A 75 4A EB 01 CD B8 1A FF FF FF EB 00 EB 01 CD 31 C9 EB 01 CD 51 EB 01 CD 51 EB 01 CD 6A 11 EB 01 CD 6A FE EB 01 CD E8 03 00 00 00 EB 01 CD 83 04 24 18 EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_v0_32a__fake_WWPack32_1_x_____emadicius__h_
 {
 meta:
@@ -13178,10 +13178,10 @@ strings:
     	$a0 = { 53 55 8B E8 33 DB EB 60 0D 0A 0D 0A 57 57 50 61 63 6B 33 32 20 64 65 63 6F 6D 70 72 65 73 73 69 6F 6E 20 72 6F 75 74 69 6E 65 20 76 65 72 73 69 6F 6E 20 31 2E 31 32 0D 0A 28 63 29 20 31 39 39 38 20 50 69 6F 74 72 20 57 61 72 65 7A 61 6B 20 61 6E 64 20 52 61 66 61 6C 20 57 69 65 72 7A 62 69 63 6B 69 0D 0A 0D 0A 5D 5B 90 EB 05 E8 EB 04 40 00 EB FA E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 50 E8 02 00 00 00 29 5A 58 6B C0 03 E8 02 00 00 00 29 5A 83 C4 04 58 74 04 75 02 EB 02 EB 01 81 0F 31 50 0F 31 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASProtect_v1_0
 {
 meta:
@@ -13190,10 +13190,10 @@ strings:
     	$a0 = { 60 E8 01 ?? ?? ?? 90 5D 81 ED ?? ?? ?? ?? BB ?? ?? ?? ?? 03 DD 2B 9D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASProtect_v1_1
 {
 meta:
@@ -13202,10 +13202,10 @@ strings:
     	$a0 = { 60 E9 ?? 04 ?? ?? E9 ?? ?? ?? ?? ?? ?? ?? EE }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASProtect_v1_2
 {
 meta:
@@ -13214,10 +13214,10 @@ strings:
     	$a0 = { 68 01 ?? ?? ?? C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SLVc0deProtector_v1_1____SLV__h_
 {
 meta:
@@ -13227,10 +13227,10 @@ strings:
 	$a1 = { E8 00 00 00 00 58 C6 00 EB C6 40 01 08 FF E0 E9 4C }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule RJoiner_1_2_by_Vaska__25_03_2007_16_58_
 {
 meta:
@@ -13239,10 +13239,10 @@ strings:
     	$a0 = { 55 8B EC 81 EC 0C 02 00 00 8D 85 F4 FD FF FF 56 50 68 04 01 00 00 FF 15 14 10 40 00 90 8D 85 F4 FD FF FF 50 FF 15 10 10 40 00 90 BE 00 20 40 00 90 83 3E FF 0F 84 84 00 00 00 53 57 33 FF 8D 46 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule VOB_ProtectCD_5
 {
 meta:
@@ -13251,10 +13251,10 @@ strings:
     	$a0 = { 36 3E 26 8A C0 60 E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SecuPack_v1_5
 {
 meta:
@@ -13263,10 +13263,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 F0 53 56 57 33 C0 89 45 F0 B8 CC 3A 40 ?? E8 E0 FC FF FF 33 C0 55 68 EA 3C 40 ?? 64 FF 30 64 89 20 6A ?? 68 80 ?? ?? ?? 6A 03 6A ?? 6A 01 ?? ?? ?? 80 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Yoda_s_Protector_v1_03_2_Beta2____Ashkbiz_Danehkar
 {
 meta:
@@ -13275,10 +13275,10 @@ strings:
     	$a0 = { E8 03 00 00 00 EB 01 ?? BB 55 00 00 00 E8 03 00 00 00 EB 01 ?? E8 8F 00 00 00 E8 03 00 00 00 EB 01 ?? E8 82 00 00 00 E8 03 00 00 00 EB 01 ?? E8 B8 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PKLITE_v1_14__v1_20
 {
 meta:
@@ -13287,10 +13287,10 @@ strings:
     	$a0 = { B8 ?? ?? BA ?? ?? 05 ?? ?? 3B 06 ?? ?? 72 ?? B4 09 BA ?? ?? CD 21 CD 20 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Crunch_PE_v2_0_x_x
 {
 meta:
@@ -13299,10 +13299,10 @@ strings:
     	$a0 = { 55 E8 ?? ?? ?? ?? 5D 83 ED 06 8B C5 55 60 89 AD ?? ?? ?? ?? 2B 85 ?? ?? ?? ?? 89 85 ?? ?? ?? ?? 55 BB ?? ?? ?? ?? 03 DD 53 64 67 FF 36 ?? ?? 64 67 89 26 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PCPEC__alpha___preview_
 {
 meta:
@@ -13311,10 +13311,10 @@ strings:
     	$a0 = { 53 51 52 56 57 55 E8 00 00 00 00 5D 8B CD 81 ED 33 30 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ExeJoiner_V1_0____Yoda_f2f
 {
 meta:
@@ -13323,10 +13323,10 @@ strings:
     	$a0 = { 68 00 10 40 00 68 04 01 00 00 E8 39 03 00 00 05 00 10 40 00 C6 00 5C 68 04 01 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASPack_v1_07b
 {
 meta:
@@ -13338,10 +13338,10 @@ strings:
 	$a3 = { 90 75 ?? E9 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep or $a3 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep or $a3 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__Microsoft_Visual_Basic_5_0___6_0______Anorganix
 {
 meta:
@@ -13350,10 +13350,10 @@ strings:
     	$a0 = { 68 ?? ?? ?? ?? E8 0A 00 00 00 00 00 00 00 00 00 30 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PC_Guard_v4_05d__v4_10d__v4_15d
 {
 meta:
@@ -13362,10 +13362,10 @@ strings:
     	$a0 = { FC 55 50 E8 00 00 00 00 5D EB 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__PECompact_1_4_______Anorganix
 {
 meta:
@@ -13374,10 +13374,10 @@ strings:
     	$a0 = { 90 90 90 90 68 ?? ?? ?? ?? 67 64 FF 36 00 00 67 64 89 26 00 00 F1 90 90 90 90 EB 06 68 90 90 90 90 C3 9C 60 E8 02 90 90 90 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ARJ_SFX_Custom
 {
 meta:
@@ -13388,10 +13388,10 @@ strings:
 	$a2 = { 64 A1 00 00 00 00 55 8B EC 6A FF 68 18 C0 40 00 68 C4 A1 40 00 50 64 89 25 00 00 00 00 83 EC 60 53 56 57 89 65 E8 FF 15 38 03 41 00 A3 D0 D6 40 00 33 C0 A0 D1 D6 40 00 A3 DC D6 40 00 A1 D0 D6 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
-    
+
 rule MSLRH_v0_32a__fake__BJFNT_1_3_____emadicius__h_
 {
 meta:
@@ -13400,10 +13400,10 @@ strings:
     	$a0 = { EB 03 3A 4D 3A 1E EB 02 CD 20 9C EB 02 CD 20 EB 02 CD 20 60 EB 02 C7 05 EB 02 CD 20 E8 03 00 00 00 E9 EB 04 58 40 50 C3 61 9D 1F EB 05 E8 EB 04 40 00 EB FA E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 50 E8 02 00 00 00 29 5A 58 6B C0 03 E8 02 00 00 00 29 5A 83 C4 04 58 74 04 75 02 EB 02 EB 01 81 0F 31 50 0F 31 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 2B 04 24 74 04 75 02 EB 02 EB 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NakedPacker_1_0___by_BigBoote
 {
 meta:
@@ -13413,10 +13413,10 @@ strings:
 	$a1 = { 60 FC 0F B6 05 34 ?? ?? ?? 85 C0 75 31 B8 50 ?? ?? ?? 2B 05 04 ?? ?? ?? A3 30 ?? ?? ?? A1 00 ?? ?? ?? 03 05 30 ?? ?? ?? A3 38 ?? ?? ?? E8 9A 00 00 00 A3 50 ?? ?? ?? C6 05 34 ?? ?? ?? 01 83 3D 50 ?? ?? ?? 00 75 07 61 FF 25 38 ?? ?? ?? 61 FF 74 24 04 6A 00 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule SimplePack_V1_1X__Method1_____bagie___Sign_by_fly
 {
 meta:
@@ -13425,10 +13425,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5B 8D 5B FA BD ?? ?? ?? ?? 8B 7D 3C 8D 74 3D 00 8D BE F8 00 00 00 0F B7 76 06 4E 8B 47 10 09 C0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_Inliner_1_0_by_GPcH
 {
 meta:
@@ -13440,7 +13440,7 @@ condition:
     	$a0
 }
 
-    
+
 rule EXECryptor_2_3_9__compressed_resources_
 {
 meta:
@@ -13449,10 +13449,10 @@ strings:
     	$a0 = { 51 68 ?? ?? ?? ?? 59 81 F1 12 3C CB 98 E9 53 2C 00 00 F7 D7 E9 EB 60 00 00 83 45 F8 02 E9 E3 36 00 00 F6 45 F8 20 0F 84 1E 21 00 00 55 E9 80 62 00 00 87 0C 24 8B E9 ?? ?? ?? ?? 00 00 23 C1 81 E9 ?? ?? ?? ?? 57 E9 ED 00 00 00 0F 88 ?? ?? ?? ?? E9 2C 0D 00 00 81 ED BB 43 CB 79 C1 E0 1C E9 9E 14 00 00 0B 15 ?? ?? ?? ?? 81 E2 2A 70 7F 49 81 C2 9D 83 12 3B E8 0C 50 00 00 E9 A0 16 00 00 59 5B C3 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 E8 41 42 00 00 E9 93 33 00 00 31 DB 89 D8 59 5B C3 A1 ?? ?? ?? ?? 8A 00 2C 99 E9 82 30 00 00 0F 8A ?? ?? ?? ?? B8 01 00 00 00 31 D2 0F A2 25 FF 0F 00 00 E9 72 21 00 00 0F 86 57 0B 00 00 E9 ?? ?? ?? ?? C1 C0 03 E8 F0 36 00 00 E9 41 0A 00 00 81 F7 B3 6E 85 EA 81 C7 ?? ?? ?? ?? 87 3C 24 E9 74 52 00 00 0F 8E ?? ?? ?? ?? E8 5E 37 00 00 68 B1 74 96 13 5A E9 A1 04 00 00 81 D1 49 C0 12 27 E9 50 4E 00 00 C1 C8 1B 1B C3 81 E1 96 36 E5 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule tElock_v0_71
 {
 meta:
@@ -13461,10 +13461,10 @@ strings:
     	$a0 = { 60 E8 ED 10 00 00 C3 83 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule tElock_v0_70
 {
 meta:
@@ -13473,10 +13473,10 @@ strings:
     	$a0 = { 60 E8 BD 10 00 00 C3 83 E2 00 F9 75 FA 70 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_v1_20__Eng_____dulek_xt_____Borland_Delphi___Microsoft_Visual_C___
 {
 meta:
@@ -13486,10 +13486,10 @@ strings:
 	$a1 = { 0F B6 D0 E8 01 00 00 00 0C 5A B8 80 ?? ?? 00 EB 02 00 DE 8D 35 F4 00 00 00 F7 D2 EB 02 0E EA 8B 38 EB 01 A0 C1 F3 11 81 EF 84 88 F4 4C EB 02 CD 20 83 F7 22 87 D3 33 FE C1 C3 19 83 F7 26 E8 02 00 00 00 BC DE 5A 81 EF F7 EF 6F 18 EB 02 CD 20 83 EF 7F EB 01 F7 2B FE EB 01 7F 81 EF DF 30 90 1E EB 02 CD 20 87 FA 88 10 80 EA 03 40 EB 01 20 4E EB 01 3D 83 FE 00 75 A2 EB 02 CD 20 EB 01 C3 78 73 42 F7 35 6C 2D 3F ED 33 97 ?? ?? ?? 5D F0 45 29 55 57 55 71 63 02 72 E9 1F 2D 67 B1 C0 91 FD 10 58 A3 90 71 6C 83 11 E0 5D 20 AE 5C 71 83 D0 7B 10 97 54 17 11 C0 0E 00 33 76 85 33 3C 33 21 31 F5 50 CE 56 6C 89 C8 F7 CD 70 D5 E3 DD 08 E8 4E 25 FF 0D F3 ED EF C8 0B 89 A6 CD 77 42 F0 A6 C8 19 66 3D B2 CD E7 89 CB 13 D7 D5 E3 1E DF 5A E3 D5 50 DF B3 39 32 C0 2D B0 3F B4 B4 43 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule diProtector_1_x____diProtector_Software
 {
 meta:
@@ -13498,10 +13498,10 @@ strings:
     	$a0 = { 01 00 A0 E3 14 00 00 EB 00 00 20 E0 44 10 9F E5 03 2A A0 E3 40 30 A0 E3 AE 00 00 EB 30 00 8F E5 00 20 A0 E1 3A 0E 8F E2 00 00 80 E2 1C 10 9F E5 20 30 8F E2 0E 00 00 EB 14 00 9F E5 14 10 9F E5 7F 20 A0 E3 C5 00 00 EB 04 C0 8F E2 00 F0 9C E5 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Themida_1_0_x_x___1_8_x_x__no_compression_____Oreans_Technologies__h_
 {
 meta:
@@ -13511,10 +13511,10 @@ strings:
 	$a1 = { 55 8B EC 83 C4 D8 60 E8 00 00 00 00 5A 81 EA ?? ?? ?? ?? 8B DA C7 45 D8 00 00 00 00 8B 45 D8 40 89 45 D8 81 7D D8 80 00 00 00 74 0F 8B 45 08 89 83 ?? ?? ?? ?? FF 45 08 43 EB E1 89 45 DC 61 8B 45 DC C9 C2 04 00 55 8B EC 81 C4 7C FF FF FF 60 E8 00 00 00 00 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule EPW_v1_2
 {
 meta:
@@ -13523,10 +13523,10 @@ strings:
     	$a0 = { 06 57 1E 56 55 52 51 53 50 2E ?? ?? ?? ?? 8C C0 05 ?? ?? 2E ?? ?? ?? 8E D8 A1 ?? ?? 2E }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Crunch_PE
 {
 meta:
@@ -13535,10 +13535,10 @@ strings:
     	$a0 = { 55 E8 ?? ?? ?? ?? 5D 83 ED 06 8B C5 55 60 89 AD ?? ?? ?? ?? 2B 85 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASPack_v2_12
 {
 meta:
@@ -13549,10 +13549,10 @@ strings:
 	$a2 = { 60 E8 03 00 00 00 E9 EB 04 5D 45 55 C3 E8 01 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2
+    	$a0 at manape.ep or $a1 at manape.ep or $a2
 }
 
-    
+
 rule ASPack_v2_11
 {
 meta:
@@ -13561,10 +13561,10 @@ strings:
     	$a0 = { 60 E9 3D 04 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_V1_12_V1_14__aPlib_0_43_____ap0x
 {
 meta:
@@ -13573,10 +13573,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 8D B5 ?? ?? ?? ?? 8D 9D ?? ?? ?? ?? 33 FF EB 0F FF ?? ?? ?? FF ?? ?? ?? D3 83 C4 ?? 83 C7 ?? 83 3C 37 00 75 EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SLVc0deProtector_0_60____SLV___ICU
 {
 meta:
@@ -13588,7 +13588,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Unknown_packer__04_
 {
 meta:
@@ -13597,10 +13597,10 @@ strings:
     	$a0 = { BC ?? ?? C3 2E FF 2E ?? ?? CF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Safeguard_1_0____Simonzh
 {
 meta:
@@ -13609,10 +13609,10 @@ strings:
     	$a0 = { E8 00 00 00 00 EB 29 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Aase_Crypter___by_santasdad
 {
 meta:
@@ -13622,10 +13622,10 @@ strings:
 	$a1 = { 55 8B EC 83 C4 F0 53 B8 A0 3E 00 10 E8 93 DE FF FF 68 F8 42 00 10 E8 79 DF FF FF 68 00 43 00 10 68 0C 43 00 10 E8 42 DF FF FF 50 E8 44 DF FF FF A3 98 66 00 10 83 3D 98 66 00 10 00 75 13 6A 00 68 18 43 00 10 68 1C 43 00 10 6A 00 E8 4B DF FF FF 68 2C 43 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Armadillo_v1_60a
 {
 meta:
@@ -13634,10 +13634,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 98 71 40 00 68 48 2D 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ________EXE_____________________v1_0____________
 {
 meta:
@@ -13646,10 +13646,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 08 4B 40 00 68 36 3A 40 00 64 A1 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule CExe_v1_0a
 {
 meta:
@@ -13658,10 +13658,10 @@ strings:
     	$a0 = { 55 8B EC 81 EC 0C 02 ?? ?? 56 BE 04 01 ?? ?? 8D 85 F8 FE FF FF 56 50 6A ?? FF 15 54 10 40 ?? 8A 8D F8 FE FF FF 33 D2 84 C9 8D 85 F8 FE FF FF 74 16 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RJcrush_v1_00
 {
 meta:
@@ -13670,10 +13670,10 @@ strings:
     	$a0 = { 06 FC 8C C8 BA ?? ?? 03 D0 52 BA ?? ?? 52 BA ?? ?? 03 C2 8B D8 05 ?? ?? 8E DB 8E C0 33 F6 33 FF B9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule AntiDote_V1_2_Demo____SIS_Team
 {
 meta:
@@ -13682,10 +13682,10 @@ strings:
     	$a0 = { E8 F7 FE FF FF 05 CB 22 00 00 FF E0 E8 EB FE FF FF 05 BB 19 00 00 FF E0 E8 BD 00 00 00 08 B2 62 00 01 52 17 0C 0F 2C 2B 20 7F 52 79 01 30 07 17 29 4F 01 3C 30 2B 5A 3D C7 26 11 26 06 59 0E 78 2E 10 14 0B 13 1A 1A 3F 64 1D 71 33 57 21 09 24 8B 1B 09 37 08 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule BeRoEXEPacker_v1_00__LZBRS_____BeRo___Farbrausch
 {
 meta:
@@ -13694,10 +13694,10 @@ strings:
     	$a0 = { 60 BE ?? ?? ?? ?? BF ?? ?? ?? ?? FC AD 8D 1C 07 B0 80 3B FB 73 3B E8 ?? ?? ?? ?? 72 03 A4 EB F2 E8 ?? ?? ?? ?? 8D 51 FF E8 ?? ?? ?? ?? 56 8B F7 2B F2 F3 A4 5E EB DB 02 C0 75 03 AC 12 C0 C3 33 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Special_EXE_Password_Protector_v1_0
 {
 meta:
@@ -13706,10 +13706,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED 06 00 00 00 89 AD 8C 01 00 00 8B C5 2B 85 FE 75 00 00 89 85 3E 77 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASDPack_2_0____asd
 {
 meta:
@@ -13720,10 +13720,10 @@ strings:
 	$a2 = { 8B 44 24 04 56 57 53 E8 CD 01 00 00 C3 00 00 00 00 00 00 00 00 00 00 00 00 00 10 00 00 00 }
 
 condition:
-    	$a0 or $a1 or $a2 at sgpe.ep
+    	$a0 or $a1 or $a2 at manape.ep
 }
 
-    
+
 rule ZealPack_1_0____Zeal
 {
 meta:
@@ -13732,10 +13732,10 @@ strings:
     	$a0 = { C7 45 F4 00 00 40 00 C7 45 F0 ?? ?? ?? ?? 8B 45 F4 05 ?? ?? ?? ?? 89 45 F4 C7 45 FC 00 00 00 00 EB 09 8B 4D FC 83 C1 01 89 4D FC 8B 55 FC 3B 55 F0 7D 22 8B 45 F4 03 45 FC 8A 08 88 4D F8 0F BE 55 F8 83 F2 0F 88 55 F8 8B 45 F4 03 45 FC 8A 4D F8 88 08 EB CD FF 65 F4 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEMangle
 {
 meta:
@@ -13744,10 +13744,10 @@ strings:
     	$a0 = { 60 9C BE ?? ?? ?? ?? 8B FE B9 ?? ?? ?? ?? BB 44 52 4F 4C AD 33 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PC_Guard_v3_03d__v3_05d
 {
 meta:
@@ -13756,10 +13756,10 @@ strings:
     	$a0 = { 55 50 E8 ?? ?? ?? ?? 5D EB 01 E3 60 E8 03 ?? ?? ?? D2 EB 0B 58 EB 01 48 40 EB 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule tElock_0_96____tE_
 {
 meta:
@@ -13768,10 +13768,10 @@ strings:
     	$a0 = { E9 59 E4 FF FF 00 00 00 00 00 00 00 ?? ?? ?? ?? EE ?? ?? 00 00 00 00 00 00 00 00 00 0E ?? ?? 00 FE ?? ?? 00 F6 ?? ?? 00 00 00 00 00 00 00 00 00 1B ?? ?? 00 06 ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 26 ?? ?? 00 00 00 00 00 39 ?? ?? 00 00 00 00 00 26 ?? ?? 00 00 00 00 00 39 ?? ?? 00 00 00 00 00 6B 65 72 6E 65 6C 33 32 2E 64 6C 6C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_V1_94____Markus_Oberhumer__amp__Laszlo_Molnar__amp__John_Reiser
 {
 meta:
@@ -13783,7 +13783,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PEQuake_v0_06____forgot_us__h_
 {
 meta:
@@ -13792,10 +13792,10 @@ strings:
     	$a0 = { E8 A5 00 00 00 2D ?? ?? ?? 00 00 00 00 00 00 00 00 3D ?? ?? ?? 2D ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 6B 45 72 4E 65 4C 33 32 2E 64 4C 6C 00 00 00 47 65 74 50 72 6F 63 41 64 64 72 65 73 73 00 00 00 47 65 74 4D 6F 64 75 6C 65 48 61 6E 64 6C 65 41 00 00 00 4C 6F 61 64 4C 69 62 72 61 72 79 41 00 ?? ?? 00 00 56 69 72 74 75 61 6C 41 6C 6C 6F 63 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 5D 81 ED 05 00 00 00 8D 75 3D 56 FF 55 31 8D B5 81 00 00 00 56 50 FF 55 2D 89 85 8E 00 00 00 6A 04 68 00 10 00 00 68 ?? ?? 00 00 6A 00 FF 95 8E 00 00 00 50 8B 9D 7D 00 00 00 03 DD 50 53 E8 04 00 00 00 5A 55 FF E2 60 8B 74 24 24 8B 7C 24 28 FC B2 80 33 DB A4 B3 02 E8 6D 00 00 00 73 F6 33 C9 E8 64 00 00 00 73 1C 33 C0 E8 5B 00 00 00 73 23 B3 02 41 B0 10 E8 4F 00 00 00 12 C0 73 F7 75 3F AA EB D4 E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule DotFix_Nice_Protect_V2_1____GPcH_Soft___Sign_By_haggar
 {
 meta:
@@ -13807,7 +13807,7 @@ condition:
     	$a0
 }
 
-    
+
 rule tElock_v0_95
 {
 meta:
@@ -13816,10 +13816,10 @@ strings:
     	$a0 = { E9 D5 E4 FF FF 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECrc32_0_88____ZhouJinYu
 {
 meta:
@@ -13828,10 +13828,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED B6 A4 45 00 8D BD B0 A4 45 00 81 EF 82 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PESPin_v1_3____Cyberbob__h_
 {
 meta:
@@ -13841,10 +13841,10 @@ strings:
 	$a1 = { EB 01 68 60 E8 00 00 00 00 8B 1C 24 83 C3 12 81 2B E8 B1 06 00 FE 4B FD 82 2C 24 AC DF 46 00 0B E4 74 9E 75 01 C7 81 73 04 D7 7A F7 2F 81 73 19 77 00 43 B7 F6 C3 6B B7 00 00 F9 FF E3 C9 C2 08 00 A3 68 72 01 FF 5D 33 C9 41 E2 17 EB 07 EA EB 01 EB EB 0D FF }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PESpin_V0_71____cyberbob
 {
 meta:
@@ -13853,10 +13853,10 @@ strings:
     	$a0 = { EB 01 68 60 E8 00 00 00 00 8B 1C 24 83 C3 12 81 2B E8 B1 06 00 FE 4B FD 82 2C 24 83 D5 46 00 0B E4 74 9E }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule BeRoEXEPacker_V1_00____BeRo___Sign_by_fly
 {
 meta:
@@ -13868,7 +13868,7 @@ condition:
     	$a0
 }
 
-    
+
 rule NTKrnlPacker____Ashkbiz_Danehkar
 {
 meta:
@@ -13880,7 +13880,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PESpin_v0_7____Cyberbob__h_
 {
 meta:
@@ -13890,10 +13890,10 @@ strings:
 	$a1 = { EB 01 68 60 E8 00 00 00 00 8B 1C 24 83 C3 12 81 2B E8 B1 06 00 FE 4B FD 82 2C 24 83 D5 46 00 0B E4 74 9E 75 01 C7 81 73 04 D7 7A F7 2F 81 73 19 77 00 43 B7 F6 C3 6B B7 00 00 F9 FF E3 C9 C2 08 00 A3 68 72 01 FF 5D 33 C9 41 E2 17 EB 07 EA EB 01 EB EB 0D FF }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule AHpack_0_1____FEUERRADER__h_
 {
 meta:
@@ -13903,10 +13903,10 @@ strings:
 	$a1 = { 60 68 54 ?? ?? ?? B8 48 ?? ?? ?? FF 10 68 B3 ?? ?? ?? 50 B8 44 ?? ?? ?? FF 10 68 00 ?? ?? ?? 6A 40 FF D0 89 05 CA ?? ?? ?? 89 C7 BE 00 10 ?? ?? 60 FC B2 80 31 DB A4 B3 02 E8 6D 00 00 00 73 F6 31 C9 E8 64 00 00 00 73 1C 31 C0 E8 5B 00 00 00 73 23 B3 02 41 B0 10 E8 4F 00 00 00 10 C0 73 F7 75 3F AA EB D4 E8 4D 00 00 00 29 D9 75 10 E8 42 00 00 00 EB 28 AC D1 E8 74 4D 11 C9 EB 1C 91 48 C1 E0 08 AC E8 2C 00 00 00 3D 00 7D 00 00 73 0A 80 FC 05 73 06 83 F8 7F 77 02 41 41 95 89 E8 B3 01 56 89 FE 29 C6 F3 A4 5E EB 8E 00 D2 75 05 8A 16 46 10 D2 C3 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PECompact_v1_47___v1_50
 {
 meta:
@@ -13915,10 +13915,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 0F A0 40 ?? 87 DD 8B 85 A6 A0 40 ?? 01 85 03 A0 40 ?? 66 C7 85 ?? A0 40 ?? 90 90 01 85 9E A0 40 ?? BB 5B 12 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NsPack_3_0_by_North_Star__Liu_Xing_Ping_
 {
 meta:
@@ -13927,10 +13927,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 5D B8 07 00 00 00 2B E8 8D B5 55 F9 FF FF 66 8B 06 66 83 F8 00 74 15 8B F5 8D B5 7D F9 FF FF 66 8B 06 66 83 F8 01 0F 84 42 02 00 00 C6 06 01 8B D5 2B 95 11 F9 FF FF 89 95 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Thinstall_v2_460____Jitit
 {
 meta:
@@ -13939,10 +13939,10 @@ strings:
     	$a0 = { 55 8B EC 51 53 56 57 6A 00 6A 00 FF 15 F4 18 40 00 50 E8 87 FC FF FF 59 59 A1 94 1A 40 00 8B 40 10 03 05 90 1A 40 00 89 45 FC 8B 45 FC FF E0 5F 5E 5B C9 C3 00 00 00 76 0C 00 00 D4 0C 00 00 1E }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule CRYPToCRACk_s_PE_Protector_V0_9_3____Lukas_Fleischer___Sign_by_fly
 {
 meta:
@@ -13951,10 +13951,10 @@ strings:
     	$a0 = { 5B 81 E3 00 FF FF FF 66 81 3B 4D 5A 75 33 8B F3 03 73 3C 81 3E 50 45 00 00 75 26 0F B7 46 18 8B C8 69 C0 AD 0B 00 00 F7 E0 2D AB 5D 41 4B 69 C9 DE C0 00 00 03 C1 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Exe_Stealth_2_75a____WebtoolMaster
 {
 meta:
@@ -13964,10 +13964,10 @@ strings:
 	$a1 = { EB 58 53 68 61 72 65 77 61 72 65 2D 56 65 72 73 69 6F 6E 20 45 78 65 53 74 65 61 6C 74 68 2C 20 63 6F 6E 74 61 63 74 20 73 75 70 70 6F 72 74 40 77 65 62 74 6F 6F 6C 6D 61 73 74 65 72 2E 63 6F 6D 20 2D 20 77 77 77 2E 77 65 62 74 6F 6F 6C 6D 61 73 74 65 72 2E 63 6F 6D 00 90 60 90 E8 00 00 00 00 5D 81 ED F7 27 40 00 B9 15 00 00 00 83 C1 04 83 C1 01 EB 05 EB FE 83 C7 56 EB 00 EB 00 83 E9 02 81 C1 78 43 27 65 EB 00 81 C1 10 25 94 00 81 E9 63 85 00 00 B9 96 0C 00 00 90 8D BD 74 28 40 00 8B F7 AC }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule XPack_1_52___1_64
 {
 meta:
@@ -13976,10 +13976,10 @@ strings:
     	$a0 = { 8B EC FA 33 C0 8E D0 BC ?? ?? 2E ?? ?? ?? ?? 2E ?? ?? ?? ?? EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEStubOEP_v1_x
 {
 meta:
@@ -13991,7 +13991,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Splash_Bitmap_v1_00__With_Unpack_Code_____BoB___Bobsoft
 {
 meta:
@@ -14000,10 +14000,10 @@ strings:
     	$a0 = { E8 00 00 00 00 60 8B 6C 24 20 55 81 ED ?? ?? ?? ?? 8D BD ?? ?? ?? ?? 8D 8D ?? ?? ?? ?? 29 F9 31 C0 FC F3 AA 8B 04 24 48 66 25 00 F0 66 81 38 4D 5A 75 F4 8B 48 3C 81 3C 01 50 45 00 00 75 E8 89 85 ?? ?? ?? ?? 6A 40 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule AVP_Antiviral_Database
 {
 meta:
@@ -14015,7 +14015,7 @@ condition:
     	$a0
 }
 
-    
+
 rule BeRoEXEPacker_v1_00____BeRo___Farbrausch
 {
 meta:
@@ -14028,10 +14028,10 @@ strings:
 	$a4 = { 60 BE ?? ?? ?? ?? BF ?? ?? ?? ?? FC B2 80 33 DB A4 B3 02 E8 ?? ?? ?? ?? 73 F6 33 C9 E8 ?? ?? ?? ?? 73 1C 33 C0 E8 ?? ?? ?? ?? 73 23 B3 02 41 B0 10 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep or $a3 or $a4 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep or $a3 or $a4 at manape.ep
 }
 
-    
+
 rule kkrunchy____Ryd
 {
 meta:
@@ -14041,10 +14041,10 @@ strings:
 	$a1 = { BD 08 ?? ?? 00 C7 45 00 ?? ?? ?? 00 FF 4D 08 C6 45 0C 05 8D 7D 14 31 C0 B4 04 89 C1 F3 AB BF ?? ?? ?? 00 57 BE ?? ?? ?? 00 31 C9 41 FF 4D 0C 8D 9C 8D A0 00 00 00 FF D6 10 C9 73 F3 FF 45 0C 91 AA 83 C9 FF 8D 5C 8D 18 FF D6 74 DD E3 17 8D 5D 1C FF D6 74 10 8D 9D A0 08 00 00 E8 EB 00 00 00 8B 45 10 EB 42 8D 9D A0 04 00 00 E8 DB 00 00 00 49 49 78 40 8D 5D 20 74 03 83 C3 40 31 D2 42 E8 BD 00 00 00 8D 0C 48 F6 C2 10 74 F3 41 91 8D 9D A0 08 00 00 E8 B2 00 00 00 3D 00 08 00 00 83 D9 FF 83 F8 60 83 D9 FF 89 45 10 56 89 FE 29 C6 F3 A4 5E EB 90 BE ?? ?? ?? 00 BB ?? ?? ?? 00 55 46 AD 85 C0 74 29 97 56 FF 13 85 C0 74 16 95 AC 84 C0 75 FB 38 06 74 E8 78 0D 56 55 FF 53 04 AB 85 C0 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule WinUpack_v0_30_beta____By_Dwing
 {
 meta:
@@ -14056,7 +14056,7 @@ condition:
     	$a0
 }
 
-    
+
 rule FSG_v1_10__Eng_____dulek_xt_____Borland_C___
 {
 meta:
@@ -14067,10 +14067,10 @@ strings:
 	$a2 = { 23 CA EB 02 5A 0D E8 02 00 00 00 6A 35 58 C1 C9 10 BE 80 ?? ?? 00 0F B6 C9 EB 02 CD 20 BB }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
-    
+
 rule Armadillo_v2_10b2
 {
 meta:
@@ -14079,10 +14079,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 18 12 41 00 68 24 A0 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECryptor_V2_1X____SoftComplete_com
 {
 meta:
@@ -14091,10 +14091,10 @@ strings:
     	$a0 = { E9 ?? ?? ?? ?? 66 9C 60 50 8D 88 ?? ?? ?? ?? 8D 90 04 16 ?? ?? 8B DC 8B E1 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Frusion____biff
 {
 meta:
@@ -14103,10 +14103,10 @@ strings:
     	$a0 = { 83 EC 0C 53 55 56 57 68 04 01 00 00 C7 44 24 14 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__32Lite_0_03______Anorganix
 {
 meta:
@@ -14115,10 +14115,10 @@ strings:
     	$a0 = { 60 06 FC 1E 07 BE 90 90 90 90 6A 04 68 90 10 90 90 68 ?? ?? ?? ?? E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASProtect_v_______If_you_know_this_version__post_on_PEiD_board
 {
 meta:
@@ -14127,10 +14127,10 @@ strings:
     	$a0 = { 90 60 E8 03 00 00 00 E9 EB 04 5D 45 55 C3 E8 01 00 00 00 EB 5D BB ED FF FF FF 03 DD 81 EB 00 ?? ?? 00 80 7D 4D 01 75 0C 8B 74 24 28 83 FE 01 89 5D 4E 75 31 8D 45 53 50 53 FF B5 DD 09 00 00 8D 45 35 50 E9 82 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_V1_19__aPlib_0_43_____ap0x_nbsp___nbsp___Sign_by_fly
 {
 meta:
@@ -14139,10 +14139,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 83 7C 24 28 01 75 0C 8B 44 24 24 89 85 3C 04 00 00 EB 0C 8B 85 38 04 00 00 89 85 3C 04 00 00 8D B5 60 04 00 00 8D 9D EB 02 00 00 33 FF E8 52 01 00 00 EB 1B 8B 85 3C 04 00 00 FF 74 37 04 01 04 24 FF 34 37 01 04 24 FF D3 83 C4 08 83 C7 08 83 3C 37 00 75 DF 83 BD 48 04 00 00 00 74 0E 83 BD 4C 04 00 00 00 74 05 E8 B8 01 00 00 8D 74 37 04 53 6A 40 68 00 10 00 00 68 ?? ?? ?? ?? 6A 00 FF 95 D1 03 00 00 89 85 5C 04 00 00 5B FF B5 5C 04 00 00 56 FF D3 83 C4 08 8B B5 5C 04 00 00 8B C6 EB 01 40 80 38 01 75 FA 40 8B 38 03 BD 3C 04 00 00 83 C0 04 89 85 58 04 00 00 E9 94 00 00 00 56 FF 95 C9 03 00 00 85 C0 0F 84 B4 00 00 00 89 85 54 04 00 00 8B C6 EB 5B 8B 85 58 04 00 00 8B 00 A9 00 00 00 80 74 14 35 00 00 00 80 50 8B 85 58 04 00 00 C7 00 20 20 20 00 EB 06 FF B5 58 04 00 00 FF B5 54 04 00 00 FF 95 CD 03 00 00 85 C0 74 71 89 07 83 C7 04 8B 85 58 04 00 00 EB 01 40 80 38 00 75 FA 40 89 85 58 04 00 00 66 81 78 02 00 80 74 A5 80 38 00 75 A0 EB 01 46 80 3E 00 75 FA 46 40 8B 38 03 BD 3C 04 00 00 83 C0 04 89 85 58 04 00 00 80 3E 01 0F 85 63 FF FF FF 68 00 40 00 00 68 ?? ?? ?? ?? FF B5 5C 04 00 00 FF 95 D5 03 00 00 E8 3D 00 00 00 E8 24 01 00 00 61 E9 ?? ?? ?? ?? 61 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PluginToExe_v1_01____BoB___BobSoft
 {
 meta:
@@ -14151,10 +14151,10 @@ strings:
     	$a0 = { E8 00 00 00 00 29 C0 5D 81 ED C6 41 40 00 50 8F 85 71 40 40 00 50 FF 95 A5 41 40 00 89 85 6D 40 40 00 FF 95 A1 41 40 00 50 FF 95 B5 41 40 00 80 38 00 74 16 8A 08 80 F9 22 75 07 50 FF 95 B9 41 40 00 89 85 75 40 40 00 EB 6C 6A 01 8F 85 71 40 40 00 6A 58 6A 40 FF 95 A9 41 40 00 89 85 69 40 40 00 89 C7 68 00 08 00 00 6A 40 FF 95 A9 41 40 00 89 47 1C C7 07 58 00 00 00 C7 47 20 00 08 00 00 C7 47 18 01 00 00 00 C7 47 34 04 10 88 00 8D 8D B9 40 40 00 89 4F 0C 8D 8D DB 40 40 00 89 4F 30 FF B5 69 40 40 00 FF 95 95 41 40 00 FF 77 1C 8F 85 75 40 40 00 8B 9D 6D 40 40 00 60 6A 00 6A 01 53 81 C3 ?? ?? ?? 00 FF D3 61 6A 00 68 44 69 45 50 FF B5 75 40 40 00 6A 00 81 C3 ?? ?? 00 00 FF D3 83 C4 10 83 BD 71 40 40 00 00 74 10 FF 77 1C FF 95 AD 41 40 00 57 FF 95 AD 41 40 00 6A 00 FF 95 9D 41 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Petite_1_3_____c_1998_Ian_Luck
 {
 meta:
@@ -14163,10 +14163,10 @@ strings:
     	$a0 = { 9C 60 50 8D 88 00 ?? ?? ?? 8D 90 ?? ?? 00 00 8B DC 8B E1 68 00 00 ?? ?? 53 50 80 04 24 08 50 80 04 24 42 50 80 04 24 61 50 80 04 24 9D 50 80 04 24 BB 83 3A 00 0F 84 DA 14 00 00 8B 44 24 18 F6 42 03 80 74 19 FD 80 72 03 80 8B F0 8B F8 03 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__Microsoft_Visual_C___7_0_DLL_____Anorganix
 {
 meta:
@@ -14175,10 +14175,10 @@ strings:
     	$a0 = { 55 8D 6C 01 00 81 EC 00 00 00 00 8B 45 90 83 F8 01 56 0F 84 00 00 00 00 85 C0 0F 84 ?? ?? ?? ?? E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXE2COM__Method_1_
 {
 meta:
@@ -14187,10 +14187,10 @@ strings:
     	$a0 = { 8C DB BE ?? ?? 8B C6 B1 ?? D3 E8 03 C3 03 ?? ?? A3 ?? ?? 8C C8 05 ?? ?? A3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPXLock_v1_1____CyberDoom___Bob
 {
 meta:
@@ -14199,10 +14199,10 @@ strings:
     	$a0 = { 60 E8 ?? ?? ?? ?? 5D 81 ED ?? ?? ?? 00 60 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_4_40____Silicon_Realms_Toolworks__h_
 {
 meta:
@@ -14215,7 +14215,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule EXERefactor_V0_1____random
 {
 meta:
@@ -14224,10 +14224,10 @@ strings:
     	$a0 = { 55 8B EC 81 EC 90 0B 00 00 53 56 57 E9 58 8C 01 00 55 53 43 41 54 49 4F 4E }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_1_17_
 {
 meta:
@@ -14236,10 +14236,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 8D B5 ?? ?? 00 00 8D 9D ?? ?? 00 00 33 FF E8 ?? ?? ?? ?? EB 0F FF 74 37 04 FF 34 37 FF D3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Naked_Packer_V1_X____BigBoote
 {
 meta:
@@ -14248,10 +14248,10 @@ strings:
     	$a0 = { 6A ?? E8 9A 05 00 00 8B D8 53 68 ?? ?? ?? ?? E8 6C FD FF FF B9 05 00 00 00 8B F3 BF ?? ?? ?? ?? 53 F3 A5 E8 8D 05 00 00 8B 3D ?? ?? ?? ?? A1 ?? ?? ?? ?? 66 8B 15 ?? ?? ?? ?? B9 ?? ?? ?? ?? 2B CF 89 45 E8 89 0D ?? ?? ?? ?? 66 89 55 EC 8B 41 3C 33 D2 03 C1 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule A_program_by_Jupiter___
 {
 meta:
@@ -14260,10 +14260,10 @@ strings:
     	$a0 = { 2B C0 74 05 68 ?? ?? ?? ?? 50 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NTkrnl_Secure_Suite_V0_1_DLL____NTkrnl_Software___Sign_by_fly
 {
 meta:
@@ -14275,7 +14275,7 @@ condition:
     	$a0
 }
 
-    
+
 rule EncryptPE_1_2003_5_18____WFS
 {
 meta:
@@ -14284,10 +14284,10 @@ strings:
     	$a0 = { 60 9C 64 FF 35 00 00 00 00 E8 79 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__Borland_Delphi_5_0_KOL_MCK______Anorganix
 {
 meta:
@@ -14296,10 +14296,10 @@ strings:
     	$a0 = { 55 8B EC 90 90 90 90 68 ?? ?? ?? ?? 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 00 FF 90 90 90 90 90 90 90 90 00 01 90 90 90 90 90 90 90 90 90 EB 04 00 00 00 01 90 90 90 90 90 90 90 00 01 90 90 90 90 90 90 90 90 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule VMProtect_v1_25____PolyTech
 {
 meta:
@@ -15129,10 +15129,10 @@ strings:
 	$a821 = { 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? 89 EC 5A 5A 5F 5E 58 5D 59 5D 5B 9D C3 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep or $a3 at sgpe.ep or $a4 at sgpe.ep or $a5 at sgpe.ep or $a6 at sgpe.ep or $a7 at sgpe.ep or $a8 at sgpe.ep or $a9 at sgpe.ep or $a10 at sgpe.ep or $a11 at sgpe.ep or $a12 at sgpe.ep or $a13 at sgpe.ep or $a14 at sgpe.ep or $a15 at sgpe.ep or $a16 at sgpe.ep or $a17 at sgpe.ep or $a18 at sgpe.ep or $a19 at sgpe.ep or $a20 at sgpe.ep or $a21 at sgpe.ep or $a22 at sgpe.ep or $a23 at sgpe.ep or $a24 at sgpe.ep or $a25 at sgpe.ep or $a26 at sgpe.ep or $a27 at sgpe.ep or $a28 at sgpe.ep or $a29 at sgpe.ep or $a30 at sgpe.ep or $a31 at sgpe.ep or $a32 at sgpe.ep or $a33 at sgpe.ep or $a34 at sgpe.ep or $a35 at sgpe.ep or $a36 at sgpe.ep or $a37 at sgpe.ep or $a38 at sgpe.ep or $a39 or $a40 at sgpe.ep or $a41 at sgpe.ep or $a42 at sgpe.ep or $a43 at sgpe.ep or $a44 at sgpe.ep or $a45 at sgpe.ep or $a46 at sgpe.ep or $a47 at sgpe.ep or $a48 at sgpe.ep or $a49 at sgpe.ep or $a50 at sgpe.ep or $a51 at sgpe.ep or $a52 at sgpe.ep or $a53 at sgpe.ep or $a54 at sgpe.ep or $a55 at sgpe.ep or $a56 at sgpe.ep or $a57 at sgpe.ep or $a58 at sgpe.ep or $a59 at sgpe.ep or $a60 at sgpe.ep or $a61 at sgpe.ep or $a62 at sgpe.ep or $a63 at sgpe.ep or $a64 at sgpe.ep or $a65 at sgpe.ep or $a66 at sgpe.ep or $a67 at sgpe.ep or $a68 at sgpe.ep or $a69 at sgpe.ep or $a70 at sgpe.ep or $a71 at sgpe.ep or $a72 at sgpe.ep or $a73 at sgpe.ep or $a74 at sgpe.ep or $a75 at sgpe.ep or $a76 at sgpe.ep or $a77 at sgpe.ep or $a78 at sgpe.ep or $a79 at sgpe.ep or $a80 at sgpe.ep or $a81 at sgpe.ep or $a82 at sgpe.ep or $a83 at sgpe.ep or $a84 at sgpe.ep or $a85 at sgpe.ep or $a86 at sgpe.ep or $a87 at sgpe.ep or $a88 at sgpe.ep or $a89 at sgpe.ep or $a90 at sgpe.ep or $a91 at sgpe.ep or $a92 at sgpe.ep or $a93 at sgpe.ep or $a94 at sgpe.ep or $a95 at sgpe.ep or $a96 at sgpe.ep or $a97 at sgpe.ep or $a98 at sgpe.ep or $a99 at sgpe.ep or $a100 at sgpe.ep or $a101 at sgpe.ep or $a102 at sgpe.ep or $a103 at sgpe.ep or $a104 at sgpe.ep or $a105 at sgpe.ep or $a106 at sgpe.ep or $a107 at sgpe.ep or $a108 at sgpe.ep or $a109 at sgpe.ep or $a110 at sgpe.ep or $a111 at sgpe.ep or $a112 at sgpe.ep or $a113 at sgpe.ep or $a114 at sgpe.ep or $a115 at sgpe.ep or $a116 at sgpe.ep or $a117 at sgpe.ep or $a118 at sgpe.ep or $a119 at sgpe.ep or $a120 at sgpe.ep or $a121 at sgpe.ep or $a122 at sgpe.ep or $a123 at sgpe.ep or $a124 at sgpe.ep or $a125 at sgpe.ep or $a126 at sgpe.ep or $a127 at sgpe.ep or $a128 at sgpe.ep or $a129 at sgpe.ep or $a130 at sgpe.ep or $a131 at sgpe.ep or $a132 at sgpe.ep or $a133 at sgpe.ep or $a134 at sgpe.ep or $a135 at sgpe.ep or $a136 at sgpe.ep or $a137 at sgpe.ep or $a138 at sgpe.ep or $a139 at sgpe.ep or $a140 at sgpe.ep or $a141 at sgpe.ep or $a142 at sgpe.ep or $a143 at sgpe.ep or $a144 at sgpe.ep or $a145 at sgpe.ep or $a146 at sgpe.ep or $a147 at sgpe.ep or $a148 at sgpe.ep or $a149 at sgpe.ep or $a150 at sgpe.ep or $a151 at sgpe.ep or $a152 at sgpe.ep or $a153 at sgpe.ep or $a154 at sgpe.ep or $a155 at sgpe.ep or $a156 at sgpe.ep or $a157 at sgpe.ep or $a158 at sgpe.ep or $a159 at sgpe.ep or $a160 at sgpe.ep or $a161 at sgpe.ep or $a162 at sgpe.ep or $a163 at sgpe.ep or $a164 at sgpe.ep or $a165 at sgpe.ep or $a166 at sgpe.ep or $a167 at sgpe.ep or $a168 at sgpe.ep or $a169 at sgpe.ep or $a170 at sgpe.ep or $a171 at sgpe.ep or $a172 at sgpe.ep or $a173 at sgpe.ep or $a174 at sgpe.ep or $a175 at sgpe.ep or $a176 at sgpe.ep or $a177 at sgpe.ep or $a178 at sgpe.ep or $a179 at sgpe.ep or $a180 at sgpe.ep or $a181 at sgpe.ep or $a182 at sgpe.ep or $a183 at sgpe.ep or $a184 at sgpe.ep or $a185 at sgpe.ep or $a186 at sgpe.ep or $a187 at sgpe.ep or $a188 at sgpe.ep or $a189 at sgpe.ep or $a190 at sgpe.ep or $a191 at sgpe.ep or $a192 at sgpe.ep or $a193 at sgpe.ep or $a194 at sgpe.ep or $a195 at sgpe.ep or $a196 at sgpe.ep or $a197 at sgpe.ep or $a198 at sgpe.ep or $a199 at sgpe.ep or $a200 at sgpe.ep or $a201 at sgpe.ep or $a202 at sgpe.ep or $a203 at sgpe.ep or $a204 at sgpe.ep or $a205 at sgpe.ep or $a206 at sgpe.ep or $a207 at sgpe.ep or $a208 at sgpe.ep or $a209 at sgpe.ep or $a210 at sgpe.ep or $a211 at sgpe.ep or $a212 at sgpe.ep or $a213 at sgpe.ep or $a214 at sgpe.ep or $a215 at sgpe.ep or $a216 at sgpe.ep or $a217 at sgpe.ep or $a218 at sgpe.ep or $a219 at sgpe.ep or $a220 at sgpe.ep or $a221 at sgpe.ep or $a222 at sgpe.ep or $a223 at sgpe.ep or $a224 at sgpe.ep or $a225 at sgpe.ep or $a226 at sgpe.ep or $a227 at sgpe.ep or $a228 at sgpe.ep or $a229 at sgpe.ep or $a230 at sgpe.ep or $a231 at sgpe.ep or $a232 at sgpe.ep or $a233 at sgpe.ep or $a234 at sgpe.ep or $a235 at sgpe.ep or $a236 at sgpe.ep or $a237 at sgpe.ep or $a238 at sgpe.ep or $a239 at sgpe.ep or $a240 at sgpe.ep or $a241 at sgpe.ep or $a242 at sgpe.ep or $a243 at sgpe.ep or $a244 at sgpe.ep or $a245 at sgpe.ep or $a246 at sgpe.ep or $a247 at sgpe.ep or $a248 at sgpe.ep or $a249 at sgpe.ep or $a250 at sgpe.ep or $a251 at sgpe.ep or $a252 at sgpe.ep or $a253 at sgpe.ep or $a254 at sgpe.ep or $a255 at sgpe.ep or $a256 at sgpe.ep or $a257 at sgpe.ep or $a258 at sgpe.ep or $a259 at sgpe.ep or $a260 at sgpe.ep or $a261 at sgpe.ep or $a262 at sgpe.ep or $a263 at sgpe.ep or $a264 at sgpe.ep or $a265 at sgpe.ep or $a266 at sgpe.ep or $a267 at sgpe.ep or $a268 at sgpe.ep or $a269 at sgpe.ep or $a270 at sgpe.ep or $a271 at sgpe.ep or $a272 at sgpe.ep or $a273 at sgpe.ep or $a274 at sgpe.ep or $a275 at sgpe.ep or $a276 at sgpe.ep or $a277 at sgpe.ep or $a278 at sgpe.ep or $a279 at sgpe.ep or $a280 at sgpe.ep or $a281 at sgpe.ep or $a282 at sgpe.ep or $a283 at sgpe.ep or $a284 at sgpe.ep or $a285 at sgpe.ep or $a286 at sgpe.ep or $a287 at sgpe.ep or $a288 at sgpe.ep or $a289 at sgpe.ep or $a290 at sgpe.ep or $a291 at sgpe.ep or $a292 at sgpe.ep or $a293 at sgpe.ep or $a294 at sgpe.ep or $a295 at sgpe.ep or $a296 at sgpe.ep or $a297 at sgpe.ep or $a298 at sgpe.ep or $a299 at sgpe.ep or $a300 at sgpe.ep or $a301 at sgpe.ep or $a302 at sgpe.ep or $a303 at sgpe.ep or $a304 at sgpe.ep or $a305 at sgpe.ep or $a306 at sgpe.ep or $a307 at sgpe.ep or $a308 at sgpe.ep or $a309 at sgpe.ep or $a310 at sgpe.ep or $a311 at sgpe.ep or $a312 at sgpe.ep or $a313 at sgpe.ep or $a314 at sgpe.ep or $a315 at sgpe.ep or $a316 at sgpe.ep or $a317 at sgpe.ep or $a318 at sgpe.ep or $a319 at sgpe.ep or $a320 at sgpe.ep or $a321 at sgpe.ep or $a322 at sgpe.ep or $a323 at sgpe.ep or $a324 at sgpe.ep or $a325 at sgpe.ep or $a326 at sgpe.ep or $a327 at sgpe.ep or $a328 at sgpe.ep or $a329 at sgpe.ep or $a330 at sgpe.ep or $a331 at sgpe.ep or $a332 at sgpe.ep or $a333 at sgpe.ep or $a334 at sgpe.ep or $a335 at sgpe.ep or $a336 at sgpe.ep or $a337 at sgpe.ep or $a338 at sgpe.ep or $a339 at sgpe.ep or $a340 at sgpe.ep or $a341 at sgpe.ep or $a342 at sgpe.ep or $a343 at sgpe.ep or $a344 at sgpe.ep or $a345 at sgpe.ep or $a346 at sgpe.ep or $a347 at sgpe.ep or $a348 at sgpe.ep or $a349 at sgpe.ep or $a350 at sgpe.ep or $a351 at sgpe.ep or $a352 at sgpe.ep or $a353 at sgpe.ep or $a354 at sgpe.ep or $a355 at sgpe.ep or $a356 at sgpe.ep or $a357 at sgpe.ep or $a358 at sgpe.ep or $a359 at sgpe.ep or $a360 at sgpe.ep or $a361 at sgpe.ep or $a362 at sgpe.ep or $a363 at sgpe.ep or $a364 at sgpe.ep or $a365 at sgpe.ep or $a366 at sgpe.ep or $a367 at sgpe.ep or $a368 at sgpe.ep or $a369 at sgpe.ep or $a370 at sgpe.ep or $a371 at sgpe.ep or $a372 at sgpe.ep or $a373 at sgpe.ep or $a374 at sgpe.ep or $a375 at sgpe.ep or $a376 at sgpe.ep or $a377 at sgpe.ep or $a378 at sgpe.ep or $a379 at sgpe.ep or $a380 at sgpe.ep or $a381 at sgpe.ep or $a382 at sgpe.ep or $a383 at sgpe.ep or $a384 at sgpe.ep or $a385 at sgpe.ep or $a386 at sgpe.ep or $a387 at sgpe.ep or $a388 at sgpe.ep or $a389 at sgpe.ep or $a390 at sgpe.ep or $a391 at sgpe.ep or $a392 at sgpe.ep or $a393 at sgpe.ep or $a394 at sgpe.ep or $a395 at sgpe.ep or $a396 at sgpe.ep or $a397 at sgpe.ep or $a398 at sgpe.ep or $a399 at sgpe.ep or $a400 at sgpe.ep or $a401 at sgpe.ep or $a402 at sgpe.ep or $a403 at sgpe.ep or $a404 at sgpe.ep or $a405 at sgpe.ep or $a406 at sgpe.ep or $a407 at sgpe.ep or $a408 at sgpe.ep or $a409 at sgpe.ep or $a410 at sgpe.ep or $a411 at sgpe.ep or $a412 at sgpe.ep or $a413 at sgpe.ep or $a414 at sgpe.ep or $a415 at sgpe.ep or $a416 at sgpe.ep or $a417 at sgpe.ep or $a418 at sgpe.ep or $a419 at sgpe.ep or $a420 at sgpe.ep or $a421 at sgpe.ep or $a422 at sgpe.ep or $a423 at sgpe.ep or $a424 at sgpe.ep or $a425 at sgpe.ep or $a426 at sgpe.ep or $a427 at sgpe.ep or $a428 at sgpe.ep or $a429 at sgpe.ep or $a430 at sgpe.ep or $a431 at sgpe.ep or $a432 at sgpe.ep or $a433 at sgpe.ep or $a434 at sgpe.ep or $a435 at sgpe.ep or $a436 at sgpe.ep or $a437 at sgpe.ep or $a438 at sgpe.ep or $a439 at sgpe.ep or $a440 at sgpe.ep or $a441 at sgpe.ep or $a442 at sgpe.ep or $a443 at sgpe.ep or $a444 at sgpe.ep or $a445 at sgpe.ep or $a446 at sgpe.ep or $a447 at sgpe.ep or $a448 at sgpe.ep or $a449 at sgpe.ep or $a450 at sgpe.ep or $a451 at sgpe.ep or $a452 at sgpe.ep or $a453 at sgpe.ep or $a454 at sgpe.ep or $a455 at sgpe.ep or $a456 at sgpe.ep or $a457 at sgpe.ep or $a458 at sgpe.ep or $a459 at sgpe.ep or $a460 at sgpe.ep or $a461 at sgpe.ep or $a462 at sgpe.ep or $a463 at sgpe.ep or $a464 at sgpe.ep or $a465 at sgpe.ep or $a466 at sgpe.ep or $a467 at sgpe.ep or $a468 at sgpe.ep or $a469 at sgpe.ep or $a470 at sgpe.ep or $a471 at sgpe.ep or $a472 at sgpe.ep or $a473 at sgpe.ep or $a474 at sgpe.ep or $a475 at sgpe.ep or $a476 at sgpe.ep or $a477 at sgpe.ep or $a478 at sgpe.ep or $a479 at sgpe.ep or $a480 at sgpe.ep or $a481 at sgpe.ep or $a482 at sgpe.ep or $a483 at sgpe.ep or $a484 at sgpe.ep or $a485 at sgpe.ep or $a486 at sgpe.ep or $a487 at sgpe.ep or $a488 at sgpe.ep or $a489 at sgpe.ep or $a490 at sgpe.ep or $a491 at sgpe.ep or $a492 at sgpe.ep or $a493 at sgpe.ep or $a494 at sgpe.ep or $a495 at sgpe.ep or $a496 at sgpe.ep or $a497 at sgpe.ep or $a498 at sgpe.ep or $a499 at sgpe.ep or $a500 at sgpe.ep or $a501 at sgpe.ep or $a502 at sgpe.ep or $a503 at sgpe.ep or $a504 at sgpe.ep or $a505 at sgpe.ep or $a506 at sgpe.ep or $a507 at sgpe.ep or $a508 at sgpe.ep or $a509 at sgpe.ep or $a510 at sgpe.ep or $a511 at sgpe.ep or $a512 at sgpe.ep or $a513 at sgpe.ep or $a514 at sgpe.ep or $a515 at sgpe.ep or $a516 at sgpe.ep or $a517 at sgpe.ep or $a518 at sgpe.ep or $a519 at sgpe.ep or $a520 at sgpe.ep or $a521 at sgpe.ep or $a522 at sgpe.ep or $a523 at sgpe.ep or $a524 at sgpe.ep or $a525 at sgpe.ep or $a526 at sgpe.ep or $a527 at sgpe.ep or $a528 at sgpe.ep or $a529 at sgpe.ep or $a530 at sgpe.ep or $a531 at sgpe.ep or $a532 at sgpe.ep or $a533 at sgpe.ep or $a534 at sgpe.ep or $a535 at sgpe.ep or $a536 at sgpe.ep or $a537 at sgpe.ep or $a538 at sgpe.ep or $a539 at sgpe.ep or $a540 at sgpe.ep or $a541 at sgpe.ep or $a542 at sgpe.ep or $a543 at sgpe.ep or $a544 at sgpe.ep or $a545 at sgpe.ep or $a546 at sgpe.ep or $a547 at sgpe.ep or $a548 at sgpe.ep or $a549 at sgpe.ep or $a550 at sgpe.ep or $a551 at sgpe.ep or $a552 at sgpe.ep or $a553 at sgpe.ep or $a554 at sgpe.ep or $a555 at sgpe.ep or $a556 at sgpe.ep or $a557 at sgpe.ep or $a558 at sgpe.ep or $a559 at sgpe.ep or $a560 at sgpe.ep or $a561 at sgpe.ep or $a562 at sgpe.ep or $a563 at sgpe.ep or $a564 at sgpe.ep or $a565 at sgpe.ep or $a566 at sgpe.ep or $a567 at sgpe.ep or $a568 at sgpe.ep or $a569 at sgpe.ep or $a570 at sgpe.ep or $a571 at sgpe.ep or $a572 at sgpe.ep or $a573 at sgpe.ep or $a574 at sgpe.ep or $a575 at sgpe.ep or $a576 at sgpe.ep or $a577 at sgpe.ep or $a578 at sgpe.ep or $a579 at sgpe.ep or $a580 at sgpe.ep or $a581 at sgpe.ep or $a582 at sgpe.ep or $a583 at sgpe.ep or $a584 at sgpe.ep or $a585 at sgpe.ep or $a586 at sgpe.ep or $a587 at sgpe.ep or $a588 at sgpe.ep or $a589 at sgpe.ep or $a590 at sgpe.ep or $a591 at sgpe.ep or $a592 at sgpe.ep or $a593 at sgpe.ep or $a594 at sgpe.ep or $a595 at sgpe.ep or $a596 at sgpe.ep or $a597 at sgpe.ep or $a598 at sgpe.ep or $a599 at sgpe.ep or $a600 at sgpe.ep or $a601 at sgpe.ep or $a602 at sgpe.ep or $a603 at sgpe.ep or $a604 at sgpe.ep or $a605 at sgpe.ep or $a606 at sgpe.ep or $a607 at sgpe.ep or $a608 at sgpe.ep or $a609 at sgpe.ep or $a610 at sgpe.ep or $a611 at sgpe.ep or $a612 at sgpe.ep or $a613 at sgpe.ep or $a614 at sgpe.ep or $a615 at sgpe.ep or $a616 at sgpe.ep or $a617 at sgpe.ep or $a618 at sgpe.ep or $a619 at sgpe.ep or $a620 at sgpe.ep or $a621 at sgpe.ep or $a622 at sgpe.ep or $a623 at sgpe.ep or $a624 at sgpe.ep or $a625 at sgpe.ep or $a626 at sgpe.ep or $a627 at sgpe.ep or $a628 at sgpe.ep or $a629 at sgpe.ep or $a630 at sgpe.ep or $a631 at sgpe.ep or $a632 at sgpe.ep or $a633 at sgpe.ep or $a634 at sgpe.ep or $a635 at sgpe.ep or $a636 at sgpe.ep or $a637 at sgpe.ep or $a638 at sgpe.ep or $a639 at sgpe.ep or $a640 at sgpe.ep or $a641 at sgpe.ep or $a642 at sgpe.ep or $a643 at sgpe.ep or $a644 at sgpe.ep or $a645 at sgpe.ep or $a646 at sgpe.ep or $a647 at sgpe.ep or $a648 at sgpe.ep or $a649 at sgpe.ep or $a650 at sgpe.ep or $a651 at sgpe.ep or $a652 at sgpe.ep or $a653 at sgpe.ep or $a654 at sgpe.ep or $a655 at sgpe.ep or $a656 at sgpe.ep or $a657 at sgpe.ep or $a658 at sgpe.ep or $a659 at sgpe.ep or $a660 at sgpe.ep or $a661 at sgpe.ep or $a662 at sgpe.ep or $a663 at sgpe.ep or $a664 at sgpe.ep or $a665 at sgpe.ep or $a666 at sgpe.ep or $a667 at sgpe.ep or $a668 at sgpe.ep or $a669 at sgpe.ep or $a670 at sgpe.ep or $a671 at sgpe.ep or $a672 at sgpe.ep or $a673 at sgpe.ep or $a674 at sgpe.ep or $a675 at sgpe.ep or $a676 at sgpe.ep or $a677 at sgpe.ep or $a678 at sgpe.ep or $a679 at sgpe.ep or $a680 at sgpe.ep or $a681 at sgpe.ep or $a682 at sgpe.ep or $a683 at sgpe.ep or $a684 at sgpe.ep or $a685 at sgpe.ep or $a686 at sgpe.ep or $a687 at sgpe.ep or $a688 at sgpe.ep or $a689 at sgpe.ep or $a690 at sgpe.ep or $a691 at sgpe.ep or $a692 at sgpe.ep or $a693 at sgpe.ep or $a694 at sgpe.ep or $a695 at sgpe.ep or $a696 at sgpe.ep or $a697 at sgpe.ep or $a698 at sgpe.ep or $a699 at sgpe.ep or $a700 at sgpe.ep or $a701 at sgpe.ep or $a702 at sgpe.ep or $a703 at sgpe.ep or $a704 at sgpe.ep or $a705 at sgpe.ep or $a706 at sgpe.ep or $a707 at sgpe.ep or $a708 at sgpe.ep or $a709 at sgpe.ep or $a710 at sgpe.ep or $a711 at sgpe.ep or $a712 at sgpe.ep or $a713 at sgpe.ep or $a714 at sgpe.ep or $a715 at sgpe.ep or $a716 at sgpe.ep or $a717 at sgpe.ep or $a718 at sgpe.ep or $a719 at sgpe.ep or $a720 at sgpe.ep or $a721 at sgpe.ep or $a722 at sgpe.ep or $a723 at sgpe.ep or $a724 at sgpe.ep or $a725 at sgpe.ep or $a726 at sgpe.ep or $a727 at sgpe.ep or $a728 at sgpe.ep or $a729 at sgpe.ep or $a730 at sgpe.ep or $a731 at sgpe.ep or $a732 at sgpe.ep or $a733 at sgpe.ep or $a734 at sgpe.ep or $a735 at sgpe.ep or $a736 at sgpe.ep or $a737 at sgpe.ep or $a738 at sgpe.ep or $a739 at sgpe.ep or $a740 at sgpe.ep or $a741 at sgpe.ep or $a742 at sgpe.ep or $a743 at sgpe.ep or $a744 at sgpe.ep or $a745 at sgpe.ep or $a746 at sgpe.ep or $a747 at sgpe.ep or $a748 at sgpe.ep or $a749 at sgpe.ep or $a750 at sgpe.ep or $a751 at sgpe.ep or $a752 at sgpe.ep or $a753 at sgpe.ep or $a754 at sgpe.ep or $a755 at sgpe.ep or $a756 at sgpe.ep or $a757 at sgpe.ep or $a758 at sgpe.ep or $a759 at sgpe.ep or $a760 at sgpe.ep or $a761 at sgpe.ep or $a762 at sgpe.ep or $a763 at sgpe.ep or $a764 at sgpe.ep or $a765 at sgpe.ep or $a766 at sgpe.ep or $a767 at sgpe.ep or $a768 at sgpe.ep or $a769 at sgpe.ep or $a770 at sgpe.ep or $a771 at sgpe.ep or $a772 at sgpe.ep or $a773 at sgpe.ep or $a774 at sgpe.ep or $a775 at sgpe.ep or $a776 at sgpe.ep or $a777 at sgpe.ep or $a778 at sgpe.ep or $a779 at sgpe.ep or $a780 at sgpe.ep or $a781 at sgpe.ep or $a782 at sgpe.ep or $a783 at sgpe.ep or $a784 at sgpe.ep or $a785 at sgpe.ep or $a786 at sgpe.ep or $a787 at sgpe.ep or $a788 at sgpe.ep or $a789 at sgpe.ep or $a790 at sgpe.ep or $a791 at sgpe.ep or $a792 at sgpe.ep or $a793 at sgpe.ep or $a794 at sgpe.ep or $a795 at sgpe.ep or $a796 at sgpe.ep or $a797 at sgpe.ep or $a798 at sgpe.ep or $a799 at sgpe.ep or $a800 at sgpe.ep or $a801 at sgpe.ep or $a802 at sgpe.ep or $a803 at sgpe.ep or $a804 at sgpe.ep or $a805 at sgpe.ep or $a806 at sgpe.ep or $a807 at sgpe.ep or $a808 at sgpe.ep or $a809 at sgpe.ep or $a810 at sgpe.ep or $a811 at sgpe.ep or $a812 at sgpe.ep or $a813 at sgpe.ep or $a814 at sgpe.ep or $a815 at sgpe.ep or $a816 at sgpe.ep or $a817 at sgpe.ep or $a818 at sgpe.ep or $a819 at sgpe.ep or $a820 at sgpe.ep or $a821 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep or $a3 at manape.ep or $a4 at manape.ep or $a5 at manape.ep or $a6 at manape.ep or $a7 at manape.ep or $a8 at manape.ep or $a9 at manape.ep or $a10 at manape.ep or $a11 at manape.ep or $a12 at manape.ep or $a13 at manape.ep or $a14 at manape.ep or $a15 at manape.ep or $a16 at manape.ep or $a17 at manape.ep or $a18 at manape.ep or $a19 at manape.ep or $a20 at manape.ep or $a21 at manape.ep or $a22 at manape.ep or $a23 at manape.ep or $a24 at manape.ep or $a25 at manape.ep or $a26 at manape.ep or $a27 at manape.ep or $a28 at manape.ep or $a29 at manape.ep or $a30 at manape.ep or $a31 at manape.ep or $a32 at manape.ep or $a33 at manape.ep or $a34 at manape.ep or $a35 at manape.ep or $a36 at manape.ep or $a37 at manape.ep or $a38 at manape.ep or $a39 or $a40 at manape.ep or $a41 at manape.ep or $a42 at manape.ep or $a43 at manape.ep or $a44 at manape.ep or $a45 at manape.ep or $a46 at manape.ep or $a47 at manape.ep or $a48 at manape.ep or $a49 at manape.ep or $a50 at manape.ep or $a51 at manape.ep or $a52 at manape.ep or $a53 at manape.ep or $a54 at manape.ep or $a55 at manape.ep or $a56 at manape.ep or $a57 at manape.ep or $a58 at manape.ep or $a59 at manape.ep or $a60 at manape.ep or $a61 at manape.ep or $a62 at manape.ep or $a63 at manape.ep or $a64 at manape.ep or $a65 at manape.ep or $a66 at manape.ep or $a67 at manape.ep or $a68 at manape.ep or $a69 at manape.ep or $a70 at manape.ep or $a71 at manape.ep or $a72 at manape.ep or $a73 at manape.ep or $a74 at manape.ep or $a75 at manape.ep or $a76 at manape.ep or $a77 at manape.ep or $a78 at manape.ep or $a79 at manape.ep or $a80 at manape.ep or $a81 at manape.ep or $a82 at manape.ep or $a83 at manape.ep or $a84 at manape.ep or $a85 at manape.ep or $a86 at manape.ep or $a87 at manape.ep or $a88 at manape.ep or $a89 at manape.ep or $a90 at manape.ep or $a91 at manape.ep or $a92 at manape.ep or $a93 at manape.ep or $a94 at manape.ep or $a95 at manape.ep or $a96 at manape.ep or $a97 at manape.ep or $a98 at manape.ep or $a99 at manape.ep or $a100 at manape.ep or $a101 at manape.ep or $a102 at manape.ep or $a103 at manape.ep or $a104 at manape.ep or $a105 at manape.ep or $a106 at manape.ep or $a107 at manape.ep or $a108 at manape.ep or $a109 at manape.ep or $a110 at manape.ep or $a111 at manape.ep or $a112 at manape.ep or $a113 at manape.ep or $a114 at manape.ep or $a115 at manape.ep or $a116 at manape.ep or $a117 at manape.ep or $a118 at manape.ep or $a119 at manape.ep or $a120 at manape.ep or $a121 at manape.ep or $a122 at manape.ep or $a123 at manape.ep or $a124 at manape.ep or $a125 at manape.ep or $a126 at manape.ep or $a127 at manape.ep or $a128 at manape.ep or $a129 at manape.ep or $a130 at manape.ep or $a131 at manape.ep or $a132 at manape.ep or $a133 at manape.ep or $a134 at manape.ep or $a135 at manape.ep or $a136 at manape.ep or $a137 at manape.ep or $a138 at manape.ep or $a139 at manape.ep or $a140 at manape.ep or $a141 at manape.ep or $a142 at manape.ep or $a143 at manape.ep or $a144 at manape.ep or $a145 at manape.ep or $a146 at manape.ep or $a147 at manape.ep or $a148 at manape.ep or $a149 at manape.ep or $a150 at manape.ep or $a151 at manape.ep or $a152 at manape.ep or $a153 at manape.ep or $a154 at manape.ep or $a155 at manape.ep or $a156 at manape.ep or $a157 at manape.ep or $a158 at manape.ep or $a159 at manape.ep or $a160 at manape.ep or $a161 at manape.ep or $a162 at manape.ep or $a163 at manape.ep or $a164 at manape.ep or $a165 at manape.ep or $a166 at manape.ep or $a167 at manape.ep or $a168 at manape.ep or $a169 at manape.ep or $a170 at manape.ep or $a171 at manape.ep or $a172 at manape.ep or $a173 at manape.ep or $a174 at manape.ep or $a175 at manape.ep or $a176 at manape.ep or $a177 at manape.ep or $a178 at manape.ep or $a179 at manape.ep or $a180 at manape.ep or $a181 at manape.ep or $a182 at manape.ep or $a183 at manape.ep or $a184 at manape.ep or $a185 at manape.ep or $a186 at manape.ep or $a187 at manape.ep or $a188 at manape.ep or $a189 at manape.ep or $a190 at manape.ep or $a191 at manape.ep or $a192 at manape.ep or $a193 at manape.ep or $a194 at manape.ep or $a195 at manape.ep or $a196 at manape.ep or $a197 at manape.ep or $a198 at manape.ep or $a199 at manape.ep or $a200 at manape.ep or $a201 at manape.ep or $a202 at manape.ep or $a203 at manape.ep or $a204 at manape.ep or $a205 at manape.ep or $a206 at manape.ep or $a207 at manape.ep or $a208 at manape.ep or $a209 at manape.ep or $a210 at manape.ep or $a211 at manape.ep or $a212 at manape.ep or $a213 at manape.ep or $a214 at manape.ep or $a215 at manape.ep or $a216 at manape.ep or $a217 at manape.ep or $a218 at manape.ep or $a219 at manape.ep or $a220 at manape.ep or $a221 at manape.ep or $a222 at manape.ep or $a223 at manape.ep or $a224 at manape.ep or $a225 at manape.ep or $a226 at manape.ep or $a227 at manape.ep or $a228 at manape.ep or $a229 at manape.ep or $a230 at manape.ep or $a231 at manape.ep or $a232 at manape.ep or $a233 at manape.ep or $a234 at manape.ep or $a235 at manape.ep or $a236 at manape.ep or $a237 at manape.ep or $a238 at manape.ep or $a239 at manape.ep or $a240 at manape.ep or $a241 at manape.ep or $a242 at manape.ep or $a243 at manape.ep or $a244 at manape.ep or $a245 at manape.ep or $a246 at manape.ep or $a247 at manape.ep or $a248 at manape.ep or $a249 at manape.ep or $a250 at manape.ep or $a251 at manape.ep or $a252 at manape.ep or $a253 at manape.ep or $a254 at manape.ep or $a255 at manape.ep or $a256 at manape.ep or $a257 at manape.ep or $a258 at manape.ep or $a259 at manape.ep or $a260 at manape.ep or $a261 at manape.ep or $a262 at manape.ep or $a263 at manape.ep or $a264 at manape.ep or $a265 at manape.ep or $a266 at manape.ep or $a267 at manape.ep or $a268 at manape.ep or $a269 at manape.ep or $a270 at manape.ep or $a271 at manape.ep or $a272 at manape.ep or $a273 at manape.ep or $a274 at manape.ep or $a275 at manape.ep or $a276 at manape.ep or $a277 at manape.ep or $a278 at manape.ep or $a279 at manape.ep or $a280 at manape.ep or $a281 at manape.ep or $a282 at manape.ep or $a283 at manape.ep or $a284 at manape.ep or $a285 at manape.ep or $a286 at manape.ep or $a287 at manape.ep or $a288 at manape.ep or $a289 at manape.ep or $a290 at manape.ep or $a291 at manape.ep or $a292 at manape.ep or $a293 at manape.ep or $a294 at manape.ep or $a295 at manape.ep or $a296 at manape.ep or $a297 at manape.ep or $a298 at manape.ep or $a299 at manape.ep or $a300 at manape.ep or $a301 at manape.ep or $a302 at manape.ep or $a303 at manape.ep or $a304 at manape.ep or $a305 at manape.ep or $a306 at manape.ep or $a307 at manape.ep or $a308 at manape.ep or $a309 at manape.ep or $a310 at manape.ep or $a311 at manape.ep or $a312 at manape.ep or $a313 at manape.ep or $a314 at manape.ep or $a315 at manape.ep or $a316 at manape.ep or $a317 at manape.ep or $a318 at manape.ep or $a319 at manape.ep or $a320 at manape.ep or $a321 at manape.ep or $a322 at manape.ep or $a323 at manape.ep or $a324 at manape.ep or $a325 at manape.ep or $a326 at manape.ep or $a327 at manape.ep or $a328 at manape.ep or $a329 at manape.ep or $a330 at manape.ep or $a331 at manape.ep or $a332 at manape.ep or $a333 at manape.ep or $a334 at manape.ep or $a335 at manape.ep or $a336 at manape.ep or $a337 at manape.ep or $a338 at manape.ep or $a339 at manape.ep or $a340 at manape.ep or $a341 at manape.ep or $a342 at manape.ep or $a343 at manape.ep or $a344 at manape.ep or $a345 at manape.ep or $a346 at manape.ep or $a347 at manape.ep or $a348 at manape.ep or $a349 at manape.ep or $a350 at manape.ep or $a351 at manape.ep or $a352 at manape.ep or $a353 at manape.ep or $a354 at manape.ep or $a355 at manape.ep or $a356 at manape.ep or $a357 at manape.ep or $a358 at manape.ep or $a359 at manape.ep or $a360 at manape.ep or $a361 at manape.ep or $a362 at manape.ep or $a363 at manape.ep or $a364 at manape.ep or $a365 at manape.ep or $a366 at manape.ep or $a367 at manape.ep or $a368 at manape.ep or $a369 at manape.ep or $a370 at manape.ep or $a371 at manape.ep or $a372 at manape.ep or $a373 at manape.ep or $a374 at manape.ep or $a375 at manape.ep or $a376 at manape.ep or $a377 at manape.ep or $a378 at manape.ep or $a379 at manape.ep or $a380 at manape.ep or $a381 at manape.ep or $a382 at manape.ep or $a383 at manape.ep or $a384 at manape.ep or $a385 at manape.ep or $a386 at manape.ep or $a387 at manape.ep or $a388 at manape.ep or $a389 at manape.ep or $a390 at manape.ep or $a391 at manape.ep or $a392 at manape.ep or $a393 at manape.ep or $a394 at manape.ep or $a395 at manape.ep or $a396 at manape.ep or $a397 at manape.ep or $a398 at manape.ep or $a399 at manape.ep or $a400 at manape.ep or $a401 at manape.ep or $a402 at manape.ep or $a403 at manape.ep or $a404 at manape.ep or $a405 at manape.ep or $a406 at manape.ep or $a407 at manape.ep or $a408 at manape.ep or $a409 at manape.ep or $a410 at manape.ep or $a411 at manape.ep or $a412 at manape.ep or $a413 at manape.ep or $a414 at manape.ep or $a415 at manape.ep or $a416 at manape.ep or $a417 at manape.ep or $a418 at manape.ep or $a419 at manape.ep or $a420 at manape.ep or $a421 at manape.ep or $a422 at manape.ep or $a423 at manape.ep or $a424 at manape.ep or $a425 at manape.ep or $a426 at manape.ep or $a427 at manape.ep or $a428 at manape.ep or $a429 at manape.ep or $a430 at manape.ep or $a431 at manape.ep or $a432 at manape.ep or $a433 at manape.ep or $a434 at manape.ep or $a435 at manape.ep or $a436 at manape.ep or $a437 at manape.ep or $a438 at manape.ep or $a439 at manape.ep or $a440 at manape.ep or $a441 at manape.ep or $a442 at manape.ep or $a443 at manape.ep or $a444 at manape.ep or $a445 at manape.ep or $a446 at manape.ep or $a447 at manape.ep or $a448 at manape.ep or $a449 at manape.ep or $a450 at manape.ep or $a451 at manape.ep or $a452 at manape.ep or $a453 at manape.ep or $a454 at manape.ep or $a455 at manape.ep or $a456 at manape.ep or $a457 at manape.ep or $a458 at manape.ep or $a459 at manape.ep or $a460 at manape.ep or $a461 at manape.ep or $a462 at manape.ep or $a463 at manape.ep or $a464 at manape.ep or $a465 at manape.ep or $a466 at manape.ep or $a467 at manape.ep or $a468 at manape.ep or $a469 at manape.ep or $a470 at manape.ep or $a471 at manape.ep or $a472 at manape.ep or $a473 at manape.ep or $a474 at manape.ep or $a475 at manape.ep or $a476 at manape.ep or $a477 at manape.ep or $a478 at manape.ep or $a479 at manape.ep or $a480 at manape.ep or $a481 at manape.ep or $a482 at manape.ep or $a483 at manape.ep or $a484 at manape.ep or $a485 at manape.ep or $a486 at manape.ep or $a487 at manape.ep or $a488 at manape.ep or $a489 at manape.ep or $a490 at manape.ep or $a491 at manape.ep or $a492 at manape.ep or $a493 at manape.ep or $a494 at manape.ep or $a495 at manape.ep or $a496 at manape.ep or $a497 at manape.ep or $a498 at manape.ep or $a499 at manape.ep or $a500 at manape.ep or $a501 at manape.ep or $a502 at manape.ep or $a503 at manape.ep or $a504 at manape.ep or $a505 at manape.ep or $a506 at manape.ep or $a507 at manape.ep or $a508 at manape.ep or $a509 at manape.ep or $a510 at manape.ep or $a511 at manape.ep or $a512 at manape.ep or $a513 at manape.ep or $a514 at manape.ep or $a515 at manape.ep or $a516 at manape.ep or $a517 at manape.ep or $a518 at manape.ep or $a519 at manape.ep or $a520 at manape.ep or $a521 at manape.ep or $a522 at manape.ep or $a523 at manape.ep or $a524 at manape.ep or $a525 at manape.ep or $a526 at manape.ep or $a527 at manape.ep or $a528 at manape.ep or $a529 at manape.ep or $a530 at manape.ep or $a531 at manape.ep or $a532 at manape.ep or $a533 at manape.ep or $a534 at manape.ep or $a535 at manape.ep or $a536 at manape.ep or $a537 at manape.ep or $a538 at manape.ep or $a539 at manape.ep or $a540 at manape.ep or $a541 at manape.ep or $a542 at manape.ep or $a543 at manape.ep or $a544 at manape.ep or $a545 at manape.ep or $a546 at manape.ep or $a547 at manape.ep or $a548 at manape.ep or $a549 at manape.ep or $a550 at manape.ep or $a551 at manape.ep or $a552 at manape.ep or $a553 at manape.ep or $a554 at manape.ep or $a555 at manape.ep or $a556 at manape.ep or $a557 at manape.ep or $a558 at manape.ep or $a559 at manape.ep or $a560 at manape.ep or $a561 at manape.ep or $a562 at manape.ep or $a563 at manape.ep or $a564 at manape.ep or $a565 at manape.ep or $a566 at manape.ep or $a567 at manape.ep or $a568 at manape.ep or $a569 at manape.ep or $a570 at manape.ep or $a571 at manape.ep or $a572 at manape.ep or $a573 at manape.ep or $a574 at manape.ep or $a575 at manape.ep or $a576 at manape.ep or $a577 at manape.ep or $a578 at manape.ep or $a579 at manape.ep or $a580 at manape.ep or $a581 at manape.ep or $a582 at manape.ep or $a583 at manape.ep or $a584 at manape.ep or $a585 at manape.ep or $a586 at manape.ep or $a587 at manape.ep or $a588 at manape.ep or $a589 at manape.ep or $a590 at manape.ep or $a591 at manape.ep or $a592 at manape.ep or $a593 at manape.ep or $a594 at manape.ep or $a595 at manape.ep or $a596 at manape.ep or $a597 at manape.ep or $a598 at manape.ep or $a599 at manape.ep or $a600 at manape.ep or $a601 at manape.ep or $a602 at manape.ep or $a603 at manape.ep or $a604 at manape.ep or $a605 at manape.ep or $a606 at manape.ep or $a607 at manape.ep or $a608 at manape.ep or $a609 at manape.ep or $a610 at manape.ep or $a611 at manape.ep or $a612 at manape.ep or $a613 at manape.ep or $a614 at manape.ep or $a615 at manape.ep or $a616 at manape.ep or $a617 at manape.ep or $a618 at manape.ep or $a619 at manape.ep or $a620 at manape.ep or $a621 at manape.ep or $a622 at manape.ep or $a623 at manape.ep or $a624 at manape.ep or $a625 at manape.ep or $a626 at manape.ep or $a627 at manape.ep or $a628 at manape.ep or $a629 at manape.ep or $a630 at manape.ep or $a631 at manape.ep or $a632 at manape.ep or $a633 at manape.ep or $a634 at manape.ep or $a635 at manape.ep or $a636 at manape.ep or $a637 at manape.ep or $a638 at manape.ep or $a639 at manape.ep or $a640 at manape.ep or $a641 at manape.ep or $a642 at manape.ep or $a643 at manape.ep or $a644 at manape.ep or $a645 at manape.ep or $a646 at manape.ep or $a647 at manape.ep or $a648 at manape.ep or $a649 at manape.ep or $a650 at manape.ep or $a651 at manape.ep or $a652 at manape.ep or $a653 at manape.ep or $a654 at manape.ep or $a655 at manape.ep or $a656 at manape.ep or $a657 at manape.ep or $a658 at manape.ep or $a659 at manape.ep or $a660 at manape.ep or $a661 at manape.ep or $a662 at manape.ep or $a663 at manape.ep or $a664 at manape.ep or $a665 at manape.ep or $a666 at manape.ep or $a667 at manape.ep or $a668 at manape.ep or $a669 at manape.ep or $a670 at manape.ep or $a671 at manape.ep or $a672 at manape.ep or $a673 at manape.ep or $a674 at manape.ep or $a675 at manape.ep or $a676 at manape.ep or $a677 at manape.ep or $a678 at manape.ep or $a679 at manape.ep or $a680 at manape.ep or $a681 at manape.ep or $a682 at manape.ep or $a683 at manape.ep or $a684 at manape.ep or $a685 at manape.ep or $a686 at manape.ep or $a687 at manape.ep or $a688 at manape.ep or $a689 at manape.ep or $a690 at manape.ep or $a691 at manape.ep or $a692 at manape.ep or $a693 at manape.ep or $a694 at manape.ep or $a695 at manape.ep or $a696 at manape.ep or $a697 at manape.ep or $a698 at manape.ep or $a699 at manape.ep or $a700 at manape.ep or $a701 at manape.ep or $a702 at manape.ep or $a703 at manape.ep or $a704 at manape.ep or $a705 at manape.ep or $a706 at manape.ep or $a707 at manape.ep or $a708 at manape.ep or $a709 at manape.ep or $a710 at manape.ep or $a711 at manape.ep or $a712 at manape.ep or $a713 at manape.ep or $a714 at manape.ep or $a715 at manape.ep or $a716 at manape.ep or $a717 at manape.ep or $a718 at manape.ep or $a719 at manape.ep or $a720 at manape.ep or $a721 at manape.ep or $a722 at manape.ep or $a723 at manape.ep or $a724 at manape.ep or $a725 at manape.ep or $a726 at manape.ep or $a727 at manape.ep or $a728 at manape.ep or $a729 at manape.ep or $a730 at manape.ep or $a731 at manape.ep or $a732 at manape.ep or $a733 at manape.ep or $a734 at manape.ep or $a735 at manape.ep or $a736 at manape.ep or $a737 at manape.ep or $a738 at manape.ep or $a739 at manape.ep or $a740 at manape.ep or $a741 at manape.ep or $a742 at manape.ep or $a743 at manape.ep or $a744 at manape.ep or $a745 at manape.ep or $a746 at manape.ep or $a747 at manape.ep or $a748 at manape.ep or $a749 at manape.ep or $a750 at manape.ep or $a751 at manape.ep or $a752 at manape.ep or $a753 at manape.ep or $a754 at manape.ep or $a755 at manape.ep or $a756 at manape.ep or $a757 at manape.ep or $a758 at manape.ep or $a759 at manape.ep or $a760 at manape.ep or $a761 at manape.ep or $a762 at manape.ep or $a763 at manape.ep or $a764 at manape.ep or $a765 at manape.ep or $a766 at manape.ep or $a767 at manape.ep or $a768 at manape.ep or $a769 at manape.ep or $a770 at manape.ep or $a771 at manape.ep or $a772 at manape.ep or $a773 at manape.ep or $a774 at manape.ep or $a775 at manape.ep or $a776 at manape.ep or $a777 at manape.ep or $a778 at manape.ep or $a779 at manape.ep or $a780 at manape.ep or $a781 at manape.ep or $a782 at manape.ep or $a783 at manape.ep or $a784 at manape.ep or $a785 at manape.ep or $a786 at manape.ep or $a787 at manape.ep or $a788 at manape.ep or $a789 at manape.ep or $a790 at manape.ep or $a791 at manape.ep or $a792 at manape.ep or $a793 at manape.ep or $a794 at manape.ep or $a795 at manape.ep or $a796 at manape.ep or $a797 at manape.ep or $a798 at manape.ep or $a799 at manape.ep or $a800 at manape.ep or $a801 at manape.ep or $a802 at manape.ep or $a803 at manape.ep or $a804 at manape.ep or $a805 at manape.ep or $a806 at manape.ep or $a807 at manape.ep or $a808 at manape.ep or $a809 at manape.ep or $a810 at manape.ep or $a811 at manape.ep or $a812 at manape.ep or $a813 at manape.ep or $a814 at manape.ep or $a815 at manape.ep or $a816 at manape.ep or $a817 at manape.ep or $a818 at manape.ep or $a819 at manape.ep or $a820 at manape.ep or $a821 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__MEW_11_SE_1_0_
 {
 meta:
@@ -15141,10 +15141,10 @@ strings:
     	$a0 = { E9 09 00 00 00 00 00 00 02 00 00 00 0C 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Shrink_Wrap_v1_4
 {
 meta:
@@ -15153,10 +15153,10 @@ strings:
     	$a0 = { 58 60 8B E8 55 33 F6 68 48 01 ?? ?? E8 49 01 ?? ?? EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule WWPACK_v3_05c4__Unextr__Passw_check__Vir__shield_
 {
 meta:
@@ -15165,10 +15165,10 @@ strings:
     	$a0 = { 03 05 C0 1B B8 ?? ?? 8C CA 03 D0 8C C9 81 C1 ?? ?? 51 B9 ?? ?? 51 06 06 B1 ?? 51 8C D3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PolyEnE_0_01__by_Lennart_Hedlund
 {
 meta:
@@ -15180,7 +15180,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Vx__VirusConstructor_IVP__based
 {
 meta:
@@ -15189,10 +15189,10 @@ strings:
     	$a0 = { E9 ?? ?? E8 ?? ?? 5D ?? ?? ?? ?? ?? 81 ED ?? ?? ?? ?? ?? ?? E8 ?? ?? 81 FC ?? ?? ?? ?? 8D ?? ?? ?? BF ?? ?? 57 A4 A5 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__TravJack_883
 {
 meta:
@@ -15201,10 +15201,10 @@ strings:
     	$a0 = { EB ?? 9C 9E 26 ?? ?? 51 04 ?? 7D ?? 00 ?? 2E ?? ?? ?? ?? 8C C8 8E C0 8E D8 80 ?? ?? ?? ?? 74 ?? 8A ?? ?? ?? BB ?? ?? 8A ?? 32 C2 88 ?? FE C2 43 81 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__SK
 {
 meta:
@@ -15213,10 +15213,10 @@ strings:
     	$a0 = { CD 20 B8 03 00 CD 10 51 E8 00 00 5E 83 EE 09 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__November_17_768
 {
 meta:
@@ -15225,7 +15225,7 @@ strings:
     	$a0 = { E8 ?? ?? 5E 81 EE ?? ?? 50 33 C0 8E D8 80 3E ?? ?? ?? 0E 1F ?? ?? FC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
 rule Vx__Compiler
@@ -15236,10 +15236,10 @@ strings:
     	$a0 = { 8C C3 83 C3 10 2E 01 1E ?? 02 2E 03 1E ?? 02 53 1E }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__Trojan_Telefoon
 {
 meta:
@@ -15248,10 +15248,10 @@ strings:
     	$a0 = { 60 1E E8 3B 01 BF CC 01 2E 03 3E CA 01 2E C7 05 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule BeRoEXEPacker_v1_00__DLL_____BeRo___Farbrausch
 {
 meta:
@@ -15262,10 +15262,10 @@ strings:
 	$a2 = { 83 7C 24 08 01 0F 85 ?? ?? ?? ?? 60 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? BE ?? ?? ?? ?? B9 ?? ?? ?? ?? 8B F9 81 FE ?? ?? ?? ?? 7F 10 AC 47 04 18 2C 02 73 F0 29 3E 03 F1 03 F9 EB E8 BA ?? ?? ?? ?? 8D B2 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
-    
+
 rule eXPressor_1_3____CGSoftLabs
 {
 meta:
@@ -15274,10 +15274,10 @@ strings:
     	$a0 = { 55 8B EC 83 EC ?? 53 56 57 EB 0C 45 78 50 72 2D 76 2E 31 2E 33 2E 2E }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule VcAsm_Protector____VcAsm
 {
 meta:
@@ -15286,10 +15286,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 E8 03 00 00 00 C7 84 00 58 EB 01 E9 83 C0 07 50 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASProtect_v1_1_MTEc
 {
 meta:
@@ -15298,10 +15298,10 @@ strings:
     	$a0 = { 90 60 E8 1B ?? ?? ?? E9 FC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASProtect_v1_1_MTEb
 {
 meta:
@@ -15310,10 +15310,10 @@ strings:
     	$a0 = { 90 60 E9 ?? 04 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule AsCrypt_v0_1____SToRM___needs_to_be_added
 {
 meta:
@@ -15328,7 +15328,7 @@ condition:
     	$a0 or $a1 or $a2 or $a3
 }
 
-    
+
 rule PseudoSigner_0_2__UPX_0_6______Anorganix
 {
 meta:
@@ -15337,10 +15337,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 58 83 E8 3D 50 8D B8 00 00 00 FF 57 8D B0 E8 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_v1_10__Eng_____dulek_xt_____Microsoft_Visual_Basic___MASM32_
 {
 meta:
@@ -15349,10 +15349,10 @@ strings:
     	$a0 = { EB 02 09 94 0F B7 FF 68 80 ?? ?? 00 81 F6 8E 00 00 00 5B EB 02 11 C2 8D 05 F4 00 00 00 47 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__CodeSafe_2_0______Anorganix
 {
 meta:
@@ -15361,10 +15361,10 @@ strings:
     	$a0 = { 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 0B 83 EC 10 53 56 57 E8 C4 01 00 85 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Ady_s_Glue_v0_10
 {
 meta:
@@ -15373,10 +15373,10 @@ strings:
     	$a0 = { 2E 8C 06 ?? ?? 0E 07 33 C0 8E D8 BE ?? ?? BF ?? ?? FC B9 ?? ?? 56 F3 A5 1E 07 5F }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PC_Guard_v5_00d
 {
 meta:
@@ -15386,10 +15386,10 @@ strings:
 	$a1 = { FC 55 50 E8 00 00 00 00 5D 60 E8 03 00 00 00 83 EB 0E EB 01 0C 58 EB 01 35 40 EB 01 36 FF E0 0B 61 B8 30 D2 40 00 EB 01 E3 60 E8 03 00 00 00 D2 EB 0B 58 EB 01 48 40 EB 01 35 FF E0 E7 61 2B E8 9C EB 01 D5 9D EB 01 0B 58 60 E8 03 00 00 00 83 EB 0E EB 01 0C 58 EB 01 35 40 EB 01 36 FF E0 0B 61 89 85 E1 EA 41 00 9C EB 01 D5 9D EB 01 0B 58 EB 01 E3 60 E8 03 00 00 00 D2 EB 0B 58 EB 01 48 40 EB 01 35 FF E0 E7 61 89 85 F9 EA 41 00 9C EB 01 D5 9D EB 01 0B 89 9D E5 EA 41 00 60 E8 03 00 00 00 83 EB 0E EB 01 0C 58 EB 01 35 40 EB 01 36 FF E0 0B 61 89 8D E9 EA 41 00 EB 01 E3 60 E8 03 00 00 00 D2 EB 0B 58 EB 01 48 40 EB 01 35 FF E0 E7 61 89 95 ED EA 41 00 60 E8 03 00 00 00 83 EB 0E EB 01 0C 58 EB 01 35 40 EB 01 36 FF E0 0B 61 89 B5 F1 EA 41 00 9C EB 01 D5 9D EB 01 0B 89 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PoPa_0_01__Packer_on_Pascal_____bagie
 {
 meta:
@@ -15398,10 +15398,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 EC 53 56 57 33 C0 89 45 EC B8 A4 3E 00 10 E8 30 F6 FF FF 33 C0 55 68 BE 40 00 10 ?? ?? ?? ?? 89 20 6A 00 68 80 00 00 00 6A 03 6A 00 6A 01 68 00 00 00 80 8D 55 EC 33 C0 E8 62 E7 FF FF 8B 45 EC E8 32 F2 FF FF 50 E8 B4 F6 FF FF A3 64 66 00 10 33 D2 55 68 93 40 00 10 64 FF 32 64 89 22 83 3D 64 66 00 10 FF 0F 84 3A 01 00 00 6A 00 6A 00 6A 00 A1 64 66 00 10 50 E8 9B F6 FF FF 83 E8 10 50 A1 64 66 00 10 50 E8 BC F6 FF FF 6A 00 68 80 66 00 10 6A 10 68 68 66 00 10 A1 64 66 00 10 50 E8 8B F6 FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXEPACK__LINK__v3_60__v3_64__v3_65_or_5_01_21
 {
 meta:
@@ -15410,10 +15410,10 @@ strings:
     	$a0 = { 8C C0 05 ?? ?? 0E 1F A3 ?? ?? 03 ?? ?? ?? 8E C0 8B ?? ?? ?? 8B ?? 4F 8B F7 FD F3 A4 50 B8 ?? ?? 50 CB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_v0_76_1__pe_exe_
 {
 meta:
@@ -15422,10 +15422,10 @@ strings:
     	$a0 = { 60 BE ?? ?? ?? ?? 8D ?? ?? ?? ?? ?? 66 ?? ?? ?? ?? ?? ?? 57 83 ?? ?? 31 DB EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__Borland_Delphi_3_0______Anorganix
 {
 meta:
@@ -15434,10 +15434,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 90 90 90 90 68 ?? ?? ?? ?? 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECryptor_2_2_4____Strongbit_SoftComplete_Development__h2_
 {
 meta:
@@ -15446,10 +15446,10 @@ strings:
     	$a0 = { E8 F7 FE FF FF 05 ?? ?? 00 00 FF E0 E8 EB FE FF FF 05 ?? ?? 00 00 FF E0 E8 ?? 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Pohernah_Crypter_V1_0_2____Kas
 {
 meta:
@@ -15458,10 +15458,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED DE 26 40 00 8B BD 05 28 40 00 8B 8D 0D 28 40 00 B8 25 28 40 00 01 E8 80 30 05 83 F9 00 74 71 81 7F 1C AB 00 00 00 75 62 8B 57 0C 03 95 09 28 40 00 31 C0 51 31 C9 66 B9 F7 00 66 83 F9 00 74 49 8B 57 0C 03 95 09 28 40 00 8B 85 11 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SVK_Protector_1_32__Eng_____Pavol_Cerven
 {
 meta:
@@ -15473,7 +15473,7 @@ condition:
     	$a0
 }
 
-    
+
 rule FSG_v1_10__Eng_____dulek_xt_____Borland_Delphi___Microsoft_Visual_C___x
 {
 meta:
@@ -15482,10 +15482,10 @@ strings:
     	$a0 = { 1B DB E8 02 00 00 00 1A 0D 5B 68 80 ?? ?? 00 E8 01 00 00 00 EA 5A 58 EB 02 CD 20 68 F4 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_v0_51
 {
 meta:
@@ -15494,10 +15494,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 58 83 E8 3D 50 8D B8 ?? ?? ?? FF 57 8D B0 D8 01 ?? ?? 83 CD FF 31 DB ?? ?? ?? ?? 01 DB 75 07 8B 1E 83 EE FC 11 DB 73 0B 8A 06 46 88 07 47 EB EB 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NSPack____Nort_Star_Software___url____www_nsdsn_com_
 {
 meta:
@@ -15506,10 +15506,10 @@ strings:
     	$a0 = { 83 F9 00 74 28 43 8D B5 ?? ?? FF FF 8B 16 56 51 53 52 56 FF 33 FF 73 04 8B 43 08 03 C2 50 FF 95 ?? ?? FF FF 5A 5B 59 5E 83 C3 0C E2 E1 61 9D E9 ?? ?? ?? FF 8B B5 ?? ?? FF FF 0B F6 0F 84 97 00 00 00 8B 95 ?? ?? FF FF 03 F2 83 3E 00 75 0E 83 7E 04 00 75 08 83 7E 08 00 75 02 EB 7A 8B 5E 08 03 DA 53 52 56 8D BD ?? ?? FF FF 03 7E 04 83 C6 0C 57 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Virogen_Crypt_v0_75
 {
 meta:
@@ -15518,10 +15518,10 @@ strings:
     	$a0 = { 9C 55 E8 EC 00 00 00 87 D5 5D 60 87 D5 80 BD 15 27 40 00 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__Borland_Delphi_6_0___7_0_
 {
 meta:
@@ -15530,10 +15530,10 @@ strings:
     	$a0 = { 90 90 90 90 68 ?? ?? ?? ?? 67 64 FF 36 00 00 67 64 89 26 00 00 F1 90 90 90 90 53 8B D8 33 C0 A3 09 09 09 00 6A 00 E8 09 09 00 FF A3 09 09 09 00 A1 09 09 09 00 A3 09 09 09 00 33 C0 A3 09 09 09 00 33 C0 A3 09 09 09 00 E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__Microsoft_Visual_Basic_5_0___6_0_____Anorganix
 {
 meta:
@@ -15542,10 +15542,10 @@ strings:
     	$a0 = { 68 ?? ?? ?? ?? E8 0A 00 00 00 00 00 00 00 00 00 30 00 00 00 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule VisualUPX_0_2____emadicius
 {
 meta:
@@ -15554,10 +15554,10 @@ strings:
     	$a0 = { 66 C7 05 ?? ?? ?? 00 75 07 E9 ?? FE FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EmbedPE_V1_X____cyclotron
 {
 meta:
@@ -15566,10 +15566,10 @@ strings:
     	$a0 = { 83 EC 50 60 68 ?? ?? ?? ?? E8 ?? ?? 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PRO_PACK_v2_08__emphasis_on_packed_size__locked
 {
 meta:
@@ -15578,10 +15578,10 @@ strings:
     	$a0 = { 83 EC ?? 8B EC BE ?? ?? FC E8 ?? ?? 05 ?? ?? 8B C8 E8 ?? ?? 8B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v2_60
 {
 meta:
@@ -15590,10 +15590,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 D0 ?? ?? ?? 68 34 ?? ?? ?? 64 A1 ?? ?? ?? ?? 50 64 89 25 ?? ?? ?? ?? 83 EC 58 53 56 57 89 65 E8 FF 15 68 ?? ?? ?? 33 D2 8A D4 89 15 84 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v2_61
 {
 meta:
@@ -15602,10 +15602,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 28 ?? ?? ?? 68 E4 ?? ?? ?? 64 A1 ?? ?? ?? ?? 50 64 89 25 ?? ?? ?? ?? 83 EC 58 53 56 57 89 65 E8 FF 15 6C ?? ?? ?? 33 D2 8A D4 89 15 0C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Crunch_V5_0____Bitarts
 {
 meta:
@@ -15614,10 +15614,10 @@ strings:
     	$a0 = { EB 15 03 00 00 00 06 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RAZOR_1911_encruptor
 {
 meta:
@@ -15626,10 +15626,10 @@ strings:
     	$a0 = { E8 ?? ?? BF ?? ?? 3B FC 72 ?? B4 4C CD 21 BE ?? ?? B9 ?? ?? FD F3 A5 FC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Joiner__sign_from_pinch_25_03_2007_20_10_
 {
 meta:
@@ -15638,10 +15638,10 @@ strings:
     	$a0 = { 81 EC 04 01 00 00 8B F4 68 04 01 00 00 56 6A 00 E8 7C 01 00 00 33 C0 6A 00 68 80 00 00 00 6A 03 6A 00 6A 00 68 00 00 00 80 56 E8 50 01 00 00 8B D8 6A 00 6A 00 6A 00 6A 02 6A 00 53 E8 44 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Dropper_Creator_V0_1____Conflict
 {
 meta:
@@ -15653,7 +15653,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Exe_Shield_v2_7b
 {
 meta:
@@ -15663,10 +15663,10 @@ strings:
 	$a1 = { EB 06 68 40 85 06 00 C3 9C 60 E8 02 00 00 00 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 3F 90 40 00 87 DD 8B 85 E6 90 40 00 01 85 33 90 40 00 66 C7 85 30 90 40 00 90 90 01 85 DA 90 40 00 01 85 DE 90 40 00 01 85 E2 90 40 00 BB 7B 11 00 00 03 9D EA 90 40 00 03 9D E6 90 40 00 53 8B C3 8B FB 2D AC 90 40 00 89 85 AD 90 40 00 8D B5 AC 90 40 00 B9 40 04 00 00 F3 A5 8B FB C3 BD 00 00 00 00 8B F7 83 C6 54 81 C7 FF 10 00 00 56 57 57 56 FF 95 DA 90 40 00 8B C8 5E 5F 8B C1 C1 F9 02 F3 A5 03 C8 83 E1 03 F3 A4 EB 26 D0 12 5B 00 AC 12 5B 00 48 12 5B 00 00 00 40 00 00 D0 5A 00 00 10 5B 00 87 DB 87 DB 87 DB 87 DB 87 DB 87 DB 87 DB 8B 0E B5 E6 90 40 07 56 03 76 EE 0F 18 83 C6 14 12 35 97 80 8D BD 63 39 0D B9 06 86 02 07 F3 A5 6A 04 68 06 10 12 1B FF B5 51 29 EE 10 22 95 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule DIET_v1_00d
 {
 meta:
@@ -15675,10 +15675,10 @@ strings:
     	$a0 = { FC 06 1E 0E 8C C8 01 ?? ?? ?? BA ?? ?? 03 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_5_00____Silicon_Realms_Toolworks
 {
 meta:
@@ -15688,10 +15688,10 @@ strings:
 	$a1 = { E8 E3 40 00 00 E9 16 FE FF FF 6A 0C 68 ?? ?? ?? ?? E8 44 15 00 00 8B 4D 08 33 FF 3B CF 76 2E 6A E0 58 33 D2 F7 F1 3B 45 0C 1B C0 40 75 1F E8 36 13 00 00 C7 00 0C 00 00 00 57 57 57 57 57 E8 C7 12 00 00 83 C4 14 33 C0 E9 D5 00 00 00 0F AF 4D 0C 8B F1 89 75 08 3B F7 75 03 33 F6 46 33 DB 89 5D E4 83 FE E0 77 69 83 3D ?? ?? ?? ?? 03 75 4B 83 C6 0F 83 E6 F0 89 75 0C 8B 45 08 3B 05 ?? ?? ?? ?? 77 37 6A 04 E8 48 11 00 00 59 89 7D FC FF 75 08 E8 01 49 00 00 59 89 45 E4 C7 45 FC FE FF FF FF E8 5F 00 00 00 8B 5D E4 3B DF 74 11 FF 75 08 57 53 E8 66 D3 FF FF 83 C4 0C 3B DF 75 61 56 6A 08 FF 35 ?? ?? ?? ?? FF 15 ?? ?? ?? ?? 8B D8 3B DF 75 4C 39 3D ?? ?? ?? ?? 74 33 56 E8 AF F9 FF FF 59 85 C0 0F 85 72 FF FF FF 8B 45 10 3B C7 0F 84 50 FF FF FF C7 00 0C 00 00 00 E9 45 FF FF FF 33 FF 8B 75 0C 6A 04 E8 EE 0F 00 00 59 C3 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule AntiDote_1_0_beta____Spy_Instructor
 {
 meta:
@@ -15701,10 +15701,10 @@ strings:
 	$a1 = { E8 BB FF FF FF 84 C0 74 2F 68 04 01 00 00 68 C0 23 60 00 6A 00 FF 15 08 10 60 00 E8 40 FF FF FF 50 68 78 11 60 00 68 68 11 60 00 68 C0 23 60 00 E8 AB FD FF FF 83 C4 10 33 C0 C2 10 00 90 90 90 8B 4C 24 08 56 8B 74 24 08 33 D2 8B C6 F7 F1 8B C6 85 D2 74 08 33 D2 F7 F1 40 0F AF C1 5E C3 90 8B 44 24 04 53 55 56 8B 48 3C 57 03 C8 33 D2 8B 79 54 8B 71 38 8B C7 F7 F6 85 D2 74 0C 8B C7 33 D2 F7 F6 8B F8 47 0F AF FE 33 C0 33 DB 66 8B 41 14 8D 54 08 18 33 C0 66 8B 41 06 89 54 24 14 8D 68 FF 85 ED 7C 37 33 C0 8B 4C 24 14 8D 04 80 8B 4C C1 08 85 C9 74 1A 8B C1 33 D2 F7 F6 85 D2 75 04 03 F9 EB 0C 8B C1 33 D2 F7 F6 40 0F AF C6 03 F8 43 8B C3 25 FF FF 00 00 3B C5 7E CB 8B C7 5F 5E 5D 5B C3 90 90 90 90 90 90 90 90 90 90 90 90 55 8B EC 6A FF 68 50 22 60 00 64 A1 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule RLPack_V1_18__LZMA_4_30_____ap0x
 {
 meta:
@@ -15713,10 +15713,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 ?? 8D B5 21 0B 00 00 8D 9D FF 02 00 00 33 FF E8 9F 01 00 00 6A ?? 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 6A 00 FF 95 AA 0A 00 00 89 85 F9 0A 00 00 EB 14 60 FF B5 F9 0A 00 00 FF 34 37 FF 74 37 04 FF D3 61 83 C7 ?? 83 3C 37 00 75 E6 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Pelles_C_3_00__4_00__4_50_EXE__X86_CRT_DLL_
 {
 meta:
@@ -15728,7 +15728,7 @@ condition:
     	$a0
 }
 
-    
+
 rule EXECryptor_2_2_6_DLL__minimum_protection_____www_strongbit_com
 {
 meta:
@@ -15740,7 +15740,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Obsidium_v1_3_0_4____Obsidium_Software__h_
 {
 meta:
@@ -15750,10 +15750,10 @@ strings:
 	$a1 = { EB 02 ?? ?? E8 25 00 00 00 EB 04 ?? ?? ?? ?? EB 01 ?? 8B 54 24 0C EB 01 ?? 83 82 B8 00 00 00 23 EB 01 ?? 33 C0 EB 02 ?? ?? C3 EB 02 ?? ?? EB 04 ?? ?? ?? ?? 64 67 FF 36 00 00 EB 03 ?? ?? ?? 64 67 89 26 00 00 EB 02 ?? ?? EB 01 ?? 50 EB 01 ?? 33 C0 EB 01 ?? 8B 00 EB 01 ?? C3 EB 02 ?? ?? E9 FA 00 00 00 EB 02 ?? ?? E8 D5 FF FF FF EB 03 ?? ?? ?? EB 04 ?? ?? ?? ?? 58 EB 02 ?? ?? EB 04 ?? ?? ?? ?? 64 67 8F 06 00 00 EB 03 ?? ?? ?? 83 C4 04 EB 01 ?? E8 3B 26 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule EXECryptor_2_3_9__minimum_protection_
 {
 meta:
@@ -15762,10 +15762,10 @@ strings:
     	$a0 = { 68 ?? ?? ?? ?? E9 ?? ?? ?? FF 50 C1 C8 18 89 05 ?? ?? ?? ?? C3 C1 C0 18 51 E9 ?? ?? ?? FF 84 C0 0F 84 6A F9 FF FF E9 ?? ?? ?? FF C3 E9 ?? ?? ?? FF E8 CF E9 FF FF B8 01 00 00 00 E9 ?? ?? ?? FF 2B D0 68 A0 36 80 D4 59 81 C9 64 98 FF 99 E9 ?? ?? ?? FF 84 C0 0F 84 8E EC FF FF E9 ?? ?? ?? FF C3 87 3C 24 5F 8B 00 03 45 FC 83 C0 18 E9 ?? ?? ?? FF 87 0C 24 59 B8 01 00 00 00 D3 E0 23 D0 E9 02 18 00 00 0F 8D DB 00 00 00 C1 E8 14 E9 CA 00 00 00 9D 87 0C 24 59 87 1C 24 68 AE 73 B9 96 E9 C5 10 00 00 0F 8A ?? ?? ?? ?? E9 ?? ?? ?? FF 81 FD F5 FF 8F 07 E9 4F 10 00 00 C3 E9 5E 12 00 00 87 3C 24 E9 ?? ?? ?? FF E8 ?? ?? ?? FF 83 3D ?? ?? ?? ?? 00 0F 85 ?? ?? ?? ?? 8D 55 EC B8 ?? ?? ?? ?? E9 ?? ?? ?? FF E8 A7 1A 00 00 E8 2A CB FF FF E9 ?? ?? ?? FF C3 E9 ?? ?? ?? FF 59 89 45 E0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PeCompact2_2_53_2_76____BitSum_Technologies
 {
 meta:
@@ -15777,7 +15777,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_1__Yoda_s_Protector_1_02______Anorganix
 {
 meta:
@@ -15786,10 +15786,10 @@ strings:
     	$a0 = { E8 03 00 00 00 EB 01 90 90 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule BeRoEXEPacker_v1_00_DLL__LZBRS_
 {
 meta:
@@ -15799,10 +15799,10 @@ strings:
 	$a1 = { 83 7C 24 08 01 0F 85 ?? ?? ?? ?? 60 BE ?? ?? ?? ?? BF ?? ?? ?? ?? FC AD 8D 1C 07 B0 80 3B FB 73 3B E8 ?? ?? ?? ?? 72 03 A4 EB F2 E8 ?? ?? ?? ?? 8D 51 FF E8 ?? ?? ?? ?? 56 8B F7 2B F2 F3 A4 5E EB DB 02 C0 75 03 AC 12 C0 C3 33 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule yoda_s_Protector_1_02___1_03____Ashkbiz_Danehkar
 {
 meta:
@@ -15811,10 +15811,10 @@ strings:
     	$a0 = { E8 03 00 00 00 EB 01 ?? BB 55 00 00 00 E8 03 00 00 00 EB 01 ?? E8 8F 00 00 00 E8 03 00 00 00 EB 01 ?? E8 82 00 00 00 E8 03 00 00 00 EB 01 ?? E8 B8 00 00 00 E8 03 00 00 00 EB 01 ?? E8 AB 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PUNiSHER_v1_5__DEMO_____FEUERRADER_AHTeam
 {
 meta:
@@ -15824,10 +15824,10 @@ strings:
 	$a1 = { EB 04 83 A4 BC CE 60 EB 04 80 BC 04 11 E8 00 00 00 00 81 2C 24 CA C2 41 00 EB 04 64 6B 88 18 5D E8 00 00 00 00 EB 04 64 6B 88 18 81 2C 24 86 00 00 00 EB 04 64 6B 88 18 8B 85 9C C2 41 00 EB 04 64 6B 88 18 29 04 24 EB 04 64 6B 88 18 EB 04 64 6B 88 18 8B 04 24 EB 04 64 6B 88 18 89 85 9C C2 41 00 EB 04 64 6B 88 18 58 68 9F 6F 56 B6 50 E8 5D 00 00 00 EB FF 71 78 C2 50 00 EB D3 5B F3 68 89 5C 24 48 5C 24 58 FF 8D 5C 24 58 5B 83 C3 4C 75 F4 5A 8D 71 78 75 09 81 F3 EB FF 52 BA 01 00 83 EB FC 4A FF 71 0F 75 19 8B 5C 24 00 00 81 33 50 53 8B 1B 0F FF C6 75 1B 81 F3 EB 87 1C 24 8B 8B 04 24 83 EC FC EB 01 E8 83 EC FC E9 E7 00 00 00 58 EB FF F0 EB FF C0 83 E8 FD EB FF 30 E8 C9 00 00 00 89 E0 EB FF D0 EB FF 71 0F 83 C0 01 EB FF 70 F0 71 EE EB FA EB 83 C0 14 EB FF 70 ED }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PECompact_v1_56
 {
 meta:
@@ -15836,10 +15836,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 0F 90 40 ?? 87 DD 8B 85 A2 90 40 ?? 01 85 03 90 40 ?? 66 C7 85 ?? 90 40 ?? 90 90 01 85 9E 90 40 ?? BB 2D 12 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v1_55
 {
 meta:
@@ -15848,10 +15848,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 0F 80 40 ?? 87 DD 8B 85 A2 80 40 ?? 01 85 03 80 40 ?? 66 C7 85 ?? 80 40 ?? 90 90 01 85 9E 80 40 ?? BB 2D 12 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__PE_Intro_1_0______Anorganix
 {
 meta:
@@ -15860,10 +15860,10 @@ strings:
     	$a0 = { 8B 04 24 9C 60 E8 14 00 00 00 5D 81 ED 0A 45 40 90 80 BD 67 44 40 90 90 0F 85 48 FF ED 0A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Trilobyte_s_JPEG_graphics_Library
 {
 meta:
@@ -15875,7 +15875,7 @@ condition:
     	$a0
 }
 
-    
+
 rule CrypKey_V5_6_X_DLL____Kenonic_Controls_Ltd_
 {
 meta:
@@ -15884,10 +15884,10 @@ strings:
     	$a0 = { 8B 1D ?? ?? ?? ?? 83 FB 00 75 0A E8 ?? ?? ?? ?? E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__FSG_1_31______Anorganix
 {
 meta:
@@ -15896,10 +15896,10 @@ strings:
     	$a0 = { BE 90 90 90 00 BF 90 90 90 00 BB 90 90 90 00 53 BB 90 90 90 00 B2 80 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__ASPack_2_xx_Heuristic______Anorganix
 {
 meta:
@@ -15908,10 +15908,10 @@ strings:
     	$a0 = { 90 90 90 90 68 ?? ?? ?? ?? 67 64 FF 36 00 00 67 64 89 26 00 00 F1 90 90 90 90 A8 03 00 00 61 75 08 B8 01 00 00 00 C2 0C 00 68 00 00 00 00 C3 8B 85 26 04 00 00 8D 8D 3B 04 00 00 51 50 FF 95 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule kkrunchy_v0_17____F__Giesen
 {
 meta:
@@ -15923,7 +15923,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_1__WATCOM_C_C___EXE_____Anorganix
 {
 meta:
@@ -15932,10 +15932,10 @@ strings:
     	$a0 = { E9 00 00 00 00 90 90 90 90 57 41 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Soft_Defender_v1_0___v1_1
 {
 meta:
@@ -15944,10 +15944,10 @@ strings:
     	$a0 = { 74 07 75 05 19 32 67 E8 E8 74 1F 75 1D E8 68 39 44 CD ?? 59 9C 50 74 0A 75 08 E8 59 C2 04 ?? 55 8B EC E8 F4 FF FF FF 56 57 53 78 0F 79 0D E8 34 99 47 49 34 33 EF 31 34 52 47 23 68 A2 AF 47 01 59 E8 ?? ?? ?? ?? 58 05 BA 01 ?? ?? 03 C8 74 BE 75 BC E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Exe_Shield_vx_x
 {
 meta:
@@ -15956,10 +15956,10 @@ strings:
     	$a0 = { 65 78 65 73 68 6C 2E 64 6C 6C C0 5D 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_Full_Edition_1_17____Ap0x
 {
 meta:
@@ -15968,10 +15968,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 8D B5 ?? ?? ?? ?? 8D 9D ?? ?? ?? ?? 33 FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FixupPak_1_20
 {
 meta:
@@ -15983,7 +15983,7 @@ condition:
     	$a0
 }
 
-    
+
 rule ExeBundle_v3_0__small_loader_
 {
 meta:
@@ -15992,10 +15992,10 @@ strings:
     	$a0 = { 00 00 00 00 60 BE 00 F0 40 00 8D BE 00 20 FF FF 57 83 CD FF EB 10 90 90 90 90 90 90 8A 06 46 88 07 47 01 DB 75 07 8B 1E 83 EE FC 11 DB 72 ED B8 01 00 00 00 01 DB 75 07 8B 1E 83 EE FC 11 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule yoda_s_Protector_v1_0b____Ashkbiz_Danehkar__h_
 {
 meta:
@@ -16004,10 +16004,10 @@ strings:
     	$a0 = { 55 8B EC 53 56 57 60 E8 00 00 00 00 5D 81 ED 4C 32 40 00 E8 03 00 00 00 EB 01 ?? B9 EA 47 40 00 81 E9 E9 32 40 00 8B D5 81 C2 E9 32 40 00 8D 3A 8B F7 33 C0 E8 04 00 00 00 90 EB 01 ?? E8 03 00 00 00 EB 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Pe123_2006_4_12
 {
 meta:
@@ -16019,7 +16019,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Inbuild_v1_0__hard
 {
 meta:
@@ -16028,10 +16028,10 @@ strings:
     	$a0 = { B9 ?? ?? BB ?? ?? 2E ?? ?? 2E ?? ?? 43 E2 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule tElock_v0_71b7
 {
 meta:
@@ -16040,10 +16040,10 @@ strings:
     	$a0 = { 60 E8 48 11 00 00 C3 83 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SVK_Protector_v1_43____www_anticracking_sk
 {
 meta:
@@ -16055,7 +16055,7 @@ condition:
     	$a0
 }
 
-    
+
 rule tElock_v0_71b2
 {
 meta:
@@ -16064,10 +16064,10 @@ strings:
     	$a0 = { 60 E8 44 11 00 00 C3 83 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Simple_UPX_Cryptor_v30_4_2005__One_layer_encryption______MANtiCORE
 {
 meta:
@@ -16076,10 +16076,10 @@ strings:
     	$a0 = { 60 B8 ?? ?? ?? 00 B9 ?? 01 00 00 80 34 08 ?? E2 FA 61 68 ?? ?? ?? 00 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__ExeSmasher______Anorganix
 {
 meta:
@@ -16088,10 +16088,10 @@ strings:
     	$a0 = { 9C FE 03 90 60 BE 90 90 41 90 8D BE 90 10 FF FF 57 83 CD FF EB 10 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 FE 0B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_Full_Edition_1_17__aPLib_____Ap0x
 {
 meta:
@@ -16100,10 +16100,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 8D B5 74 1F 00 00 8D 9D 1E 03 00 00 33 FF ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? EB 0F FF 74 37 04 FF 34 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule DIET_v1_02b__v1_10a__v1_20
 {
 meta:
@@ -16112,10 +16112,10 @@ strings:
     	$a0 = { BE ?? ?? BF ?? ?? B9 ?? ?? 3B FC 72 ?? B4 4C CD 21 FD F3 A5 FC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ENIGMA_Protector_V1_1____Sukhov_Vladimir
 {
 meta:
@@ -16124,10 +16124,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 83 ?? ?? 81 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_0_32a__fake_PEX_0_99_____emadicius
 {
 meta:
@@ -16139,7 +16139,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_1__WATCOM_C_C___EXE______Anorganix
 {
 meta:
@@ -16148,10 +16148,10 @@ strings:
     	$a0 = { E9 00 00 00 00 90 90 90 90 57 41 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_V1_18_Basic_Edition__aPLib_or_LZMA_____ap0x
 {
 meta:
@@ -16160,10 +16160,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 8D B5 ?? ?? 00 00 8D 9D ?? 02 00 00 33 FF E8 ?? 01 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PrivateEXE_v2_0a
 {
 meta:
@@ -16173,10 +16173,10 @@ strings:
 	$a1 = { 06 60 C8 ?? ?? ?? 0E 68 ?? ?? 9A ?? ?? ?? ?? 3D ?? ?? 0F ?? ?? ?? 50 50 0E 68 ?? ?? 9A ?? ?? ?? ?? 0E }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Armadillo_3_6x____Silicon_Realms_Toolworks
 {
 meta:
@@ -16185,10 +16185,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 50 51 EB 0F ?? EB 0F ?? EB 07 ?? EB 0F ?? EB 08 FD EB 0B F2 EB F5 EB F6 F2 EB 08 FD EB E9 F3 EB E4 FC ?? 59 58 50 51 EB 0F ?? EB 0F ?? EB 07 ?? EB 0F ?? EB 08 FD EB 0B F2 EB F5 EB F6 F2 EB 08 FD EB E9 F3 EB E4 FC ?? 59 58 50 51 EB 0F ?? EB 0F ?? EB 07 ?? EB 0F ?? EB 08 FD EB 0B F2 EB F5 EB F6 F2 EB 08 FD EB E9 F3 EB E4 FC ?? 59 58 60 33 C9 75 02 EB 15 ?? 33 C9 75 18 7A 0C 70 0E EB 0D ?? 72 0E 79 F1 ?? ?? ?? 79 09 74 F0 ?? 87 DB 7A F0 ?? ?? 61 50 51 EB 0F ?? EB 0F ?? EB 07 ?? EB 0F ?? EB 08 FD EB 0B F2 EB F5 EB F6 F2 EB 08 FD EB E9 F3 EB E4 FC ?? 59 58 60 9C 33 C0 E8 09 00 00 00 E8 E8 23 00 00 00 7A 23 ?? 8B 04 24 EB 03 7A 29 ?? C6 00 90 C3 ?? 70 F0 87 D2 71 07 ?? ?? 40 8B DB 7A 11 EB 08 ?? EB F7 EB C3 ?? 7A E9 70 DA 7B D1 71 F3 ?? 7B F3 71 D6 ?? 9D 61 83 ED 06 33 FF 47 60 33 C9 75 02 EB 15 ?? 33 C9 75 18 7A 0C 70 0E EB 0D ?? 72 0E 79 F1 ?? ?? ?? 79 09 74 F0 EB 87 ?? 7A F0 ?? ?? 61 8B 9C BD AB 76 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PluginToExe_v1_02____BoB___BobSoft
 {
 meta:
@@ -16197,10 +16197,10 @@ strings:
     	$a0 = { E8 00 00 00 00 29 C0 5D 81 ED 32 42 40 00 50 8F 85 DD 40 40 00 50 FF 95 11 42 40 00 89 85 D9 40 40 00 FF 95 0D 42 40 00 50 FF 95 21 42 40 00 80 38 00 74 16 8A 08 80 F9 22 75 07 50 FF 95 25 42 40 00 89 85 E1 40 40 00 EB 6C 6A 01 8F 85 DD 40 40 00 6A 58 6A 40 FF 95 15 42 40 00 89 85 D5 40 40 00 89 C7 68 00 08 00 00 6A 40 FF 95 15 42 40 00 89 47 1C C7 07 58 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Pohernah_1_0_2___by_Kas
 {
 meta:
@@ -16209,10 +16209,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED DE 26 40 00 8B BD 05 28 40 00 8B 8D 0D 28 40 00 B8 25 28 40 00 01 E8 80 30 05 83 F9 00 74 71 81 7F 1C AB 00 00 00 75 62 8B 57 0C 03 95 09 28 40 00 31 C0 51 31 C9 66 B9 F7 00 66 83 F9 00 74 49 8B 57 0C 03 95 09 28 40 00 8B 85 11 28 40 00 83 F8 02 75 06 81 C2 00 02 00 00 51 8B 4F 10 83 F8 02 75 06 81 E9 00 02 00 00 57 BF C8 00 00 00 89 CE E8 27 00 00 00 89 C1 5F B8 25 28 40 00 01 E8 E8 24 00 00 00 59 49 EB B1 59 83 C7 28 49 EB 8A 8B 85 01 28 40 00 89 44 24 1C 61 FF E0 56 57 4F F7 D7 21 FE 89 F0 5F 5E C3 60 83 F0 05 40 90 48 83 F0 05 89 C6 89 D7 60 E8 0B 00 00 00 61 83 C7 08 83 E9 07 E2 F1 61 C3 57 8B 1F 8B 4F 04 68 B9 79 37 9E 5A 42 89 D0 48 C1 E0 05 BF 20 00 00 00 4A 89 DD C1 E5 04 29 E9 8B 6E 08 31 DD 29 E9 89 DD C1 ED 05 31 C5 29 E9 2B 4E 0C 89 CD C1 E5 04 29 EB 8B 2E 31 CD 29 EB 89 CD C1 ED 05 31 C5 29 EB 2B 5E 04 29 D0 4F 75 C8 5F 89 1F 89 4F 04 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule by_Central_Point_Software
 {
 meta:
@@ -16221,10 +16221,10 @@ strings:
     	$a0 = { 50 51 52 56 57 8B EB 1E 2E }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Krypton_v0_3
 {
 meta:
@@ -16233,10 +16233,10 @@ strings:
     	$a0 = { 8B 0C 24 E9 C0 8D 01 ?? C1 3A 6E CA 5D 7E 79 6D B3 64 5A 71 EA }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Krypton_v0_2
 {
 meta:
@@ -16245,10 +16245,10 @@ strings:
     	$a0 = { 8B 0C 24 E9 0A 7C 01 ?? AD 42 40 BD BE 9D 7A 04 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Krypton_v0_5
 {
 meta:
@@ -16257,10 +16257,10 @@ strings:
     	$a0 = { 54 E8 ?? ?? ?? ?? 5D 8B C5 81 ED 71 44 ?? ?? 2B 85 64 60 ?? ?? EB 43 DF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Krypton_v0_4
 {
 meta:
@@ -16269,10 +16269,10 @@ strings:
     	$a0 = { 54 E8 ?? ?? ?? ?? 5D 8B C5 81 ED 61 34 ?? ?? 2B 85 60 37 ?? ?? 83 E8 06 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_0_32a__fake_PESHiELD_0_25_____emadicius
 {
 meta:
@@ -16284,7 +16284,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Upack_v0_30_beta____Dwing
 {
 meta:
@@ -16293,10 +16293,10 @@ strings:
     	$a0 = { E9 ?? ?? ?? ?? 42 79 44 77 69 6E 67 40 00 00 00 50 45 00 00 4C 01 02 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 30 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Ding_Boy_s_PE_lock_Phantasm_v1_0___v1_1
 {
 meta:
@@ -16305,10 +16305,10 @@ strings:
     	$a0 = { 55 57 56 52 51 53 66 81 C3 EB 02 EB FC 66 81 C3 EB 02 EB FC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Packman_0_0_0_1____bubba
 {
 meta:
@@ -16317,10 +16317,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 58 8D A8 ?? FE FF FF 8D 98 ?? ?? ?? FF 8D ?? ?? 01 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule AntiDote_1_2_Beta__Demo_____SIS_Team
 {
 meta:
@@ -16329,10 +16329,10 @@ strings:
     	$a0 = { 68 69 D6 00 00 E8 C6 FD FF FF 68 69 D6 00 00 E8 BC FD FF FF 83 C4 08 E8 A4 FF FF FF 84 C0 74 2F 68 04 01 00 00 68 B0 21 60 00 6A 00 FF 15 08 10 60 00 E8 29 FF FF FF 50 68 88 10 60 00 68 78 10 60 00 68 B0 21 60 00 E8 A4 FD FF FF 83 C4 10 33 C0 C2 10 00 90 90 90 90 90 90 90 90 90 90 90 90 8B 4C 24 08 56 8B 74 24 08 33 D2 8B C6 F7 F1 8B C6 85 D2 74 08 33 D2 F7 F1 40 0F AF C1 5E C3 90 8B 44 24 04 53 55 56 8B 48 3C 57 03 C8 33 D2 8B 79 54 8B 71 38 8B C7 F7 F6 85 D2 74 0C 8B C7 33 D2 F7 F6 8B F8 47 0F AF FE 33 C0 33 DB 66 8B 41 14 8D 54 08 18 33 C0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__MEW_11_SE_1_0______Anorganix
 {
 meta:
@@ -16341,10 +16341,10 @@ strings:
     	$a0 = { E9 09 00 00 00 00 00 00 02 00 00 00 0C 90 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXE2COM__Packed_
 {
 meta:
@@ -16353,10 +16353,10 @@ strings:
     	$a0 = { BD ?? ?? 89 ?? ?? ?? 81 ?? ?? ?? ?? ?? 8C ?? ?? ?? 8C C8 05 ?? ?? 8E C0 BE ?? ?? 8B FE 0E 57 54 59 F3 A4 06 68 ?? ?? CB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Morphine_v3_3____Silent_Software___Silent_Shield__c_2005
 {
 meta:
@@ -16368,7 +16368,7 @@ condition:
     	$a0
 }
 
-    
+
 rule TAV
 {
 meta:
@@ -16377,10 +16377,10 @@ strings:
     	$a0 = { E8 ?? ?? 4D 5A CB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule tElock_v0_80
 {
 meta:
@@ -16389,10 +16389,10 @@ strings:
     	$a0 = { 60 E8 F9 11 00 00 C3 83 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Themida_WinLicense_V1_X_NoCompression_SecureEngine____Oreans_Technologies
 {
 meta:
@@ -16404,7 +16404,7 @@ condition:
     	$a0
 }
 
-    
+
 rule KBys_Packer_0_28_Beta____Shoooo
 {
 meta:
@@ -16416,7 +16416,7 @@ condition:
     	$a0
 }
 
-    
+
 rule R_SC_s_Process_Patcher_1_5_1
 {
 meta:
@@ -16428,7 +16428,7 @@ condition:
     	$a0
 }
 
-    
+
 rule RCryptor_v1_6x_____Vaska
 {
 meta:
@@ -16437,10 +16437,10 @@ strings:
     	$a0 = { 60 90 61 61 80 7F F0 45 90 60 0F 85 1B 8B 1F FF 68 ?? ?? ?? ?? C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MEW_11_SE_v1_1_____Northfox__HCC_
 {
 meta:
@@ -16449,10 +16449,10 @@ strings:
     	$a0 = { E9 ?? ?? ?? FF 0C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v2_5x___v2_6x
 {
 meta:
@@ -16461,10 +16461,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 53 56 57 89 65 E8 FF 15 58 ?? ?? ?? 33 D2 8A D4 89 15 EC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v0_978_2
 {
 meta:
@@ -16473,10 +16473,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB D1 84 40 ?? 87 DD 8B 85 56 85 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v0_978_1
 {
 meta:
@@ -16485,10 +16485,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 49 87 40 ?? 87 DD 8B 85 CE 87 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule yoda_s_Protector_V1_02____Ashkbiz_Danehkar___Sign_by_fly
 {
 meta:
@@ -16497,10 +16497,10 @@ strings:
     	$a0 = { E8 03 00 00 00 EB 01 ?? BB 55 00 00 00 E8 03 00 00 00 EB 01 ?? E8 8F 00 00 00 E8 03 00 00 00 EB 01 ?? E8 82 00 00 00 E8 03 00 00 00 EB 01 ?? E8 B8 00 00 00 E8 03 00 00 00 EB 01 ?? E8 AB 00 00 00 E8 03 00 00 00 EB 01 ?? 83 FB 55 E8 03 00 00 00 EB 01 ?? 75 2E E8 03 00 00 00 EB 01 ?? C3 60 E8 00 00 00 00 5D 81 ED 23 3F 42 00 8B D5 81 C2 72 3F 42 00 52 E8 01 00 00 00 C3 C3 E8 03 00 00 00 EB 01 ?? E8 0E 00 00 00 E8 D1 FF FF FF C3 E8 03 00 00 00 EB 01 ?? 33 C0 64 FF 30 64 89 20 CC C3 E8 03 00 00 00 EB 01 ?? 33 C0 64 FF 30 64 89 20 4B CC C3 E8 03 00 00 00 EB 01 ?? 33 DB B9 3A 66 42 00 81 E9 1D 40 42 00 8B D5 81 C2 1D 40 42 00 8D 3A 8B F7 33 C0 E8 03 00 00 00 EB 01 ?? E8 17 00 00 00 90 90 90 E9 C3 1F 00 00 33 C0 64 FF 30 64 89 20 43 CC C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Berio_2_00_beta__h_
 {
 meta:
@@ -16509,10 +16509,10 @@ strings:
     	$a0 = { 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 E9 01 74 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_0_22___0_23_beta____Dwing
 {
 meta:
@@ -16523,10 +16523,10 @@ strings:
 	$a2 = { 6A 07 BE 88 01 40 00 AD 8B F8 59 95 F3 A5 AD B5 ?? F3 AB AD 50 97 51 58 8D 54 85 5C FF 16 72 59 2C 03 73 02 B0 00 3C 07 72 02 2C 03 50 0F B6 5F FF C1 E3 ?? B3 00 8D 1C 5B 8D 9C 9D 0C 10 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 or $a2 at manape.ep
 }
 
-    
+
 rule Password_protector_my_SMT
 {
 meta:
@@ -16535,10 +16535,10 @@ strings:
     	$a0 = { E8 ?? ?? ?? ?? 5D 8B FD 81 ?? ?? ?? ?? ?? 81 ?? ?? ?? ?? ?? 83 ?? ?? 89 ?? ?? ?? ?? ?? 8D ?? ?? ?? ?? ?? 8D ?? ?? ?? ?? ?? 46 80 ?? ?? 74 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__Caz_1204
 {
 meta:
@@ -16547,10 +16547,10 @@ strings:
     	$a0 = { E8 ?? ?? 5E 83 EE 03 1E 06 B8 FF FF CD 2F 3C 10 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule eXPressor_Protection_1_5_0_X____CGSoftLabs
 {
 meta:
@@ -16562,7 +16562,7 @@ condition:
     	$a0
 }
 
-    
+
 rule MSLRH_v0_32a__fake_PEtite_2_1_____emadicius__h_
 {
 meta:
@@ -16571,10 +16571,10 @@ strings:
     	$a0 = { B8 00 50 40 00 6A 00 68 BB 21 40 00 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 66 9C 60 50 83 C4 04 61 66 9D 64 8F 05 00 00 00 00 83 C4 08 EB 05 E8 EB 04 40 00 EB FA E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 50 E8 02 00 00 00 29 5A 58 6B C0 03 E8 02 00 00 00 29 5A 83 C4 04 58 74 04 75 02 EB 02 EB 01 81 0F 31 50 0F 31 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule JExeCompressor_V1_0____UsAr
 {
 meta:
@@ -16583,10 +16583,10 @@ strings:
     	$a0 = { 0F C8 0F CF C6 C4 8B 0F AC EA 99 0F AD D8 13 F5 0F BD EF 85 EF 85 DA 69 FE ?? ?? ?? ?? 21 F9 BE ?? ?? ?? ?? 23 CF 0F BC FE D2 DC 85 EF B9 ?? ?? ?? ?? C6 C0 F7 8D 35 ?? ?? ?? ?? 8D 0D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ACProtect_V1_4X____risco
 {
 meta:
@@ -16595,10 +16595,10 @@ strings:
     	$a0 = { 60 E8 01 00 00 00 7C 83 04 24 06 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Excalibur_V1_03____forgot___Sign_by_fly
 {
 meta:
@@ -16607,10 +16607,10 @@ strings:
     	$a0 = { E9 00 00 00 00 60 E8 14 00 00 00 5D 81 ED 00 00 00 00 6A 45 E8 A3 00 00 00 68 00 00 00 00 E8 58 61 EB 39 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Symantec_WinFax_PRO_8_3_Coverpage_Quick_CoverPage
 {
 meta:
@@ -16622,7 +16622,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Fish_PE_Shield_1_12_1_16____HellFish
 {
 meta:
@@ -16634,10 +16634,10 @@ strings:
 	$a3 = { 60 E8 EA FD FF FF FF D0 C3 8D 40 00 ?? 00 00 00 2C 00 00 00 }
 
 condition:
-    	$a0 or $a1 or $a2 at sgpe.ep or $a3 at sgpe.ep
+    	$a0 or $a1 or $a2 at manape.ep or $a3 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2___BJFNT_1_1b______Anorganix
 {
 meta:
@@ -16646,10 +16646,10 @@ strings:
     	$a0 = { EB 01 EA 9C EB 01 EA 53 EB 01 EA 51 EB 01 EA 52 EB 01 EA 56 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RE_Crypt_0_7x____Crudd__RET_
 {
 meta:
@@ -16658,10 +16658,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED F3 1D 40 00 B9 7B 09 00 00 8D BD 3B 1E 40 00 8B F7 61 60 E8 00 00 00 00 5D 55 81 04 24 0A 00 00 00 C3 8B F5 81 C5 ?? ?? 00 00 89 6D 34 89 75 38 8B 7D 38 81 E7 00 FF FF FF 81 C7 48 00 00 00 47 03 7D 60 8B 4D 5C 83 F9 00 7E 0F 8B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule eXpressor_v1_4_5____CGSoftLabs
 {
 meta:
@@ -16671,10 +16671,10 @@ strings:
 	$a1 = { 55 8B EC 83 EC ?? 53 56 57 83 65 DC 00 F3 EB 0C }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule X_Pack_v1_4_2
 {
 meta:
@@ -16686,7 +16686,7 @@ condition:
     	$a0
 }
 
-    
+
 rule MSLRH_v0_32a__fake_PC_Guard_4_xx_____emadicius__h_
 {
 meta:
@@ -16695,10 +16695,10 @@ strings:
     	$a0 = { FC 55 50 E8 00 00 00 00 5D EB 01 E3 60 E8 03 00 00 00 D2 EB 0B 58 EB 01 48 40 EB 01 35 FF E0 E7 61 58 5D EB 05 E8 EB 04 40 00 EB FA E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 50 E8 02 00 00 00 29 5A 58 6B C0 03 E8 02 00 00 00 29 5A 83 C4 04 58 74 04 75 02 EB 02 EB 01 81 0F 31 50 0F 31 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Unknown_UPX_modifyer
 {
 meta:
@@ -16707,10 +16707,10 @@ strings:
     	$a0 = { E8 02 00 00 00 CD 03 5A 81 C2 ?? ?? ?? ?? 81 C2 ?? ?? ?? ?? 89 D1 81 C1 3C 05 00 00 52 81 2A 33 53 45 12 83 C2 04 39 CA 7E F3 89 CA 8B 42 04 8D 18 29 02 BB 78 56 00 00 83 EA 04 3B 14 24 7D EC C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__JDPack_1_x___JDProtect_0_9_
 {
 meta:
@@ -16719,10 +16719,10 @@ strings:
     	$a0 = { 60 E8 22 00 00 00 5D 8B D5 81 ED 90 90 90 90 2B 95 90 90 90 90 81 EA 06 90 90 90 89 95 90 90 90 90 83 BD 45 00 01 00 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule D1S1G_v1_1_Beta____Scrambled_EXE____D1N
 {
 meta:
@@ -16734,7 +16734,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_1__UPX_0_6_____Anorganix
 {
 meta:
@@ -16743,10 +16743,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 58 83 E8 3D 50 8D B8 00 00 00 FF 57 8D B0 E8 00 00 00 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__CD_Cops_II______Anorganix
 {
 meta:
@@ -16755,10 +16755,10 @@ strings:
     	$a0 = { 53 60 BD 90 90 90 90 8D 45 90 8D 5D 90 E8 00 00 00 00 8D 01 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule N_Joy_1_0____NEX
 {
 meta:
@@ -16767,10 +16767,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 F0 B8 9C 3B 40 00 E8 8C FC FF FF 6A 00 68 E4 39 40 00 6A 0A 6A 00 E8 40 FD FF FF E8 EF F5 FF FF 8D 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Protect_Shareware_V1_1____eCompserv_CMS
 {
 meta:
@@ -16782,7 +16782,7 @@ condition:
     	$a0
 }
 
-    
+
 rule DOS_16M_DOS_Extender__c__Tenberry_Software_Inc_1987_1995
 {
 meta:
@@ -16791,10 +16791,10 @@ strings:
     	$a0 = { BF ?? ?? 8E C7 8E D7 BC ?? ?? 36 ?? ?? ?? ?? FF ?? ?? ?? 36 ?? ?? ?? ?? BE ?? ?? AC 8A D8 B7 00 ?? ?? 8B ?? ?? ?? 4F 8E C7 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASPack_v2_11d
 {
 meta:
@@ -16803,10 +16803,10 @@ strings:
     	$a0 = { 60 E8 02 00 00 00 EB 09 5D 55 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule AntiDote_1_2_1_4_SE_DLL____SIS_Team
 {
 meta:
@@ -16815,10 +16815,10 @@ strings:
     	$a0 = { EB 10 66 62 3A 43 2B 2B 48 4F 4F 4B 90 E9 08 32 90 90 90 90 90 90 90 90 90 90 80 7C 24 08 01 0F 85 ?? ?? ?? ?? 60 BE ?? ?? ?? ?? 8D BE ?? ?? ?? ?? 57 83 CD FF EB 0B 90 8A 06 46 88 07 47 01 DB 75 07 8B 1E 83 EE FC 11 DB 72 ED B8 01 00 00 00 01 DB 75 07 8B 1E 83 EE FC 11 DB 11 C0 01 DB 73 ?? 75 ?? 8B 1E 83 EE FC 11 DB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXEStealth_2_75____WebtoolMaster
 {
 meta:
@@ -16827,10 +16827,10 @@ strings:
     	$a0 = { 90 60 90 E8 00 00 00 00 5D 81 ED D1 27 40 00 B9 15 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASPack_v2_11b
 {
 meta:
@@ -16839,10 +16839,10 @@ strings:
     	$a0 = { 60 E8 02 00 00 00 EB 09 5D 55 81 ED 39 39 44 00 C3 E9 3D 04 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASPack_v2_11c
 {
 meta:
@@ -16851,10 +16851,10 @@ strings:
     	$a0 = { 60 E8 02 00 00 00 EB 09 5D 55 81 ED 39 39 44 00 C3 E9 59 04 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__Yoda_s_Protector_1_02______Anorganix
 {
 meta:
@@ -16863,10 +16863,10 @@ strings:
     	$a0 = { E8 03 00 00 00 EB 01 90 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECryptor_2_2_2_3__compressed_code_____www_strongbit_com
 {
 meta:
@@ -16876,10 +16876,10 @@ strings:
 	$a1 = { E8 00 00 00 00 58 ?? ?? ?? ?? ?? 8B 1C 24 81 EB ?? ?? ?? ?? B8 ?? ?? ?? ?? 50 6A 04 68 00 10 00 00 50 6A 00 B8 C4 ?? ?? ?? 8B 04 18 FF D0 59 BA ?? ?? ?? ?? 01 DA 52 53 50 89 C7 89 D6 FC F3 A4 B9 ?? ?? ?? ?? 01 D9 FF D1 58 8B 1C 24 68 00 80 00 00 6A 00 50 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule NSIS_Installer____NullSoft
 {
 meta:
@@ -16888,10 +16888,10 @@ strings:
     	$a0 = { 83 EC 20 53 55 56 33 DB 57 89 5C 24 18 C7 44 24 10 ?? ?? ?? ?? C6 44 24 14 20 FF 15 30 70 40 00 53 FF 15 80 72 40 00 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? A3 ?? ?? ?? ?? E8 ?? ?? ?? ?? BE }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RE_Crypt_v0_7x____Crudd__RET___h1_
 {
 meta:
@@ -16900,10 +16900,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED F3 1D 40 00 B9 7B 09 00 00 8D BD 3B 1E 40 00 8B F7 61 60 E8 00 00 00 00 5D 55 81 04 24 0A 00 00 00 C3 8B F5 81 C5 ?? ?? 00 00 89 6D 34 89 75 38 8B 7D 38 81 E7 00 FF FF FF 81 C7 48 00 00 00 47 03 7D 60 8B 4D 5C 83 F9 00 7E 0F 8B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ENIGMA_Protector_V1_1_V1_2____Sukhov_Vladimir
 {
 meta:
@@ -16912,10 +16912,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 83 ED 06 81 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__ACProtect_1_09______Anorganix
 {
 meta:
@@ -16924,10 +16924,10 @@ strings:
     	$a0 = { 60 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 02 00 00 90 90 90 04 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SDC_1_2__Self_Decrypting_Binary_Generator____by_Claes_M_Nyberg
 {
 meta:
@@ -16937,10 +16937,10 @@ strings:
 	$a1 = { 55 89 E5 83 EC 08 C7 04 24 01 00 00 00 FF 15 A0 91 40 00 E8 DB FE FF FF 55 89 E5 53 83 EC 14 8B 45 08 8B 00 8B 00 3D 91 00 00 C0 77 3B 3D 8D 00 00 C0 72 4B BB 01 00 00 00 C7 44 24 04 00 00 00 00 C7 04 24 08 00 00 00 E8 CE 24 00 00 83 F8 01 0F 84 C4 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule AHPack_0_1____FEUERRADER
 {
 meta:
@@ -16949,10 +16949,10 @@ strings:
     	$a0 = { 60 68 54 ?? ?? 00 B8 48 ?? ?? 00 FF 10 68 B3 ?? ?? 00 50 B8 44 ?? ?? 00 FF 10 68 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Lite_v0_03a
 {
 meta:
@@ -16961,10 +16961,10 @@ strings:
     	$a0 = { 60 06 FC 1E 07 BE ?? ?? ?? ?? 6A 04 68 ?? 10 ?? ?? 68 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule beria_v0_07_public_WIP____symbiont
 {
 meta:
@@ -16973,10 +16973,10 @@ strings:
     	$a0 = { 83 EC 18 53 8B 1D 00 30 ?? ?? 55 56 57 68 30 07 00 00 33 ED 55 FF D3 8B F0 3B F5 74 0D 89 AE 20 07 00 00 E8 88 0F 00 00 EB 02 33 F6 6A 10 55 89 35 30 40 ?? ?? FF D3 8B F0 3B F5 74 09 89 2E E8 3C FE FF FF EB 02 33 F6 6A 18 55 89 35 D8 43 ?? ?? FF D3 8B F0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXE_Stealth_v1_1
 {
 meta:
@@ -16985,10 +16985,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED FB 1D 40 00 B9 7B 09 00 00 8B F7 AC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_v1_33
 {
 meta:
@@ -16997,10 +16997,10 @@ strings:
     	$a0 = { BE A4 01 40 00 AD 93 AD 97 AD 56 96 B2 80 A4 B6 80 FF 13 73 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_v1_31
 {
 meta:
@@ -17009,10 +17009,10 @@ strings:
     	$a0 = { BB D0 01 40 00 BF 00 10 40 00 BE ?? ?? ?? ?? 53 BB ?? ?? ?? ?? B2 80 A4 B6 80 FF D3 73 F9 33 C9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RCryptor_v1_6d_____Vaska
 {
 meta:
@@ -17022,10 +17022,10 @@ strings:
 	$a1 = { 60 90 61 61 80 7F F0 45 90 60 0F 85 1B 8B 1F FF 68 ?? ?? ?? ?? B8 ?? ?? ?? ?? 90 3D ?? ?? ?? ?? 74 06 80 30 ?? 40 EB F3 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Dual_s_eXe_1_0
 {
 meta:
@@ -17035,10 +17035,10 @@ strings:
 	$a1 = { 55 8B EC 81 EC 00 05 00 00 E8 00 00 00 00 5D 81 ED 0E 00 00 00 8D 85 08 03 00 00 89 28 33 FF 8D 85 7D 02 00 00 8D 8D 08 03 00 00 2B C8 8B 9D 58 03 00 00 E8 1C 02 00 00 8D 9D 61 02 00 00 8D B5 7C 02 00 00 46 80 3E 00 74 24 56 FF 95 0A 04 00 00 46 80 3E 00 75 FA 46 80 3E 00 74 E7 50 56 50 FF 95 0E 04 00 00 89 03 58 83 C3 04 EB E3 8D 85 24 03 00 00 50 68 1F 00 02 00 6A 00 8D 85 48 03 00 00 50 68 01 00 00 80 FF 95 69 02 00 00 83 BD 24 03 00 00 00 0F 84 8B 00 00 00 C7 85 28 03 00 00 04 00 00 00 8D 85 28 03 00 00 50 8D 85 20 03 00 00 50 8D 85 6C 03 00 00 50 6A 00 8D 85 62 03 00 00 50 FF B5 24 03 00 00 FF 95 71 02 00 00 83 BD 20 03 00 00 01 7E 02 EB 20 6A 40 8D 85 73 03 00 00 50 8D 85 82 03 00 00 50 6A 00 FF 95 61 02 00 00 6A 00 FF 95 65 02 00 00 FF 8D 20 03 00 00 FF }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule yoda_s_Protector_V1_01____Ashkbiz_Danehkar___Sign_by_fly
 {
 meta:
@@ -17047,10 +17047,10 @@ strings:
     	$a0 = { 55 8B EC 53 56 57 E8 03 00 00 00 EB 01 ?? E8 86 00 00 00 E8 03 00 00 00 EB 01 ?? E8 79 00 00 00 E8 03 00 00 00 EB 01 ?? E8 A4 00 00 00 E8 03 00 00 00 EB 01 ?? E8 97 00 00 00 E8 03 00 00 00 EB 01 ?? E8 2D 00 00 00 E8 03 00 00 00 EB 01 ?? 60 E8 00 00 00 00 5D 81 ED D5 E4 41 00 8B D5 81 C2 23 E5 41 00 52 E8 01 00 00 00 C3 C3 E8 03 00 00 00 EB 01 ?? E8 0E 00 00 00 E8 D1 FF FF FF C3 E8 03 00 00 00 EB 01 ?? 33 C0 64 FF 30 64 89 20 CC C3 E8 03 00 00 00 EB 01 ?? 33 C0 64 FF 30 64 89 20 CC C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NsPack_V2_X____LiuXingPing
 {
 meta:
@@ -17062,7 +17062,7 @@ condition:
     	$a0
 }
 
-    
+
 rule MSLRH_0_32a__fake__BJFNT_1_3_____emadicius
 {
 meta:
@@ -17074,7 +17074,7 @@ condition:
     	$a0
 }
 
-    
+
 rule eXPressor_Protection_V1_5_0_X____CGSoftLabs___Sign_by_fly
 {
 meta:
@@ -17086,7 +17086,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PESpin_v0_3__Eng_____cyberbob
 {
 meta:
@@ -17097,10 +17097,10 @@ strings:
 	$a2 = { EB 01 68 60 E8 00 00 00 00 8B 1C 24 83 C3 12 81 2B E8 B1 06 00 FE 4B FD 82 2C 24 B7 CD 46 00 0B E4 74 9E 75 01 C7 81 73 04 D7 7A F7 2F 81 73 19 77 00 43 B7 F6 C3 6B B7 00 00 F9 FF E3 C9 C2 08 00 A3 68 72 01 FF 5D 33 C9 41 E2 17 EB 07 EA EB 01 EB EB 0D FF }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
-    
+
 rule Thinstall_Virtualization_Suite_3_0xx____Jitit_Software
 {
 meta:
@@ -17109,10 +17109,10 @@ strings:
     	$a0 = { 9C 60 68 53 74 41 6C 68 54 68 49 6E E8 00 00 00 00 58 BB 37 1F 00 00 2B C3 50 68 00 00 00 01 68 00 ?? 00 00 68 04 01 00 00 E8 BA FE FF FF E9 90 FF FF FF CC CC CC CC CC CC CC 55 8B EC 83 C4 F4 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule WWPack32_v1_x
 {
 meta:
@@ -17121,10 +17121,10 @@ strings:
     	$a0 = { 53 55 8B E8 33 DB EB 60 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASPack_v1_08_x
 {
 meta:
@@ -17133,10 +17133,10 @@ strings:
     	$a0 = { 60 EB 03 5D FF E5 E8 F8 FF FF FF 81 ED 1B 6A 44 00 BB 10 6A 44 00 03 DD 2B 9D 2A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Exe_Shield_2_7b
 {
 meta:
@@ -17148,7 +17148,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Upack_0_399____Dwing
 {
 meta:
@@ -17160,7 +17160,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PE_Diminisher_v0_1____Teraphy
 {
 meta:
@@ -17169,10 +17169,10 @@ strings:
     	$a0 = { 53 51 52 56 57 55 E8 00 00 00 00 5D 8B D5 81 ED A2 30 40 00 2B 95 91 33 40 00 81 EA 0B 00 00 00 89 95 9A 33 40 00 80 BD 99 33 40 00 00 74 50 E8 02 01 00 00 8B FD 8D 9D 9A 33 40 00 8B 1B 8D 87 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_v1_10__Eng_____dulek_xt_____Microsoft_Visual_C___6_0___7_0___ASM_
 {
 meta:
@@ -17181,10 +17181,10 @@ strings:
     	$a0 = { E8 01 00 00 00 5A 5E E8 02 00 00 00 BA DD 5E 03 F2 EB 01 64 BB 80 ?? ?? 00 8B FA EB 01 A8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Unknown_packer__07_
 {
 meta:
@@ -17193,10 +17193,10 @@ strings:
     	$a0 = { 8C C8 05 ?? ?? 50 B8 ?? ?? 50 B0 ?? 06 8C D2 06 83 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule CRYPT_Version_1_7__c__Dismember__COM_
 {
 meta:
@@ -17205,10 +17205,10 @@ strings:
     	$a0 = { 0E 17 9C 58 F6 C4 01 ?? ?? ?? ?? ?? B4 01 BE ?? ?? BF ?? ?? B9 ?? ?? 68 ?? ?? 68 ?? ?? 68 ?? ?? 57 F3 A4 C3 B0 02 E6 21 60 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NSPack____Nort_Star_Software___http___www_nsdsn_com_
 {
 meta:
@@ -17220,7 +17220,7 @@ condition:
     	$a0
 }
 
-    
+
 rule UPX_Protector_v1_0x
 {
 meta:
@@ -17229,10 +17229,10 @@ strings:
     	$a0 = { EB EC ?? ?? ?? ?? 8A 06 46 88 07 47 01 DB 75 07 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_0_21_beta____Dwing
 {
 meta:
@@ -17241,10 +17241,10 @@ strings:
     	$a0 = { BE 88 01 40 00 AD 8B F8 6A 04 95 A5 33 C0 AB 48 AB F7 D8 59 F3 AB C1 E0 0A B5 ?? F3 AB AD 50 97 51 58 8D 54 85 5C FF 16 72 5A 2C 03 73 02 B0 00 3C 07 72 02 2C 03 50 0F B6 5F FF C1 E3 ?? B3 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__Macromedia_Flash_Projector_6_0_____Anorganix
 {
 meta:
@@ -17253,10 +17253,10 @@ strings:
     	$a0 = { 90 90 90 90 68 ?? ?? ?? ?? 67 64 FF 36 00 00 67 64 89 26 00 00 F1 90 90 90 90 83 EC 44 56 FF 15 24 81 49 00 8B F0 8A 06 3C 22 75 1C 8A 46 01 46 3C 22 74 0C 84 C0 74 08 8A 46 01 46 3C 22 75 F4 80 3E 22 75 0F 46 EB 0C E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule theWRAP___by_TronDoc
 {
 meta:
@@ -17266,10 +17266,10 @@ strings:
 	$a1 = { 55 8B EC 83 C4 F0 53 56 57 33 C0 89 45 F0 B8 48 D2 4B 00 E8 BC 87 F4 FF BB 04 0B 4D 00 33 C0 55 68 E8 D5 4B 00 64 FF 30 64 89 20 E8 9C F4 FF FF E8 F7 FB FF FF 6A 40 8D 55 F0 A1 F0 ED 4B 00 8B 00 E8 42 2E F7 FF 8B 4D F0 B2 01 A1 F4 C2 40 00 E8 F7 20 F5 FF }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Alex_Protector_v0_4_beta_1_by_Alex
 {
 meta:
@@ -17279,10 +17279,10 @@ strings:
 	$a1 = { 60 E8 01 00 00 00 C7 83 C4 04 33 C9 E8 01 00 00 00 68 83 C4 04 E8 01 00 00 00 68 83 C4 04 B9 ?? 00 00 00 E8 01 00 00 00 68 83 C4 04 E8 00 00 00 00 E8 01 00 00 00 C7 83 C4 04 8B 2C 24 83 C4 04 E8 01 00 00 00 A9 83 C4 04 81 ED 3C 13 40 00 E8 01 00 00 00 68 }
 
 condition:
-    	$a0 at sgpe.ep or $a1
+    	$a0 at manape.ep or $a1
 }
 
-    
+
 rule __PseudoSigner_0_1__ExeSmasher______Anorganix
 {
 meta:
@@ -17291,10 +17291,10 @@ strings:
     	$a0 = { 9C FE 03 90 60 BE 90 90 41 90 8D BE 90 10 FF FF 57 83 CD FF EB 10 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 FE 0B E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__Armadillo_3_00______Anorganix
 {
 meta:
@@ -17303,10 +17303,10 @@ strings:
     	$a0 = { 60 E8 2A 00 00 00 5D 50 51 EB 0F B9 EB 0F B8 EB 07 B9 EB 0F 90 EB 08 FD EB 0B F2 EB F5 EB F6 F2 EB 08 FD EB E9 F3 EB E4 FC E9 59 58 50 51 EB 85 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule aPack_v0_98b__com_
 {
 meta:
@@ -17319,7 +17319,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule ASProtect_v1_2____Alexey_Solodovnikov__h1_
 {
 meta:
@@ -17331,7 +17331,7 @@ condition:
     	$a0
 }
 
-    
+
 rule UPX_v0_89_6___v1_02___v1_05___v1_22_Modified
 {
 meta:
@@ -17340,10 +17340,10 @@ strings:
     	$a0 = { 01 DB ?? 07 8B 1E 83 EE FC 11 DB ?? ED B8 01 00 00 00 01 DB ?? 07 8B 1E 83 EE FC 11 DB 11 C0 01 DB 73 ?? 75 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_v1_10__Eng_____dulek_xt_____MASM32___TASM32___Microsoft_Visual_Basic_
 {
 meta:
@@ -17352,10 +17352,10 @@ strings:
     	$a0 = { F7 D8 0F BE C2 BE 80 ?? ?? 00 0F BE C9 BF 08 3B 65 07 EB 02 D8 29 BB EC C5 9A F8 EB 01 94 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_v0_81___v0_84_Modified
 {
 meta:
@@ -17364,10 +17364,10 @@ strings:
     	$a0 = { 01 DB ?? 07 8B 1E 83 EE FC 11 DB ?? ED B8 01 00 00 00 01 DB ?? 07 8B 1E 83 EE FC 11 DB 11 C0 01 DB 77 EF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule CRYPToCRACK_s_PE_Protector_V0_9_2____Lukas_Fleischer
 {
 meta:
@@ -17376,10 +17376,10 @@ strings:
     	$a0 = { E8 01 00 00 00 E8 58 5B 81 E3 00 FF FF FF 66 81 3B 4D 5A 75 37 84 DB 75 33 8B F3 03 ?? ?? 81 3E 50 45 00 00 75 26 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_v1_2
 {
 meta:
@@ -17388,10 +17388,10 @@ strings:
     	$a0 = { 4B 45 52 4E 45 4C 33 32 2E 64 6C 6C 00 00 4C 6F 61 64 4C 69 62 72 61 72 79 41 00 00 47 65 74 50 72 6F 63 41 64 64 72 65 73 73 00 ?? 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Crunch_v4_0
 {
 meta:
@@ -17401,10 +17401,10 @@ strings:
 	$a1 = { EB 10 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 55 E8 00 00 00 00 5D 81 ED 18 00 00 00 8B C5 55 60 9C 2B 85 E9 06 00 00 89 85 E1 06 00 00 FF 74 24 2C E8 BB 01 00 00 0F 82 92 05 00 00 E8 F1 03 00 00 49 0F 88 86 05 00 00 68 6C D9 B2 96 33 C0 50 E8 24 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule SimplePack_1_11_Method_1____bagie_TMX___h_
 {
 meta:
@@ -17413,10 +17413,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5B 8D 5B FA BD 00 00 ?? ?? 8B 7D 3C 8D 74 3D 00 8D BE F8 00 00 00 0F B7 76 06 4E 8B 47 10 09 C0 74 55 0F B7 47 22 09 C0 74 4D 6A 04 68 00 10 00 00 FF 77 10 6A 00 FF 93 38 03 00 00 50 56 57 89 EE 03 77 0C 8B 4F 10 89 C7 89 C8 C1 E9 02 FC F3 A5 89 C1 83 E1 03 F3 A4 5F 5E 8B 04 24 89 EA 03 57 0C E8 3F 01 00 00 58 68 00 40 00 00 FF 77 10 50 FF 93 3C 03 00 00 83 C7 28 4E 75 9E BE ?? ?? ?? ?? 09 F6 0F 84 0C 01 00 00 01 EE 8B 4E 0C 09 C9 0F 84 FF 00 00 00 01 E9 89 CF 57 FF 93 30 03 00 00 09 C0 75 3D 6A 04 68 00 10 00 00 68 00 10 00 00 6A 00 FF 93 38 03 00 00 89 C6 8D 83 6F 02 00 00 57 50 56 FF 93 44 03 00 00 6A 10 6A 00 56 6A 00 FF 93 48 03 00 00 89 E5 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__Microsoft_Visual_C___6_20______Anorganix
 {
 meta:
@@ -17425,10 +17425,10 @@ strings:
     	$a0 = { 90 90 90 90 68 ?? ?? ?? ?? 67 64 FF 36 00 00 67 64 89 26 00 00 F1 90 90 90 90 55 8B EC 83 EC 50 53 56 57 BE 90 90 90 90 8D 7D F4 A5 A5 66 A5 8B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule dUP2____diablo2oo2
 {
 meta:
@@ -17438,10 +17438,10 @@ strings:
 	$a1 = { E8 ?? ?? ?? ?? E8 ?? ?? ?? ?? 8B F0 6A 00 68 ?? ?? ?? ?? 56 E8 ?? ?? ?? ?? A2 ?? ?? ?? ?? 6A 00 68 ?? ?? ?? ?? 56 E8 ?? ?? ?? ?? A2 ?? ?? ?? ?? 6A 00 68 ?? ?? ?? ?? 56 E8 ?? ?? ?? ?? A2 ?? ?? ?? ?? 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 56 E8 ?? ?? ?? ?? 3C 01 75 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule FSG_1_31__Eng_____dulek_xt
 {
 meta:
@@ -17453,7 +17453,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PKLITE_v1_00c__2_
 {
 meta:
@@ -17462,10 +17462,10 @@ strings:
     	$a0 = { BA ?? ?? A1 ?? ?? 2D ?? ?? 8C CB 81 C3 ?? ?? 3B C3 77 ?? 05 ?? ?? 3B C3 77 ?? B4 09 BA ?? ?? CD 21 CD 20 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule nbuild_v1_0__soft_
 {
 meta:
@@ -17474,10 +17474,10 @@ strings:
     	$a0 = { B9 ?? ?? BB ?? ?? C0 ?? ?? 80 ?? ?? 43 E2 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__ACProtect_1_09______Anorganix
 {
 meta:
@@ -17486,10 +17486,10 @@ strings:
     	$a0 = { 60 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 02 00 00 90 90 90 04 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 06 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 06 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 02 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 08 00 90 90 90 EB 06 00 00 90 90 90 90 90 90 EB 06 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 04 90 90 90 90 90 90 90 90 90 90 90 90 90 90 00 01 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX____www_upx_sourceforge_net
 {
 meta:
@@ -17502,7 +17502,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule PESpin_v1_304____Cyberbob
 {
 meta:
@@ -17511,10 +17511,10 @@ strings:
     	$a0 = { EB 01 68 60 E8 00 00 00 00 8B 1C 24 83 C3 12 81 2B E8 B1 06 00 FE 4B FD 82 2C 24 88 DF 46 00 0B E4 74 9E 75 01 C7 81 73 04 D7 7A F7 2F 81 73 19 77 00 43 B7 F6 C3 6B B7 00 00 F9 FF E3 C9 C2 08 00 A3 68 72 01 FF 5D 33 C9 41 E2 17 EB 07 EA EB 01 EB EB 0D FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_v0_399____Dwing
 {
 meta:
@@ -17526,10 +17526,10 @@ strings:
 	$a3 = { BE B0 11 ?? ?? AD 50 FF 76 34 EB 7C 48 01 ?? ?? 0B 01 4C 6F 61 64 4C 69 62 72 61 72 79 41 00 00 18 10 00 00 10 00 00 00 00 ?? ?? ?? 00 00 ?? ?? 00 10 00 00 00 02 00 00 04 00 00 00 00 00 3A 00 04 00 00 00 00 00 00 00 00 ?? ?? ?? 00 02 00 00 00 00 00 00 ?? 00 00 ?? 00 00 10 00 00 ?? ?? 00 00 00 10 00 00 10 00 00 00 00 00 00 0A 00 00 00 00 00 00 00 00 00 00 00 EE ?? ?? ?? 14 00 00 00 00 ?? ?? ?? ?? ?? 00 00 FF 76 38 AD 50 8B 3E BE F0 ?? ?? ?? 6A 27 59 F3 A5 FF 76 04 83 C8 FF 8B DF AB EB 1C 00 00 00 00 47 65 74 50 72 6F 63 41 64 64 72 65 73 73 00 00 ?? ?? ?? ?? ?? 00 00 00 40 AB 40 B1 04 F3 AB C1 E0 0A B5 ?? F3 AB 8B 7E 0C 57 51 E9 ?? ?? ?? ?? 56 10 E2 E3 B1 04 D3 E0 03 E8 8D 53 18 33 C0 55 40 51 D3 E0 8B EA 91 FF 56 4C 99 59 D1 E8 13 D2 E2 FA 5D 03 EA 45 59 89 6B 08 56 8B F7 2B F5 F3 A4 AC 5E B1 80 AA 3B }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep or $a3 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep or $a3 at manape.ep
 }
 
-    
+
 rule RCryptor_v1_6x____Vaska
 {
 meta:
@@ -17538,10 +17538,10 @@ strings:
     	$a0 = { 60 90 61 61 80 7F F0 45 90 60 0F 85 1B 8B 1F FF 68 ?? ?? ?? ?? C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Private_exe_Protector_V2_0____SetiSoft_Team
 {
 meta:
@@ -17553,7 +17553,7 @@ condition:
     	$a0
 }
 
-    
+
 rule ExeSmasher_vx_x
 {
 meta:
@@ -17562,10 +17562,10 @@ strings:
     	$a0 = { 9C FE 03 ?? 60 BE ?? ?? 41 ?? 8D BE ?? 10 FF FF 57 83 CD FF EB 10 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SoftProtect____SoftProtect_by_ru
 {
 meta:
@@ -17576,10 +17576,10 @@ strings:
 	$a2 = { EB 01 E3 60 E8 03 ?? ?? ?? D2 EB 0B 58 EB 01 48 40 EB 01 35 FF E0 E7 61 60 E8 03 ?? ?? ?? 83 EB 0E EB 01 0C 58 EB 01 35 40 EB 01 36 FF E0 0B 61 EB 01 83 9C EB 01 D5 EB 08 35 9D EB 01 89 EB 03 0B EB F7 E8 ?? ?? ?? ?? 58 E8 ?? ?? ?? ?? 59 83 01 01 80 39 5C }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
-    
+
 rule ROD_High_TECH____Ayman
 {
 meta:
@@ -17588,10 +17588,10 @@ strings:
     	$a0 = { 60 8B 15 1D 13 40 00 F7 E0 8D 82 83 19 00 00 E8 58 0C 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Unknown_encryptor__2_____PK7Tjrvx_
 {
 meta:
@@ -17600,10 +17600,10 @@ strings:
     	$a0 = { 06 B4 52 CD 21 07 E8 ?? ?? B4 62 CD 21 E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule AntiDote_1_0_Demo____SIS_Team
 {
 meta:
@@ -17613,10 +17613,10 @@ strings:
 	$a1 = { 00 00 00 00 09 01 47 65 74 43 6F 6D 6D 61 6E 64 4C 69 6E 65 41 00 DB 01 47 65 74 56 65 72 73 69 6F 6E 45 78 41 00 73 01 47 65 74 4D 6F 64 75 6C 65 46 69 6C 65 4E 61 6D 65 41 00 00 7A 03 57 61 69 74 46 6F 72 53 69 6E 67 6C 65 4F 62 6A 65 63 74 00 BF 02 52 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule Vx__Doom_666
 {
 meta:
@@ -17625,10 +17625,10 @@ strings:
     	$a0 = { E8 ?? ?? ?? 5E 83 EE ?? B8 CF 7B CD 21 3D CF 7B ?? ?? 0E 1F 81 C6 ?? ?? BF ?? ?? B9 ?? ?? FC F3 A4 06 1F 06 B8 ?? ?? 50 CB B4 48 BB 2C 00 CD 21 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FreeJoiner_Small__build_014_020_____GlOFF
 {
 meta:
@@ -17637,10 +17637,10 @@ strings:
     	$a0 = { E8 ?? ?? FF FF 6A 00 E8 0D 00 00 00 CC FF 25 78 10 40 00 FF 25 7C 10 40 00 FF 25 80 10 40 00 FF 25 84 10 40 00 FF 25 88 10 40 00 FF 25 8C 10 40 00 FF 25 90 10 40 00 FF 25 94 10 40 00 FF 25 98 10 40 00 FF 25 9C 10 40 00 FF 25 A0 10 40 00 FF 25 A4 10 40 00 FF 25 AC 10 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__VBOX_4_3_MTE______Anorganix
 {
 meta:
@@ -17649,10 +17649,10 @@ strings:
     	$a0 = { 0B C0 0B C0 0B C0 0B C0 0B C0 0B C0 0B C0 0B C0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule StarForce_Protection_Driver____Protection_Technology__h_
 {
 meta:
@@ -17661,10 +17661,10 @@ strings:
     	$a0 = { 57 68 ?? 0D 01 00 68 00 ?? ?? 00 E8 50 ?? FF FF 68 ?? ?? ?? 00 68 ?? ?? ?? 00 68 ?? ?? ?? 00 68 ?? ?? ?? 00 68 ?? ?? ?? 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Petite_2_2_____c_1998_99_Ian_Luck
 {
 meta:
@@ -17673,10 +17673,10 @@ strings:
     	$a0 = { 68 ?? ?? ?? ?? 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 66 9C 60 50 68 00 00 ?? ?? 8B 3C 24 8B 30 66 81 C7 80 07 8D 74 06 08 89 38 8B 5E 10 50 56 6A 02 68 80 08 00 00 57 6A ?? 6A 06 56 6A 04 68 80 08 00 00 57 FF D3 83 EE 08 59 F3 A5 59 66 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule BobPack_v1_00_____BoB___BobSoft
 {
 meta:
@@ -17685,10 +17685,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 0C 24 89 CD 83 E9 06 81 ED ?? ?? ?? ?? E8 3D 00 00 00 89 85 ?? ?? ?? ?? 89 C2 B8 5D 0A 00 00 8D 04 08 E8 E4 00 00 00 8B 70 04 01 D6 E8 76 00 00 00 E8 51 01 00 00 E8 01 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PuNkMoD_1_x____PuNkDuDe
 {
 meta:
@@ -17697,10 +17697,10 @@ strings:
     	$a0 = { 94 B9 ?? ?? 00 00 BC ?? ?? ?? ?? 80 34 0C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RCryptor_v1_6____Vaska
 {
 meta:
@@ -17710,10 +17710,10 @@ strings:
 	$a1 = { 33 D0 68 ?? ?? ?? ?? FF D2 B8 ?? ?? ?? ?? 3D ?? ?? ?? ?? 74 06 80 30 ?? 40 EB F3 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule CrypKey____Kenonic_Controls__h_
 {
 meta:
@@ -17722,10 +17722,10 @@ strings:
     	$a0 = { 8B 1D ?? ?? 3E 00 83 FB 00 75 0A E8 3C 00 00 00 E8 ?? 0A 00 00 8B 44 24 08 50 E8 ?? 02 00 00 A1 ?? ?? 3E 00 83 F8 01 74 06 FF 25 14 ?? 3E 00 C3 C8 00 00 00 53 8B 5D 08 33 C0 8B 4D 0C 8B 13 33 D3 83 C3 04 03 C2 49 75 F4 5B C9 C3 56 68 ?? ?? 3E 00 E8 ?? 16 00 00 8B F0 68 ?? ?? 3E 00 56 E8 ?? 16 00 00 A3 ?? ?? 3E 00 68 ?? ?? 3E 00 56 E8 ?? 16 00 00 A3 ?? ?? 3E 00 68 ?? ?? 3E 00 56 E8 ?? ?? 00 00 A3 ?? ?? 3E 00 68 ?? ?? 3E 00 56 E8 ?? ?? 00 00 A3 ?? ?? 3E 00 68 ?? ?? 3E 00 56 E8 ?? ?? 00 00 A3 ?? ?? 3E 00 68 ?? ?? 3E 00 56 E8 ?? ?? 00 00 A3 ?? ?? 3E 00 68 ?? ?? 3E 00 56 E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Patch_Creation_Wizard_v1_2_Seek_and_Destroy_Patch
 {
 meta:
@@ -17737,7 +17737,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PEShit
 {
 meta:
@@ -17746,10 +17746,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? ?? B9 ?? ?? ?? ?? 83 F9 00 7E 06 80 30 ?? 40 E2 F5 E9 ?? ?? ?? FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Stony_Brook_Pascal_v6_14
 {
 meta:
@@ -17758,10 +17758,10 @@ strings:
     	$a0 = { 31 ED 9A ?? ?? ?? ?? 55 89 E5 ?? EC ?? ?? 9A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_V1_19_Dll__aPlib_0_43_____ap0x_nbsp___nbsp___Sign_by_fly
 {
 meta:
@@ -17770,10 +17770,10 @@ strings:
     	$a0 = { 80 7C 24 08 01 0F 85 89 01 00 00 60 E8 00 00 00 00 8B 2C 24 83 C4 04 83 7C 24 28 01 75 0C 8B 44 24 24 89 85 3C 04 00 00 EB 0C 8B 85 38 04 00 00 89 85 3C 04 00 00 8D B5 60 04 00 00 8D 9D EB 02 00 00 33 FF E8 52 01 00 00 EB 1B 8B 85 3C 04 00 00 FF 74 37 04 01 04 24 FF 34 37 01 04 24 FF D3 83 C4 08 83 C7 08 83 3C 37 00 75 DF 83 BD 48 04 00 00 00 74 0E 83 BD 4C 04 00 00 00 74 05 E8 B8 01 00 00 8D 74 37 04 53 6A 40 68 00 10 00 00 68 ?? ?? ?? ?? 6A 00 FF 95 D1 03 00 00 89 85 5C 04 00 00 5B FF B5 5C 04 00 00 56 FF D3 83 C4 08 8B B5 5C 04 00 00 8B C6 EB 01 40 80 38 01 75 FA 40 8B 38 03 BD 3C 04 00 00 83 C0 04 89 85 58 04 00 00 E9 94 00 00 00 56 FF 95 C9 03 00 00 85 C0 0F 84 B4 00 00 00 89 85 54 04 00 00 8B C6 EB 5B 8B 85 58 04 00 00 8B 00 A9 00 00 00 80 74 14 35 00 00 00 80 50 8B 85 58 04 00 00 C7 00 20 20 20 00 EB 06 FF B5 58 04 00 00 FF B5 54 04 00 00 FF 95 CD 03 00 00 85 C0 74 71 89 07 83 C7 04 8B 85 58 04 00 00 EB 01 40 80 38 00 75 FA 40 89 85 58 04 00 00 66 81 78 02 00 80 74 A5 80 38 00 75 A0 EB 01 46 80 3E 00 75 FA 46 40 8B 38 03 BD 3C 04 00 00 83 C0 04 89 85 58 04 00 00 80 3E 01 0F 85 63 FF FF FF 68 00 40 00 00 68 ?? ?? ?? ?? FF B5 5C 04 00 00 FF 95 D5 03 00 00 E8 3D 00 00 00 E8 24 01 00 00 61 E9 ?? ?? ?? ?? 61 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__ASPack_2_xx_Heuristic_
 {
 meta:
@@ -17782,10 +17782,10 @@ strings:
     	$a0 = { 90 90 90 90 68 ?? ?? ?? ?? 67 64 FF 36 00 00 67 64 89 26 00 00 F1 90 90 90 90 A8 03 00 00 61 75 08 B8 01 00 00 00 C2 0C 00 68 00 00 00 00 C3 8B 85 26 04 00 00 8D 8D 3B 04 00 00 51 50 FF 95 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule eXPressor_1_2_0_Beta_PE_Packer
 {
 meta:
@@ -17794,10 +17794,10 @@ strings:
     	$a0 = { 55 8B EC 81 EC ?? ?? ?? ?? 53 56 57 EB ?? 45 78 50 72 2D 76 2E 31 2E 32 2E 2E }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_1_0_beta____ap0x
 {
 meta:
@@ -17808,10 +17808,10 @@ strings:
 	$a2 = { 60 E8 00 00 00 00 8D 64 24 04 8B 6C 24 FC 8D B5 4C 02 00 00 8D 9D 13 01 00 00 33 FF EB 0F FF 74 37 04 FF 34 37 FF D3 83 C4 08 83 C7 08 83 3C 37 00 75 EB 8D 74 37 04 53 6A 40 68 00 10 00 00 68 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
-    
+
 rule Turbo_Basic_v1_0_1987
 {
 meta:
@@ -17820,10 +17820,10 @@ strings:
     	$a0 = { 2E 8C ?? ?? ?? 2E C7 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule DBPE_v2_10
 {
 meta:
@@ -17833,10 +17833,10 @@ strings:
 	$a1 = { EB 20 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 9C 55 57 56 52 51 53 9C E8 ?? ?? ?? ?? 5D 81 ED ?? ?? ?? ?? EB 58 75 73 65 72 33 32 2E 64 6C 6C ?? 4D 65 73 73 61 67 65 42 6F 78 41 ?? 6B 65 72 6E 65 6C }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule EXE_Stealth_v2_7
 {
 meta:
@@ -17845,10 +17845,10 @@ strings:
     	$a0 = { EB 00 60 EB 00 E8 00 00 00 00 5D 81 ED D3 26 40 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXE_Stealth_v2_5
 {
 meta:
@@ -17860,7 +17860,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Upack_0_24_beta____Dwing
 {
 meta:
@@ -17869,10 +17869,10 @@ strings:
     	$a0 = { BE 88 01 40 00 AD 8B F8 95 AD 91 F3 A5 AD B5 ?? F3 AB AD 50 97 51 58 8D 54 85 5C FF 16 72 57 2C 03 73 02 B0 00 3C 07 72 02 2C 03 50 0F B6 5F FF C1 E3 ?? B3 00 8D 1C 5B 8D 9C 9D 0C 10 00 00 B0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASPack_v2_xx
 {
 meta:
@@ -17882,10 +17882,10 @@ strings:
 	$a1 = { A8 03 00 00 61 75 08 B8 01 00 00 00 C2 0C 00 68 00 00 00 00 C3 8B 85 26 04 00 00 8D 8D 3B 04 00 00 51 50 FF 95 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule RLPack_V1_18_Dll__aPlib_0_43_____ap0x
 {
 meta:
@@ -17894,10 +17894,10 @@ strings:
     	$a0 = { 80 7C 24 08 01 0F 85 5C 01 00 00 60 E8 00 00 00 00 8B 2C 24 83 C4 ?? 8D B5 1A 04 00 00 8D 9D C1 02 00 00 33 FF E8 61 01 00 00 EB 0F FF 74 37 04 FF 34 37 FF D3 83 C4 ?? 83 C7 ?? 83 3C 37 00 75 EB 83 BD 06 04 00 00 00 74 0E 83 BD 0A 04 00 00 00 74 05 E8 D7 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECryptor_v1_3_0_45
 {
 meta:
@@ -17907,10 +17907,10 @@ strings:
 	$a1 = { E8 24 00 00 00 8B 4C 24 0C C7 01 17 00 01 00 C7 81 ?? ?? ?? ?? ?? ?? ?? 31 C0 89 41 14 89 41 18 80 A1 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule ASPack_v1_061b
 {
 meta:
@@ -17919,10 +17919,10 @@ strings:
     	$a0 = { 60 E8 ?? ?? ?? ?? 5D 81 ED EA A8 43 ?? B8 E4 A8 43 ?? 03 C5 2B 85 78 AD 43 ?? 89 85 84 AD 43 ?? 80 BD 6E AD 43 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Nullsoft_PiMP_Install_System_v1_x
 {
 meta:
@@ -17935,7 +17935,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule AZProtect_0001___by_AlexZ_aka_AZCRC
 {
 meta:
@@ -17946,10 +17946,10 @@ strings:
 	$a2 = { EB 70 FC 60 8C 80 4D 11 00 70 25 81 00 40 0D 91 BB 60 8C 80 4D 11 00 70 21 81 1D 61 0D 81 00 40 CE 60 8C 80 4D 11 00 70 25 81 25 81 25 81 25 81 29 61 41 81 31 61 1D 61 00 40 B7 30 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 60 BE 00 ?? ?? 00 BF 00 00 40 00 EB 17 4B 45 52 4E 45 4C 33 32 2E 44 4C 4C 00 00 00 00 00 FF 25 ?? ?? ?? 00 8B C6 03 C7 8B F8 57 55 8B EC 05 7F 00 00 00 50 E8 E5 FF FF FF BA 8C ?? ?? 00 89 02 E9 1A 01 00 00 ?? 00 00 00 47 65 74 4D 6F 64 75 6C 65 46 69 6C 65 4E 61 6D 65 41 00 47 65 74 56 6F 6C 75 6D 65 49 6E 66 6F 72 6D 61 74 69 6F 6E 41 00 4D 65 73 73 61 67 65 42 6F 78 41 00 45 78 69 74 50 72 6F 63 65 73 73 00 47 65 74 4D 6F 64 75 6C 65 48 61 6E 64 6C 65 41 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 or $a2 at manape.ep
 }
 
-    
+
 rule Escargot_0_1___by_ueMeat
 {
 meta:
@@ -17959,10 +17959,10 @@ strings:
 	$a1 = { EB 08 28 65 73 63 30 2E 31 29 60 68 2B ?? ?? ?? 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 B8 5C ?? ?? ?? 8B 00 FF D0 50 BE 00 10 ?? ?? B9 00 ?? ?? 00 EB 05 49 80 34 31 40 0B C9 75 F7 58 0B C0 74 08 33 C0 C7 00 DE C0 AD 0B BE ?? ?? ?? ?? E9 AC 00 00 00 8B }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule Packed_with__PKLITE_v1_50_with_CRC_check__1_
 {
 meta:
@@ -17972,10 +17972,10 @@ strings:
 	$a1 = { 1F B4 09 BA ?? ?? CD 21 B8 ?? ?? CD 21 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__Neolite_2_0_
 {
 meta:
@@ -17984,10 +17984,10 @@ strings:
     	$a0 = { E9 A6 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v1_46
 {
 meta:
@@ -17996,10 +17996,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 0F A0 40 ?? 87 DD 8B 85 A6 A0 40 ?? 01 85 03 A0 40 ?? 66 C7 85 ?? A0 40 ?? 90 90 01 85 9E A0 40 ?? BB 60 12 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v1_4x_
 {
 meta:
@@ -18009,10 +18009,10 @@ strings:
 	$a1 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 }
 
 condition:
-    	$a0 at sgpe.ep or $a1
+    	$a0 at manape.ep or $a1
 }
 
-    
+
 rule __PseudoSigner_0_2__Microsoft_Visual_C___7_0_DLL______Anorganix
 {
 meta:
@@ -18021,10 +18021,10 @@ strings:
     	$a0 = { 55 8D 6C 01 00 81 EC 00 00 00 00 8B 45 90 83 F8 01 56 0F 84 00 00 00 00 85 C0 0F 84 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PeCompact_2_53_DLL__Slim_Loader_____BitSum_Technologies
 {
 meta:
@@ -18033,10 +18033,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? ?? 50 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 33 C0 89 08 50 45 43 32 00 00 08 0C 00 48 E1 01 56 57 53 55 8B 5C 24 1C 85 DB 0F 84 AB 21 E8 BD 0E E6 60 0D 0B 6B 65 72 6E 6C 33 32 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECryptor_2_2_4____Strongbit_SoftComplete_Development__h3_
 {
 meta:
@@ -18048,7 +18048,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Obsidium_1_3_3_3____Obsidium_Software___Sign_By_haggar
 {
 meta:
@@ -18057,10 +18057,10 @@ strings:
     	$a0 = { EB 02 ?? ?? E8 29 00 00 00 EB 03 ?? ?? ?? EB 03 ?? ?? ?? 8B 54 24 0C EB 01 ?? 83 82 B8 00 00 00 28 EB 03 ?? ?? ?? 33 C0 EB 01 ?? C3 EB 04 ?? ?? ?? ?? EB 02 ?? ?? 64 67 FF 36 00 00 EB 04 ?? ?? ?? ?? 64 67 89 26 00 00 EB 02 ?? ?? EB 04 ?? ?? ?? ?? 50 EB 04 ?? ?? ?? ?? 33 C0 EB 01 ?? 8B 00 EB 03 ?? ?? ?? C3 EB 03 ?? ?? ?? E9 FA 00 00 00 EB 03 ?? ?? ?? E8 D5 FF FF FF EB 04 ?? ?? ?? ?? EB 04 ?? ?? ?? ?? 58 EB 01 ?? EB 03 ?? ?? ?? 64 67 8F 06 00 00 EB 04 ?? ?? ?? ?? 83 C4 04 EB 04 ?? ?? ?? ?? E8 2B 27 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_Protector_v1_0x__2_
 {
 meta:
@@ -18072,7 +18072,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_1__32Lite_0_03_____Anorganix
 {
 meta:
@@ -18081,10 +18081,10 @@ strings:
     	$a0 = { 60 06 FC 1E 07 BE 90 90 90 90 6A 04 68 90 10 90 90 68 ?? ?? ?? ?? E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule VProtector_1_0X____vcasm
 {
 meta:
@@ -18094,10 +18094,10 @@ strings:
 	$a1 = { 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 E8 03 00 00 00 C7 84 00 58 EB 01 E9 83 C0 07 50 C3 FF 35 E8 03 00 00 00 C7 84 00 58 EB 01 E9 83 C0 07 50 C3 FF 35 E8 07 00 00 00 C7 83 83 C0 13 EB 0B 58 EB 02 CD 20 83 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule EXE_Stealth_2_5
 {
 meta:
@@ -18109,7 +18109,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Vx__Phoenix_927
 {
 meta:
@@ -18118,10 +18118,10 @@ strings:
     	$a0 = { E8 00 00 5E 81 C6 ?? ?? BF 00 01 B9 04 00 F3 A4 E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule tElock_0_99c__Private_ECLIPSE_____tE_
 {
 meta:
@@ -18130,10 +18130,10 @@ strings:
     	$a0 = { E9 3F DF FF FF 00 00 00 ?? ?? ?? ?? 04 ?? ?? 00 00 00 00 00 00 00 00 00 24 ?? ?? 00 14 ?? ?? 00 0C ?? ?? 00 00 00 00 00 00 00 00 00 31 ?? ?? 00 1C ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 3C ?? ?? 00 00 00 00 00 4F ?? ?? 00 00 00 00 00 3C ?? ?? 00 00 00 00 00 4F ?? ?? 00 00 00 00 00 6B 65 72 6E 65 6C 33 32 2E 64 6C 6C 00 75 73 65 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__Gleam_1_00_
 {
 meta:
@@ -18142,10 +18142,10 @@ strings:
     	$a0 = { 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 0B 83 EC 0C 53 56 57 E8 24 02 00 FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule WWPACK_v3_00__v3_01__Extractable_
 {
 meta:
@@ -18154,10 +18154,10 @@ strings:
     	$a0 = { B8 ?? ?? 8C CA 03 D0 8C C9 81 C1 ?? ?? 51 6A ?? 06 06 8C D3 83 ?? ?? 53 6A ?? FC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule _BJFnt_v1_1b
 {
 meta:
@@ -18166,10 +18166,10 @@ strings:
     	$a0 = { EB 01 EA 9C EB 01 EA 53 EB 01 EA 51 EB 01 EA 52 EB 01 EA 56 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SafeDisc_SafeCast_2_xx___3_xx____Macrovision
 {
 meta:
@@ -18179,10 +18179,10 @@ strings:
 	$a1 = { 55 8B EC 60 BB ?? ?? ?? ?? 33 C9 8A 0D 3D ?? ?? ?? 85 C9 74 0C B8 ?? ?? ?? ?? 2B C3 83 E8 05 EB 0E 51 B9 ?? ?? ?? ?? 8B C1 2B C3 03 41 01 59 C6 03 E9 89 43 01 51 68 09 ?? ?? ?? 33 C0 85 C9 74 05 8B 45 08 EB 00 50 E8 76 00 00 00 83 C4 08 59 83 F8 00 74 1C C6 03 C2 C6 43 01 0C 85 C9 74 09 61 5D B8 00 00 00 00 EB 97 50 A1 29 ?? ?? ?? ?? D0 61 5D EB 46 80 7C 24 08 00 75 3F 51 8B 4C 24 04 89 0D ?? ?? ?? ?? B9 ?? ?? ?? ?? 89 4C 24 04 59 EB 28 50 B8 2D ?? ?? ?? ?? 70 08 8B 40 0C FF D0 B8 2D ?? ?? ?? ?? 30 8B 40 04 FF D0 58 FF 35 ?? ?? ?? ?? C3 72 16 61 13 60 0D E9 ?? ?? ?? ?? CC CC 81 EC E8 02 00 00 53 55 56 57 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule Protect_Shareware_1_1____eCompserv_CMS
 {
 meta:
@@ -18194,7 +18194,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Private_exe_Protector_2_15____SetiSoft_Team
 {
 meta:
@@ -18203,10 +18203,10 @@ strings:
     	$a0 = { 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 4B 45 52 4E 45 4C 33 32 2E 44 4C 4C 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Thinstall_Virtualization_Suite_V3_10X____Thinstall_Company
 {
 meta:
@@ -18215,10 +18215,10 @@ strings:
     	$a0 = { 9C 60 68 53 74 41 6C 68 54 68 49 6E E8 00 00 00 00 58 BB ?? ?? ?? ?? 2B C3 50 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? E8 2C FF FF FF E9 90 FF FF FF CC CC 55 8B EC 83 C4 F4 FC 53 57 56 8B 75 08 8B 7D 0C C7 45 FC 08 00 00 00 33 DB BA 00 00 00 80 43 33 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEnguinCrypt_v1_0
 {
 meta:
@@ -18227,10 +18227,10 @@ strings:
     	$a0 = { B8 93 ?? ?? 00 55 50 67 64 FF 36 00 00 67 64 89 26 00 00 BD 4B 48 43 42 B8 04 00 00 00 CC 3C 04 75 04 90 90 C3 90 67 64 8F 06 00 00 58 5D BB 00 00 40 00 33 C9 33 C0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_1_10__Eng_____dulek_xt_____MASM32___TASM32_
 {
 meta:
@@ -18239,10 +18239,10 @@ strings:
     	$a0 = { 03 F7 23 FE 33 FB EB 02 CD 20 BB 80 ?? 40 00 EB 01 86 EB 01 90 B8 F4 00 00 00 83 EE 05 2B F2 81 F6 EE 00 00 00 EB 02 CD 20 8A 0B E8 02 00 00 00 A9 54 5E C1 EE 07 F7 D7 EB 01 DE 81 E9 B7 96 A0 C4 EB 01 6B EB 02 CD 20 80 E9 4B C1 CF 08 EB 01 71 80 E9 1C EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Patch_Creation_Wizard_v1_2_Byte_Patch
 {
 meta:
@@ -18254,7 +18254,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_2__CodeSafe_2_0_
 {
 meta:
@@ -18263,10 +18263,10 @@ strings:
     	$a0 = { 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 0B 83 EC 10 53 56 57 E8 C4 01 00 85 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EncryptPE_V2_2004_6_16_V2_2006_6_30____WFS___Sign_by_fly
 {
 meta:
@@ -18275,10 +18275,10 @@ strings:
     	$a0 = { 60 9C 64 FF 35 00 00 00 00 E8 7A 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule yzpack_V1_1____UsAr___Sign_by_fly
 {
 meta:
@@ -18287,10 +18287,10 @@ strings:
     	$a0 = { 60 33 C0 8D 48 07 50 E2 FD 8B EC 64 8B 40 30 78 0C 8B 40 0C 8B 70 1C AD 8B 40 08 EB 09 8B 40 34 8D 40 7C 8B 40 3C 89 45 04 E8 F3 07 00 00 60 8B 5D 04 8B 73 3C 8B 74 33 78 03 F3 56 8B 76 20 03 F3 33 C9 49 92 41 AD 03 C3 52 33 FF 0F B6 10 38 F2 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__VCL
 {
 meta:
@@ -18299,10 +18299,10 @@ strings:
     	$a0 = { AC B9 00 80 F2 AE B9 04 00 AC AE 75 ?? E2 FA 89 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PE_Crypt_1_02
 {
 meta:
@@ -18311,10 +18311,10 @@ strings:
     	$a0 = { E8 00 00 00 00 5B 83 EB 05 EB 04 52 4E 44 21 85 C0 73 02 F7 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PKTINY_v1_0_with_TINYPROG_v3_8
 {
 meta:
@@ -18323,10 +18323,10 @@ strings:
     	$a0 = { 2E C6 06 ?? ?? ?? 2E C6 06 ?? ?? ?? 2E C6 06 ?? ?? ?? E9 ?? ?? E8 ?? ?? 83 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Shrink_v2_0
 {
 meta:
@@ -18335,10 +18335,10 @@ strings:
     	$a0 = { E9 ?? ?? 50 9C FC BE ?? ?? 8B FE 8C C8 05 ?? ?? 8E C0 06 57 B9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ACProtect_1_09g____Risco_software_Inc_
 {
 meta:
@@ -18347,10 +18347,10 @@ strings:
     	$a0 = { 60 F9 50 E8 01 00 00 00 7C 58 58 49 50 E8 01 00 00 00 7E 58 58 79 04 66 B9 B8 72 E8 01 00 00 00 7A 83 C4 04 85 C8 EB 01 EB C1 F8 BE 72 03 73 01 74 0F 81 01 00 00 00 F9 EB 01 75 F9 E8 01 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule hmimys_protect_0_1____hmimys
 {
 meta:
@@ -18362,7 +18362,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Pelles_C_2_8_x_4_5_x____Pelle_Orinius
 {
 meta:
@@ -18371,10 +18371,10 @@ strings:
     	$a0 = { 55 89 E5 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 64 FF 35 ?? ?? ?? ?? 64 89 25 ?? ?? ?? ?? 83 EC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ANDpakk2_0_06___by_Dmitry__quot_AND_quot__Andreev
 {
 meta:
@@ -18383,10 +18383,10 @@ strings:
     	$a0 = { 60 FC BE D4 00 40 00 BF 00 10 00 01 57 83 CD FF 33 C9 F9 EB 05 A4 02 DB 75 05 8A 1E 46 12 DB 72 F4 33 C0 40 02 DB 75 05 8A 1E 46 12 DB 13 C0 02 DB 75 05 8A 1E 46 12 DB 72 0E 48 02 DB 75 05 8A 1E 46 12 DB 13 C0 EB DC 83 E8 03 72 0F C1 E0 08 AC 83 F0 FF 74 4D D1 F8 8B E8 EB 09 02 DB 75 05 8A 1E 46 12 DB 13 C9 02 DB 75 05 8A 1E 46 12 DB 13 C9 75 1A 41 02 DB 75 05 8A 1E 46 12 DB 13 C9 02 DB 75 05 8A 1E 46 12 DB 73 EA 83 C1 02 81 FD 00 FB FF FF 83 D1 01 56 8D 34 2F F3 A4 5E E9 73 FF FF FF C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__Microsoft_Visual_Basic_6_0_DLL_
 {
 meta:
@@ -18395,10 +18395,10 @@ strings:
     	$a0 = { 90 90 90 90 68 ?? ?? ?? ?? 67 64 FF 36 00 00 67 64 89 26 00 00 F1 90 90 90 90 5A 68 90 90 90 90 68 90 90 90 90 52 E9 90 90 FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_v1_10__Eng_____dulek_xt_____Microsoft_Visual_C___6_0___ASM_
 {
 meta:
@@ -18407,10 +18407,10 @@ strings:
     	$a0 = { F7 D0 EB 02 CD 20 BE BB 74 1C FB EB 02 CD 20 BF 3B ?? ?? FB C1 C1 03 33 F7 EB 02 CD 20 68 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_v1_3_0_37____Obsidium_Software__h_
 {
 meta:
@@ -18420,10 +18420,10 @@ strings:
 	$a1 = { EB 02 ?? ?? E8 26 00 00 00 EB 03 ?? ?? ?? EB 01 ?? 8B 54 24 0C EB 04 ?? ?? ?? ?? 83 82 B8 00 00 00 26 EB 01 ?? 33 C0 EB 02 ?? ?? C3 EB 01 ?? EB 04 ?? ?? ?? ?? 64 67 FF 36 00 00 EB 01 ?? 64 67 89 26 00 00 EB 01 ?? EB 03 ?? ?? ?? 50 EB 03 ?? ?? ?? 33 C0 EB }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule FreeJoiner_Small__build_017_____GlOFF
 {
 meta:
@@ -18433,10 +18433,10 @@ strings:
 	$a1 = { 55 8B EC 83 C4 F0 86 FF 86 DB 86 FF 68 00 01 00 00 68 18 20 40 00 6A 00 E8 FF 01 00 00 8A E4 6A 00 68 80 00 00 00 6A 03 6A 00 6A 00 68 00 00 00 80 68 18 20 40 00 E8 D5 01 00 00 A3 00 20 40 00 40 0F 84 97 01 00 00 8A E4 6A 02 6A 00 6A FB FF 35 00 20 40 00 E8 E0 01 00 00 86 FF 86 DB 86 FF 6A 00 8D 45 FC 50 6A 04 8D 45 F8 50 FF 35 00 20 40 00 E8 BD 01 00 00 8A E4 6A 00 8D 45 FC 50 6A 01 8D 45 F3 50 }
 
 condition:
-    	$a0 at sgpe.ep or $a1
+    	$a0 at manape.ep or $a1
 }
 
-    
+
 rule JExeCompressor_1_0___by_Arash_Veyskarami
 {
 meta:
@@ -18446,10 +18446,10 @@ strings:
 	$a1 = { 8D 2D D3 4A E5 14 0F BB F7 0F BA E5 73 0F AF D5 8D 0D 0C 9F E6 11 C0 F8 EF F6 DE 80 DC 5B F6 DA 0F A5 C1 0F C1 F1 1C F3 4A 81 E1 8C 1F 66 91 0F BE C6 11 EE 0F C0 E7 33 D9 64 F2 C0 DC 73 0F C0 D5 55 8B EC BA C0 1F 41 00 8B C2 B9 97 00 00 00 80 32 79 50 B8 02 00 00 00 50 03 14 24 58 58 51 2B C9 B9 01 00 00 00 83 EA 01 E2 FB 59 E2 E1 FF E0 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule tElock_v0_96
 {
 meta:
@@ -18458,10 +18458,10 @@ strings:
     	$a0 = { E9 59 E4 FF FF 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule DzA_Patcher_v1_3_Loader
 {
 meta:
@@ -18474,7 +18474,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule tElock_v0_90
 {
 meta:
@@ -18483,10 +18483,10 @@ strings:
     	$a0 = { E8 02 00 00 00 E8 00 E8 00 00 00 00 5E 2B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule tElock_v0_99
 {
 meta:
@@ -18495,10 +18495,10 @@ strings:
     	$a0 = { E9 ?? ?? FF FF 00 00 00 ?? ?? ?? ?? ?? ?? ?? 00 ?? ?? ?? ?? ?? ?? ?? 00 ?? ?? ?? 00 ?? ?? ?? 00 ?? ?? 02 00 ?? ?? ?? 00 ?? ?? ?? 00 ?? ?? ?? 00 ?? ?? ?? 00 ?? ?? ?? 00 ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? 00 00 00 00 00 ?? ?? 02 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule tElock_v0_98
 {
 meta:
@@ -18507,10 +18507,10 @@ strings:
     	$a0 = { E9 25 E4 FF FF 00 00 00 ?? ?? ?? ?? 1E }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule CERBERUS_v2_0
 {
 meta:
@@ -18519,10 +18519,10 @@ strings:
     	$a0 = { 9C 2B ED 8C ?? ?? 8C ?? ?? FA E4 ?? 88 ?? ?? 16 07 BF ?? ?? 8E DD 9B F5 B9 ?? ?? FC F3 A5 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Pelles_C_2_90_EXE__X86_CRT_LIB_
 {
 meta:
@@ -18534,7 +18534,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_2__Crunch_PE_Heuristic_
 {
 meta:
@@ -18543,10 +18543,10 @@ strings:
     	$a0 = { 55 E8 0E 00 00 00 5D 83 ED 06 8B C5 55 60 89 AD ?? ?? ?? ?? 2B 85 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__Horse_1776
 {
 meta:
@@ -18555,10 +18555,10 @@ strings:
     	$a0 = { E8 ?? ?? 5D 83 ?? ?? 06 1E 26 ?? ?? ?? ?? BF ?? ?? 1E 0E 1F 8B F7 01 EE B9 ?? ?? FC F3 A6 1F 1E 07 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule iPB_Protect_0_1_3___0_1_7____forgot
 {
 meta:
@@ -18567,10 +18567,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 4B 43 55 46 68 54 49 48 53 64 A1 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SLVc0deProtector_1_1____SLV__h_
 {
 meta:
@@ -18582,7 +18582,7 @@ condition:
     	$a0
 }
 
-    
+
 rule CDS_SS_1_0_beta1____CyberDoom
 {
 meta:
@@ -18591,10 +18591,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED CA 47 40 00 FF 74 24 20 E8 D3 03 00 00 0B C0 0F 84 13 03 00 00 89 85 B8 4E 40 00 66 8C D8 A8 04 74 0C C7 85 8C 4E 40 00 01 00 00 00 EB 12 64 A1 30 00 00 00 0F B6 40 02 0A C0 0F 85 E8 02 00 00 8D 85 F6 4C 40 00 50 FF B5 B8 4E 40 00 E8 FC 03 00 00 0B C0 0F 84 CE 02 00 00 E8 1E 03 00 00 89 85 90 4E 40 00 8D 85 03 4D 40 00 50 FF B5 B8 4E 40 00 E8 D7 03 00 00 0B C0 0F 84 A9 02 00 00 E8 F9 02 00 00 89 85 94 4E 40 00 8D 85 12 4D 40 00 50 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PureBasic_4_x____Neil_Hodgson
 {
 meta:
@@ -18603,10 +18603,10 @@ strings:
     	$a0 = { 68 ?? ?? 00 00 68 00 00 00 00 68 ?? ?? ?? 00 E8 ?? ?? ?? 00 83 C4 0C 68 00 00 00 00 E8 ?? ?? ?? 00 A3 ?? ?? ?? 00 68 00 00 00 00 68 00 10 00 00 68 00 00 00 00 E8 ?? ?? ?? 00 A3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PENightMare_v1_3
 {
 meta:
@@ -18615,10 +18615,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D B9 ?? ?? ?? ?? 80 31 15 41 81 F9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ActiveMARK_TM__R5_31_1140____Trymedia
 {
 meta:
@@ -18627,10 +18627,10 @@ strings:
     	$a0 = { 79 11 7F AB 9A 4A 83 B5 C9 6B 1A 48 F9 27 B4 25 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Private_EXE_Protector_1_9_7____SetiSoft__h_
 {
 meta:
@@ -18643,7 +18643,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule RJoiner_by_Vaska__Sign_from_pinch_25_03_2007_17_00_
 {
 meta:
@@ -18652,10 +18652,10 @@ strings:
     	$a0 = { E8 03 FD FF FF 6A 00 E8 0C 00 00 00 FF 25 6C 10 40 00 FF 25 70 10 40 00 FF 25 74 10 40 00 FF 25 78 10 40 00 FF 25 7C 10 40 00 FF 25 80 10 40 00 FF 25 84 10 40 00 FF 25 88 10 40 00 FF 25 8C 10 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Crypto_Lock_v2_02__Eng_____Ryan_Thian
 {
 meta:
@@ -18668,10 +18668,10 @@ strings:
 	$a4 = { 60 BE ?? 90 40 00 8D BE ?? ?? FF FF 57 83 CD FF EB 10 90 90 90 90 90 90 8A 06 46 88 07 47 01 DB 75 07 8B 1E 83 EE FC 11 DB 72 ED B8 01 00 00 00 01 DB 75 07 8B 1E 83 EE FC 11 DB 11 C0 01 DB 73 EF 75 09 8B 1E 83 EE FC 11 DB 73 E4 31 C9 83 E8 03 72 0D C1 E0 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep or $a3 at sgpe.ep or $a4 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep or $a3 at manape.ep or $a4 at manape.ep
 }
 
-    
+
 rule eXPressor_V1_4_5_x____CGSoftLabs
 {
 meta:
@@ -18680,10 +18680,10 @@ strings:
     	$a0 = { 55 8B EC 83 EC ?? 53 56 57 83 65 ?? 00 F3 EB 0C 65 58 50 72 2D 76 2E 31 2E 34 2E 00 A1 00 ?? ?? 00 05 00 ?? ?? 00 A3 ?? ?? ?? 00 A1 ?? ?? ?? 00 B9 ?? ?? ?? 00 2B 48 18 89 0D ?? ?? ?? 00 83 3D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_Full_Edition_1_17_DLL__LZMA_____Ap0x
 {
 meta:
@@ -18692,10 +18692,10 @@ strings:
     	$a0 = { 80 7C 24 08 01 0F 85 ?? ?? ?? ?? 60 E8 00 00 00 00 8B 2C 24 83 C4 04 8D B5 5A 0A 00 00 8D 9D 40 02 00 00 33 FF E8 ?? ?? ?? ?? 6A 40 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 6A 00 FF 95 EB 09 00 00 89 85 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__Gotcha_879
 {
 meta:
@@ -18704,10 +18704,10 @@ strings:
     	$a0 = { E8 ?? ?? 5B 81 EB ?? ?? 9C FC 2E ?? ?? ?? ?? ?? ?? ?? 8C D8 05 ?? ?? 2E ?? ?? ?? ?? 50 2E ?? ?? ?? ?? ?? ?? 8B C3 05 ?? ?? 8B F0 BF 00 01 B9 20 00 F3 A4 0E B8 00 01 50 B8 DA DA CD 21 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_1_16__aPLib_compression_____ap0x__h_
 {
 meta:
@@ -18719,7 +18719,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PureBasic_DLL____Neil_Hodgson
 {
 meta:
@@ -18728,10 +18728,10 @@ strings:
     	$a0 = { 83 7C 24 08 01 75 ?? 8B 44 24 04 A3 ?? ?? ?? 10 E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Unknown_packer__06_
 {
 meta:
@@ -18740,10 +18740,10 @@ strings:
     	$a0 = { FA B8 ?? ?? BE ?? ?? 33 F0 0E 17 2E ?? ?? ?? BA ?? ?? 87 E6 5B 33 DC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule yzpack_V1_12____UsAr
 {
 meta:
@@ -18752,10 +18752,10 @@ strings:
     	$a0 = { 5A 52 45 60 83 EC 18 8B EC 8B FC 33 C0 64 8B 40 30 78 0C 8B 40 0C 8B 70 1C AD 8B 40 08 EB 09 8B 40 34 83 C0 7C 8B 40 3C AB E9 ?? ?? ?? ?? B4 09 BA 00 00 1F CD 21 B8 01 4C CD 21 40 00 00 00 50 45 00 00 4C 01 02 00 ?? ?? ?? ?? 00 00 00 00 00 00 00 00 E0 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Encrypted_by__RSCC_286_v1_02
 {
 meta:
@@ -18767,7 +18767,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Encrypted_by__RSCC_286_v1_01
 {
 meta:
@@ -18779,7 +18779,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Pe123__v2006_4_4
 {
 meta:
@@ -18788,10 +18788,10 @@ strings:
     	$a0 = { 8B C0 EB 01 34 60 EB 01 2A 9C EB 02 EA C8 E8 0F 00 00 00 EB 03 3D 23 23 EB 01 4A EB 01 5B C3 8D 40 00 53 EB 01 6C EB 01 7E EB 01 8F E8 15 01 00 00 50 E8 67 04 00 00 EB 01 9A 8B D8 FF D3 5B C3 8B C0 E8 00 00 00 00 58 83 C0 05 C3 8B C0 55 8B EC 60 8B 4D 10 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ShellModify_0_1____pll621
 {
 meta:
@@ -18800,10 +18800,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 98 66 41 00 68 3C 3D 41 00 64 A1 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule VcAsm_Protector_V1_0X____VcAsm
 {
 meta:
@@ -18812,10 +18812,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 E8 03 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PeCompact_2_xx__Slim_Loader______BitSum_Technologies
 {
 meta:
@@ -18824,10 +18824,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? ?? 50 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 33 C0 89 08 50 45 43 32 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule yoda_s_Protector_1_0b____Ashkbiz_Danehkar
 {
 meta:
@@ -18839,7 +18839,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_2__Borland_Delphi_DLL_
 {
 meta:
@@ -18848,10 +18848,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 B4 B8 90 90 90 90 E8 00 00 00 00 E8 00 00 00 00 8D 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_v0_2Beta
 {
 meta:
@@ -18860,10 +18860,10 @@ strings:
     	$a0 = { BE 88 01 ?? ?? AD 8B F8 95 A5 33 C0 33 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FishPE_V1_0X____hellfish
 {
 meta:
@@ -18872,10 +18872,10 @@ strings:
     	$a0 = { 60 E8 ?? ?? ?? ?? C3 90 09 00 00 00 2C 00 00 00 ?? ?? ?? ?? C4 03 00 00 BC A0 00 00 00 40 01 00 ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 99 00 00 00 00 8A 00 00 00 10 00 00 ?? ?? 00 00 ?? ?? ?? ?? 00 00 02 00 00 00 A0 00 00 18 01 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Morphine_2_7____Holy_Father___Ratter_29A__h_
 {
 meta:
@@ -18887,7 +18887,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Program_Protector_XP_v1_0
 {
 meta:
@@ -18896,10 +18896,10 @@ strings:
     	$a0 = { E8 ?? ?? ?? ?? 58 83 D8 05 89 C3 81 C3 ?? ?? ?? ?? 8B 43 64 50 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Protector_v1_1_11__DDeM____PE_Engine_v0_9__DDeM____CI_v0_9_2_
 {
 meta:
@@ -18908,10 +18908,10 @@ strings:
     	$a0 = { 53 51 56 E8 00 00 00 00 5B 81 EB 08 10 00 00 8D B3 34 10 00 00 B9 F3 03 00 00 BA 63 17 2A EE 31 16 83 C6 04 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FileShield
 {
 meta:
@@ -18920,10 +18920,10 @@ strings:
     	$a0 = { 50 1E EB ?? 90 00 00 8B D8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Software_Compress____BG_Software
 {
 meta:
@@ -18933,10 +18933,10 @@ strings:
 	$a1 = { E9 BE 00 00 00 60 8B 74 24 24 8B 7C 24 28 FC B2 80 33 DB A4 B3 02 E8 6D 00 00 00 73 F6 33 C9 E8 64 00 00 00 73 1C 33 C0 E8 5B 00 00 00 73 23 B3 02 41 B0 10 E8 4F 00 00 00 12 C0 73 F7 75 3F AA EB D4 E8 4D 00 00 00 2B CB 75 10 E8 42 00 00 00 EB 28 AC D1 E8 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule FSG_v1_1
 {
 meta:
@@ -18945,10 +18945,10 @@ strings:
     	$a0 = { BB D0 01 40 ?? BF ?? 10 40 ?? BE ?? ?? ?? ?? FC B2 80 8A 06 46 88 07 47 02 D2 75 05 8A 16 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_v1_0
 {
 meta:
@@ -18957,10 +18957,10 @@ strings:
     	$a0 = { BB D0 01 40 00 BF 00 10 40 00 BE ?? ?? ?? ?? 53 E8 0A 00 00 00 02 D2 75 05 8A 16 46 12 D2 C3 FC B2 80 A4 6A 02 5B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_v1_3
 {
 meta:
@@ -18971,10 +18971,10 @@ strings:
 	$a2 = { BB D0 01 40 00 BF 00 10 40 00 BE ?? ?? ?? ?? 53 E8 0A 00 00 00 02 D2 75 05 8A 16 46 12 D2 C3 B2 80 A4 6A 02 5B FF 14 24 73 F7 33 C9 FF 14 24 73 18 33 C0 FF 14 24 73 21 B3 02 41 B0 10 FF 14 24 12 C0 73 F9 75 3F AA EB DC E8 43 00 00 00 2B CB 75 10 E8 38 00 00 00 EB 28 AC D1 E8 74 41 13 C9 EB 1C 91 48 C1 E0 08 AC E8 22 00 00 00 3D 00 7D 00 00 73 0A 80 FC 05 73 06 83 F8 7F 77 02 41 41 95 8B C5 B3 01 56 8B F7 2B F0 F3 A4 5E EB 96 33 C9 41 FF 54 24 04 13 C9 FF 54 24 04 72 F4 C3 5F 5B 0F B7 3B 4F 74 08 4F 74 13 C1 E7 0C EB 07 8B 7B 02 57 83 C3 04 43 43 E9 52 FF FF FF 5F BB ?? ?? ?? ?? 47 8B 37 AF 57 FF 13 95 33 C0 AE 75 FD FE ?? 74 EF FE }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2
+    	$a0 at manape.ep or $a1 at manape.ep or $a2
 }
 
-    
+
 rule __PseudoSigner_0_1__Borland_Delphi_6_0___7_0______Anorganix
 {
 meta:
@@ -18983,10 +18983,10 @@ strings:
     	$a0 = { 90 90 90 90 68 ?? ?? ?? ?? 67 64 FF 36 00 00 67 64 89 26 00 00 F1 90 90 90 90 53 8B D8 33 C0 A3 09 09 09 00 6A 00 E8 09 09 00 FF A3 09 09 09 00 A1 09 09 09 00 A3 09 09 09 00 33 C0 A3 09 09 09 00 33 C0 A3 09 09 09 00 E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASDPack_v1_0____asd
 {
 meta:
@@ -18998,7 +18998,7 @@ condition:
     	$a0
 }
 
-    
+
 rule eXpressor_v1_2____CGSoftLabs
 {
 meta:
@@ -19007,10 +19007,10 @@ strings:
     	$a0 = { 55 8B EC 81 EC D4 01 00 00 53 56 57 EB 0C 45 78 50 72 2D 76 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MEW_11_SE_v1_2____Northfox_HCC
 {
 meta:
@@ -19019,10 +19019,10 @@ strings:
     	$a0 = { E9 ?? ?? ?? FF 0C ?? ?? 00 00 00 00 00 00 00 00 00 ?? ?? ?? 00 0C ?? ?? 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__MEW_11_SE_1_0______Anorganix
 {
 meta:
@@ -19031,10 +19031,10 @@ strings:
     	$a0 = { E9 09 00 00 00 00 00 00 02 00 00 00 0C 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_1_3_3_3____Obsidium_Software
 {
 meta:
@@ -19044,10 +19044,10 @@ strings:
 	$a1 = { EB 02 ?? ?? E8 29 00 00 00 EB 03 ?? ?? ?? EB 03 ?? ?? ?? 8B 54 24 0C EB 01 ?? 83 82 B8 00 00 00 28 EB 03 ?? ?? ?? 33 C0 EB 01 ?? C3 EB 04 ?? ?? ?? ?? EB 02 ?? ?? 64 67 FF 36 00 00 EB 04 ?? ?? ?? ?? 64 67 89 26 00 00 EB 02 ?? ?? EB 04 ?? ?? ?? ?? 50 EB 04 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Armadillo_4_30a____Silicon_Realms_Toolworks__h_
 {
 meta:
@@ -19060,7 +19060,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule FASM_v1_3x
 {
 meta:
@@ -19069,10 +19069,10 @@ strings:
     	$a0 = { 6A ?? FF 15 ?? ?? ?? ?? A3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FreeJoiner_Small__build_031_032_____GlOFF
 {
 meta:
@@ -19081,10 +19081,10 @@ strings:
     	$a0 = { 50 32 ?? 66 8B C3 58 E8 ?? FD FF FF 6A 00 E8 0D 00 00 00 CC FF 25 78 10 40 00 FF 25 7C 10 40 00 FF 25 80 10 40 00 FF 25 84 10 40 00 FF 25 88 10 40 00 FF 25 8C 10 40 00 FF 25 90 10 40 00 FF 25 94 10 40 00 FF 25 98 10 40 00 FF 25 9C 10 40 00 FF 25 A0 10 40 00 FF 25 A4 10 40 00 FF 25 AC 10 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule DEF_1_00__Eng_____bart_xt
 {
 meta:
@@ -19096,7 +19096,7 @@ condition:
     	$a0
 }
 
-    
+
 rule MESS_v1_20
 {
 meta:
@@ -19105,10 +19105,10 @@ strings:
     	$a0 = { FA B9 ?? ?? F3 ?? ?? E3 ?? EB ?? EB ?? B6 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_3_02
 {
 meta:
@@ -19117,10 +19117,10 @@ strings:
     	$a0 = { 60 BE ?? ?? ?? ?? 8D BE ?? ?? ?? ?? 57 89 E5 8D 9C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2___BJFNT_1_2______Anorganix
 {
 meta:
@@ -19129,10 +19129,10 @@ strings:
     	$a0 = { EB 02 69 B1 83 EC 04 EB 03 CD 20 EB EB 01 EB 9C EB 01 EB EB 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Xtreme_Protector_1_06
 {
 meta:
@@ -19144,7 +19144,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Petite_v_____after_v1_4_
 {
 meta:
@@ -19153,10 +19153,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? ?? 66 9C 60 50 8D ?? ?? ?? ?? ?? 68 ?? ?? ?? ?? 83 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule REC__C0ded_by_ROSE
 {
 meta:
@@ -19165,10 +19165,10 @@ strings:
     	$a0 = { 06 1E 0E 0E 07 1F B4 30 CD 21 86 E0 3D 00 03 73 ?? CD 20 EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_v1_3_3_1____Obsidium_Software__h_
 {
 meta:
@@ -19178,10 +19178,10 @@ strings:
 	$a1 = { EB 01 ?? E8 29 00 00 00 EB 02 ?? ?? EB 03 ?? ?? ?? 8B 54 24 0C EB 02 ?? ?? 83 82 B8 00 00 00 24 EB 04 ?? ?? ?? ?? 33 C0 EB 02 ?? ?? C3 EB 02 ?? ?? EB 02 ?? ?? 64 67 FF 36 00 00 EB 04 ?? ?? ?? ?? 64 67 89 26 00 00 EB 01 ?? EB 02 ?? ?? 50 EB 01 ?? 33 C0 EB 04 ?? ?? ?? ?? 8B 00 EB 03 ?? ?? ?? C3 EB 03 ?? ?? ?? E9 FA 00 00 00 EB 02 ?? ?? E8 D5 FF FF FF EB 01 ?? EB 04 ?? ?? ?? ?? 58 EB 02 ?? ?? EB 04 ?? ?? ?? ?? 64 67 8F 06 00 00 EB 01 ?? 83 C4 04 EB 02 ?? ?? E8 5F 27 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PKLITE_v2_00b
 {
 meta:
@@ -19190,10 +19190,10 @@ strings:
     	$a0 = { 50 B8 ?? ?? BA ?? ?? 05 ?? ?? 3B 06 02 00 72 ?? B4 09 BA ?? ?? CD 21 B8 01 4C CD 21 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 59 2D ?? ?? 8E D0 51 2D ?? ?? 8E C0 50 B9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PKLITE_v2_00c
 {
 meta:
@@ -19202,10 +19202,10 @@ strings:
     	$a0 = { 50 B8 ?? ?? BA ?? ?? 3B C4 73 ?? 8B C4 2D ?? ?? 25 ?? ?? 8B F8 B9 ?? ?? BE ?? ?? FC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v1_40b5___v1_40b6
 {
 meta:
@@ -19214,10 +19214,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 0F A0 40 ?? 87 DD 8B 85 A6 A0 40 ?? 01 85 03 A0 40 ?? 66 C7 85 ?? A0 40 ?? 90 90 01 85 9E A0 40 ?? BB 8A 11 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPXLock_v1_0____CyberDoom
 {
 meta:
@@ -19226,10 +19226,10 @@ strings:
     	$a0 = { 60 E8 ?? ?? ?? ?? 5D 81 ED ?? ?? ?? ?? 60 E8 2B 03 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PESpin_v1_0____Cyberbob__h_
 {
 meta:
@@ -19238,10 +19238,10 @@ strings:
     	$a0 = { EB 01 68 60 E8 00 00 00 00 8B 1C 24 83 C3 12 81 2B E8 B1 06 00 FE 4B FD 82 2C 24 C8 DC 46 00 0B E4 74 9E 75 01 C7 81 73 04 D7 7A F7 2F 81 73 19 77 00 43 B7 F6 C3 6B B7 00 00 F9 FF E3 C9 C2 08 00 A3 68 72 01 FF 5D 33 C9 41 E2 17 EB 07 EA EB 01 EB EB 0D FF E8 01 00 00 00 EA 5A 83 EA 0B FF E2 EB 04 9A EB 04 00 EB FB FF 8B 95 D2 42 40 00 8B 42 3C 03 C2 89 85 DC 42 40 00 EB 02 12 77 F9 72 08 73 0E F9 83 04 24 17 C3 E8 04 00 00 00 0F F5 73 11 EB 06 9A 72 ED 1F EB 07 F5 72 0E F5 72 F8 68 EB EC 83 04 24 07 F5 FF 34 24 C3 41 C1 E1 07 8B 0C 01 03 CA E8 03 00 00 00 EB 04 9A EB FB 00 83 04 24 0C C3 3B 8B 59 10 03 DA 8B 1B 89 9D F0 42 40 00 53 8F 85 94 41 40 00 BB ?? 00 00 00 B9 8C 0B 00 00 8D BD 80 43 40 00 4F EB 01 AB 30 1C 39 FE CB E2 F9 EB 01 C8 68 CB 00 00 00 59 8D BD 40 4E 40 00 E8 03 00 00 00 EB 04 FA EB FB 68 83 04 24 0C C3 8D C0 0C 39 02 E2 FA E8 02 00 00 00 FF 15 5A 8D 85 FD 68 56 00 BB 54 13 0B 00 D1 E3 2B C3 FF E0 E8 01 00 00 00 68 E8 1A 00 00 00 8D 34 28 B9 08 00 00 00 B8 ?? ?? ?? ?? 2B C9 83 C9 15 0F A3 C8 0F 83 81 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SoftComp_1_x____BG_Soft_PT
 {
 meta:
@@ -19253,7 +19253,7 @@ condition:
     	$a0
 }
 
-    
+
 rule SoftDefender_1_x____Randy_Li
 {
 meta:
@@ -19263,10 +19263,10 @@ strings:
 	$a1 = { 74 07 75 05 19 32 67 E8 E8 74 1F 75 1D E8 68 39 44 CD 00 59 9C 50 74 0A 75 08 E8 59 C2 04 00 55 8B EC E8 F4 FF FF FF 56 57 53 78 0F 79 0D E8 34 99 47 49 34 33 EF 31 34 52 47 23 68 A2 AF 47 01 59 E8 01 00 00 00 FF 58 05 E6 01 00 00 03 C8 74 BD 75 BB E8 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Wise_Installer_Stub_v1_10_1029_1
 {
 meta:
@@ -19276,10 +19276,10 @@ strings:
 	$a1 = { 55 8B EC 81 EC 40 0F 00 00 53 56 57 6A 04 FF 15 F4 30 40 00 FF 15 74 30 40 00 8A 08 89 45 E8 80 F9 22 75 48 8A 48 01 40 89 45 E8 33 F6 84 C9 74 0E 80 F9 22 74 09 8A 48 01 40 89 45 E8 EB EE 80 38 22 75 04 40 89 45 E8 80 38 20 75 09 40 80 38 20 74 FA 89 45 E8 8A 08 80 F9 2F 74 2B 84 C9 74 1F 80 F9 3D 74 1A 8A 48 01 40 EB F1 33 F6 84 C9 74 D6 80 F9 20 74 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Armadillo_3_X_5_X____Silicon_Realms_Toolworks
 {
 meta:
@@ -19289,10 +19289,10 @@ strings:
 	$a1 = { 60 E8 00 00 00 00 5D 50 51 0F CA F7 D2 9C F7 D2 0F CA EB 0F B9 EB 0F B8 EB 07 B9 EB 0F 90 EB 08 FD EB 0B F2 EB F5 EB F6 F2 EB 08 FD EB E9 F3 EB E4 FC E9 9D 0F C9 8B CA F7 D1 59 58 50 51 0F CA F7 D2 9C F7 D2 0F CA EB 0F B9 EB 0F B8 EB 07 B9 EB 0F 90 EB 08 FD EB 0B F2 EB F5 EB F6 F2 EB 08 FD EB E9 F3 EB E4 FC E9 9D 0F C9 8B CA F7 D1 59 58 50 51 0F CA F7 D2 9C F7 D2 0F CA EB 0F B9 EB 0F B8 EB 07 B9 EB 0F 90 EB 08 FD EB 0B F2 EB F5 EB F6 F2 EB 08 FD EB E9 F3 EB E4 FC E9 9D 0F C9 8B CA F7 D1 59 58 60 33 C9 75 02 EB 15 EB 33 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__UPX_0_6______Anorganix
 {
 meta:
@@ -19301,10 +19301,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 58 83 E8 3D 50 8D B8 00 00 00 FF 57 8D B0 E8 00 00 00 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Nullsoft_PIMP_Install_System_v1_3x
 {
 meta:
@@ -19313,10 +19313,10 @@ strings:
     	$a0 = { 55 8B EC 81 EC ?? ?? 00 00 56 57 6A ?? BE ?? ?? ?? ?? 59 8D BD }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RCryptor_v1_1____Vaska
 {
 meta:
@@ -19328,7 +19328,7 @@ condition:
     	$a0
 }
 
-    
+
 rule ExeSplitter_1_3__Split_Crypt_Method_____Bill_Prisoner___TPOC
 {
 meta:
@@ -19338,10 +19338,10 @@ strings:
 	$a1 = { 15 10 05 23 14 56 57 57 48 12 0B 16 66 66 66 66 66 66 66 66 66 02 C7 56 66 66 66 ED 26 6A ED 26 6A ED 66 E3 A6 69 E2 39 64 66 66 ED 2E 56 E6 5F 0D 12 61 E6 5F 2D 12 64 8D 81 E6 1F 6A 55 12 64 8D B9 ED 26 7E A5 33 ED 8A 8D 69 21 03 12 36 14 09 05 27 02 02 14 03 15 15 27 ED 2B 6A ED 13 6E ED B8 65 10 5A EB 10 7E EB 10 06 ED 50 65 95 30 ED 10 46 65 95 55 B4 ED A0 ED 50 65 95 37 ED 2B 6A EB DF AB 76 26 66 3F DF 68 66 66 66 9A 95 C0 6D AF 13 64 }
 
 condition:
-    	$a0 at sgpe.ep or $a1
+    	$a0 at manape.ep or $a1
 }
 
-    
+
 rule PseudoSigner_0_2__FSG_1_0_
 {
 meta:
@@ -19350,10 +19350,10 @@ strings:
     	$a0 = { 90 90 90 90 68 ?? ?? ?? ?? 67 64 FF 36 00 00 67 64 89 26 00 00 F1 90 90 90 90 BB D0 01 40 00 BF 00 10 40 00 BE 90 90 90 90 53 E8 0A 00 00 00 02 D2 75 05 8A 16 46 12 D2 C3 FC B2 80 A4 6A 02 5B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_1_16__LZMA_compression_____ap0x__h_
 {
 meta:
@@ -19365,7 +19365,7 @@ condition:
     	$a0
 }
 
-    
+
 rule SimbiOZ_Poly_2_1____Extranger
 {
 meta:
@@ -19374,10 +19374,10 @@ strings:
     	$a0 = { 55 50 8B C4 83 C0 04 C7 00 ?? ?? ?? ?? 58 C3 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ID_Application_Protector_V1_2____ID_Security_Suite___Sign_by_fly
 {
 meta:
@@ -19386,10 +19386,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED F2 0B 47 00 B9 19 22 47 00 81 E9 EA 0E 47 00 89 EA 81 C2 EA 0E 47 00 8D 3A 89 FE 31 C0 E9 D3 02 00 00 CC CC CC CC E9 CA 02 00 00 43 3A 5C 57 69 6E 64 6F 77 73 5C 53 6F 66 74 57 61 72 65 50 72 6F 74 65 63 74 6F 72 5C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Private_Exe_Protector_1_x____setisoft
 {
 meta:
@@ -19398,10 +19398,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? ?? B9 ?? 90 01 ?? BE ?? 10 40 ?? 68 50 91 41 ?? 68 01 ?? ?? ?? C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RCryptor_v1_3___v1_4____Vaska
 {
 meta:
@@ -19410,10 +19410,10 @@ strings:
     	$a0 = { 55 8B EC 8B 44 24 04 83 E8 4F 68 ?? ?? ?? ?? FF D0 58 59 50 B8 ?? ?? ?? ?? 3D ?? ?? ?? ?? 74 06 80 30 ?? 40 EB F3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MaskPE_V2_0____yzkzero
 {
 meta:
@@ -19425,7 +19425,7 @@ condition:
     	$a0
 }
 
-    
+
 rule SimplePack_1_11_Method_2_NT_____bagie_TMX_
 {
 meta:
@@ -19434,10 +19434,10 @@ strings:
     	$a0 = { 4D 5A 90 EB 01 00 52 E9 89 01 00 00 50 45 00 00 4C 01 02 00 00 00 00 00 00 00 00 00 00 00 00 00 E0 00 0F 03 0B 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule INCrypter_0_3__INinY____by_z3e_NiFe
 {
 meta:
@@ -19447,10 +19447,10 @@ strings:
 	$a1 = { 60 64 A1 30 00 00 00 8B 40 0C 8B 40 0C 8D 58 20 C7 03 00 00 00 00 E8 00 00 00 00 5D 81 ED 4D 16 40 00 8B 9D 0E 17 40 00 64 A1 18 00 00 00 8B 40 30 0F B6 40 02 83 F8 01 75 05 03 DB C1 CB 10 8B 8D 12 17 40 00 8B B5 06 17 40 00 51 81 3E 2E 72 73 72 74 65 8B }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule UPXFreak_V0_1____HMX0101
 {
 meta:
@@ -19459,10 +19459,10 @@ strings:
     	$a0 = { BE ?? ?? ?? ?? 83 C6 01 FF E6 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v1_10b3
 {
 meta:
@@ -19471,10 +19471,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 0F 60 40 ?? 87 DD 8B 85 95 60 40 ?? 01 85 03 60 40 ?? 66 C7 85 ?? 60 40 ?? 90 90 BB 95 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v1_10b2
 {
 meta:
@@ -19483,10 +19483,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 0F 60 40 ?? 87 DD 8B 85 94 60 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v1_10b1
 {
 meta:
@@ -19495,10 +19495,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 28 63 40 ?? 87 DD 8B 85 AD 63 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_0_32a__fake_SVKP_1_11_____emadicius
 {
 meta:
@@ -19510,7 +19510,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PECompact_v1_10b7
 {
 meta:
@@ -19519,10 +19519,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 0F 60 40 ?? 87 DD 8B 85 9A 60 40 ?? 01 85 03 60 40 ?? 66 C7 85 ?? 60 40 ?? 90 90 01 85 92 60 40 ?? BB 14 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v1_10b6
 {
 meta:
@@ -19531,10 +19531,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 0F 60 ?? 00 87 DD 8B 85 9A 60 40 ?? 01 85 03 60 40 ?? 66 C7 85 ?? 60 40 ?? 90 90 01 85 92 60 40 ?? BB B7 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v1_10b5
 {
 meta:
@@ -19543,10 +19543,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 0F 60 40 ?? 87 DD 8B 85 95 60 40 ?? 01 85 03 60 40 ?? 66 C7 85 ?? 60 40 ?? 90 90 BB 49 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v1_10b4
 {
 meta:
@@ -19555,10 +19555,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 0F 60 40 ?? 87 DD 8B 85 95 60 40 ?? 01 85 03 60 40 ?? 66 C7 85 ?? 60 40 ?? 90 90 BB 44 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Sentinel_SuperPro__Automatic_Protection__v6_4_0____Safenet
 {
 meta:
@@ -19568,10 +19568,10 @@ strings:
 	$a1 = { 68 ?? ?? ?? ?? 6A 01 6A 00 FF 15 ?? ?? ?? ?? A3 ?? ?? ?? ?? FF 15 ?? ?? ?? ?? 33 C9 3D B7 00 00 00 A1 ?? ?? ?? ?? 0F 94 C1 85 C0 89 0D ?? ?? ?? ?? 0F 85 ?? ?? ?? ?? 55 56 C7 05 ?? ?? ?? ?? 01 00 00 00 FF 15 ?? ?? ?? ?? 01 05 ?? ?? ?? ?? FF 15 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PE_Armor_V0_760_V0_765____hying
 {
 meta:
@@ -19580,10 +19580,10 @@ strings:
     	$a0 = { 00 00 00 00 00 00 00 00 ?? ?? ?? ?? 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 4B 45 52 4E 45 4C 33 32 2E 64 6C 6C 00 00 00 00 47 65 74 50 72 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule CrypWrap_vx_x
 {
 meta:
@@ -19592,10 +19592,10 @@ strings:
     	$a0 = { E8 B8 ?? ?? ?? E8 90 02 ?? ?? 83 F8 ?? 75 07 6A ?? E8 ?? ?? ?? ?? FF 15 49 8F 40 ?? A9 ?? ?? ?? 80 74 0E }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule IMP_Packer_1_0____Mahdi_Hezavehi__IMPOSTER___h_
 {
 meta:
@@ -19607,7 +19607,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PE_Armor_0_460_0_759____hying
 {
 meta:
@@ -19617,10 +19617,10 @@ strings:
 	$a1 = { 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 4B 45 52 4E 45 4C 33 32 2E 64 6C 6C 00 00 00 00 47 65 74 50 72 6F 63 41 64 64 72 65 73 73 00 00 00 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule DEF_v1_00__Eng_____bart_xt
 {
 meta:
@@ -19630,10 +19630,10 @@ strings:
 	$a1 = { BE ?? 01 40 00 6A ?? 59 80 7E 07 00 74 11 8B 46 0C 05 00 00 40 00 8B 56 10 30 10 40 4A 75 FA 83 C6 28 E2 E4 68 ?? ?? 40 00 C3 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule SDProtector_V1_1X____Randy_Li___Sign_by_fly
 {
 meta:
@@ -19642,10 +19642,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 88 88 88 08 64 A1 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__Backfont_900
 {
 meta:
@@ -19654,10 +19654,10 @@ strings:
     	$a0 = { E8 ?? ?? B4 30 CD 21 3C 03 ?? ?? B8 ?? ?? BA ?? ?? CD 21 81 FA ?? ?? ?? ?? BA ?? ?? 8C C0 48 8E C0 8E D8 80 ?? ?? ?? 5A ?? ?? 03 ?? ?? ?? 40 8E D8 80 ?? ?? ?? 5A ?? ?? 83 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v0_90
 {
 meta:
@@ -19666,10 +19666,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? 40 00 C3 9C 60 BD ?? ?? 00 00 B9 02 00 00 00 B0 90 8D BD 7A 42 40 00 F3 AA 01 AD D9 43 40 00 FF B5 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NsPack_v3_1____North_Star
 {
 meta:
@@ -19678,10 +19678,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 5D 83 ED 07 8D 9D ?? ?? FF FF 8A 03 3C 00 74 10 8D 9D ?? ?? FF FF 8A 03 3C 01 0F 84 42 02 00 00 C6 03 01 8B D5 2B 95 ?? ?? FF FF 89 95 ?? ?? FF FF 01 95 ?? ?? FF FF 8D B5 ?? ?? FF FF 01 16 60 6A 40 68 00 10 00 00 68 00 10 00 00 6A 00 FF 95 ?? ?? FF FF 85 C0 0F 84 6A 03 00 00 89 85 ?? ?? FF FF E8 00 00 00 00 5B B9 68 03 00 00 03 D9 50 53 E8 B1 02 00 00 61 8B 36 8B FD 03 BD ?? ?? FF FF 8B DF 83 3F 00 75 0A 83 C7 04 B9 00 00 00 00 EB 16 B9 01 00 00 00 03 3B 83 C3 04 83 3B 00 74 36 01 13 8B 33 03 7B 04 57 51 52 53 FF B5 ?? ?? FF FF FF B5 ?? ?? FF FF 8B D6 8B CF 8B 85 ?? ?? FF FF 05 AA 05 00 00 FF D0 5B 5A 59 5F 83 F9 00 74 05 83 C3 08 EB C5 68 00 80 00 00 6A 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v0_92
 {
 meta:
@@ -19690,10 +19690,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 BD ?? ?? ?? ?? B9 02 ?? ?? ?? B0 90 8D BD A5 4F 40 ?? F3 AA 01 AD 04 51 40 ?? FF B5 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v0_94
 {
 meta:
@@ -19702,10 +19702,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 ?? ?? ?? ?? 5D 55 58 81 ED ?? ?? ?? ?? 2B 85 ?? ?? ?? ?? 01 85 ?? ?? ?? ?? 50 B9 02 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule bambam_V0_01____bedrock
 {
 meta:
@@ -19715,10 +19715,10 @@ strings:
 	$a1 = { 6A 14 E8 9A 05 00 00 8B D8 53 68 ?? ?? ?? ?? E8 6C FD FF FF }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Armadillo_v1_90c
 {
 meta:
@@ -19727,10 +19727,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 10 F2 40 00 68 74 9D 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v0_99
 {
 meta:
@@ -19739,10 +19739,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 2F 85 40 ?? 87 DD 8B 85 B4 85 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v1_90a
 {
 meta:
@@ -19751,10 +19751,10 @@ strings:
     	$a0 = { 55 8B EC 64 FF 68 10 F2 40 00 68 14 9B 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule tElock_0_99___1_0_private____tE_
 {
 meta:
@@ -19763,10 +19763,10 @@ strings:
     	$a0 = { E9 ?? ?? FF FF 00 00 00 ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Stealth_PE_v1_1
 {
 meta:
@@ -19775,10 +19775,10 @@ strings:
     	$a0 = { BA ?? ?? ?? 00 FF E2 BA ?? ?? ?? 00 B8 ?? ?? ?? ?? 89 02 83 C2 03 B8 ?? ?? ?? ?? 89 02 83 C2 FD FF E2 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RCryptor_v1_6b___v1_6c_____Vaska
 {
 meta:
@@ -19788,10 +19788,10 @@ strings:
 	$a1 = { 8B C7 03 04 24 2B C7 80 38 50 0F 85 1B 8B 1F FF 68 ?? ?? ?? ?? B8 ?? ?? ?? ?? 3D ?? ?? ?? ?? 74 06 80 30 ?? 40 EB F3 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PE_Protector_0_9_3____CRYPToCRACk
 {
 meta:
@@ -19800,10 +19800,10 @@ strings:
     	$a0 = { 5B 81 E3 00 FF FF FF 66 81 3B 4D 5A 75 33 8B F3 03 73 3C 81 3E 50 45 00 00 75 26 0F B7 46 18 8B C8 69 C0 AD 0B 00 00 F7 E0 2D AB 5D 41 4B 69 C9 DE C0 00 00 03 C1 75 09 83 EC 04 0F 85 DD 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Unnamed_Scrambler_1_3B____p0ke
 {
 meta:
@@ -19813,10 +19813,10 @@ strings:
 	$a1 = { 55 8B EC B9 08 00 00 00 6A 00 6A 00 49 75 F9 53 56 57 B8 98 56 00 10 E8 48 EB FF FF 33 C0 55 68 AC 5D 00 10 64 FF 30 64 89 20 6A 00 68 BC 5D 00 10 68 C4 5D 00 10 6A 00 E8 23 EC FF FF E8 C6 CE FF FF 6A 00 68 BC 5D 00 10 68 ?? ?? ?? ?? 6A 00 E8 0B EC FF FF }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule EXE_Stealth_v2_76____WebToolMaster
 {
 meta:
@@ -19825,10 +19825,10 @@ strings:
     	$a0 = { EB 65 45 78 65 53 74 65 61 6C 74 68 20 56 32 20 2D 20 77 77 77 2E 77 65 62 74 6F 6F 6C 6D 61 73 74 65 72 2E 63 6F 6D 20 59 4F 55 52 20 41 44 20 48 45 52 45 21 50 69 52 41 43 59 20 69 53 20 41 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule yoda_s_Protector_1_0_beta____Ashkbiz_Danehkar
 {
 meta:
@@ -19837,10 +19837,10 @@ strings:
     	$a0 = { 55 8B EC 53 56 57 60 E8 00 00 00 00 5D 81 ED 4C 32 40 00 E8 03 00 00 00 EB 01 ?? B9 EA 47 40 00 81 E9 E9 32 40 00 8B D5 81 C2 E9 32 40 00 8D 3A 8B F7 33 C0 E8 04 00 00 00 90 EB 01 ?? E8 03 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Splice_1_1___by_Tw1sted_L0gic
 {
 meta:
@@ -19850,10 +19850,10 @@ strings:
 	$a1 = { 68 00 1A 40 00 E8 EE FF FF FF 00 00 00 00 00 00 30 00 00 00 40 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 01 00 00 00 ?? ?? ?? ?? ?? ?? 50 72 6F 6A 65 63 74 31 00 ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 06 00 00 00 AC }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule tElock_0_99
 {
 meta:
@@ -19865,7 +19865,7 @@ condition:
     	$a0
 }
 
-    
+
 rule MZ_Crypt_1_0___by_BrainSt0rm
 {
 meta:
@@ -19874,10 +19874,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED 25 14 40 00 8B BD 77 14 40 00 8B 8D 7F 14 40 00 EB 28 83 7F 1C 07 75 1E 8B 77 0C 03 B5 7B 14 40 00 33 C0 EB 0C 50 8A A5 83 14 40 00 30 26 58 40 46 3B 47 10 76 EF 83 C7 28 49 0B C9 75 D4 8B 85 73 14 40 00 89 44 24 1C 61 FF E0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule E_______________________________
 {
 meta:
@@ -19886,10 +19886,10 @@ strings:
     	$a0 = { 55 8B EC B8 ?? ?? ?? ?? E8 ?? ?? ?? ?? 53 56 57 0F 31 8B D8 0F 31 8B D0 2B D3 C1 EA 10 B8 ?? ?? ?? ?? 0F 6E C0 B8 ?? ?? ?? ?? 0F 6E C8 0F F5 C1 0F 7E C0 0F 77 03 C2 ?? ?? ?? ?? ?? FF E0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ACProtect_v1_35____risco_software_Inc____Anticrack_Software__h_
 {
 meta:
@@ -19901,7 +19901,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Armadillo_v2_00
 {
 meta:
@@ -19910,10 +19910,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 00 02 41 00 68 C4 A0 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v2_01
 {
 meta:
@@ -19922,10 +19922,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 08 02 41 00 68 04 9A 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Packman_V1_0____Brandon_LaCombe
 {
 meta:
@@ -19934,10 +19934,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5B 8D 5B C6 01 1B 8B 13 8D 73 14 6A 08 59 01 16 AD 49 75 FA }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MinGW_3_2_x__Dll_WinMain_
 {
 meta:
@@ -19949,7 +19949,7 @@ condition:
     	$a0
 }
 
-    
+
 rule mucki_s_protector____mucki
 {
 meta:
@@ -19958,10 +19958,10 @@ strings:
     	$a0 = { BE ?? ?? ?? ?? B9 ?? ?? ?? ?? 8A 06 F6 D0 88 06 46 E2 F7 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PKLITE_v1_00c__1_
 {
 meta:
@@ -19970,10 +19970,10 @@ strings:
     	$a0 = { 2E 8C 1E ?? ?? 8B 1E ?? ?? 8C DA 81 C2 ?? ?? 3B DA 72 ?? 81 EB ?? ?? 83 EB ?? FA 8E D3 BC ?? ?? FB FD BE ?? ?? 8B FE }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Ionic_Wind_Software
 {
 meta:
@@ -19982,10 +19982,10 @@ strings:
     	$a0 = { 9B DB E3 9B DB E2 D9 2D 00 ?? ?? 00 55 89 E5 E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SoftWrap
 {
 meta:
@@ -19994,10 +19994,10 @@ strings:
     	$a0 = { 52 53 51 56 57 55 E8 ?? ?? ?? ?? 5D 81 ED 36 ?? ?? ?? E8 ?? 01 ?? ?? 60 BA ?? ?? ?? ?? E8 ?? ?? ?? ?? 5F }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ACProtect_V1_3X____risco
 {
 meta:
@@ -20006,10 +20006,10 @@ strings:
     	$a0 = { 60 50 E8 01 00 00 00 75 83 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX__com_
 {
 meta:
@@ -20018,10 +20018,10 @@ strings:
     	$a0 = { B9 ?? ?? BE ?? ?? BF C0 FF FD }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Utah_RLE_Graphics_format
 {
 meta:
@@ -20033,7 +20033,7 @@ condition:
     	$a0
 }
 
-    
+
 rule ExeSafeguard_v1_0____simonzh__h_
 {
 meta:
@@ -20046,7 +20046,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule Upack_0_12_beta____Dwing
 {
 meta:
@@ -20055,10 +20055,10 @@ strings:
     	$a0 = { BE 48 01 40 00 AD ?? ?? ?? A5 ?? C0 33 C9 ?? ?? ?? ?? ?? ?? ?? F3 AB ?? ?? 0A ?? ?? ?? ?? AD 50 97 51 ?? 87 F5 58 8D 54 86 5C ?? D5 72 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? B6 5F FF C1 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule VPacker____ttui
 {
 meta:
@@ -20067,10 +20067,10 @@ strings:
     	$a0 = { 89 C6 C7 45 E0 01 00 00 00 F7 03 00 00 FF FF 75 18 0F B7 03 50 8B 45 D8 50 FF 55 F8 89 07 8B C3 E8 ?? FE FF FF 8B D8 EB 13 53 8B 45 D8 50 FF 55 F8 89 07 8B C3 E8 ?? FE FF FF 8B D8 83 C7 04 FF 45 E0 4E 75 C4 8B F3 83 3E 00 75 88 8B 45 E4 8B 40 10 03 45 DC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MicroJoiner_1_7____coban2k
 {
 meta:
@@ -20079,10 +20079,10 @@ strings:
     	$a0 = { BF 00 10 40 00 8D 5F 21 6A 0A 58 6A 04 59 60 57 E8 8E 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXE32Pack_v1_39
 {
 meta:
@@ -20091,10 +20091,10 @@ strings:
     	$a0 = { 3B C0 74 02 81 83 55 3B C0 74 02 81 83 53 3B C9 74 01 BC ?? ?? ?? ?? 02 81 ?? ?? ?? ?? ?? ?? ?? 3B DB 74 01 BE 5D 8B D5 81 ED EC 8D 40 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXE32Pack_v1_38
 {
 meta:
@@ -20103,10 +20103,10 @@ strings:
     	$a0 = { 3B C0 74 02 81 83 55 3B C0 74 02 81 83 53 3B C9 74 01 BC ?? ?? ?? ?? 02 81 ?? ?? ?? ?? ?? ?? ?? 3B DB 74 01 BE 5D 8B D5 81 ED DC 8D 40 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PE_PaCK_1_0_____C__Copyright_1998_by_ANAKiN__h_
 {
 meta:
@@ -20118,7 +20118,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Armadillo_v2_51
 {
 meta:
@@ -20127,10 +20127,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 B8 ?? ?? ?? 68 D0 ?? ?? ?? 64 A1 ?? ?? ?? ?? 50 64 89 25 ?? ?? ?? ?? 83 EC 58 53 56 57 89 65 E8 FF 15 20 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXE32Pack_v1_37
 {
 meta:
@@ -20139,10 +20139,10 @@ strings:
     	$a0 = { 3B C0 74 02 81 83 55 3B C0 74 02 81 83 53 3B C9 74 01 BC ?? ?? ?? ?? 02 81 ?? ?? ?? ?? ?? ?? ?? 3B DB 74 01 BE 5D 8B D5 81 ED 4C 8E 40 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXE32Pack_v1_36
 {
 meta:
@@ -20151,10 +20151,10 @@ strings:
     	$a0 = { 3B C0 74 02 81 83 55 3B C0 74 02 81 83 53 3B C9 74 01 BC ?? ?? ?? ?? 02 81 ?? ?? ?? ?? ?? ?? ?? 3B DB 74 01 BE 5D 8B D5 81 ED CC 8D 40 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_V1_19_Dll__LZMA_4_30_____ap0x_nbsp___nbsp___Sign_by_fly
 {
 meta:
@@ -20163,10 +20163,10 @@ strings:
     	$a0 = { 80 7C 24 08 01 0F 85 C7 01 00 00 60 E8 00 00 00 00 8B 2C 24 83 C4 04 83 7C 24 28 01 75 0C 8B 44 24 24 89 85 49 0B 00 00 EB 0C 8B 85 45 0B 00 00 89 85 49 0B 00 00 8D B5 6D 0B 00 00 8D 9D 2F 03 00 00 33 FF 6A 40 68 00 10 00 00 68 00 20 0C 00 6A 00 FF 95 DA 0A 00 00 89 85 41 0B 00 00 E8 76 01 00 00 EB 20 60 8B 85 49 0B 00 00 FF B5 41 0B 00 00 FF 34 37 01 04 24 FF 74 37 04 01 04 24 FF D3 61 83 C7 08 83 3C 37 00 75 DA 83 BD 55 0B 00 00 00 74 0E 83 BD 59 0B 00 00 00 74 05 E8 D7 01 00 00 8D 74 37 04 53 6A 40 68 00 10 00 00 68 ?? ?? ?? ?? 6A 00 FF 95 DA 0A 00 00 89 85 69 0B 00 00 5B 60 FF B5 41 0B 00 00 56 FF B5 69 0B 00 00 FF D3 61 8B B5 69 0B 00 00 8B C6 EB 01 40 80 38 01 75 FA 40 8B 38 03 BD 49 0B 00 00 83 C0 04 89 85 65 0B 00 00 E9 98 00 00 00 56 FF 95 D2 0A 00 00 89 85 61 0B 00 00 85 C0 0F 84 C8 00 00 00 8B C6 EB 5F 8B 85 65 0B 00 00 8B 00 A9 00 00 00 80 74 14 35 00 00 00 80 50 8B 85 65 0B 00 00 C7 00 20 20 20 00 EB 06 FF B5 65 0B 00 00 FF B5 61 0B 00 00 FF 95 D6 0A 00 00 85 C0 0F 84 87 00 00 00 89 07 83 C7 04 8B 85 65 0B 00 00 EB 01 40 80 38 00 75 FA 40 89 85 65 0B 00 00 66 81 78 02 00 80 74 A1 80 38 00 75 9C EB 01 46 80 3E 00 75 FA 46 40 8B 38 03 BD 49 0B 00 00 83 C0 04 89 85 65 0B 00 00 80 3E 01 0F 85 5F FF FF FF 68 00 40 00 00 68 ?? ?? ?? ?? FF B5 69 0B 00 00 FF 95 DE 0A 00 00 68 00 40 00 00 68 00 20 0C 00 FF B5 41 0B 00 00 FF 95 DE 0A 00 00 E8 3D 00 00 00 E8 24 01 00 00 61 E9 ?? ?? ?? ?? 61 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ExeLock_v1_00
 {
 meta:
@@ -20175,10 +20175,10 @@ strings:
     	$a0 = { 06 8C C8 8E C0 BE ?? ?? 26 ?? ?? 34 ?? 26 ?? ?? 46 81 ?? ?? ?? 75 ?? 40 B3 ?? B3 ?? F3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEiD_Bundle_V1_00____BoB___BobSoft
 {
 meta:
@@ -20187,10 +20187,10 @@ strings:
     	$a0 = { 60 E8 21 02 00 00 8B 44 24 04 52 48 66 31 C0 66 81 38 4D 5A 75 F5 8B 50 3C 81 3C 02 50 45 00 00 75 E9 5A C2 04 00 60 89 DD 89 C3 8B 45 3C 8B 54 28 78 01 EA 52 8B 52 20 01 EA 31 C9 41 8B 34 8A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PE_Lock_NT_v2_02c
 {
 meta:
@@ -20199,10 +20199,10 @@ strings:
     	$a0 = { EB 02 C7 85 1E EB 03 CD 20 EB EB 01 EB 9C EB 01 EB EB 02 CD }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_v0_36_beta____Dwing
 {
 meta:
@@ -20211,10 +20211,10 @@ strings:
     	$a0 = { BE E0 11 ?? ?? FF 36 E9 C3 00 00 00 48 01 ?? ?? 0B 01 4B 45 52 4E 45 4C 33 32 2E 44 4C 4C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EmbedPE_1_13____cyclotron
 {
 meta:
@@ -20225,10 +20225,10 @@ strings:
 	$a2 = { 83 EC 50 60 68 5D B9 52 5A E8 2F 99 00 00 DC 99 F3 57 05 68 B8 5E 2D C6 DA FD 48 63 05 3C 71 B8 5E 97 7C 36 7E 32 7C 08 4F 06 51 64 10 A3 F1 4E CF 25 CB 80 D2 99 54 46 ED E1 D3 46 86 2D 10 68 93 83 5C 46 4D 43 9B 8C D6 7C BB 99 69 97 71 2A 2F A3 38 6B 33 A3 F5 0B 85 97 7C BA 1D 96 DD 07 F8 FD D2 3A 98 83 CC 46 99 9D DF 6F 89 92 54 46 9F 94 43 CC 41 43 9B 8C 61 B9 D8 6F 96 3B D1 07 32 24 DD 07 05 8E CB 6F A1 07 5C 62 20 E0 DB BA 9D 83 54 46 E6 83 51 7A 2B 94 54 64 8A 83 05 68 D7 5E 2D C6 B7 57 00 B3 E8 3C 71 B8 3C 97 7C 36 19 32 7C 08 2A 06 51 64 73 A3 F1 4E 92 25 CB 80 8D 99 54 46 B0 E1 D3 46 A5 2D 10 68 B6 83 91 46 F2 DF 64 FD D1 BC CA AA 70 E2 AB 39 AE 3B 5A 6F 9B 15 BD 25 98 25 30 4C AD 7D 55 07 A8 A3 AC 0A C1 BD 54 72 BC 83 54 82 A3 97 B1 1A B3 83 54 46 83 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
-    
+
 rule DOS32_v_3_3_DOS_Extender_and_Loader
 {
 meta:
@@ -20237,10 +20237,10 @@ strings:
     	$a0 = { 0E 1F FC 9C 5B 8B C3 80 F4 ?? 50 9D 9C 58 3A E7 75 ?? BA ?? ?? B4 09 CD 21 B4 4C CD 21 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SDProtector_Basic_Pro_Edition_1_12____Randy_Li__h_
 {
 meta:
@@ -20249,10 +20249,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 1D 32 13 05 68 88 88 88 08 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 58 64 A3 00 00 00 00 58 58 58 58 8B E8 E8 3B 00 00 00 E8 01 00 00 00 FF 58 05 53 00 00 00 51 8B 4C 24 10 89 81 B8 00 00 00 B8 55 01 00 00 89 41 20 33 C0 89 41 04 89 41 08 89 41 0C 89 41 10 59 C3 C3 C3 C3 C3 C3 C3 C3 C3 C3 C3 C3 C3 33 C0 64 FF 30 64 89 20 9C 80 4C 24 01 01 9D 90 90 C3 C3 C3 C3 C3 C3 C3 C3 C3 C3 C3 C3 64 8F 00 58 74 07 75 05 19 32 67 E8 E8 74 27 75 25 EB 00 EB FC 68 39 44 CD 00 59 9C 50 74 0F 75 0D E8 59 C2 04 00 55 8B EC E9 FA FF FF 0E E8 EF FF FF FF 56 57 53 78 03 79 01 E8 68 A2 AF 47 01 59 E8 01 00 00 00 FF 58 05 7B 03 00 00 03 C8 74 C4 75 C2 E8 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 E2 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule BobSoft_Mini_Delphi____BoB___BobSoft
 {
 meta:
@@ -20263,10 +20263,10 @@ strings:
 	$a2 = { 55 8B EC 83 C4 F0 B8 ?? ?? ?? ?? E8 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__Watcom_C_C___DLL______Anorganix
 {
 meta:
@@ -20275,10 +20275,10 @@ strings:
     	$a0 = { 53 56 57 55 8B 74 24 14 8B 7C 24 18 8B 6C 24 1C 83 FF 03 0F 87 01 00 00 00 F1 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RCryptor_1_6d_by_Vaska__UsAr_sign_21_03_2007_22_22_
 {
 meta:
@@ -20287,10 +20287,10 @@ strings:
     	$a0 = { 60 90 61 61 80 7F F0 45 90 60 0F 85 1B 8B 1F FF 68 40 A1 14 13 B8 00 10 14 13 90 3D 24 C0 14 13 74 06 80 30 F6 40 EB F3 B8 8C 20 18 13 90 3D B9 27 18 13 74 06 80 30 89 40 EB F3 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_v0_32a__fake_nSPack_1_3_____emadicius__h_
 {
 meta:
@@ -20299,10 +20299,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 5D B8 B3 85 40 00 2D AC 85 40 00 2B E8 8D B5 D3 FE FF FF 8B 06 83 F8 00 74 11 8D B5 DF FE FF FF 8B 06 83 F8 01 0F 84 F1 01 00 00 61 9D EB 05 E8 EB 04 40 00 EB FA E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 50 E8 02 00 00 00 29 5A 58 6B C0 03 E8 02 00 00 00 29 5A 83 C4 04 58 74 04 75 02 EB 02 EB 01 81 0F 31 50 0F 31 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 2B 04 24 74 04 75 02 EB 02 EB 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule N_Joy_1_3____NEX
 {
 meta:
@@ -20311,10 +20311,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 F0 B8 48 36 40 00 E8 54 EE FF FF 6A 00 68 D8 2B 40 00 6A 0A 6A 00 E8 2C EF FF FF E8 23 E7 FF FF 8D 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SVKP_v1_42____Pavol_Cerven__h_
 {
 meta:
@@ -20323,10 +20323,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED 06 00 00 00 EB 05 B8 49 DC EC 00 64 A0 23 00 00 00 EB 03 C7 84 E8 84 C0 EB 03 C7 84 E9 75 67 B9 49 00 00 00 8D B5 C5 02 00 00 56 80 06 44 46 E2 FA 8B 8D C1 02 00 00 5E 55 51 6A 00 56 FF 95 2D 67 00 00 59 5D 40 85 C0 75 3C 80 3E 00 74 03 46 EB F8 46 E2 E3 8B C5 8B 4C 24 20 2B 85 BD 02 00 00 89 85 B9 02 00 00 80 BD B4 02 00 00 01 75 06 8B 8D 2D 67 00 00 89 8D B5 02 00 00 8D 85 0E 03 00 00 8B DD FF E0 55 68 10 10 00 00 8D 85 B4 00 00 00 50 8D 85 B4 01 00 00 50 6A 00 FF 95 39 67 00 00 5D 6A FF FF 95 31 67 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXE32Pack_v1_3x
 {
 meta:
@@ -20335,10 +20335,10 @@ strings:
     	$a0 = { 3B ?? 74 02 81 83 55 3B ?? 74 02 81 ?? 53 3B ?? 74 01 ?? ?? ?? ?? ?? 02 81 ?? ?? E8 ?? ?? ?? ?? 3B 74 01 ?? 5D 8B D5 81 ED }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Thinstall_Embedded_V2_0X____Jitit___Sign_by_fly
 {
 meta:
@@ -20347,10 +20347,10 @@ strings:
     	$a0 = { B8 EF BE AD DE 50 6A 00 FF 15 ?? ?? ?? ?? E9 AD FF FF FF 8B C1 8B 4C 24 04 89 88 29 04 00 00 C7 40 0C 01 00 00 00 0F B6 49 01 D1 E9 89 48 10 C7 40 14 80 00 00 00 C2 04 00 8B 44 24 04 C7 41 0C 01 00 00 00 89 81 29 04 00 00 0F B6 40 01 D1 E8 89 41 10 C7 41 14 80 00 00 00 C2 04 00 55 8B EC 53 56 57 33 C0 33 FF 39 45 0C 8B F1 76 0C 8B 4D 08 03 3C 81 40 3B 45 0C 72 F4 8B CE E8 43 00 00 00 8B 46 14 33 D2 F7 F7 8B 5E 10 33 D2 8B F8 8B C3 F7 F7 89 7E 18 89 45 0C 33 C0 33 C9 8B 55 08 03 0C 82 40 39 4D 0C 73 F4 48 8B 14 82 2B CA 0F AF CF 2B D9 0F AF FA 89 7E 14 89 5E 10 5F 5E 5B 5D C2 08 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Kbys_Packer_0_28_Beta___shoooo314
 {
 meta:
@@ -20362,7 +20362,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_1__Armadillo_3_00_____Anorganix
 {
 meta:
@@ -20371,10 +20371,10 @@ strings:
     	$a0 = { 60 E8 2A 00 00 00 5D 50 51 EB 0F B9 EB 0F B8 EB 07 B9 EB 0F 90 EB 08 FD EB 0B F2 EB F5 EB F6 F2 EB 08 FD EB E9 F3 EB E4 FC E9 59 58 50 51 EB 85 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule WinUpack_v0_39_final____By_Dwing__c_2005__h1_
 {
 meta:
@@ -20388,10 +20388,10 @@ strings:
 	$a5 = { BE B0 11 ?? ?? AD 50 FF 76 34 EB 7C 48 01 ?? ?? 0B 01 4C 6F 61 64 4C 69 62 72 61 72 79 41 00 00 18 10 00 00 10 00 00 00 ?? ?? ?? ?? 00 00 ?? ?? 00 10 00 00 00 02 00 00 04 00 00 00 00 00 39 00 04 00 00 00 00 00 00 00 00 ?? ?? ?? 00 02 00 00 00 00 00 00 ?? 00 00 ?? 00 00 ?? 00 00 ?? ?? 00 00 00 10 00 00 10 00 00 00 00 00 00 0A 00 00 00 00 00 00 00 00 00 00 00 EE ?? ?? ?? 14 00 00 00 00 ?? ?? ?? ?? ?? ?? 00 FF 76 38 AD 50 8B 3E BE F0 ?? ?? ?? 6A 27 59 F3 A5 FF 76 04 83 C8 FF 8B DF AB EB 1C 00 00 00 00 47 65 74 50 72 6F 63 41 64 64 72 65 73 73 00 00 ?? ?? ?? ?? ?? 00 00 00 40 AB 40 B1 04 F3 AB C1 E0 0A B5 ?? F3 AB 8B 7E 0C 57 51 E9 ?? ?? ?? ?? 56 10 E2 E3 B1 04 D3 E0 03 E8 8D 53 18 33 C0 55 40 51 D3 E0 8B EA 91 FF 56 4C 99 59 D1 E8 13 D2 E2 FA 5D 03 EA 45 59 89 6B 08 56 8B F7 2B F5 F3 A4 AC 5E B1 80 AA 3B 7E 34 0F 82 AC FE FF FF 58 5F 59 E3 1B 8A 07 47 04 18 3C 02 73 F7 8B 07 3C ?? 75 F3 B0 00 0F C8 03 46 38 2B C7 AB E2 E5 5E 5D 59 46 AD 85 C0 74 1F 51 56 97 FF D1 93 AC 84 C0 75 FB 38 06 74 EA 8B C6 79 05 46 33 C0 66 AD 50 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep or $a3 or $a4 at sgpe.ep or $a5 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep or $a3 or $a4 at manape.ep or $a5 at manape.ep
 }
 
-    
+
 rule MSLRH_v0_32a__fake_UPX_0_89_6___1_02___1_05___1_24_____emadicius__h_
 {
 meta:
@@ -20400,10 +20400,10 @@ strings:
     	$a0 = { 60 BE 00 90 8B 00 8D BE 00 80 B4 FF 57 83 CD FF EB 3A 90 90 90 90 90 90 8A 06 46 88 07 47 01 DB 75 07 8B 1E 83 EE FC 11 DB 72 ED B8 01 00 00 00 01 DB 75 07 8B 1E 83 EE FC 11 DB 11 C0 01 DB 73 0B 75 19 8B 1E 83 EE FC 11 DB 72 10 58 61 90 EB 05 E8 EB 04 40 00 EB FA E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 50 E8 02 00 00 00 29 5A 58 6B C0 03 E8 02 00 00 00 29 5A 83 C4 04 58 74 04 75 02 EB 02 EB 01 81 0F 31 50 0F 31 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule BeRo_Tiny_Pascal____BeRo___Farbrausch
 {
 meta:
@@ -20412,10 +20412,10 @@ strings:
     	$a0 = { E9 ?? ?? ?? ?? 20 43 6F 6D 70 69 6C 65 64 20 62 79 3A 20 42 65 52 6F 54 69 6E 79 50 61 73 63 61 6C 20 2D 20 28 43 29 20 43 6F 70 79 72 69 67 68 74 20 32 30 30 36 2C 20 42 65 6E 6A 61 6D 69 6E 20 27 42 65 52 6F 27 20 52 6F 73 73 65 61 75 78 20 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Dual_s_eXe_Encryptor_1_0b____Dual
 {
 meta:
@@ -20424,10 +20424,10 @@ strings:
     	$a0 = { 55 8B EC 81 EC 00 05 00 00 E8 00 00 00 00 5D 81 ED 0E 00 00 00 8D 85 3A 04 00 00 89 28 33 FF 8D 85 80 03 00 00 8D 8D 3A 04 00 00 2B C8 8B 9D 8A 04 00 00 E8 24 02 00 00 8D 9D 58 03 00 00 8D B5 7F 03 00 00 46 80 3E 00 74 24 56 FF 95 58 05 00 00 46 80 3E 00 75 FA 46 80 3E 00 74 E7 50 56 50 FF 95 5C 05 00 00 89 03 58 83 C3 04 EB E3 8D 85 69 02 00 00 FF D0 8D 85 56 04 00 00 50 68 1F 00 02 00 6A 00 8D 85 7A 04 00 00 50 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_V1_3_0_0____Obsidium_Software
 {
 meta:
@@ -20438,10 +20438,10 @@ strings:
 	$a2 = { EB 04 ?? ?? ?? ?? E8 29 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
-    
+
 rule DotFix_Nice_Protect_2_1____GPcH_Soft
 {
 meta:
@@ -20451,10 +20451,10 @@ strings:
 	$a1 = { E9 FF 00 00 00 60 8B 74 24 24 8B 7C 24 28 FC B2 80 33 DB A4 B3 02 E8 6D 00 00 00 73 F6 33 C9 E8 64 00 00 00 73 1C 33 C0 E8 5B 00 00 00 73 23 B3 02 41 B0 10 E8 4F 00 00 00 12 C0 73 F7 75 3F AA EB D4 E8 4D 00 00 00 2B CB 75 10 E8 42 00 00 00 EB 28 AC D1 E8 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule PE_Admin_V1_0__EncryptPE_V1_2003_5_18_Sold_____Flying_Cat
 {
 meta:
@@ -20463,10 +20463,10 @@ strings:
     	$a0 = { 60 9C 64 FF 35 00 00 00 00 E8 79 01 00 00 90 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PROTECT__EXE_COM_v6_0
 {
 meta:
@@ -20475,10 +20475,10 @@ strings:
     	$a0 = { 1E B4 30 CD 21 3C 02 73 ?? CD 20 BE ?? ?? E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_4_44a_public_build____Silicon_Realms_Toolworks__h_
 {
 meta:
@@ -20490,7 +20490,7 @@ condition:
     	$a0
 }
 
-    
+
 rule nSPack_2_x____North_Star_Liu_Xing_Ping
 {
 meta:
@@ -20499,10 +20499,10 @@ strings:
     	$a0 = { FF FF 8B 4E 08 8D 56 10 8B 36 8B FE 83 F9 00 74 3F 8A 07 47 2C E8 3C 01 77 F7 8B 07 80 7A 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__LCC_Win32_1_x_
 {
 meta:
@@ -20511,10 +20511,10 @@ strings:
     	$a0 = { 64 A1 01 00 00 00 55 89 E5 6A FF 68 ?? ?? ?? ?? 68 9A 10 40 90 50 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_1_3_3_1____Obsidium_Software
 {
 meta:
@@ -20523,10 +20523,10 @@ strings:
     	$a0 = { EB 01 ?? E8 29 00 00 00 EB 02 ?? ?? EB 03 ?? ?? ?? 8B 54 24 0C EB 02 ?? ?? 83 82 B8 00 00 00 24 EB 04 ?? ?? ?? ?? 33 C0 EB 02 ?? ?? C3 EB 02 ?? ?? EB 02 ?? ?? 64 67 FF 36 00 00 EB 04 ?? ?? ?? ?? 64 67 89 26 00 00 EB 01 ?? EB 02 ?? ?? 50 EB 01 ?? 33 C0 EB 04 ?? ?? ?? ?? 8B 00 EB 03 ?? ?? ?? C3 EB 03 ?? ?? ?? E9 FA 00 00 00 EB 02 ?? ?? E8 D5 FF FF FF EB 01 ?? EB 04 ?? ?? ?? ?? 58 EB 02 ?? ?? EB 04 ?? ?? ?? ?? 64 67 8F 06 00 00 EB 01 ?? 83 C4 04 EB 02 ?? ?? E8 5F 27 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vcasm_Protector_1_0a___1_0d____vcasm
 {
 meta:
@@ -20535,10 +20535,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 ?? ?? ?? 00 68 ?? ?? ?? 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 E8 03 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FACRYPT_v1_0
 {
 meta:
@@ -20547,10 +20547,10 @@ strings:
     	$a0 = { B9 ?? ?? B3 ?? 33 D2 BE ?? ?? 8B FE AC 32 C3 AA 49 43 32 E4 03 D0 E3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PESpin_0_1____Cyberbob__h_
 {
 meta:
@@ -20562,7 +20562,7 @@ condition:
     	$a0
 }
 
-    
+
 rule ExeSafeguard_1_0____simonzh__h_
 {
 meta:
@@ -20574,7 +20574,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_2__32Lite_0_03______Anorganix
 {
 meta:
@@ -20583,10 +20583,10 @@ strings:
     	$a0 = { 60 06 FC 1E 07 BE 90 90 90 90 6A 04 68 90 10 90 90 68 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_v0_35_alpha____Sign_by_hot_UNP
 {
 meta:
@@ -20598,7 +20598,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Fish_PE_Shield_1_16____HellFish
 {
 meta:
@@ -20607,10 +20607,10 @@ strings:
     	$a0 = { 60 E8 EA FD FF FF FF D0 C3 8D 40 00 ?? 00 00 00 2C 00 00 00 ?? ?? ?? 00 ?? ?? 00 00 ?? ?? ?? 00 00 ?? ?? 00 ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? 00 00 00 00 ?? ?? 00 00 10 00 00 ?? ?? ?? 00 40 ?? ?? ?? 00 00 ?? ?? 00 00 ?? ?? 00 ?? ?? ?? 00 40 ?? ?? ?? 00 00 ?? 00 00 00 ?? ?? 00 ?? ?? 00 00 40 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule bambam_V0_04____bedrock___Sign_by_fly
 {
 meta:
@@ -20619,10 +20619,10 @@ strings:
     	$a0 = { BF ?? ?? ?? ?? 83 C9 FF 33 C0 68 ?? ?? ?? ?? F2 AE F7 D1 49 51 68 ?? ?? ?? ?? E8 11 0A 00 00 83 C4 0C 68 ?? ?? ?? ?? FF 15 ?? ?? ?? ?? 8B F0 BF ?? ?? ?? ?? 83 C9 FF 33 C0 F2 AE F7 D1 49 BF ?? ?? ?? ?? 8B D1 68 ?? ?? ?? ?? C1 E9 02 F3 AB 8B CA 83 E1 03 F3 AA BF ?? ?? ?? ?? 83 C9 FF 33 C0 F2 AE F7 D1 49 51 68 ?? ?? ?? ?? E8 C0 09 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PACKWIN_v1_01p
 {
 meta:
@@ -20631,10 +20631,10 @@ strings:
     	$a0 = { 8C C0 FA 8E D0 BC ?? ?? FB 06 0E 1F 2E ?? ?? ?? ?? 8B F1 4E 8B FE 8C DB 2E ?? ?? ?? ?? 8E C3 FD F3 A4 53 B8 ?? ?? 50 CB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Borland_Delphi_v6_0_KOL
 {
 meta:
@@ -20643,10 +20643,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 F0 B8 ?? ?? 40 00 E8 ?? ?? FF FF A1 ?? 72 40 00 33 D2 E8 ?? ?? FF FF A1 ?? 72 40 00 8B 00 83 C0 14 E8 ?? ?? FF FF E8 ?? ?? FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Hasp_dongle__Alladin_
 {
 meta:
@@ -20655,10 +20655,10 @@ strings:
     	$a0 = { 50 53 51 52 57 56 8B 75 1C 8B 3E ?? ?? ?? ?? ?? 8B 5D 08 8A FB ?? ?? 03 5D 10 8B 45 0C 8B 4D 14 8B 55 18 80 FF 32 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v2_5_Retail__Slim_Loader_____Bitsum_Technologies
 {
 meta:
@@ -20667,10 +20667,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? 01 50 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 33 C0 89 08 50 45 43 32 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_Full_Edition_1_17_DLL__aPLib_
 {
 meta:
@@ -20679,10 +20679,10 @@ strings:
     	$a0 = { 80 7C 24 08 01 0F 85 ?? ?? ?? ?? 60 E8 00 00 00 00 8B 2C 24 83 C4 04 8D B5 53 03 00 00 8D 9D 02 02 00 00 33 FF E8 ?? ?? ?? ?? EB 0F FF 74 37 04 FF 34 37 FF D3 83 C4 08 83 C7 08 83 3C 37 00 75 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Inno_Setup_Module_v2_0_18
 {
 meta:
@@ -20694,7 +20694,7 @@ condition:
     	$a0
 }
 
-    
+
 rule BopCrypt_v1_0
 {
 meta:
@@ -20703,10 +20703,10 @@ strings:
     	$a0 = { 60 BD ?? ?? ?? ?? E8 ?? ?? 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_1_20__Eng_____dulek_xt_____Borland_C___
 {
 meta:
@@ -20718,7 +20718,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PE_PaCK_v1_0_____C__Copyright_1998_by_ANAKiN__h_
 {
 meta:
@@ -20731,7 +20731,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule Upack_v0_33___v0_34_Beta____Sign_by_hot_UNP
 {
 meta:
@@ -20740,10 +20740,10 @@ strings:
     	$a0 = { 59 F3 A5 83 C8 FF 8B DF AB 40 AB 40 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PE_Crypt_v1_02
 {
 meta:
@@ -20753,10 +20753,10 @@ strings:
 	$a1 = { E8 ?? ?? ?? ?? 5B 83 EB 05 EB 04 52 4E 44 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule SimplePack_V1_X__Method2_____bagie
 {
 meta:
@@ -20765,10 +20765,10 @@ strings:
     	$a0 = { 4D 5A 90 EB 01 00 52 E9 ?? 01 00 00 50 45 00 00 4C 01 02 00 00 00 00 00 00 00 00 00 00 00 00 00 E0 00 0F 03 0B 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0C 00 00 00 00 ?? ?? ?? 00 10 00 00 00 02 00 00 01 00 00 00 00 00 00 00 04 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule InstallShield_Custom
 {
 meta:
@@ -20777,10 +20777,10 @@ strings:
     	$a0 = { 55 8B EC 83 EC 44 56 FF 15 ?? ?? 41 00 8B F0 85 F6 75 08 6A FF FF 15 ?? ?? 41 00 8A 06 57 8B 3D ?? ?? 41 00 3C 22 75 1B 56 FF D7 8B F0 8A 06 3C 22 74 04 84 C0 75 F1 80 3E 22 75 15 56 FF D7 8B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule REALbasic
 {
 meta:
@@ -20789,10 +20789,10 @@ strings:
     	$a0 = { 55 89 E5 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 50 ?? ?? ?? ?? ?? 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NFO_v1_0
 {
 meta:
@@ -20801,10 +20801,10 @@ strings:
     	$a0 = { 8D 50 12 2B C9 B1 1E 8A 02 34 77 88 02 42 E2 F7 C8 8C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Virogen_s_PE_Shrinker_v0_14
 {
 meta:
@@ -20813,10 +20813,10 @@ strings:
     	$a0 = { 9C 55 E8 ?? ?? ?? ?? 87 D5 5D 60 87 D5 8D ?? ?? ?? ?? ?? 8D ?? ?? ?? ?? ?? 57 56 AD 0B C0 74 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FakeNinja_v2_8____Spirit
 {
 meta:
@@ -20828,7 +20828,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PECompact_v0_977
 {
 meta:
@@ -20837,10 +20837,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB A0 86 40 ?? 87 DD 8B 85 2A 87 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PE_Lock_v1_06
 {
 meta:
@@ -20849,10 +20849,10 @@ strings:
     	$a0 = { 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 4C 6F 61 64 4C 69 62 72 61 72 79 41 00 00 56 69 72 74 75 61 6C 41 6C 6C 6F 63 00 4B 45 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Apex_c_beta____500mhz
 {
 meta:
@@ -20862,10 +20862,10 @@ strings:
 	$a1 = { 68 ?? ?? ?? ?? B9 FF FF FF 00 01 D0 F7 E2 72 01 48 E2 F7 B9 FF 00 00 00 8B 34 24 80 36 FD 46 E2 FA C3 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule v_02Packer____tt_t
 {
 meta:
@@ -20874,10 +20874,10 @@ strings:
     	$a0 = { 60 E8 36 FE FF FF C3 90 ?? 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PUNiSHER_V1_5___FEUERRADER
 {
 meta:
@@ -20889,7 +20889,7 @@ condition:
     	$a0
 }
 
-    
+
 rule BlindSpot_1_0____s134k
 {
 meta:
@@ -20899,10 +20899,10 @@ strings:
 	$a1 = { 55 8B EC 81 EC 50 02 00 00 8D 85 B0 FE FF FF 53 56 A3 90 12 40 00 57 8D 85 B0 FD FF FF 68 00 01 00 00 33 F6 50 56 FF 15 24 10 40 00 56 68 80 00 00 00 6A 03 56 56 8D 85 B0 FD FF FF 68 00 00 00 80 50 FF 15 20 10 40 00 56 56 68 00 08 00 00 50 89 45 FC FF 15 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule WWPACK_v3_03
 {
 meta:
@@ -20911,10 +20911,10 @@ strings:
     	$a0 = { B8 ?? ?? 8C CA 03 D0 8C C9 81 C1 ?? ?? 51 B9 ?? ?? 51 06 06 BB ?? ?? 53 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule TXT2COM__Read_A_Matic_v1_0_
 {
 meta:
@@ -20923,10 +20923,10 @@ strings:
     	$a0 = { B8 ?? ?? 8E D8 8C 06 ?? ?? FA 8E D0 BC ?? ?? FB B4 ?? CD 21 A3 ?? ?? 06 50 B4 34 CD 21 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule VProtector_1_1A_1_2____vcasm
 {
 meta:
@@ -20938,7 +20938,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Vx__ARCV_4
 {
 meta:
@@ -20947,10 +20947,10 @@ strings:
     	$a0 = { E8 00 00 5D 81 ED 06 01 81 FC 4F 50 74 0B 8D B6 86 01 BF 00 01 57 A4 EB 11 1E 06 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_V1_15_V1_17__LZMA_4_30_____ap0x___Sign_by_fly
 {
 meta:
@@ -20959,10 +20959,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 8D B5 ?? ?? ?? ?? 8D 9D ?? ?? ?? ?? 33 FF E8 83 01 00 00 6A ?? 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 6A ?? FF 95 ?? ?? ?? ?? 89 85 ?? ?? ?? ?? EB 14 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Anti007_V2_5_V2_6____NsPacK_Private
 {
 meta:
@@ -20971,10 +20971,10 @@ strings:
     	$a0 = { 00 00 00 4C 6F 61 64 4C 69 62 72 61 72 79 41 00 00 00 47 65 74 50 72 6F 63 41 64 64 72 65 73 73 00 00 00 56 69 72 74 75 61 6C 50 72 6F 74 65 63 74 00 00 00 56 69 72 74 75 61 6C 41 6C 6C 6F 63 00 00 00 56 69 72 74 75 61 6C 46 72 65 65 00 00 00 47 65 74 53 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_V1_19_Dll__LZMA_4_30_____ap0x___Sign_by_fly
 {
 meta:
@@ -20983,10 +20983,10 @@ strings:
     	$a0 = { 80 7C 24 08 01 0F 85 C7 01 00 00 60 E8 00 00 00 00 8B 2C 24 83 C4 04 83 7C 24 28 01 75 0C 8B 44 24 24 89 85 49 0B 00 00 EB 0C 8B 85 45 0B 00 00 89 85 49 0B 00 00 8D B5 6D 0B 00 00 8D 9D 2F 03 00 00 33 FF 6A 40 68 00 10 00 00 68 00 20 0C 00 6A 00 FF 95 DA }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule VMProtect_v1_25_____PolyTech
 {
 meta:
@@ -21003,10 +21003,10 @@ strings:
 	$a8 = { 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? 89 EC 59 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep or $a3 at sgpe.ep or $a4 at sgpe.ep or $a5 at sgpe.ep or $a6 at sgpe.ep or $a7 at sgpe.ep or $a8 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep or $a3 at manape.ep or $a4 at manape.ep or $a5 at manape.ep or $a6 at manape.ep or $a7 at manape.ep or $a8 at manape.ep
 }
 
-    
+
 rule UPX_Scrambler_by_Guru_eXe
 {
 meta:
@@ -21018,7 +21018,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PE_PACK_0_99
 {
 meta:
@@ -21027,10 +21027,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 83 ED 06 80 BD E0 04 00 00 01 0F 84 F2 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ExeShield_v3_7____ExeShield_Team__h_
 {
 meta:
@@ -21040,10 +21040,10 @@ strings:
 	$a1 = { B8 ?? ?? ?? 00 50 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 33 C0 89 08 50 45 43 6F 6D 70 61 63 74 32 00 CE 1E 42 AF F8 D6 CC E9 FB C8 4F 1B 22 7C B4 C8 0D BD 71 A9 C8 1F 5F B1 29 8F 11 73 8F 00 D1 88 87 A9 3F 4D 00 6C 3C BF C0 80 F7 AD 35 23 EB 84 82 6F }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule North_Star_PE_Shrinker_1_3_by_Liuxingping
 {
 meta:
@@ -21055,7 +21055,7 @@ condition:
     	$a0
 }
 
-    
+
 rule N_Joy_1_2____NEX
 {
 meta:
@@ -21064,10 +21064,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 F0 B8 A4 32 40 00 E8 E8 F1 FF FF 6A 00 68 54 2A 40 00 6A 0A 6A 00 E8 A8 F2 FF FF E8 C7 EA FF FF 8D 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RCryptor_by_Vaska_unknown_ver__sign_from_pinch_21_03_2006_23_05_
 {
 meta:
@@ -21076,10 +21076,10 @@ strings:
     	$a0 = { 90 58 90 50 90 8B 00 90 3C 50 90 58 0F 85 67 D6 EF 11 50 68 00 10 14 13 B8 00 10 14 13 3D 00 64 14 13 74 06 80 30 BC 40 EB F3 E8 00 00 00 00 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PE_Password_v0_2_SMT_SMF
 {
 meta:
@@ -21088,10 +21088,10 @@ strings:
     	$a0 = { E8 04 ?? ?? ?? 8B EC 5D C3 33 C0 5D 8B FD 81 ED 33 26 40 ?? 81 EF ?? ?? ?? ?? 83 EF 05 89 AD 88 27 40 ?? 8D 9D 07 29 40 ?? 8D B5 62 28 40 ?? 46 80 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__Borland_Delphi_5_0_KOL_MCK_
 {
 meta:
@@ -21100,10 +21100,10 @@ strings:
     	$a0 = { 55 8B EC 90 90 90 90 68 ?? ?? ?? ?? 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 00 FF 90 90 90 90 90 90 90 90 00 01 90 90 90 90 90 90 90 90 90 EB 04 00 00 00 01 90 90 90 90 90 90 90 00 01 90 90 90 90 90 90 90 90 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Patch_Creation_Wizard_1_2_Byte_Patch
 {
 meta:
@@ -21115,7 +21115,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PROTECT__EXE_COM_v5_0
 {
 meta:
@@ -21124,10 +21124,10 @@ strings:
     	$a0 = { 1E 0E 0E 1F 07 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SDProtector_Pro_Edition_1_16____Randy_Li__h_
 {
 meta:
@@ -21137,10 +21137,10 @@ strings:
 	$a1 = { 55 8B EC 6A FF 68 1D 32 13 05 68 88 88 88 08 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 58 64 A3 00 00 00 00 58 58 58 58 8B E8 E8 3B 00 00 00 E8 01 00 00 00 FF 58 05 53 00 00 00 51 8B 4C 24 10 89 81 B8 00 00 00 B8 55 01 00 00 89 41 18 33 C0 89 41 04 89 41 08 89 41 0C 89 41 10 59 C3 C3 C3 C3 C3 C3 C3 C3 C3 C3 C3 C3 C3 33 C0 64 FF 30 64 89 20 9C 80 4C 24 01 01 9D 90 90 C3 C3 C3 C3 C3 C3 C3 C3 C3 C3 C3 C3 64 8F 00 58 74 07 75 05 19 32 67 E8 E8 74 27 75 25 EB 00 EB FC 68 39 44 CD 00 59 9C 50 74 0F 75 0D E8 59 C2 04 00 55 8B EC E9 FA FF FF 0E E8 EF FF FF FF 56 57 53 78 03 79 01 E8 68 A2 AF 47 01 59 E8 01 00 00 00 FF 58 05 93 03 00 00 03 C8 74 C4 75 C2 E8 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__Pack_Master_1_0__PEX_Clone_______Anorganix
 {
 meta:
@@ -21149,10 +21149,10 @@ strings:
     	$a0 = { 60 E8 01 01 00 00 E8 83 C4 04 E8 01 90 90 90 E9 5D 81 ED D3 22 40 90 E8 04 02 90 90 E8 EB 08 EB 02 CD 20 FF 24 24 9A 66 BE 47 46 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule y0da_s_Crypter_v1_2
 {
 meta:
@@ -21161,10 +21161,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED F3 1D 40 00 B9 7B 09 00 00 8D BD 3B 1E 40 00 8B F7 AC ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? AA E2 CC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule eXPressor_V1_3____CGSoftLabs
 {
 meta:
@@ -21173,10 +21173,10 @@ strings:
     	$a0 = { 55 8B EC 83 EC ?? 53 56 57 EB 0C 45 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule y0da_s_Crypter_v1_0
 {
 meta:
@@ -21185,10 +21185,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED E7 1A 40 00 E8 A1 00 00 00 E8 D1 00 00 00 E8 85 01 00 00 F7 85 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule y0da_s_Crypter_v1_1
 {
 meta:
@@ -21197,10 +21197,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED 8A 1C 40 00 B9 9E 00 00 00 8D BD 4C 23 40 00 8B F7 33 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Launcher_Generator_1_03
 {
 meta:
@@ -21212,7 +21212,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Vx__Spanz
 {
 meta:
@@ -21221,10 +21221,10 @@ strings:
     	$a0 = { E8 00 00 5E 81 EE ?? ?? 8D 94 ?? ?? B4 1A CD 21 C7 84 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Zortech_C_v2_00_1988__1989
 {
 meta:
@@ -21233,10 +21233,10 @@ strings:
     	$a0 = { FA B8 ?? ?? 8E D8 8C ?? ?? ?? 26 8B ?? ?? ?? 89 1E ?? ?? 8B D8 2B 1E ?? ?? 89 1E }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__ACProtect_1_09_
 {
 meta:
@@ -21245,10 +21245,10 @@ strings:
     	$a0 = { 60 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 02 00 00 90 90 90 04 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule _____v1_0____Li_Jianjun
 {
 meta:
@@ -21257,10 +21257,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED 0A 4A 44 00 BB 04 4A 44 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_v0_21Beta____Sign_by_hot_UNP
 {
 meta:
@@ -21269,10 +21269,10 @@ strings:
     	$a0 = { BE 88 01 ?? ?? AD 8B F8 ?? ?? ?? ?? 33 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__Video_Lan_Client______Anorganix
 {
 meta:
@@ -21281,10 +21281,10 @@ strings:
     	$a0 = { 55 89 E5 83 EC 08 90 90 90 90 90 90 90 90 90 90 90 90 90 90 01 FF FF 01 01 01 00 01 90 90 90 90 90 90 90 90 90 90 90 90 90 90 00 01 00 01 00 01 90 90 00 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule tElock_v0_4x___v0_5x
 {
 meta:
@@ -21293,10 +21293,10 @@ strings:
     	$a0 = { C1 EE 00 66 8B C9 EB 01 EB 60 EB 01 EB 9C E8 00 00 00 00 5E 83 C6 ?? 8B FE 68 79 01 ?? ?? 59 EB 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__PE_Intro_1_0______Anorganix
 {
 meta:
@@ -21305,10 +21305,10 @@ strings:
     	$a0 = { 8B 04 24 9C 60 E8 14 00 00 00 5D 81 ED 0A 45 40 90 80 BD 67 44 40 90 90 0F 85 48 FF ED 0A E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_1_3_3_6____Obsidium_Software
 {
 meta:
@@ -21318,10 +21318,10 @@ strings:
 	$a1 = { EB 04 ?? ?? ?? ?? E8 28 00 00 00 EB 01 ?? ?? ?? ?? ?? ?? ?? 8B 54 24 0C EB 01 ?? 83 82 B8 00 00 00 26 EB 04 ?? ?? ?? ?? 33 C0 EB 01 ?? C3 EB 03 ?? ?? ?? EB 04 ?? ?? ?? ?? 64 67 FF 36 00 00 EB 04 ?? ?? ?? ?? 64 67 89 26 00 00 EB 03 ?? ?? ?? EB 04 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Anslym_Crypter
 {
 meta:
@@ -21331,10 +21331,10 @@ strings:
 	$a1 = { 55 8B EC 83 C4 F0 53 56 B8 38 17 05 10 E8 5A 45 FB FF 33 C0 55 68 21 1C 05 10 64 FF 30 64 89 20 EB 08 FC FC FC FC FC FC 27 54 E8 85 4C FB FF 6A 00 E8 0E 47 FB FF 6A 0A E8 27 49 FB FF E8 EA 47 FB FF 6A 0A 68 30 1C 05 10 A1 60 56 05 10 50 E8 68 47 FB FF 8B D8 85 DB 0F 84 B6 02 00 00 53 A1 60 56 05 10 50 E8 F2 48 FB FF 8B F0 85 F6 0F 84 A0 02 00 00 E8 F3 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule EXE_Stealth_v2_72
 {
 meta:
@@ -21343,10 +21343,10 @@ strings:
     	$a0 = { EB 00 EB 2F 53 68 61 72 65 77 61 72 65 20 2D 20 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXE_Stealth_v2_73
 {
 meta:
@@ -21358,7 +21358,7 @@ condition:
     	$a0
 }
 
-    
+
 rule EXE_Stealth_v2_71
 {
 meta:
@@ -21367,10 +21367,10 @@ strings:
     	$a0 = { EB 00 60 EB 00 E8 00 00 00 00 5D 81 ED B0 27 40 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Borland_Pascal_v7_0
 {
 meta:
@@ -21379,10 +21379,10 @@ strings:
     	$a0 = { B8 ?? ?? 8E D8 8C ?? ?? ?? 8C D3 8C C0 2B D8 8B C4 05 ?? ?? C1 ?? ?? 03 D8 B4 ?? CD 21 0E }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SVK_Protector_v1_3x__Eng_____Pavol_Cerven
 {
 meta:
@@ -21392,10 +21392,10 @@ strings:
 	$a1 = { 60 E8 00 00 00 00 5D 81 ED 06 00 00 00 EB 05 B8 ?? ?? 42 00 64 A0 23 00 00 00 EB 03 C7 84 E8 84 C0 EB 03 C7 84 E9 75 67 B9 49 00 00 00 8D B5 C5 02 00 00 56 80 06 44 46 E2 FA 8B 8D C1 02 00 00 5E 55 51 6A 00 56 FF 95 0C 61 00 00 59 5D 40 85 C0 75 3C 80 3E 00 74 03 46 EB F8 46 E2 E3 8B C5 8B 4C 24 20 2B 85 BD 02 00 00 89 85 B9 02 00 00 80 BD B4 02 00 00 01 75 06 8B 8D 0C 61 00 00 89 8D B5 02 00 00 8D 85 0E 03 00 00 8B DD FF E0 55 68 10 10 00 00 8D 85 B4 00 00 00 50 8D 85 B4 01 00 00 50 6A 00 FF 95 18 61 00 00 5D 6A FF FF 95 10 61 00 00 44 65 62 75 67 67 65 72 20 6F 72 20 74 6F 6F 6C 20 66 6F 72 20 6D 6F 6E 69 74 6F 72 69 6E 67 20 64 65 74 65 63 74 65 64 21 21 21 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule EXE_Stealth_v2_74
 {
 meta:
@@ -21407,7 +21407,7 @@ condition:
     	$a0
 }
 
-    
+
 rule SCRAM__v0_8a1
 {
 meta:
@@ -21416,10 +21416,10 @@ strings:
     	$a0 = { B4 30 CD 21 3C 02 77 ?? CD 20 BC ?? ?? B9 ?? ?? 8B FC B2 ?? 58 4C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ExeTools_v2_1_Encruptor_by_DISMEMBER
 {
 meta:
@@ -21428,10 +21428,10 @@ strings:
     	$a0 = { E8 ?? ?? 5D 83 ?? ?? 1E 8C DA 83 ?? ?? 8E DA 8E C2 BB ?? ?? BA ?? ?? 85 D2 74 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Naked_Packer_V1_0____BigBoote
 {
 meta:
@@ -21440,10 +21440,10 @@ strings:
     	$a0 = { 60 FC 0F B6 05 ?? ?? ?? ?? 85 C0 75 31 B8 ?? ?? ?? ?? 2B 05 ?? ?? ?? ?? A3 ?? ?? ?? ?? A1 ?? ?? ?? ?? 03 05 ?? ?? ?? ?? A3 ?? ?? ?? ?? E8 9A 00 00 00 A3 ?? ?? ?? ?? C6 05 ?? ?? ?? ?? 01 83 3D ?? ?? ?? ?? 00 75 07 61 FF 25 ?? ?? ?? ?? 61 FF 74 24 04 6A 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule CRYPT_Version_1_7__c__Dismember
 {
 meta:
@@ -21452,10 +21452,10 @@ strings:
     	$a0 = { 0E 17 9C 58 F6 ?? ?? 74 ?? E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Pi_Cryptor_1_0___by_Scofield
 {
 meta:
@@ -21467,10 +21467,10 @@ strings:
 	$a3 = { 89 55 F8 BB 01 00 00 00 8A 04 1F 24 0F 8B 55 FC 8A 14 32 80 E2 0F 32 C2 8A 14 1F 80 E2 F0 02 D0 88 14 1F 46 8D 45 F4 8B 55 FC E8 ?? ?? ?? ?? 8B 45 F4 E8 ?? ?? ?? ?? 3B F0 7E 05 BE 01 00 00 00 43 FF 4D F8 75 C2 ?? ?? ?? ?? 5A 59 59 64 89 10 68 ?? ?? ?? ?? 8D 45 F4 E8 ?? ?? ?? ?? C3 E9 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep or $a3
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep or $a3
 }
 
-    
+
 rule PE_Crypt_1_5____BitShape_Software
 {
 meta:
@@ -21479,10 +21479,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED 55 20 40 00 B9 7B 09 00 00 8D BD 9D 20 40 00 8B F7 AC ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? AA E2 CC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule nSpack_V2_3____LiuXingPing
 {
 meta:
@@ -21494,7 +21494,7 @@ condition:
     	$a0
 }
 
-    
+
 rule __PseudoSigner_0_1__Gleam_1_00______Anorganix
 {
 meta:
@@ -21503,10 +21503,10 @@ strings:
     	$a0 = { 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 0B 83 EC 0C 53 56 57 E8 24 02 00 FF E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__VOB_ProtectCD_5_____Anorganix
 {
 meta:
@@ -21515,10 +21515,10 @@ strings:
     	$a0 = { 36 3E 26 8A C0 60 E8 00 00 00 00 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v1_26b1___v1_26b2
 {
 meta:
@@ -21527,10 +21527,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 0F 70 40 ?? 87 DD 8B 85 A6 70 40 ?? 01 85 03 70 40 ?? 66 C7 85 70 40 90 ?? 90 01 85 9E 70 40 BB ?? 05 0E }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_v1_10__Eng_____bart_xt_____Watcom_C_C___EXE_
 {
 meta:
@@ -21539,10 +21539,10 @@ strings:
     	$a0 = { EB 02 CD 20 03 ?? 8D ?? 80 ?? ?? 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? EB 02 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Software_Compress_v1_4_LITE____BG_Software_Protect_Technologies__h_
 {
 meta:
@@ -21552,10 +21552,10 @@ strings:
 	$a1 = { E8 00 00 00 00 81 2C 24 AA 1A 41 00 5D E8 00 00 00 00 83 2C 24 6E 8B 85 5D 1A 41 00 29 04 24 8B 04 24 89 85 5D 1A 41 00 58 8B 85 5D 1A 41 00 8B 50 3C 03 D0 8B 92 80 00 00 00 03 D0 8B 4A 58 89 8D 49 1A 41 00 8B 4A 5C 89 8D 4D 1A 41 00 8B 4A 60 89 8D 55 1A }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule UPolyX_v0_5
 {
 meta:
@@ -21569,7 +21569,7 @@ condition:
     	$a0 or $a1 or $a2
 }
 
-    
+
 rule ReversingLabsProtector_0_7_4_beta____Ap0x
 {
 meta:
@@ -21578,10 +21578,10 @@ strings:
     	$a0 = { 68 00 00 41 00 E8 01 00 00 00 C3 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__DEF_1_0______Anorganix
 {
 meta:
@@ -21590,10 +21590,10 @@ strings:
     	$a0 = { BE 00 01 40 00 6A 05 59 80 7E 07 00 74 11 8B 46 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 83 C1 01 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Hying_s_PE_Armor_0_75_exe____Hying
 {
 meta:
@@ -21605,7 +21605,7 @@ condition:
     	$a0
 }
 
-    
+
 rule dUP_2_x_Patcher____www_diablo2oo2_cjb_net
 {
 meta:
@@ -21617,7 +21617,7 @@ condition:
     	$a0
 }
 
-    
+
 rule WWPACK_v3_02__v3_02a__v3_04__Relocations_pack_
 {
 meta:
@@ -21626,10 +21626,10 @@ strings:
     	$a0 = { BE ?? ?? BF ?? ?? B9 ?? ?? 8C CD 81 ED ?? ?? 8B DD 81 EB ?? ?? 8B D3 FC FA 1E 8E DB 01 15 33 C0 2E AC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_V0_10_V0_11____Dwing___Sign_by_fly
 {
 meta:
@@ -21638,10 +21638,10 @@ strings:
     	$a0 = { BE ?? ?? ?? ?? AD 8B F8 95 A5 33 C0 33 C9 AB 48 AB F7 D8 B1 ?? F3 AB C1 E0 ?? B5 ?? F3 AB AD 50 97 51 AD 87 F5 58 8D 54 86 5C FF D5 72 5A 2C ?? 73 ?? B0 ?? 3C ?? 72 02 2C ?? 50 0F B6 5F FF C1 E3 ?? B3 ?? 8D 1C 5B 8D ?? ?? ?? ?? ?? ?? B0 ?? 67 E3 29 8B D7 2B 56 0C 8A 2A 33 D2 84 E9 0F 95 C6 52 FE C6 8A D0 8D 14 93 FF D5 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__Gleam_1_00______Anorganix
 {
 meta:
@@ -21650,10 +21650,10 @@ strings:
     	$a0 = { 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 0B 83 EC 0C 53 56 57 E8 24 02 00 FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_v1_3_0_4____Obsidium_Software
 {
 meta:
@@ -21662,10 +21662,10 @@ strings:
     	$a0 = { EB 02 ?? ?? E8 25 00 00 00 EB 04 ?? ?? ?? ?? EB 01 ?? 8B 54 24 0C EB 01 ?? 83 82 B8 00 00 00 23 EB 01 ?? 33 C0 EB 02 ?? ?? C3 EB 02 ?? ?? EB 04 ?? ?? ?? ?? 64 67 FF 36 00 00 EB 03 ?? ?? ?? 64 67 89 26 00 00 EB 02 ?? ?? EB 01 ?? 50 EB 01 ?? 33 C0 EB 01 ?? 8B 00 EB 01 ?? C3 EB 02 ?? ?? E9 FA 00 00 00 EB 02 ?? ?? E8 D5 FF FF FF EB 03 ?? ?? ?? EB 04 ?? ?? ?? ?? 58 EB 02 ?? ?? EB 04 ?? ?? ?? ?? 64 67 8F 06 00 00 EB 03 ?? ?? ?? 83 C4 04 EB 01 ?? E8 3B 26 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule AntiDote_1_0_Demo___1_2____SIS_Team
 {
 meta:
@@ -21677,7 +21677,7 @@ condition:
     	$a0
 }
 
-    
+
 rule eXPressor_1_2____CGSoftLabs
 {
 meta:
@@ -21686,10 +21686,10 @@ strings:
     	$a0 = { 55 8B EC 81 EC D4 01 00 00 53 56 57 EB 0C 45 78 50 72 2D 76 2E 31 2E 32 2E 2E }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack____Ap0x
 {
 meta:
@@ -21700,10 +21700,10 @@ strings:
 	$a2 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 8D B5 2C 0A 00 00 8D 9D 22 02 00 00 33 FF E8 ?? ?? ?? ?? 6A 40 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 6A 00 FF 95 CD 09 00 00 89 85 ?? ?? ?? ?? EB 14 60 FF B5 14 0A }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
-    
+
 rule GameGuard_v2006_5_x_x____exe_
 {
 meta:
@@ -21712,10 +21712,10 @@ strings:
     	$a0 = { 31 FF 74 06 61 E9 4A 4D 50 30 5A BA 7D 00 00 00 80 7C 24 08 01 E9 00 00 00 00 60 BE 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__PE_Intro_1_0_
 {
 meta:
@@ -21724,10 +21724,10 @@ strings:
     	$a0 = { 8B 04 24 9C 60 E8 14 00 00 00 5D 81 ED 0A 45 40 90 80 BD 67 44 40 90 90 0F 85 48 FF ED 0A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__Video_Lan_Client______Anorganix
 {
 meta:
@@ -21736,10 +21736,10 @@ strings:
     	$a0 = { 55 89 E5 83 EC 08 90 90 90 90 90 90 90 90 90 90 90 90 90 90 01 FF FF 01 01 01 00 01 90 90 90 90 90 90 90 90 90 90 90 90 90 90 00 01 00 01 00 01 90 90 00 01 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule tElock_v0_85f
 {
 meta:
@@ -21748,10 +21748,10 @@ strings:
     	$a0 = { 60 E8 02 00 00 00 CD 20 E8 00 00 00 00 5E 2B C9 58 74 02 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule GameGuard___nProtect
 {
 meta:
@@ -21761,10 +21761,10 @@ strings:
 	$a1 = { 31 FF 74 06 61 E9 4A 4D 50 30 5A BA 7D 00 00 00 80 7C 24 08 01 E9 00 00 00 00 60 BE ?? ?? ?? ?? 31 FF 74 06 61 E9 4A 4D 50 30 8D BE ?? ?? ?? ?? 31 C9 74 06 61 E9 4A 4D 50 30 B8 7D 00 00 00 39 C2 B8 4C 00 00 00 F7 D0 75 3F 64 A1 30 00 00 00 85 C0 78 23 8B 40 0C 8B 40 0C C7 40 20 00 10 00 00 64 A1 18 00 00 00 8B 40 30 0F B6 40 02 85 C0 75 16 E9 12 00 00 00 31 C0 64 A0 20 00 00 00 85 C0 75 05 E9 01 00 00 00 61 57 83 CD FF EB 0B 90 8A 06 46 88 07 47 01 DB 75 07 8B 1E 83 EE FC 11 DB 72 ED B8 01 00 00 00 01 DB 75 07 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule XPack_1_67
 {
 meta:
@@ -21773,10 +21773,10 @@ strings:
     	$a0 = { B8 8C D3 15 33 75 81 3E E8 0F 00 9A E8 F9 FF 9A 9C EB 01 9A 59 80 CD 01 51 9D EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule HACKSTOP_v1_10__v1_11
 {
 meta:
@@ -21785,10 +21785,10 @@ strings:
     	$a0 = { B4 30 CD 21 86 E0 3D ?? ?? 73 ?? B4 2F CD 21 B0 ?? B4 4C CD 21 50 B8 ?? ?? 58 EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule WinZip_Self_Extractor_2_2_personal_edition____WinZip_Computing__h_
 {
 meta:
@@ -21797,10 +21797,10 @@ strings:
     	$a0 = { 53 FF 15 58 70 40 00 B3 22 38 18 74 03 80 C3 FE 40 33 D2 8A 08 3A CA 74 10 3A CB 74 07 40 8A 08 3A CA 75 F5 38 10 74 01 40 52 50 52 52 FF 15 5C 70 40 00 50 E8 15 FB FF FF 50 FF 15 8C 70 40 00 5B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__Macromedia_Flash_Projector_6_0______Anorganix
 {
 meta:
@@ -21809,10 +21809,10 @@ strings:
     	$a0 = { 90 90 90 90 68 ?? ?? ?? ?? 67 64 FF 36 00 00 67 64 89 26 00 00 F1 90 90 90 90 83 EC 44 56 FF 15 24 81 49 00 8B F0 8A 06 3C 22 75 1C 8A 46 01 46 3C 22 74 0C 84 C0 74 08 8A 46 01 46 3C 22 75 F4 80 3E 22 75 0F 46 EB 0C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPXcrypter____archphase_NWC
 {
 meta:
@@ -21821,10 +21821,10 @@ strings:
     	$a0 = { BF ?? ?? ?? 00 81 FF ?? ?? ?? 00 74 10 81 2F ?? 00 00 00 83 C7 04 BB 05 ?? ?? 00 FF E3 BE ?? ?? ?? 00 FF E6 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v1_72___v1_73
 {
 meta:
@@ -21833,10 +21833,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 E8 C1 ?? ?? 68 F4 86 ?? ?? 64 A1 ?? ?? ?? ?? 50 64 89 25 ?? ?? ?? ?? 83 EC 58 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NX_PE_Packer_v1_0
 {
 meta:
@@ -21845,10 +21845,10 @@ strings:
     	$a0 = { FF 60 FF CA FF 00 BA DC 0D E0 40 00 50 00 60 00 70 00 80 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEiD_Bundle_V1_02____BoB___BobSoft
 {
 meta:
@@ -21857,10 +21857,10 @@ strings:
     	$a0 = { 60 E8 9C 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 36 ?? ?? ?? 2E ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 80 00 00 00 00 4B 65 72 6E 65 6C 33 32 2E 44 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASProtect_v1_2x
 {
 meta:
@@ -21869,10 +21869,10 @@ strings:
     	$a0 = { 00 00 68 01 ?? ?? ?? C3 AA }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule _pirit_v1_5
 {
 meta:
@@ -21881,10 +21881,10 @@ strings:
     	$a0 = { 5B 24 55 50 44 FB 32 2E 31 5D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Minke_1_0_1___by_Codius
 {
 meta:
@@ -21894,10 +21894,10 @@ strings:
 	$a1 = { 55 8B EC 83 C4 F0 53 ?? ?? ?? ?? ?? 10 E8 7A F6 FF FF BE 68 66 00 10 33 C0 55 68 DB 40 00 10 64 FF 30 64 89 20 E8 FA F8 FF FF BA EC 40 00 10 8B C6 E8 F2 FA FF FF 8B D8 B8 6C 66 00 10 8B 16 E8 88 F2 FF FF B8 6C 66 00 10 E8 76 F2 FF FF 8B D0 8B C3 8B 0E E8 E3 E4 FF FF E8 2A F9 FF FF E8 C1 F8 FF FF B8 6C 66 00 10 8B 16 E8 6D FA FF FF E8 14 F9 FF FF E8 AB F8 FF FF 8B 06 E8 B8 E3 FF FF 8B D8 B8 6C 66 00 10 E8 38 F2 FF FF 8B D3 8B 0E E8 A7 E4 FF ?? ?? ?? ?? C4 FB FF FF E8 E7 F8 FF FF 8B C3 E8 B0 E3 FF FF E8 DB F8 FF FF 33 C0 5A 59 59 64 89 10 68 E2 40 00 10 C3 E9 50 EB FF FF EB F8 5E 5B E8 BB EF FF FF 00 00 00 43 41 31 38 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule E_language
 {
 meta:
@@ -21906,10 +21906,10 @@ strings:
     	$a0 = { E8 06 00 00 00 50 E8 ?? 01 00 00 55 8B EC 81 C4 F0 FE FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Crunch_PE_4_0
 {
 meta:
@@ -21921,7 +21921,7 @@ condition:
     	$a0
 }
 
-    
+
 rule codeCrypter_0_31
 {
 meta:
@@ -21931,10 +21931,10 @@ strings:
 	$a1 = { 50 58 53 5B 90 BB ?? ?? 40 00 FF E3 90 CC CC CC 55 8B EC 5D C3 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule RLPack_Full_Edition_1_17_iBox__LZMA_
 {
 meta:
@@ -21943,10 +21943,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 8D B5 67 30 00 00 8D 9D 66 03 00 00 33 FF ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 6A 40 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 6A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__PE_Pack_0_99______Anorganix
 {
 meta:
@@ -21955,10 +21955,10 @@ strings:
     	$a0 = { 60 E8 11 00 00 00 5D 83 ED 06 80 BD E0 04 90 90 01 0F 84 F2 FF CC 0A E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_Patch____Sign_by_hot_UNP
 {
 meta:
@@ -21968,10 +21968,10 @@ strings:
 	$a1 = { 81 3A 00 00 00 02 00 00 00 00 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule Nullsoft_Install_System_v2_0a0
 {
 meta:
@@ -21984,7 +21984,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule NsPacK__Net____LiuXingPing___Sign_by_fly
 {
 meta:
@@ -21996,7 +21996,7 @@ condition:
     	$a0
 }
 
-    
+
 rule DBPE_v1_53
 {
 meta:
@@ -22005,10 +22005,10 @@ strings:
     	$a0 = { 9C 55 57 56 52 51 53 9C FA E8 ?? ?? ?? ?? 5D 81 ED 5B 53 40 ?? B0 ?? E8 ?? ?? ?? ?? 5E 83 C6 11 B9 27 ?? ?? ?? 30 06 46 49 75 FA }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXE2COM__regular_
 {
 meta:
@@ -22017,10 +22017,10 @@ strings:
     	$a0 = { E9 8C CA 81 C3 ?? ?? 3B 16 ?? ?? 76 ?? BA ?? ?? B4 09 CD 21 CD 20 0D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXE2COM__Encrypted_without_selfcheck_
 {
 meta:
@@ -22029,10 +22029,10 @@ strings:
     	$a0 = { B3 ?? B9 ?? ?? BE ?? ?? BF ?? ?? EB ?? 54 69 ?? ?? ?? ?? 03 ?? ?? 32 C3 AA 43 49 E3 ?? EB ?? BE ?? ?? 8B C6 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Lockless_Intro_Pack
 {
 meta:
@@ -22041,10 +22041,10 @@ strings:
     	$a0 = { 2C E8 ?? ?? ?? ?? 5D 8B C5 81 ED F6 73 ?? ?? 2B 85 ?? ?? ?? ?? 83 E8 06 89 85 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Hying_s_PE_Armor_0_75_exe____Hying__CCG
 {
 meta:
@@ -22056,7 +22056,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PECompact_v0_98
 {
 meta:
@@ -22065,10 +22065,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB D7 84 40 ?? 87 DD 8B 85 5C 85 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__Gleam_1_00_____Anorganix
 {
 meta:
@@ -22077,10 +22077,10 @@ strings:
     	$a0 = { 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 0B 83 EC 0C 53 56 57 E8 24 02 00 FF E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_0_32a__fake_Microsoft_Visual_C_______emadicius
 {
 meta:
@@ -22092,7 +22092,7 @@ condition:
     	$a0
 }
 
-    
+
 rule VBOX_v4_2_MTE
 {
 meta:
@@ -22101,10 +22101,10 @@ strings:
     	$a0 = { 8C E0 0B C5 8C E0 0B C4 03 C5 74 00 74 00 8B C5 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Shrinker_v3_2
 {
 meta:
@@ -22113,10 +22113,10 @@ strings:
     	$a0 = { 83 3D ?? ?? ?? ?? ?? 55 8B EC 56 57 75 65 68 00 01 ?? ?? E8 ?? E6 FF FF 83 C4 04 8B 75 08 A3 ?? ?? ?? ?? 85 F6 74 1D 68 FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Shrinker_v3_3
 {
 meta:
@@ -22125,10 +22125,10 @@ strings:
     	$a0 = { 83 3D ?? ?? ?? 00 00 55 8B EC 56 57 75 65 68 00 01 00 00 E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Shrinker_v3_4
 {
 meta:
@@ -22138,10 +22138,10 @@ strings:
 	$a1 = { 83 3D B4 ?? ?? ?? ?? 55 8B EC 56 57 75 6B 68 00 01 00 00 E8 ?? 0B 00 00 83 C4 04 8B 75 08 A3 B4 ?? ?? ?? 85 F6 74 23 83 7D 0C 03 77 1D 68 FF }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule ActiveMARK_TM
 {
 meta:
@@ -22150,10 +22150,10 @@ strings:
     	$a0 = { 79 11 7F AB 9A 4A 83 B5 C9 6B 1A 48 F9 27 B4 25 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_V1_19__LZMA_4_30_____ap0x_nbsp___nbsp___Sign_by_fly
 {
 meta:
@@ -22162,10 +22162,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 83 7C 24 28 01 75 0C 8B 44 24 24 89 85 49 0B 00 00 EB 0C 8B 85 45 0B 00 00 89 85 49 0B 00 00 8D B5 6D 0B 00 00 8D 9D 2F 03 00 00 33 FF 6A 40 68 00 10 00 00 68 00 20 0C 00 6A 00 FF 95 DA 0A 00 00 89 85 41 0B 00 00 E8 76 01 00 00 EB 20 60 8B 85 49 0B 00 00 FF B5 41 0B 00 00 FF 34 37 01 04 24 FF 74 37 04 01 04 24 FF D3 61 83 C7 08 83 3C 37 00 75 DA 83 BD 55 0B 00 00 00 74 0E 83 BD 59 0B 00 00 00 74 05 E8 D7 01 00 00 8D 74 37 04 53 6A 40 68 00 10 00 00 68 ?? ?? ?? ?? 6A 00 FF 95 DA 0A 00 00 89 85 69 0B 00 00 5B 60 FF B5 41 0B 00 00 56 FF B5 69 0B 00 00 FF D3 61 8B B5 69 0B 00 00 8B C6 EB 01 40 80 38 01 75 FA 40 8B 38 03 BD 49 0B 00 00 83 C0 04 89 85 65 0B 00 00 E9 98 00 00 00 56 FF 95 D2 0A 00 00 89 85 61 0B 00 00 85 C0 0F 84 C8 00 00 00 8B C6 EB 5F 8B 85 65 0B 00 00 8B 00 A9 00 00 00 80 74 14 35 00 00 00 80 50 8B 85 65 0B 00 00 C7 00 20 20 20 00 EB 06 FF B5 65 0B 00 00 FF B5 61 0B 00 00 FF 95 D6 0A 00 00 85 C0 0F 84 87 00 00 00 89 07 83 C7 04 8B 85 65 0B 00 00 EB 01 40 80 38 00 75 FA 40 89 85 65 0B 00 00 66 81 78 02 00 80 74 A1 80 38 00 75 9C EB 01 46 80 3E 00 75 FA 46 40 8B 38 03 BD 49 0B 00 00 83 C0 04 89 85 65 0B 00 00 80 3E 01 0F 85 5F FF FF FF 68 00 40 00 00 68 ?? ?? ?? ?? FF B5 69 0B 00 00 FF 95 DE 0A 00 00 68 00 40 00 00 68 00 20 0C 00 FF B5 41 0B 00 00 FF 95 DE 0A 00 00 E8 3D 00 00 00 E8 24 01 00 00 61 E9 ?? ?? ?? ?? 61 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NsPacK_V3_1____LiuXingPing
 {
 meta:
@@ -22174,10 +22174,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 5D 83 ED 07 8D 9D ?? ?? ?? ?? 8A 03 3C 00 74 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_0_37_beta____Dwing
 {
 meta:
@@ -22189,7 +22189,7 @@ condition:
     	$a0
 }
 
-    
+
 rule RPolyCrypt_v_1_0__personal_polycryptor__sign_from_pinch
 {
 meta:
@@ -22198,10 +22198,10 @@ strings:
     	$a0 = { 50 58 97 97 60 61 8B 04 24 80 78 F3 6A E8 00 00 00 00 58 E8 00 00 00 00 58 91 91 EB 00 0F 85 6B F4 76 6F E8 00 00 00 00 83 C4 04 E8 00 00 00 00 58 90 E8 00 00 00 00 83 C4 04 8B 04 24 80 78 F1 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXE_Stealth_v2_74____WebToolMaster
 {
 meta:
@@ -22210,10 +22210,10 @@ strings:
     	$a0 = { EB 00 EB 17 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 60 90 E8 00 00 00 00 5D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule unknown____jac
 {
 meta:
@@ -22222,10 +22222,10 @@ strings:
     	$a0 = { 55 89 E5 B9 00 80 00 00 BA ?? ?? ?? ?? B8 ?? ?? ?? ?? 05 ?? ?? ?? ?? 31 C2 66 01 C2 C1 C2 07 E2 F1 50 E8 91 FF FF FF C9 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Thinstall_Embedded_V2_717_V2_719____Jitit___Sign_by_fly
 {
 meta:
@@ -22234,10 +22234,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 58 BB ?? ?? ?? ?? 2B C3 50 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? E8 C1 FE FF FF E9 97 FF FF FF CC CC 55 8B EC 83 C4 F4 FC 53 57 56 8B 75 08 8B 7D 0C C7 45 FC 08 00 00 00 33 DB BA 00 00 00 80 43 33 C0 E8 19 01 00 00 73 0E 8B 4D F8 E8 27 01 00 00 02 45 F7 AA EB E9 E8 04 01 00 00 0F 82 96 00 00 00 E8 F9 00 00 00 73 5B B9 04 00 00 00 E8 05 01 00 00 48 74 DE 0F 89 C6 00 00 00 E8 DF 00 00 00 73 1B 55 BD 00 01 00 00 E8 DF 00 00 00 88 07 47 4D 75 F5 E8 C7 00 00 00 72 E9 5D EB A2 B9 01 00 00 00 E8 D0 00 00 00 83 C0 07 89 45 F8 C6 45 F7 00 83 F8 08 74 89 E8 B1 00 00 00 88 45 F7 E9 7C FF FF FF B9 07 00 00 00 E8 AA 00 00 00 50 33 C9 B1 02 E8 A0 00 00 00 8B C8 41 41 58 0B C0 74 04 8B D8 EB 5E 83 F9 02 74 6A 41 E8 88 00 00 00 89 45 FC E9 48 FF FF FF E8 87 00 00 00 49 E2 09 8B C3 E8 7D 00 00 00 EB 3A 49 8B C1 55 8B 4D FC 8B E8 33 C0 D3 E5 E8 5D 00 00 00 0B C5 5D 8B D8 E8 5F 00 00 00 3D 00 00 01 00 73 14 3D FF 37 00 00 73 0E 3D 7F 02 00 00 73 08 83 F8 7F 77 04 41 41 41 41 56 8B F7 2B F0 F3 A4 5E E9 F0 FE FF FF 33 C0 EB 05 8B C7 2B 45 0C 5E 5F 5B C9 C2 08 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PE_PROTECT_0_9
 {
 meta:
@@ -22246,10 +22246,10 @@ strings:
     	$a0 = { E9 CF 00 00 00 0D 0A 0D 0A C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule G_X_Protector_1_2____Guru_eXe
 {
 meta:
@@ -22258,10 +22258,10 @@ strings:
     	$a0 = { 60 EB 05 E8 EB 04 40 00 EB FA E8 0A 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__Eddie_1028
 {
 meta:
@@ -22270,10 +22270,10 @@ strings:
     	$a0 = { E8 ?? ?? 5E FC 83 ?? ?? 81 ?? ?? ?? 4D 5A ?? ?? FA 8B E6 81 C4 ?? ?? FB 3B ?? ?? ?? ?? ?? 50 06 56 1E B8 FE 4B CD 21 81 FF BB 55 ?? ?? 07 ?? ?? ?? 07 B4 49 CD 21 BB FF FF B4 48 CD 21 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MicroJoiner_1_6____coban2k
 {
 meta:
@@ -22282,10 +22282,10 @@ strings:
     	$a0 = { 33 C0 64 8B 38 48 8B C8 F2 AF AF 8B 1F 66 33 DB 66 81 3B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Thinstall_2_628____Jtit
 {
 meta:
@@ -22294,10 +22294,10 @@ strings:
     	$a0 = { E8 00 00 00 00 58 BB 34 1D 00 00 2B C3 50 68 00 00 40 00 68 00 40 00 00 68 BC 00 00 00 E8 C3 FE FF FF E9 99 FF FF FF CC CC CC CC CC CC CC CC CC CC 55 8B EC 83 C4 F4 FC 53 57 56 8B 75 08 8B 7D 0C C7 45 FC 08 00 00 00 33 DB BA 00 00 00 80 43 33 C0 E8 19 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__UPX_0_6______Anorganix
 {
 meta:
@@ -22306,10 +22306,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 58 83 E8 3D 50 8D B8 00 00 00 FF 57 8D B0 E8 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v2_53b3
 {
 meta:
@@ -22318,10 +22318,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 D8 ?? ?? ?? 68 14 ?? ?? ?? 64 A1 ?? ?? ?? ?? 50 64 89 25 ?? ?? ?? ?? 83 EC 58 53 56 57 89 65 E8 FF 15 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ARM_Protector_0_2___SMoKE
 {
 meta:
@@ -22333,7 +22333,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_2__Borland_Delphi_Setup_Module_
 {
 meta:
@@ -22342,10 +22342,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 90 53 56 57 33 C0 89 45 F0 89 45 D4 89 45 D0 E8 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECryptor_2_3_9__compressed_resources_____www_strongbit_com
 {
 meta:
@@ -22357,7 +22357,7 @@ condition:
     	$a0
 }
 
-    
+
 rule MSLRH_v0_32a__fake_PE_Crypt_1_02_____emadicius__h_
 {
 meta:
@@ -22366,10 +22366,10 @@ strings:
     	$a0 = { E8 00 00 00 00 5B 83 EB 05 EB 04 52 4E 44 21 85 C0 73 02 F7 05 50 E8 08 00 00 00 EA FF 58 EB 18 EB 01 0F EB 02 CD 20 EB 03 EA CD 20 58 58 EB 05 E8 EB 04 40 00 EB FA E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 50 E8 02 00 00 00 29 5A 58 6B C0 03 E8 02 00 00 00 29 5A 83 C4 04 58 74 04 75 02 EB 02 EB 01 81 0F 31 50 0F 31 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SecurePE_1_X
 {
 meta:
@@ -22378,10 +22378,10 @@ strings:
     	$a0 = { 8B 04 24 E8 00 00 00 00 5D 81 ED 4C 2F 40 00 89 85 61 2F 40 00 8D 9D 65 2F 40 00 53 C3 00 00 00 00 8D B5 BA 2F 40 00 8B FE BB 65 2F 40 00 B9 C6 01 00 00 AD 2B C3 C1 C0 03 33 C3 AB 43 81 FB 8E 2F 40 00 75 05 BB 65 2F 40 00 E2 E7 89 AD 1A 31 40 00 89 AD 55 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v1_66
 {
 meta:
@@ -22390,10 +22390,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 3F 90 40 ?? 87 DD 8B 85 E6 90 40 ?? 01 85 33 90 40 ?? 66 C7 85 ?? 90 40 ?? 90 90 01 85 DA 90 40 ?? 01 85 DE 90 40 ?? 01 85 E2 90 40 ?? BB 5B 11 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v1_67
 {
 meta:
@@ -22402,10 +22402,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 3F 90 40 87 DD 8B 85 E6 90 40 01 85 33 90 40 66 C7 85 90 40 90 90 01 85 DA 90 40 01 85 DE 90 40 01 85 E2 90 40 BB 8B 11 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Nakedbind_1_0____nakedcrew
 {
 meta:
@@ -22414,10 +22414,10 @@ strings:
     	$a0 = { 64 8B 38 48 8B C8 F2 AF AF 8B 1F 66 33 DB 66 81 3B 4D 5A 74 08 81 EB 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PE_Crypt_v1_00_v1_01
 {
 meta:
@@ -22426,10 +22426,10 @@ strings:
     	$a0 = { E8 ?? ?? ?? ?? 5B 83 EB 05 EB 04 52 4E 44 21 EB 02 CD 20 EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Crunch_PE_v4_0
 {
 meta:
@@ -22442,7 +22442,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule Armadillo_v2_75a
 {
 meta:
@@ -22451,10 +22451,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 68 ?? ?? ?? 68 D0 ?? ?? ?? 64 A1 ?? ?? ?? ?? 50 64 89 25 ?? ?? ?? ?? 83 EC 58 53 56 57 89 65 E8 FF 15 28 ?? ?? ?? 33 D2 8A D4 89 15 24 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXE_Shield_v0_1b___v0_3b__v0_3____SMoKE
 {
 meta:
@@ -22463,10 +22463,10 @@ strings:
     	$a0 = { E8 04 00 00 00 83 60 EB 0C 5D EB 05 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PE_PACK_v1_0_by_ANAKiN_1998______
 {
 meta:
@@ -22475,10 +22475,10 @@ strings:
     	$a0 = { 74 ?? E9 ?? ?? ?? ?? 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SDProtector_Pro_1_12
 {
 meta:
@@ -22487,10 +22487,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 1D 32 13 05 68 88 88 88 08 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 58 64 A3 00 00 00 00 58 58 58 58 8B E8 E8 3B 00 00 00 E8 01 00 00 00 FF 58 05 53 00 00 00 51 8B 4C 24 10 89 81 B8 00 00 00 B8 55 01 00 00 89 41 20 33 C0 89 41 04 89 41 08 89 41 0C 89 41 10 59 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASProtect_SKE_2_1_2_2__exe_____Alexey_Solodovnikov__h_
 {
 meta:
@@ -22504,7 +22504,7 @@ condition:
     	$a0 or $a1 or $a2
 }
 
-    
+
 rule Pe_Ninja_____DzA_kRAker__TNT_
 {
 meta:
@@ -22513,10 +22513,10 @@ strings:
     	$a0 = { BE 5B 2A 40 00 BF 35 12 00 00 E8 40 12 00 00 3D 22 83 A3 C6 0F 85 67 0F 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PRO_PACK_v2_08
 {
 meta:
@@ -22525,10 +22525,10 @@ strings:
     	$a0 = { 8C D3 8E C3 8C CA 8E DA 8B 0E ?? ?? 8B F1 83 ?? ?? 8B FE D1 ?? FD F3 A5 53 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECryptor_2_2_4____Strongbit_SoftComplete_Development__h1_
 {
 meta:
@@ -22537,10 +22537,10 @@ strings:
     	$a0 = { E8 F7 FE FF FF 05 ?? ?? 00 00 FF E0 E8 EB FE FF FF 05 ?? ?? 00 00 FF E0 E8 04 00 00 00 FF FF FF FF 5E C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__PEX_0_99_
 {
 meta:
@@ -22549,10 +22549,10 @@ strings:
     	$a0 = { 60 E8 01 00 00 00 55 83 C4 04 E8 01 00 00 00 90 5D 81 FF FF FF 00 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule VMProtect_0_x____PolyTech
 {
 meta:
@@ -22561,10 +22561,10 @@ strings:
     	$a0 = { 5B 20 56 4D 50 72 6F 74 65 63 74 20 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Thinstall_Virtualization_Suite_V3_0X____Thinstall_Company
 {
 meta:
@@ -22573,10 +22573,10 @@ strings:
     	$a0 = { 9C 60 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? E8 00 00 00 00 58 BB ?? ?? ?? ?? 2B C3 50 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? E8 BA FE FF FF E9 ?? ?? ?? ?? CC CC CC CC CC CC CC 55 8B EC 83 C4 F4 FC 53 57 56 8B 75 08 8B 7D 0C C7 45 FC 08 00 00 00 33 DB BA }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_v0_22___v0_23Beta____Sign_by_hot_UNP
 {
 meta:
@@ -22585,10 +22585,10 @@ strings:
     	$a0 = { 6A 07 BE 88 01 40 00 AD 8B F8 59 95 F3 A5 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule bambam_V0_04____bedrock
 {
 meta:
@@ -22597,10 +22597,10 @@ strings:
     	$a0 = { BF ?? ?? ?? ?? 83 C9 FF 33 C0 68 ?? ?? ?? ?? F2 AE F7 D1 49 51 68 ?? ?? ?? ?? E8 11 0A 00 00 83 C4 0C 68 ?? ?? ?? ?? FF 15 ?? ?? ?? ?? 8B F0 BF ?? ?? ?? ?? 83 C9 FF 33 C0 F2 AE F7 D1 49 BF ?? ?? ?? ?? 8B D1 68 ?? ?? ?? ?? C1 E9 02 F3 AB 8B CA 83 E1 03 F3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECryptor_2_1_17____Strongbit___SoftComplete_Development__h_
 {
 meta:
@@ -22612,7 +22612,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PE_Spin_0_b
 {
 meta:
@@ -22624,7 +22624,7 @@ condition:
     	$a0
 }
 
-    
+
 rule ASProtect_v1_23_RC4_build_08_07__exe_____Alexey_Solodovnikov__h_
 {
 meta:
@@ -22637,7 +22637,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule FreeCryptor_0_1__build_001____GlOFF
 {
 meta:
@@ -22649,7 +22649,7 @@ condition:
     	$a0
 }
 
-    
+
 rule UPX_0_72
 {
 meta:
@@ -22658,10 +22658,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 83 CD FF 31 DB 5E }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__Hafen_1641
 {
 meta:
@@ -22670,10 +22670,10 @@ strings:
     	$a0 = { E8 ?? ?? 01 ?? ?? ?? CE CC 25 ?? ?? 25 ?? ?? 25 ?? ?? 40 51 D4 ?? ?? ?? CC 47 CA ?? ?? 46 8A CC 44 88 CC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Escargot_V0_1______Meat
 {
 meta:
@@ -22682,10 +22682,10 @@ strings:
     	$a0 = { EB 04 40 30 2E 31 60 68 61 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EP_v2_0
 {
 meta:
@@ -22694,10 +22694,10 @@ strings:
     	$a0 = { 6A ?? 60 E9 01 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RCryptor_V1_6c____Vaska___Sign_by_fly
 {
 meta:
@@ -22706,10 +22706,10 @@ strings:
     	$a0 = { 8B C7 03 04 24 2B C7 80 38 50 0F 85 1B 8B 1F FF 68 ?? ?? ?? ?? B8 ?? ?? ?? ?? 3D ?? ?? ?? ?? 74 06 80 30 ?? 40 EB F3 B8 ?? ?? ?? ?? 3D ?? ?? ?? ?? 74 06 80 30 ?? 40 EB F3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SDProtect____Randy_Li
 {
 meta:
@@ -22718,10 +22718,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 88 88 88 08 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 58 64 A3 00 00 00 00 58 58 58 58 8B E8 E8 3B 00 00 00 E8 01 00 00 00 FF 58 05 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Thinstall_Embedded_V2_717_V2_719____Jitit
 {
 meta:
@@ -22730,10 +22730,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 58 BB ?? ?? ?? ?? 2B C3 50 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? E8 C1 FE FF FF E9 97 FF FF FF CC CC 55 8B EC 83 C4 F4 FC 53 57 56 8B 75 08 8B 7D 0C C7 45 FC 08 00 00 00 33 DB BA 00 00 00 80 43 33 C0 E8 19 01 00 00 73 0E 8B 4D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_V1_12_V1_14__LZMA_4_30_____ap0x___Sign_by_fly
 {
 meta:
@@ -22742,10 +22742,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 8D B5 ?? ?? ?? ?? 8D 9D ?? ?? ?? ?? 33 FF 6A ?? 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 6A ?? FF 95 ?? ?? ?? ?? 89 85 ?? ?? ?? ?? EB ?? 60 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule TurboBAT_v3_10____5_0__Patched_
 {
 meta:
@@ -22754,10 +22754,10 @@ strings:
     	$a0 = { 90 90 90 90 90 90 90 06 B8 ?? ?? 8E C0 B9 ?? ?? 26 ?? ?? ?? ?? 80 ?? ?? 26 ?? ?? ?? 24 ?? 3A C4 90 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Soft_Defender_v1_12
 {
 meta:
@@ -22769,7 +22769,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Fish_PE_Shield_1_01____HellFish
 {
 meta:
@@ -22781,10 +22781,10 @@ strings:
 	$a3 = { 55 8B EC 83 C4 D0 53 56 57 8B 45 10 83 C0 0C 8B 00 89 45 DC 83 7D DC 00 75 08 E8 AD FF FF FF 89 45 DC E8 C1 FE FF FF 8B 10 03 55 DC 89 55 E4 83 C0 04 8B 10 89 55 FC 83 C0 04 8B 10 89 55 F4 83 C0 04 8B 10 89 55 F8 83 C0 04 8B 10 89 55 F0 83 C0 04 8B 10 89 55 EC 83 C0 04 8B 00 89 45 E8 8B 45 E4 8B 58 04 03 5D E4 8B FB 8B 45 E4 8B 30 4E 85 F6 72 2B 46 C7 45 E0 00 00 00 00 83 7B 04 00 74 14 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 or $a3
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 or $a3
 }
 
-    
+
 rule EXE_Shield_0_5____Smoke
 {
 meta:
@@ -22796,7 +22796,7 @@ condition:
     	$a0
 }
 
-    
+
 rule __PseudoSigner_0_1__Microsoft_Visual_C___5_0___MFC_______Anorganix
 {
 meta:
@@ -22805,10 +22805,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 64 A1 00 00 00 00 50 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_v0_89_6___v1_02___v1_05___v1_22_DLL
 {
 meta:
@@ -22817,10 +22817,10 @@ strings:
     	$a0 = { 80 7C 24 08 01 0F 85 ?? ?? ?? 00 60 BE ?? ?? ?? ?? 8D BE ?? ?? ?? ?? 57 83 CD FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Guardant_Stealth_aka_Novex_Dongle
 {
 meta:
@@ -22829,10 +22829,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 F0 60 E8 51 FF FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Anti007_V1_0_V2_X____NsPacK_Private
 {
 meta:
@@ -22841,10 +22841,10 @@ strings:
     	$a0 = { 00 00 00 4C 6F 61 64 4C 69 62 72 61 72 79 41 00 00 00 47 65 74 50 72 6F 63 41 64 64 72 65 73 73 00 00 00 56 69 72 74 75 61 6C 50 72 6F 74 65 63 74 00 00 00 56 69 72 74 75 61 6C 41 6C 6C 6F 63 00 00 00 56 69 72 74 75 61 6C 46 72 65 65 00 00 00 45 78 69 74 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule The_Guard_Library
 {
 meta:
@@ -22853,10 +22853,10 @@ strings:
     	$a0 = { 50 E8 ?? ?? ?? ?? 58 25 ?? F0 FF FF 8B C8 83 C1 60 51 83 C0 40 83 EA 06 52 FF 20 9D C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Packanoid____Arkanoid
 {
 meta:
@@ -22865,10 +22865,10 @@ strings:
     	$a0 = { BF 00 10 40 00 BE ?? ?? ?? 00 E8 9D 00 00 00 B8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule _____________________v1_0____________
 {
 meta:
@@ -22877,10 +22877,10 @@ strings:
     	$a0 = { 64 A1 00 00 00 00 55 89 E5 6A FF 68 1C 30 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__Lockless_Intro_Pack______Anorganix
 {
 meta:
@@ -22889,10 +22889,10 @@ strings:
     	$a0 = { 2C E8 EB 1A 90 90 5D 8B C5 81 ED F6 73 90 90 2B 85 90 90 90 90 83 E8 06 89 85 FF 01 EC AD }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PE_Armor_0_49____Hying
 {
 meta:
@@ -22901,10 +22901,10 @@ strings:
     	$a0 = { 56 52 51 53 55 E8 15 01 00 00 32 ?? ?? 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule JDPack
 {
 meta:
@@ -22913,10 +22913,10 @@ strings:
     	$a0 = { 60 E8 ?? ?? ?? ?? 5D 8B D5 81 ED ?? ?? ?? ?? 2B 95 ?? ?? ?? ?? 81 EA 06 ?? ?? ?? 89 95 ?? ?? ?? ?? 83 BD 45 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXE_Manager_Version_3_0_1994__c__Solar_Designer
 {
 meta:
@@ -22925,10 +22925,10 @@ strings:
     	$a0 = { B4 30 1E 06 CD 21 2E ?? ?? ?? BF ?? ?? B9 ?? ?? 33 C0 2E ?? ?? 47 E2 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Enigma_protector_1_10__unregistered_
 {
 meta:
@@ -22941,7 +22941,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule DxPack_1_0
 {
 meta:
@@ -22950,10 +22950,10 @@ strings:
     	$a0 = { 60 E8 ?? ?? ?? ?? 5D 8B FD 81 ED ?? ?? ?? ?? 2B B9 ?? ?? ?? ?? 81 EF ?? ?? ?? ?? 83 BD ?? ?? ?? ?? ?? 0F 84 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule TopSpeed_v3_01_1989
 {
 meta:
@@ -22962,10 +22962,10 @@ strings:
     	$a0 = { 1E BA ?? ?? 8E DA 8B ?? ?? ?? 8B ?? ?? ?? FF ?? ?? ?? 50 53 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule AINEXE_v2_30
 {
 meta:
@@ -22974,10 +22974,10 @@ strings:
     	$a0 = { 0E 07 B9 ?? ?? BE ?? ?? 33 FF FC F3 A4 A1 ?? ?? 2D ?? ?? 8E D0 BC ?? ?? 8C D8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ExeStealth____WebToolMaster
 {
 meta:
@@ -22989,7 +22989,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_2__Microsoft_Visual_C___7_0_DLL______Anorganix
 {
 meta:
@@ -22998,10 +22998,10 @@ strings:
     	$a0 = { 55 8D 6C 01 00 81 EC 00 00 00 00 8B 45 90 83 F8 01 56 0F 84 00 00 00 00 85 C0 0F 84 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXEJoiner_v1_0
 {
 meta:
@@ -23010,10 +23010,10 @@ strings:
     	$a0 = { 68 00 10 40 00 68 04 01 00 00 E8 39 03 00 00 05 00 10 40 C6 00 5C 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 6A 00 E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule yC_1_3_by_Ashkbiz_Danehkar
 {
 meta:
@@ -23025,7 +23025,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_2__Borland_Delphi_Setup_Module______Anorganix
 {
 meta:
@@ -23034,10 +23034,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 90 53 56 57 33 C0 89 45 F0 89 45 D4 89 45 D0 E8 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__Borland_C___1999______Anorganix
 {
 meta:
@@ -23046,10 +23046,10 @@ strings:
     	$a0 = { EB 10 66 62 3A 43 2B 2B 48 4F 4F 4B 90 E9 90 90 90 90 A1 ?? ?? ?? ?? A3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_v1_31__Eng_____dulek_xt
 {
 meta:
@@ -23059,10 +23059,10 @@ strings:
 	$a1 = { BB D0 01 40 00 BF 00 10 40 00 BE ?? ?? ?? 00 53 BB ?? ?? ?? 00 B2 80 A4 B6 80 FF D3 73 F9 33 C9 FF D3 73 16 33 C0 FF D3 73 23 B6 80 41 B0 10 FF D3 12 C0 73 FA 75 42 AA EB E0 E8 46 00 00 00 02 F6 83 D9 01 75 10 E8 38 00 00 00 EB 28 AC D1 E8 74 48 13 C9 EB }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule MZ0oPE_1_0_6b____TaskFall
 {
 meta:
@@ -23073,10 +23073,10 @@ strings:
 	$a2 = { EB CA 89 03 83 C3 04 87 FE 32 C0 AE 75 FD 87 FE 80 3E FF 75 E2 46 5B 83 C3 04 53 8B 1B 80 3F FF 75 C9 8B E5 61 68 ?? ?? ?? ?? C3 FC B2 80 33 DB A4 B3 02 E8 6D 00 00 00 73 F6 33 C9 E8 64 00 00 00 73 1C 33 C0 E8 5B 00 00 00 73 23 B3 02 41 B0 10 E8 4F 00 00 00 12 C0 73 F7 75 3F AA EB D4 E8 4D 00 00 00 2B CB 75 10 E8 42 00 00 00 EB 28 AC D1 E8 74 4C 13 C9 EB 1C 91 48 C1 E0 08 AC E8 2C 00 00 00 3D 00 7D 00 00 73 0A 80 FC 05 73 06 83 F8 7F 77 02 41 41 95 8B C5 B3 01 56 8B F7 2B F0 F3 A4 5E EB 8E 02 D2 75 05 8A 16 46 12 D2 C3 33 C9 41 E8 EE FF FF FF 13 C9 E8 E7 FF FF FF 72 F2 C3 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
-    
+
 rule PKLITE32_1_1
 {
 meta:
@@ -23085,10 +23085,10 @@ strings:
     	$a0 = { 50 4B 4C 49 54 45 33 32 20 43 6F 70 79 72 69 67 68 74 20 31 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PESHiELD_v0_25
 {
 meta:
@@ -23097,10 +23097,10 @@ strings:
     	$a0 = { 60 E8 2B 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PIRIT_v1_5
 {
 meta:
@@ -23109,10 +23109,10 @@ strings:
     	$a0 = { B4 4D CD 21 E8 ?? ?? FD E8 ?? ?? B4 51 CD 21 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Sentinel_SuperPro__Automatic_Protection__v6_4_1____Safenet
 {
 meta:
@@ -23122,10 +23122,10 @@ strings:
 	$a1 = { A1 ?? ?? ?? ?? 55 8B ?? ?? ?? 85 C0 74 ?? 85 ED 75 ?? A1 ?? ?? ?? ?? 50 55 FF 15 ?? ?? ?? ?? 8B 0D ?? ?? ?? ?? 55 51 FF 15 ?? ?? ?? ?? 85 C0 74 ?? 8B 15 ?? ?? ?? ?? 52 FF 15 ?? ?? ?? ?? 6A 00 6A 00 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? B8 01 00 00 00 5D C2 0C 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Crunch_PE_v1_0_x_x
 {
 meta:
@@ -23134,10 +23134,10 @@ strings:
     	$a0 = { 55 E8 ?? ?? ?? ?? 5D 83 ED 06 8B C5 55 60 89 AD ?? ?? ?? ?? 2B 85 ?? ?? ?? ?? 89 85 ?? ?? ?? ?? 80 BD ?? ?? ?? ?? ?? 75 09 C6 85 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule WWPack32_v1_00__v1_11__v1_12__v1_20
 {
 meta:
@@ -23146,10 +23146,10 @@ strings:
     	$a0 = { 53 55 8B E8 33 DB EB 60 0D 0A 0D 0A 57 57 50 61 63 6B 33 32 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule LameCrypt_v1_0
 {
 meta:
@@ -23158,10 +23158,10 @@ strings:
     	$a0 = { 60 66 9C BB ?? ?? ?? ?? 80 B3 00 10 40 00 90 4B 83 FB FF 75 F3 66 9D 61 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECryptor_2_3_9_DLL__compressed_resources_____www_strongbit_com
 {
 meta:
@@ -23173,7 +23173,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Armadillo_3_10
 {
 meta:
@@ -23185,7 +23185,7 @@ condition:
     	$a0
 }
 
-    
+
 rule MSLRH_v0_32a__fake_EXE32Pack_1_3x_____emadicius__h_
 {
 meta:
@@ -23194,10 +23194,10 @@ strings:
     	$a0 = { 3B C0 74 02 81 83 55 3B C0 74 02 81 83 53 3B C9 74 01 BC 56 3B D2 74 02 81 85 57 E8 00 00 00 00 3B DB 74 01 90 83 C4 14 EB 05 E8 EB 04 40 00 EB FA E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 50 E8 02 00 00 00 29 5A 58 6B C0 03 E8 02 00 00 00 29 5A 83 C4 04 58 74 04 75 02 EB 02 EB 01 81 0F 31 50 0F 31 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Unknown_packer__08_
 {
 meta:
@@ -23206,10 +23206,10 @@ strings:
     	$a0 = { 8B C4 2D ?? ?? 24 00 8B F8 57 B9 ?? ?? BE ?? ?? F3 A5 FD C3 97 4F 4F }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule HEALTH_v_5_1_by_Muslim_M_Polyak
 {
 meta:
@@ -23218,10 +23218,10 @@ strings:
     	$a0 = { 1E E8 ?? ?? 2E 8C 06 ?? ?? 2E 89 3E ?? ?? 8B D7 B8 ?? ?? CD 21 8B D8 0E 1F E8 ?? ?? 06 57 A1 ?? ?? 26 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__REALBasic______Anorganix
 {
 meta:
@@ -23230,10 +23230,10 @@ strings:
     	$a0 = { 55 89 E5 90 90 90 90 90 90 90 90 90 90 50 90 90 90 90 90 00 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__PE_Protect_0_9______Anorganix
 {
 meta:
@@ -23242,10 +23242,10 @@ strings:
     	$a0 = { 52 51 55 57 64 67 A1 30 00 85 C0 78 0D E8 07 00 00 00 58 83 C0 07 C6 90 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_v1_10__Eng_____dulek_xt_____Borland_Delphi___Borland_C___
 {
 meta:
@@ -23256,10 +23256,10 @@ strings:
 	$a2 = { 2B C2 E8 02 00 00 00 95 4A 59 8D 3D 52 F1 2A E8 C1 C8 1C BE 2E ?? ?? 18 EB 02 AB A0 03 F7 EB 02 CD 20 68 F4 00 00 00 0B C7 5B 03 CB 8A 06 8A 16 E8 02 00 00 00 8D 46 59 EB 01 A4 02 D3 EB 02 CD 20 02 D3 E8 02 00 00 00 57 AB 58 81 C2 AA 87 AC B9 0F BE C9 80 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
-    
+
 rule tElock_0_51____tE_
 {
 meta:
@@ -23268,10 +23268,10 @@ strings:
     	$a0 = { C1 EE 00 66 8B C9 EB 01 EB 60 EB 01 EB 9C E8 00 00 00 00 5E 83 C6 5E 8B FE 68 79 01 00 00 59 EB 01 EB AC 54 E8 03 00 00 00 5C EB 08 8D 64 24 04 FF 64 24 FC 6A 05 D0 2C 24 72 01 E8 01 24 24 5C F7 DC EB 02 CD 20 8D 64 24 FE F7 DC EB 02 CD 20 FE C8 E8 00 00 00 00 32 C1 EB 02 82 0D AA EB 03 82 0D 58 EB 02 1D 7A 49 EB 05 E8 01 00 00 00 7F AE 14 7E A0 77 76 75 74 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_v3_0__DLL_LZMA_____Markus_Oberhumer___Laszlo_Molnar___John_Reiser
 {
 meta:
@@ -23280,10 +23280,10 @@ strings:
     	$a0 = { 80 7C 24 08 01 0F 85 C7 0B 00 00 60 BE 00 ?? ?? ?? 8D BE 00 ?? ?? FF 57 89 E5 8D 9C 24 80 C1 FF FF 31 C0 50 39 DC 75 FB 46 46 53 68 ?? ?? ?? 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule xPEP_0_3x____xIkUg
 {
 meta:
@@ -23292,10 +23292,10 @@ strings:
     	$a0 = { 55 53 56 51 52 57 E8 16 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule BookManager_v9510
 {
 meta:
@@ -23304,10 +23304,10 @@ strings:
     	$a0 = { FC A3 ?? ?? 89 1E ?? ?? 49 89 0E ?? ?? BB ?? ?? 8C 1F 83 ?? ?? 89 ?? ?? B8 ?? ?? 50 89 ?? ?? F7 D0 50 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule D1S1G_v1_1_beta_____D1N
 {
 meta:
@@ -23319,7 +23319,7 @@ condition:
     	$a0
 }
 
-    
+
 rule AVPACK_v1_20
 {
 meta:
@@ -23328,10 +23328,10 @@ strings:
     	$a0 = { 50 1E 0E 1F 16 07 33 F6 8B FE B9 ?? ?? FC F3 A5 06 BB ?? ?? 53 CB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EmbedPE_v1_24____cyclotron
 {
 meta:
@@ -23340,10 +23340,10 @@ strings:
     	$a0 = { 83 EC 50 60 68 ?? ?? ?? ?? E8 CB FF 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PC_Shrinker_v0_45
 {
 meta:
@@ -23352,10 +23352,10 @@ strings:
     	$a0 = { BD ?? ?? ?? ?? 01 AD E3 38 40 ?? FF B5 DF 38 40 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NoName_Packer
 {
 meta:
@@ -23364,10 +23364,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED 2E 34 46 00 B9 55 4A 46 00 81 E9 26 37 46 00 89 EA 81 C2 26 37 46 00 8D 3A 89 FE 31 C0 E9 D3 02 00 00 CC CC CC CC E9 CA 02 00 00 43 3A 5C 57 69 6E 64 6F 77 73 5C 53 6F 66 74 57 61 72 65 50 72 6F 74 65 63 74 6F 72 5C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Simple_UPX_Cryptor_V30_4_2005____MANtiCORE
 {
 meta:
@@ -23376,10 +23376,10 @@ strings:
     	$a0 = { 60 B8 ?? ?? ?? ?? B9 ?? ?? ?? ?? ?? ?? ?? ?? E2 FA 61 68 ?? ?? ?? ?? C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PESpin_1_0____Cyberbob__h_
 {
 meta:
@@ -23391,7 +23391,7 @@ condition:
     	$a0
 }
 
-    
+
 rule MEW_11_SE_v1_2
 {
 meta:
@@ -23404,7 +23404,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule Obsidium_1_3_0_0____Obsidium_Software__h_
 {
 meta:
@@ -23416,7 +23416,7 @@ condition:
     	$a0
 }
 
-    
+
 rule MSLRH_v0_31a
 {
 meta:
@@ -23429,7 +23429,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule FASM_v1_5x
 {
 meta:
@@ -23441,7 +23441,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_1__LCC_Win32_1_x_____Anorganix
 {
 meta:
@@ -23450,10 +23450,10 @@ strings:
     	$a0 = { 64 A1 01 00 00 00 55 89 E5 6A FF 68 ?? ?? ?? ?? 68 9A 10 40 90 50 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule VProtector_V1_0B____vcasm
 {
 meta:
@@ -23462,10 +23462,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 CA 37 41 00 68 06 38 41 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 E8 03 00 00 00 C7 84 00 58 EB 01 E9 83 C0 07 50 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__LCC_Win32_1_x______Anorganix
 {
 meta:
@@ -23474,10 +23474,10 @@ strings:
     	$a0 = { 64 A1 01 00 00 00 55 89 E5 6A FF 68 ?? ?? ?? ?? 68 9A 10 40 90 50 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NeoLite_v1_0
 {
 meta:
@@ -23487,10 +23487,10 @@ strings:
 	$a1 = { 8B 44 24 04 8D 54 24 FC 23 05 ?? ?? ?? ?? E8 ?? ?? ?? ?? FF 35 ?? ?? ?? ?? 50 FF 25 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule nPack_v1_1_150_200_Beta____NEOx
 {
 meta:
@@ -23499,10 +23499,10 @@ strings:
     	$a0 = { 83 3D 40 ?? ?? ?? 00 75 05 E9 01 00 00 00 C3 E8 41 00 00 00 B8 80 ?? ?? ?? 2B 05 08 ?? ?? ?? A3 3C ?? ?? 00 E8 5E 00 00 00 E8 E0 01 00 00 E8 EC 06 00 00 E8 F7 05 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Themida_WinLicense_V1_8_X_V1_9_X_nbsp_____Oreans_Technologies_nbsp___nbsp___Sign_By_fly
 {
 meta:
@@ -23511,10 +23511,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? ?? 60 0B C0 74 68 E8 00 00 00 00 58 05 53 00 00 00 80 38 E9 75 13 61 EB 45 DB 2D ?? ?? ?? ?? FF FF FF FF FF FF FF FF 3D ?? ?? ?? ?? 00 00 58 25 00 F0 FF FF 33 FF 66 BB ?? ?? 66 83 ?? ?? 66 39 18 75 12 0F B7 50 3C 03 D0 BB ?? ?? ?? ?? 83 C3 ?? 39 1A 74 07 2D ?? ?? ?? ?? EB DA 8B F8 B8 ?? ?? ?? ?? 03 C7 B9 ?? ?? ?? ?? 03 CF EB 0A B8 ?? ?? ?? ?? B9 ?? ?? ?? ?? 50 51 E8 ?? ?? ?? ?? E8 ?? ?? ?? ?? 58 2D ?? ?? ?? ?? B9 ?? ?? ?? ?? C6 00 E9 83 E9 05 89 48 01 61 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_HiT_v0_0_1
 {
 meta:
@@ -23526,7 +23526,7 @@ condition:
     	$a0
 }
 
-    
+
 rule EXECryptor_V2_1X____softcomplete_com
 {
 meta:
@@ -23538,7 +23538,7 @@ condition:
     	$a0
 }
 
-    
+
 rule eXPressor_1_1____CGSoftLabs
 {
 meta:
@@ -23547,10 +23547,10 @@ strings:
     	$a0 = { E9 ?? ?? 00 00 E9 ?? ?? 00 00 E9 ?? 12 00 00 E9 ?? 0C 00 00 E9 ?? ?? 00 00 E9 ?? ?? 00 00 E9 ?? ?? 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PE_Crypter
 {
 meta:
@@ -23559,10 +23559,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D EB 26 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Soft_Defender_1_1x____Randy_Li
 {
 meta:
@@ -23571,10 +23571,10 @@ strings:
     	$a0 = { 74 07 75 05 19 32 67 E8 E8 74 1F 75 1D E8 68 39 44 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECryptor_2_2_6_DLL__minimum_protection_
 {
 meta:
@@ -23583,10 +23583,10 @@ strings:
     	$a0 = { 50 8B C6 87 04 24 68 ?? ?? ?? ?? 5E E9 ?? ?? ?? ?? 85 C8 E9 ?? ?? ?? ?? 81 C3 ?? ?? ?? ?? 0F 81 ?? ?? ?? 00 81 FA ?? ?? ?? ?? 33 D0 E9 ?? ?? ?? 00 0F 8D ?? ?? ?? 00 81 D5 ?? ?? ?? ?? F7 D1 0B 15 ?? ?? ?? ?? C1 C2 ?? 81 C2 ?? ?? ?? ?? 9D E9 ?? ?? ?? ?? C1 E2 ?? C1 E8 ?? 81 EA ?? ?? ?? ?? 13 DA 81 E9 ?? ?? ?? ?? 87 04 24 8B C8 E9 ?? ?? ?? ?? 55 8B EC 83 C4 F8 89 45 FC 8B 45 FC 89 45 F8 8B 45 08 E9 ?? ?? ?? ?? 8B 45 E0 C6 00 00 FF 45 E4 E9 ?? ?? ?? ?? FF 45 E4 E9 ?? ?? ?? 00 F7 D3 0F 81 ?? ?? ?? ?? E9 ?? ?? ?? ?? 87 34 24 5E 8B 45 F4 E8 ?? ?? ?? 00 8B 45 F4 8B E5 5D C3 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__GRUNT_1_Family
 {
 meta:
@@ -23595,10 +23595,10 @@ strings:
     	$a0 = { 01 B9 ?? 00 31 17 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Thinstall_Embedded_V2_501____Jitit___Sign_by_fly
 {
 meta:
@@ -23607,10 +23607,10 @@ strings:
     	$a0 = { 55 8B EC B8 ?? ?? ?? ?? BB ?? ?? ?? ?? 50 E8 00 00 00 00 58 2D A8 1A 00 00 B9 6D 1A 00 00 BA 21 1B 00 00 BE 00 10 00 00 BF C0 53 00 00 BD F0 1A 00 00 03 E8 81 75 00 ?? ?? ?? ?? 81 75 04 ?? ?? ?? ?? 81 75 08 ?? ?? ?? ?? 81 75 0C ?? ?? ?? ?? 81 75 10 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule yP_v1_0b_by_Ashkbiz_Danehkar
 {
 meta:
@@ -23622,7 +23622,7 @@ condition:
     	$a0
 }
 
-    
+
 rule MSLRH_v0_32a__fake_yoda_s_cryptor_1_2_____emadicius__h_
 {
 meta:
@@ -23631,10 +23631,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED F3 1D 40 00 B9 7B 09 00 00 8D BD 3B 1E 40 00 8B F7 AC 90 2C 8A C0 C0 78 90 04 62 EB 01 00 61 EB 05 E8 EB 04 40 00 EB FA E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 50 E8 02 00 00 00 29 5A 58 6B C0 03 E8 02 00 00 00 29 5A 83 C4 04 58 74 04 75 02 EB 02 EB 01 81 0F 31 50 0F 31 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_Full_Edition_1_17__LZMA_
 {
 meta:
@@ -23643,10 +23643,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 8D B5 73 26 00 00 8D 9D 58 03 00 00 33 FF ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 6A 40 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 6A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule DEF_v1_0
 {
 meta:
@@ -23656,10 +23656,10 @@ strings:
 	$a1 = { BE ?? 01 40 00 6A 05 59 80 7E 07 00 74 11 8B 46 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule nPack_V1_1_150_2006_Beta____NEOx__uinC
 {
 meta:
@@ -23669,10 +23669,10 @@ strings:
 	$a1 = { 83 3D 40 ?? ?? ?? 00 75 05 E9 01 00 00 00 C3 E8 41 00 00 00 B8 80 ?? ?? ?? 2B 05 08 ?? ?? ?? A3 3C ?? ?? ?? E8 5E 00 00 00 E8 E0 01 00 00 E8 EC 06 00 00 E8 F7 05 00 00 A1 3C ?? ?? ?? C7 05 40 ?? ?? ?? 01 00 00 00 01 05 00 ?? ?? ?? FF 35 00 ?? ?? ?? C3 C3 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule ZCode_Win32_PE_Protector_v1_01
 {
 meta:
@@ -23681,10 +23681,10 @@ strings:
     	$a0 = { E9 12 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? E9 FB FF FF FF C3 68 ?? ?? ?? ?? 64 FF 35 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PE_Diminisher_v0_1
 {
 meta:
@@ -23694,10 +23694,10 @@ strings:
 	$a1 = { 53 51 52 56 57 55 E8 00 00 00 00 5D 8B D5 81 ED A2 30 40 00 2B 95 91 33 40 00 81 EA 0B 00 00 00 89 95 9A 33 40 00 80 BD 99 33 40 00 00 74 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule ASProtect_v1_1_MTE
 {
 meta:
@@ -23706,10 +23706,10 @@ strings:
     	$a0 = { 60 E9 ?? ?? ?? ?? 91 78 79 79 79 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SmartE____Microsoft
 {
 meta:
@@ -23718,10 +23718,10 @@ strings:
     	$a0 = { EB 15 03 00 00 00 ?? 00 00 00 00 00 00 00 00 00 00 00 68 00 00 00 00 55 E8 00 00 00 00 5D 81 ED 1D 00 00 00 8B C5 55 60 9C 2B 85 8F 07 00 00 89 85 83 07 00 00 FF 74 24 2C E8 BB 01 00 00 0F 82 2F 06 00 00 E8 8E 04 00 00 49 0F 88 23 06 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_Patch_or_any_Version____Sign_by_hot_UNP
 {
 meta:
@@ -23730,10 +23730,10 @@ strings:
     	$a0 = { 60 E8 09 00 00 00 ?? ?? ?? 00 E9 06 02 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule tElock_v0_99_Special_Build____heXer___forgot
 {
 meta:
@@ -23743,10 +23743,10 @@ strings:
 	$a1 = { E9 5E DF FF FF 00 00 00 ?? ?? ?? ?? E5 ?? ?? 00 00 00 00 00 00 00 00 00 05 ?? ?? 00 F5 ?? ?? 00 ED ?? ?? 00 00 00 00 00 00 00 00 00 12 ?? ?? 00 FD ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 1D ?? ?? 00 00 00 00 00 30 ?? ?? 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule UPXFreak_0_1__Borland_Delphi_____HMX0101
 {
 meta:
@@ -23758,7 +23758,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Escargot_0_1__final_______Meat
 {
 meta:
@@ -23767,10 +23767,10 @@ strings:
     	$a0 = { EB 04 40 30 2E 31 60 68 61 ?? ?? ?? 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 B8 92 ?? ?? ?? 8B 00 FF D0 50 B8 CD ?? ?? ?? 81 38 DE C0 37 13 75 2D 68 C9 ?? ?? ?? 6A 40 68 00 ?? 00 00 68 00 00 ?? ?? B8 96 ?? ?? ?? 8B 00 FF D0 8B 44 24 F0 8B 4C 24 F4 EB 05 49 C6 04 01 40 0B C9 75 F7 BE 00 10 ?? ?? B9 00 ?? ?? 00 EB 05 49 80 34 31 40 0B C9 75 F7 58 0B C0 74 08 33 C0 C7 00 DE C0 AD 0B BE ?? ?? ?? ?? E9 AC 00 00 00 8B 46 0C BB 00 00 ?? ?? 03 C3 50 50 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_0_32a__fake_ASPack_2_12_____emadicius
 {
 meta:
@@ -23780,10 +23780,10 @@ strings:
 	$a1 = { 60 E8 03 00 00 00 E9 EB 04 5D 45 55 C3 E8 01 00 00 00 EB 5D BB ED FF FF FF 03 DD 81 EB 00 73 00 00 61 EB 05 E8 EB 04 40 00 EB FA E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 50 E8 02 00 00 00 29 5A 58 6B }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule CDS_SS_v1_0_Beta_1____CyberDoom___Team_X
 {
 meta:
@@ -23792,10 +23792,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED CA 47 40 00 FF 74 24 20 E8 D3 03 00 00 0B C0 0F 84 13 03 00 00 89 85 B8 4E 40 00 66 8C D8 A8 04 74 0C C7 85 8C 4E 40 00 01 00 00 00 EB 12 64 A1 30 00 00 00 0F B6 40 02 0A C0 0F 85 E8 02 00 00 8D 85 F6 4C 40 00 50 FF B5 B8 4E 40 00 E8 FC 03 00 00 0B C0 0F 84 CE 02 00 00 E8 1E 03 00 00 89 85 90 4E 40 00 8D 85 03 4D 40 00 50 FF B5 B8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__August_16th__Iron_Maiden_
 {
 meta:
@@ -23804,10 +23804,10 @@ strings:
     	$a0 = { BA 79 02 03 D7 B4 1A CD 21 B8 24 35 CD 21 5F 57 89 9D 4E 02 8C 85 50 02 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Pohernah_1_0_1___by_Kas
 {
 meta:
@@ -23816,10 +23816,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED F1 26 40 00 8B BD 18 28 40 00 8B 8D 20 28 40 00 B8 38 28 40 00 01 E8 80 30 05 83 F9 00 74 71 81 7F 1C AB 00 00 00 75 62 8B 57 0C 03 95 1C 28 40 00 31 C0 51 31 C9 66 B9 FA 00 66 83 F9 00 74 49 8B 57 0C 03 95 1C 28 40 00 8B 85 24 28 40 00 83 F8 02 75 06 81 C2 00 02 00 00 51 8B 4F 10 83 F8 02 75 06 81 E9 00 02 00 00 57 BF C8 00 00 00 89 CE E8 27 00 00 00 89 C1 5F B8 38 28 40 00 01 E8 E8 24 00 00 00 59 49 EB B1 59 83 C7 28 49 EB 8A 8B 85 14 28 40 00 89 44 24 1C 61 FF E0 56 57 4F F7 D7 21 FE 89 F0 5F 5E C3 60 83 F0 05 40 90 48 83 F0 05 89 C6 89 D7 60 E8 0B 00 00 00 61 83 C7 08 83 E9 07 E2 F1 61 C3 57 8B 1F 8B 4F 04 68 B9 79 37 9E 5A 42 89 D0 48 C1 E0 05 BF 20 00 00 00 4A 89 DD C1 E5 04 29 E9 8B 6E 08 31 DD 29 E9 89 DD C1 ED 05 31 C5 29 E9 2B 4E 0C 89 CD C1 E5 04 29 EB 8B 2E 31 CD 29 EB 89 CD C1 ED 05 31 C5 29 EB 2B 5E 04 29 D0 4F 75 C8 5F 89 1F 89 4F 04 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Unnamed_Scrambler_1_2B____p0ke
 {
 meta:
@@ -23829,10 +23829,10 @@ strings:
 	$a1 = { 55 8B EC 83 C4 D8 53 56 57 33 C0 89 45 D8 89 45 DC 89 45 E0 89 45 E4 89 45 E8 B8 70 3A 40 00 E8 C4 EC FF FF 33 C0 55 68 5C 3F 40 00 64 FF 30 64 89 20 E8 C5 D7 FF FF E8 5C F5 FF FF B8 20 65 40 00 33 C9 BA 04 01 00 00 E8 D3 DB FF FF 68 04 01 00 00 68 20 65 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule Exe_Guarder_v1_8____Exeicon_com__h_
 {
 meta:
@@ -23842,10 +23842,10 @@ strings:
 	$a1 = { 55 8B EC 83 C4 D0 53 56 57 8D 75 FC 8B 44 24 30 25 00 00 FF FF 81 38 4D 5A 90 00 74 07 2D 00 10 00 00 EB F1 89 45 FC E8 C8 FF FF FF 2D B2 04 00 00 89 45 F4 8B 06 8B 40 3C 03 06 8B 40 78 03 06 8B C8 8B 51 20 03 16 8B 59 24 03 1E 89 5D F0 8B 59 1C 03 1E 89 5D EC 8B 41 18 8B C8 49 85 C9 72 5A 41 33 C0 8B D8 C1 E3 02 03 DA 8B 3B 03 3E 81 3F 47 65 74 50 75 40 8B DF 83 C3 04 81 3B 72 6F 63 41 75 33 8B DF 83 C3 08 81 3B 64 64 72 65 75 26 83 C7 0C 66 81 3F 73 73 75 1C 8B D0 03 D2 03 55 F0 0F B7 12 C1 E2 02 03 55 EC 8B 12 03 16 8B 4D F4 89 51 08 EB 04 40 49 75 A9 8B 5D F4 8D 83 A1 00 00 00 50 8B 06 50 FF 53 08 89 43 0C 8D 83 AE 00 00 00 50 8B 06 50 FF 53 08 89 43 10 8D 83 BA 00 00 00 50 8B 06 50 FF 53 08 89 43 14 8D 83 C6 00 00 00 50 8B 06 50 FF 53 08 89 43 18 8D 83 D7 00 00 00 50 8B 06 50 FF 53 08 89 43 1C 8D 83 E0 00 00 00 50 8B 06 50 FF 53 08 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule RE_Crypt_v0_7x____Crudd__RET___h2_
 {
 meta:
@@ -23854,10 +23854,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 55 81 04 24 0A 00 00 00 C3 8B F5 81 C5 ?? ?? 00 00 89 6D 34 89 75 38 8B 7D 38 81 E7 00 FF FF FF 81 C7 48 00 00 00 47 03 7D 60 8B 4D 5C 83 F9 00 7E 0F 8B 17 33 55 58 89 17 83 C7 04 83 C1 FC EB EC 8B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FreeJoiner_Small__build_035_____GlOFF
 {
 meta:
@@ -23866,10 +23866,10 @@ strings:
     	$a0 = { 51 33 CB 86 C9 59 E8 9E FD FF FF 66 87 DB 6A 00 E8 0C 00 00 00 FF 25 78 10 40 00 FF 25 7C 10 40 00 FF 25 80 10 40 00 FF 25 84 10 40 00 FF 25 88 10 40 00 FF 25 8C 10 40 00 FF 25 90 10 40 00 FF 25 94 10 40 00 FF 25 98 10 40 00 FF 25 9C 10 40 00 FF 25 A0 10 40 00 FF 25 A4 10 40 00 FF 25 AC 10 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Thinstall_Virtualization_Suite_V3_0X____Thinstall_Company___Sign_by_fly
 {
 meta:
@@ -23878,10 +23878,10 @@ strings:
     	$a0 = { 9C 60 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? E8 00 00 00 00 58 BB ?? ?? ?? ?? 2B C3 50 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? E8 BA FE FF FF E9 ?? ?? ?? ?? CC CC CC CC CC CC CC 55 8B EC 83 C4 F4 FC 53 57 56 8B 75 08 8B 7D 0C C7 45 FC 08 00 00 00 33 DB BA ?? ?? ?? ?? 43 33 C0 E8 19 01 00 00 73 0E 8B 4D F8 E8 27 01 00 00 02 45 F7 AA EB E9 E8 04 01 00 00 0F 82 96 00 00 00 E8 F9 00 00 00 73 5B B9 04 00 00 00 E8 05 01 00 00 48 74 DE 0F 89 ?? ?? ?? ?? E8 DF 00 00 00 73 1B 55 BD ?? ?? ?? ?? E8 DF 00 00 00 88 07 47 4D 75 F5 E8 C7 00 00 00 72 E9 5D EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Mew_5_0_1____NorthFox___HCC
 {
 meta:
@@ -23890,10 +23890,10 @@ strings:
     	$a0 = { BE 5B 00 40 00 AD 91 AD 93 53 AD 96 56 5F AC C0 C0 ?? 04 ?? C0 C8 ?? AA E2 F4 C3 00 ?? ?? 00 ?? ?? ?? 00 00 10 40 00 4D 45 57 20 30 2E 31 20 62 79 20 4E 6F 72 74 68 66 6F 78 00 4D 45 57 20 30 2E 31 20 62 79 20 4E 6F 72 74 68 66 6F 78 00 4D 45 57 20 30 2E 31 20 62 79 20 4E 6F 72 74 68 66 6F 78 00 4D 45 57 20 30 2E 31 20 62 79 20 4E 6F 72 74 68 66 6F 78 00 4D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__LCC_Win32_DLL_____Anorganix
 {
 meta:
@@ -23902,10 +23902,10 @@ strings:
     	$a0 = { 55 89 E5 53 56 57 83 7D 0C 01 75 05 E8 17 90 90 90 FF 75 10 FF 75 0C FF 75 08 A1 ?? ?? ?? ?? E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FreePascal_2_0_0_Win32_____Berczi_Gabor__Pierre_Muller___Peter_Vreman_
 {
 meta:
@@ -23917,7 +23917,7 @@ condition:
     	$a0
 }
 
-    
+
 rule MPEG_movie_file
 {
 meta:
@@ -23929,7 +23929,7 @@ condition:
     	$a0
 }
 
-    
+
 rule ASProtect_v_______If_you_know_this_version__post_on_PEiD_board__h2_
 {
 meta:
@@ -23942,7 +23942,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule PseudoSigner_0_2__Lockless_Intro_Pack_
 {
 meta:
@@ -23951,10 +23951,10 @@ strings:
     	$a0 = { 2C E8 EB 1A 90 90 5D 8B C5 81 ED F6 73 90 90 2B 85 90 90 90 90 83 E8 06 89 85 FF 01 EC AD }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ILUCRYPT_v4_015__exe_
 {
 meta:
@@ -23963,10 +23963,10 @@ strings:
     	$a0 = { 8B EC FA C7 46 F7 ?? ?? 42 81 FA ?? ?? 75 F9 FF 66 F7 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_v1_10__Eng_____dulek_xt_____Borland_Delphi_2_0_
 {
 meta:
@@ -23975,10 +23975,10 @@ strings:
     	$a0 = { EB 01 56 E8 02 00 00 00 B2 D9 59 68 80 ?? 41 00 E8 02 00 00 00 65 32 59 5E EB 02 CD 20 BB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NsPack_3_1____Liu_Xing_Ping
 {
 meta:
@@ -23990,7 +23990,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Gardian_Angel_1_0
 {
 meta:
@@ -23999,10 +23999,10 @@ strings:
     	$a0 = { 06 8C C8 8E D8 8E C0 FC BF ?? ?? EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule LGLZ_v1_04__com
 {
 meta:
@@ -24011,10 +24011,10 @@ strings:
     	$a0 = { BF ?? ?? 3B FC 72 19 B4 09 BA 12 01 CD 21 B4 4C CD 21 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule COMPACK_v4_5__2_
 {
 meta:
@@ -24023,10 +24023,10 @@ strings:
     	$a0 = { BE ?? ?? E8 ?? ?? 5D 83 ?? ?? 55 50 53 51 52 0E 07 0E 1F 8B CE }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_1_20__Eng_____dulek_xt_____MASM32___TASM32_
 {
 meta:
@@ -24038,7 +24038,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_2__ASProtect_
 {
 meta:
@@ -24047,10 +24047,10 @@ strings:
     	$a0 = { 60 90 90 90 90 90 90 5D 90 90 90 90 90 90 90 90 90 90 90 03 DD }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLP_V0_7_3_beta____ap0x
 {
 meta:
@@ -24062,7 +24062,7 @@ condition:
     	$a0
 }
 
-    
+
 rule SecureEXE_3_0____ZipWorx
 {
 meta:
@@ -24071,10 +24071,10 @@ strings:
     	$a0 = { E9 B8 00 00 00 ?? ?? ?? 00 ?? ?? ?? 00 ?? ?? ?? 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__Number_One
 {
 meta:
@@ -24083,10 +24083,10 @@ strings:
     	$a0 = { F9 07 3C 53 6D 69 6C 65 3E E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Wind_of_Crypt_1_0___by_DarkPressure
 {
 meta:
@@ -24096,10 +24096,10 @@ strings:
 	$a1 = { 55 8B EC 83 C4 EC 53 ?? ?? ?? ?? 89 45 EC B8 64 40 00 10 E8 28 EA FF FF 33 C0 55 68 CE 51 00 10 64 ?? ?? ?? ?? 20 6A 00 68 80 00 00 00 6A 03 6A 00 6A 01 68 00 00 00 80 8D 55 EC 33 C0 E8 F6 DB FF FF 8B 45 EC E8 12 E7 FF FF 50 E8 3C EA FF FF 8B D8 83 FB FF }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule RLPack_Full_Edition_1_17_iBox__aPLib_
 {
 meta:
@@ -24108,10 +24108,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 8D B5 79 29 00 00 8D 9D 2C 03 00 00 33 FF ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? EB 0F FF 74 37 04 FF 34 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule _EP__ExE_Pack__V1_0____Elite_Coding_Group
 {
 meta:
@@ -24120,10 +24120,10 @@ strings:
     	$a0 = { 60 68 ?? ?? ?? ?? B8 ?? ?? ?? ?? FF 10 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Thinstall_2_5_________h_
 {
 meta:
@@ -24132,10 +24132,10 @@ strings:
     	$a0 = { 55 8B EC B8 ?? ?? ?? ?? BB ?? ?? ?? ?? 50 E8 00 00 00 00 58 2D A7 1A 00 00 B9 6C 1A 00 00 BA 20 1B 00 00 BE 00 10 00 00 BF B0 53 00 00 BD EC 1A 00 00 03 E8 81 75 00 ?? ?? ?? ?? 81 75 04 ?? ?? ?? ?? 81 75 08 ?? ?? ?? ?? 81 75 0C ?? ?? ?? ?? 81 75 10 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v1_20___v1_20_1
 {
 meta:
@@ -24144,10 +24144,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 0F 70 40 ?? 87 DD 8B 85 9A 70 40 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule AINEXE_v2_1
 {
 meta:
@@ -24156,10 +24156,10 @@ strings:
     	$a0 = { A1 ?? ?? 2D ?? ?? 8E D0 BC ?? ?? 8C D8 36 A3 ?? ?? 05 ?? ?? 36 A3 ?? ?? 2E A1 ?? ?? 8A D4 B1 04 D2 EA FE C9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXE_joiner____Amok
 {
 meta:
@@ -24168,10 +24168,10 @@ strings:
     	$a0 = { A1 14 A1 40 00 C1 E0 02 A3 18 A1 40 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXEPACK_v5_31_009__LINK_v3_69_
 {
 meta:
@@ -24180,10 +24180,10 @@ strings:
     	$a0 = { 8B E8 8C C0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_1_3_3_4____Obsidium_Software
 {
 meta:
@@ -24192,10 +24192,10 @@ strings:
     	$a0 = { EB 02 ?? ?? E8 29 00 00 00 EB 03 ?? ?? ?? EB 02 ?? ?? 8B 54 24 0C EB 03 ?? ?? ?? 83 82 B8 00 00 00 25 EB 02 ?? ?? 33 C0 EB 02 ?? ?? C3 EB 03 ?? ?? ?? EB 01 ?? 64 67 FF 36 00 00 EB 02 ?? ?? 64 67 89 26 00 00 EB 02 ?? ?? EB 04 ?? ?? ?? ?? 50 EB 02 ?? ?? 33 C0 EB 01 ?? 8B 00 EB 04 ?? ?? ?? ?? C3 EB 03 ?? ?? ?? E9 FA 00 00 00 EB 02 ?? ?? E8 D5 FF FF FF EB 02 ?? ?? EB 03 ?? ?? ?? 58 EB 02 ?? ?? EB 03 ?? ?? ?? 64 67 8F 06 00 00 EB 03 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PC_PE_Encryptor_Alpha_preview
 {
 meta:
@@ -24204,10 +24204,10 @@ strings:
     	$a0 = { 53 51 52 56 57 55 E8 00 00 00 00 5D 8B CD 81 ED 33 30 40 ?? 2B 8D EE 32 40 00 83 E9 0B 89 8D F2 32 40 ?? 80 BD D1 32 40 ?? 01 0F 84 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule StarForce_V3_X____StarForce_Copy_Protection_System
 {
 meta:
@@ -24216,10 +24216,10 @@ strings:
     	$a0 = { 68 ?? ?? ?? ?? FF 25 ?? ?? ?? ?? 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule yoda_s_Crypter_1_3___Ashkbiz_Danehkar
 {
 meta:
@@ -24228,10 +24228,10 @@ strings:
     	$a0 = { 55 8B EC 53 56 57 60 E8 00 00 00 00 5D 81 ED 6C 28 40 00 B9 5D 34 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_V2_00_V2_90____Markus_Oberhumer___Laszlo_Molnar___John_Reiser
 {
 meta:
@@ -24243,7 +24243,7 @@ condition:
     	$a0
 }
 
-    
+
 rule NTkrnl_Secure_Suite_0_1_0_15____NTkrnl_Software
 {
 meta:
@@ -24252,10 +24252,10 @@ strings:
     	$a0 = { 00 00 00 00 00 00 00 00 00 00 00 00 34 10 00 00 28 10 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 4B 65 72 6E 65 6C 33 32 2E 64 6C 6C 00 00 00 4C 6F 61 64 4C 69 62 72 61 72 79 41 00 00 00 47 65 74 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__Code_Lock______Anorganix
 {
 meta:
@@ -24264,10 +24264,10 @@ strings:
     	$a0 = { 43 4F 44 45 2D 4C 4F 43 4B 2E 4F 43 58 00 01 28 01 50 4B 47 05 4C 3F B4 04 4D 4C 47 4B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Pe_Ninja_____DzA_kRAker__TNT
 {
 meta:
@@ -24276,10 +24276,10 @@ strings:
     	$a0 = { BE 5B 2A 40 00 BF 35 12 00 00 E8 40 12 00 00 3D 22 83 A3 C6 0F 85 67 0F 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule AverCryptor_1_02_beta____os1r1s
 {
 meta:
@@ -24288,10 +24288,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED 0C 17 40 00 8B BD 33 18 40 00 8B 8D 3B 18 40 00 B8 51 18 40 00 03 C5 80 30 05 83 F9 00 74 71 81 7F 1C AB 00 00 00 75 62 8B 57 0C 03 95 37 18 40 00 33 C0 51 33 C9 66 B9 F7 00 66 83 F9 00 74 49 8B 57 0C 03 95 37 18 40 00 8B 85 3F 18 40 00 83 F8 02 75 06 81 C2 00 02 00 00 51 8B 4F 10 83 F8 02 75 06 81 E9 00 02 00 00 57 BF C8 00 00 00 8B F1 E8 27 00 00 00 8B C8 5F B8 51 18 40 00 03 C5 E8 24 00 00 00 59 49 EB B1 59 83 C7 28 49 EB 8A 8B 85 2F 18 40 00 89 44 24 1C 61 FF E0 56 57 4F F7 D7 23 F7 8B C6 5F 5E C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__32Lite_0_03______Anorganix
 {
 meta:
@@ -24300,10 +24300,10 @@ strings:
     	$a0 = { 60 06 FC 1E 07 BE 90 90 90 90 6A 04 68 90 10 90 90 68 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__CD_Cops_II______Anorganix
 {
 meta:
@@ -24312,10 +24312,10 @@ strings:
     	$a0 = { 53 60 BD 90 90 90 90 8D 45 90 8D 5D 90 E8 00 00 00 00 8D 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v2_20
 {
 meta:
@@ -24324,10 +24324,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 10 12 41 00 68 F4 A0 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_v0_32a__fake_PEBundle_0_2___3_x_____emadicius__h_
 {
 meta:
@@ -24336,10 +24336,10 @@ strings:
     	$a0 = { 9C 60 E8 02 00 00 00 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 07 30 40 00 87 DD 61 9D EB 05 E8 EB 04 40 00 EB FA E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 50 E8 02 00 00 00 29 5A 58 6B C0 03 E8 02 00 00 00 29 5A 83 C4 04 58 74 04 75 02 EB 02 EB 01 81 0F 31 50 0F 31 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__PENightMare_2_Beta______Anorganix
 {
 meta:
@@ -24348,10 +24348,10 @@ strings:
     	$a0 = { 60 E9 10 00 00 00 EF 40 03 A7 07 8F 07 1C 37 5D 43 A7 04 B9 2C 3A E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ChSfx__small__v1_1
 {
 meta:
@@ -24360,10 +24360,10 @@ strings:
     	$a0 = { BA ?? ?? E8 ?? ?? 8B EC 83 EC ?? 8C C8 BB ?? ?? B1 ?? D3 EB 03 C3 8E D8 05 ?? ?? 89 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEiD_Bundle_v1_00_____BoB___BobSoft
 {
 meta:
@@ -24372,10 +24372,10 @@ strings:
     	$a0 = { 60 E8 21 02 00 00 8B 44 24 04 52 48 66 31 C0 66 81 38 4D 5A 75 F5 8B 50 3C 81 3C 02 50 45 00 00 75 E9 5A C2 04 00 60 89 DD 89 C3 8B 45 3C 8B 54 28 78 01 EA 52 8B 52 20 01 EA 31 C9 41 8B 34 8A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PKLITE_v1_50__Device_driver_compression_
 {
 meta:
@@ -24384,10 +24384,10 @@ strings:
     	$a0 = { B4 09 BA 14 01 CD 21 B8 00 4C CD 21 F8 9C 50 53 51 52 56 57 55 1E 06 BB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Unknown_Packer____Northfox
 {
 meta:
@@ -24396,10 +24396,10 @@ strings:
     	$a0 = { 54 59 68 61 7A 79 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v3_xx
 {
 meta:
@@ -24408,10 +24408,10 @@ strings:
     	$a0 = { 60 E8 ?? ?? ?? ?? 5D 50 51 EB 0F B9 EB 0F B8 EB 07 B9 EB 0F 90 EB 08 FD EB 0B F2 EB F5 EB F6 F2 EB 08 FD EB E9 F3 EB E4 FC E9 59 58 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_HiT_0_0_1____sibaway7_yahoo_com
 {
 meta:
@@ -24423,7 +24423,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PassLock_2000_1_0__Eng_____Moonlight_Software
 {
 meta:
@@ -24432,10 +24432,10 @@ strings:
     	$a0 = { 55 8B EC 53 56 57 BB 00 50 40 00 66 2E F7 05 34 20 40 00 04 00 0F 85 98 00 00 00 E8 1F 01 00 00 C7 43 60 01 00 00 00 8D 83 E4 01 00 00 50 FF 15 F0 61 40 00 83 EC 44 C7 04 24 44 00 00 00 C7 44 24 2C 00 00 00 00 54 FF 15 E8 61 40 00 B8 0A 00 00 00 F7 44 24 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule VProtector_V1_1A____vcasm
 {
 meta:
@@ -24444,10 +24444,10 @@ strings:
     	$a0 = { EB 0B 5B 56 50 72 6F 74 65 63 74 5D 00 E8 24 00 00 00 8B 44 24 04 8B 00 3D 04 00 00 80 75 08 8B 64 24 08 EB 04 58 EB 0C E9 64 8F 05 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Private_Personal_Packer__PPP__v1_0_2_____ConquestOfTroy_com
 {
 meta:
@@ -24456,10 +24456,10 @@ strings:
     	$a0 = { E8 17 00 00 00 E8 68 00 00 00 FF 35 2C 37 00 10 E8 ED 01 00 00 6A 00 E8 2E 04 00 00 E8 41 04 00 00 A3 74 37 00 10 6A 64 E8 5F 04 00 00 E8 30 04 00 00 A3 78 37 00 10 6A 64 E8 4E 04 00 00 E8 1F 04 00 00 A3 7C 37 00 10 A1 74 37 00 10 8B 1D 78 37 00 10 2B D8 8B 0D 7C 37 00 10 2B C8 83 FB 64 73 0F 81 F9 C8 00 00 00 73 07 6A 00 E8 D9 03 00 00 C3 6A 0A 6A 07 6A 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule REC_v0_34__3_
 {
 meta:
@@ -24468,10 +24468,10 @@ strings:
     	$a0 = { 06 1E B4 30 CD 21 3C 02 73 ?? 33 C0 06 50 CB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECryptor_2_2_x____SoftComplete_Developement
 {
 meta:
@@ -24483,7 +24483,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Mew_10_v1_0__Eng_____Northfox
 {
 meta:
@@ -24492,10 +24492,10 @@ strings:
     	$a0 = { 33 C0 E9 ?? ?? ?? FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule C_I_Crypt_V0_2____FearlesS
 {
 meta:
@@ -24504,10 +24504,10 @@ strings:
     	$a0 = { 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 6B 65 72 6E 65 6C 33 32 2E 64 6C 6C 00 00 47 65 74 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RCryptor_1_5_by_Vaska__UsAr_sign__individual_version__21_03_2007_22_15_
 {
 meta:
@@ -24516,10 +24516,10 @@ strings:
     	$a0 = { 83 2C 24 4F 68 40 A1 14 13 FF 54 24 04 83 44 24 04 4F B8 00 10 14 13 3D 24 C0 14 13 74 06 80 30 2B 40 EB F3 B8 8C 20 18 13 3D B9 27 18 13 74 06 80 30 19 40 EB F3 E8 00 00 00 00 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RE_Crypt_v0_7x____Crudd__RET
 {
 meta:
@@ -24529,10 +24529,10 @@ strings:
 	$a1 = { 60 E8 00 00 00 00 5D 81 ED F3 1D 40 00 B9 7B 09 00 00 8D BD 3B 1E 40 00 8B F7 61 60 E8 00 00 00 00 5D 55 81 04 24 0A 00 00 00 C3 8B F5 81 C5 ?? ?? 00 00 89 6D 34 89 75 38 8B 7D 38 81 E7 00 FF FF FF 81 C7 48 00 00 00 47 03 7D 60 8B 4D 5C 83 F9 00 7E 0F 8B 17 33 55 58 89 17 83 C7 04 83 C1 FC EB EC }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__LCC_Win32_DLL______Anorganix
 {
 meta:
@@ -24541,10 +24541,10 @@ strings:
     	$a0 = { 55 89 E5 53 56 57 83 7D 0C 01 75 05 E8 17 90 90 90 FF 75 10 FF 75 0C FF 75 08 A1 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Software_Compress_V1_2____BG_Software_Protect_Technologies
 {
 meta:
@@ -24553,10 +24553,10 @@ strings:
     	$a0 = { E9 BE 00 00 00 60 8B 74 24 24 8B 7C 24 28 FC B2 80 33 DB A4 B3 02 E8 6D 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule IProtect_1_0__FxSub_dll_mode____by_FuXdas
 {
 meta:
@@ -24566,10 +24566,10 @@ strings:
 	$a1 = { EB 33 2E 46 55 58 4C 6F 61 64 4C 69 62 72 61 72 79 41 00 46 78 53 75 62 2E 64 6C 6C 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? 00 60 E8 00 00 00 00 5D 81 ED B6 13 40 00 FF 74 24 20 E8 40 00 00 00 0B C0 74 2F 89 85 A8 13 40 00 8D 85 81 13 40 00 50 FF B5 A8 13 40 00 E8 92 00 00 00 0B C0 74 13 89 85 A4 13 40 00 8D 85 8E 13 40 00 50 FF 95 A4 13 40 00 8B 85 AC 13 40 00 89 44 24 1C 61 FF E0 8B 7C 24 04 8D 85 00 10 40 00 50 64 FF 35 00 00 00 00 8D 85 98 13 40 00 89 20 89 68 04 8D 9D 4F 14 40 00 89 58 08 64 89 25 00 00 00 00 81 E7 00 00 FF FF 66 81 3F 4D 5A 75 0F 8B F7 03 76 3C 81 3E 50 45 00 00 75 02 EB 17 81 EF 00 00 01 00 81 FF 00 00 00 70 73 07 BF 00 00 F7 BF EB 02 EB D3 97 64 8F 05 00 00 00 00 83 C4 04 C2 04 00 8D 85 00 10 40 00 50 64 FF 35 00 00 00 00 8D 85 98 13 40 00 89 20 89 68 04 8D 9D 4F 14 40 00 89 58 08 64 89 25 00 00 00 00 8B 74 24 0C 66 81 3E 4D 5A 74 05 E9 8A 00 00 00 03 76 3C 81 3E 50 45 00 00 74 02 EB 7D 8B 7C 24 10 B9 96 00 00 00 32 C0 F2 AE 8B CF 2B 4C 24 10 8B 56 78 03 54 24 0C 8B 5A 20 03 5C 24 0C 33 C0 8B 3B 03 7C 24 0C 8B 74 24 10 51 F3 A6 75 05 83 C4 04 EB 0A 59 83 C3 04 40 3B 42 18 75 E2 3B 42 18 75 02 EB 35 8B 72 24 03 74 24 0C 52 BB 02 00 00 00 33 D2 F7 E3 5A 03 C6 33 C9 66 8B 08 8B 7A 1C 33 D2 BB 04 00 00 00 8B C1 F7 E3 03 44 24 0C 03 C7 8B 00 03 44 24 0C EB 02 33 C0 64 8F 05 00 00 00 00 83 C4 04 C2 08 00 E8 B5 FA FF FF }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Dual_s_Cryptor____dual
 {
 meta:
@@ -24578,10 +24578,10 @@ strings:
     	$a0 = { 55 8B EC 81 EC 00 05 00 00 E8 00 00 00 00 5D 81 ED 0E }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEBundle_v0_2___v2_0x
 {
 meta:
@@ -24590,10 +24590,10 @@ strings:
     	$a0 = { 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB ?? ?? 40 ?? 87 DD 6A 04 68 ?? 10 ?? ?? 68 ?? 02 ?? ?? 6A ?? FF 95 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__ASProtect______Anorganix
 {
 meta:
@@ -24602,10 +24602,10 @@ strings:
     	$a0 = { 60 90 90 90 90 90 90 5D 90 90 90 90 90 90 90 90 90 90 90 03 DD }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASPack_1_08
 {
 meta:
@@ -24614,10 +24614,10 @@ strings:
     	$a0 = { 90 90 90 75 01 90 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__PENinja_1_31_____Anorganix
 {
 meta:
@@ -24626,10 +24626,10 @@ strings:
     	$a0 = { 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule DCrypt_Private_0_9b____drmist
 {
 meta:
@@ -24638,10 +24638,10 @@ strings:
     	$a0 = { B9 ?? ?? ?? 00 E8 00 00 00 00 58 68 ?? ?? ?? 00 83 E8 0B 0F 18 00 D0 00 48 E2 FB C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__XPEH_4768
 {
 meta:
@@ -24650,10 +24650,10 @@ strings:
     	$a0 = { E8 ?? ?? 5B 81 ?? ?? ?? 50 56 57 2E ?? ?? ?? ?? ?? 2E ?? ?? ?? ?? ?? ?? B8 01 00 50 B8 ?? ?? 50 E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v4_10____Silicon_Realms_Toolworks
 {
 meta:
@@ -24665,7 +24665,7 @@ condition:
     	$a0
 }
 
-    
+
 rule _BJFnt_v1_2_RC
 {
 meta:
@@ -24674,10 +24674,10 @@ strings:
     	$a0 = { EB 02 69 B1 83 EC 04 EB 03 CD 20 EB EB 01 EB 9C EB 01 EB EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MoleBox_v2_0
 {
 meta:
@@ -24689,7 +24689,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_2___BJFNT_1_2______Anorganix
 {
 meta:
@@ -24698,10 +24698,10 @@ strings:
     	$a0 = { EB 02 69 B1 83 EC 04 EB 03 CD 20 EB EB 01 EB 9C EB 01 EB EB 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule JDPack_2_x____JDPack
 {
 meta:
@@ -24710,10 +24710,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 68 51 40 00 68 04 25 40 00 64 A1 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RCryptor_v2_0_____Vaska
 {
 meta:
@@ -24722,10 +24722,10 @@ strings:
     	$a0 = { F7 D1 83 F1 FF 6A 00 F7 D1 83 F1 FF 81 04 24 ?? 02 00 00 F7 D1 83 F1 FF 59 BA 32 21 ?? 00 F7 D1 83 F1 FF F7 D1 83 F1 FF 80 02 E3 F7 D1 83 F1 FF C0 0A 05 F7 D1 83 F1 FF 80 02 6F F7 D1 83 F1 FF 80 32 A4 F7 D1 83 F1 FF 80 02 2D F7 D1 83 F1 FF 42 49 85 C9 75 CD 1C 4F 8D 5B FD 62 1E 1C 4F 8D 5B FD 4D 9D B9 ?? ?? ?? 1E 1C 4F 8D 5B FD 22 1C 4F 8D 5B FD 8E A2 B9 B9 E2 83 DB E2 E5 4D CD 1E BF 60 AB 1F 4D DB 1E 1E 3D 1E 92 1B 8E DC 7D EC A4 E2 4D E5 20 C6 CC B2 8E EC 2D 7D DC 1C 4F 8D 5B FD 83 56 8E E0 3A 7D D0 8E 9D 6E 7D D6 4D 25 06 C2 AB 20 CC 3A 4D 2D 9D 6B 0B 81 45 CC 18 4D 2D 1F A1 A1 6B C2 CC F7 E2 4D 2D 9E 8B 8B CC DE 2E 2D F7 1E AB 7D 45 92 30 8E E6 B9 7D D6 8E 9D 27 DA FD FD 1E 1E 8E DF B8 7D CF 8E A3 4D 7D DC 1C 4F 8D 5B FD 33 D7 1E 1E 1E A6 0B 41 A1 A6 42 61 6B 41 6B 4C 45 1E 21 F6 26 BC E2 62 1E 62 1E 62 1E 23 63 59 ?? 1E 62 1E 62 1E 33 D7 1E 1E 1E 85 6B C2 41 AB C2 9F 23 6B C2 41 A1 1E C0 FD F0 FD 30 20 33 9E 1E 1E 1E 85 A2 0B 8B C2 27 41 EB A1 A2 C2 1E C0 FD F0 FD 30 62 1E 33 7E 1E 1E 1E C6 2D 42 AB 9F 23 6B C2 41 A1 1E C0 FD F0 FD 30 C0 FD F0 8E 1D 1C 4F 8D 5B FD E0 00 33 5E 1E 1E 1E BF 0B EC C2 E6 42 A2 C2 45 1E C0 FD F0 FD 30 CE 36 CC F2 1C 4F 8D 5B FD }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule WARNING____TROJAN____RobinPE
 {
 meta:
@@ -24734,10 +24734,10 @@ strings:
     	$a0 = { 60 6A 00 6A 20 6A 02 6A 00 6A 03 68 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__Haryanto
 {
 meta:
@@ -24746,10 +24746,10 @@ strings:
     	$a0 = { 81 EB 2A 01 8B 0F 1E 5B 03 CB 0E 51 B9 10 01 51 CB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__Ncu_Li_1688
 {
 meta:
@@ -24758,10 +24758,10 @@ strings:
     	$a0 = { 0E 1E B8 55 AA CD 21 3D 49 4C 74 ?? 0E 0E 1F 07 E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Anslym_FUD_Crypter___Sign_by_fly
 {
 meta:
@@ -24770,10 +24770,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 F0 53 56 B8 38 17 05 10 E8 5A 45 FB FF 33 C0 55 68 21 1C 05 10 64 FF 30 64 89 20 EB 08 FC FC FC FC FC FC 27 54 E8 85 4C FB FF 6A 00 E8 0E 47 FB FF 6A 0A E8 27 49 FB FF E8 EA 47 FB FF 6A 0A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__PE_Protect_0_9______Anorganix
 {
 meta:
@@ -24782,10 +24782,10 @@ strings:
     	$a0 = { 52 51 55 57 64 67 A1 30 00 85 C0 78 0D E8 07 00 00 00 58 83 C0 07 C6 90 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v2_65b1
 {
 meta:
@@ -24794,10 +24794,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 38 ?? ?? ?? 68 40 ?? ?? ?? 64 A1 ?? ?? ?? ?? 50 64 89 25 ?? ?? ?? ?? 83 EC 58 53 56 57 89 65 E8 FF 15 28 ?? ?? ?? 33 D2 8A D4 89 15 F4 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_4_00_0053____Silicon_Realms_Toolworks
 {
 meta:
@@ -24809,7 +24809,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Berio_1_00_beta__h_
 {
 meta:
@@ -24818,10 +24818,10 @@ strings:
     	$a0 = { 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 E9 01 12 00 00 90 60 E8 03 00 00 00 E9 EB 04 5D 45 55 C3 E8 01 00 00 00 EB 5D BB ED FF FF FF 03 DD 81 EB 00 B0 01 00 83 BD 22 04 00 00 00 89 9D 22 04 00 00 0F 85 65 03 00 00 8D 85 2E 04 00 00 50 FF 95 4D 0F }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Cruncher_v1_0
 {
 meta:
@@ -24830,10 +24830,10 @@ strings:
     	$a0 = { 2E ?? ?? ?? ?? 2E ?? ?? ?? B4 30 CD 21 3C 03 73 ?? BB ?? ?? 8E DB 8D ?? ?? ?? B4 09 CD 21 06 33 C0 50 CB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule mPack_V0_03____DeltaAziz
 {
 meta:
@@ -24842,10 +24842,10 @@ strings:
     	$a0 = { 55 8B EC 83 ?? ?? 33 C0 89 45 F0 B8 ?? ?? ?? ?? E8 67 C4 FF FF 33 C0 55 68 ?? ?? ?? ?? 64 FF 30 64 89 20 8D 55 F0 33 C0 E8 93 C8 FF FF 8B 45 F0 E8 87 CB FF FF A3 ?? ?? ?? ?? 33 C0 55 68 ?? ?? ?? ?? 64 FF 30 64 89 20 A1 ?? ?? ?? ?? E8 FA C9 FF FF 83 F8 FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule AntiVirus_Vaccine_v_1_03
 {
 meta:
@@ -24854,10 +24854,10 @@ strings:
     	$a0 = { FA 33 DB B9 ?? ?? 0E 1F 33 F6 FC AD 35 ?? ?? 03 D8 E2 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule VIRUS___I_Worm_Bagle
 {
 meta:
@@ -24870,7 +24870,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule Pelles_C_2_80__2_90_EXE__X86_CRT_LIB_
 {
 meta:
@@ -24879,10 +24879,10 @@ strings:
     	$a0 = { 55 89 E5 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 64 FF 35 ?? ?? ?? ?? 64 89 25 ?? ?? ?? ?? 83 EC ?? 83 EC ?? 53 56 57 89 65 E8 68 00 00 00 ?? E8 ?? ?? ?? ?? 59 A3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Inbuild_v1_0__hard_
 {
 meta:
@@ -24891,10 +24891,10 @@ strings:
     	$a0 = { B9 ?? ?? BB ?? ?? 2E ?? ?? 2E ?? ?? 43 E2 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule VBOX_v4_3___v4_6
 {
 meta:
@@ -24908,7 +24908,7 @@ condition:
     	$a0 or $a1 or $a2
 }
 
-    
+
 rule Private_EXE_Protector_1_8____SetiSoft__h_
 {
 meta:
@@ -24920,7 +24920,7 @@ condition:
     	$a0
 }
 
-    
+
 rule nbuild_v1_0__soft
 {
 meta:
@@ -24929,10 +24929,10 @@ strings:
     	$a0 = { B9 ?? ?? BB ?? ?? C0 ?? ?? 80 ?? ?? 43 E2 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule yoda_s_Protector_1_0b____Ashkbiz_Danehkar__h_
 {
 meta:
@@ -24944,7 +24944,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Stone_s_PE_Encryptor_v1_13
 {
 meta:
@@ -24953,10 +24953,10 @@ strings:
     	$a0 = { 55 57 56 52 51 53 E8 ?? ?? ?? ?? 5D 8B D5 81 ED 97 3B 40 ?? 2B 95 2D 3C 40 ?? 83 EA 0B 89 95 36 3C 40 ?? 01 95 24 3C 40 ?? 01 95 28 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule mPACK_v0_0_2____DeltaAziz__h_
 {
 meta:
@@ -24965,10 +24965,10 @@ strings:
     	$a0 = { E9 00 00 00 00 60 E8 14 00 00 00 5D 81 ED 00 00 00 00 6A 45 E8 A3 00 00 00 68 00 00 00 00 E8 58 61 E8 AA 00 00 00 4E ?? ?? 00 00 00 00 00 00 00 00 00 5E ?? ?? 00 4E ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 4B 45 52 4E 45 4C 33 32 2E 64 6C 6C 00 00 00 00 47 65 74 50 72 6F 63 41 64 64 72 65 73 73 00 00 00 47 65 74 4D 6F 64 75 6C 65 48 61 6E 64 6C 65 41 00 00 00 4C 6F 61 64 4C 69 62 72 61 72 79 41 00 ?? ?? 00 00 ?? ?? 00 00 56 69 72 74 75 61 6C 41 6C 6C 6F 63 00 00 00 00 00 00 ?? ?? ?? 0C ?? ?? ?? CC E4 ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 5D 68 00 FE 9F 07 53 E8 5D 00 00 00 EB FF 71 E8 C2 50 00 EB D6 5E F3 68 89 74 24 48 74 24 58 FF 8D 74 24 58 5E 83 C6 4C 75 F4 59 8D 71 E8 75 09 81 F6 EB FF 51 B9 01 00 83 EE FC 49 FF 71 C7 75 19 8B 74 24 00 00 81 36 50 56 8B 36 EB FF 77 C4 36 81 F6 EB 87 34 24 8B 8B 1C 24 83 EC FC EB 01 E8 83 EC FC E9 E7 00 00 00 5B EB FF F3 EB FF C3 83 EB FD }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v1_xx___v2_xx
 {
 meta:
@@ -24977,10 +24977,10 @@ strings:
     	$a0 = { 55 8B EC 53 8B 5D 08 56 8B 75 0C 57 8B 7D 10 85 F6 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NsPack_2_9____North_Star
 {
 meta:
@@ -24989,10 +24989,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 5D B8 07 00 00 00 2B E8 8D B5 ?? ?? FF FF 8A 06 3C 00 74 12 8B F5 8D B5 ?? ?? FF FF 8A 06 3C 01 0F 84 42 02 00 00 C6 06 01 8B D5 2B 95 ?? ?? FF FF 89 95 ?? ?? FF FF 01 95 ?? ?? FF FF 8D B5 ?? ?? FF FF 01 16 60 6A 40 68 00 10 00 00 68 00 10 00 00 6A 00 FF 95 ?? ?? FF FF 85 C0 0F 84 6A 03 00 00 89 85 ?? ?? FF FF E8 00 00 00 00 5B B9 68 03 00 00 03 D9 50 53 E8 B1 02 00 00 61 8B 36 8B FD 03 BD ?? ?? FF FF 8B DF 83 3F 00 75 0A 83 C7 04 B9 00 00 00 00 EB 16 B9 01 00 00 00 03 3B 83 C3 04 83 3B 00 74 36 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule WWPACK_v3_05c4__Unextractable___Virus_Shield_
 {
 meta:
@@ -25001,10 +25001,10 @@ strings:
     	$a0 = { 03 05 40 1B B8 ?? ?? 8C CA 03 D0 8C C9 81 C1 ?? ?? 51 B9 ?? ?? 51 06 06 B1 ?? 51 8C D3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule VProtector____vcasm
 {
 meta:
@@ -25017,10 +25017,10 @@ strings:
 	$a4 = { 00 00 00 00 4B 45 52 4E 45 4C 33 32 2E 64 6C 6C 00 00 55 53 45 52 33 32 2E 64 6C 6C 00 00 47 44 49 33 32 2E 64 6C 6C 00 00 00 00 00 00 00 00 47 65 74 50 72 6F 63 41 64 64 72 65 73 73 00 00 00 47 65 74 4D 6F 64 75 6C 65 48 61 6E 64 6C 65 41 00 00 00 4C 6F }
 
 condition:
-    	$a0 or $a1 at sgpe.ep or $a2 or $a3 or $a4
+    	$a0 or $a1 at manape.ep or $a2 or $a3 or $a4
 }
 
-    
+
 rule Unknown_by_SMT
 {
 meta:
@@ -25029,10 +25029,10 @@ strings:
     	$a0 = { 60 BE ?? ?? ?? ?? 8D BE ?? ?? ?? ?? 83 ?? ?? 57 EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PKZIP_SFX_v1_1_1989_90
 {
 meta:
@@ -25041,10 +25041,10 @@ strings:
     	$a0 = { FC 2E 8C 0E ?? ?? A1 ?? ?? 8C CB 81 C3 ?? ?? 3B C3 72 ?? 2D ?? ?? 2D ?? ?? FA BC ?? ?? 8E D0 FB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__Borland_C___DLL__Method_2_______Anorganix
 {
 meta:
@@ -25053,10 +25053,10 @@ strings:
     	$a0 = { EB 10 66 62 3A 43 2B 2B 48 4F 4F 4B 90 E9 90 90 90 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PolyCryptor_by_SMT_Version__v3__v4
 {
 meta:
@@ -25065,10 +25065,10 @@ strings:
     	$a0 = { EB ?? 28 50 6F 6C 79 53 63 72 79 70 74 20 ?? ?? ?? 20 62 79 20 53 4D 54 29 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEZip_v1_0_by_BaGIE
 {
 meta:
@@ -25081,7 +25081,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule Crunch_4____Bit_Arts
 {
 meta:
@@ -25090,10 +25090,10 @@ strings:
     	$a0 = { EB 10 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 55 E8 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASPack_v2_000____Alexey_Solodovnikov
 {
 meta:
@@ -25102,10 +25102,10 @@ strings:
     	$a0 = { 60 E8 70 05 00 00 EB 4C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_SCRAMBLER_3_06______OnT__oL
 {
 meta:
@@ -25114,10 +25114,10 @@ strings:
     	$a0 = { E8 00 00 00 00 59 83 C1 07 51 C3 C3 BE ?? ?? ?? ?? 83 EC 04 89 34 24 B9 80 00 00 00 81 36 ?? ?? ?? ?? 50 B8 04 00 00 00 50 03 34 24 58 58 83 E9 03 E2 E9 EB D6 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_V1_15_V1_17_Dll____ap0x___Sign_by_fly
 {
 meta:
@@ -25126,10 +25126,10 @@ strings:
     	$a0 = { 80 7C 24 08 01 0F 85 ?? 01 00 00 60 E8 00 00 00 00 8B 2C 24 83 C4 04 8D B5 ?? ?? ?? ?? 8D 9D ?? ?? ?? ?? 33 FF E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule pscrambler_1_2____by_p0ke
 {
 meta:
@@ -25139,10 +25139,10 @@ strings:
 	$a1 = { 55 8B EC B9 04 00 00 00 6A 00 6A 00 49 75 F9 51 53 ?? ?? ?? ?? 10 E8 2D F3 FF FF 33 C0 55 68 E8 31 00 10 64 FF 30 64 89 20 8D 45 E0 E8 53 F5 FF FF 8B 45 E0 8D 55 E4 E8 30 F6 FF FF 8B 45 E4 8D 55 E8 E8 A9 F4 FF FF 8B 45 E8 8D 55 EC E8 EE F7 FF FF 8B 55 EC }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule FishPE_V1_0X____hellfish___Sign_by_fly
 {
 meta:
@@ -25151,10 +25151,10 @@ strings:
     	$a0 = { 60 E8 ?? ?? ?? ?? C3 90 09 00 00 00 2C 00 00 00 ?? ?? ?? ?? C4 03 00 00 BC A0 00 00 00 40 01 00 ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 99 00 00 00 00 8A 00 00 00 10 00 00 ?? ?? 00 00 ?? ?? ?? ?? 00 00 02 00 00 00 A0 00 00 18 01 00 00 ?? ?? ?? ?? 00 00 0C 00 00 00 B0 00 00 38 0A 00 00 ?? ?? ?? ?? 00 00 00 00 00 00 C0 00 00 40 39 00 00 ?? ?? ?? ?? 00 00 08 00 00 00 00 01 00 C8 06 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASProtect_SKE_2_1x__dll_____Alexey_Solodovnikov__h_
 {
 meta:
@@ -25163,10 +25163,10 @@ strings:
     	$a0 = { 60 E8 03 00 00 00 E9 EB 04 5D 45 55 C3 E8 01 00 00 00 EB 5D BB ED FF FF FF 03 DD 81 EB 00 ?? ?? ?? 80 7D 4D 01 75 0C 8B 74 24 28 83 FE 01 89 5D 4E 75 31 8D 45 53 50 53 FF B5 ED 09 00 00 8D 45 35 50 E9 82 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Thinstall_Embedded_V2_620_V2_623____Jitit___Sign_by_fly
 {
 meta:
@@ -25175,10 +25175,10 @@ strings:
     	$a0 = { E8 00 00 00 00 58 BB AC 1E 00 00 2B C3 50 68 ?? ?? ?? ?? 68 B0 21 00 00 68 C4 00 00 00 E8 C3 FE FF FF E9 99 FF FF FF 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__LTC_1_3______Anorganix
 {
 meta:
@@ -25187,10 +25187,10 @@ strings:
     	$a0 = { 54 E8 00 00 00 00 5D 8B C5 81 ED F6 73 40 00 2B 85 87 75 40 00 83 E8 06 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule tElock_v0_98b1
 {
 meta:
@@ -25199,10 +25199,10 @@ strings:
     	$a0 = { E9 25 E4 FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule _EP_ExE_Pack__V1_4_lite_final____6aHguT___g_l_u_k
 {
 meta:
@@ -25211,10 +25211,10 @@ strings:
     	$a0 = { 90 90 90 90 61 B8 ?? ?? ?? ?? FF E0 55 8B EC 60 55 8B 75 08 8B 7D 0C E8 02 00 00 00 EB 04 8B 1C 24 C3 81 C3 00 02 00 00 53 57 8B 07 89 03 83 C7 04 83 C3 04 4E 75 F3 5F 5E FC B2 80 8A 06 46 88 07 47 02 D2 75 05 8A 16 46 12 D2 73 EF 02 D2 75 05 8A 16 46 12 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PESHiELD_v0_251
 {
 meta:
@@ -25223,10 +25223,10 @@ strings:
     	$a0 = { 5D 83 ED 06 EB 02 EA 04 8D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MEW_11_SE_v1_0____Northfox
 {
 meta:
@@ -25235,10 +25235,10 @@ strings:
     	$a0 = { E9 ?? ?? ?? ?? 00 00 00 02 00 00 00 0C ?0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SLR__OPTLINK___1_
 {
 meta:
@@ -25247,10 +25247,10 @@ strings:
     	$a0 = { 87 C0 EB ?? 71 ?? 02 D8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule TurboBAT_v3_10____5_0
 {
 meta:
@@ -25259,10 +25259,10 @@ strings:
     	$a0 = { BA ?? ?? B4 09 ?? ?? 06 B8 ?? ?? 8E C0 B9 ?? ?? 26 ?? ?? ?? ?? 80 ?? ?? 26 ?? ?? ?? 24 0F 3A C4 ?? ?? 26 ?? ?? ?? 24 0F 3A C4 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_V0_10_V0_11____Dwing
 {
 meta:
@@ -25271,10 +25271,10 @@ strings:
     	$a0 = { BE ?? ?? ?? ?? AD 8B F8 95 A5 33 C0 33 C9 AB 48 AB F7 D8 B1 ?? F3 AB C1 E0 ?? B5 ?? F3 AB AD 50 97 51 AD 87 F5 58 8D 54 86 5C FF D5 72 5A 2C ?? 73 ?? B0 ?? 3C ?? 72 02 2C ?? 50 0F B6 5F FF C1 E3 ?? B3 ?? 8D 1C 5B 8D ?? ?? ?? ?? ?? ?? B0 ?? 67 E3 29 8B D7 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule KByS_V0_28____shoooo___Sign_by_fly
 {
 meta:
@@ -25283,10 +25283,10 @@ strings:
     	$a0 = { 68 ?? ?? ?? ?? E8 01 00 00 00 C3 C3 60 8B 74 24 24 8B 7C 24 28 FC B2 80 33 DB A4 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEtite_vx_x
 {
 meta:
@@ -25295,10 +25295,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? ?? 66 9C 60 50 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_v0_1____emadicius
 {
 meta:
@@ -25310,7 +25310,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Morphine_3_3____Silent_Software___Silent_Shield__c_2005__h_
 {
 meta:
@@ -25322,7 +25322,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Pe123_v2006_4_4
 {
 meta:
@@ -25331,10 +25331,10 @@ strings:
     	$a0 = { 8B C0 EB 01 34 60 EB 01 2A 9C EB 02 EA C8 E8 0F 00 00 00 EB 03 3D 23 23 EB 01 4A EB 01 5B C3 8D 40 00 53 EB 01 6C EB 01 7E EB 01 8F E8 15 01 00 00 50 E8 67 04 00 00 EB 01 9A 8B D8 FF D3 5B C3 8B C0 E8 00 00 00 00 58 83 C0 05 C3 8B C0 55 8B EC 60 8B 4D 10 8B 7D 0C 8B 75 08 F3 A4 61 5D C2 0C 00 E8 00 00 00 00 58 83 E8 05 C3 8B C0 E8 00 00 00 00 58 83 C0 05 C3 8B C0 E8 00 00 00 00 58 C1 E8 0C C1 E0 0C 66 81 38 4D 5A 74 0C 2D 00 10 00 00 66 81 38 4D 5A 75 F4 C3 E8 00 00 00 00 58 83 E8 05 C3 8B C0 55 8B EC 81 C4 B8 FE FF FF 6A 40 8D 45 B0 50 E8 C0 FF FF FF 50 E8 8E FF FF FF 68 F8 00 00 00 8D 85 B8 FE FF FF 50 E8 A9 FF FF FF 03 45 EC 50 E8 74 FF FF FF E8 9B FF FF FF 03 85 38 FF FF FF 83 C0 34 89 45 FC E8 8A FF FF FF 03 85 38 FF FF FF 83 C0 38 89 45 F4 8B 45 FC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NsPack_3_1____North_Star__h_
 {
 meta:
@@ -25346,7 +25346,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Alex_Protector_v1_0____Alex
 {
 meta:
@@ -25355,10 +25355,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED 06 10 40 00 E8 24 00 00 00 EB 01 E9 8B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_v0_32a__fake_Neolite_2_0_____emadicius__h_
 {
 meta:
@@ -25367,10 +25367,10 @@ strings:
     	$a0 = { E9 A6 00 00 00 B0 7B 40 00 78 60 40 00 7C 60 40 00 00 00 00 00 B0 3F 00 00 12 62 40 00 4E 65 6F 4C 69 74 65 20 45 78 65 63 75 74 61 62 6C 65 20 46 69 6C 65 20 43 6F 6D 70 72 65 73 73 6F 72 0D 0A 43 6F 70 79 72 69 67 68 74 20 28 63 29 20 31 39 39 38 2C 31 39 39 39 20 4E 65 6F 57 6F 72 78 20 49 6E 63 0D 0A 50 6F 72 74 69 6F 6E 73 20 43 6F 70 79 72 69 67 68 74 20 28 63 29 20 31 39 39 37 2D 31 39 39 39 20 4C 65 65 20 48 61 73 69 75 6B 0D 0A 41 6C 6C 20 52 69 67 68 74 73 20 52 65 73 65 72 76 65 64 2E 00 00 00 00 EB 05 E8 EB 04 40 00 EB FA E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 50 E8 02 00 00 00 29 5A 58 6B C0 03 E8 02 00 00 00 29 5A 83 C4 04 58 74 04 75 02 EB 02 EB 01 81 0F 31 50 0F 31 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 2B 04 24 74 04 75 02 EB 02 EB 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PeCompact_2_xx__Slim_Loader_____BitSum_Technologies
 {
 meta:
@@ -25379,10 +25379,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? ?? 50 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 33 C0 89 08 50 45 43 32 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EP_1_0
 {
 meta:
@@ -25394,7 +25394,7 @@ condition:
     	$a0
 }
 
-    
+
 rule aPack_v0_98b__exe_
 {
 meta:
@@ -25407,7 +25407,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule WWPACK_v3_05c4__Extr__Passw_check__Vir__shield_
 {
 meta:
@@ -25416,10 +25416,10 @@ strings:
     	$a0 = { 03 05 C0 1A B8 ?? ?? 8C CA 03 D0 8C C9 81 C1 ?? ?? 51 B9 ?? ?? 51 06 06 B1 ?? 51 8C D3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Gamehouse_Media_Protector_Version_Unknown
 {
 meta:
@@ -25428,10 +25428,10 @@ strings:
     	$a0 = { 68 ?? ?? ?? ?? 6A 00 FF 15 ?? ?? ?? ?? 50 FF 15 ?? ?? ?? 00 00 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__MEW_11_SE_1_0_____Anorganix
 {
 meta:
@@ -25440,10 +25440,10 @@ strings:
     	$a0 = { E9 09 00 00 00 00 00 00 02 00 00 00 0C 90 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Thinstall_Virtualization_Suite_V3_035_V3_043____Thinstall_Company___Sign_by_fly
 {
 meta:
@@ -25452,10 +25452,10 @@ strings:
     	$a0 = { 9C 60 68 53 74 41 6C 68 54 68 49 6E E8 00 00 00 00 58 BB 37 1F 00 00 2B C3 50 68 ?? ?? ?? ?? 68 00 28 00 00 68 04 01 00 00 E8 BA FE FF FF E9 90 FF FF FF CC CC CC CC CC CC CC 55 8B EC 83 C4 F4 FC 53 57 56 8B 75 08 8B 7D 0C C7 45 FC 08 00 00 00 33 DB BA 00 00 00 80 43 33 C0 E8 19 01 00 00 73 0E 8B 4D F8 E8 27 01 00 00 02 45 F7 AA EB E9 E8 04 01 00 00 0F 82 96 00 00 00 E8 F9 00 00 00 73 5B B9 04 00 00 00 E8 05 01 00 00 48 74 DE 0F 89 C6 00 00 00 E8 DF 00 00 00 73 1B 55 BD 00 01 00 00 E8 DF 00 00 00 88 07 47 4D 75 F5 E8 C7 00 00 00 72 E9 5D EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FreeJoiner_Small__build_014_015_____GlOFF
 {
 meta:
@@ -25465,10 +25465,10 @@ strings:
 	$a1 = { E8 0E FE FF FF 6A 00 E8 0D 00 00 00 CC FF 25 78 10 40 00 FF 25 7C 10 40 00 FF 25 80 10 40 00 FF 25 84 10 40 00 FF 25 88 10 40 00 FF 25 8C 10 40 00 FF 25 90 10 40 00 FF 25 94 10 40 00 FF 25 98 10 40 00 FF 25 9C 10 40 00 FF 25 A0 10 40 00 FF 25 A4 10 40 00 FF 25 AC 10 40 00 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule Thinstall_Embedded_V2_545____Jitit___Sign_by_fly
 {
 meta:
@@ -25477,10 +25477,10 @@ strings:
     	$a0 = { E8 F2 FF FF FF 50 68 ?? ?? ?? ?? 68 40 1B 00 00 E8 42 FF FF FF E9 9D FF FF FF 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__Yoda_s_Protector_1_02______Anorganix
 {
 meta:
@@ -25489,10 +25489,10 @@ strings:
     	$a0 = { E8 03 00 00 00 EB 01 90 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_v1_18_Basic__aPLib_____Ap0x
 {
 meta:
@@ -25501,10 +25501,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 8D B5 1A 04 00 00 8D 9D C1 02 00 00 33 FF E8 61 01 00 00 EB 0F FF 74 37 04 FF 34 37 FF D3 83 C4 08 83 C7 08 83 3C 37 00 75 EB 83 BD 06 04 00 00 00 74 0E 83 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PAV_Cryptor__Pawning_AntiVirus_Cryptor_____masha_dev
 {
 meta:
@@ -25516,7 +25516,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Thinstall_Embedded_V2_422_V2_428____Jitit___Sign_by_fly
 {
 meta:
@@ -25525,10 +25525,10 @@ strings:
     	$a0 = { 55 8B EC B8 ?? ?? ?? ?? BB ?? ?? ?? ?? 50 E8 00 00 00 00 58 2D 9B 1A 00 00 B9 84 1A 00 00 BA 14 1B 00 00 BE 00 10 00 00 BF B0 53 00 00 BD E0 1A 00 00 03 E8 81 75 00 ?? ?? ?? ?? 81 75 04 ?? ?? ?? ?? 81 75 08 ?? ?? ?? ?? 81 75 0C ?? ?? ?? ?? 81 75 10 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NFO_v1_x_modified
 {
 meta:
@@ -25537,10 +25537,10 @@ strings:
     	$a0 = { 60 9C 8D 50 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Crunch_5____Bit_Arts
 {
 meta:
@@ -25552,7 +25552,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_1__PEtite_2_x__level_0__
 {
 meta:
@@ -25561,10 +25561,10 @@ strings:
     	$a0 = { 90 90 90 90 68 ?? ?? ?? ?? 67 64 FF 36 00 00 67 64 89 26 00 00 F1 90 90 90 90 B8 00 90 90 00 6A 00 68 90 90 90 00 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 66 9C 60 50 8B D8 03 00 68 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__Eddie_1530
 {
 meta:
@@ -25573,10 +25573,10 @@ strings:
     	$a0 = { E8 ?? ?? 5E 81 EE ?? ?? FC 2E ?? ?? ?? ?? 4D 5A ?? ?? FA 8B E6 81 C4 ?? ?? FB 3B ?? ?? ?? ?? ?? 2E ?? ?? ?? ?? 50 06 56 1E 33 C0 50 1F C4 ?? ?? ?? 2E ?? ?? ?? ?? 2E }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_1_3_0_21____Obsidium_Software
 {
 meta:
@@ -25585,10 +25585,10 @@ strings:
     	$a0 = { EB 03 ?? ?? ?? E8 2E 00 00 00 EB 04 ?? ?? ?? ?? EB 04 ?? ?? ?? ?? 8B 54 24 0C EB 04 ?? ?? ?? ?? 83 82 B8 00 00 00 23 EB 01 ?? 33 C0 EB 04 ?? ?? ?? ?? C3 EB 03 ?? ?? ?? EB 02 ?? ?? 64 67 FF 36 00 00 EB 01 ?? 64 67 89 26 00 00 EB 02 ?? ?? EB 02 ?? ?? 50 EB 01 ?? 33 C0 EB 03 ?? ?? ?? 8B 00 EB 03 ?? ?? ?? C3 EB 03 ?? ?? ?? E9 FA 00 00 00 EB 04 ?? ?? ?? ?? E8 D5 FF FF FF EB 01 ?? EB 01 ?? 58 EB 04 ?? ?? ?? ?? EB 04 ?? ?? ?? ?? 64 67 8F 06 00 00 EB 03 ?? ?? ?? 83 C4 04 EB 04 ?? ?? ?? ?? E8 2B 26 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__FaxFree_Topo
 {
 meta:
@@ -25597,10 +25597,10 @@ strings:
     	$a0 = { FA 06 33 C0 8E C0 B8 ?? ?? 26 ?? ?? ?? ?? 50 8C C8 26 ?? ?? ?? ?? 50 CC 58 9D 58 26 ?? ?? ?? ?? 58 26 ?? ?? ?? ?? 07 FB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_5_0_Dll____Silicon_Realms_Toolworks
 {
 meta:
@@ -25609,10 +25609,10 @@ strings:
     	$a0 = { 83 7C 24 08 01 75 05 E8 DE 4B 00 00 FF 74 24 04 8B 4C 24 10 8B 54 24 0C E8 ED FE FF FF 59 C2 0C 00 6A 0C 68 ?? ?? ?? ?? E8 E5 24 00 00 8B 4D 08 33 FF 3B CF 76 2E 6A E0 58 33 D2 F7 F1 3B 45 0C 1B C0 40 75 1F E8 8F 15 00 00 C7 00 0C 00 00 00 57 57 57 57 57 E8 20 15 00 00 83 C4 14 33 C0 E9 D5 00 00 00 0F AF 4D 0C 8B F1 89 75 08 3B F7 75 03 33 F6 46 33 DB 89 5D E4 83 FE E0 77 69 83 3D ?? ?? ?? ?? 03 75 4B 83 C6 0F 83 E6 F0 89 75 0C 8B 45 08 3B 05 ?? ?? ?? ?? 77 37 6A 04 E8 D7 23 00 00 59 89 7D FC FF 75 08 E8 EC 53 00 00 59 89 45 E4 C7 45 FC FE FF FF FF E8 5F 00 00 00 8B 5D E4 3B DF 74 11 FF 75 08 57 53 E8 2B C5 FF FF 83 C4 0C 3B DF 75 61 56 6A 08 FF 35 ?? ?? ?? ?? FF 15 ?? ?? ?? ?? 8B D8 3B DF 75 4C 39 3D ?? ?? ?? ?? 74 33 56 E8 19 ED FF FF 59 85 C0 0F 85 72 FF FF FF 8B 45 10 3B C7 0F 84 50 FF FF FF C7 00 0C 00 00 00 E9 45 FF FF FF 33 FF 8B 75 0C 6A 04 E8 7D 22 00 00 59 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Elicense_System_V4_0_0_0____ViaTech_Inc
 {
 meta:
@@ -25624,7 +25624,7 @@ condition:
     	$a0
 }
 
-    
+
 rule X_Hider_1_0____GlobaL
 {
 meta:
@@ -25634,10 +25634,10 @@ strings:
 	$a1 = { 55 8B EC 83 C4 EC 33 C0 89 45 EC B8 54 20 44 44 E8 DF F8 FF FF 33 C0 55 68 08 21 44 44 64 FF 30 64 89 20 8D 55 EC B8 1C 21 44 44 E8 E0 F9 FF FF 8B 55 EC B8 40 ?? ?? 44 E8 8B F5 FF FF 6A 00 6A 00 6A 02 6A 00 6A 01 68 00 00 00 40 A1 40 ?? ?? 44 E8 7E F6 FF FF 50 E8 4C F9 FF FF 6A 00 50 E8 4C F9 FF FF A3 28 ?? ?? 44 E8 CE FE FF FF 33 C0 5A 59 59 64 89 10 68 0F 21 44 44 8D 45 EC E8 F1 F4 FF FF C3 E9 BB F2 FF FF EB F0 E8 FC F3 FF FF FF FF FF FF 0E 00 00 00 63 3A 5C 30 30 30 30 30 30 31 2E 64 61 74 00 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__Microsoft_Visual_C___6_0__Debug_Version_______Anorganix
 {
 meta:
@@ -25646,10 +25646,10 @@ strings:
     	$a0 = { 55 8B EC 51 90 90 90 01 01 90 90 90 90 68 ?? ?? ?? ?? 90 90 90 90 90 90 90 90 90 90 90 90 00 01 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 00 01 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 10 01 90 90 90 90 90 90 90 90 E8 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 02 00 00 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_0_1x_beta____Dwing
 {
 meta:
@@ -25658,10 +25658,10 @@ strings:
     	$a0 = { BE 48 01 40 00 AD 8B F8 95 A5 33 C0 33 C9 AB 48 AB F7 D8 B1 04 F3 AB C1 E0 0A B5 ?? F3 AB AD 50 97 51 AD 87 F5 58 8D 54 86 5C FF D5 72 5A 2C 03 73 02 B0 00 3C 07 72 02 2C 03 50 0F B6 5F FF C1 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Pelles_C_2_90__3_00__4_00_DLL__X86_CRT_LIB_
 {
 meta:
@@ -25673,7 +25673,7 @@ condition:
     	$a0
 }
 
-    
+
 rule VProtector_V1_0__Build_2004_12_13__test_____vcasm
 {
 meta:
@@ -25682,10 +25682,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 1A 89 40 00 68 56 89 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 E8 03 00 00 00 C7 84 00 58 EB 01 E9 83 C0 07 50 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule IProtect_1_0__Fxlib_dll_mode____by_FuXdas
 {
 meta:
@@ -25695,10 +25695,10 @@ strings:
 	$a1 = { EB 33 2E 46 55 58 4C 6F 61 64 4C 69 62 72 61 72 79 41 00 46 78 4C 69 62 2E 64 6C 6C 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? 00 60 E8 00 00 00 00 5D 81 ED 71 10 40 00 FF 74 24 20 E8 40 00 00 00 0B C0 74 2F 89 85 63 10 40 00 8D 85 3C 10 40 00 50 FF B5 63 10 40 00 E8 92 00 00 00 0B C0 74 13 89 85 5F 10 40 00 8D 85 49 10 40 00 50 FF 95 5F 10 40 00 8B 85 67 10 40 00 89 44 24 1C 61 FF E0 8B 7C 24 04 8D 85 00 10 40 00 50 64 FF 35 00 00 00 00 8D 85 53 10 40 00 89 20 89 68 04 8D 9D 0A 11 40 00 89 58 08 64 89 25 00 00 00 00 81 E7 00 00 FF FF 66 81 3F 4D 5A 75 0F 8B F7 03 76 3C 81 3E 50 45 00 00 75 02 EB 17 81 EF 00 00 01 00 81 FF 00 00 00 70 73 07 BF 00 00 F7 BF EB 02 EB D3 97 64 8F 05 00 00 00 00 83 C4 04 C2 04 00 8D 85 00 10 40 00 50 64 FF 35 00 00 00 00 8D 85 53 10 40 00 89 20 89 68 04 8D 9D 0A 11 40 00 89 58 08 64 89 25 00 00 00 00 8B 74 24 0C 66 81 3E 4D 5A 74 05 E9 8A 00 00 00 03 76 3C 81 3E 50 45 00 00 74 02 EB 7D 8B 7C 24 10 B9 96 00 00 00 32 C0 F2 AE 8B CF 2B 4C 24 10 8B 56 78 03 54 24 0C 8B 5A 20 03 5C 24 0C 33 C0 8B 3B 03 7C 24 0C 8B 74 24 10 51 F3 A6 75 05 83 C4 04 EB 0A 59 83 C3 04 40 3B 42 18 75 E2 3B 42 18 75 02 EB 35 8B 72 24 03 74 24 0C 52 BB 02 00 00 00 33 D2 F7 E3 5A 03 C6 33 C9 66 8B 08 8B 7A 1C 33 D2 BB 04 00 00 00 8B C1 F7 E3 03 44 24 0C 03 C7 8B 00 03 44 24 0C EB 02 33 C0 64 8F 05 00 00 00 00 83 C4 04 C2 08 00 E8 FA FD FF FF }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Armadillo_v2_60c
 {
 meta:
@@ -25707,10 +25707,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 40 ?? ?? ?? 68 F4 ?? ?? ?? 64 A1 ?? ?? ?? ?? 50 64 89 25 ?? ?? ?? ?? 83 EC 58 53 56 57 89 65 E8 FF 15 6C ?? ?? ?? 33 D2 8A D4 89 15 F4 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v2_60a
 {
 meta:
@@ -25719,10 +25719,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 94 ?? ?? ?? 64 A1 ?? ?? ?? ?? 50 64 89 25 ?? ?? ?? ?? 83 EC 58 53 56 57 89 65 E8 FF 15 6C ?? ?? ?? 33 D2 8A D4 89 15 B4 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SkD_Undetectabler_Pro_2_0__No_UPX_Method_____SkD
 {
 meta:
@@ -25731,10 +25731,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 F0 B8 FC 26 00 10 E8 EC F3 FF FF 6A 0F E8 15 F5 FF FF E8 64 FD FF FF E8 BB ED FF FF 8D 40 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__Explosion_1000
 {
 meta:
@@ -25743,10 +25743,10 @@ strings:
     	$a0 = { E8 ?? ?? 5E 1E 06 50 81 ?? ?? ?? 56 FC B8 21 35 CD 21 2E ?? ?? ?? ?? 2E ?? ?? ?? ?? 26 ?? ?? ?? ?? ?? ?? 74 ?? 8C D8 48 8E D8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Petite_v1_4
 {
 meta:
@@ -25755,10 +25755,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? ?? 66 9C 60 50 8B D8 03 00 68 ?? ?? ?? ?? 6A 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_V1_12_V1_14__LZMA_4_30_____ap0x
 {
 meta:
@@ -25767,10 +25767,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 8D B5 ?? ?? ?? ?? 8D 9D ?? ?? ?? ?? 33 FF 6A ?? 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 6A ?? FF 95 ?? ?? ?? ?? 89 85 ?? ?? ?? ?? EB ?? 60 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_v0_89_6___v1_02___v1_05__v1_24____Markus___Laszlo__overlay_
 {
 meta:
@@ -25779,10 +25779,10 @@ strings:
     	$a0 = { 60 BE ?? ?? ?? ?? 8D BE ?? ?? ?? ?? 57 EB 0B 90 8A 06 46 88 07 47 01 DB 75 ?? 8B 1E 83 ?? ?? 11 DB 72 ?? B8 01 00 00 00 01 DB 75 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Thinstall_V2_403____Jitit
 {
 meta:
@@ -25791,10 +25791,10 @@ strings:
     	$a0 = { 6A 00 FF 15 20 50 40 00 E8 D4 F8 FF FF E9 E9 AD FF FF FF 8B C1 8B 4C 24 04 89 88 29 04 00 00 C7 40 0C 01 00 00 00 0F B6 49 01 D1 E9 89 48 10 C7 40 14 80 00 00 00 C2 04 00 8B 44 24 04 C7 41 0C 01 00 00 00 89 81 29 04 00 00 0F B6 40 01 D1 E8 89 41 10 C7 41 14 80 00 00 00 C2 04 00 55 8B EC 53 56 57 33 C0 33 FF 39 45 0C 8B F1 76 0C 8B 4D 08 03 3C 81 40 3B 45 0C 72 F4 8B CE E8 43 00 00 00 8B 46 14 33 D2 F7 F7 8B 5E 10 33 D2 8B F8 8B C3 F7 F7 89 7E 18 89 45 0C 33 C0 33 C9 8B 55 08 03 0C 82 40 39 4D 0C 73 F4 48 8B 14 82 2B CA 0F AF CF 2B D9 0F AF FA 89 7E 14 89 5E 10 5F 5E 5B 5D C2 08 00 57 BF 00 00 80 00 39 79 14 77 36 53 56 8B B1 29 04 00 00 8B 41 0C 8B 59 10 03 DB 8A 14 30 83 E2 01 0B D3 C1 E2 07 40 89 51 10 89 41 0C 0F B6 04 30 C1 61 14 08 D1 E8 09 41 10 39 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__Borland_Delphi_DLL______Anorganix
 {
 meta:
@@ -25803,10 +25803,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 B4 B8 90 90 90 90 E8 00 00 00 00 E8 00 00 00 00 8D 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NsPack_V1_1____LiuXingPing
 {
 meta:
@@ -25815,10 +25815,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 5D B8 57 84 40 00 2D 50 84 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upx_v1_2____Marcus___Lazlo
 {
 meta:
@@ -25827,10 +25827,10 @@ strings:
     	$a0 = { 60 BE ?? ?? ?? ?? 8D BE ?? ?? ?? ?? 57 83 CD FF EB 05 A4 01 DB 75 07 8B 1E 83 EE FC 11 DB 72 F2 31 C0 40 01 DB 75 07 8B 1E 83 EE FC 11 DB 11 C0 01 DB 75 07 8B 1E 83 EE FC 11 DB 73 E6 31 C9 83 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Thinstall_V2_736____Jitit___Sign_by_fly
 {
 meta:
@@ -25839,10 +25839,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 58 BB F3 1C 00 00 2B C3 50 68 00 00 40 00 68 00 26 00 00 68 CC 00 00 00 E8 C1 FE FF FF E9 97 FF FF FF CC CC CC CC CC CC CC CC CC CC CC 55 8B EC 83 C4 F4 FC 53 57 56 8B 75 08 8B 7D 0C C7 45 FC 08 00 00 00 33 DB BA 00 00 00 80 43 33 C0 E8 19 01 00 00 73 0E 8B 4D F8 E8 27 01 00 00 02 45 F7 AA EB E9 E8 04 01 00 00 0F 82 96 00 00 00 E8 F9 00 00 00 73 5B B9 04 00 00 00 E8 05 01 00 00 48 74 DE 0F 89 C6 00 00 00 E8 DF 00 00 00 73 1B 55 BD 00 01 00 00 E8 DF 00 00 00 88 07 47 4D 75 F5 E8 C7 00 00 00 72 E9 5D EB A2 B9 01 00 00 00 E8 D0 00 00 00 83 C0 07 89 45 F8 C6 45 F7 00 83 F8 08 74 89 E8 B1 00 00 00 88 45 F7 E9 7C FF FF FF B9 07 00 00 00 E8 AA 00 00 00 50 33 C9 B1 02 E8 A0 00 00 00 8B C8 41 41 58 0B C0 74 04 8B D8 EB 5E 83 F9 02 74 6A 41 E8 88 00 00 00 89 45 FC E9 48 FF FF FF E8 87 00 00 00 49 E2 09 8B C3 E8 7D 00 00 00 EB 3A 49 8B C1 55 8B 4D FC 8B E8 33 C0 D3 E5 E8 5D 00 00 00 0B C5 5D 8B D8 E8 5F 00 00 00 3D 00 00 01 00 73 14 3D FF 37 00 00 73 0E 3D 7F 02 00 00 73 08 83 F8 7F 77 04 41 41 41 41 56 8B F7 2B F0 F3 A4 5E E9 F0 FE FF FF 33 C0 EB 05 8B C7 2B 45 0C 5E 5F 5B C9 C2 08 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_v0_36_alpha____Sign_by_hot_UNP
 {
 meta:
@@ -25854,7 +25854,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_1__Borland_Delphi_5_0_KOL_MCK______Anorganix
 {
 meta:
@@ -25863,10 +25863,10 @@ strings:
     	$a0 = { 55 8B EC 90 90 90 90 68 ?? ?? ?? ?? 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 00 FF 90 90 90 90 90 90 90 90 00 01 90 90 90 90 90 90 90 90 90 EB 04 00 00 00 01 90 90 90 90 90 90 90 00 01 90 90 90 90 90 90 90 90 90 90 90 EB 08 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 08 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 08 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 0E 00 90 90 90 90 90 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 0A 00 00 00 90 90 90 90 90 00 00 00 01 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule yoda_s_Protector_V1_03_3____Ashkbiz_Danehkar___Sign_by_fly
 {
 meta:
@@ -25875,10 +25875,10 @@ strings:
     	$a0 = { E8 03 00 00 00 EB 01 ?? BB 55 00 00 00 E8 03 00 00 00 EB 01 ?? E8 8E 00 00 00 E8 03 00 00 00 EB 01 ?? E8 81 00 00 00 E8 03 00 00 00 EB 01 ?? E8 B7 00 00 00 E8 03 00 00 00 EB 01 ?? E8 AA 00 00 00 E8 03 00 00 00 EB 01 ?? 83 FB 55 E8 03 00 00 00 EB 01 ?? 75 2D E8 03 00 00 00 EB 01 ?? 60 E8 00 00 00 00 5D 81 ED 07 E2 40 00 8B D5 81 C2 56 E2 40 00 52 E8 01 00 00 00 C3 C3 E8 03 00 00 00 EB 01 ?? E8 0E 00 00 00 E8 D1 FF FF FF C3 E8 03 00 00 00 EB 01 ?? 33 C0 64 FF 30 64 89 20 CC C3 E8 03 00 00 00 EB 01 ?? 33 C0 64 FF 30 64 89 20 4B CC C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MEW_11_SE_1_2
 {
 meta:
@@ -25890,7 +25890,7 @@ condition:
     	$a0
 }
 
-    
+
 rule hmimys_s_PE_Pack_0_1____hmimys
 {
 meta:
@@ -25900,10 +25900,10 @@ strings:
 	$a1 = { E8 00 00 00 00 5D 83 ED 05 6A 00 FF 95 E1 0E 00 00 89 85 85 0E 00 00 8B 58 3C 03 D8 81 C3 F8 00 00 00 80 AD 89 0E 00 00 01 89 9D 63 0F 00 00 8B 4B 0C 03 8D 85 0E 00 00 8B 53 08 80 BD 89 0E 00 00 00 75 0C 03 8D 91 0E 00 00 2B 95 91 0E 00 00 89 8D 57 0F 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule FSG_v1_30__Eng_____dulek_xt
 {
 meta:
@@ -25913,10 +25913,10 @@ strings:
 	$a1 = { BB D0 01 40 00 BF 00 10 40 00 BE ?? ?? ?? 00 53 E8 0A 00 00 00 02 D2 75 05 8A 16 46 12 D2 C3 B2 80 A4 6A 02 5B FF 14 24 73 F7 33 C9 FF 14 24 73 18 33 C0 FF 14 24 73 21 B3 02 41 B0 10 FF 14 24 12 C0 73 F9 75 3F AA EB DC E8 43 00 00 00 2B CB 75 10 E8 38 00 00 00 EB 28 AC D1 E8 74 41 13 C9 EB 1C 91 48 C1 E0 08 AC E8 22 00 00 00 3D 00 7D 00 00 73 0A 80 FC 05 73 06 83 F8 7F 77 02 41 41 95 8B C5 B3 01 56 8B F7 2B F0 F3 A4 5E EB 96 33 C9 41 FF 54 24 04 13 C9 FF 54 24 04 72 F4 C3 5F 5B 0F B7 3B 4F 74 08 4F 74 13 C1 E7 0C EB 07 8B 7B 02 57 83 C3 04 43 43 E9 52 FF FF FF 5F BB ?? ?? ?? 00 47 8B 37 AF 57 FF 13 95 33 C0 AE 75 FD FE 0F 74 EF FE 0F 75 06 47 FF 37 AF EB 09 FE 0F 0F 84 ?? ?? ?? FF 57 55 FF 53 04 09 06 AD 75 DB 8B EC C3 ?? ?? ?? 00 00 00 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule themida_1_0_0_5____http___www_oreans_com
 {
 meta:
@@ -25926,10 +25926,10 @@ strings:
 	$a1 = { B8 00 00 00 00 60 0B C0 74 58 E8 00 00 00 00 58 05 43 00 00 00 80 38 E9 75 03 61 EB 35 E8 00 00 00 00 58 25 00 F0 FF FF 33 FF 66 BB 19 5A 66 83 C3 34 66 39 18 75 12 0F B7 50 3C 03 D0 BB E9 44 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Morphine_2_7____Holy_Father___Ratter_29A
 {
 meta:
@@ -25941,7 +25941,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Celsius_Crypt_2_1____Z3r0
 {
 meta:
@@ -25951,10 +25951,10 @@ strings:
 	$a1 = { 55 89 E5 83 EC 28 8B 45 10 89 04 24 E8 3F 14 01 00 48 89 45 FC 8B 45 0C 48 89 45 F4 8D 45 F4 89 44 24 04 8D 45 FC 89 04 24 E8 12 A3 03 00 8B 00 89 45 F8 8B 45 FC 89 45 F0 C6 45 EF 01 C7 45 E8 00 00 00 00 8B 45 E8 3B 45 F8 73 39 80 7D EF 00 74 33 8B 45 F0 89 44 24 04 8B 45 10 89 04 24 E8 1C 1A 01 00 89 C1 8B 45 08 8B 55 E8 01 C2 0F B6 01 3A 02 0F 94 C0 88 45 EF 8D 45 F0 FF 08 8D 45 E8 FF 00 EB BF 83 7D F0 00 74 34 80 7D EF 00 74 2E 8B 45 F0 89 44 24 04 8B 45 10 89 04 24 E8 DD 19 01 00 89 C1 8B 45 08 8B 55 F8 01 C2 0F B6 01 3A 02 0F 94 C0 88 45 EF 8D 45 F0 FF 08 EB C6 C7 44 24 04 00 00 00 00 8B 45 10 89 04 24 E8 AE 19 01 00 89 C1 8B 45 08 8B 55 F8 01 C2 0F B6 01 3A 02 7F 0C 0F B6 45 EF 83 E0 01 88 45 E7 EB 04 C6 45 E7 00 0F B6 45 E7 88 45 EF 0F B6 45 EF C9 C3 }
 
 condition:
-    	$a0 at sgpe.ep or $a1
+    	$a0 at manape.ep or $a1
 }
 
-    
+
 rule Vx__Heloween_1172
 {
 meta:
@@ -25963,10 +25963,10 @@ strings:
     	$a0 = { E8 ?? ?? 5E 81 EE ?? ?? 56 50 06 0E 1F 8C C0 01 ?? ?? 01 ?? ?? 80 ?? ?? ?? ?? 8B ?? ?? A3 ?? ?? 8A ?? ?? A2 ?? ?? B8 ?? ?? CD 21 3D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__CodeSafe_2_0_____Anorganix
 {
 meta:
@@ -25975,10 +25975,10 @@ strings:
     	$a0 = { 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 0B 83 EC 10 53 56 57 E8 C4 01 00 85 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Thinstall_vx_x
 {
 meta:
@@ -25987,10 +25987,10 @@ strings:
     	$a0 = { B8 EF BE AD DE 50 6A ?? FF 15 10 19 40 ?? E9 AD FF FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_0_36_beta____Dwing
 {
 meta:
@@ -26002,7 +26002,7 @@ condition:
     	$a0
 }
 
-    
+
 rule STUD_RC4_1_0_Jamie_Edition__ScanTime_UnDetectable____by_MarjinZ
 {
 meta:
@@ -26012,10 +26012,10 @@ strings:
 	$a1 = { 68 2C 11 40 00 E8 F0 FF FF FF 00 00 00 00 00 00 30 00 00 00 38 00 00 00 00 00 00 00 37 BB 71 EC A4 E1 98 4C 9B FE 8F 0F FA 6A 07 F6 00 00 00 00 00 00 01 00 00 00 20 20 46 6F 72 20 73 74 75 64 00 20 54 6F 00 00 00 00 06 00 00 00 CC 1A 40 00 07 00 00 00 D4 18 40 00 07 00 00 00 7C 18 40 00 07 00 00 00 2C 18 40 00 07 00 00 00 E0 17 40 00 56 42 35 21 F0 1F 2A 00 00 00 00 00 00 00 00 00 00 00 00 00 7E 00 00 00 00 00 00 00 00 00 00 00 00 00 0A 00 09 04 00 00 00 00 00 00 E8 13 40 00 F4 13 40 00 00 F0 30 00 00 FF FF FF 08 00 00 00 01 00 00 00 00 00 00 00 E9 00 00 00 04 11 40 00 04 11 40 00 C8 10 40 00 78 00 00 00 7C 00 00 00 81 00 00 00 82 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 61 61 61 00 53 74 75 64 00 00 73 74 75 64 00 00 01 00 01 00 30 16 40 00 00 00 00 00 FF FF FF FF FF FF FF FF 00 00 00 00 B4 16 40 00 10 30 40 00 07 00 00 00 24 12 40 00 0E 00 20 00 00 00 00 00 1C 9E 21 00 EC 11 40 00 5C 10 40 00 E4 1A 40 00 2C 34 40 00 68 17 40 00 58 17 40 00 78 17 40 00 8C 17 40 00 8C 10 40 00 62 10 40 00 92 10 40 00 F8 1A 40 00 24 19 40 00 98 10 40 00 9E 10 40 00 77 04 18 FF 04 1C FF 05 00 00 24 01 00 0D 14 00 78 1C 40 00 48 21 40 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule FSG_v1_10__Eng_____dulek_xt_____Microsoft_Visual_C___4_x___LCC_Win32_1_x_
 {
 meta:
@@ -26024,10 +26024,10 @@ strings:
     	$a0 = { 2C 71 1B CA EB 01 2A EB 01 65 8D 35 80 ?? ?? 00 80 C9 84 80 C9 68 BB F4 00 00 00 EB 01 EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__PESHiELD_0_25______Anorganix
 {
 meta:
@@ -26036,10 +26036,10 @@ strings:
     	$a0 = { 60 E8 2B 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 CC CC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule kkrunchy_0_23_alpha_2____Ryd
 {
 meta:
@@ -26049,10 +26049,10 @@ strings:
 	$a1 = { BD ?? ?? ?? ?? C7 45 00 ?? ?? ?? 00 B8 ?? ?? ?? 00 89 45 04 89 45 54 50 C7 45 10 ?? ?? ?? 00 FF 4D 0C FF 45 14 FF 45 58 C6 45 1C 08 B8 00 08 00 00 8D 7D 30 AB AB AB AB BB 00 00 D8 00 BF }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule NoodleCrypt_v2_00__Eng_____NoodleSpa
 {
 meta:
@@ -26062,10 +26062,10 @@ strings:
 	$a1 = { EB 01 9A E8 76 00 00 00 EB 01 9A E8 65 00 00 00 EB 01 9A E8 7D 00 00 00 EB 01 9A E8 55 00 00 00 EB 01 9A E8 43 04 00 00 EB 01 9A E8 E1 00 00 00 EB 01 9A E8 3D 00 00 00 EB 01 9A E8 EB 01 00 00 EB 01 9A E8 2C 04 00 00 EB 01 9A E8 25 00 00 00 EB 01 9A E8 02 04 00 00 EB 01 9A E8 19 07 00 00 EB 01 9A E8 9C 00 00 00 EB 01 9A E8 9C 06 00 00 E8 00 00 00 00 0F 7E F8 EB 01 9A 8B F8 C3 E8 00 00 00 00 58 EB 01 9A 25 00 F0 FF FF 8B F8 EB 01 9A 0F 6E F8 C3 8B D0 EB 01 9A 81 C2 C8 00 00 00 EB 01 9A B9 00 17 00 00 EB 01 9A C0 0A 06 EB 01 9A 80 2A 15 EB 01 9A 42 E2 EE 0F 6E C0 EB 01 9A 0F 7E C0 EB 01 9A 8B D0 00 85 EB A5 F5 65 4B 45 45 00 85 EB B3 65 07 45 45 00 85 EB 75 C7 C6 00 85 EB 65 CF 8A 00 85 EB D5 FD C0 00 85 EB 7F E5 05 05 05 00 85 EB 7F 61 06 45 45 00 85 EB 7F }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Armadillo_4_30___4_40____Silicon_Realms_Toolworks
 {
 meta:
@@ -26077,7 +26077,7 @@ condition:
     	$a0
 }
 
-    
+
 rule __PseudoSigner_0_2__FSG_1_31______Anorganix
 {
 meta:
@@ -26086,10 +26086,10 @@ strings:
     	$a0 = { BE 90 90 90 00 BF 90 90 90 00 BB 90 90 90 00 53 BB 90 90 90 00 B2 80 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__Video_Lan_Client_____Anorganix
 {
 meta:
@@ -26098,10 +26098,10 @@ strings:
     	$a0 = { 55 89 E5 83 EC 08 90 90 90 90 90 90 90 90 90 90 90 90 90 90 01 FF FF 01 01 01 00 01 90 90 90 90 90 90 90 90 90 90 90 90 90 90 00 01 00 01 00 01 90 90 00 01 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule VOB_ProtectCD
 {
 meta:
@@ -26110,10 +26110,10 @@ strings:
     	$a0 = { 5F 81 EF ?? ?? ?? ?? BE ?? ?? 40 ?? 8B 87 ?? ?? ?? ?? 03 C6 57 56 8C A7 ?? ?? ?? ?? FF 10 89 87 ?? ?? ?? ?? 5E 5F }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Can2Exe_v0_01
 {
 meta:
@@ -26122,10 +26122,10 @@ strings:
     	$a0 = { 0E 1F 0E 07 E8 ?? ?? E8 ?? ?? 3A C6 73 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Private_exe_Protector_V1_8X_V1_9X____SetiSoft_Team
 {
 meta:
@@ -26137,7 +26137,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PESpin_1_304____Cyberbob__h_
 {
 meta:
@@ -26149,7 +26149,7 @@ condition:
     	$a0
 }
 
-    
+
 rule BeRoEXEPacker_v1_00__LZMA_____BeRo___Farbrausch
 {
 meta:
@@ -26158,10 +26158,10 @@ strings:
     	$a0 = { 60 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? BE ?? ?? ?? ?? B9 04 00 00 00 8B F9 81 FE ?? ?? ?? ?? 7F 10 AC 47 04 18 2C 02 73 F0 29 3E 03 F1 03 F9 EB E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Anti007____NsPacK_Private
 {
 meta:
@@ -26170,10 +26170,10 @@ strings:
     	$a0 = { 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 10 00 00 00 00 00 00 ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_0_32a__fake_MSVC___DLL_Method_4_____emadicius
 {
 meta:
@@ -26185,7 +26185,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_1__FSG_1_0_____Anorganix
 {
 meta:
@@ -26194,10 +26194,10 @@ strings:
     	$a0 = { 90 90 90 90 68 ?? ?? ?? ?? 67 64 FF 36 00 00 67 64 89 26 00 00 F1 90 90 90 90 BB D0 01 40 00 BF 00 10 40 00 BE 90 90 90 90 53 E8 0A 00 00 00 02 D2 75 05 8A 16 46 12 D2 C3 FC B2 80 A4 6A 02 5B E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_v1_20__Eng_____dulek_xt_____Borland_C___
 {
 meta:
@@ -26207,10 +26207,10 @@ strings:
 	$a1 = { C1 F0 07 EB 02 CD 20 BE 80 ?? ?? 00 1B C6 8D 1D F4 00 00 00 0F B6 06 EB 02 CD 20 8A 16 0F B6 C3 E8 01 00 00 00 DC 59 80 EA 37 EB 02 CD 20 2A D3 EB 02 CD 20 80 EA 73 1B CF 32 D3 C1 C8 0E 80 EA 23 0F B6 C9 02 D3 EB 01 B5 02 D3 EB 02 DB 5B 81 C2 F6 56 7B F6 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule SOFTWrapper_for_Win9x_NT__Evaluation_Version_
 {
 meta:
@@ -26220,10 +26220,10 @@ strings:
 	$a1 = { E8 00 00 00 00 5D 8B C5 2D ?? ?? ?? 00 50 81 ED 05 00 00 00 8B C5 2B 85 03 0F 00 00 89 85 03 0F 00 00 8B F0 03 B5 0B 0F 00 00 8B F8 03 BD 07 0F 00 00 83 7F 0C 00 74 2B 56 57 8B 7F 10 03 F8 8B 76 10 03 F0 83 3F 00 74 0C 8B 1E 89 1F 83 C6 04 83 C7 04 EB EF 5F 5E 83 C6 14 83 C7 14 EB D3 00 00 00 00 8B F5 81 C6 0D 0A 00 00 B9 0C 00 00 00 8B 85 03 0F 00 00 01 46 02 83 C6 06 E2 F8 E8 06 08 00 00 68 00 01 00 00 8D 85 DD 0D 00 00 50 6A 00 E8 95 09 00 00 8B B5 03 0F 00 00 66 81 3E 4D 5A 75 33 03 76 3C 81 3E 50 45 00 00 75 28 8B 46 28 03 85 03 0F 00 00 3B C5 74 1B 6A 30 E8 99 09 00 00 6A 30 8D 85 DD 0D 00 00 50 8D 85 2B 0F 00 00 E9 55 03 00 00 66 8B 85 9D 0A 00 00 F6 C4 80 74 31 E8 6A 07 00 00 0B C0 75 23 6A 40 E8 69 09 00 00 6A 40 8D 85 DD 0D 00 00 50 8B 9D 17 0F }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PESpin_v0_1____Cyberbob
 {
 meta:
@@ -26232,10 +26232,10 @@ strings:
     	$a0 = { EB 01 68 60 E8 00 00 00 00 8B 1C 24 83 C3 12 81 2B E8 B1 06 00 FE 4B FD 82 2C 24 5C CB 46 00 0B E4 74 9E 75 01 C7 81 73 04 D7 7A F7 2F 81 73 19 77 00 43 B7 F6 C3 6B B7 00 00 F9 FF E3 C9 C2 08 00 A3 68 72 01 FF 5D 33 C9 41 E2 17 EB 07 EA EB 01 EB EB 0D FF E8 01 00 00 00 EA 5A 83 EA 0B FF E2 8B 95 B3 28 40 00 8B 42 3C 03 C2 89 85 BD 28 40 00 41 C1 E1 07 8B 0C 01 03 CA 8B 59 10 03 DA 8B 1B 89 9D D1 28 40 00 53 8F 85 C4 27 40 00 BB ?? 00 00 00 B9 A5 08 00 00 8D BD 75 29 40 00 4F 30 1C 39 FE CB E2 F9 68 2D 01 00 00 59 8D BD AA 30 40 00 C0 0C 39 02 E2 FA E8 02 00 00 00 FF 15 5A 8D 85 07 4F 56 00 BB 54 13 0B 00 D1 E3 2B C3 FF E0 E8 01 00 00 00 68 E8 1A 00 00 00 8D 34 28 B8 ?? ?? ?? ?? 2B C9 83 C9 15 0F A3 C8 0F 83 81 00 00 00 8D B4 0D C4 28 40 00 8B D6 B9 10 00 00 00 AC 84 C0 74 06 C0 4E FF 03 E2 F5 E8 00 00 00 00 59 81 C1 1D 00 00 00 52 51 C1 E9 05 23 D1 FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__WATCOM_C_C___EXE_
 {
 meta:
@@ -26244,10 +26244,10 @@ strings:
     	$a0 = { E9 00 00 00 00 90 90 90 90 57 41 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Morphnah_Beta____Kas
 {
 meta:
@@ -26256,10 +26256,10 @@ strings:
     	$a0 = { 2E 6E 61 68 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 A0 00 00 E0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__Watcom_C_C___DLL______Anorganix
 {
 meta:
@@ -26268,10 +26268,10 @@ strings:
     	$a0 = { 53 56 57 55 8B 74 24 14 8B 7C 24 18 8B 6C 24 1C 83 FF 03 0F 87 01 00 00 00 F1 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule aPack_v0_98__m
 {
 meta:
@@ -26283,7 +26283,7 @@ condition:
     	$a0
 }
 
-    
+
 rule EncryptPE_V2_2006_7_10____WFS
 {
 meta:
@@ -26293,10 +26293,10 @@ strings:
 	$a1 = { 60 9C 64 FF 35 00 00 00 00 E8 73 01 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1
+    	$a0 at manape.ep or $a1
 }
 
-    
+
 rule ASProtect_SKE_2_1_2_2__dll_____Alexey_Solodovnikov__h_
 {
 meta:
@@ -26306,10 +26306,10 @@ strings:
 	$a1 = { 60 E8 03 00 00 00 E9 EB 04 5D 45 55 C3 E8 01 00 00 00 EB 5D BB ED FF FF FF 03 DD 81 EB 00 ?? ?? ?? 80 7D 4D 01 75 0C 8B 74 24 28 83 FE 01 89 5D 4E 75 31 8D 45 53 50 53 FF B5 ED 09 00 00 8D 45 35 50 E9 82 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1
+    	$a0 at manape.ep or $a1
 }
 
-    
+
 rule SimplePack_V1_2_build_30_09__Method2_____bagie
 {
 meta:
@@ -26318,10 +26318,10 @@ strings:
     	$a0 = { 4D 5A 90 EB 01 00 52 E9 86 01 00 00 50 45 00 00 4C 01 02 00 00 00 00 00 00 00 00 00 00 00 00 00 E0 00 0F 03 0B 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0C 00 00 00 00 ?? ?? ?? 00 10 00 00 00 02 00 00 01 00 00 00 00 00 00 00 04 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Thinstall_Embedded_V2_2X_V2_308____Jitit
 {
 meta:
@@ -26330,10 +26330,10 @@ strings:
     	$a0 = { B8 EF BE AD DE 50 6A 00 FF 15 ?? ?? ?? ?? E9 B9 FF FF FF 8B C1 8B 4C 24 04 89 88 29 04 00 00 C7 40 0C 01 00 00 00 0F B6 49 01 D1 E9 89 48 10 C7 40 14 80 00 00 00 C2 04 00 8B 44 24 04 C7 41 0C 01 00 00 00 89 81 29 04 00 00 0F B6 40 01 D1 E8 89 41 10 C7 41 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule hying_s_PEArmor_V0_76____hying
 {
 meta:
@@ -26342,10 +26342,10 @@ strings:
     	$a0 = { E9 00 00 00 00 60 E8 14 00 00 00 5D 81 ED 00 00 00 00 6A ?? E8 A3 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ________EXE________________yy66
 {
 meta:
@@ -26354,10 +26354,10 @@ strings:
     	$a0 = { 68 78 18 40 00 E8 F0 FF FF FF 00 00 00 00 00 00 30 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_0_32a__fake_ASPack_2_11d_____emadicius
 {
 meta:
@@ -26369,7 +26369,7 @@ condition:
     	$a0
 }
 
-    
+
 rule MSLRH_v0_32a__fake_MSVC___DLL_Method_4_____emadicius__h_
 {
 meta:
@@ -26378,10 +26378,10 @@ strings:
     	$a0 = { 55 8B EC 56 57 BF 01 00 00 00 8B 75 0C 85 F6 5F 5E 5D EB 05 E8 EB 04 40 00 EB FA E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 50 E8 02 00 00 00 29 5A 58 6B C0 03 E8 02 00 00 00 29 5A 83 C4 04 58 74 04 75 02 EB 02 EB 01 81 0F 31 50 0F 31 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_0_32a__fake_PE_Crypt_1_02_____emadicius
 {
 meta:
@@ -26393,7 +26393,7 @@ condition:
     	$a0
 }
 
-    
+
 rule CD_Cops_II
 {
 meta:
@@ -26402,10 +26402,10 @@ strings:
     	$a0 = { 53 60 BD ?? ?? ?? ?? 8D 45 ?? 8D 5D ?? E8 ?? ?? ?? ?? 8D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PolyBox_C____Anskya
 {
 meta:
@@ -26414,10 +26414,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 F0 53 56 B8 E4 41 00 10 E8 3A E1 FF FF 33 C0 55 68 11 44 00 10 64 FF 30 64 89 20 EB 08 FC FC FC FC FC FC 27 54 6A 0A 68 20 44 00 10 A1 1C 71 00 10 50 E8 CC E1 ?? ?? ?? ?? 85 DB 0F 84 77 01 00 00 53 A1 1C 71 00 10 50 E8 1E E2 FF FF 8B F0 85 F6 0F 84 61 01 00 00 53 A1 1C 71 00 10 50 E8 E0 E1 FF FF 85 C0 0F 84 4D 01 00 00 50 E8 DA E1 FF FF 8B D8 85 DB 0F 84 3D 01 00 00 56 B8 70 80 00 10 B9 01 00 00 00 8B 15 98 41 00 10 E8 9E DE FF FF 83 C4 04 A1 70 80 00 10 8B CE 8B D3 E8 E1 E1 FF FF 6A 00 6A 00 A1 70 80 00 10 B9 30 44 00 10 8B D6 E8 F8 FD FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule CopyMinder____Microcosm_Ltd___Sign_by_fly
 {
 meta:
@@ -26426,10 +26426,10 @@ strings:
     	$a0 = { 83 25 ?? ?? ?? ?? EF 6A 00 E8 ?? ?? ?? ?? E8 ?? ?? ?? ?? CC FF 25 ?? ?? ?? ?? FF 25 ?? ?? ?? ?? FF 25 ?? ?? ?? ?? FF 25 ?? ?? ?? ?? FF 25 ?? ?? ?? ?? FF 25 ?? ?? ?? ?? FF 25 ?? ?? ?? ?? FF 25 ?? ?? ?? ?? FF 25 ?? ?? ?? ?? FF 25 ?? ?? ?? ?? FF 25 ?? ?? ?? ?? FF 25 ?? ?? ?? ?? FF 25 ?? ?? ?? ?? FF 25 ?? ?? ?? ?? FF 25 ?? ?? ?? ?? FF 25 ?? ?? ?? ?? FF 25 ?? ?? ?? ?? FF 25 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v1_60___v1_65
 {
 meta:
@@ -26438,10 +26438,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 3F 80 40 ?? 87 DD 8B 85 D2 80 40 ?? 01 85 33 80 40 ?? 66 C7 85 ?? 80 40 ?? 90 90 01 85 CE 80 40 ?? BB BB 12 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ChinaProtect____dummy___Sign_by_fly
 {
 meta:
@@ -26453,7 +26453,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_1__Yoda_s_Protector_1_02_____Anorganix
 {
 meta:
@@ -26462,10 +26462,10 @@ strings:
     	$a0 = { E8 03 00 00 00 EB 01 90 90 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__DxPack_1_0_
 {
 meta:
@@ -26474,10 +26474,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 8B FD 81 ED 90 90 90 90 2B B9 00 00 00 00 81 EF 90 90 90 90 83 BD 90 90 90 90 90 0F 84 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule WinUpack_v0_39_final__relocated_image_base_____By_Dwing__c_2005__h2_
 {
 meta:
@@ -26487,10 +26487,10 @@ strings:
 	$a1 = { 60 E8 09 00 00 00 ?? ?? ?? 00 E9 06 02 00 00 33 C9 5E 87 0E E3 F4 2B F1 8B DE AD 2B D8 AD 03 C3 50 97 AD 91 F3 A5 5E AD 56 91 01 1E AD E2 FB AD 8D 6E 10 01 5D 00 8D 7D 1C B5 ?? F3 AB 5E AD 53 50 51 97 58 8D 54 85 5C FF 16 72 57 2C 03 73 02 B0 00 3C 07 72 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule WebCops__EXE
 {
 meta:
@@ -26499,10 +26499,10 @@ strings:
     	$a0 = { EB 03 05 EB 02 EB FC 55 EB 03 EB 04 05 EB FB EB 53 E8 04 00 00 00 72 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Spalsher_v1_0___v3_0
 {
 meta:
@@ -26511,10 +26511,10 @@ strings:
     	$a0 = { 9C 60 8B 44 24 24 E8 ?? ?? ?? ?? 5D 81 ED ?? ?? ?? ?? 50 E8 ED 02 ?? ?? 8C C0 0F 84 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v2_00_alpha_38
 {
 meta:
@@ -26527,7 +26527,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule CALS_Raster_graphics_format
 {
 meta:
@@ -26539,7 +26539,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PECompact_v1_00
 {
 meta:
@@ -26548,10 +26548,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB C4 84 40 ?? 87 DD 8B 85 49 85 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__Morphine_1_2_
 {
 meta:
@@ -26560,10 +26560,10 @@ strings:
     	$a0 = { 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 EB 06 00 90 90 90 90 90 90 90 90 EB 08 E8 90 00 00 00 66 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 51 66 90 90 90 59 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__PESHiELD_0_25______Anorganix
 {
 meta:
@@ -26572,10 +26572,10 @@ strings:
     	$a0 = { 60 E8 2B 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 CC CC E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule AntiDote_1_2_DLL_Demo____SIS_Team
 {
 meta:
@@ -26585,10 +26585,10 @@ strings:
 	$a1 = { EB 10 66 62 3A 43 2B 2B 48 4F 4F 4B 90 E9 08 32 90 90 90 90 90 90 90 90 90 90 80 7C 24 08 01 0F 85 ?? ?? ?? ?? 60 BE ?? ?? ?? ?? 8D BE ?? ?? ?? ?? 57 83 CD FF EB 0B 90 8A 06 46 88 07 47 01 DB 75 07 8B 1E 83 EE FC 11 DB 72 ED B8 01 00 00 00 01 DB 75 07 8B 1E 83 EE FC 11 DB 11 C0 01 DB 73 EF 75 09 8B 1E 83 EE FC 11 DB 73 E4 31 C9 83 E8 03 72 0D C1 E0 08 8A 06 46 83 F0 FF 74 74 89 C5 01 DB 75 07 8B 1E 83 EE FC 11 DB 11 C9 01 DB 75 07 8B 1E 83 EE FC 11 DB 11 C9 75 20 41 01 DB 75 07 8B 1E 83 EE FC 11 DB 11 C9 01 DB 73 EF 75 09 8B 1E 83 EE FC 11 DB 73 E4 83 C1 02 81 FD 00 F3 FF FF 83 D1 01 8D 14 2F 83 FD FC 76 0F 8A 02 42 88 07 47 49 75 F7 E9 63 FF FF FF 90 8B 02 83 C2 04 89 07 83 C7 04 83 E9 04 77 F1 01 CF E9 4C FF FF FF }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Armadillo_v3_00
 {
 meta:
@@ -26597,10 +26597,10 @@ strings:
     	$a0 = { 60 E8 ?? ?? ?? ?? 5D 50 51 EB 0F B9 EB 0F B8 EB 07 B9 EB 0F 90 EB 08 FD EB 0B F2 EB F5 EB F6 F2 EB 08 FD EB E9 F3 EB E4 FC E9 59 58 60 33 C9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__Noon_1163
 {
 meta:
@@ -26609,10 +26609,10 @@ strings:
     	$a0 = { E8 ?? ?? 5B 50 56 B4 CB CD 21 3C 07 ?? ?? 81 ?? ?? ?? 2E ?? ?? 4D 5A ?? ?? BF 00 01 89 DE FC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_v1_10__Eng_____bart_xt
 {
 meta:
@@ -26622,10 +26622,10 @@ strings:
 	$a1 = { BB D0 01 40 00 BF 00 10 40 00 BE ?? ?? ?? 00 53 E8 0A 00 00 00 02 D2 75 05 8A 16 46 12 D2 C3 B2 80 A4 6A 02 5B FF 14 24 73 F7 33 C9 FF 14 24 73 18 33 C0 FF 14 24 73 21 B3 02 41 B0 10 FF 14 24 12 C0 73 F9 75 3F AA EB DC E8 43 00 00 00 2B CB 75 10 E8 38 00 00 00 EB 28 AC D1 E8 74 41 13 C9 EB 1C 91 48 C1 E0 08 AC E8 22 00 00 00 3D 00 7D 00 00 73 0A 80 FC 05 73 06 83 F8 7F 77 02 41 41 95 8B C5 B3 01 56 8B F7 2B F0 F3 A4 5E EB 96 33 C9 41 FF 54 24 04 13 C9 FF 54 24 04 72 F4 C3 5F 5B 0F B7 3B 4F 74 08 4F 74 13 C1 E7 0C EB 07 8B 7B 02 57 83 C3 04 43 43 E9 52 FF FF FF 5F BB 27 ?? ?? 00 47 8B 37 AF 57 FF 13 95 33 C0 AE 75 FD FE 07 74 EF FE 07 75 06 47 FF 37 AF EB 09 FE 07 0F 84 1A ?? ?? FF 57 55 FF 53 04 09 06 AD 75 DB 8B EC C3 1B ?? ?? 00 00 00 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule diPacker_V1_X____diProtector_Software
 {
 meta:
@@ -26634,10 +26634,10 @@ strings:
     	$a0 = { 0F 00 2D E9 01 00 A0 E3 68 01 00 EB 8C 00 00 EB 2B 00 00 EB 00 00 20 E0 1C 10 8F E2 8E 20 8F E2 00 30 A0 E3 67 01 00 EB 0F 00 BD E8 00 C0 8F E2 00 F0 9C E5 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_2_00_3_0X____Markus_Oberhumer___Laszlo_Molnar___John_Reiser
 {
 meta:
@@ -26649,7 +26649,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Video_Lan_Client_____UnknownCompiler_
 {
 meta:
@@ -26658,10 +26658,10 @@ strings:
     	$a0 = { 55 89 E5 83 EC 08 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? FF FF ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 ?? ?? ?? ?? ?? ?? ?? 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Microsoft_Visual_Basic_v5_0
 {
 meta:
@@ -26670,10 +26670,10 @@ strings:
     	$a0 = { FF FF FF 00 00 00 00 00 00 30 00 00 00 40 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASProtect_v1_2x__New_Strain_
 {
 meta:
@@ -26682,10 +26682,10 @@ strings:
     	$a0 = { 68 01 ?? ?? ?? E8 01 ?? ?? ?? C3 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_v32a____emadicius
 {
 meta:
@@ -26697,7 +26697,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Simple_UPX_Cryptor_v30_4_2005__multi_layer_encryption______MANtiCORE
 {
 meta:
@@ -26707,10 +26707,10 @@ strings:
 	$a1 = { 60 B8 ?? ?? ?? 00 B9 18 00 00 00 80 34 08 ?? E2 FA 61 68 ?? ?? ?? 00 C3 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Thinstall_Embedded_V1_9X____Jitit___Sign_by_fly
 {
 meta:
@@ -26719,10 +26719,10 @@ strings:
     	$a0 = { 55 8B EC 51 53 56 57 6A 00 6A 00 FF 15 ?? ?? ?? ?? 50 E8 87 FC FF FF 59 59 A1 ?? ?? ?? ?? 8B 40 10 03 05 ?? ?? ?? ?? 89 45 FC 8B 45 FC FF E0 5F 5E 5B C9 C3 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule nMacro_recorder_1_0
 {
 meta:
@@ -26734,7 +26734,7 @@ condition:
     	$a0
 }
 
-    
+
 rule SEN_Debug_Protector___
 {
 meta:
@@ -26743,10 +26743,10 @@ strings:
     	$a0 = { BB ?? ?? ?? ?? 00 ?? ?? ?? ?? ?? 29 ?? ?? 4E E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_v1_20__Eng_____dulek_xt_____Borland_Delphi___Borland_C___
 {
 meta:
@@ -26756,10 +26756,10 @@ strings:
 	$a1 = { 0F BE C1 EB 01 0E 8D 35 C3 BE B6 22 F7 D1 68 43 ?? ?? 22 EB 02 B5 15 5F C1 F1 15 33 F7 80 E9 F9 BB F4 00 00 00 EB 02 8F D0 EB 02 08 AD 8A 16 2B C7 1B C7 80 C2 7A 41 80 EA 10 EB 01 3C 81 EA CF AE F1 AA EB 01 EC 81 EA BB C6 AB EE 2C E3 32 D3 0B CB 81 EA AB }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PDS_graphics_file_format
 {
 meta:
@@ -26771,7 +26771,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Turbo_C
 {
 meta:
@@ -26780,10 +26780,10 @@ strings:
     	$a0 = { BC ?? ?? E8 ?? ?? 2E 8E ?? ?? ?? E8 ?? ?? 2E 80 ?? ?? ?? ?? 75 ?? E8 ?? ?? 8B C3 2E F7 ?? ?? ?? E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Packman_Executable_Image_Packer_0_0_0_1____bubba
 {
 meta:
@@ -26792,10 +26792,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 58 8D A8 ?? ?? FF FF 8D 98 ?? ?? ?? FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RCryptor_1_6_by_Vaska__Damrai_sign_20_03_2007_20_41_
 {
 meta:
@@ -26804,10 +26804,10 @@ strings:
     	$a0 = { 33 D0 68 40 A1 14 13 FF D2 B8 00 10 14 13 3D 24 C0 14 13 74 06 80 30 BB 40 EB F3 33 C0 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ORiEN_v2_11__DEMO_
 {
 meta:
@@ -26817,10 +26817,10 @@ strings:
 	$a1 = { E9 5D 01 00 00 CE D1 CE CE 0D 0A 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 0D 0A 2D 20 4F 52 69 45 4E 20 65 78 65 63 75 74 61 62 6C 65 20 66 69 6C 65 73 20 70 72 6F 74 65 63 74 69 6F 6E 20 73 79 73 74 65 6D 20 2D 0D 0A 2D 2D 2D 2D 2D 2D 20 43 72 65 61 74 65 64 20 62 79 20 41 2E 20 46 69 73 75 6E 2C 20 31 39 39 34 2D 32 30 30 33 20 2D 2D 2D 2D 2D 2D 0D 0A 2D 2D 2D 2D 2D 2D 2D 20 57 57 57 3A 20 68 74 74 70 3A 2F 2F 7A 61 6C 65 78 66 2E 6E 61 72 6F 64 2E 72 75 2F 20 2D 2D 2D 2D 2D 2D 2D 0D 0A 2D 2D 2D 2D 2D 2D 2D 2D 20 65 2D 6D 61 69 6C 3A 20 7A 61 6C 65 78 66 40 68 6F 74 6D 61 69 6C 2E 72 75 20 2D 2D 2D 2D 2D 2D 2D 2D 2D 0D 0A 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Crinkler_V0_3_V0_4____Rune_L_H_Stubbe_and_Aske_Simon_Christensen
 {
 meta:
@@ -26829,10 +26829,10 @@ strings:
     	$a0 = { B8 00 00 42 00 31 DB 43 EB 58 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_0_32a__fake_UPX_0_89_6___1_02___1_05___1_24_____emadicius
 {
 meta:
@@ -26844,7 +26844,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Upack_v0_37___v0_38_Beta__Strip_base_relocation_table_Option____Sign_by_hot_UNP
 {
 meta:
@@ -26856,7 +26856,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Thinstall_Embedded_V2_547_V2_600____Jitit___Sign_by_fly
 {
 meta:
@@ -26865,10 +26865,10 @@ strings:
     	$a0 = { E8 00 00 00 00 58 BB BC 18 00 00 2B C3 50 68 ?? ?? ?? ?? 68 60 1B 00 00 68 60 00 00 00 E8 35 FF FF FF E9 99 FF FF FF 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EncryptPE_V1_2003_3_18_V1_2003_5_18____WFS
 {
 meta:
@@ -26877,10 +26877,10 @@ strings:
     	$a0 = { 60 9C 64 FF 35 00 00 00 00 E8 79 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Crunch_v5____Bit_Arts
 {
 meta:
@@ -26890,10 +26890,10 @@ strings:
 	$a1 = { EB 15 03 00 00 00 06 00 00 00 00 00 00 00 00 00 00 00 68 00 00 00 00 55 E8 00 00 00 00 5D 81 ED 1D 00 00 00 8B C5 55 60 9C 2B 85 FC 07 00 00 89 85 E8 07 00 00 FF 74 24 2C E8 20 02 00 00 0F 82 94 06 00 00 E8 F3 04 00 00 49 0F 88 88 06 00 00 8B B5 E8 07 00 00 8B 56 3C 8D 8C 32 C8 00 00 00 83 39 00 74 50 8B D9 53 68 BB D4 C3 79 33 C0 50 E8 0E 04 00 00 50 8D 95 EC 07 00 00 52 6A 04 68 00 10 00 00 FF B5 E8 07 00 00 FF D0 58 5B C7 03 00 00 00 00 C7 43 04 00 00 00 00 8D 95 F0 07 00 00 52 FF B5 EC 07 00 00 68 00 10 00 00 FF B5 E8 07 00 00 FF D0 68 6C D9 B2 96 33 C0 50 E8 C1 03 00 00 89 85 ?? 46 00 00 68 EC 49 7B 79 33 C0 50 E8 AE 03 00 00 89 85 ?? 46 00 00 E8 04 06 00 00 E9 F3 05 00 00 51 52 53 33 C9 49 8B D1 33 C0 33 DB AC 32 C1 8A CD 8A EA 8A D6 B6 08 66 D1 EB 66 D1 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Armadillo_v2_52b2
 {
 meta:
@@ -26902,10 +26902,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 B0 ?? ?? ?? 68 60 ?? ?? ?? 64 A1 ?? ?? ?? ?? 50 64 89 25 ?? ?? ?? ?? 83 EC 58 53 56 57 89 65 E8 FF 15 24 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_0_32a__fake_PEBundle_0_2___3_x_____emadicius
 {
 meta:
@@ -26917,7 +26917,7 @@ condition:
     	$a0
 }
 
-    
+
 rule FSG_1_10__Eng_____bart_xt
 {
 meta:
@@ -26926,10 +26926,10 @@ strings:
     	$a0 = { BB D0 01 40 00 BF 00 10 40 00 BE ?? ?? ?? 00 53 E8 0A 00 00 00 02 D2 75 05 8A 16 46 12 D2 C3 B2 80 A4 6A 02 5B FF 14 24 73 F7 33 C9 FF 14 24 73 18 33 C0 FF 14 24 73 21 B3 02 41 B0 10 FF 14 24 12 C0 73 F9 75 3F AA EB DC E8 43 00 00 00 2B CB 75 10 E8 38 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule A3E__TXT2COM_
 {
 meta:
@@ -26938,10 +26938,10 @@ strings:
     	$a0 = { 1E 33 C0 50 BE ?? ?? 81 C6 ?? ?? B8 ?? ?? 8E C0 BF ?? ?? B9 ?? ?? F3 A5 CB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule XXPack_0_1____bagie
 {
 meta:
@@ -26950,10 +26950,10 @@ strings:
     	$a0 = { E8 04 00 00 00 83 60 EB 0C 5D EB 05 45 55 EB 04 B8 EB F9 00 C3 E8 00 00 00 00 5D EB 01 00 81 ED 5E 1F 40 00 EB 02 83 09 8D B5 EF 1F 40 00 EB 02 83 09 BA A3 11 00 00 EB 00 68 00 ?? ?? ?? C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule IMP_Packer_1_0____Mahdi_Hezavehi__IMPOSTER
 {
 meta:
@@ -26965,7 +26965,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Go32Stub_v_2_00_DOS_Extender
 {
 meta:
@@ -26974,10 +26974,10 @@ strings:
     	$a0 = { 0E 1F 8C 1E ?? ?? 8C 06 ?? ?? FC B4 30 CD 21 80 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MS_Visual_C___v_8_DLL__h_small_sig1_
 {
 meta:
@@ -26986,10 +26986,10 @@ strings:
     	$a0 = { 8B FF 55 8B EC 83 7D 0C 01 75 05 E8 ?? ?? ?? FF 5D E9 D6 FE FF FF CC CC CC CC CC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule HACKSTOP_v1_10p1
 {
 meta:
@@ -26998,10 +26998,10 @@ strings:
     	$a0 = { B4 30 CD 21 86 E0 3D 00 03 73 ?? B4 2F CD 21 B4 2A CD 21 B4 2C CD 21 B0 FF B4 4C CD 21 50 B8 ?? ?? 58 EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_V1_3_3_7____Obsidium_Software
 {
 meta:
@@ -27010,10 +27010,10 @@ strings:
     	$a0 = { EB 02 ?? ?? E8 2C 00 00 00 EB 04 ?? ?? ?? ?? EB 04 ?? ?? ?? ?? 8B 54 24 0C EB 02 ?? ?? 83 82 B8 00 00 00 27 EB 04 ?? ?? ?? ?? 33 C0 EB 02 ?? ?? C3 EB 02 ?? ?? EB 03 ?? ?? ?? 64 67 FF 36 00 00 EB 04 ?? ?? ?? ?? 64 67 89 26 00 00 EB 03 ?? ?? ?? EB 01 ?? 50 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PE_Packer
 {
 meta:
@@ -27022,10 +27022,10 @@ strings:
     	$a0 = { FC 8B 35 70 01 40 ?? 83 EE 40 6A 40 68 ?? 30 10 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v1_90b2
 {
 meta:
@@ -27034,10 +27034,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 F0 C1 40 00 68 A4 89 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v1_90b3
 {
 meta:
@@ -27046,10 +27046,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 08 E2 40 00 68 94 95 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v1_90b1
 {
 meta:
@@ -27058,10 +27058,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 E0 C1 40 00 68 04 89 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v1_90b4
 {
 meta:
@@ -27070,10 +27070,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 08 E2 40 00 68 B4 96 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule CipherWall_Self_Extrator_Decryptor__GUI__1_5
 {
 meta:
@@ -27085,7 +27085,7 @@ condition:
     	$a0
 }
 
-    
+
 rule GHF_Protector__pack____GPcH
 {
 meta:
@@ -27094,10 +27094,10 @@ strings:
     	$a0 = { 60 68 ?? ?? ?? ?? B8 ?? ?? ?? ?? FF 10 68 ?? ?? ?? ?? 50 B8 ?? ?? ?? ?? FF 10 68 00 A0 00 00 6A 40 FF D0 89 05 ?? ?? ?? ?? 89 C7 BE ?? ?? ?? ?? 60 FC B2 80 31 DB A4 B3 02 E8 6D 00 00 00 73 F6 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PUNiSHER_1_5__DEMO_____FEUERRADER_AHTeam
 {
 meta:
@@ -27109,7 +27109,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Stranik_1_3_Modula_C_Pascal
 {
 meta:
@@ -27118,10 +27118,10 @@ strings:
     	$a0 = { E8 ?? ?? FF FF E8 ?? ?? FF FF ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule BamBam_0_01
 {
 meta:
@@ -27133,7 +27133,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PocketPC_MIB
 {
 meta:
@@ -27143,10 +27143,10 @@ strings:
 	$a1 = { E8 FF BD 27 14 00 BF AF 18 00 A4 AF 1C 00 A5 AF 20 00 A6 AF 24 00 A7 AF ?? ?? ?? 0C 00 00 00 00 18 00 A4 8F 1C 00 A5 8F 20 00 A6 8F ?? ?? ?? 0C 24 00 A7 8F ?? ?? ?? 0C 25 20 40 00 14 00 BF 8F 08 00 E0 03 18 00 BD 27 ?? FF BD 27 18 00 ?? AF ?? 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__VBOX_4_3_MTE______Anorganix
 {
 meta:
@@ -27155,10 +27155,10 @@ strings:
     	$a0 = { 0B C0 0B C0 0B C0 0B C0 0B C0 0B C0 0B C0 0B C0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Fuck_n_Joy_1_0c____UsAr
 {
 meta:
@@ -27170,7 +27170,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PECompact_2_00_alpha_38
 {
 meta:
@@ -27182,7 +27182,7 @@ condition:
     	$a0
 }
 
-    
+
 rule UPX___ECLiPSE_layer
 {
 meta:
@@ -27191,10 +27191,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? ?? B9 ?? ?? ?? ?? 33 D2 EB 01 0F 56 EB 01 0F E8 03 00 00 00 EB 01 0F EB 01 0F 5E EB 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Hasp_4_envelope_dongle__Alladin_
 {
 meta:
@@ -27203,10 +27203,10 @@ strings:
     	$a0 = { 10 02 D0 51 0F 00 83 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_V1_3_5_0____Obsidium_Software
 {
 meta:
@@ -27215,10 +27215,10 @@ strings:
     	$a0 = { EB 03 ?? ?? ?? E8 ?? ?? ?? ?? EB 02 ?? ?? EB 04 ?? ?? ?? ?? 8B 54 24 0C EB 04 ?? ?? ?? ?? 83 82 B8 00 00 00 20 EB 03 ?? ?? ?? 33 C0 EB 01 ?? C3 EB 02 ?? ?? EB 03 ?? ?? ?? 64 67 FF 36 00 00 EB 03 ?? ?? ?? 64 67 89 26 00 00 EB 01 ?? EB 04 ?? ?? ?? ?? 50 EB 04 ?? ?? ?? ?? 33 C0 EB 04 ?? ?? ?? ?? 8B 00 EB 03 ?? ?? ?? C3 EB 02 ?? ?? E9 FA 00 00 00 EB 01 ?? E8 ?? ?? ?? ?? EB 01 ?? EB 02 ?? ?? 58 EB 04 ?? ?? ?? ?? EB 02 ?? ?? 64 67 8F 06 00 00 EB 02 ?? ?? 83 C4 04 EB 01 ?? E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule _EPack_1_4_lite__final____by_6aHguT
 {
 meta:
@@ -27227,10 +27227,10 @@ strings:
     	$a0 = { 33 C0 8B C0 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MEW_10_by_Northfox
 {
 meta:
@@ -27242,7 +27242,7 @@ condition:
     	$a0
 }
 
-    
+
 rule RLPack_v1_18_Basic_DLL__aPLib_____Ap0x
 {
 meta:
@@ -27251,10 +27251,10 @@ strings:
     	$a0 = { 80 7C 24 08 01 0F 85 ?? ?? ?? ?? 60 E8 00 00 00 00 8B 2C 24 83 C4 04 8D B5 1A 04 00 00 8D 9D C1 02 00 00 33 FF E8 61 01 00 00 EB 0F FF 74 37 04 FF 34 37 FF D3 83 C4 08 83 C7 08 83 3C 37 00 75 EB 83 BD 06 04 00 00 00 74 0E 83 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule yoda_s_Protector_v1_03_2_by_Ashkbiz_Danehkar
 {
 meta:
@@ -27266,7 +27266,7 @@ condition:
     	$a0
 }
 
-    
+
 rule HASP_HL_Protection_1_X____Aladdin
 {
 meta:
@@ -27278,7 +27278,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Exe_Guarder_1_8____Exeicon_com__h_
 {
 meta:
@@ -27290,7 +27290,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Vcasm_Protector_1_0
 {
 meta:
@@ -27300,10 +27300,10 @@ strings:
 	$a1 = { 55 8B EC 6A FF 68 ?? ?? ?? 00 68 ?? ?? ?? 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 E8 03 00 00 00 C7 84 00 58 EB 01 E9 83 C0 07 50 C3 FF 35 E8 03 00 00 00 C7 84 00 58 EB 01 E9 83 C0 07 50 C3 FF 35 E8 07 00 00 00 C7 83 83 C0 13 EB 0B 58 EB 02 CD 20 83 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Alloy_v1_x_2000
 {
 meta:
@@ -27312,10 +27312,10 @@ strings:
     	$a0 = { 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 07 20 40 ?? 87 DD 6A 04 68 ?? 10 ?? ?? 68 ?? 02 ?? ?? 6A ?? FF 95 46 23 40 ?? 0B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__VBOX_4_3_MTE_____Anorganix
 {
 meta:
@@ -27324,10 +27324,10 @@ strings:
     	$a0 = { 0B C0 0B C0 0B C0 0B C0 0B C0 0B C0 0B C0 0B C0 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Private_Personal_Packer__PPP__1_0_3____ConquestOfTroy_com
 {
 meta:
@@ -27336,10 +27336,10 @@ strings:
     	$a0 = { E8 19 00 00 00 90 90 E8 68 00 00 00 FF 35 2C 37 00 10 E8 ED 01 00 00 6A 00 E8 2E 04 00 00 E8 41 04 00 00 A3 74 37 00 10 6A 64 E8 5F 04 00 00 E8 30 04 00 00 A3 78 37 00 10 6A 64 E8 4E 04 00 00 E8 1F 04 00 00 A3 7C 37 00 10 A1 74 37 00 10 8B 1D 78 37 00 10 2B D8 8B 0D 7C 37 00 10 2B C8 83 FB 64 73 0F 81 F9 C8 00 00 00 73 07 6A 00 E8 D9 03 00 00 C3 6A 0A 6A 07 6A 00 E8 D3 03 00 00 A3 20 37 00 10 50 6A 00 E8 DE 03 00 00 A3 24 37 00 10 FF 35 20 37 00 10 6A 00 E8 EA 03 00 00 A3 30 37 00 10 FF 35 24 37 00 10 E8 C2 03 00 00 A3 28 37 00 10 8B 0D 30 37 00 10 8B 3D 28 37 00 10 EB 09 49 C0 04 39 55 80 34 39 24 0B C9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule tElock_v0_7x___v0_84
 {
 meta:
@@ -27348,10 +27348,10 @@ strings:
     	$a0 = { 60 E8 00 00 C3 83 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_V1_18_Basic_Edition__LZMA_4_30_____ap0x
 {
 meta:
@@ -27360,10 +27360,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 8D B5 21 0B 00 00 8D 9D FF 02 00 00 33 FF E8 9F 01 00 00 6A 40 68 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_v0_71__DLL_
 {
 meta:
@@ -27372,10 +27372,10 @@ strings:
     	$a0 = { 80 7C 24 08 01 0F 85 95 01 00 00 60 E8 00 00 00 00 83 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Thinstall_Embedded_V2_2X_V2_308____Jitit___Sign_by_fly
 {
 meta:
@@ -27384,10 +27384,10 @@ strings:
     	$a0 = { B8 EF BE AD DE 50 6A 00 FF 15 ?? ?? ?? ?? E9 B9 FF FF FF 8B C1 8B 4C 24 04 89 88 29 04 00 00 C7 40 0C 01 00 00 00 0F B6 49 01 D1 E9 89 48 10 C7 40 14 80 00 00 00 C2 04 00 8B 44 24 04 C7 41 0C 01 00 00 00 89 81 29 04 00 00 0F B6 40 01 D1 E8 89 41 10 C7 41 14 80 00 00 00 C2 04 00 55 8B EC 53 56 57 33 C0 33 FF 39 45 0C 8B F1 76 0C 8B 4D 08 03 3C 81 40 3B 45 0C 72 F4 8B CE E8 43 00 00 00 8B 46 14 33 D2 F7 F7 8B 5E 10 33 D2 8B F8 8B C3 F7 F7 89 7E 18 89 45 0C 33 C0 33 C9 8B 55 08 03 0C 82 40 39 4D 0C 73 F4 48 8B 14 82 2B CA 0F AF CF 2B D9 0F AF FA 89 7E 14 89 5E 10 5F 5E 5B 5D C2 08 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_v0_32a__fake_PE_Lock_NT_2_04_____emadicius__h_
 {
 meta:
@@ -27396,10 +27396,10 @@ strings:
     	$a0 = { EB 03 CD 20 C7 1E EB 03 CD 20 EA 9C EB 02 EB 01 EB 01 EB 60 EB 03 CD 20 EB EB 01 EB E8 03 00 00 00 E9 EB 04 58 40 50 C3 EB 03 CD 20 EB EB 03 CD 20 03 61 9D 83 C4 04 EB 05 E8 EB 04 40 00 EB FA E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 50 E8 02 00 00 00 29 5A 58 6B C0 03 E8 02 00 00 00 29 5A 83 C4 04 58 74 04 75 02 EB 02 EB 01 81 0F 31 50 0F 31 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PKLITE_v2_00b__extra_
 {
 meta:
@@ -27408,10 +27408,10 @@ strings:
     	$a0 = { 50 B8 ?? ?? BA ?? ?? 05 ?? ?? 3B 06 02 00 72 ?? B4 09 BA ?? ?? CD 21 B8 01 4C CD 21 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? EA ?? ?? ?? ?? F3 A5 C3 59 2D ?? ?? 8E D0 51 2D ?? ?? 50 80 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECryptor_2_3_9_DLL__minimum_protection_____www_strongbit_com
 {
 meta:
@@ -27423,7 +27423,7 @@ condition:
     	$a0
 }
 
-    
+
 rule UPX_Modified_Stub_b____Farb_rausch_Consumer_Consulting
 {
 meta:
@@ -27433,10 +27433,10 @@ strings:
 	$a1 = { 60 BE ?? ?? ?? ?? 8D BE ?? ?? ?? ?? 57 83 CD FF FC B2 80 31 DB A4 B3 02 E8 6D 00 00 00 73 F6 31 C9 E8 64 00 00 00 73 1C 31 C0 E8 5B 00 00 00 73 23 B3 02 41 B0 10 E8 4F 00 00 00 10 C0 73 F7 75 3F AA EB D4 E8 4D 00 00 00 29 D9 75 10 E8 42 00 00 00 EB 28 AC }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule EXEPACK_v4_05__v4_06
 {
 meta:
@@ -27445,10 +27445,10 @@ strings:
     	$a0 = { 8C C0 05 ?? ?? 0E 1F A3 ?? ?? 03 06 ?? ?? 8E C0 8B 0E ?? ?? 8B F9 4F 8B F7 FD F3 A4 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Themida_WinLicense_V1_0_X_V1_7_X_DLL____Oreans_Technologies
 {
 meta:
@@ -27457,10 +27457,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? ?? 60 0B C0 74 58 E8 00 00 00 00 58 05 ?? ?? ?? ?? 80 38 E9 75 03 61 EB 35 E8 00 00 00 00 58 25 00 F0 FF FF 33 FF 66 BB ?? ?? 66 83 ?? ?? 66 39 18 75 12 0F B7 50 3C 03 D0 BB ?? ?? ?? ?? 83 C3 ?? 39 1A 74 07 2D 00 10 00 00 EB DA 8B F8 B8 ?? ?? ?? ?? 03 C7 B9 ?? ?? ?? ?? 03 CF EB 0A B8 ?? ?? ?? ?? B9 ?? ?? ?? ?? 50 51 E8 84 00 00 00 E8 00 00 00 00 58 2D ?? ?? ?? ?? B9 ?? ?? ?? ?? C6 00 E9 83 E9 ?? 89 48 01 61 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Morphine_v2_7____Holy_Father___Ratter_29A
 {
 meta:
@@ -27472,7 +27472,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PECompact_v1_22
 {
 meta:
@@ -27481,10 +27481,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 0F 70 40 ?? 87 DD 8B 85 A6 70 40 ?? 01 85 03 70 40 ?? 66 C7 85 ?? 70 40 ?? 90 90 01 85 9E 70 40 ?? BB F3 08 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ORiEN_v2_11___2_12____Fisun_Alexander
 {
 meta:
@@ -27494,10 +27494,10 @@ strings:
 	$a1 = { E9 5D 01 00 00 CE D1 CE ?? 0D 0A 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 0D 0A 2D 20 4F 52 69 45 4E 20 65 78 65 63 75 74 61 62 6C 65 20 66 69 6C 65 73 20 70 72 6F 74 65 63 74 69 6F 6E 20 73 79 73 74 65 6D 20 2D 0D 0A 2D 2D 2D 2D 2D 2D 20 43 72 65 61 74 65 64 20 62 79 20 41 2E 20 46 69 73 75 6E 2C 20 31 39 39 34 2D 32 30 30 33 20 2D 2D 2D 2D 2D 2D 0D 0A 2D 2D 2D 2D 2D 2D 2D 20 57 57 57 3A 20 68 74 74 70 3A 2F 2F 7A 61 6C 65 78 66 2E 6E 61 72 6F 64 2E 72 75 2F 20 2D 2D 2D 2D 2D 2D 2D 0D 0A 2D 2D 2D 2D 2D 2D 2D 2D 20 65 2D 6D 61 69 6C 3A 20 7A 61 6C 65 78 66 40 68 6F 74 6D 61 69 6C 2E 72 75 20 2D 2D 2D 2D 2D 2D 2D 2D 2D 0D 0A 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PE_Armor_0_760_0_765____hying
 {
 meta:
@@ -27509,7 +27509,7 @@ condition:
     	$a0
 }
 
-    
+
 rule CipherWall_Self_Extrator_Decryptor__Console__v1_5
 {
 meta:
@@ -27519,10 +27519,10 @@ strings:
 	$a1 = { 90 61 BE 00 10 42 00 8D BE 00 00 FE FF C7 87 C0 20 02 00 0B 6E 5B 9B 57 83 CD FF EB 0E 90 90 90 90 8A 06 46 88 07 47 01 DB 75 07 8B 1E 83 EE FC 11 DB 72 ED B8 01 00 00 00 01 DB 75 07 8B 1E 83 EE FC 11 DB 11 C0 01 DB 73 EF 75 09 8B 1E 83 EE FC 11 DB 73 E4 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule eXPressor_1_0_beta____CGSoftLabs
 {
 meta:
@@ -27532,10 +27532,10 @@ strings:
 	$a1 = { E9 35 14 00 00 E9 31 13 00 00 E9 98 12 00 00 E9 EF 0C 00 00 E9 42 13 00 00 E9 E9 02 00 00 E9 EF 0B 00 00 E9 1B 0D 00 00 CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 2A 70 77 20 3D 20 30 78 25 30 34 78 20 20 2A 70 64 77 20 3D 20 30 78 25 30 38 78 00 00 00 00 00 00 00 00 00 42 61 64 20 70 6F 69 6E 74 65 72 3A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 2A 70 64 77 20 3D 20 30 78 25 30 38 78 00 00 00 45 72 72 6F 72 3A 00 00 54 68 65 20 25 68 73 20 66 69 6C 65 20 69 73 20 0A 6C 69 6E 6B 65 64 20 74 6F 20 6D 69 73 73 69 6E 67 20 65 78 70 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PEiD_Bundle_v1_02_____BoB___BobSoft
 {
 meta:
@@ -27544,10 +27544,10 @@ strings:
     	$a0 = { 60 E8 9C 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 36 ?? ?? ?? 2E ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 80 00 00 00 00 4B 65 72 6E 65 6C 33 32 2E 44 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_1_10__Eng_____dulek_xt_____Microsoft_Visual_C___6_0_
 {
 meta:
@@ -27556,10 +27556,10 @@ strings:
     	$a0 = { 03 DE EB 01 F8 B8 80 ?? 42 00 EB 02 CD 20 68 17 A0 B3 AB EB 01 E8 59 0F B6 DB 68 0B A1 B3 AB EB 02 CD 20 5E 80 CB AA 2B F1 EB 02 CD 20 43 0F BE 38 13 D6 80 C3 47 2B FE EB 01 F4 03 FE EB 02 4F 4E 81 EF 93 53 7C 3C 80 C3 29 81 F7 8A 8F 67 8B 80 C3 C7 2B FE }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule XPack_1_67__com
 {
 meta:
@@ -27568,10 +27568,10 @@ strings:
     	$a0 = { E9 53 00 FF FD FF FB FF F9 FF BC 03 00 8B E5 4C 4C C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_v0_71__DLL
 {
 meta:
@@ -27580,10 +27580,10 @@ strings:
     	$a0 = { 80 7C 24 08 01 0F 85 95 01 00 00 60 E8 00 00 00 00 83 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Patch_Creation_Wizard_1_2_Seek_and_Destroy_Patch
 {
 meta:
@@ -27595,7 +27595,7 @@ condition:
     	$a0
 }
 
-    
+
 rule SimbiOZ_1_3____Extranger
 {
 meta:
@@ -27604,10 +27604,10 @@ strings:
     	$a0 = { 57 57 8D 7C 24 04 50 B8 00 ?? ?? ?? AB 58 5F C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Phoenix_Protector_v1_0_v1_1____NTCore_com
 {
 meta:
@@ -27616,10 +27616,10 @@ strings:
     	$a0 = { 02 6F ?? ?? ?? 0A 0A 06 8D ?? ?? ?? 01 0B 16 0C 38 36 00 00 00 02 08 6F ?? ?? ?? 0A 0D 09 06 08 59 61 D2 13 04 09 1E 63 08 61 D2 13 05 07 08 11 05 1E 62 11 04 60 D1 9D 08 17 58 0C 08 07 8E 69 38 0B 00 00 00 28 ?? ?? ?? 0A 2A 38 EC FF FF FF 3F C0 FF FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECryptor_2_xx__compressed_resources_____www_strongbit_com___Sign_By_haggar
 {
 meta:
@@ -27631,7 +27631,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_2__PE_Pack_0_99______Anorganix
 {
 meta:
@@ -27640,10 +27640,10 @@ strings:
     	$a0 = { 60 E8 11 00 00 00 5D 83 ED 06 80 BD E0 04 90 90 01 0F 84 F2 FF CC 0A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ProActivate_V1_0X____TurboPower_Software_Company___Sign_by_fly
 {
 meta:
@@ -27652,10 +27652,10 @@ strings:
     	$a0 = { 55 8B EC B9 0E 00 00 00 6A 00 6A 00 49 75 F9 51 53 56 57 B8 ?? ?? ?? ?? 90 90 90 90 90 33 C0 55 68 ?? ?? ?? ?? 64 FF 30 64 89 20 A1 ?? ?? ?? ?? 83 C0 05 A3 ?? ?? ?? ?? C7 05 ?? ?? ?? ?? 0D 00 00 00 E8 85 E2 FF FF 81 3D ?? ?? ?? ?? 21 7E 7E 40 75 7A 81 3D ?? ?? ?? ?? 43 52 43 33 75 6E 81 3D ?? ?? ?? ?? 32 40 7E 7E 75 62 81 3D ?? ?? ?? ?? 21 7E 7E 40 75 56 81 3D ?? ?? ?? ?? 43 52 43 33 75 4A 81 3D ?? ?? ?? ?? 32 40 7E 7E 75 3E 81 3D ?? ?? ?? ?? 21 7E 7E 40 75 32 81 3D ?? ?? ?? ?? 43 52 43 33 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASPack_v1_08_04____Alexey_Solodovnikov
 {
 meta:
@@ -27664,10 +27664,10 @@ strings:
     	$a0 = { 60 E8 41 06 00 00 EB 41 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_v0_39_final____Sign_by_hot_UNP
 {
 meta:
@@ -27680,7 +27680,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule R_SC_s_Process_Patcher_v1_4
 {
 meta:
@@ -27693,7 +27693,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule PEiD_Bundle_v1_00___v1_01____BoB___BobSoft
 {
 meta:
@@ -27702,10 +27702,10 @@ strings:
     	$a0 = { 60 E8 ?? 02 00 00 8B 44 24 04 52 48 66 31 C0 66 81 38 4D 5A 75 F5 8B 50 3C 81 3C 02 50 45 00 00 75 E9 5A C2 04 00 60 89 DD 89 C3 8B 45 3C 8B 54 28 78 01 EA 52 8B 52 20 01 EA 31 C9 41 8B 34 8A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule AntiDote_v1_4_osCE__Sing_by_osC__CoDeR
 {
 meta:
@@ -27714,10 +27714,10 @@ strings:
     	$a0 = { 68 95 01 00 00 E8 D0 FD FF FF 68 95 01 00 00 E8 C3 FD FF FF 68 90 03 00 00 E8 BC FD FF FF 68 90 03 00 00 E8 B2 FD FF FF 50 E8 AC FD FF FF 50 E8 A6 FD FF FF 68 69 D6 00 00 E8 9C FD FF FF 50 E8 96 FD FF FF 50 E8 90 FD FF FF 83 C4 20 E8 78 FF FF FF 84 C0 74 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PeCompact_v2_08____Bitsum_Technologies_signature_by_loveboom_
 {
 meta:
@@ -27726,10 +27726,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? ?? 50 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 33 C0 89 08 50 45 43 6F 6D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXE_Stealth_2_74
 {
 meta:
@@ -27741,7 +27741,7 @@ condition:
     	$a0
 }
 
-    
+
 rule EXE_Stealth_2_73
 {
 meta:
@@ -27753,7 +27753,7 @@ condition:
     	$a0
 }
 
-    
+
 rule SEA_AXE
 {
 meta:
@@ -27762,10 +27762,10 @@ strings:
     	$a0 = { FC BC ?? ?? 0E 1F E8 ?? ?? 26 A1 ?? ?? 8B 1E ?? ?? 2B C3 8E C0 B1 ?? D3 E3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Ding_Boy_s_PE_lock_Phantasm_v1_5b3
 {
 meta:
@@ -27774,10 +27774,10 @@ strings:
     	$a0 = { 9C 55 57 56 52 51 53 9C FA E8 00 00 00 00 5D 81 ED 5B 53 40 00 B0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule DiskDupe__c__MSD_Configuration_file
 {
 meta:
@@ -27789,7 +27789,7 @@ condition:
     	$a0
 }
 
-    
+
 rule BeRoEXEPacker_v1_00_DLL__LZBRS_____BeRo___Farbrausch
 {
 meta:
@@ -27798,10 +27798,10 @@ strings:
     	$a0 = { 83 7C 24 08 01 0F 85 ?? ?? ?? ?? 60 BE ?? ?? ?? ?? BF ?? ?? ?? ?? FC AD 8D 1C 07 B0 80 3B FB 73 3B E8 ?? ?? ?? ?? 72 03 A4 EB F2 E8 ?? ?? ?? ?? 8D 51 FF E8 ?? ?? ?? ?? 56 8B F7 2B F2 F3 A4 5E EB DB 02 C0 75 03 AC 12 C0 C3 33 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PESPin_1_3____Cyberbob__h_
 {
 meta:
@@ -27813,7 +27813,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Packman_V0_0_0_1____Bubbasoft
 {
 meta:
@@ -27822,10 +27822,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 58 8D ?? ?? ?? ?? ?? 8D ?? ?? ?? ?? ?? 8D ?? ?? ?? ?? ?? 8D ?? ?? 48 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECryptor_2_2_6__minimum_protection_____www_strongbit_com
 {
 meta:
@@ -27837,7 +27837,7 @@ condition:
     	$a0
 }
 
-    
+
 rule FSG_1_20__Eng_____dulek_xt_____Borland_Delphi___Borland_C___
 {
 meta:
@@ -27849,7 +27849,7 @@ condition:
     	$a0
 }
 
-    
+
 rule UPX_v0_89_6___v1_02___v1_05___v1_22
 {
 meta:
@@ -27858,10 +27858,10 @@ strings:
     	$a0 = { 80 7C 24 08 01 0F 85 ?? ?? ?? 00 60 BE ?? ?? ?? ?? 8D BE ?? ?? ?? ?? 57 83 CD }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__UPX_0_6_
 {
 meta:
@@ -27870,10 +27870,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 58 83 E8 3D 50 8D B8 00 00 00 FF 57 8D B0 E8 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule LZEXE_v0_91__v1_00a__1_
 {
 meta:
@@ -27882,10 +27882,10 @@ strings:
     	$a0 = { 06 0E 1F 8B ?? ?? ?? 8B F1 4E 89 F7 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule hmimys_Packer_1_0____hmimys
 {
 meta:
@@ -27898,7 +27898,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule RLPack_V1_19__aPlib_0_43_____ap0x___Sign_by_fly
 {
 meta:
@@ -27907,10 +27907,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 83 7C 24 28 01 75 0C 8B 44 24 24 89 85 3C 04 00 00 EB 0C 8B 85 38 04 00 00 89 85 3C 04 00 00 8D B5 60 04 00 00 8D 9D EB 02 00 00 33 FF E8 52 01 00 00 EB 1B 8B 85 3C 04 00 00 FF 74 37 04 01 04 24 FF 34 37 01 04 24 FF D3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECryptor_2_xx__compressed_resources_____www_strongbit_com
 {
 meta:
@@ -27919,10 +27919,10 @@ strings:
     	$a0 = { 56 57 53 31 DB 89 C6 89 D7 0F B6 06 89 C2 83 E0 1F C1 EA 05 74 2D 4A 74 15 8D 5C 13 02 46 C1 E0 08 89 FA 0F B6 0E 46 29 CA 4A 29 C2 EB 32 C1 E3 05 8D 5C 03 04 46 89 FA 0F B7 0E 29 CA 4A 83 C6 02 EB 1D C1 E3 04 46 89 C1 83 E1 0F 01 CB C1 E8 05 73 07 43 89 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Petite_1_2
 {
 meta:
@@ -27931,10 +27931,10 @@ strings:
     	$a0 = { 66 9C 60 E8 CA 00 00 00 03 00 04 00 05 00 06 00 07 00 08 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Petite_1_3
 {
 meta:
@@ -27946,7 +27946,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Petite_1_4
 {
 meta:
@@ -27958,7 +27958,7 @@ condition:
     	$a0
 }
 
-    
+
 rule EXE________________________Liuli
 {
 meta:
@@ -27970,7 +27970,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Upack_v0_29_Beta___v0_31_Beta____Sign_by_hot_UNP
 {
 meta:
@@ -27982,7 +27982,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_2__Borland_C___1999_____Anorganix
 {
 meta:
@@ -27991,10 +27991,10 @@ strings:
     	$a0 = { EB 10 66 62 3A 43 2B 2B 48 4F 4F 4B 90 E9 90 90 90 90 A1 ?? ?? ?? ?? A3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Amiga_AIFF_8SFX_Audio_file
 {
 meta:
@@ -28006,7 +28006,7 @@ condition:
     	$a0
 }
 
-    
+
 rule MSLRH_v0_32a__fake_PESHiELD_0_25_____emadicius__h_
 {
 meta:
@@ -28015,10 +28015,10 @@ strings:
     	$a0 = { 60 E8 2B 00 00 00 0D 0A 0D 0A 0D 0A 52 65 67 69 73 74 41 72 65 64 20 74 6F 3A 20 4E 4F 4E 2D 43 4F 4D 4D 45 52 43 49 41 4C 21 21 0D 0A 0D 0A 0D 00 58 61 EB 05 E8 EB 04 40 00 EB FA E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 50 E8 02 00 00 00 29 5A 58 6B C0 03 E8 02 00 00 00 29 5A 83 C4 04 58 74 04 75 02 EB 02 EB 01 81 0F 31 50 0F 31 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NsPack_3_x____Liu_Xing_Ping
 {
 meta:
@@ -28027,10 +28027,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 5D 83 ED 07 8D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EncryptPE_V2_2006_7_10_V2_2007_04_11____WFS
 {
 meta:
@@ -28039,10 +28039,10 @@ strings:
     	$a0 = { 60 9C 64 FF 35 00 00 00 00 E8 1B 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule eXPressor_V1_0____CGSoftLabs
 {
 meta:
@@ -28051,10 +28051,10 @@ strings:
     	$a0 = { E9 35 14 00 00 E9 31 13 00 00 E9 98 12 00 00 E9 EF 0C 00 00 E9 42 13 00 00 E9 E9 02 00 00 E9 EF 0B 00 00 E9 1B 0D 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule DZA_Patcher_v1_3____DZA
 {
 meta:
@@ -28064,10 +28064,10 @@ strings:
 	$a1 = { EB 08 35 48 34 30 4C 31 4E 00 60 E8 00 00 00 00 5D 8B D5 81 ED 44 73 40 00 2B 95 74 74 40 00 83 EA 10 89 95 70 74 40 00 8B 44 24 20 25 00 00 FF FF 80 38 4D 74 07 2D 00 00 01 00 EB F4 93 89 85 7C 74 40 00 8D BD 8C 74 40 00 E8 83 00 00 00 89 85 80 74 40 00 8D BD A4 74 40 00 E8 72 00 00 00 89 85 84 74 40 00 8D BD F0 73 40 00 57 FF D0 8D BD 99 74 40 00 E8 58 00 00 00 89 85 88 74 40 00 8B 85 78 74 40 00 03 85 70 74 40 00 99 8D 8D 6C 74 40 00 51 52 52 50 52 52 FF 95 80 74 40 00 8D BD C0 74 40 00 8B 0F E3 13 8A 5F 05 8A 01 3A C3 75 FA 8A 57 04 88 11 83 C7 06 EB E9 E8 00 00 00 00 5D 81 ED F5 73 40 00 6A 00 FF 95 88 74 40 00 61 C3 8B D3 0F B7 43 3C 03 D8 8B 5B 78 03 DA 0B FF 74 40 8B 73 20 03 F2 8B 4B 18 53 33 DB AD 03 C2 56 57 87 FE 97 AC 0A C0 75 07 80 3F 00 74 0B }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__DxPack_1_0______Anorganix
 {
 meta:
@@ -28076,10 +28076,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 8B FD 81 ED 90 90 90 90 2B B9 00 00 00 00 81 EF 90 90 90 90 83 BD 90 90 90 90 90 0F 84 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_v0_32a__fake_ASPack_2_11d_____emadicius__h_
 {
 meta:
@@ -28088,10 +28088,10 @@ strings:
     	$a0 = { 60 E8 02 00 00 00 EB 09 5D 55 81 ED 39 39 44 00 C3 61 EB 05 E8 EB 04 40 00 EB FA E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 50 E8 02 00 00 00 29 5A 58 6B C0 03 E8 02 00 00 00 29 5A 83 C4 04 58 74 04 75 02 EB 02 EB 01 81 0F 31 50 0F 31 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule iLUCRYPT_v4_018__exe
 {
 meta:
@@ -28100,10 +28100,10 @@ strings:
     	$a0 = { 8B EC FA C7 ?? ?? ?? ?? 4C 4C C3 FB BF ?? ?? B8 ?? ?? 2E ?? ?? D1 C8 4F 81 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_1_3_2_2____Obsidium_Software
 {
 meta:
@@ -28112,10 +28112,10 @@ strings:
     	$a0 = { EB 04 ?? ?? ?? ?? E8 2A 00 00 00 EB 03 ?? ?? ?? EB 04 ?? ?? ?? ?? 8B 54 24 0C EB 02 ?? ?? 83 82 B8 00 00 00 26 EB 04 ?? ?? ?? ?? 33 C0 EB 02 ?? ?? C3 EB 01 ?? EB 03 ?? ?? ?? 64 67 FF 36 00 00 EB 02 ?? ?? 64 67 89 26 00 00 EB 02 ?? ?? EB 01 ?? 50 EB 04 ?? ?? ?? ?? 33 C0 EB 04 ?? ?? ?? ?? 8B 00 EB 02 ?? ?? C3 EB 03 ?? ?? ?? E9 FA 00 00 00 EB 04 ?? ?? ?? ?? E8 D5 FF FF FF EB 02 ?? ?? EB 04 ?? ?? ?? ?? 58 EB 01 ?? EB 01 ?? 64 67 8F 06 00 00 EB 01 ?? 83 C4 04 EB 04 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_Shit_0_1____500mhz
 {
 meta:
@@ -28125,10 +28125,10 @@ strings:
 	$a1 = { E8 00 00 00 00 5E 83 C6 14 AD 89 C7 AD 89 C1 AD 30 07 47 E2 FB AD FF E0 C3 00 ?? ?? 00 ?? ?? ?? 00 ?? ?? ?? 01 ?? ?? ?? 00 55 50 58 2D 53 68 69 74 20 76 30 2E 31 20 2D 20 77 77 77 2E 62 6C 61 63 6B 6C 6F 67 69 63 2E 6E 65 74 20 2D 20 63 6F 64 65 20 62 79 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule ASProtect_v2_0
 {
 meta:
@@ -28140,7 +28140,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PENinja
 {
 meta:
@@ -28149,10 +28149,10 @@ strings:
     	$a0 = { 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule VProtector_V1_0E____vcasm
 {
 meta:
@@ -28161,10 +28161,10 @@ strings:
     	$a0 = { EB 0A 5B 56 50 72 6F 74 65 63 74 5D E8 24 00 00 00 8B 44 24 04 8B 00 3D 04 00 00 80 75 08 8B 64 24 08 EB 04 58 EB 0C E9 64 8F 05 00 00 00 00 74 F3 75 F1 EB 24 64 FF 35 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__PEtite_2_x__level_0_______Anorganix
 {
 meta:
@@ -28173,10 +28173,10 @@ strings:
     	$a0 = { 90 90 90 90 68 ?? ?? ?? ?? 67 64 FF 36 00 00 67 64 89 26 00 00 F1 90 90 90 90 B8 00 90 90 00 6A 00 68 90 90 90 00 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 66 9C 60 50 8B D8 03 00 68 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SimbiOZ____Extranger
 {
 meta:
@@ -28185,10 +28185,10 @@ strings:
     	$a0 = { 50 60 E8 00 00 00 00 5D 81 ED 07 10 40 00 68 80 0B 00 00 8D 85 1F 10 40 00 50 E8 84 0B 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Crunch_4
 {
 meta:
@@ -28200,7 +28200,7 @@ condition:
     	$a0
 }
 
-    
+
 rule ORiEN_2_11___2_12____Fisun_Alexander
 {
 meta:
@@ -28212,7 +28212,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_2__DEF_1_0_
 {
 meta:
@@ -28221,10 +28221,10 @@ strings:
     	$a0 = { BE 00 01 40 00 6A 05 59 80 7E 07 00 74 11 8B 46 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 83 C1 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule eXPressor_v1_5x____CGSoftLabs__h_
 {
 meta:
@@ -28233,10 +28233,10 @@ strings:
     	$a0 = { 55 8B EC 81 EC 58 02 00 00 53 56 57 83 A5 CC FD FF FF 00 F3 EB 0C 65 58 50 72 2D 76 2E 31 2E 35 2E 00 83 7D 0C 01 75 23 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Anskya_NTPacker_Generator____Anskya
 {
 meta:
@@ -28246,10 +28246,10 @@ strings:
 	$a1 = { 55 8B EC 83 C4 F0 53 B8 88 1D 00 10 E8 C7 FA FF FF 6A 0A 68 20 1E 00 10 A1 14 31 00 10 50 E8 71 FB FF FF 8B D8 85 DB 74 2F 53 A1 14 31 00 10 50 E8 97 FB FF FF 85 C0 74 1F 53 A1 14 31 00 10 50 E8 5F FB FF FF 85 C0 74 0F 50 E8 5D FB FF FF 85 C0 74 05 E8 70 FC FF FF 5B E8 F2 F6 FF FF 00 00 48 45 41 52 54 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule ass___crypter____by_santasdad
 {
 meta:
@@ -28259,10 +28259,10 @@ strings:
 	$a1 = { 55 8B EC 83 C4 EC 53 ?? ?? ?? ?? 89 45 EC B8 98 40 00 10 E8 AC EA FF FF 33 C0 55 68 78 51 00 10 64 ?? ?? ?? ?? 20 6A 0A 68 88 51 00 10 A1 E0 97 00 10 50 E8 D8 EA FF FF 8B D8 53 A1 E0 97 00 10 50 E8 12 EB FF FF 8B F8 53 A1 E0 97 00 10 50 E8 DC EA FF FF 8B }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PEQuake_0_06_by_fORGAT
 {
 meta:
@@ -28274,7 +28274,7 @@ condition:
     	$a0
 }
 
-    
+
 rule MaskPE_1_6____yzkzero
 {
 meta:
@@ -28286,7 +28286,7 @@ condition:
     	$a0
 }
 
-    
+
 rule CorelDraw_8_CDR_Graphics_format
 {
 meta:
@@ -28298,7 +28298,7 @@ condition:
     	$a0
 }
 
-    
+
 rule AntiDote_1_2_Demo____SIS_Team
 {
 meta:
@@ -28307,10 +28307,10 @@ strings:
     	$a0 = { E8 F7 FE FF FF 05 CB 22 00 00 FF E0 E8 EB FE FF FF 05 BB 19 00 00 FF E0 E8 BD 00 00 00 08 B2 62 00 01 52 17 0C 0F 2C 2B 20 7F 52 79 01 30 07 17 29 4F 01 3C 30 2B 5A 3D C7 26 11 26 06 59 0E 78 2E 10 14 0B 13 1A 1A 3F 64 1D 71 33 57 21 09 24 8B 1B 09 37 08 61 0F 1D 1D 2A 01 87 35 4C 07 39 0B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__VirusConstructor_based
 {
 meta:
@@ -28320,10 +28320,10 @@ strings:
 	$a1 = { E8 ?? ?? 5D 81 ?? ?? ?? 06 1E E8 ?? ?? E8 ?? ?? ?? ?? 2E ?? ?? ?? ?? ?? ?? B4 4A BB FF FF CD 21 83 ?? ?? B4 4A CD 21 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__PESHiELD_0_25______Anorganix
 {
 meta:
@@ -28332,10 +28332,10 @@ strings:
     	$a0 = { 60 E8 2B 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 CC CC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_1_1_BasicEdition____ap0x
 {
 meta:
@@ -28344,10 +28344,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 8D B5 4A 02 00 00 8D 9D 11 01 00 00 33 FF EB 0F FF 74 37 04 FF 34 37 FF D3 83 C4 08 83 C7 08 83 3C 37 00 75 EB 8D 74 37 04 53 6A 40 68 00 10 00 00 68 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule IMPostor_Pack_1_0____Mahdi_Hezavehi
 {
 meta:
@@ -28356,10 +28356,10 @@ strings:
     	$a0 = { BE ?? ?? ?? 00 83 C6 01 FF E6 00 00 00 00 ?? ?? 00 00 00 00 00 00 00 00 00 ?? ?? ?? 00 ?? 02 ?? ?? 00 10 00 00 00 02 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule eXPressor_1_2____CGSoftLabs__h_
 {
 meta:
@@ -28371,7 +28371,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Vx__Modification_of_Hi_924
 {
 meta:
@@ -28380,10 +28380,10 @@ strings:
     	$a0 = { 50 53 51 52 1E 06 9C B8 21 35 CD 21 53 BB ?? ?? 26 ?? ?? 49 48 5B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule CopyMinder____Microcosm_Ltd
 {
 meta:
@@ -28392,10 +28392,10 @@ strings:
     	$a0 = { 83 25 ?? ?? ?? ?? EF 6A 00 E8 ?? ?? ?? ?? E8 ?? ?? ?? ?? CC FF 25 ?? ?? ?? ?? FF 25 ?? ?? ?? ?? FF 25 ?? ?? ?? ?? FF 25 ?? ?? ?? ?? FF 25 ?? ?? ?? ?? FF 25 ?? ?? ?? ?? FF 25 ?? ?? ?? ?? FF 25 ?? ?? ?? ?? FF 25 ?? ?? ?? ?? FF 25 ?? ?? ?? ?? FF 25 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_2_90__LZMA___Delphi_stub_____Markus_Oberhumer__Laszlo_Molnar___John_Reiser
 {
 meta:
@@ -28404,10 +28404,10 @@ strings:
     	$a0 = { 60 BE ?? ?? ?? ?? 8D BE ?? ?? ?? ?? C7 87 ?? ?? ?? ?? ?? ?? ?? ?? 57 83 CD FF 89 E5 8D 9C 24 ?? ?? ?? ?? 31 C0 50 39 DC 75 FB 46 46 53 68 ?? ?? ?? ?? 57 83 C3 04 53 68 ?? ?? ?? ?? 56 83 C3 04 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MoleBox_v2_5_4____Teggo
 {
 meta:
@@ -28419,7 +28419,7 @@ condition:
     	$a0
 }
 
-    
+
 rule kkrunchy_V0_2X____Ryd___Sign_by_fly
 {
 meta:
@@ -28428,10 +28428,10 @@ strings:
     	$a0 = { BD ?? ?? ?? ?? C7 45 ?? ?? ?? ?? ?? FF 4D 08 C6 45 0C 05 8D 7D 14 31 C0 B4 04 89 C1 F3 AB BF ?? ?? ?? ?? 57 BE ?? ?? ?? ?? 31 C9 41 FF 4D 0C 8D 9C 8D A0 00 00 00 FF D6 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Mew_10_exe_coder_1_0____Northfox__HCC_
 {
 meta:
@@ -28440,10 +28440,10 @@ strings:
     	$a0 = { 33 C0 E9 ?? ?? FF FF 6A ?? ?? ?? ?? ?? 70 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__Microsoft_Visual_Basic_5_0___6_0______Anorganix
 {
 meta:
@@ -28452,10 +28452,10 @@ strings:
     	$a0 = { 68 ?? ?? ?? ?? E8 0A 00 00 00 00 00 00 00 00 00 30 00 00 00 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule nPack_v1_1_xxx____NEOx
 {
 meta:
@@ -28464,10 +28464,10 @@ strings:
     	$a0 = { 83 3D ?? ?? ?? 00 00 75 05 E9 01 00 00 00 C3 E8 46 00 00 00 E8 73 00 00 00 B8 ?? ?? ?? ?? 2B 05 08 ?? ?? ?? A3 ?? ?? ?? ?? E8 9C 00 00 00 E8 ?? 02 00 00 E8 ?? 06 00 00 E8 ?? 06 00 00 A1 ?? ?? ?? ?? C7 05 ?? ?? ?? 00 01 00 00 00 01 05 00 ?? ?? ?? FF 35 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_3_00a____Silicon_Realms_Toolworks
 {
 meta:
@@ -28477,10 +28477,10 @@ strings:
 	$a1 = { 60 E8 00 00 00 00 5D 50 51 EB 0F ?? EB 0F ?? EB 07 ?? EB 0F ?? EB 08 FD EB 0B F2 EB F5 EB F6 F2 EB 08 FD EB E9 F3 EB E4 FC ?? 59 58 50 51 EB 0F ?? EB 0F ?? EB 07 ?? EB 0F ?? EB 08 FD EB 0B F2 EB F5 EB F6 F2 EB 08 FD EB E9 F3 EB E4 FC ?? 59 58 50 51 EB 0F }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule UPX_v0_62__DLL_
 {
 meta:
@@ -28489,10 +28489,10 @@ strings:
     	$a0 = { 80 7C 24 08 01 0F 85 95 01 00 00 60 E8 00 00 00 00 58 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__REALBasic_____Anorganix
 {
 meta:
@@ -28501,10 +28501,10 @@ strings:
     	$a0 = { 55 89 E5 90 90 90 90 90 90 90 90 90 90 50 90 90 90 90 90 00 01 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_v0_32a__fake_MSVC___7_0_DLL_Method_3_____emadicius__h_
 {
 meta:
@@ -28513,10 +28513,10 @@ strings:
     	$a0 = { 55 8B EC 53 8B 5D 08 56 8B 75 0C 5E 5B 5D EB 05 E8 EB 04 40 00 EB FA E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 50 E8 02 00 00 00 29 5A 58 6B C0 03 E8 02 00 00 00 29 5A 83 C4 04 58 74 04 75 02 EB 02 EB 01 81 0F 31 50 0F 31 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v0_978
 {
 meta:
@@ -28525,10 +28525,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 24 88 40 ?? 87 DD 8B 85 A9 88 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__PEX_0_99______Anorganix
 {
 meta:
@@ -28537,10 +28537,10 @@ strings:
     	$a0 = { 60 E8 01 00 00 00 55 83 C4 04 E8 01 00 00 00 90 5D 81 FF FF FF 00 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NTPacker_1_0____ErazerZ
 {
 meta:
@@ -28549,10 +28549,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 E0 53 33 C0 89 45 E0 89 45 E4 89 45 E8 89 45 EC B8 ?? ?? 40 00 E8 ?? ?? FF FF 33 C0 55 68 ?? ?? 40 00 64 FF 30 64 89 20 8D 4D EC BA ?? ?? 40 00 A1 ?? ?? 40 00 E8 ?? FC FF FF 8B 55 EC B8 ?? ?? 40 00 E8 ?? ?? FF FF 8D 4D E8 BA ?? ?? 40 00 A1 ?? ?? 40 00 E8 ?? FE FF FF 8B 55 E8 B8 ?? ?? 40 00 E8 ?? ?? FF FF B8 ?? ?? 40 00 E8 ?? FB FF FF 8B D8 A1 ?? ?? 40 00 BA ?? ?? 40 00 E8 ?? ?? FF FF 75 26 8B D3 A1 ?? ?? 40 00 E8 ?? ?? FF FF 84 C0 75 2A 8D 55 E4 33 C0 E8 ?? ?? FF FF 8B 45 E4 8B D3 E8 ?? ?? FF FF EB 14 8D 55 E0 33 C0 E8 ?? ?? FF FF 8B 45 E0 8B D3 E8 ?? ?? FF FF 6A 00 E8 ?? ?? FF FF 33 C0 5A 59 59 64 89 10 68 ?? ?? 40 00 8D 45 E0 BA 04 00 00 00 E8 ?? ?? FF FF C3 E9 ?? ?? FF FF EB EB 5B E8 ?? ?? FF FF 00 00 00 FF FF FF FF 01 00 00 00 25 00 00 00 FF FF FF FF 01 00 00 00 5C 00 00 00 FF FF FF FF 06 00 00 00 53 45 52 56 45 52 00 00 FF FF FF FF 01 00 00 00 31 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__PENightMare_2_Beta_____Anorganix
 {
 meta:
@@ -28561,10 +28561,10 @@ strings:
     	$a0 = { 60 E9 10 00 00 00 EF 40 03 A7 07 8F 07 1C 37 5D 43 A7 04 B9 2C 3A E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SimplePack_V1_1X_V1_2X__Method2_____bagie
 {
 meta:
@@ -28573,10 +28573,10 @@ strings:
     	$a0 = { 4D 5A 90 EB 01 00 52 E9 ?? 01 00 00 50 45 00 00 4C 01 02 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASProtect_2_3_SKE_build_04_26_Beta
 {
 meta:
@@ -28588,7 +28588,7 @@ condition:
     	$a0
 }
 
-    
+
 rule SuckStop_v1_11
 {
 meta:
@@ -28597,10 +28597,10 @@ strings:
     	$a0 = { EB ?? ?? ?? BE ?? ?? B4 30 CD 21 EB ?? 9B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule nBinder_v4_0
 {
 meta:
@@ -28612,7 +28612,7 @@ condition:
     	$a0
 }
 
-    
+
 rule UnoPiX_1_03_1_10____BaGiE
 {
 meta:
@@ -28621,10 +28621,10 @@ strings:
     	$a0 = { 83 EC 04 C7 04 24 00 ?? ?? ?? C3 00 ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? 00 10 00 00 00 02 00 00 01 00 00 00 00 00 00 00 04 00 00 00 00 00 00 00 00 ?? ?? 00 00 10 00 00 00 00 00 00 02 00 00 ?? 00 00 ?? 00 00 ?? ?? 00 00 00 10 00 00 10 00 00 00 00 00 00 10 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_1_00__Eng_____dulek_xt
 {
 meta:
@@ -28636,7 +28636,7 @@ condition:
     	$a0
 }
 
-    
+
 rule dePACK____deNULL
 {
 meta:
@@ -28645,10 +28645,10 @@ strings:
     	$a0 = { EB 01 DD 60 68 00 ?? ?? ?? 68 ?? ?? 00 00 E8 ?? 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NTkrnl_Secure_Suite_V0_1____NTkrnl_Software___Sign_by_fly
 {
 meta:
@@ -28660,7 +28660,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Exe_Shield_v1_7
 {
 meta:
@@ -28669,10 +28669,10 @@ strings:
     	$a0 = { EB 06 68 90 1F 06 00 C3 9C 60 E8 02 00 00 00 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 3F 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v1_33
 {
 meta:
@@ -28681,10 +28681,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 0F 80 40 ?? 87 DD 8B 85 A6 80 40 ?? 01 85 03 80 40 ?? 66 C7 85 00 80 40 ?? 90 90 01 85 9E 80 40 ?? BB E8 0E }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PeX_0_99____bart_CrackPl
 {
 meta:
@@ -28693,10 +28693,10 @@ strings:
     	$a0 = { E9 F5 ?? ?? ?? 0D 0A C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 C4 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_v0_76_1__dos_exe
 {
 meta:
@@ -28705,10 +28705,10 @@ strings:
     	$a0 = { B9 ?? ?? BE ?? ?? 89 F7 1E A9 ?? ?? 8C C8 05 ?? ?? 8E D8 05 ?? ?? 8E C0 FD F3 A5 FC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__FSG_1_0______Anorganix
 {
 meta:
@@ -28717,10 +28717,10 @@ strings:
     	$a0 = { 90 90 90 90 68 ?? ?? ?? ?? 67 64 FF 36 00 00 67 64 89 26 00 00 F1 90 90 90 90 BB D0 01 40 00 BF 00 10 40 00 BE 90 90 90 90 53 E8 0A 00 00 00 02 D2 75 05 8A 16 46 12 D2 C3 FC B2 80 A4 6A 02 5B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_v3_10
 {
 meta:
@@ -28730,10 +28730,10 @@ strings:
 	$a1 = { 55 8B EC 6A FF 68 E0 97 44 00 68 20 C0 42 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 53 56 57 89 65 E8 FF 15 4C 41 44 00 33 D2 8A D4 89 15 90 A1 44 00 8B C8 81 E1 FF 00 00 00 89 0D 8C A1 44 00 C1 E1 08 03 CA 89 0D 88 A1 44 00 C1 E8 10 A3 84 A1 44 00 33 F6 56 E8 72 16 00 00 59 85 C0 75 08 6A 1C E8 B0 00 00 00 59 89 75 FC E8 3D 13 00 00 FF 15 30 40 44 00 A3 84 B7 44 00 E8 FB 11 00 00 A3 E0 A1 44 00 E8 A4 0F 00 00 E8 E6 0E 00 00 E8 4E F6 FF FF 89 75 D0 8D 45 A4 50 FF 15 38 40 44 00 E8 77 0E 00 00 89 45 9C F6 45 D0 01 74 06 0F B7 45 D4 EB 03 6A 0A 58 50 FF 75 9C 56 56 FF 15 7C 41 44 00 50 E8 49 D4 FE FF 89 45 A0 50 E8 3C F6 FF FF 8B 45 EC 8B 08 8B 09 89 4D 98 50 51 E8 B5 0C 00 00 59 59 C3 8B 65 E8 FF 75 98 E8 2E F6 FF FF 83 3D E8 A1 44 00 01 75 05 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule eXPressor_1_2_0b
 {
 meta:
@@ -28745,7 +28745,7 @@ condition:
     	$a0
 }
 
-    
+
 rule NsPack_1_4____Liuxingping
 {
 meta:
@@ -28754,10 +28754,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 5D B8 ?? ?? 40 00 2D ?? ?? 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule USSR_0_31___by_Spirit
 {
 meta:
@@ -28766,10 +28766,10 @@ strings:
     	$a0 = { E8 00 00 00 00 5D 83 C5 12 55 C3 20 83 B8 ED 20 37 EF C6 B9 79 37 9E 8C C9 30 C9 E3 01 C3 BE 32 ?? ?? ?? B0 ?? 30 06 8A 06 46 81 FE 00 ?? ?? ?? 7C F3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FreeJoiner_Small__build_029_____GlOFF
 {
 meta:
@@ -28778,10 +28778,10 @@ strings:
     	$a0 = { 50 32 C4 8A C3 58 E8 DE FD FF FF 6A 00 E8 0D 00 00 00 CC FF 25 78 10 40 00 FF 25 7C 10 40 00 FF 25 80 10 40 00 FF 25 84 10 40 00 FF 25 88 10 40 00 FF 25 8C 10 40 00 FF 25 90 10 40 00 FF 25 94 10 40 00 FF 25 98 10 40 00 FF 25 9C 10 40 00 FF 25 A0 10 40 00 FF 25 A4 10 40 00 FF 25 AC 10 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__MinGW_GCC_2_x_
 {
 meta:
@@ -28790,10 +28790,10 @@ strings:
     	$a0 = { 55 89 E5 E8 02 00 00 00 C9 C3 90 90 45 58 45 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RCryptor_v1_5__Private______Vaska
 {
 meta:
@@ -28802,10 +28802,10 @@ strings:
     	$a0 = { 83 2C 24 4F 68 ?? ?? ?? ?? FF 54 24 04 83 44 24 04 4F B8 ?? ?? ?? ?? 3D ?? ?? ?? ?? 74 06 80 30 ?? 40 EB F3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule VProtector_V1_3X____vcasm
 {
 meta:
@@ -28815,10 +28815,10 @@ strings:
 	$a1 = { E9 B9 16 00 00 55 8B EC 81 EC 74 04 00 00 57 68 00 00 00 00 68 00 00 C2 14 68 FF FF 00 00 68 ?? ?? ?? ?? 9C 81 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 9D 54 FF 14 24 68 00 00 00 00 68 00 00 C2 10 68 ?? ?? ?? ?? 9C 81 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 9D 54 FF 14 24 68 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule Symantec_C_v2_10__v4_00_or_Zortech_C_v3_0r1
 {
 meta:
@@ -28827,10 +28827,10 @@ strings:
     	$a0 = { FA FC B8 ?? ?? 8E D8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_Full_Edition_1_17_DLL__aPLib_____Ap0x
 {
 meta:
@@ -28839,10 +28839,10 @@ strings:
     	$a0 = { 80 7C 24 08 01 0F 85 ?? ?? ?? ?? 60 E8 00 00 00 00 8B 2C 24 83 C4 04 8D B5 53 03 00 00 8D 9D 02 02 00 00 33 FF E8 ?? ?? ?? ?? EB 0F FF 74 37 04 FF 34 37 FF D3 83 C4 08 83 C7 08 83 3C 37 00 75 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule vprotector_1_2____vcasm
 {
 meta:
@@ -28852,10 +28852,10 @@ strings:
 	$a1 = { EB 0B 5B 56 50 72 6F 74 65 63 74 5D 00 E8 24 00 00 00 8B 44 24 04 8B 00 3D 04 00 00 80 75 08 8B 64 24 08 EB 04 58 EB 0C E9 64 8F 05 00 00 00 00 74 F3 75 F1 EB 24 64 FF 35 00 00 00 00 EB 12 FF 9C 74 03 75 01 E9 81 0C 24 00 01 00 00 9D 90 EB F4 64 89 25 00 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__Yoda_s_Protector_1_02______Anorganix
 {
 meta:
@@ -28864,10 +28864,10 @@ strings:
     	$a0 = { E8 03 00 00 00 EB 01 90 90 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Cracked_by_Autohack__2_
 {
 meta:
@@ -28876,10 +28876,10 @@ strings:
     	$a0 = { 0E 1F B4 09 BA ?? ?? CD 21 FA 8E 06 ?? ?? BE ?? ?? 8B 0E ?? ?? 83 F9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule The_aPE_Inline_Patch_ExtraStealth__SuperStealth_
 {
 meta:
@@ -28888,10 +28888,10 @@ strings:
     	$a0 = { E8 02 ?? ?? ?? EB 01 C3 3E 8B 44 24 FC 50 B9 ?? ?? ?? ?? E8 ?? ?? ?? ?? 89 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule BeRoEXEPacker_v1_00__LZMA_
 {
 meta:
@@ -28900,10 +28900,10 @@ strings:
     	$a0 = { 60 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? BE ?? ?? ?? ?? B9 04 00 00 00 8B F9 81 FE ?? ?? ?? ?? 7F 10 AC 47 04 18 2C 02 73 F0 29 3E 03 F1 03 F9 EB E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RCryptor_v1_6b___v1_6c____Vaska
 {
 meta:
@@ -28912,10 +28912,10 @@ strings:
     	$a0 = { 8B C7 03 04 24 2B C7 80 38 50 0F 85 1B 8B 1F FF 68 ?? ?? ?? ?? B8 ?? ?? ?? ?? 3D ?? ?? ?? ?? 74 06 80 30 ?? 40 EB F3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEQuake_v0_06_by_fORGAT
 {
 meta:
@@ -28928,7 +28928,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule CHECKPRG__c__1992
 {
 meta:
@@ -28937,10 +28937,10 @@ strings:
     	$a0 = { 33 C0 BE ?? ?? 8B D8 B9 ?? ?? BF ?? ?? BA ?? ?? 47 4A 74 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_2_0beta_student_version____Jeremy_Collake
 {
 meta:
@@ -28952,7 +28952,7 @@ condition:
     	$a0
 }
 
-    
+
 rule ASProtect_1_33___2_1_Registered____Alexey_Solodovnikov
 {
 meta:
@@ -28961,10 +28961,10 @@ strings:
     	$a0 = { 68 01 ?? ?? ?? E8 01 00 00 00 C3 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_v0_32a__fake_SVKP_1_11_____emadicius__h_
 {
 meta:
@@ -28973,10 +28973,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED 06 00 00 00 64 A0 23 00 00 00 83 C5 06 61 EB 05 E8 EB 04 40 00 EB FA E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 50 E8 02 00 00 00 29 5A 58 6B C0 03 E8 02 00 00 00 29 5A 83 C4 04 58 74 04 75 02 EB 02 EB 01 81 0F 31 50 0F 31 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 2B 04 24 74 04 75 02 EB 02 EB 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Unnamed_Scrambler_2_1_Beta____2_1_1____p0ke
 {
 meta:
@@ -28986,10 +28986,10 @@ strings:
 	$a1 = { 55 8B EC B9 15 00 00 00 6A 00 6A 00 49 75 F9 53 56 57 B8 ?? 3A ?? ?? E8 ?? EE FF FF 33 C0 55 68 ?? 43 ?? ?? 64 FF 30 64 89 20 BA ?? 43 ?? ?? B8 E4 64 ?? ?? E8 0F FD FF FF 8B D8 85 DB 75 07 6A 00 E8 ?? EE FF FF BA E8 64 ?? ?? 8B C3 8B 0D E4 64 ?? ?? E8 ?? D7 FF FF B8 F8 ?? ?? ?? BA 04 00 00 00 E8 ?? EF FF FF 33 C0 A3 F8 ?? ?? ?? BB ?? ?? ?? ?? C7 45 EC E8 64 ?? ?? C7 45 E8 ?? ?? ?? ?? C7 45 E4 ?? ?? ?? ?? BE ?? ?? ?? ?? BF ?? ?? ?? ?? B8 E0 ?? ?? ?? BA 04 00 00 00 E8 ?? EF FF FF 68 F4 01 00 00 E8 ?? EE FF FF 83 7B 04 00 75 0B 83 3B 00 0F 86 ?? 07 00 00 EB 06 0F 8E ?? 07 00 00 8B 03 8B D0 B8 E4 ?? ?? ?? E8 ?? E5 FF FF B8 E4 ?? ?? ?? E8 ?? E3 FF FF 8B D0 8B 45 EC 8B 0B E8 }
 
 condition:
-    	$a0 at sgpe.ep or $a1
+    	$a0 at manape.ep or $a1
 }
 
-    
+
 rule WATCOM_C_C___Run_Time_system_DOS4GW_DOS_Extender_1988_93
 {
 meta:
@@ -28998,10 +28998,10 @@ strings:
     	$a0 = { BF ?? ?? 8E D7 81 C4 ?? ?? BE ?? ?? 2B F7 8B C6 B1 ?? D3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__Trivial_46
 {
 meta:
@@ -29010,10 +29010,10 @@ strings:
     	$a0 = { B4 4E B1 20 BA ?? ?? CD 21 BA ?? ?? B8 ?? 3D CD 21 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Stone_s_PE_Encryptor_v1_0
 {
 meta:
@@ -29022,10 +29022,10 @@ strings:
     	$a0 = { 55 57 56 52 51 53 E8 ?? ?? ?? ?? 5D 8B D5 81 ED 63 3A 40 ?? 2B 95 C2 3A 40 ?? 83 EA 0B 89 95 CB 3A 40 ?? 8D B5 CA 3A 40 ?? 0F B6 36 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Erdas_LAN_GIS_Image_graphics_format
 {
 meta:
@@ -29037,7 +29037,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PE_SHiELD_0_2
 {
 meta:
@@ -29046,10 +29046,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 41 4E 41 4B 49 4E 5D 83 ED 06 EB 02 EA 04 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Thinstall_Embedded_V2_312____Jitit
 {
 meta:
@@ -29058,10 +29058,10 @@ strings:
     	$a0 = { 6A 00 FF 15 ?? ?? ?? ?? E8 D4 F8 FF FF E9 E9 AD FF FF FF 8B C1 8B 4C 24 04 89 88 29 04 00 00 C7 40 0C 01 00 00 00 0F B6 49 01 D1 E9 89 48 10 C7 40 14 80 00 00 00 C2 04 00 8B 44 24 04 C7 41 0C 01 00 00 00 89 81 29 04 00 00 0F B6 40 01 D1 E8 89 41 10 C7 41 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule TXT2COM_v2_06
 {
 meta:
@@ -29070,10 +29070,10 @@ strings:
     	$a0 = { 8D 26 ?? ?? E8 ?? ?? B8 ?? ?? CD 21 CD 20 54 58 54 32 43 4F 4D 20 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__VOB_ProtectCD_5______Anorganix
 {
 meta:
@@ -29082,10 +29082,10 @@ strings:
     	$a0 = { 36 3E 26 8A C0 60 E8 00 00 00 00 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule BeRoEXEPacker_v1_00_DLL__LZMA_____BeRo___Farbrausch
 {
 meta:
@@ -29094,10 +29094,10 @@ strings:
     	$a0 = { 83 7C 24 08 01 0F 85 ?? ?? ?? ?? 60 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? BE ?? ?? ?? ?? B9 ?? ?? ?? ?? 8B F9 81 FE ?? ?? ?? ?? 7F 10 AC 47 04 18 2C 02 73 F0 29 3E 03 F1 03 F9 EB E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PKLITE32_v1_1
 {
 meta:
@@ -29109,10 +29109,10 @@ strings:
 	$a3 = { 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 68 00 00 00 00 E8 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 or $a3 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 or $a3 at manape.ep
 }
 
-    
+
 rule EXE2COM__Limited_
 {
 meta:
@@ -29121,10 +29121,10 @@ strings:
     	$a0 = { BE ?? ?? 8B 04 3D ?? ?? 74 ?? BA ?? ?? B4 09 CD 21 CD 20 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_Unknown__DLL_________Sign_by_hot_UNP
 {
 meta:
@@ -29133,10 +29133,10 @@ strings:
     	$a0 = { 60 E8 09 00 00 00 17 CD 00 00 E9 06 02 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__Borland_C___DLL__Method_2_______Anorganix
 {
 meta:
@@ -29145,10 +29145,10 @@ strings:
     	$a0 = { EB 10 66 62 3A 43 2B 2B 48 4F 4F 4B 90 E9 90 90 90 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule HACKSTOP_v1_11c
 {
 meta:
@@ -29157,10 +29157,10 @@ strings:
     	$a0 = { B4 30 CD 21 86 E0 3D ?? ?? 73 ?? B4 ?? CD 21 B0 ?? B4 4C CD 21 53 BB ?? ?? 5B EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__SYP
 {
 meta:
@@ -29169,10 +29169,10 @@ strings:
     	$a0 = { 47 8B C2 05 1E 00 52 8B D0 B8 02 3D CD 21 8B D8 5A }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PESpin_v1_304____Cyberbob__h_
 {
 meta:
@@ -29183,10 +29183,10 @@ strings:
 	$a2 = { EB 01 68 60 E8 00 00 00 00 8B 1C 24 83 C3 12 81 2B E8 B1 06 00 FE 4B FD 82 2C 24 88 DF 46 00 0B E4 74 9E 75 01 C7 81 73 04 D7 7A F7 2F 81 73 19 77 00 43 B7 F6 C3 6B B7 00 00 F9 FF E3 C9 C2 08 00 A3 68 72 01 FF 5D 33 C9 41 E2 17 EB 07 EA EB 01 EB EB 0D FF }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
-    
+
 rule Obsidium_V1_3_4_2____Obsidium_Software_nbsp___nbsp___Sign_By_fly
 {
 meta:
@@ -29195,10 +29195,10 @@ strings:
     	$a0 = { EB 02 ?? ?? E8 26 00 00 00 EB 03 ?? ?? ?? EB 01 ?? 8B 54 24 0C EB 02 ?? ?? 83 82 B8 00 00 00 24 EB 03 ?? ?? ?? 33 C0 EB 01 ?? C3 EB 02 ?? ?? EB 02 ?? ?? 64 67 FF 36 00 00 EB 03 ?? ?? ?? 64 67 89 26 00 00 EB 03 ?? ?? ?? EB 03 ?? ?? ?? 50 EB 04 ?? ?? ?? ?? 33 C0 EB 03 ?? ?? ?? 8B 00 EB 03 ?? ?? ?? C3 EB 03 ?? ?? ?? E9 FA 00 00 00 EB 03 ?? ?? ?? E8 D5 FF FF FF EB 01 ?? EB 03 ?? ?? ?? 58 EB 04 ?? ?? ?? ?? EB 04 ?? ?? ?? ?? 64 67 8F 06 00 00 EB 04 ?? ?? ?? ?? 83 C4 04 EB 01 ?? E8 C3 27 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ORiEN_V1_X_V2_X____Fisun_A_V____Sign_by_fly
 {
 meta:
@@ -29210,7 +29210,7 @@ condition:
     	$a0
 }
 
-    
+
 rule _MSLRH__V0_31____emadicius
 {
 meta:
@@ -29219,10 +29219,10 @@ strings:
     	$a0 = { 60 D1 CB 0F CA C1 CA E0 D1 CA 0F C8 EB 01 F1 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_v0_32a__fake_PEBundle_2_0x___2_4x_____emadicius__h_
 {
 meta:
@@ -29231,10 +29231,10 @@ strings:
     	$a0 = { 9C 60 E8 02 00 00 00 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 07 30 40 00 87 DD 83 BD 9C 38 40 00 01 61 9D EB 05 E8 EB 04 40 00 EB FA E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF 83 C4 08 74 04 75 02 EB 02 EB 01 81 50 E8 02 00 00 00 29 5A 58 6B C0 03 E8 02 00 00 00 29 5A 83 C4 04 58 74 04 75 02 EB 02 EB 01 81 0F 31 50 0F 31 E8 0A 00 00 00 E8 EB 0C 00 00 E8 F6 FF FF FF E8 F2 FF FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_v0_37___v0_38_Beta__Strip_base_relocation_table_Option_____Sign_by_hot_UNP
 {
 meta:
@@ -29246,7 +29246,7 @@ condition:
     	$a0
 }
 
-    
+
 rule modified_HACKSTOP_v1_11f
 {
 meta:
@@ -29255,10 +29255,10 @@ strings:
     	$a0 = { 52 B4 30 CD 21 52 FA ?? FB 3D ?? ?? EB ?? CD 20 0E 1F B4 09 E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule nPack_V1_1_150_2006_Beta____NEOx__uinC_
 {
 meta:
@@ -29268,10 +29268,10 @@ strings:
 	$a1 = { 83 3D 40 ?? ?? ?? 00 75 05 E9 01 00 00 00 C3 E8 41 00 00 00 B8 80 ?? ?? ?? 2B 05 08 ?? ?? ?? A3 3C ?? ?? ?? E8 5E 00 00 00 E8 E0 01 00 00 E8 EC 06 00 00 E8 F7 05 00 00 A1 3C ?? ?? ?? C7 05 40 ?? ?? ?? 01 00 00 00 01 05 00 ?? ?? ?? FF 35 00 ?? ?? ?? C3 C3 56 57 68 54 ?? ?? ?? FF 15 00 ?? ?? ?? 8B 35 08 ?? ?? ?? 8B F8 68 44 ?? ?? ?? 57 FF D6 68 38 ?? ?? ?? 57 A3 38 ?? ?? ?? FF D6 5F A3 34 ?? ?? ?? 5E C3 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule SimplePack_1_2_build_30_09__Method2_____bagie
 {
 meta:
@@ -29283,7 +29283,7 @@ condition:
     	$a0
 }
 
-    
+
 rule eXPressor_v1_2____CGSoftLabs__h_
 {
 meta:
@@ -29293,10 +29293,10 @@ strings:
 	$a1 = { 55 8B EC 81 EC D4 01 00 00 53 56 57 EB 0C 45 78 50 72 2D 76 2E 31 2E 32 2E 2E B8 ?? ?? ?? ?? 2B 05 84 ?? ?? ?? A3 ?? ?? ?? ?? 83 3D ?? ?? ?? ?? 00 74 16 A1 ?? ?? ?? ?? 03 05 80 ?? ?? ?? 89 85 54 FE FF FF E9 ?? 07 00 00 C7 05 ?? ?? ?? ?? 01 00 00 00 68 04 01 00 00 8D 85 F0 FE FF FF 50 6A 00 FF 15 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule RLPack_Full_Edition_1_17_iBox__aPLib_____Ap0x
 {
 meta:
@@ -29305,10 +29305,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 8D B5 79 29 00 00 8D 9D 2C 03 00 00 33 FF ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? EB 0F FF 74 37 04 FF 34 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule N_Joy_1_1____NEX
 {
 meta:
@@ -29317,10 +29317,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 F0 B8 0C 3C 40 00 E8 24 FC FF FF 6A 00 68 28 3A 40 00 6A 0A 6A 00 E8 D8 FC FF FF E8 7F F5 FF FF 8D 40 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule YZPack_1_2____UsAr
 {
 meta:
@@ -29329,10 +29329,10 @@ strings:
     	$a0 = { 4D 5A 52 45 60 83 EC 18 8B EC 8B FC 33 C0 64 8B 40 30 78 0C 8B 40 0C 8B 70 1C AD 8B 40 08 EB 09 8B 40 34 83 C0 7C 8B 40 3C AB E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule DAEMON_Protect_v0_6_7
 {
 meta:
@@ -29341,10 +29341,10 @@ strings:
     	$a0 = { 60 60 9C 8C C9 32 C9 E3 0C 52 0F 01 4C 24 FE 5A 83 C2 0C 8B 1A 9D 61 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Exe_Shield_v2_7
 {
 meta:
@@ -29353,10 +29353,10 @@ strings:
     	$a0 = { EB 06 68 F4 86 06 00 C3 9C 60 E8 02 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Thinstall_Embedded_V2_609____Jitit___Sign_by_fly
 {
 meta:
@@ -29365,10 +29365,10 @@ strings:
     	$a0 = { E8 00 00 00 00 58 BB AD 19 00 00 2B C3 50 68 ?? ?? ?? ?? 68 B0 1C 00 00 68 80 00 00 00 E8 35 FF FF FF E9 99 FF FF FF 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ExeSplitter_1_3__Split_Method_____Bill_Prisoner___TPOC
 {
 meta:
@@ -29378,10 +29378,10 @@ strings:
 	$a1 = { E8 00 00 00 00 5D 81 ED 08 12 40 00 E8 66 FE FF FF 55 50 8D 9D 81 11 40 00 53 8D 9D 21 11 40 00 53 6A 08 E8 76 FF FF FF 6A 40 68 00 30 00 00 68 00 01 00 00 6A 00 FF 95 89 11 40 00 89 85 61 10 40 00 50 68 00 01 00 00 FF 95 85 11 40 00 8D 85 65 10 40 00 50 FF B5 61 10 40 00 FF 95 8D 11 40 00 6A 00 68 80 00 00 00 6A 02 6A 00 ?? ?? ?? ?? 01 1F 00 FF B5 61 10 40 00 FF 95 91 11 40 00 89 85 72 10 40 00 6A 00 8D ?? ?? ?? ?? 00 50 FF B5 09 10 40 00 8D 85 F5 12 40 00 50 FF B5 72 10 40 00 FF 95 95 11 40 00 FF B5 72 10 40 00 FF 95 99 11 40 00 8D 85 0D 10 40 00 50 8D 85 1D 10 40 00 50 B9 07 00 00 00 6A 00 E2 FC }
 
 condition:
-    	$a0 at sgpe.ep or $a1
+    	$a0 at manape.ep or $a1
 }
 
-    
+
 rule Morphine_3_3____Holy_Father___Ratter_29A
 {
 meta:
@@ -29393,7 +29393,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Exe_Shield_v2_9
 {
 meta:
@@ -29402,10 +29402,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED 0B 20 40 00 B9 EB 08 00 00 8D BD 53 20 40 00 8B F7 AC ?? ?? ?? F8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule KGCrypt_vx_x
 {
 meta:
@@ -29414,10 +29414,10 @@ strings:
     	$a0 = { E8 ?? ?? ?? ?? 5D 81 ED ?? ?? ?? ?? 64 A1 30 ?? ?? ?? 84 C0 74 ?? 64 A1 20 ?? ?? ?? 0B C0 74 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Obsidium_v1_3_0_0____Obsidium_Software__h_
 {
 meta:
@@ -29427,10 +29427,10 @@ strings:
 	$a1 = { EB 04 25 80 34 CA E8 29 00 00 00 EB 02 C1 81 EB 01 3A 8B 54 24 0C EB 02 32 92 83 82 B8 00 00 00 22 EB 02 F2 7F 33 C0 EB 04 65 7E 14 79 C3 EB 04 05 AD 7F 45 EB 04 05 65 0B E8 64 67 FF 36 00 00 EB 04 0D F6 A8 7F 64 67 89 26 00 00 EB 04 8D 68 C7 FB EB 01 6B 50 EB 03 8A 0B 93 33 C0 EB 02 28 B9 8B 00 EB 01 04 C3 EB 04 65 B3 54 0A E9 FA 00 00 00 EB 01 A2 E8 D5 FF FF FF EB 02 2B 49 EB 03 7C 3E 76 58 EB 04 B8 94 92 56 EB 01 72 64 67 8F 06 00 00 EB 02 23 72 83 C4 04 EB 02 A9 CB E8 47 26 00 00 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Prepared_by_SLR__OPTLINK_
 {
 meta:
@@ -29439,10 +29439,10 @@ strings:
     	$a0 = { 87 C0 55 56 57 52 51 53 50 9C FC 8C DA 83 ?? ?? 16 07 0E 1F }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Petite_1_3_____c_1998_Ian_Luck__h_
 {
 meta:
@@ -29452,10 +29452,10 @@ strings:
 	$a1 = { 9C 60 50 8D 88 00 ?? ?? ?? 8D 90 ?? ?? 00 00 8B DC 8B E1 68 00 00 ?? ?? 53 50 80 04 24 08 50 80 04 24 42 50 80 04 24 61 50 80 04 24 9D 50 80 04 24 BB 83 3A 00 0F 84 DA 14 00 00 8B 44 24 18 F6 42 03 80 74 19 FD 80 72 03 80 8B F0 8B F8 03 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule PPC_PROTECT_1_1X____Alexey_Gorchakov
 {
 meta:
@@ -29464,10 +29464,10 @@ strings:
     	$a0 = { FF 5F 2D E9 20 00 9F E5 00 00 90 E5 18 00 8F E5 18 00 9F E5 00 00 90 E5 10 00 8F E5 01 00 A0 E3 00 00 00 EB 02 00 00 EA 04 F0 1F E5 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ANDpakk2_0_06___by_Dmitry__AND__Andreev
 {
 meta:
@@ -29476,10 +29476,10 @@ strings:
     	$a0 = { 60 FC BE D4 00 40 00 BF 00 10 00 01 57 83 CD FF 33 C9 F9 EB 05 A4 02 DB 75 05 8A 1E 46 12 DB 72 F4 33 C0 40 02 DB 75 05 8A 1E 46 12 DB 13 C0 02 DB 75 05 8A 1E 46 12 DB 72 0E 48 02 DB 75 05 8A 1E 46 12 DB 13 C0 EB DC 83 E8 03 72 0F C1 E0 08 AC 83 F0 FF 74 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PrincessSandy_1_0_eMiNENCE_Process_Patcher_Patch
 {
 meta:
@@ -29491,7 +29491,7 @@ condition:
     	$a0
 }
 
-    
+
 rule vfp_exeNc_v6_00____Wang_JianGuo
 {
 meta:
@@ -29500,10 +29500,10 @@ strings:
     	$a0 = { 60 E8 01 00 00 00 63 58 E8 01 00 00 00 7A 58 2D 0D 10 40 00 8D 90 C1 10 40 00 52 50 8D 80 49 10 40 00 5D 50 8D 85 65 10 40 00 50 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 CC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EZIP_v1_0
 {
 meta:
@@ -29512,10 +29512,10 @@ strings:
     	$a0 = { E9 19 32 00 00 E9 7C 2A 00 00 E9 19 24 00 00 E9 FF 23 00 00 E9 1E 2E 00 00 E9 88 2E 00 00 E9 2C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule DJoin_v0_7_public__xor_encryption_____drmist
 {
 meta:
@@ -29524,10 +29524,10 @@ strings:
     	$a0 = { C6 05 ?? ?? 40 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 ?? ?? ?? ?? 00 ?? ?? ?? ?? ?? 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASPack_v2_001____Alexey_Solodovnikov
 {
 meta:
@@ -29536,10 +29536,10 @@ strings:
     	$a0 = { 60 E8 72 05 00 00 EB 4C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v1_24_2___v1_24_3
 {
 meta:
@@ -29548,10 +29548,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 0F 70 40 ?? 87 DD 8B 85 A6 70 40 ?? 01 85 03 70 40 ?? 66 C7 85 70 40 90 ?? 90 01 85 9E 70 40 BB ?? D2 09 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_1_3
 {
 meta:
@@ -29563,7 +29563,7 @@ condition:
     	$a0
 }
 
-    
+
 rule SmokesCrypt_v1_2
 {
 meta:
@@ -29572,10 +29572,10 @@ strings:
     	$a0 = { 60 B8 ?? ?? ?? ?? B8 ?? ?? ?? ?? 8A 14 08 80 F2 ?? 88 14 08 41 83 F9 ?? 75 F1 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PC_Shrinker_v0_71
 {
 meta:
@@ -29584,10 +29584,10 @@ strings:
     	$a0 = { 9C 60 BD ?? ?? ?? ?? 01 AD 54 3A 40 ?? FF B5 50 3A 40 ?? 6A 40 FF 95 88 3A 40 ?? 50 50 2D ?? ?? ?? ?? 89 85 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASProtect_1_23_RC4_build_08_07__exe_____Alexey_Solodovnikov__h_
 {
 meta:
@@ -29599,7 +29599,7 @@ condition:
     	$a0
 }
 
-    
+
 rule EmbedPE_V1_00_V1_24____cyclotron___Sign_by_fly
 {
 meta:
@@ -29611,7 +29611,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_2__ZCode_1_01______Anorganix
 {
 meta:
@@ -29620,10 +29620,10 @@ strings:
     	$a0 = { E9 12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 E9 FB FF FF FF C3 68 00 00 00 00 64 FF 35 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_v0_29_beta____Dwing
 {
 meta:
@@ -29632,10 +29632,10 @@ strings:
     	$a0 = { E9 ?? ?? ?? ?? 42 79 44 77 69 6E 67 40 00 00 00 50 45 00 00 4C 01 02 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 29 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule shoooo_s_Pack____shoooo
 {
 meta:
@@ -29644,10 +29644,10 @@ strings:
     	$a0 = { 68 ?? ?? ?? ?? E8 01 00 00 00 C3 C3 11 55 07 8B EC B8 ?? ?? ?? ?? E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule KByS_V0_28_DLL____shoooo___Sign_by_fly
 {
 meta:
@@ -29656,10 +29656,10 @@ strings:
     	$a0 = { B8 ?? ?? ?? ?? BA ?? ?? ?? ?? 03 C2 FF E0 ?? ?? ?? ?? 60 E8 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule REC_v0_32
 {
 meta:
@@ -29668,10 +29668,10 @@ strings:
     	$a0 = { 06 1E 52 B8 ?? ?? 1E CD 21 86 E0 3D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Unnamed_Scrambler_1_0____p0ke
 {
 meta:
@@ -29681,10 +29681,10 @@ strings:
 	$a1 = { 55 8B EC 83 C4 EC 53 56 33 C0 89 45 ?? ?? ?? ?? 40 00 E8 11 F4 FF FF BE 30 6B 40 00 33 C0 55 68 C9 42 40 00 64 FF 30 64 89 20 E8 C9 FA FF FF BA D8 42 40 00 8B ?? ?? ?? ?? FF FF 8B D8 B8 28 6B 40 00 8B 16 E8 37 F0 FF FF B8 2C 6B 40 00 8B 16 E8 2B F0 FF FF B8 28 6B 40 00 E8 19 F0 FF FF 8B D0 8B C3 8B 0E E8 42 E3 FF FF BA DC 42 40 00 8B C6 E8 2A FA FF FF 8B D8 B8 20 6B 40 00 8B 16 E8 FC EF FF FF B8 24 6B 40 00 8B 16 E8 F0 EF FF FF B8 20 6B 40 00 E8 DE EF FF FF 8B D0 8B C3 8B 0E E8 07 E3 FF FF 6A 00 6A 19 6A 00 6A 32 A1 28 6B 40 00 E8 59 EF FF FF 83 E8 05 03 C0 8D 55 EC E8 94 FE FF FF 8B 55 EC B9 24 6B 40 00 A1 20 6B 40 00 E8 E2 F6 FF FF 6A 00 6A 19 6A 00 6A 32 }
 
 condition:
-    	$a0 at sgpe.ep or $a1
+    	$a0 at manape.ep or $a1
 }
 
-    
+
 rule Upack_v0_32_Beta__Patch_____Sign_by_hot_UNP
 {
 meta:
@@ -29696,7 +29696,7 @@ condition:
     	$a0
 }
 
-    
+
 rule UPX_v0_89_6___v1_02___v1_05__v1_22__Delphi__stub
 {
 meta:
@@ -29705,10 +29705,10 @@ strings:
     	$a0 = { 60 BE ?? ?? ?? ?? 8D BE ?? ?? ?? ?? C7 87 ?? ?? ?? ?? ?? ?? ?? ?? 57 83 CD FF EB 0E ?? ?? ?? ?? 8A 06 46 88 07 47 01 DB 75 07 8B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule aPack_v0_82
 {
 meta:
@@ -29717,10 +29717,10 @@ strings:
     	$a0 = { 1E 06 8C CB BA ?? ?? 03 DA 8D ?? ?? ?? FC 33 F6 33 FF 48 4B 8E C0 8E DB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_Modified_stub
 {
 meta:
@@ -29729,10 +29729,10 @@ strings:
     	$a0 = { 79 07 0F B7 07 47 50 47 B9 57 48 F2 AE 55 FF 96 84 ?? 00 00 09 C0 74 07 89 03 83 C3 04 EB D8 FF 96 88 ?? 00 00 61 E9 ?? ?? ?? FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_Full_Edition_1_17_DLL____Ap0x
 {
 meta:
@@ -29741,10 +29741,10 @@ strings:
     	$a0 = { 80 7C 24 08 01 0F 85 ?? ?? ?? ?? 60 E8 00 00 00 00 8B 2C 24 83 C4 04 8D B5 ?? ?? ?? ?? 8D 9D ?? ?? ?? ?? 33 FF E8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2___BJFNT_1_1b______Anorganix
 {
 meta:
@@ -29753,10 +29753,10 @@ strings:
     	$a0 = { EB 01 EA 9C EB 01 EA 53 EB 01 EA 51 EB 01 EA 52 EB 01 EA 56 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule CodeCrypt_v0_164
 {
 meta:
@@ -29765,10 +29765,10 @@ strings:
     	$a0 = { E9 2E 03 00 00 EB 02 83 3D 58 EB 02 FF 1D 5B EB 02 0F C7 5F EB 03 FF 1D 34 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECrypt_1_0____ReBirth
 {
 meta:
@@ -29777,10 +29777,10 @@ strings:
     	$a0 = { 90 90 60 E8 00 00 00 00 5D 81 ED D1 27 40 00 B9 15 00 00 00 83 C1 04 83 C1 01 EB 05 EB FE 83 C7 56 EB 00 EB 00 83 E9 02 81 C1 78 43 27 65 EB 00 81 C1 10 25 94 00 81 E9 63 85 00 00 B9 96 0C 00 00 90 8D BD 4E 28 40 00 8B F7 AC }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__PE_Protect_0_9_
 {
 meta:
@@ -29789,10 +29789,10 @@ strings:
     	$a0 = { 52 51 55 57 64 67 A1 30 00 85 C0 78 0D E8 07 00 00 00 58 83 C0 07 C6 90 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SimplePack_1_11_Method_1____bagie_TMX
 {
 meta:
@@ -29801,10 +29801,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5B 8D 5B FA BD 00 00 ?? ?? 8B 7D 3C 8D 74 3D 00 8D BE F8 00 00 00 0F B7 76 06 4E 8B 47 10 09 C0 74 55 0F B7 47 22 09 C0 74 4D 6A 04 68 00 10 00 00 FF 77 10 6A 00 FF 93 38 03 00 00 50 56 57 89 EE 03 77 0C 8B 4F 10 89 C7 89 C8 C1 E9 02 FC F3 A5 89 C1 83 E1 03 F3 A4 5F 5E 8B 04 24 89 EA 03 57 0C E8 3F 01 00 00 58 68 00 40 00 00 FF 77 10 50 FF 93 3C 03 00 00 83 C7 28 4E 75 9E BE ?? ?? ?? ?? 09 F6 0F 84 0C 01 00 00 01 EE 8B 4E 0C 09 C9 0F 84 FF 00 00 00 01 E9 89 CF 57 FF 93 30 03 00 00 09 C0 75 3D 6A 04 68 00 10 00 00 68 00 10 00 00 6A 00 FF 93 38 03 00 00 89 C6 8D 83 6F 02 00 00 57 50 56 FF 93 44 03 00 00 6A 10 6A 00 56 6A 00 FF 93 48 03 00 00 89 E5 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ASPack_v1_00b
 {
 meta:
@@ -29813,10 +29813,10 @@ strings:
     	$a0 = { 60 E8 ?? ?? ?? ?? 5D 81 ED 92 1A 44 ?? B8 8C 1A 44 ?? 03 C5 2B 85 CD 1D 44 ?? 89 85 D9 1D 44 ?? 80 BD C4 1D 44 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule TPPpack___clane
 {
 meta:
@@ -29828,7 +29828,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Obsidium_V1_2_5_8____Obsidium_Software
 {
 meta:
@@ -29837,10 +29837,10 @@ strings:
     	$a0 = { EB 01 ?? E8 ?? 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_1_18_Dll__LZMA_4_30_____ap0x
 {
 meta:
@@ -29849,10 +29849,10 @@ strings:
     	$a0 = { 80 7C 24 08 01 0F 85 ?? 01 00 00 60 E8 00 00 00 00 8B 2C 24 83 C4 04 8D B5 ?? ?? ?? ?? 8D 9D ?? ?? ?? ?? 33 FF E8 9F 01 00 00 6A ?? 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 6A ?? FF 95 AA 0A 00 00 89 85 F9 0A 00 00 EB 14 60 FF B5 F9 0A 00 00 FF 34 37 FF 74 37 04 FF D3 61 83 C7 08 83 3C 37 00 75 E6 83 BD 0D 0B 00 00 00 74 0E 83 BD 11 0B 00 00 00 74 05 E8 F6 01 00 00 8D 74 37 04 53 6A ?? 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 6A ?? FF 95 AA 0A 00 00 89 85 1D 0B 00 00 5B 60 FF B5 F9 0A 00 00 56 FF B5 1D 0B 00 00 FF D3 61 8B B5 1D 0B 00 00 8B C6 EB 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXECryptor_2_0_2_1__protected_IAT_____www_strongbit_com___Sign_By_haggar
 {
 meta:
@@ -29864,7 +29864,7 @@ condition:
     	$a0
 }
 
-    
+
 rule ASProtect_SKE_2_1x__exe_____Alexey_Solodovnikov__h_
 {
 meta:
@@ -29876,7 +29876,7 @@ condition:
     	$a0
 }
 
-    
+
 rule VPacker____ttui___Sign_by_fly
 {
 meta:
@@ -29888,7 +29888,7 @@ condition:
     	$a0
 }
 
-    
+
 rule RLPack_____Ap0x
 {
 meta:
@@ -29899,10 +29899,10 @@ strings:
 	$a2 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 8D B5 5A 0A 00 00 8D 9D 40 02 00 00 33 FF E8 83 01 00 00 6A 40 68 00 10 00 00 68 00 20 0C 00 6A 00 FF 95 EB 09 00 00 89 85 3A 0A 00 00 EB 14 60 FF B5 3A 0A }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
-    
+
 rule tElock_v0_41x
 {
 meta:
@@ -29911,10 +29911,10 @@ strings:
     	$a0 = { 66 8B C0 8D 24 24 EB 01 EB 60 EB 01 EB 9C E8 00 00 00 00 5E 83 C6 50 8B FE 68 78 01 ?? ?? 59 EB 01 EB AC 54 E8 03 ?? ?? ?? 5C EB 08 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__JDPack_1_x___JDProtect_0_9______Anorganix
 {
 meta:
@@ -29923,10 +29923,10 @@ strings:
     	$a0 = { 60 E8 22 00 00 00 5D 8B D5 81 ED 90 90 90 90 2B 95 90 90 90 90 81 EA 06 90 90 90 89 95 90 90 90 90 83 BD 45 00 01 00 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLPack_1_18__aPlib_0_43_____ap0x
 {
 meta:
@@ -29935,10 +29935,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 ?? 8D B5 1A 04 00 00 8D 9D C1 02 00 00 33 FF E8 61 01 00 00 EB 0F FF 74 37 04 FF 34 37 FF D3 83 C4 ?? 83 C7 ?? 83 3C 37 00 75 EB 83 BD 06 04 00 00 00 74 0E 83 BD 0A 04 00 00 00 74 05 E8 D7 01 00 00 8D 74 37 04 53 6A ?? 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 6A 00 FF 95 A7 03 00 00 89 85 16 04 00 00 5B FF B5 16 04 00 00 56 FF D3 83 C4 ?? 8B B5 16 04 00 00 8B C6 EB 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule USSR_V0_31____SpiritST___Sign_by_fly
 {
 meta:
@@ -29950,7 +29950,7 @@ condition:
     	$a0
 }
 
-    
+
 rule FSG_v1_10__Eng_____dulek_xt_____Microsoft_Visual_C___6_0_
 {
 meta:
@@ -29969,10 +29969,10 @@ strings:
 	$a10 = { 03 DE EB 01 F8 B8 80 ?? 42 00 EB 02 CD 20 68 17 A0 B3 AB EB 01 E8 59 0F B6 DB 68 0B A1 B3 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep or $a3 at sgpe.ep or $a4 at sgpe.ep or $a5 at sgpe.ep or $a6 at sgpe.ep or $a7 at sgpe.ep or $a8 at sgpe.ep or $a9 at sgpe.ep or $a10 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep or $a3 at manape.ep or $a4 at manape.ep or $a5 at manape.ep or $a6 at manape.ep or $a7 at manape.ep or $a8 at manape.ep or $a9 at manape.ep or $a10 at manape.ep
 }
 
-    
+
 rule MEW_11_SE_v1_1
 {
 meta:
@@ -29984,7 +29984,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Launcher_Generator_v1_03
 {
 meta:
@@ -29996,7 +29996,7 @@ strings:
 condition:
     	$a0 or $a1
 }
-    
+
 rule PseudoSigner_0_2__Macromedia_Flash_Projector_6_0_
 {
 meta:
@@ -30005,10 +30005,10 @@ strings:
     	$a0 = { 90 90 90 90 68 ?? ?? ?? ?? 67 64 FF 36 00 00 67 64 89 26 00 00 F1 90 90 90 90 83 EC 44 56 FF 15 24 81 49 00 8B F0 8A 06 3C 22 75 1C 8A 46 01 46 3C 22 74 0C 84 C0 74 08 8A 46 01 46 3C 22 75 F4 80 3E 22 75 0F 46 EB 0C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_1_10__Eng_____dulek_xt_____Borland_C___
 {
 meta:
@@ -30017,10 +30017,10 @@ strings:
     	$a0 = { 23 CA EB 02 5A 0D E8 02 00 00 00 6A 35 58 C1 C9 10 BE 80 ?? ?? 00 0F B6 C9 EB 02 CD 20 BB F4 00 00 00 EB 02 04 FA EB 01 FA EB 01 5F EB 02 CD 20 8A 16 EB 02 11 31 80 E9 31 EB 02 30 11 C1 E9 11 80 EA 04 EB 02 F0 EA 33 CB 81 EA AB AB 19 08 04 D5 03 C2 80 EA }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule CRYPToCRACk_s_PE_Protector_v0_9_3____Lucas_Fleischer__h_
 {
 meta:
@@ -30029,10 +30029,10 @@ strings:
     	$a0 = { 5B 81 E3 00 FF FF FF 66 81 3B 4D 5A 75 33 8B F3 03 73 3C 81 3E 50 45 00 00 75 26 0F B7 46 18 8B C8 69 C0 AD 0B 00 00 F7 E0 2D AB 5D 41 4B 69 C9 DE C0 00 00 03 C1 75 09 83 EC 04 0F 85 DD 00 00 00 81 EB 00 01 00 00 75 BE 90 72 ?? ?? ?? ?? 00 00 00 00 00 00 00 7A ?? ?? ?? 72 ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? ?? 00 00 00 00 6B 65 72 6E 65 6C 33 32 2E 64 6C 6C 00 C1 00 46 61 74 61 6C 45 78 69 74 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PEArmor_V0_7X____Hying
 {
 meta:
@@ -30041,10 +30041,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED ?? ?? ?? ?? 8D B5 ?? ?? ?? ?? 55 56 81 C5 ?? ?? ?? ?? 55 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ABC_Cryptor_1_0___by_ZloY
 {
 meta:
@@ -30053,10 +30053,10 @@ strings:
     	$a0 = { 68 FF 64 24 F0 68 58 58 58 58 90 FF D4 50 8B 40 F2 05 B0 95 F6 95 0F 85 01 81 BB FF 68 ?? ?? ?? ?? BF 00 ?? ?? ?? B9 00 ?? ?? ?? 80 37 ?? 47 39 CF 75 F8 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NsPack_3_0____North_Star
 {
 meta:
@@ -30065,10 +30065,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 5D B8 07 00 00 00 2B E8 8D B5 ?? ?? FF FF 66 8B 06 66 83 F8 00 74 15 8B F5 8D B5 ?? ?? FF FF 66 8B 06 66 83 F8 01 0F 84 42 02 00 00 C6 06 01 8B D5 2B 95 ?? ?? FF FF 89 95 ?? ?? FF FF 01 95 ?? ?? FF FF 8D B5 ?? ?? FF FF 01 16 60 6A 40 68 00 10 00 00 68 00 10 00 00 6A 00 FF 95 ?? ?? FF FF 85 C0 0F 84 6A 03 00 00 89 85 ?? ?? FF FF E8 00 00 00 00 5B B9 68 03 00 00 03 D9 50 53 E8 B1 02 00 00 61 8B 36 8B FD 03 BD ?? ?? FF FF 8B DF 83 3F 00 75 0A 83 C7 04 B9 00 00 00 00 EB 16 B9 01 00 00 00 03 3B 83 C3 04 83 3B 00 74 36 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v1_23b3___v1_24_1
 {
 meta:
@@ -30077,10 +30077,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 0F 70 40 ?? 87 DD 8B 85 A6 70 40 ?? 01 85 03 70 40 ?? 66 C7 85 70 40 90 ?? 90 01 85 9E 70 40 BB ?? D2 08 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule DIET_v1_44__v1_45f
 {
 meta:
@@ -30089,10 +30089,10 @@ strings:
     	$a0 = { F8 9C 06 1E 57 56 52 51 53 50 0E FC 8C C8 BA ?? ?? 03 D0 52 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule XJ___XPAL____LiNSoN
 {
 meta:
@@ -30101,10 +30101,10 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 ?? ?? 40 00 68 ?? ?? 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 44 53 56 57 66 9C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__Microsoft_Visual_Basic_6_0_DLL______Anorganix
 {
 meta:
@@ -30113,10 +30113,10 @@ strings:
     	$a0 = { 90 90 90 90 68 ?? ?? ?? ?? 67 64 FF 36 00 00 67 64 89 26 00 00 F1 90 90 90 90 5A 68 90 90 90 90 68 90 90 90 90 52 E9 90 90 FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v1_40b2___v1_40b4
 {
 meta:
@@ -30125,10 +30125,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 0F A0 40 ?? 87 DD 8B 85 A6 A0 40 ?? 01 85 03 A0 40 ?? 66 C7 85 ?? A0 40 ?? 90 90 01 85 9E A0 40 ?? BB 86 11 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PESpin_V1_1____cyberbob
 {
 meta:
@@ -30137,10 +30137,10 @@ strings:
     	$a0 = { EB 01 68 60 E8 00 00 00 00 8B 1C 24 83 C3 12 81 2B E8 B1 06 00 FE 4B FD 82 2C 24 7D DE 46 00 0B E4 74 9E }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Pack_Master_v1_0
 {
 meta:
@@ -30150,10 +30150,10 @@ strings:
 	$a1 = { 60 E8 01 00 00 00 E8 83 C4 04 E8 01 00 00 00 E9 5D 81 ED D3 22 40 00 E8 04 02 00 00 E8 EB 08 EB 02 CD 20 FF 24 24 9A 66 BE 47 46 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule Vx__XRCV_1015
 {
 meta:
@@ -30162,10 +30162,10 @@ strings:
     	$a0 = { E8 ?? ?? 5E 83 ?? ?? 53 51 1E 06 B4 99 CD 21 80 FC 21 ?? ?? ?? ?? ?? 33 C0 50 8C D8 48 8E C0 1F A1 ?? ?? 8B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Thinstall_Embedded_V2_312____Jitit___Sign_by_fly
 {
 meta:
@@ -30174,10 +30174,10 @@ strings:
     	$a0 = { 6A 00 FF 15 ?? ?? ?? ?? E8 D4 F8 FF FF E9 E9 AD FF FF FF 8B C1 8B 4C 24 04 89 88 29 04 00 00 C7 40 0C 01 00 00 00 0F B6 49 01 D1 E9 89 48 10 C7 40 14 80 00 00 00 C2 04 00 8B 44 24 04 C7 41 0C 01 00 00 00 89 81 29 04 00 00 0F B6 40 01 D1 E8 89 41 10 C7 41 14 80 00 00 00 C2 04 00 55 8B EC 53 56 57 33 C0 33 FF 39 45 0C 8B F1 76 0C 8B 4D 08 03 3C 81 40 3B 45 0C 72 F4 8B CE E8 43 00 00 00 8B 46 14 33 D2 F7 F7 8B 5E 10 33 D2 8B F8 8B C3 F7 F7 89 7E 18 89 45 0C 33 C0 33 C9 8B 55 08 03 0C 82 40 39 4D 0C 73 F4 48 8B 14 82 2B CA 0F AF CF 2B D9 0F AF FA 89 7E 14 89 5E 10 5F 5E 5B 5D C2 08 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upx_Lock_1_0___1_2____CyberDoom___Team_X___BoB___BobSoft
 {
 meta:
@@ -30186,10 +30186,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 5D 81 ED 48 12 40 00 60 E8 2B 03 00 00 61 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__ExeSmasher______Anorganix
 {
 meta:
@@ -30198,10 +30198,10 @@ strings:
     	$a0 = { 9C FE 03 90 60 BE 90 90 41 90 8D BE 90 10 FF FF 57 83 CD FF EB 10 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 FE 0B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PGMPACK_v0_14
 {
 meta:
@@ -30210,10 +30210,10 @@ strings:
     	$a0 = { 1E 17 50 B4 30 CD 21 3C 02 73 ?? B4 4C CD 21 FC BE ?? ?? BF ?? ?? E8 ?? ?? E8 ?? ?? BB ?? ?? BA ?? ?? 8A C3 8B F3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule CPAV
 {
 meta:
@@ -30222,10 +30222,10 @@ strings:
     	$a0 = { E8 ?? ?? 4D 5A B1 01 93 01 00 00 02 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PGMPACK_v0_13
 {
 meta:
@@ -30234,10 +30234,10 @@ strings:
     	$a0 = { FA 1E 17 50 B4 30 CD 21 3C 02 73 ?? B4 4C CD 21 FC BE ?? ?? BF ?? ?? E8 ?? ?? E8 ?? ?? BB ?? ?? BA ?? ?? 8A C3 8B F3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule NsPack_v3_7____North_Star__h_
 {
 meta:
@@ -30246,10 +30246,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 5D 83 ED 07 8D 8D ?? ?? ?? FF 80 39 01 0F 84 42 02 00 00 C6 01 01 8B C5 2B 85 ?? ?? ?? FF 89 85 ?? ?? ?? FF 01 85 ?? ?? ?? FF 8D B5 ?? ?? ?? FF 01 06 55 56 6A 40 68 00 10 00 00 68 00 10 00 00 6A 00 FF 95 ?? ?? ?? FF 85 C0 0F 84 69 03 00 00 89 85 ?? ?? ?? FF E8 00 00 00 00 5B B9 67 03 00 00 03 D9 50 53 E8 B0 02 00 00 5E 5D 8B 36 8B FD 03 BD ?? ?? ?? FF 8B DF 83 3F 00 75 0A 83 C7 04 B9 00 00 00 00 EB 16 B9 01 00 00 00 03 3B 83 C3 04 83 3B 00 74 34 01 13 8B 33 03 7B 04 57 51 53 FF B5 ?? ?? ?? FF FF B5 ?? ?? ?? FF 8B D6 8B CF 8B 85 ?? ?? ?? FF 05 AA 05 00 00 FF D0 5B 59 5F 83 F9 00 74 05 83 C3 08 EB C7 68 00 80 00 00 6A 00 FF B5 ?? ?? ?? FF FF 95 ?? ?? ?? FF 8D B5 ?? ?? ?? FF 8B 4E 08 8D 56 10 8B 36 8B FE 83 F9 00 74 3F 8A 07 47 2C E8 3C 01 77 F7 8B 07 80 7A 01 00 74 14 8A 1A 38 1F 75 E9 8A 5F 04 66 C1 E8 08 C1 C0 10 86 C4 EB 0A 8A 5F 04 86 C4 C1 C0 10 86 C4 2B C7 03 C6 89 07 83 C7 05 80 EB E8 8B C3 E2 C6 E8 3A 01 00 00 8D 8D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__CIH_Version_1_2_TTIT____WIN95CIH___
 {
 meta:
@@ -30258,10 +30258,10 @@ strings:
     	$a0 = { 55 8D ?? ?? ?? 33 DB 64 87 03 E8 ?? ?? ?? ?? 5B 8D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule HACKSTOP_v1_00
 {
 meta:
@@ -30270,10 +30270,10 @@ strings:
     	$a0 = { FA BD ?? ?? FF E5 6A 49 48 0C ?? E4 ?? 3F 98 3F }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Hardlock_dongle__Alladin_
 {
 meta:
@@ -30282,10 +30282,10 @@ strings:
     	$a0 = { 5C 5C 2E 5C 48 41 52 44 4C 4F 43 4B 2E 56 58 44 00 00 00 00 5C 5C 2E 5C 46 45 6E 74 65 44 65 76 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FSG_v1_10__Eng_____dulek_xt_____MASM32___TASM32_
 {
 meta:
@@ -30296,10 +30296,10 @@ strings:
 	$a2 = { 03 F7 23 FE 33 FB EB 02 CD 20 BB 80 ?? 40 00 EB 01 86 EB 01 90 B8 F4 00 00 00 83 EE 05 2B F2 81 F6 EE 00 00 00 EB 02 CD 20 8A 0B E8 02 00 00 00 A9 54 5E C1 EE 07 F7 D7 EB 01 DE 81 E9 B7 96 A0 C4 EB 01 6B EB 02 CD 20 80 E9 4B C1 CF 08 EB 01 71 80 E9 1C EB 02 F0 49 C1 F6 09 88 0B F7 DE 0F B6 F2 43 EB 02 CD 20 C1 E7 0A 48 EB 01 89 C1 E7 14 2B FF 3B C7 75 A8 E8 01 00 00 00 81 5F F7 D7 D9 EE 1F 5E 1E DD 1E 2E 5E 1E DC ?? ?? 5E 1E 71 06 28 1E 1E 1E 20 F0 93 23 A8 34 64 30 F0 E1 D0 9E 51 F9 C2 D1 20 1D 32 42 91 16 51 E7 1D 32 42 91 36 51 DE 1D 32 42 91 3F D1 20 5F CE 2E 1D 32 42 30 DE 91 17 93 5D C8 09 FA 06 61 1E 1E 1E 49 E9 93 2E 06 56 1E 1E 1E 09 46 CA EF 06 92 5F 31 E7 09 3A AF 66 DF FE 26 CA 06 40 1E 1E 1E 5B 1E 9B 1E 1E 91 28 9E 1A 23 91 24 A1 16 9D 95 20 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
-    
+
 rule beria_v0_07_public_WIP_____symbiont
 {
 meta:
@@ -30308,10 +30308,10 @@ strings:
     	$a0 = { 83 EC 18 53 8B 1D 00 30 ?? ?? 55 56 57 68 30 07 00 00 33 ED 55 FF D3 8B F0 3B F5 74 0D 89 AE 20 07 00 00 E8 88 0F 00 00 EB 02 33 F6 6A 10 55 89 35 30 40 ?? ?? FF D3 8B F0 3B F5 74 09 89 2E E8 3C FE FF FF EB 02 33 F6 6A 18 55 89 35 D8 43 ?? ?? FF D3 8B F0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule eXpressor_v1_0____CGSoftLabs
 {
 meta:
@@ -30323,7 +30323,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PESpin_v1_1_by_cyberbob
 {
 meta:
@@ -30335,7 +30335,7 @@ condition:
     	$a0
 }
 
-    
+
 rule MoleBox_v2_3_0____Teggo
 {
 meta:
@@ -30347,7 +30347,7 @@ condition:
     	$a0
 }
 
-    
+
 rule __PseudoSigner_0_1__VOB_ProtectCD_5______Anorganix
 {
 meta:
@@ -30356,10 +30356,10 @@ strings:
     	$a0 = { 36 3E 26 8A C0 60 E8 00 00 00 00 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Werus_Crypter_1_0___by_Kas
 {
 meta:
@@ -30368,10 +30368,10 @@ strings:
     	$a0 = { BB E8 12 40 00 80 33 05 E9 7D FF FF FF }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule UPX_v3_0__EXE_LZMA_____Markus_Oberhumer___Laszlo_Molnar___John_Reiser
 {
 meta:
@@ -30380,10 +30380,10 @@ strings:
     	$a0 = { 60 BE ?? ?? ?? ?? 8D BE ?? ?? ?? FF 57 89 E5 8D 9C 24 80 C1 FF FF 31 C0 50 39 DC 75 FB 46 46 53 68 ?? ?? ?? 00 57 83 C3 04 53 68 ?? ?? ?? 00 56 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule DotFix_NiceProtect_vna
 {
 meta:
@@ -30392,10 +30392,10 @@ strings:
     	$a0 = { 60 E8 55 00 00 00 8D BD 00 10 40 00 68 ?? ?? ?? 00 03 3C 24 8B F7 90 68 31 10 40 00 9B DB E3 55 DB 04 24 8B C7 DB 44 24 04 DE C1 DB 1C 24 8B 1C 24 66 AD 51 DB 04 24 90 90 DA 8D 77 10 40 00 DB 1C 24 D1 E1 29 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule eXPressor_1_4_5_1____CGSoftLabs
 {
 meta:
@@ -30405,10 +30405,10 @@ strings:
 	$a1 = { 55 8B EC 83 EC 58 53 56 57 83 65 DC 00 F3 EB 0C 65 58 50 72 2D 76 2E 31 2E 34 2E 00 A1 00 ?? ?? 00 05 00 ?? ?? 00 A3 08 ?? ?? 00 A1 08 ?? ?? 00 B9 81 ?? ?? 00 2B 48 18 89 0D 0C ?? ?? 00 83 3D 10 ?? ?? 00 00 74 16 A1 08 ?? ?? 00 8B 0D 0C ?? ?? 00 03 48 14 89 4D CC E9 97 04 00 00 C7 05 10 ?? ?? 00 01 00 00 00 ?? ?? 68 54 ?? ?? 00 68 18 ?? ?? 00 6A 00 FF 15 E4 ?? ?? 00 83 7D 0C 01 74 04 83 65 08 00 6A 04 68 00 10 00 00 68 04 01 00 00 6A 00 FF 15 C4 ?? ?? 00 89 45 EC 68 04 01 00 00 FF 75 EC FF 75 08 FF 15 DC ?? ?? 00 8B 4D EC 8D 44 01 FF 89 45 AC 8B 45 AC 0F BE 00 83 F8 5C 74 09 8B 45 AC 48 89 45 AC EB EC 8B 45 AC 40 89 45 AC 8B 45 AC 2B 45 EC 89 45 B0 6A 04 68 00 10 00 00 68 04 01 00 00 6A 00 FF 15 C4 ?? ?? 00 89 45 FC 8B 4D B0 8B 75 EC 8B 7D FC 8B C1 C1 E9 02 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule SLVc0deProtector_1_1x____SLV___ICU
 {
 meta:
@@ -30417,10 +30417,10 @@ strings:
     	$a0 = { E8 00 00 00 00 58 C6 00 EB C6 40 01 08 FF E0 E9 4C ?? ?? 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule aPack_v0_62
 {
 meta:
@@ -30429,10 +30429,10 @@ strings:
     	$a0 = { 1E 06 8C C8 8E D8 ?? ?? ?? 8E C0 50 BE ?? ?? 33 FF FC B6 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule LameCrypt____LaZaRus
 {
 meta:
@@ -30441,10 +30441,10 @@ strings:
     	$a0 = { 60 66 9C BB 00 ?? ?? 00 80 B3 00 10 40 00 90 4B 83 FB FF 75 F3 66 9D 61 B8 ?? ?? 40 00 FF E0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule yC_v1_3_by_Ashkbiz_Danehkar
 {
 meta:
@@ -30456,7 +30456,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Obsidium_1_2_5_8____Obsidium_Software
 {
 meta:
@@ -30466,10 +30466,10 @@ strings:
 	$a1 = { EB 01 ?? E8 29 00 00 00 EB 02 ?? ?? EB 01 ?? 8B 54 24 0C EB 04 ?? ?? ?? ?? 83 82 B8 00 00 00 24 EB 04 ?? ?? ?? ?? 33 C0 EB 02 ?? ?? C3 EB 02 ?? ?? EB 03 ?? ?? ?? 64 67 FF 36 00 00 EB 01 ?? 64 67 89 26 00 00 EB 03 ?? ?? ?? EB 01 ?? 50 EB 03 ?? ?? ?? 33 C0 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule RLPack_1_0_beta____ap0x__h_
 {
 meta:
@@ -30478,10 +30478,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8D 64 24 04 8B 6C 24 FC 8D B5 4C 02 00 00 8D 9D 13 01 00 00 33 FF EB 0F FF 74 37 04 FF 34 37 FF D3 83 C4 08 83 C7 08 83 3C 37 00 75 EB 8D 74 37 04 53 6A 40 68 00 10 00 00 68 ?? ?? ?? ?? 6A 00 FF 95 F9 01 00 00 89 85 48 02 00 00 5B FF B5 48 02 00 00 56 FF D3 83 C4 08 8B B5 48 02 00 00 8B C6 EB 01 40 80 38 01 75 FA 40 8B 38 83 C0 04 89 85 44 02 00 00 EB 7A 56 FF 95 F1 01 00 00 89 85 40 02 00 00 8B C6 EB 4F 8B 85 44 02 00 00 8B 00 A9 00 00 00 80 74 14 35 00 00 00 80 50 8B 85 44 02 00 00 C7 00 20 20 20 00 EB 06 FF B5 44 02 00 00 FF B5 40 02 00 00 FF 95 F5 01 00 00 89 07 83 C7 04 8B 85 44 02 00 00 EB 01 40 80 38 00 75 FA 40 89 85 44 02 00 00 80 38 00 75 AC EB 01 46 80 3E 00 75 FA 46 40 8B 38 83 C0 04 89 85 44 02 00 00 80 3E 01 75 81 68 00 40 00 00 68 ?? ?? ?? ?? FF B5 48 02 00 00 FF 95 FD 01 00 00 61 68 ?? ?? ?? ?? C3 60 8B 74 24 24 8B 7C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MEW_5_1_0____Northfox
 {
 meta:
@@ -30490,10 +30490,10 @@ strings:
     	$a0 = { BE 5B 00 40 00 AD 91 AD 93 53 AD 96 56 5F AC C0 C0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Armadillo_5_00_Dll____Silicon_Realms_Toolworks
 {
 meta:
@@ -30502,10 +30502,10 @@ strings:
     	$a0 = { 83 7C 24 08 01 75 05 E8 DE 4B 00 00 FF 74 24 04 8B 4C 24 10 8B 54 24 0C E8 ED FE FF FF 59 C2 0C 00 6A 0C 68 ?? ?? ?? ?? E8 E5 24 00 00 8B 4D 08 33 FF 3B CF 76 2E 6A E0 58 33 D2 F7 F1 3B 45 0C 1B C0 40 75 1F E8 8F 15 00 00 C7 00 0C 00 00 00 57 57 57 57 57 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MSLRH_0_32a__fake_yoda_s_cryptor_1_2_____emadicius
 {
 meta:
@@ -30517,7 +30517,7 @@ condition:
     	$a0
 }
 
-    
+
 rule yoda_s_Protector_V1_03_1____Ashkbiz_Danehkar___Sign_by_fly
 {
 meta:
@@ -30526,10 +30526,10 @@ strings:
     	$a0 = { E8 03 00 00 00 EB 01 ?? BB 55 00 00 00 E8 03 00 00 00 EB 01 ?? E8 8F 00 00 00 E8 03 00 00 00 EB 01 ?? E8 82 00 00 00 E8 03 00 00 00 EB 01 ?? E8 B8 00 00 00 E8 03 00 00 00 EB 01 ?? E8 AB 00 00 00 E8 03 00 00 00 EB 01 ?? 83 FB 55 E8 03 00 00 00 EB 01 ?? 75 2E E8 03 00 00 00 EB 01 ?? C3 60 E8 00 00 00 00 5D 81 ED 74 72 42 00 8B D5 81 C2 C3 72 42 00 52 E8 01 00 00 00 C3 C3 E8 03 00 00 00 EB 01 ?? E8 0E 00 00 00 E8 D1 FF FF FF C3 E8 03 00 00 00 EB 01 ?? 33 C0 64 FF 30 64 89 20 CC C3 E8 03 00 00 00 EB 01 ?? 33 C0 64 FF 30 64 89 20 4B CC C3 E8 03 00 00 00 EB 01 ?? 33 DB B9 3F A9 42 00 81 E9 6E 73 42 00 8B D5 81 C2 6E 73 42 00 8D 3A 8B F7 33 C0 E8 03 00 00 00 EB 01 ?? E8 17 00 00 00 90 90 90 E9 98 2E 00 00 33 C0 64 FF 30 64 89 20 43 CC C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_1__VBOX_4_3_MTE______Anorganix
 {
 meta:
@@ -30538,10 +30538,10 @@ strings:
     	$a0 = { 0B C0 0B C0 0B C0 0B C0 0B C0 0B C0 0B C0 0B C0 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PECompact_v1_25
 {
 meta:
@@ -30550,10 +30550,10 @@ strings:
     	$a0 = { EB 06 68 ?? ?? ?? ?? C3 9C 60 E8 02 ?? ?? ?? 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 EB 0F 70 40 ?? 87 DD 8B 85 A6 70 40 ?? 01 85 03 70 40 ?? 66 C7 85 70 40 90 ?? 90 01 85 9E 70 40 BB ?? F3 0D }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Morphine_v3_3____Silent_Software___Silent_Shield__c_2005__h_
 {
 meta:
@@ -30565,7 +30565,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Stone_s_PE_Encryptor_v2_0
 {
 meta:
@@ -30574,10 +30574,10 @@ strings:
     	$a0 = { 53 51 52 56 57 55 E8 ?? ?? ?? ?? 5D 81 ED 42 30 40 ?? FF 95 32 35 40 ?? B8 37 30 40 ?? 03 C5 2B 85 1B 34 40 ?? 89 85 27 34 40 ?? 83 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule MicroJoiner_1_1____coban2k
 {
 meta:
@@ -30586,10 +30586,10 @@ strings:
     	$a0 = { BE 0C 70 40 00 BB F8 11 40 00 33 ED 83 EE 04 39 2E 74 11 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Upack_0_28___0_399__relocated_image_base___Delphi___NET__DLL_or_something_else____Dwing__h_
 {
 meta:
@@ -30601,7 +30601,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Vx__VCL__encrypted_
 {
 meta:
@@ -30611,10 +30611,10 @@ strings:
 	$a1 = { 01 B9 ?? ?? 81 34 ?? ?? 46 46 E2 F8 C3 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule RLPack_V1_11____ap0x
 {
 meta:
@@ -30623,10 +30623,10 @@ strings:
     	$a0 = { 60 E8 00 00 00 00 8B 2C 24 83 C4 04 8D B5 4A 02 00 00 8D 9D 11 01 00 00 33 FF EB 0F FF 74 37 04 FF 34 37 FF D3 83 C4 08 83 C7 08 83 3C 37 00 75 EB }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Setup_Factory_6_0_0_3_Setup_Launcher
 {
 meta:
@@ -30638,7 +30638,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Petite_2_2_____c_1998_99_Ian_Luck__h_
 {
 meta:
@@ -30648,10 +30648,10 @@ strings:
 	$a1 = { 68 ?? ?? ?? ?? 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 66 9C 60 50 68 00 00 ?? ?? 8B 3C 24 8B 30 66 81 C7 80 07 8D 74 06 08 89 38 8B 5E 10 50 56 6A 02 68 80 08 00 00 57 6A ?? 6A 06 56 6A 04 68 80 08 00 00 57 FF D3 83 EE 08 59 F3 A5 59 66 83 C7 68 81 C6 ?? ?? 00 00 F3 A5 FF D3 58 8D 90 B8 01 00 00 8B 0A 0F BA F1 1F 73 16 8B 04 24 FD 8B F0 8B F8 03 72 04 03 7A 08 F3 A5 83 C2 0C FC EB E2 83 C2 10 8B 5A F4 85 DB 74 D8 8B 04 24 8B 7A F8 03 F8 52 8D 34 01 EB 17 58 58 58 5A 74 C4 E9 1C FF FF FF 02 D2 75 07 8A 16 83 EE FF 12 D2 C3 81 FB 00 00 01 00 73 0E 68 60 C0 FF FF 68 60 FC FF FF B6 05 EB 22 81 FB 00 00 04 00 73 0E 68 80 81 FF FF 68 80 F9 FF FF B6 07 EB 0C 68 00 83 FF FF 68 00 FB FF FF B6 08 6A 00 32 D2 4B A4 33 C9 83 FB 00 7E A4 E8 AA FF FF FF 72 17 A4 30 5F FF 4B EB ED 41 E8 9B FF FF FF 13 C9 E8 94 FF FF FF 72 F2 C3 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule vprotector_1_2____vcasm__h_
 {
 meta:
@@ -30660,10 +30660,10 @@ strings:
     	$a0 = { EB 0B 5B 56 50 72 6F 74 65 63 74 5D 00 E8 24 00 00 00 8B 44 24 04 8B 00 3D 04 00 00 80 75 08 8B 64 24 08 EB 04 58 EB 0C E9 64 8F 05 00 00 00 00 74 F3 75 F1 EB 24 64 FF 35 00 00 00 00 EB 12 FF 9C 74 03 75 01 E9 81 0C 24 00 01 00 00 9D 90 EB F4 64 89 25 00 00 00 00 EB E6 E8 16 00 00 00 8B 5C 24 0C 8B A3 C4 00 00 00 64 8F 05 00 00 00 00 83 C4 04 EB 14 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 33 C9 99 F7 F1 E9 E8 03 00 00 00 C7 84 00 58 EB 01 E9 83 C0 07 50 C3 FF 35 E8 16 00 00 00 8B 5C 24 0C 8B A3 C4 00 00 00 64 8F 05 00 00 00 00 83 C4 04 EB 14 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 33 C9 99 F7 F1 E9 E8 03 00 00 00 C7 84 00 58 EB 01 E9 83 C0 07 50 C3 FF 35 33 F6 E8 10 00 00 00 8B 64 24 08 64 8F 05 00 00 00 00 58 EB 13 C7 83 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 AD CD 20 E8 05 00 00 00 0F 01 EB 05 E8 EB FB 00 00 83 C4 04 E8 08 00 00 00 0F 01 83 C0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule EXE_Packer_v7_0_by_TurboPower_Software
 {
 meta:
@@ -30672,10 +30672,10 @@ strings:
     	$a0 = { 1E 06 8C C3 83 ?? ?? 2E ?? ?? ?? ?? B9 ?? ?? 8C C8 8E D8 8B F1 4E 8B FE }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Matrix_Dongle____TDi_GmbH
 {
 meta:
@@ -30685,10 +30685,10 @@ strings:
 	$a1 = { E8 00 00 00 00 E8 00 00 00 00 59 5A 2B CA 2B D1 E8 1A FF FF FF }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__Microsoft_Visual_Basic_5_0___6_0_
 {
 meta:
@@ -30697,10 +30697,10 @@ strings:
     	$a0 = { 68 ?? ?? ?? ?? E8 0A 00 00 00 00 00 00 00 00 00 30 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__Video_Lan_Client_
 {
 meta:
@@ -30709,10 +30709,10 @@ strings:
     	$a0 = { 55 89 E5 83 EC 08 90 90 90 90 90 90 90 90 90 90 90 90 90 90 01 FF FF 01 01 01 00 01 90 90 90 90 90 90 90 90 90 90 90 90 90 90 00 01 00 01 00 01 90 90 00 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FreeJoiner_1_5_1____GlOFF
 {
 meta:
@@ -30721,10 +30721,10 @@ strings:
     	$a0 = { 90 87 FF 90 90 B9 2B 00 00 00 BA 07 10 40 00 83 C2 03 90 87 FF 90 90 B9 04 00 00 00 90 87 FF 90 33 C9 C7 05 09 30 40 00 00 00 00 00 68 00 01 00 00 68 21 30 40 00 6A 00 E8 B7 02 00 00 6A 00 68 80 00 00 00 6A 03 6A 00 6A 00 68 00 00 00 80 68 21 30 40 00 E8 8F 02 00 00 A3 19 30 40 00 90 87 FF 90 8B 15 09 30 40 00 81 C2 04 01 00 00 F7 DA 6A 02 6A 00 52 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ARM_Protector_0_1_by_SMoKE
 {
 meta:
@@ -30736,7 +30736,7 @@ condition:
     	$a0
 }
 
-    
+
 rule BeRo_Tiny_Pascal____BeRo
 {
 meta:
@@ -30745,10 +30745,10 @@ strings:
     	$a0 = { E9 ?? ?? ?? ?? 20 43 6F 6D 70 69 6C 65 64 20 62 79 3A 20 42 65 52 6F 54 69 6E 79 50 61 73 63 61 6C 20 2D 20 28 43 29 20 43 6F 70 79 72 69 67 68 74 20 32 30 30 36 2C 20 42 65 6E 6A 61 6D 69 6E 20 27 42 65 52 6F 27 20 52 6F 73 73 65 61 75 78 20 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Safe_2_0
 {
 meta:
@@ -30760,7 +30760,7 @@ condition:
     	$a0
 }
 
-    
+
 rule PseudoSigner_0_2__ExeSmasher_
 {
 meta:
@@ -30769,10 +30769,10 @@ strings:
     	$a0 = { 9C FE 03 90 60 BE 90 90 41 90 8D BE 90 10 FF FF 57 83 CD FF EB 10 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 FE 0B }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule hmimys_Protect_v1_0
 {
 meta:
@@ -30783,10 +30783,10 @@ strings:
 	$a2 = { E8 BA 00 00 00 ?? 00 00 00 00 ?? ?? 00 00 10 40 00 ?? ?? ?? 00 ?? ?? ?? 00 00 ?? ?? 00 ?? ?? ?? 00 ?? ?? ?? 00 ?? ?? ?? 00 ?? ?? ?? 00 ?? ?? ?? 00 ?? 00 00 00 00 00 00 00 ?? ?? ?? 00 00 00 00 00 00 00 00 00 ?? ?? ?? 00 ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? 00 ?? ?? ?? 00 ?? ?? ?? 00 ?? ?? ?? 00 00 00 00 00 4B 65 72 6E 65 6C 33 32 2E 64 6C 6C 00 00 00 4C 6F 61 64 4C 69 62 72 61 72 79 41 00 00 00 47 65 74 50 72 6F 63 41 64 64 72 65 73 73 00 00 00 56 69 72 74 75 61 6C 46 72 65 65 00 00 00 56 69 72 74 75 61 6C 41 6C 6C 6F 63 00 5E 83 C6 64 AD 50 AD 50 83 EE 6C AD 50 AD 50 AD 50 AD 50 AD 50 E8 E7 07 00 00 AD 8B DE 8B F0 83 C3 44 AD 85 C0 74 32 8B F8 56 FF 13 8B E8 AC 84 C0 75 FB AC 84 C0 74 EA 4E AD A9 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep or $a2 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
-    
+
 rule CRYPToCRACk_s_PE_Protector_V0_9_2____Lukas_Fleischer___Sign_by_fly
 {
 meta:
@@ -30795,10 +30795,10 @@ strings:
     	$a0 = { E8 01 00 00 00 E8 58 5B 81 E3 00 FF FF FF 66 81 3B 4D 5A 75 37 84 DB 75 33 8B F3 03 ?? ?? 81 3E 50 45 00 00 75 26 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SPEC_b3
 {
 meta:
@@ -30807,10 +30807,10 @@ strings:
     	$a0 = { 5B 53 50 45 43 5D E8 ?? ?? ?? ?? 5D 8B C5 81 ED 41 24 40 ?? 2B 85 89 26 40 ?? 83 E8 0B 89 85 8D 26 40 ?? 0F B6 B5 91 26 40 ?? 8B FD }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule SPEC_b2
 {
 meta:
@@ -30819,10 +30819,10 @@ strings:
     	$a0 = { 55 57 51 53 E8 ?? ?? ?? ?? 5D 8B C5 81 ED ?? ?? ?? ?? 2B 85 ?? ?? ?? ?? 83 E8 09 89 85 ?? ?? ?? ?? 0F B6 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__VOB_ProtectCD_5______Anorganix
 {
 meta:
@@ -30831,10 +30831,10 @@ strings:
     	$a0 = { 36 3E 26 8A C0 60 E8 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule RLP_V0_7_3_beta____ap0x___Sign_by_fly
 {
 meta:
@@ -30846,7 +30846,7 @@ condition:
     	$a0
 }
 
-    
+
 rule Vx__KBDflags_1024
 {
 meta:
@@ -30855,10 +30855,10 @@ strings:
     	$a0 = { 8B EC 2E 89 2E 24 03 BC 00 04 8C D5 2E 89 2E 22 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule eXcalibur_v1_03____forgot_us__h_
 {
 meta:
@@ -30868,10 +30868,10 @@ strings:
 	$a1 = { E9 00 00 00 00 60 E8 14 00 00 00 5D 81 ED 00 00 00 00 6A 45 E8 A3 00 00 00 68 00 00 00 00 E8 58 61 EB 39 20 45 78 63 61 6C 69 62 75 72 20 28 63 29 20 62 79 20 66 6F 72 67 6F 74 2F 75 53 2F 44 46 43 47 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 }
 
 condition:
-    	$a0 at sgpe.ep or $a1
+    	$a0 at manape.ep or $a1
 }
 
-    
+
 rule Pelles_C_3_00__4_00__4_50_EXE__X86_CRT_LIB_
 {
 meta:
@@ -30883,7 +30883,7 @@ condition:
     	$a0
 }
 
-    
+
 rule WWPACK_v3_05c4__Extractable___Password_checking_
 {
 meta:
@@ -30892,10 +30892,10 @@ strings:
     	$a0 = { 03 05 80 1A B8 ?? ?? 8C CA 03 D0 8C C9 81 C1 ?? ?? 51 B9 ?? ?? 51 06 06 B1 ?? 51 8C D3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__PECompact_1_4__
 {
 meta:
@@ -30904,10 +30904,10 @@ strings:
     	$a0 = { 90 90 90 90 68 ?? ?? ?? ?? 67 64 FF 36 00 00 67 64 89 26 00 00 F1 90 90 90 90 EB 06 68 90 90 90 90 C3 9C 60 E8 02 90 90 90 33 C0 8B C4 83 C0 04 93 8B E3 8B 5B FC 81 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule ____Protector_v1_1_11__DDeM__PE_Engine_v0_9__DDeM__CI_v0_9_2_
 {
 meta:
@@ -30916,10 +30916,10 @@ strings:
     	$a0 = { 53 51 56 E8 00 00 00 00 5B 81 EB 08 10 00 00 8D B3 34 10 00 00 B9 F3 03 00 00 BA 63 17 2A EE 31 16 83 C6 04 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Petite_1_2_____c_1998_Ian_Luck__h_
 {
 meta:
@@ -30929,10 +30929,10 @@ strings:
 	$a1 = { 66 9C 60 E8 CA 00 00 00 03 00 04 00 05 00 06 00 07 00 08 00 09 00 0A 00 0B 00 0D 00 0F 00 11 00 13 00 17 00 1B 00 1F 00 23 00 2B 00 33 00 3B 00 43 00 53 00 63 00 73 00 83 00 A3 00 C3 00 E3 00 02 01 00 00 00 00 00 00 00 00 00 00 00 00 01 01 01 01 02 02 02 02 03 03 03 03 04 04 04 04 05 05 05 05 00 70 70 01 00 02 00 03 00 04 00 05 00 07 00 09 00 0D 00 11 00 19 00 21 00 31 00 41 00 61 00 81 00 C1 00 01 01 81 01 01 02 01 03 01 04 01 06 01 08 01 0C 01 10 01 18 01 20 01 30 01 40 01 60 00 00 00 00 01 01 02 02 03 03 04 04 05 05 06 06 07 07 08 08 09 09 0A 0A 0B 0B 0C 0C 0D 0D 10 11 12 00 08 07 09 06 0A 05 0B 04 0C 03 0D 02 0E 01 0F 58 2C 08 50 8B C8 8B D0 81 C1 ?? D2 00 00 81 C2 ?? ?? 00 00 89 20 8B E1 50 81 2C 24 00 ?? ?? ?? FF 30 50 80 04 24 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule TTPpack
 {
 meta:
@@ -30941,10 +30941,10 @@ strings:
     	$a0 = { E8 00 00 00 00 5D 81 ED F5 8F 40 00 60 33 F6 E8 11 00 00 00 8B 64 24 08 64 8F 05 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule tElock_0_98____tE_
 {
 meta:
@@ -30953,10 +30953,10 @@ strings:
     	$a0 = { E9 25 E4 FF FF 00 00 00 ?? ?? ?? ?? 1E ?? ?? 00 00 00 00 00 00 00 00 00 3E ?? ?? 00 2E ?? ?? 00 26 ?? ?? 00 00 00 00 00 00 00 00 00 4B ?? ?? 00 36 ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 56 ?? ?? 00 00 00 00 00 69 ?? ?? 00 00 00 00 00 56 ?? ?? 00 00 00 00 00 69 ?? ?? 00 00 00 00 00 6B 65 72 6E 65 6C 33 32 2E 64 6C 6C 00 75 73 65 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PE_Armor_0_46____China_Cracking_Group
 {
 meta:
@@ -30966,10 +30966,10 @@ strings:
 	$a1 = { E8 AA 00 00 00 2D ?? ?? 00 00 00 00 00 00 00 00 00 3D ?? ?? 00 2D ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 4B ?? ?? 00 5C ?? ?? 00 6F ?? ?? 00 00 00 00 00 4B 45 52 4E 45 4C 33 32 2E 64 6C 6C 00 00 00 00 47 65 74 50 72 6F 63 41 64 64 72 65 73 73 00 00 00 47 65 74 4D 6F 64 75 6C 65 48 61 6E 64 6C 65 41 00 00 00 4C 6F 61 64 4C 69 62 72 61 72 79 41 00 A2 01 00 00 ?? ?? 00 00 56 69 72 74 75 61 6C 41 6C 6C 6F 63 00 00 00 00 00 00 ?? ?? 00 ?? ?? ?? 00 ?? ?? ?? 00 ?? ?? ?? 00 00 00 00 00 00 00 00 00 5D 81 ED 05 00 00 00 8D 75 3D 56 FF 55 31 8D B5 86 00 00 00 56 50 FF 55 2D 89 85 93 00 00 00 6A 04 68 00 10 00 00 FF B5 82 00 00 00 6A 00 FF 95 93 00 00 00 50 8B 9D 7E 00 00 00 03 DD 50 53 E8 04 00 00 00 5A 55 FF E2 60 8B 74 24 24 8B 7C 24 28 FC }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule SimplePack_V1_1X__Method2_____bagie
 {
 meta:
@@ -30982,7 +30982,7 @@ condition:
     	$a0 or $a1
 }
 
-    
+
 rule NsPack_2_3____Liu_Xing_Ping
 {
 meta:
@@ -30994,7 +30994,7 @@ condition:
     	$a0
 }
 
-    
+
 rule yzpack_V1_12____UsAr___Sign_by_fly
 {
 meta:
@@ -31003,10 +31003,10 @@ strings:
     	$a0 = { 5A 52 45 60 83 EC 18 8B EC 8B FC 33 C0 64 8B 40 30 78 0C 8B 40 0C 8B 70 1C AD 8B 40 08 EB 09 8B 40 34 83 C0 7C 8B 40 3C AB E9 ?? ?? ?? ?? B4 09 BA 00 00 1F CD 21 B8 01 4C CD 21 40 00 00 00 50 45 00 00 4C 01 02 00 ?? ?? ?? ?? 00 00 00 00 00 00 00 00 E0 00 ?? ?? 0B 01 ?? ?? ?? ?? 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Fly_Crypter_1_0____ut1lz
 {
 meta:
@@ -31016,10 +31016,10 @@ strings:
 	$a1 = { 55 8B EC 83 C4 F0 53 B8 18 22 44 44 E8 7F F7 FF FF E8 0A F1 FF FF B8 09 00 00 00 E8 5C F1 FF FF 8B D8 85 DB 75 05 E8 85 FD FF FF 83 FB 01 75 05 E8 7B FD FF FF 83 FB 02 75 05 E8 D1 FD FF FF 83 FB 03 75 05 E8 87 FE FF FF 83 FB 04 75 05 E8 5D FD FF FF 83 FB 05 75 05 E8 B3 FD FF FF 83 FB 06 75 05 E8 69 FE FF FF 83 FB 07 75 05 E8 5F FE FF FF 83 FB 08 75 05 E8 95 FD FF FF 83 FB 09 75 05 E8 4B FE FF FF 5B E8 9D F2 FF FF 90 }
 
 condition:
-    	$a0 or $a1 at sgpe.ep
+    	$a0 or $a1 at manape.ep
 }
 
-    
+
 rule MoleBox_V2_X____MoleStudio_com
 {
 meta:
@@ -31028,10 +31028,10 @@ strings:
     	$a0 = { E8 00 00 00 00 60 E8 4F 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__Macromedia_Flash_Projector_6_0______Anorganix
 {
 meta:
@@ -31040,10 +31040,10 @@ strings:
     	$a0 = { 90 90 90 90 68 ?? ?? ?? ?? 67 64 FF 36 00 00 67 64 89 26 00 00 F1 90 90 90 90 83 EC 44 56 FF 15 24 81 49 00 8B F0 8A 06 3C 22 75 1C 8A 46 01 46 3C 22 74 0C 84 C0 74 08 8A 46 01 46 3C 22 75 F4 80 3E 22 75 0F 46 EB 0C }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Vx__Eddie_1800
 {
 meta:
@@ -31052,10 +31052,10 @@ strings:
     	$a0 = { E8 ?? ?? 5E 81 EE ?? ?? FC 2E ?? ?? ?? ?? 4D 5A ?? ?? FA 8B E6 81 C4 ?? ?? FB 3B ?? ?? ?? ?? ?? 50 06 56 1E 8B FE 33 C0 50 8E D8 C4 ?? ?? ?? 2E ?? ?? ?? ?? 2E }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule BeRoEXEPacker_v1_00__LZBRS_
 {
 meta:
@@ -31065,10 +31065,10 @@ strings:
 	$a1 = { 60 BE ?? ?? ?? ?? BF ?? ?? ?? ?? FC AD 8D 1C 07 B0 80 3B FB 73 3B E8 ?? ?? ?? ?? 72 03 A4 EB F2 E8 ?? ?? ?? ?? 8D 51 FF E8 ?? ?? ?? ?? 56 8B F7 2B F2 F3 A4 5E EB DB 02 C0 75 03 AC 12 C0 C3 33 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+
 rule RCryptor_v1_5__Private_____Vaska
 {
 meta:
@@ -31077,10 +31077,10 @@ strings:
     	$a0 = { 83 2C 24 4F 68 ?? ?? ?? ?? FF 54 24 04 83 44 24 04 4F B8 ?? ?? ?? ?? 3D ?? ?? ?? ?? 74 06 80 30 ?? 40 EB F3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule W32_Jeefo__PE_File_Infector_
 {
 meta:
@@ -31089,10 +31089,10 @@ strings:
     	$a0 = { 55 89 E5 83 EC 08 83 C4 F4 6A 02 A1 C8 ?? ?? ?? FF D0 E8 ?? ?? ?? ?? C9 C3 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_2__ZCode_1_01_
 {
 meta:
@@ -31101,10 +31101,10 @@ strings:
     	$a0 = { E9 12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 E9 FB FF FF FF C3 68 00 00 00 00 64 FF 35 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule Thinstall_2_5xx____Jtit
 {
 meta:
@@ -31113,10 +31113,10 @@ strings:
     	$a0 = { 55 8B EC B8 ?? ?? ?? ?? BB ?? ?? ?? ?? 50 E8 00 00 00 00 58 2D ?? 1A 00 00 B9 ?? 1A 00 00 BA ?? 1B 00 00 BE 00 10 00 00 BF ?? 53 00 00 BD ?? 1A 00 00 03 E8 81 75 00 ?? ?? ?? ?? ?? 75 04 ?? ?? ?? ?? 81 75 08 ?? ?? ?? ?? 81 75 0C ?? ?? ?? ?? 81 75 10 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__Borland_Delphi_Setup_Module______Anorganix
 {
 meta:
@@ -31125,10 +31125,10 @@ strings:
     	$a0 = { 55 8B EC 83 C4 90 53 56 57 33 C0 89 45 F0 89 45 D4 89 45 D0 E8 00 00 00 00 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule eXPressor_v1_5_0_1__Options____Protection__CGSoftLabs
 {
 meta:
@@ -31137,10 +31137,10 @@ strings:
     	$a0 = { 5E 00 00 80 00 00 00 68 91 5D D4 27 35 C5 5A 4C A5 40 48 C4 08 4E C0 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule __PseudoSigner_0_2__Armadillo_3_00______Anorganix
 {
 meta:
@@ -31149,10 +31149,10 @@ strings:
     	$a0 = { 60 E8 2A 00 00 00 5D 50 51 EB 0F B9 EB 0F B8 EB 07 B9 EB 0F 90 EB 08 FD EB 0B F2 EB F5 EB F6 F2 EB 08 FD EB E9 F3 EB E4 FC E9 59 58 50 51 EB 85 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__FSG_1_31_____Anorganix
 {
 meta:
@@ -31161,10 +31161,10 @@ strings:
     	$a0 = { BE 90 90 90 00 BF 90 90 90 00 BB 90 90 90 00 53 BB 90 90 90 00 B2 80 E9 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule PseudoSigner_0_1__Pack_Master_1_0__PEX_Clone__
 {
 meta:
@@ -31173,10 +31173,10 @@ strings:
     	$a0 = { 60 E8 01 01 00 00 E8 83 C4 04 E8 01 90 90 90 E9 5D 81 ED D3 22 40 90 E8 04 02 90 90 E8 EB 08 EB 02 CD 20 FF 24 24 9A 66 BE 47 46 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule DzA_Patcher_1_3_Loader
 {
 meta:
@@ -31188,7 +31188,7 @@ condition:
     	$a0
 }
 
-    
+
 rule NSPack_3_x____Liu_Xing_Ping
 {
 meta:
@@ -31197,10 +31197,10 @@ strings:
     	$a0 = { 9C 60 E8 00 00 00 00 5D 83 ED 07 8D 85 ?? ?? FF FF ?? 38 01 0F 84 ?? 02 00 00 ?? 00 01 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule LOCK98_V1_00_28____keenvim
 {
 meta:
@@ -31209,10 +31209,10 @@ strings:
     	$a0 = { 55 E8 00 00 00 00 5D 81 ?? ?? ?? ?? ?? EB 05 E9 ?? ?? ?? ?? EB 08 }
 
 condition:
-    	$a0 at sgpe.ep
+    	$a0 at manape.ep
 }
 
-    
+
 rule FakeNinja_v2_8__Anti_Debug_____Spirit
 {
 meta:
@@ -31224,7 +31224,7 @@ condition:
     	$a0
 }
 
-    
+
 rule DragonArmor____Orient
 {
 meta:
@@ -31234,7 +31234,7 @@ strings:
 	$a1 = { BF 4C ?? ?? 00 83 C9 FF 33 C0 68 34 ?? ?? 00 F2 AE F7 D1 49 51 68 4C ?? ?? 00 E8 11 0A 00 00 83 C4 0C 68 4C ?? ?? 00 FF 15 00 ?? ?? 00 8B F0 BF 4C ?? ?? 00 83 C9 FF 33 C0 F2 AE F7 D1 49 BF 4C ?? ?? 00 8B D1 68 34 ?? ?? 00 C1 E9 02 F3 AB 8B CA 83 E1 03 F3 AA BF 5C ?? ?? 00 83 C9 FF 33 C0 F2 AE F7 D1 49 51 68 5C ?? ?? 00 E8 C0 09 00 00 8B 1D 04 ?? ?? 00 83 C4 0C 68 5C ?? ?? 00 56 FF D3 A3 D4 ?? ?? 00 BF 5C ?? ?? 00 83 C9 FF 33 C0 F2 AE F7 D1 49 BF 5C ?? ?? 00 8B D1 68 34 ?? ?? 00 C1 E9 02 F3 AB 8B CA 83 E1 }
 
 condition:
-    	$a0 at sgpe.ep or $a1 at sgpe.ep
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
-    
+

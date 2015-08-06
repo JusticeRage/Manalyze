@@ -1,18 +1,18 @@
 /*
-This file is part of Spike Guard.
+This file is part of Manalyze.
 
-Spike Guard is free software: you can redistribute it and/or modify
+Manalyze is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-Spike Guard is distributed in the hope that it will be useful,
+Manalyze is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
+along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #ifndef _OUTPUT_TREE_NODE_
@@ -29,14 +29,14 @@ along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
 #include "color.h"
 #include "threat_level.h"
 
-#if defined BOOST_WINDOWS_API && !defined DECLSPEC_SGCOMMONS
-#ifdef SGSTATIC_EXPORT
-#define DECLSPEC_SGCOMMONS    __declspec(dllexport)
+#if defined BOOST_WINDOWS_API && !defined DECLSPEC_MANACOMMONS
+#ifdef MANALYZE_EXPORT
+#define DECLSPEC_MANACOMMONS    __declspec(dllexport)
 	#else
-#define DECLSPEC_SGCOMMONS    __declspec(dllimport)
+#define DECLSPEC_MANACOMMONS    __declspec(dllimport)
 	#endif
-#elif !defined BOOST_WINDOWS_API && !defined DECLSPEC_SGCOMMONS
-	#define DECLSPEC_SGCOMMONS
+#elif !defined BOOST_WINDOWS_API && !defined DECLSPEC_MANACOMMONS
+	#define DECLSPEC_MANACOMMONS
 #endif
 
 namespace io
@@ -84,45 +84,45 @@ public:
 
 	// ----------------------------------------------------------------------------
 
-	DECLSPEC_SGCOMMONS OutputTreeNode(const std::string& name, boost::uint32_t i, display_modifier mod = DEC)
+	DECLSPEC_MANACOMMONS OutputTreeNode(const std::string& name, boost::uint32_t i, display_modifier mod = DEC)
 		: _name(new std::string(name)), _type(UINT32), _uint32_data(new boost::optional<boost::uint32_t>(i)), _modifier(mod)
 	{}
 
-	DECLSPEC_SGCOMMONS OutputTreeNode(const std::string& name, boost::uint16_t s, display_modifier mod = DEC)
+	DECLSPEC_MANACOMMONS OutputTreeNode(const std::string& name, boost::uint16_t s, display_modifier mod = DEC)
 		: _name(new std::string(name)), _type(UINT16), _uint16_data(new boost::optional<boost::uint16_t>(s)), _modifier(mod)
 	{}
 
-	DECLSPEC_SGCOMMONS OutputTreeNode(const std::string& name, boost::uint64_t l, display_modifier mod = DEC)
+	DECLSPEC_MANACOMMONS OutputTreeNode(const std::string& name, boost::uint64_t l, display_modifier mod = DEC)
 		: _name(new std::string(name)), _type(UINT64), _uint64_data(new boost::optional<boost::uint64_t>(l)), _modifier(mod)
 	{}
 
-	DECLSPEC_SGCOMMONS OutputTreeNode(const std::string& name, float f, display_modifier mod = NONE)
+	DECLSPEC_MANACOMMONS OutputTreeNode(const std::string& name, float f, display_modifier mod = NONE)
 		: _name(new std::string(name)), _type(FLOAT), _float_data(new boost::optional<float>(f)), _modifier(mod)
 	{}
 
-	DECLSPEC_SGCOMMONS OutputTreeNode(const std::string& name, double d, display_modifier mod = NONE)
+	DECLSPEC_MANACOMMONS OutputTreeNode(const std::string& name, double d, display_modifier mod = NONE)
 		: _name(new std::string(name)), _type(DOUBLE), _double_data(new boost::optional<double>(d)), _modifier(mod)
 	{}
 
-	DECLSPEC_SGCOMMONS OutputTreeNode(const std::string& name, const std::string& s, display_modifier mod = NONE)
+	DECLSPEC_MANACOMMONS OutputTreeNode(const std::string& name, const std::string& s, display_modifier mod = NONE)
 		: _name(new std::string(name)), _type(STRING), _string_data(new boost::optional<std::string>(s)), _modifier(mod)
 	{}
 
-	DECLSPEC_SGCOMMONS OutputTreeNode(const std::string& name, const nodes& n, display_modifier mod = NONE)
+	DECLSPEC_MANACOMMONS OutputTreeNode(const std::string& name, const nodes& n, display_modifier mod = NONE)
 		: _name(new std::string(name)), _type(LIST), _list_data(new boost::optional<nodes>(n)), _modifier(mod)
 	{}
 
-	DECLSPEC_SGCOMMONS OutputTreeNode(const std::string& name, const strings& strs, display_modifier mod = NONE)
+	DECLSPEC_MANACOMMONS OutputTreeNode(const std::string& name, const strings& strs, display_modifier mod = NONE)
 		: _name(new std::string(name)), _type(STRINGS), _strings_data(new boost::optional<strings>(strs)), _modifier(mod)
 	{}
 
-	DECLSPEC_SGCOMMONS OutputTreeNode(const std::string& name, const string_set& strs, display_modifier mod = AFTER_NAME)
+	DECLSPEC_MANACOMMONS OutputTreeNode(const std::string& name, const string_set& strs, display_modifier mod = AFTER_NAME)
 		: _name(new std::string(name)), _type(STRINGS), _modifier(mod)
 	{
 		_strings_data = shared_opt_strings(new boost::optional<strings>(strings(strs.begin(), strs.end())));
 	}
 
-	DECLSPEC_SGCOMMONS OutputTreeNode(const std::string& name, plugin::LEVEL level, display_modifier mod = NONE)
+	DECLSPEC_MANACOMMONS OutputTreeNode(const std::string& name, plugin::LEVEL level, display_modifier mod = NONE)
 		: _name(new std::string(name)), _type(THREAT_LEVEL), _level_data(new boost::optional<plugin::LEVEL>(level)), _modifier(mod)
 	{}
 
@@ -135,29 +135,29 @@ public:
 	 *	@param	enum node_type type The type of the node.
 	 *	@param	enum display_modifier mod = NONE A modifier to alter the way the node is printed.
 	 */
-	DECLSPEC_SGCOMMONS OutputTreeNode(const std::string& name, enum node_type type, enum display_modifier mod = NONE);
+	DECLSPEC_MANACOMMONS OutputTreeNode(const std::string& name, enum node_type type, enum display_modifier mod = NONE);
 
 	// ----------------------------------------------------------------------------
 
-	DECLSPEC_SGCOMMONS pString get_name() const {
+	DECLSPEC_MANACOMMONS pString get_name() const {
 		return _name;
 	}
 
 	// ----------------------------------------------------------------------------
 
-	DECLSPEC_SGCOMMONS node_type get_type() const {
+	DECLSPEC_MANACOMMONS node_type get_type() const {
 		return _type;
 	}
 
 	// ----------------------------------------------------------------------------
 
-	DECLSPEC_SGCOMMONS display_modifier get_modifier() const {
+	DECLSPEC_MANACOMMONS display_modifier get_modifier() const {
 		return _modifier;
 	}
 
 	// ----------------------------------------------------------------------------
 
-	DECLSPEC_SGCOMMONS void set_modifier(display_modifier mod) {
+	DECLSPEC_MANACOMMONS void set_modifier(display_modifier mod) {
 		_modifier = mod;
 	}
 
@@ -171,15 +171,15 @@ public:
 	*
 	*	@return	A string representation of the contained data.
 	*/
-	DECLSPEC_SGCOMMONS pString to_string() const;
+	DECLSPEC_MANACOMMONS pString to_string() const;
 
 	// ----------------------------------------------------------------------------
 
-	DECLSPEC_SGCOMMONS plugin::LEVEL get_level() const;
+	DECLSPEC_MANACOMMONS plugin::LEVEL get_level() const;
 
 	// ----------------------------------------------------------------------------
 
-	DECLSPEC_SGCOMMONS shared_strings get_strings() const;
+	DECLSPEC_MANACOMMONS shared_strings get_strings() const;
 
 	// ----------------------------------------------------------------------------
 
@@ -188,43 +188,43 @@ public:
 	*
 	*	@param	pNode node	The list to append.
 	*/
-	DECLSPEC_SGCOMMONS void append(pNode node);
+	DECLSPEC_MANACOMMONS void append(pNode node);
 
 	// ----------------------------------------------------------------------------
 
 	/**
 	*	@brief	Returns the data contained by a LIST node (a vector of nodes).
 	*/
-	DECLSPEC_SGCOMMONS pNodes get_children();
+	DECLSPEC_MANACOMMONS pNodes get_children();
 
 	// ----------------------------------------------------------------------------
 
 	/**
 	 *	@brief	Returns the size of a LIST node.
 	 */
-	DECLSPEC_SGCOMMONS unsigned int size();
+	DECLSPEC_MANACOMMONS unsigned int size();
 
 	// ----------------------------------------------------------------------------
 
 	/**
 	*	@brief	Empties the contents of a LIST node.
 	*/
-	DECLSPEC_SGCOMMONS void clear();
+	DECLSPEC_MANACOMMONS void clear();
 
 	// ----------------------------------------------------------------------------
 
-	DECLSPEC_SGCOMMONS void update_value(const std::string& s);
+	DECLSPEC_MANACOMMONS void update_value(const std::string& s);
 
 	// ----------------------------------------------------------------------------
 
-	DECLSPEC_SGCOMMONS void update_value(plugin::LEVEL level);
+	DECLSPEC_MANACOMMONS void update_value(plugin::LEVEL level);
 
 	// ----------------------------------------------------------------------------
 
 	/**
 	*	@brief	Returns the data contained by a STRINGS node (a vector of strings).
 	*/
-	DECLSPEC_SGCOMMONS shared_strings get_strings();
+	DECLSPEC_MANACOMMONS shared_strings get_strings();
 
 	// ----------------------------------------------------------------------------
 
@@ -233,7 +233,7 @@ public:
 	*
 	*	@param	const std::string& s The string to append.
 	*/
-	DECLSPEC_SGCOMMONS void append(const std::string& s);
+	DECLSPEC_MANACOMMONS void append(const std::string& s);
 
 	// ----------------------------------------------------------------------------
 
@@ -242,7 +242,7 @@ public:
 	*
 	*	@param	const strings& strs The strings to append.
 	*/
-	DECLSPEC_SGCOMMONS void append(const strings& strs);
+	DECLSPEC_MANACOMMONS void append(const strings& strs);
 
 	// ----------------------------------------------------------------------------
 
@@ -256,7 +256,7 @@ public:
 	*
 	*	@return	A pointer which may point to the located node, or be NULL.
 	*/
-	DECLSPEC_SGCOMMONS pNode find_node(const std::string& name) const;
+	DECLSPEC_MANACOMMONS pNode find_node(const std::string& name) const;
 
 private:
 	pString _name;
@@ -289,7 +289,7 @@ typedef boost::shared_ptr<nodes> pNodes;
 *
 *	@return	The maximum size of the children's names.
 */
-DECLSPEC_SGCOMMONS unsigned int determine_max_width(pNode node);
+	DECLSPEC_MANACOMMONS unsigned int determine_max_width(pNode node);
 
 } // !namespace io
 

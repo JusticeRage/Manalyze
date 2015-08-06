@@ -1,18 +1,18 @@
 /*
-    This file is part of Spike Guard.
+    This file is part of Manalyze.
 
-    Spike Guard is free software: you can redistribute it and/or modify
+    Manalyze is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Spike Guard is distributed in the hope that it will be useful,
+    Manalyze is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
+    along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "yara/yara_wrapper.h"
@@ -51,21 +51,21 @@ public:
 			return res;
 		}
 
-		yara::const_matches m = _engine.scan_file(*pe.get_path(), pe.create_sgpe_module_data());
-		if (m->size() > 0) 
+		yara::const_matches m = _engine.scan_file(*pe.get_path(), pe.create_manape_module_data());
+		if (m && m->size() > 0)
 		{
 			res->set_level(level);
 			res->set_summary(summary);
-			for (yara::match_vector::const_iterator it = m->begin() ; it != m->end() ; ++it) 
+			for (yara::match_vector::const_iterator it = m->begin() ; it != m->end() ; ++it)
 			{
 				if (!show_strings) {
 					res->add_information((*it)->operator[](meta_field_name));
 				}
 				else
 				{
-					io::pNode output = io::pNode(new io::OutputTreeNode((*it)->operator[](meta_field_name), 
+					io::pNode output = io::pNode(new io::OutputTreeNode((*it)->operator[](meta_field_name),
 						io::OutputTreeNode::STRINGS, io::OutputTreeNode::NEW_LINE));
-					
+
 					std::set<std::string> found = (*it)->get_found_strings();
 					for (std::set<std::string>::iterator it2 = found.begin() ; it2 != found.end() ; ++it2) {
 						output->append(*it2);
@@ -83,10 +83,10 @@ public:
 private:
 	std::string _rule_file;
 	yara::Yara _engine;
-	
+
 	bool _load_rules()
 	{
-		if (!_engine.load_rules(_rule_file)) 
+		if (!_engine.load_rules(_rule_file))
 		{
 			PRINT_ERROR << "Could not load " << _rule_file << "!" << std::endl;
 			return false;
@@ -105,11 +105,11 @@ public:
 		return scan(pe, "Matching ClamAV signature(s):", MALICIOUS, "signature");
 	}
 
-	pString get_id() const { 
+	pString get_id() const {
 		return pString (new std::string("clamav"));
 	}
 
-	pString  get_description() const { 
+	pString  get_description() const {
 		return pString (new std::string("Scans the binary with ClamAV virus definitions."));
 	}
 };
@@ -123,11 +123,11 @@ public:
 		return scan(pe, "Matching compiler(s):", NO_OPINION, "description");
 	}
 
-	boost::shared_ptr<std::string> get_id() const { 
+	boost::shared_ptr<std::string> get_id() const {
 		return boost::shared_ptr<std::string>(new std::string("compilers"));
 	}
 
-	boost::shared_ptr<std::string> get_description() const { 
+	boost::shared_ptr<std::string> get_description() const {
 		return boost::shared_ptr<std::string>(new std::string("Tries to determine which compiler generated the binary."));
 	}
 };
@@ -141,11 +141,11 @@ public:
 		return scan(pe, "PEiD Signature:", SUSPICIOUS, "packer_name");
 	}
 
-	boost::shared_ptr<std::string> get_id() const { 
+	boost::shared_ptr<std::string> get_id() const {
 		return boost::shared_ptr<std::string>(new std::string("peid"));
 	}
 
-	boost::shared_ptr<std::string> get_description() const { 
+	boost::shared_ptr<std::string> get_description() const {
 		return boost::shared_ptr<std::string>(new std::string("Returns the PEiD signature of the binary."));
 	}
 };
@@ -160,11 +160,11 @@ public:
 		return scan(pe, "Strings found in the binary may indicate undesirable behavior:", SUSPICIOUS, "description", true);
 	}
 
-	boost::shared_ptr<std::string> get_id() const { 
+	boost::shared_ptr<std::string> get_id() const {
 		return boost::shared_ptr<std::string>(new std::string("strings"));
 	}
 
-	boost::shared_ptr<std::string> get_description() const{ 
+	boost::shared_ptr<std::string> get_description() const{
 		return boost::shared_ptr<std::string>(new std::string("Looks for suspicious strings (anti-VM, process names...)."));
 	}
 };
@@ -174,7 +174,7 @@ class FindCryptPlugin : public YaraPlugin
 public:
 	FindCryptPlugin() : YaraPlugin("yara_rules/findcrypt.yara") {}
 
-	pResult analyze(const sg::PE& pe) 
+	pResult analyze(const sg::PE& pe)
 	{
 		pResult res = scan(pe, "Cryptographic algorithms detected in the binary:", NO_OPINION, "description");
 
@@ -195,11 +195,11 @@ public:
 		return res;
 	}
 
-	boost::shared_ptr<std::string> get_id() const { 
+	boost::shared_ptr<std::string> get_id() const {
 		return boost::shared_ptr<std::string>(new std::string("findcrypt"));
 	}
 
-	boost::shared_ptr<std::string> get_description() const { 
+	boost::shared_ptr<std::string> get_description() const {
 		return boost::shared_ptr<std::string>(new std::string("Detects embedded cryptographic constants."));
 	}
 };

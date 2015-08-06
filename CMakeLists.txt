@@ -1,12 +1,12 @@
 cmake_minimum_required (VERSION 2.8)
 
-project (sgstatic)
+project (manalyze)
 
 option(GitHub "GitHub" ON)
 
 if (WIN32)
 	set(Boost_USE_STATIC_LIBS ON)
-	set(Boost_USE_MULTITHREADED ON)  
+	set(Boost_USE_MULTITHREADED ON)
 	set(Boost_USE_STATIC_RUNTIME ON)
 endif()
 
@@ -47,44 +47,44 @@ include_directories(
 						${Boost_INCLUDE_DIRS}
                    )
 
-add_library(sgpe SHARED pe.cpp nt_values.cpp utils.cpp imports.cpp resources.cpp section.cpp)
+add_library(manape SHARED pe.cpp nt_values.cpp utils.cpp imports.cpp resources.cpp section.cpp)
 
-add_library(sgcommons SHARED color.cpp output_tree_node.cpp plugin_framework/result.cpp)
+add_library(manacommons SHARED color.cpp output_tree_node.cpp plugin_framework/result.cpp)
 
-add_executable(sgstatic main.cpp config_parser.cpp output_formatter.cpp dump.cpp
+add_executable(manalyze main.cpp config_parser.cpp output_formatter.cpp dump.cpp
 			   plugin_framework/dynamic_library.cpp plugin_framework/plugin_manager.cpp # Plugin system
 			   plugins/yara/plugins_yara.cpp plugins/plugin_packer_detection.cpp plugins/plugin_imports.cpp plugins/plugin_resources.cpp) # Bundled plugins
 
 if (WIN32)
 			add_definitions(/D_CRT_SECURE_NO_WARNINGS) # Please don't complain about fopen()
 			add_definitions(/D_WINSOCK_DEPRECATED_NO_WARNINGS) # Don't complain about ASIO's WSASocket functions either.
-			set_target_properties(sgpe PROPERTIES COMPILE_DEFINITIONS "SGPE_EXPORT") # Export the PE parsing functions
-			set_target_properties(sgcommons PROPERTIES COMPILE_DEFINITIONS "SGCOMMONS_EXPORT") # Export core functions
+			set_target_properties(manape PROPERTIES COMPILE_DEFINITIONS "MANAPE_EXPORT") # Export the PE parsing functions
+			set_target_properties(manacommons PROPERTIES COMPILE_DEFINITIONS "MANACOMMONS_EXPORT") # Export core functions
 			set (BUILD_SHARED_LIBS FALSE)
             set (CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -MTd")
             set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -MTd")
             set (CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -MT")
             set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -MT")
-			
+
 			add_definitions(-DBOOST_ALL_NO_LIB -DNOMINMAX) # Problems with autolink and MSVC + don't hide std::min and std::max.
-			
+
 			# Windows only plugins:
 			add_library(plugin_authenticode SHARED plugins/plugin_authenticode.cpp)
-			target_link_libraries(plugin_authenticode sgpe hash-library sgcommons ${Boost_LIBRARIES})
+			target_link_libraries(plugin_authenticode manape hash-library manacommons ${Boost_LIBRARIES})
 else()
             if (CMAKE_BUILD_TYPE MATCHES "[Dd][Ee][Bb][Uu][Gg]")
                 add_definitions("/D_DEBUG")
 				set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
             endif()
-			target_link_libraries(sgstatic dl)
+			target_link_libraries(manalyze dl)
 			set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif()
 
 # VirusTotal plugin
-add_library(plugin_virustotal SHARED plugins/plugin_virustotal/plugin_virustotal.cpp 
-									 plugins/plugin_virustotal/json_spirit/json_spirit_reader.cpp 
+add_library(plugin_virustotal SHARED plugins/plugin_virustotal/plugin_virustotal.cpp
+									 plugins/plugin_virustotal/json_spirit/json_spirit_reader.cpp
 									 plugins/plugin_virustotal/json_spirit/json_spirit_value.cpp)
-target_link_libraries(plugin_virustotal sgpe hash-library sgcommons ${Boost_LIBRARIES})
+target_link_libraries(plugin_virustotal manape hash-library manacommons ${Boost_LIBRARIES})
 
 # yara dependency
 add_subdirectory(external/yara)
@@ -92,12 +92,12 @@ add_subdirectory(external/yara)
 # hash-library dependency
 add_subdirectory(external/hash-library)
 
-target_link_libraries(sgpe yara hash-library sgcommons ${Boost_LIBRARIES})
+target_link_libraries(manape yara hash-library manacommons ${Boost_LIBRARIES})
 
 target_link_libraries(
-						sgstatic
-						sgcommons
-						sgpe
+						manalyze
+						manacommons
+						manape
 						yara
 						hash-library
 						${Boost_LIBRARIES}

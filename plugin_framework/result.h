@@ -1,18 +1,18 @@
 /*
-    This file is part of Spike Guard.
+    This file is part of Manalyze.
 
-    Spike Guard is free software: you can redistribute it and/or modify
+    Manalyze is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Spike Guard is distributed in the hope that it will be useful,
+    Manalyze is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
+    along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #ifndef _RESULT_H_
@@ -38,7 +38,7 @@ typedef boost::shared_ptr<std::vector<std::string> > pInformation;
  *	@brief	Represents the result of a PE analysis, as returned by plugins.
  *
  *	It is composed of three parts: a threat level which indicates how dangerous the
- *	PE is according to the plugin, a summary describing the findings and some text 
+ *	PE is according to the plugin, a summary describing the findings and some text
  *	information giving more details.
  */
 class Result
@@ -46,7 +46,7 @@ class Result
 	friend class IPlugin; // Result's constructor should only be called from IPlugin::make_result().
 
 public:
-	DECLSPEC_SGCOMMONS void set_level(LEVEL level);
+	DECLSPEC_MANACOMMONS void set_level(LEVEL level);
 
 	/**
 	 *	@brief	This function is simply a setter which only sets the value if the new one is higher than
@@ -54,13 +54,13 @@ public:
 	 *
 	 *	@param	LEVEL level	The level to set.
 	 */
-	DECLSPEC_SGCOMMONS void raise_level(LEVEL level);
+	DECLSPEC_MANACOMMONS void raise_level(LEVEL level);
 
-	DECLSPEC_SGCOMMONS LEVEL get_level() const;
-	
-	DECLSPEC_SGCOMMONS void set_summary(const std::string& s);
+	DECLSPEC_MANACOMMONS LEVEL get_level() const;
 
-	DECLSPEC_SGCOMMONS pString get_summary() const;
+	DECLSPEC_MANACOMMONS void set_summary(const std::string& s);
+
+	DECLSPEC_MANACOMMONS pString get_summary() const;
 
 	/**
 	 *	@brief	Add any kind of information to a result. This should primarily be used with strings, but
@@ -99,18 +99,18 @@ public:
 	 *
 	 *	@returns	A pointer to a node which is never NULL. The node may be empty however.
 	 */
-	DECLSPEC_SGCOMMONS io::pNode get_information() const;
+	DECLSPEC_MANACOMMONS io::pNode get_information() const;
 
 private:
 	// Constructor is made private, so only IPlugin::make_result() calls it.
-	DECLSPEC_SGCOMMONS Result(const std::string& plugin_name);
+	DECLSPEC_MANACOMMONS Result(const std::string& plugin_name);
 
 	/**
 	 *	@brief	Creates an node name to use when information is appended to _data.
 	 *
 	 *	The name of the node is simply an index, because we do not intend to print it in most cases.
 	 */
-	DECLSPEC_SGCOMMONS std::string _create_node_name();
+	DECLSPEC_MANACOMMONS std::string _create_node_name();
 
 	io::pNode _data;
 };
@@ -120,7 +120,7 @@ typedef boost::shared_ptr<Result> pResult;
 *	@brief	Template specialization for io::pNodes.
 */
 template<>
-DECLSPEC_SGCOMMONS void Result::add_information(io::pNode node);
+	DECLSPEC_MANACOMMONS void Result::add_information(io::pNode node);
 
 } // !namespace plugin
 

@@ -1,28 +1,28 @@
 /*
-    This file is part of Spike Guard.
+    This file is part of Manalyze.
 
-    Spike Guard is free software: you can redistribute it and/or modify
+    Manalyze is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Spike Guard is distributed in the hope that it will be useful,
+    Manalyze is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
+    along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "section.h"
 
-namespace sg 
+namespace sg
 {
 
-Section::Section(const image_section_header& header, 
-				 const std::string& path, 
-				 const std::vector<pString>& coff_string_table)	
+Section::Section(const image_section_header& header,
+				 const std::string& path,
+				 const std::vector<pString>& coff_string_table)
 	  : _virtual_size(header.VirtualSize),
 		_virtual_address(header.VirtualAddress),
 		_size_of_raw_data(header.SizeOfRawData),
@@ -36,7 +36,7 @@ Section::Section(const image_section_header& header,
 {
 	_name = std::string((char*) header.Name);
 
-	if (_name.size() > 0 && _name[0] == '/') 
+	if (_name.size() > 0 && _name[0] == '/')
 	{
 		std::stringstream ss;
 		unsigned int index;
@@ -63,7 +63,7 @@ shared_bytes Section::get_raw_data() const
 		return res;
 	}
 	FILE* f = fopen(_path.c_str(), "rb");
-	if (f == NULL || fseek(f, _pointer_to_raw_data, SEEK_SET)) 
+	if (f == NULL || fseek(f, _pointer_to_raw_data, SEEK_SET))
 	{
 		fclose(f);
 		return res;
@@ -80,7 +80,7 @@ shared_bytes Section::get_raw_data() const
 		return res;
 	}
 
-	if (_size_of_raw_data != fread(&(*res)[0], 1, _size_of_raw_data, f)) 
+	if (_size_of_raw_data != fread(&(*res)[0], 1, _size_of_raw_data, f))
 	{
 		PRINT_WARNING << "Raw bytes from section " << _name << " could not be obtained." << std::endl;
 		res->resize(0);
@@ -110,7 +110,7 @@ sg::pSection find_section(unsigned int rva, const std::vector<sg::pSection>& sec
 	std::vector<sg::pSection>::const_iterator it;
 	for (it = section_list.begin() ; it != section_list.end() ; ++it)
 	{
-		if (is_address_in_section(rva, *it)) 
+		if (is_address_in_section(rva, *it))
 		{
 			res = *it;
 			break;
@@ -121,7 +121,7 @@ sg::pSection find_section(unsigned int rva, const std::vector<sg::pSection>& sec
 	{
 		for (it = section_list.begin() ; it != section_list.end() ; ++it)
 		{
-			if (is_address_in_section(rva, *it, true)) 
+			if (is_address_in_section(rva, *it, true))
 			{
 				res = *it;
 				break;

@@ -1,20 +1,20 @@
 #!/usr/bin/env python
 
 """
-    This file is part of Spike Guard.
+    This file is part of Manalyze.
 
-    Spike Guard is free software: you can redistribute it and/or modify
+    Manalyze is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Spike Guard is distributed in the hope that it will be useful,
+    Manalyze is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
+    along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 """
 import argparse
 import re
@@ -137,7 +137,7 @@ class YaraRule:
 
             base_yara_offset = None
             if relative_to == "EP":
-                base_yara_offset = "sgpe.ep"
+                base_yara_offset = "manape.ep"
 
             # Conditions regarding the end of file
             if relative_to == "EOF":
@@ -146,15 +146,15 @@ class YaraRule:
             if relative_to[0] == "S":
                 try:
                     section_number = int(relative_to[1:])
-                    base_yara_offset = "sgpe.sections[%d].start" % section_number
+                    base_yara_offset = "manape.sections[%d].start" % section_number
                 except ValueError:
                     pass
 
                 if relative_to == "SL":  # Start of the last section
-                    base_yara_offset = "sgpe.sections[sgpe.num_sections].start"
+                    base_yara_offset = "manape.sections[manape.num_sections].start"
                 elif relative_to[1] == 'E':  # SEx : contained inside section x
                     num_section = int(relative_to[2:])
-                    self._condition = " in (sgpe.sections[%d].start .. sgpe.sections[%d].start + sgpe.sections[%d].size)" \
+                    self._condition = " in (manape.sections[%d].start .. manape.sections[%d].start + manape.sections[%d].size)" \
                                        % (num_section, num_section, num_section)
                     return  # No need to look at offsets for SEx
 

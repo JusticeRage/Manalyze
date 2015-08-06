@@ -1,18 +1,18 @@
 /*
-    This file is part of Spike Guard.
+    This file is part of Manalyze.
 
-    Spike Guard is free software: you can redistribute it and/or modify
+    Manalyze is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Spike Guard is distributed in the hope that it will be useful,
+    Manalyze is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
+    along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 rule System_Tools
@@ -47,7 +47,7 @@ rule Browsers
         $ff = "firefox.exe" nocase wide ascii
         $ff_key = "key3.db"
         $ff_log = "signons.sqlite"
-        $chrome = "chrome.exe" nocase wide ascii       
+        $chrome = "chrome.exe" nocase wide ascii
 		// TODO: Add user-agent strings
     condition:
         any of them
@@ -570,7 +570,7 @@ rule VMWare_Detection : AntiVM
         $vmware_mac_4a = "00-1C-14" nocase wide ascii
         $vmware_mac_4b = "00:1C:14" nocase wide ascii
         $vmware_mac_4c = "001C14" nocase wide ascii
-		
+
 		// PCI Vendor IDs, from Hacking Team's leak
 		$virtualbox_vid_1 = "VEN_15ad" nocase wide ascii
 
@@ -630,7 +630,7 @@ rule VirtualBox_Detection : AntiVM
         $virtualbox_mac_1a = "08-00-27"
         $virtualbox_mac_1b = "08:00:27"
         $virtualbox_mac_1c = "080027"
-		
+
 		// PCI Vendor IDs, from Hacking Team's leak
 		$virtualbox_vid_1 = "VEN_80EE" nocase wide ascii
     condition:
@@ -645,7 +645,7 @@ rule Parallels_Detection : AntiVM
         $a0 = "magi"
         $a1 = "c!nu"
         $a2 = "mber"
-		
+
 		// PCI Vendor IDs, from Hacking Team's leak
 		$parallels_vid_1 = "VEN_80EE" nocase wide ascii
     condition:

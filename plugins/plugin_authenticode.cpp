@@ -1,18 +1,18 @@
 /*
-    This file is part of Spike Guard.
+    This file is part of Manalyze.
 
-    Spike Guard is free software: you can redistribute it and/or modify
+    Manalyze is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Spike Guard is distributed in the hope that it will be useful,
+    Manalyze is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
+    along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #pragma comment(lib, "wintrust")
@@ -44,7 +44,7 @@ namespace plugin {
  *			certificate.
  *
  *	@param	const std::string& file_path The file to analyze.
- *	@param	plugin::pResult result The result into which the information should be 
+ *	@param	plugin::pResult result The result into which the information should be
  *			appended.
  */
 void get_certificate_info(const std::wstring& file_path, plugin::pResult result);
@@ -65,7 +65,7 @@ void make_information(const std::string& type, const std::wstring& data, pResult
 	boost::shared_array<char> conv = boost::shared_array<char>(new char[data.size() + 1]);
 	memset(conv.get(), 0, sizeof(char) * (data.size() + 1));
 	wcstombs(conv.get(), data.c_str(), data.size());
-	
+
 	std::stringstream ss;
 	ss << type << ": " << conv.get();
 	result->add_information(ss.str());
@@ -90,18 +90,18 @@ class AuthenticodePlugin : public IPlugin
 public:
 	int get_api_version() { return 1; }
 
-	pString get_id() const { 
+	pString get_id() const {
 		return pString(new std::string("authenticode"));
 	}
 
-	pString get_description() const { 
+	pString get_description() const {
 		return pString(new std::string("Checks if the digital signature of the PE is valid."));
 	}
 
-	pResult analyze(const sg::PE& pe) 
+	pResult analyze(const sg::PE& pe)
 	{
 		pResult res = create_result();
-		
+
 		WINTRUST_FILE_INFO file_info;
 		memset(&file_info, 0, sizeof(file_info));
 		file_info.cbStruct = sizeof(WINTRUST_FILE_INFO);
@@ -134,8 +134,8 @@ public:
 				res->set_summary("The PE's digital signature has been explicitly blacklisted.");
 			case TRUST_E_NOSIGNATURE:
 				error_code = ::GetLastError();
-				if (TRUST_E_NOSIGNATURE == error_code || 
-					TRUST_E_SUBJECT_FORM_UNKNOWN == error_code || 
+				if (TRUST_E_NOSIGNATURE == error_code ||
+					TRUST_E_SUBJECT_FORM_UNKNOWN == error_code ||
 					TRUST_E_PROVIDER_UNKNOWN == error_code)
 				{
 					// No digital signature.
@@ -419,7 +419,7 @@ void get_certificate_timestamp(PCMSG_SIGNER_INFO info, pResult result)
 				result->add_information(make_error("Could not get certificate timestamp: malloc failed."));
 				return;
 			}
-			
+
 			res = ::CryptDecodeObject(X509_ASN_ENCODING | PKCS_7_ASN_ENCODING,		// Encoding
 									  PKCS7_SIGNER_INFO,							// Structure of the data to decode
 									  info->UnauthAttrs.rgAttr[i].rgValue->pbData,	// The data to decode
@@ -472,7 +472,7 @@ void get_certificate_timestamp(PCMSG_SIGNER_INFO info, pResult result)
 			time.tm_sec = system_time.wSecond;
 			time.tm_year = system_time.wYear - 1900;
 			strftime(date_string, sizeof(date_string), "%Y-%b-%d %H:%M:%S %z", &time);
-			
+
 			std::stringstream ss;
 			ss << "Signing time: " << date_string;
 			result->add_information(ss.str());
@@ -488,7 +488,7 @@ void get_certificate_timestamp(PCMSG_SIGNER_INFO info, pResult result)
 void get_certificate_info(const std::wstring& file_path, pResult result)
 {
 	HCERTSTORE hStore = NULL;
-	HCRYPTMSG hMsg = NULL; 
+	HCRYPTMSG hMsg = NULL;
 	PCMSG_SIGNER_INFO info = NULL;
 
 	BOOL res = ::CryptQueryObject(CERT_QUERY_OBJECT_FILE,						// The function targets a file (as opposed to a memory structure)
@@ -562,7 +562,7 @@ void check_version_info(const sg::PE& pe, pResult res)
 	sg::pResource version_info;
 	for (sg::shared_resources::element_type::const_iterator it = resources->begin() ; it != resources->end() ; ++it)
 	{
-		if (*(*it)->get_type() == "RT_VERSION") 
+		if (*(*it)->get_type() == "RT_VERSION")
 		{
 			version_info = *it;
 			break;
@@ -575,19 +575,19 @@ void check_version_info(const sg::PE& pe, pResult res)
 	}
 
 	yara::Yara y;
-	if (!y.load_rules("yara_rules/company_names.yara")) 
+	if (!y.load_rules("yara_rules/company_names.yara"))
 	{
 		std::cerr << "Could not load company_names.yara!" << std::endl;
 		return;
 	}
 	yara::const_matches m = y.scan_bytes(*version_info->get_raw_data());
-	if (m->size() > 0)
+	if (m && m->size() > 0)
 	{
 		std::stringstream ss;
 		std::set<std::string> found_strings = m->at(0)->get_found_strings();
 		if (found_strings.size() > 0)
 		{
-			ss << "PE pretends to be from " << *(m->at(0)->get_found_strings().begin()) 
+			ss << "PE pretends to be from " << *(m->at(0)->get_found_strings().begin())
 				<< " but is not signed!";
 			res->set_summary(ss.str());
 			res->raise_level(MALICIOUS);

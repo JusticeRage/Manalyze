@@ -1,21 +1,21 @@
 /*
-    This file is part of Spike Guard.
+    This file is part of Manalyze.
 
-    Spike Guard is free software: you can redistribute it and/or modify
+    Manalyze is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Spike Guard is distributed in the hope that it will be useful,
+    Manalyze is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
+    along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-rule Bitmap_graphic 
+rule Bitmap_graphic
 {
     meta:
         extension = ".bmp"
@@ -28,7 +28,7 @@ rule Bitmap_graphic
     condition:
         $a at 0
 }
-rule Java_Class_File 
+rule Java_Class_File
 {
     meta:
         extension = ".class"
@@ -41,7 +41,7 @@ rule Java_Class_File
     condition:
         $a at 0
 }
-rule Java_Archive 
+rule Java_Archive
 {
     meta:
         extension = ".jar"
@@ -55,7 +55,7 @@ rule Java_Archive
     condition:
         $a at 0 or $b at 0
 }
-rule JPEG_graphic_file 
+rule JPEG_graphic_file
 {
     meta:
         extension = ".jpg"
@@ -68,7 +68,7 @@ rule JPEG_graphic_file
     condition:
         $a at 0
 }
-rule JPEG_2000_graphic_file 
+rule JPEG_2000_graphic_file
 {
     meta:
         extension = ".jp2"
@@ -81,7 +81,7 @@ rule JPEG_2000_graphic_file
     condition:
         $a at 0
 }
-rule GIF_graphic_file 
+rule GIF_graphic_file
 {
     meta:
         extension = ".gif"
@@ -94,7 +94,7 @@ rule GIF_graphic_file
     condition:
         $a at 0
 }
-rule TIF_graphic_file 
+rule TIF_graphic_file
 {
     meta:
         extension = ".tif"
@@ -108,7 +108,7 @@ rule TIF_graphic_file
     condition:
         $a at 0 or $b at 0
 }
-rule PNG_graphic_file 
+rule PNG_graphic_file
 {
     meta:
         extension = ".png"
@@ -121,7 +121,7 @@ rule PNG_graphic_file
     condition:
         $a at 0
 }
-rule Photoshop_Graphics 
+rule Photoshop_Graphics
 {
     meta:
         extension = ".psd"
@@ -134,7 +134,7 @@ rule Photoshop_Graphics
     condition:
         $a at 0
 }
-rule Windows_Meta_File 
+rule Windows_Meta_File
 {
     meta:
         extension = ".wmf"
@@ -148,7 +148,7 @@ rule Windows_Meta_File
     condition:
         $a at 0 or $b at 0
 }
-rule MIDI_file 
+rule MIDI_file
 {
     meta:
         extension = ".mid"
@@ -161,7 +161,7 @@ rule MIDI_file
     condition:
         $a at 0
 }
-rule Icon_file 
+rule Icon_file
 {
     meta:
         extension = ".ico"
@@ -174,7 +174,7 @@ rule Icon_file
     condition:
         $a at 0
 }
-rule Cursor_file 
+rule Cursor_file
 {
     meta:
         extension = ".cur"
@@ -187,7 +187,7 @@ rule Cursor_file
     condition:
         $a at 0
 }
-rule MP3_file_with_ID3_identity_tag 
+rule MP3_file_with_ID3_identity_tag
 {
     meta:
         extension = ".mp3"
@@ -200,7 +200,7 @@ rule MP3_file_with_ID3_identity_tag
     condition:
         $a at 0
 }
-rule Flash_Shockwave 
+rule Flash_Shockwave
 {
     meta:
         extension = ".swf"
@@ -213,7 +213,7 @@ rule Flash_Shockwave
     condition:
         $a at 0
 }
-rule Flash_Video 
+rule Flash_Video
 {
     meta:
         extension = ".flv"
@@ -226,7 +226,7 @@ rule Flash_Video
     condition:
         $a at 0
 }
-rule Adobe_Flash_shared_object_file 
+rule Adobe_Flash_shared_object_file
 {
     meta:
         extension = ".sol"
@@ -239,7 +239,7 @@ rule Adobe_Flash_shared_object_file
     condition:
         $a at 0
 }
-rule MP4_video_file 
+rule MP4_video_file
 {
     meta:
         extension = ".mp4"
@@ -252,7 +252,7 @@ rule MP4_video_file
     condition:
         $a at 0
 }
-rule M4A_video_file 
+rule M4A_video_file
 {
     meta:
         extension = ".m4a"
@@ -265,7 +265,7 @@ rule M4A_video_file
     condition:
         $a at 0
 }
-rule MOV_video_file 
+rule MOV_video_file
 {
     meta:
         extension = ".mov"
@@ -278,7 +278,7 @@ rule MOV_video_file
     condition:
         $a at 0
 }
-rule QuickTime_movie_file 
+rule QuickTime_movie_file
 {
     meta:
         extension = ".mov"
@@ -291,7 +291,7 @@ rule QuickTime_movie_file
     condition:
         $a at 4
 }
-rule MPEG_4_video_QuickTime_file 
+rule MPEG_4_video_QuickTime_file
 {
     meta:
         extension = ".m4v"
@@ -304,7 +304,7 @@ rule MPEG_4_video_QuickTime_file
     condition:
         $a at 4
 }
-rule Windows_Video_file 
+rule Windows_Video_file
 {
     meta:
         extension = ".wmv"
@@ -317,7 +317,7 @@ rule Windows_Video_file
     condition:
         $a at 0
 }
-rule GZip 
+rule GZip
 {
     meta:
         extension = ".gz"
@@ -330,7 +330,7 @@ rule GZip
     condition:
         $a at 0
 }
-rule bzip2_compressed_archive 
+rule bzip2_compressed_archive
 {
     meta:
         extension = ".bz2"
@@ -343,7 +343,7 @@ rule bzip2_compressed_archive
     condition:
         $a at 0
 }
-rule Tar_file 
+rule Tar_file
 {
     meta:
         extension = ".tar"
@@ -356,7 +356,7 @@ rule Tar_file
     condition:
         $a at 0
 }
-rule Tape_Archive_file 
+rule Tape_Archive_file
 {
     meta:
         extension = ".tar"
@@ -369,7 +369,7 @@ rule Tape_Archive_file
     condition:
         $a at 257
 }
-rule Compressed_tape_archive_file 
+rule Compressed_tape_archive_file
 {
     meta:
         extension = ".tar.z"
@@ -383,7 +383,7 @@ rule Compressed_tape_archive_file
     condition:
         $a at 0 or $b at 0
 }
-rule LZH_Compressed_archive_file 
+rule LZH_Compressed_archive_file
 {
     meta:
         extension = ".lzh"
@@ -396,7 +396,7 @@ rule LZH_Compressed_archive_file
     condition:
         $a at 2
 }
-rule _7_Zip_compressed_file 
+rule _7_Zip_compressed_file
 {
     meta:
         extension = ".7z"
@@ -409,7 +409,7 @@ rule _7_Zip_compressed_file
     condition:
         $a at 0
 }
-rule Microsoft_COFF_object_file 
+rule Microsoft_COFF_object_file
 {
     meta:
         extension = ".obj"
@@ -422,7 +422,7 @@ rule Microsoft_COFF_object_file
     condition:
         $a at 0
 }
-rule CAB_Installer_file 
+rule CAB_Installer_file
 {
     meta:
         extension = ".cab"
@@ -436,7 +436,7 @@ rule CAB_Installer_file
     condition:
         $a at 0 or $b at 0
 }
-rule Microsoft_C___debugging_symbols_file 
+rule Microsoft_C___debugging_symbols_file
 {
     meta:
         extension = ".pdb"
@@ -449,7 +449,7 @@ rule Microsoft_C___debugging_symbols_file
     condition:
         $a at 0
 }
-rule Help_file 
+rule Help_file
 {
     meta:
         extension = ".hlp"
@@ -462,7 +462,7 @@ rule Help_file
     condition:
         $a at 0
 }
-rule VMWare_Disk_file 
+rule VMWare_Disk_file
 {
     meta:
         extension = ".vmdk"
@@ -475,7 +475,7 @@ rule VMWare_Disk_file
     condition:
         $a at 0
 }
-rule VMware_BIOS_state_file 
+rule VMware_BIOS_state_file
 {
     meta:
         extension = ".nvram"
@@ -488,7 +488,7 @@ rule VMware_BIOS_state_file
     condition:
         $a at 0
 }
-rule Outlook_Post_Office_file 
+rule Outlook_Post_Office_file
 {
     meta:
         extension = ".pst"
@@ -501,7 +501,7 @@ rule Outlook_Post_Office_file
     condition:
         $a at 0
 }
-rule PDF_Document 
+rule PDF_Document
 {
     meta:
         extension = ".pdf"
@@ -514,7 +514,7 @@ rule PDF_Document
     condition:
         $a at 0
 }
-rule Word_Document 
+rule Word_Document
 {
     meta:
         extension = ".doc"
@@ -529,7 +529,7 @@ rule Word_Document
 	condition:
 		$rootentry and ($worddoc or $msworddoc)
 }
-rule RTF_Document 
+rule RTF_Document
 {
     meta:
         extension = ".rtf"
@@ -542,7 +542,7 @@ rule RTF_Document
     condition:
         $a at 0
 }
-rule Excel_Document 
+rule Excel_Document
 {
     meta:
         extension = ".xls"
@@ -556,7 +556,7 @@ rule Excel_Document
 	condition:
 		all of them
 }
-rule PowerPoint_Document 
+rule PowerPoint_Document
 {
     meta:
         extension = ".ppt"
@@ -569,7 +569,7 @@ rule PowerPoint_Document
 	condition:
 		all of them
 }
-rule Microsoft_Office_Open_XML_Format 
+rule Microsoft_Office_Open_XML_Format
 {
     meta:
         extension = ".docx"
@@ -582,7 +582,7 @@ rule Microsoft_Office_Open_XML_Format
     condition:
         $a at 0
 }
-rule Microsoft_Database 
+rule Microsoft_Database
 {
     meta:
         extension = ".mdb"
@@ -596,7 +596,7 @@ rule Microsoft_Database
     condition:
         $a at 0 or $b at 0
 }
-rule Microsoft_SQL_Server_2000_database 
+rule Microsoft_SQL_Server_2000_database
 {
     meta:
         extension = ".mdf"
@@ -609,7 +609,7 @@ rule Microsoft_SQL_Server_2000_database
     condition:
         $a at 0
 }
-rule Microsoft_Access_2007_file 
+rule Microsoft_Access_2007_file
 {
     meta:
         extension = ".accdb"
@@ -622,7 +622,7 @@ rule Microsoft_Access_2007_file
     condition:
         $a at 0
 }
-rule Microsoft_Money_file 
+rule Microsoft_Money_file
 {
     meta:
         extension = ".mny"
@@ -635,7 +635,7 @@ rule Microsoft_Money_file
     condition:
         $a at 0
 }
-rule Postcript_File 
+rule Postcript_File
 {
     meta:
         extension = ".ps"
@@ -648,7 +648,7 @@ rule Postcript_File
     condition:
         $a at 0
 }
-rule EPS_File 
+rule EPS_File
 {
     meta:
         extension = ".eps"
@@ -661,7 +661,7 @@ rule EPS_File
     condition:
         $a at 0
 }
-rule SLN_File 
+rule SLN_File
 {
     meta:
         extension = ".sln"
@@ -674,7 +674,7 @@ rule SLN_File
     condition:
         $a at 0
 }
-rule XCF_Gimp_file_structure 
+rule XCF_Gimp_file_structure
 {
     meta:
         extension = ".xcf"
@@ -687,7 +687,7 @@ rule XCF_Gimp_file_structure
     condition:
         $a at 0
 }
-rule TrueType_font_file 
+rule TrueType_font_file
 {
     meta:
         extension = ".ttf"
@@ -700,7 +700,7 @@ rule TrueType_font_file
     condition:
         $a at 0
 }
-rule Mujahideen_Secrets_2_encrypted_file 
+rule Mujahideen_Secrets_2_encrypted_file
 {
     meta:
         extension = ".enc"
@@ -713,7 +713,7 @@ rule Mujahideen_Secrets_2_encrypted_file
     condition:
         $a at 0
 }
-rule AES_Crypt_file_format 
+rule AES_Crypt_file_format
 {
     meta:
         extension = ".aes"
@@ -726,7 +726,7 @@ rule AES_Crypt_file_format
     condition:
         $a at 0
 }
-rule _1Password_4_Cloud_Keychain_encrypted_attachment 
+rule _1Password_4_Cloud_Keychain_encrypted_attachment
 {
     meta:
         extension = ".attachment"
@@ -739,7 +739,7 @@ rule _1Password_4_Cloud_Keychain_encrypted_attachment
     condition:
         $a at 0
 }
-rule Alcohol_120__CD_image 
+rule Alcohol_120__CD_image
 {
     meta:
         extension = ".mdf"
@@ -752,7 +752,7 @@ rule Alcohol_120__CD_image
     condition:
         $a at 0
 }
-rule PAK_Compressed_archive_file 
+rule PAK_Compressed_archive_file
 {
     meta:
         extension = ".pak"
@@ -765,7 +765,7 @@ rule PAK_Compressed_archive_file
     condition:
         $a at 0
 }
-rule WebM_video_file 
+rule WebM_video_file
 {
     meta:
         extension = ".webm"
@@ -778,7 +778,7 @@ rule WebM_video_file
     condition:
         $a at 0
 }
-rule Matroska_stream_file 
+rule Matroska_stream_file
 {
     meta:
         extension = ".mkv"
@@ -791,7 +791,7 @@ rule Matroska_stream_file
     condition:
         $a at 0
 }
-rule AVI_Resource_Interchange_File_Format 
+rule AVI_Resource_Interchange_File_Format
 {
     meta:
         extension = ".avi"
@@ -804,7 +804,7 @@ rule AVI_Resource_Interchange_File_Format
     condition:
         $a at 0
 }
-rule CD_DA_Resource_Interchange_File_Format 
+rule CD_DA_Resource_Interchange_File_Format
 {
     meta:
         extension = ".cda"
@@ -817,7 +817,7 @@ rule CD_DA_Resource_Interchange_File_Format
     condition:
         $a at 0
 }
-rule RMI_Resource_Interchange_File_Format 
+rule RMI_Resource_Interchange_File_Format
 {
     meta:
         extension = ".rmi"
@@ -830,7 +830,7 @@ rule RMI_Resource_Interchange_File_Format
     condition:
         $a at 0
 }
-rule WAV_Resource_Interchange_File_Format 
+rule WAV_Resource_Interchange_File_Format
 {
     meta:
         extension = ".wav"
@@ -843,7 +843,7 @@ rule WAV_Resource_Interchange_File_Format
     condition:
         $a at 0
 }
-rule Ogg_Vorbis_Codec_compressed_Multimedia_file 
+rule Ogg_Vorbis_Codec_compressed_Multimedia_file
 {
     meta:
         extension = ".ogg"
@@ -856,7 +856,7 @@ rule Ogg_Vorbis_Codec_compressed_Multimedia_file
     condition:
         $a at 0
 }
-rule Free_Lossless_Audio_Codec_file 
+rule Free_Lossless_Audio_Codec_file
 {
     meta:
         extension = ".flac"
@@ -869,7 +869,7 @@ rule Free_Lossless_Audio_Codec_file
     condition:
         $a at 0
 }
-rule AOL_and_AIM_buddy_list_file 
+rule AOL_and_AIM_buddy_list_file
 {
     meta:
         extension = ".bag"
@@ -882,7 +882,7 @@ rule AOL_and_AIM_buddy_list_file
     condition:
         $a at 0
 }
-rule vCard_file 
+rule vCard_file
 {
     meta:
         extension = ".vcf"
@@ -896,7 +896,7 @@ rule vCard_file
     condition:
         $a at 0
 }
-rule Palmpilot_resource_file 
+rule Palmpilot_resource_file
 {
     meta:
         extension = ".prc"
@@ -909,7 +909,7 @@ rule Palmpilot_resource_file
     condition:
         $a at 0
 }
-rule Microsoft_Reader_eBook_file 
+rule Microsoft_Reader_eBook_file
 {
     meta:
         extension = ".lit"
@@ -922,7 +922,7 @@ rule Microsoft_Reader_eBook_file
     condition:
         $a at 0
 }
-rule Open_Publication_Structure_eBook_file 
+rule Open_Publication_Structure_eBook_file
 {
     meta:
         extension = ".epub"
@@ -935,7 +935,7 @@ rule Open_Publication_Structure_eBook_file
     condition:
         $a at 0
 }
-rule Microsoft_Compiled_HTML_Help_File 
+rule Microsoft_Compiled_HTML_Help_File
 {
     meta:
         extension = ".chm"
@@ -948,7 +948,7 @@ rule Microsoft_Compiled_HTML_Help_File
     condition:
         $a at 0
 }
-rule Windows_shortcut_file 
+rule Windows_shortcut_file
 {
     meta:
         extension = ".lnk"
@@ -961,7 +961,7 @@ rule Windows_shortcut_file
     condition:
         $a at 0
 }
-rule Windows_64_bit_memory_dump 
+rule Windows_64_bit_memory_dump
 {
     meta:
         extension = ".dmp"
@@ -974,7 +974,7 @@ rule Windows_64_bit_memory_dump
     condition:
         $a at 0
 }
-rule Windows_memory_dump__dmp 
+rule Windows_memory_dump__dmp
 {
     meta:
         extension = ".dmp"
@@ -987,7 +987,7 @@ rule Windows_memory_dump__dmp
     condition:
         $a at 0
 }
-rule PKSFX_self_extracting_executable_compressed_file 
+rule PKSFX_self_extracting_executable_compressed_file
 {
     meta:
         extension = ".zip"
@@ -1000,7 +1000,7 @@ rule PKSFX_self_extracting_executable_compressed_file
     condition:
         $a at 526
 }
-rule WinRAR_compressed_archive_file 
+rule WinRAR_compressed_archive_file
 {
     meta:
         extension = ".rar"
@@ -1013,7 +1013,7 @@ rule WinRAR_compressed_archive_file
     condition:
         $a at 0
 }
-rule WinZip_compressed_archive 
+rule WinZip_compressed_archive
 {
     meta:
         extension = ".zip"
@@ -1026,7 +1026,7 @@ rule WinZip_compressed_archive
     condition:
         $a at 0
 }
-rule ARJ_compressed_archive_file 
+rule ARJ_compressed_archive_file
 {
     meta:
         extension = ".arj"
@@ -1039,7 +1039,7 @@ rule ARJ_compressed_archive_file
     condition:
         $a at 0
 }
-rule XZ_archive_file 
+rule XZ_archive_file
 {
     meta:
         extension = ".xz"
@@ -1052,7 +1052,7 @@ rule XZ_archive_file
     condition:
         $a at 0
 }
-rule Dalvik_executable_file 
+rule Dalvik_executable_file
 {
     meta:
         extension = ".dex"
@@ -1065,7 +1065,7 @@ rule Dalvik_executable_file
     condition:
         $a at 0
 }
-rule E_mail 
+rule E_mail
 {
     meta:
         extension = ".eml"
@@ -1079,7 +1079,7 @@ rule E_mail
     condition:
         $a at 0 or $b at 0
 }
-rule Visual_C_PreCompiled_header_file 
+rule Visual_C_PreCompiled_header_file
 {
     meta:
         extension = ".pch"
@@ -1092,7 +1092,7 @@ rule Visual_C_PreCompiled_header_file
     condition:
         $a at 0
 }
-rule WinAmp_Playlist_file 
+rule WinAmp_Playlist_file
 {
     meta:
         extension = ".pls"
@@ -1118,7 +1118,7 @@ rule Yara_Compiled_Rule
     condition:
         $a at 0
 }
-rule Zip 
+rule Zip
 {
     meta:
         extension = ".zip"
@@ -1131,7 +1131,7 @@ rule Zip
     condition:
         $a at 0
 }
-rule Executable_file 
+rule Executable_file
 {
     meta:
         extension = ".exe"
@@ -1139,9 +1139,9 @@ rule Executable_file
 
     condition:
 		uint16(0) == 0x5A4D and
-		uint32(uint32(0x3C)) == 0x00004550 
+		uint32(uint32(0x3C)) == 0x00004550
 }
-rule Windows_animated_cursor 
+rule Windows_animated_cursor
 {
     meta:
         extension = ".ani"
@@ -1154,7 +1154,7 @@ rule Windows_animated_cursor
     condition:
         $a at 0
 }
-rule Executable_and_Linking_Format_executable_file__Linux_Unix_ 
+rule Executable_and_Linking_Format_executable_file__Linux_Unix_
 {
     meta:
         extension = ".elf"
@@ -1167,7 +1167,7 @@ rule Executable_and_Linking_Format_executable_file__Linux_Unix_
     condition:
         $a at 0
 }
-rule tcpdump_capture_file 
+rule tcpdump_capture_file
 {
     meta:
         extension = ".pcap"
@@ -1181,7 +1181,7 @@ rule tcpdump_capture_file
     condition:
         $a at 0 or $b at 0
 }
-rule Java_Cryptography_Extension_keystore_file 
+rule Java_Cryptography_Extension_keystore_file
 {
     meta:
         extension = ".jceks"
@@ -1194,7 +1194,7 @@ rule Java_Cryptography_Extension_keystore_file
     condition:
         $a at 0
 }
-rule JavaKeyStore_file 
+rule JavaKeyStore_file
 {
     meta:
         extension = ".jks"
@@ -1207,7 +1207,7 @@ rule JavaKeyStore_file
     condition:
         $a at 0
 }
-rule Apple_IOS_apps 
+rule Apple_IOS_apps
 {
     meta:
         extension = ".class"
@@ -1220,7 +1220,7 @@ rule Apple_IOS_apps
     condition:
         $a at 0
 }
-rule RedHat_Package_Manager_file__rpm 
+rule RedHat_Package_Manager_file__rpm
 {
     meta:
         extension = "ED"
@@ -1233,7 +1233,7 @@ rule RedHat_Package_Manager_file__rpm
     condition:
         $a at 0
 }
-rule Driver_file 
+rule Driver_file
 {
     meta:
         extension = ".sys"
@@ -1246,7 +1246,7 @@ rule Driver_file
     condition:
         $a at 0
 }
-rule OLE_Compound_File 
+rule OLE_Compound_File
 {
     meta:
         extension = ".ole"

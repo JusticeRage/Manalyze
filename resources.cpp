@@ -1,18 +1,18 @@
 /*
-    This file is part of Spike Guard.
+    This file is part of Manalyze.
 
-    Spike Guard is free software: you can redistribute it and/or modify
+    Manalyze is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Spike Guard is distributed in the hope that it will be useful,
+    Manalyze is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
+    along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "pe.h" // Some functions from the PE class (related to resource parsing) have been
@@ -25,7 +25,7 @@
 namespace bfs = boost::filesystem;
 
 
-namespace sg 
+namespace sg
 {
 
 // Initialize the Yara wrapper used by resource objects
@@ -67,10 +67,10 @@ bool PE::_read_image_resource_directory(image_resource_directory& dir, FILE* f, 
 		}
 
 		// For named entries, NameOrId is a RVA to a string: retrieve it and NameOrId has high bit set to 1.
-		if (entry->NameOrId & 0x80000000) 
+		if (entry->NameOrId & 0x80000000)
 		{
-			// The offset of the string is relative 
-			unsigned int offset = _rva_to_offset(_ioh->directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress) 
+			// The offset of the string is relative
+			unsigned int offset = _rva_to_offset(_ioh->directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress)
 				+ (entry->NameOrId & 0x7FFFFFFF);
 			if (!offset || !utils::read_string_at_offset(f, offset, entry->NameStr, true))
 			{
@@ -161,7 +161,7 @@ bool PE::_parse_resources(FILE* f)
 				}
 
 				offset = _rva_to_offset(entry.OffsetToData);
-				if (!offset) 
+				if (!offset)
 				{
 					PRINT_WARNING << "Could not locate the section containing resource ";
 					if (id) {
@@ -174,7 +174,7 @@ bool PE::_parse_resources(FILE* f)
 					offset = entry.OffsetToData;
 				}
 				pResource res;
-				if (entry.Size == 0) 
+				if (entry.Size == 0)
 				{
 					if (name != "") {
 						PRINT_WARNING << "Resource " << name << " has a size of 0!" << DEBUG_INFO_INSIDEPE << std::endl;
@@ -245,13 +245,13 @@ bool PE::_parse_debug(FILE* f)
 
 			unsigned int saved_offset = ftell(f);
 			fseek(f, debug->PointerToRawData, SEEK_SET);
-			if (pdb_size != fread(&pdb, 1, pdb_size, f) || 
+			if (pdb_size != fread(&pdb, 1, pdb_size, f) ||
 				(pdb.Signature != 0x53445352 && pdb.Signature != 0x3031424E)) // Signature: "RSDS" or "NB10"
 			{
 				PRINT_ERROR << "Could not read PDB file information of invalid magic number." << DEBUG_INFO_INSIDEPE << std::endl;
 				return false;
 			}
-			pdb.PdbFileName = utils::read_ascii_string(f); // Not optimal, but it'll help if I decide to 
+			pdb.PdbFileName = utils::read_ascii_string(f); // Not optimal, but it'll help if I decide to
 														   // further parse these debug sub-structures.
 			debug->Filename = pdb.PdbFileName;
 			fseek(f, saved_offset, SEEK_SET);
@@ -291,17 +291,17 @@ bool PE::_parse_debug(FILE* f)
 shared_bytes Resource::get_raw_data() const
 {
 	boost::shared_ptr<std::vector<boost::uint8_t> > res(new std::vector<boost::uint8_t>());
-	
+
 	FILE* f = _reach_data();
 	unsigned int read_bytes;
 	if (f == NULL) {
 		goto END;
 	}
-	
+
 	try {
 		res->resize(_size);
 	}
-	catch (const std::exception& e) 
+	catch (const std::exception& e)
 	{
 		PRINT_ERROR << "Failed to allocate enough space for resource " << *get_name() << "! (" << e.what() << ")"
 			<< DEBUG_INFO << std::endl;
@@ -340,7 +340,7 @@ bool parse_version_info_header(vs_version_info_header& header, FILE* f)
 template<>
 std::string Resource::interpret_as()
 {
-	if (_type != "RT_MANIFEST") 
+	if (_type != "RT_MANIFEST")
 	{
 		PRINT_WARNING << "Resources of type " << _type << "cannot be interpreted as std::strings." << DEBUG_INFO << std::endl;
 		return "";
@@ -355,7 +355,7 @@ template<>
 std::vector<std::string> Resource::interpret_as()
 {
 	std::vector<std::string> res;
-	if (_type != "RT_STRING") 
+	if (_type != "RT_STRING")
 	{
 		PRINT_WARNING << "Resources of type " << _type << " cannot be interpreted as vectors of strings." << DEBUG_INFO << std::endl;
 		return res;
@@ -424,7 +424,7 @@ DECLSPEC pgroup_icon_directory Resource::interpret_as()
 
 	pgroup_icon_directory res = pgroup_icon_directory(new group_icon_directory);
 	unsigned int size = sizeof(boost::uint16_t) * 3;
-	if (size != fread(res.get(), 1, size, f)) 
+	if (size != fread(res.get(), 1, size, f))
 	{
 		res.reset();
 		goto END;
@@ -436,7 +436,7 @@ DECLSPEC pgroup_icon_directory Resource::interpret_as()
 
 		memset(entry.get(), 0, sizeof(group_icon_directory_entry));
 
-		if (_type == "RT_GROUP_ICON") 
+		if (_type == "RT_GROUP_ICON")
 		{
 			// sizeof(group_icon_directory_entry) - 2 to compensate the field that was changed to boost::uint32.
 			// See the comment in the structure for more information.
@@ -463,10 +463,10 @@ DECLSPEC pgroup_icon_directory Resource::interpret_as()
 				goto END;
 			}
 		}
-		
+
 		res->Entries.push_back(entry);
 	}
-	
+
 	END:
 	if (f != NULL) {
 		fclose(f);
@@ -498,7 +498,7 @@ DECLSPEC pversion_info Resource::interpret_as()
 	// We are going to read a lot of structures which look like a version info header.
 	// They will all be read into this variable, one at a time.
 	pvs_version_info_header current_structure = pvs_version_info_header(new vs_version_info_header);
-	if (!parse_version_info_header(res->Header, f)) 
+	if (!parse_version_info_header(res->Header, f))
 	{
 		res.reset();
 		goto END;
@@ -515,8 +515,8 @@ DECLSPEC pversion_info Resource::interpret_as()
 	}
 
 	bytes_read = ftell(f);
-	if (!parse_version_info_header(*current_structure, f)) 
-	{		
+	if (!parse_version_info_header(*current_structure, f))
+	{
 		res.reset();
 		goto END;
 	}
@@ -527,14 +527,14 @@ DECLSPEC pversion_info Resource::interpret_as()
 	{
 		bytes_read = ftell(f) - bytes_read;
 		fseek(f, current_structure->Length - bytes_read, SEEK_CUR);
-		if (!parse_version_info_header(*current_structure, f)) 
-		{		
+		if (!parse_version_info_header(*current_structure, f))
+		{
 			res.reset();
 			goto END;
 		}
 	}
 
-	if (current_structure->Key != "StringFileInfo") 
+	if (current_structure->Key != "StringFileInfo")
 	{
 		PRINT_ERROR << "StringFileInfo expected, read " << current_structure->Key << " instead." << DEBUG_INFO << std::endl;
 		res.reset();
@@ -543,7 +543,7 @@ DECLSPEC pversion_info Resource::interpret_as()
 
 	// We don't need the contents of StringFileInfo. Replace them with the next structure.
 	bytes_read = ftell(f);
-	if (!parse_version_info_header(*current_structure, f)) 
+	if (!parse_version_info_header(*current_structure, f))
 	{
 		res.reset();
 		goto END;
@@ -608,12 +608,12 @@ DECLSPEC pversion_info Resource::interpret_as()
 		}
 	}
 
-	/* 
+	/*
 	   Theoretically, there may be a VarFileInfo (with translation information) structure afterwards
 	   if it wasn't encountered before).
-	   In practice, I find it irrelevant to my interests, and supporting it would increase the 
-	   complexity of the version_info structure. If you *absolutely* need this for some reason, 
-	   let me know.       
+	   In practice, I find it irrelevant to my interests, and supporting it would increase the
+	   complexity of the version_info structure. If you *absolutely* need this for some reason,
+	   let me know.
 	*/
 
 	END:
@@ -637,7 +637,7 @@ FILE* Resource::_reach_data() const
 		return NULL;
 	}
 
-	if (!_offset_in_file || fseek(f, _offset_in_file, SEEK_SET)) 
+	if (!_offset_in_file || fseek(f, _offset_in_file, SEEK_SET))
 	{
 		// Offset is invalid
 		fclose(f);
@@ -667,7 +667,7 @@ std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, co
 		pResource icon = pResource();
 		for (std::vector<pResource>::const_iterator it = resources.begin(); it != resources.end(); ++it)
 		{
-			if ((*it)->get_id() == directory->Entries[i]->Id) 
+			if ((*it)->get_id() == directory->Entries[i]->Id)
 			{
 				icon = *it;
 				break;
@@ -708,7 +708,7 @@ std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, co
 
 bool PE::extract_resources(const std::string& destination_folder)
 {
-	if (!bfs::exists(destination_folder) && !bfs::create_directory(destination_folder)) 
+	if (!bfs::exists(destination_folder) && !bfs::create_directory(destination_folder))
 	{
 		PRINT_ERROR << "Could not create directory " << destination_folder << "." << DEBUG_INFO << std::endl;
 		return false;
@@ -726,7 +726,7 @@ bool PE::extract_resources(const std::string& destination_folder)
 			ss << base << "_" << (*it)->get_id() << "_" << *(*it)->get_type() << ".ico";
 			data = reconstruct_icon((*it)->interpret_as<pgroup_icon_directory>(), _resource_table);
 		}
-		else if (*(*it)->get_type() == "RT_MANIFEST") 
+		else if (*(*it)->get_type() == "RT_MANIFEST")
 		{
 			ss << base << "_" << (*it)->get_id() << "_RT_MANIFEST.xml";
 			data = *(*it)->get_raw_data();
@@ -752,7 +752,7 @@ bool PE::extract_resources(const std::string& destination_folder)
 			// Ignore the following resource types: we don't want to extract them.
 			continue;
 		}
-		else if (*(*it)->get_type() == "RT_STRING") 
+		else if (*(*it)->get_type() == "RT_STRING")
 		{
 			// Append all the strings to the same file.
 			std::vector<std::string> strings = (*it)->interpret_as<std::vector<std::string> >();
@@ -762,7 +762,7 @@ bool PE::extract_resources(const std::string& destination_folder)
 
 			destination_file = bfs::path(destination_folder) / bfs::path(base + "_RT_STRINGs.txt");
 			FILE* f = fopen(destination_file.string().c_str(), "a+");
-			if (f == NULL) 
+			if (f == NULL)
 			{
 				PRINT_ERROR << "Could not open/create " << destination_file << "!" << std::endl;
 				continue;
@@ -770,7 +770,7 @@ bool PE::extract_resources(const std::string& destination_folder)
 
 			for (std::vector<std::string>::iterator it = strings.begin(); it != strings.end(); ++it)
 			{
-				if ((*it) != "") 
+				if ((*it) != "")
 				{
 					fwrite(it->c_str(), 1, it->size(), f);
 					fputc('\n', f);
@@ -791,17 +791,17 @@ bool PE::extract_resources(const std::string& destination_folder)
 
 			// Try to guess the file extension
 			yara::const_matches m = (*it)->detect_filetype();
-			if (m->size() > 0) {
+			if (m && m->size() > 0) {
 				ss << "_" << *(*it)->get_type() << m->at(0)->operator[]("extension");
 			}
 			else {
 				ss << "_" << *(*it)->get_type() << ".raw";
 			}
-			
+
 			data = *(*it)->get_raw_data();
 		}
 
-		if (data.size() == 0) 
+		if (data.size() == 0)
 		{
 			PRINT_WARNING << "Resource " << *(*it)->get_name() << " is empty!"  << DEBUG_INFO << std::endl;
 			continue;
@@ -814,10 +814,10 @@ bool PE::extract_resources(const std::string& destination_folder)
 			PRINT_ERROR << "Could not open " << destination_file << "." << DEBUG_INFO << std::endl;
 			return false;
 		}
-		if (data.size() != fwrite(&data[0], 1, data.size(), f)) 
+		if (data.size() != fwrite(&data[0], 1, data.size(), f))
 		{
 			fclose(f);
-			PRINT_ERROR << "Could not write all the bytes for " << destination_file << "." << DEBUG_INFO << std::endl; 
+			PRINT_ERROR << "Could not write all the bytes for " << destination_file << "." << DEBUG_INFO << std::endl;
 			return false;
 		}
 
@@ -830,7 +830,7 @@ bool PE::extract_resources(const std::string& destination_folder)
 
 yara::const_matches Resource::detect_filetype()
 {
-	if (_yara->load_rules("yara_rules/magic.yara")) 
+	if (_yara->load_rules("yara_rules/magic.yara"))
 	{
 		shared_bytes bytes = get_raw_data();
 		return _yara->scan_bytes(*bytes);

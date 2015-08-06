@@ -1,3 +1,5 @@
+import "manape"
+
 rule MinGW_v3_2_x__Dll_main_
 {
 meta:
@@ -7,7 +9,7 @@ strings:
 	$a1 = { 55 89 E5 83 EC 18 89 75 FC 8B 75 0C 89 5D F8 83 FE 01 74 5C 89 74 24 04 8B 55 10 89 54 24 08 8B 55 08 89 14 24 E8 96 01 00 00 83 EC 0C 83 FE 01 89 C3 74 2C 85 F6 75 0C 8B 0D 00 30 00 10 85 C9 75 10 31 DB 89 D8 8B 5D F8 8B 75 FC 89 EC 5D C2 0C 00 E8 59 00 00 00 EB EB 8D B4 26 00 00 00 00 85 C0 75 D0 E8 47 00 00 00 EB C9 90 8D 74 26 00 C7 04 24 80 00 00 00 E8 F4 05 00 00 A3 00 30 00 10 85 C0 74 1A C7 00 00 00 00 00 A3 10 30 00 10 E8 3B 02 00 00 E8 C6 01 00 00 E9 75 FF FF FF E8 BC 05 00 00 C7 00 0C 00 00 00 31 C0 EB 98 89 F6 55 89 E5 83 EC 08 89 5D FC 8B 15 00 30 00 10 85 D2 74 29 8B 1D 10 30 00 10 83 EB 04 39 D3 72 0D 8B 03 85 C0 75 2A 83 EB 04 39 D3 73 F3 89 14 24 E8 6B 05 00 00 31 C0 A3 00 30 00 10 C7 04 24 00 00 00 00 E8 48 05 00 00 8B 5D FC 89 EC 5D C3 }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
     
@@ -19,7 +21,7 @@ strings:
     	$a0 = { 83 ?? ?? 6A 00 FF 15 F8 10 0B B0 8D ?? ?? ?? 51 6A 08 6A 00 6A 00 68 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -31,7 +33,7 @@ strings:
     	$a0 = { B8 00 30 CD 21 3C 03 73 ?? 0E 1F BA ?? ?? B4 09 CD 21 06 33 C0 50 CB }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -43,7 +45,7 @@ strings:
     	$a0 = { E9 ?? ?? ?? ?? ?? ?? ?? ?? 57 41 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -55,7 +57,7 @@ strings:
     	$a0 = { E8 0A 00 00 00 E9 7A FF FF FF CC CC CC CC CC }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -67,7 +69,7 @@ strings:
     	$a0 = { 64 A1 00 00 00 00 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 50 64 ?? ?? ?? ?? ?? ?? 83 ?? ?? 53 56 57 89 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -79,7 +81,7 @@ strings:
     	$a0 = { E8 ?? ?? 2E FF 2E ?? ?? BB ?? ?? E8 ?? ?? CB }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -91,7 +93,7 @@ strings:
     	$a0 = { 55 89 E5 83 EC 08 6A 00 6A 00 6A 00 6A 00 E8 0D 00 00 00 B8 00 00 00 00 C9 C3 90 90 90 90 90 90 FF 25 38 20 00 10 90 90 00 00 00 00 00 00 00 00 FF FF FF FF 00 00 00 00 FF FF FF FF 00 00 00 00 00 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -103,7 +105,7 @@ strings:
     	$a0 = { 55 89 E5 53 56 57 83 7D 0C 01 75 05 E8 17 ?? ?? ?? FF 75 10 FF 75 0C FF 75 08 A1 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -128,7 +130,7 @@ strings:
     	$a0 = { FB BA ?? ?? 2E 89 ?? ?? ?? B4 30 CD 21 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -144,7 +146,7 @@ strings:
 	$a4 = { 53 8B D8 33 C0 A3 00 ?? ?? ?? 06 A0 0E 80 ?? ?? 0F FA 30 ?? ?? ?? 0A 10 ?? ?? ?? 0A 30 ?? ?? ?? 03 3C 0A 30 ?? ?? ?? 03 3C 0A 30 ?? ?? ?? E8 }
 
 condition:
-    	$a0 or $a1 at entrypoint or $a2 or $a3 at entrypoint or $a4 at entrypoint
+    	$a0 or $a1 at manape.ep or $a2 or $a3 at manape.ep or $a4 at manape.ep
 }
 
     
@@ -157,7 +159,7 @@ strings:
 	$a1 = { 6A 18 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? BF 94 00 00 00 8B C7 E8 ?? ?? ?? ?? 89 }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
     
@@ -186,7 +188,7 @@ strings:
     	$a0 = { 53 56 57 55 8B 74 24 14 8B 7C 24 18 8B 6C 24 1C 83 FF 03 0F 87 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -198,7 +200,7 @@ strings:
     	$a0 = { E8 ?? ?? 2E FF ?? ?? ?? FC 06 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -223,7 +225,7 @@ strings:
     	$a0 = { 55 8B EC 83 C4 ?? 53 56 57 33 C0 89 45 F0 89 45 D4 89 45 D0 E8 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -247,7 +249,7 @@ strings:
     	$a0 = { 60 BE 00 A0 42 00 8D BE 00 70 FD FF 57 83 CD FF EB 10 90 90 90 90 90 90 8A 06 46 88 07 47 01 DB 75 07 8B 1E 83 EE FC 11 DB 72 ED B8 01 00 00 00 01 DB 75 07 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -274,7 +276,7 @@ strings:
 	$a3 = { 55 8B EC 83 EC 2C 53 56 33 F6 57 56 89 75 DC 89 75 F4 BB A4 9E 40 00 FF 15 60 70 40 00 BF C0 B2 40 00 68 04 01 00 00 57 50 A3 AC B2 40 00 FF 15 4C 70 40 00 56 56 6A 03 56 6A 01 68 00 00 00 80 57 FF 15 9C 70 40 00 8B F8 83 FF FF 89 7D EC 0F 84 C3 00 00 00 56 56 56 89 75 E4 E8 C1 C9 FF FF 8B 1D 68 70 40 00 83 C4 0C 89 45 E8 89 75 F0 6A 02 56 6A FC 57 FF D3 89 45 FC 8D 45 F8 56 50 8D 45 E4 6A 04 50 57 FF 15 48 70 40 00 85 C0 75 07 BB 7C 9E 40 00 EB 7A 56 56 56 57 FF D3 39 75 FC 7E 62 BF 74 A2 40 00 B8 00 10 00 00 39 45 FC 7F 03 8B 45 FC 8D 4D F8 56 51 50 57 FF 75 EC FF 15 48 70 40 00 85 C0 74 5A FF 75 F8 57 FF 75 E8 E8 4D C9 FF FF 89 45 E8 8B 45 F8 29 45 FC 83 C4 0C 39 75 F4 75 11 57 E8 D3 F9 FF FF 85 C0 59 74 06 8B 45 F0 89 45 F4 8B 45 F8 01 45 F0 39 75 FC }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint or $a2 at entrypoint or $a3 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep or $a3 at manape.ep
 }
 
     
@@ -287,7 +289,7 @@ strings:
 	$a1 = { C6 05 00 80 40 00 01 E8 74 00 00 00 C6 05 00 80 40 00 00 E8 68 00 00 00 50 E8 00 00 00 00 FF 25 D8 A1 40 00 90 90 90 90 90 90 90 90 90 90 90 90 55 89 E5 83 EC 04 89 5D FC E8 92 00 00 00 E8 ED 00 00 00 89 C3 B9 ?? 70 40 00 89 DA B8 00 00 00 00 E8 0A 01 00 }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
     
@@ -299,7 +301,7 @@ strings:
     	$a0 = { 64 8B 05 ?? ?? ?? ?? 55 8B EC 6A FF 68 ?? ?? 40 ?? 68 ?? ?? 40 ?? 50 64 89 25 ?? ?? ?? ?? 83 EC 08 50 53 56 57 89 65 E8 C7 45 FC }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -311,7 +313,7 @@ strings:
     	$a0 = { E8 ?? ?? ?? ?? 6A ?? E8 ?? ?? ?? ?? 89 05 ?? ?? ?? ?? E8 ?? ?? ?? ?? 89 05 ?? ?? ?? ?? C7 05 ?? ?? ?? ?? 0A ?? ?? ?? B8 ?? ?? ?? ?? C3 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -349,7 +351,7 @@ strings:
 	$a1 = { 55 8B EC 81 EC 20 02 00 00 53 56 57 6A 00 FF 15 18 61 40 00 68 00 70 40 00 89 45 08 FF 15 14 61 40 00 85 C0 74 27 6A 00 A1 00 20 40 00 50 FF 15 3C 61 40 00 8B F0 6A 06 56 FF 15 38 61 40 00 6A 03 56 FF 15 38 61 40 00 E9 36 03 00 00 68 02 7F 00 00 33 F6 56 }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
     
@@ -374,7 +376,7 @@ strings:
 	$a1 = { 6A 00 E8 7D 12 00 00 A3 A0 44 40 00 E8 79 12 00 00 6A 0A 50 6A 00 FF 35 A0 44 40 00 E8 0F 00 00 00 50 E8 69 12 00 00 CC CC CC CC CC CC CC CC CC 68 2C 02 00 00 68 00 00 00 00 68 B0 44 40 00 E8 3A 12 00 00 83 C4 0C 8B 44 24 04 A3 B8 44 40 00 68 00 00 00 00 }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
     
@@ -387,7 +389,7 @@ strings:
 	$a1 = { 6A 00 E8 CF 20 00 00 A3 F4 45 40 00 E8 CB 20 00 00 6A 0A 50 6A 00 FF 35 F4 45 40 00 E8 07 00 00 00 50 E8 BB 20 00 00 CC 68 48 00 00 00 68 00 00 00 00 68 F8 45 40 00 E8 06 19 00 00 83 C4 0C 8B 44 24 04 A3 FC 45 40 00 68 00 00 00 00 68 A0 0F 00 00 68 00 00 }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
     
@@ -412,7 +414,7 @@ strings:
 	$a1 = { 64 A1 00 00 00 00 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 50 64 ?? ?? ?? ?? ?? ?? 83 ?? ?? 53 56 57 89 ?? ?? FF }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
     
@@ -424,7 +426,7 @@ strings:
     	$a0 = { 26 8E 06 ?? ?? B9 ?? ?? 33 C0 8B F8 F2 AE E3 ?? 26 38 05 75 ?? EB ?? E9 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -436,7 +438,7 @@ strings:
     	$a0 = { A1 ?? ?? ?? ?? C1 ?? ?? A3 ?? ?? ?? ?? 83 ?? ?? ?? ?? 75 ?? 57 51 33 C0 BF }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -448,7 +450,7 @@ strings:
     	$a0 = { A1 ?? ?? ?? ?? C1 ?? ?? A3 ?? ?? ?? ?? 57 51 33 C0 BF ?? ?? ?? ?? B9 ?? ?? ?? ?? 3B CF 76 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -461,7 +463,7 @@ strings:
 	$a1 = { 55 89 E5 83 EC 18 89 75 FC 8B 75 0C 89 5D F8 83 FE 01 74 5C 89 74 24 04 8B 55 10 89 54 24 08 8B 55 08 89 14 24 E8 76 01 00 00 83 EC 0C 83 FE 01 89 C3 74 2C 85 F6 75 0C 8B 0D 00 30 00 10 85 C9 75 10 31 DB 89 D8 8B 5D F8 8B 75 FC 89 EC 5D C2 0C 00 E8 59 00 00 00 EB EB 8D B4 26 00 00 00 00 85 C0 75 D0 E8 47 00 00 00 EB C9 90 8D 74 26 00 C7 04 24 80 00 00 00 E8 A4 05 00 00 A3 00 30 00 10 85 C0 74 1A C7 00 00 00 00 00 A3 10 30 00 10 E8 1B 02 00 00 E8 A6 01 00 00 E9 75 FF FF FF E8 6C 05 00 00 C7 00 0C 00 00 00 31 C0 EB 98 89 F6 55 89 E5 83 EC 08 89 5D FC 8B 15 00 30 00 10 85 D2 74 29 8B 1D 10 30 00 10 83 EB 04 39 D3 72 0D 8B 03 85 C0 75 2A 83 EB 04 39 D3 73 F3 89 14 24 E8 1B 05 00 00 31 C0 A3 00 30 00 10 C7 04 24 00 00 00 00 E8 F8 04 00 00 8B 5D FC 89 EC 5D C3 }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
     
@@ -473,7 +475,7 @@ strings:
     	$a0 = { 6A 14 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? BB 94 00 00 00 53 6A 00 8B ?? ?? ?? ?? ?? FF D7 50 FF ?? ?? ?? ?? ?? 8B F0 85 F6 75 0A 6A 12 E8 ?? ?? ?? ?? 59 EB 18 89 1E 56 FF ?? ?? ?? ?? ?? 56 85 C0 75 14 50 FF D7 50 FF ?? ?? ?? ?? ?? B8 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -485,7 +487,7 @@ strings:
     	$a0 = { 55 89 E5 83 EC 08 C7 04 24 ?? 00 00 00 FF 15 ?? ?? ?? 00 E8 ?? FE FF FF 90 8D B4 26 00 00 00 00 55 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -497,7 +499,7 @@ strings:
     	$a0 = { E8 ?? ?? 5D 83 ED ?? 8C DA 2E 89 96 ?? ?? 83 C2 ?? 8E DA 8E C2 2E 01 96 ?? ?? 60 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -509,7 +511,7 @@ strings:
     	$a0 = { 55 8B EC 83 EC 44 56 FF 15 ?? 10 00 01 8B F0 8A 06 3C 22 75 14 8A 46 01 46 84 C0 74 04 3C 22 75 F4 80 3E 22 75 0D ?? EB 0A 3C 20 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -546,7 +548,7 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 ?? 61 40 00 68 ?? 43 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 53 56 57 89 65 E8 FF 15 ?? 61 40 00 33 D2 8A D4 89 15 A0 A9 40 00 8B C8 81 E1 FF 00 00 00 89 0D }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -570,7 +572,7 @@ strings:
     	$a0 = { B4 30 CD 21 3C 02 73 ?? 33 C0 06 50 CB BF ?? ?? 8B 36 ?? ?? 2B F7 81 FE ?? ?? 72 ?? BE ?? ?? FA 8E D7 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -585,7 +587,7 @@ strings:
 	$a3 = { 53 55 56 8B 74 24 14 85 F6 57 B8 01 00 00 00 }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint or $a2 at entrypoint or $a3 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep or $a3 at manape.ep
 }
 
     
@@ -597,7 +599,7 @@ strings:
     	$a0 = { 8C D8 ?? 45 55 8B EC 1E 8E D8 57 56 89 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -609,7 +611,7 @@ strings:
     	$a0 = { 55 8B EC 53 56 57 BB 00 ?? ?? 00 66 2E F7 05 ?? ?? 40 00 04 00 75 05 E9 14 04 00 00 E9 19 02 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -633,7 +635,7 @@ strings:
     	$a0 = { FA B8 ?? ?? DB E3 8E D8 8C 06 ?? ?? 8B D8 2B 1E ?? ?? 89 1E ?? ?? 26 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -648,7 +650,7 @@ strings:
 	$a3 = { 55 8D 6C ?? ?? 81 EC ?? ?? ?? ?? 8B 45 ?? 83 F8 01 56 0F 84 ?? ?? ?? ?? 85 C0 0F 84 }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint or $a2 or $a3 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 or $a3 at manape.ep
 }
 
     
@@ -660,7 +662,7 @@ strings:
     	$a0 = { 55 89 E5 83 EC 08 C7 04 24 ?? 00 00 00 FF 15 ?? ?? ?? ?? E8 ?? ?? FF FF ?? ?? ?? ?? ?? ?? ?? ?? 55 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -672,7 +674,7 @@ strings:
     	$a0 = { 1E 06 8C C8 8E D8 8C C0 A3 ?? ?? 83 C0 ?? A3 ?? ?? B4 30 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -684,7 +686,7 @@ strings:
     	$a0 = { B4 30 CD 21 3C 02 73 ?? CD 20 BF ?? ?? 8B ?? ?? ?? 2B F7 81 ?? ?? ?? 72 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -696,7 +698,7 @@ strings:
     	$a0 = { 0E 1F 8C C6 B4 ?? 50 BB ?? ?? CD 21 73 ?? 58 CD 21 72 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -721,7 +723,7 @@ strings:
     	$a0 = { 55 89 E5 83 EC 08 C7 04 24 01 00 00 00 FF 15 ?? ?? ?? 00 E8 C8 FE FF FF 90 8D B4 26 00 00 00 00 55 89 E5 83 EC 08 C7 04 24 02 00 00 00 FF 15 ?? ?? ?? 00 E8 A8 FE FF FF 90 8D B4 26 00 00 00 00 55 8B 0D ?? ?? ?? 00 89 E5 5D FF E1 8D 74 26 00 55 8B 0D }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
   
@@ -745,7 +747,7 @@ strings:
     	$a0 = { 60 BE 00 B0 44 00 8D BE 00 60 FB FF 57 83 CD FF EB 10 90 90 90 90 90 90 8A 06 46 88 07 47 01 DB 75 07 8B 1E 83 EE FC 11 DB 72 ED B8 01 00 00 00 01 DB 75 07 8B 1E 83 EE FC 11 DB 11 C0 01 DB 73 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -757,7 +759,7 @@ strings:
     	$a0 = { FF 25 00 20 40 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -769,7 +771,7 @@ strings:
     	$a0 = { 64 A1 00 00 00 00 55 89 E5 6A FF 68 10 30 40 00 68 9A 10 40 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -782,7 +784,7 @@ strings:
 	$a1 = { 55 8B EC 83 C4 ?? 53 56 57 33 C0 89 45 F0 89 45 ?? 89 45 ?? E8 ?? ?? FF FF E8 ?? ?? FF FF E8 ?? ?? FF FF E8 ?? ?? FF FF E8 ?? ?? FF FF }
 
 condition:
-    	$a0 at entrypoint or $a1
+    	$a0 at manape.ep or $a1
 }
 
     
@@ -794,7 +796,7 @@ strings:
     	$a0 = { B8 ?? ?? BB ?? ?? 8E D0 8B E3 8C D8 8E C0 0E 1F A1 ?? ?? 25 ?? ?? A3 ?? ?? E8 ?? ?? 83 3E ?? ?? ?? 75 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -806,7 +808,7 @@ strings:
     	$a0 = { 64 A1 00 00 00 00 55 8B EC 6A FF 68 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -818,7 +820,7 @@ strings:
     	$a0 = { BF ?? ?? 8E DF FA 8E D7 81 C4 ?? ?? FB 33 DB B8 ?? ?? CD 21 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -830,7 +832,7 @@ strings:
     	$a0 = { 8C C8 8E D8 8C 1E ?? ?? 8C 06 ?? ?? 8C 06 ?? ?? 8C 06 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -842,7 +844,7 @@ strings:
     	$a0 = { 8C CA 2E 89 16 ?? ?? B4 30 CD 21 8B 2E ?? ?? 8B ?? ?? ?? 8E DA A3 ?? ?? 8C 06 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -854,7 +856,7 @@ strings:
     	$a0 = { E8 21 48 00 00 E9 16 FE FF FF 51 C7 01 08 B4 00 30 E8 A4 48 00 00 59 C3 56 8B F1 E8 EA FF FF FF F6 ?? ?? ?? ?? 74 07 56 E8 F6 04 00 00 59 8B C6 5E C2 04 00 8B 44 24 04 83 C1 09 51 83 C0 09 50 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -867,7 +869,7 @@ strings:
 	$a1 = { 83 EC 0C 53 55 56 57 C7 44 24 10 70 92 40 00 33 DB C6 44 24 14 20 FF 15 2C 70 40 00 53 FF 15 84 72 40 00 BE 00 54 43 00 BF 00 04 00 00 56 57 A3 A8 EC 42 00 FF 15 C4 70 40 00 E8 8D FF FF FF 8B 2D 90 70 40 00 85 C0 75 21 68 FB 03 00 00 56 FF 15 5C 71 40 00 }
 
 condition:
-    	$a0 at entrypoint or $a1
+    	$a0 at manape.ep or $a1
 }
 
     
@@ -880,7 +882,7 @@ strings:
 	$a1 = { 55 8B EC 83 EC 44 56 FF 15 ?? ?? ?? ?? 6A 01 8B F0 FF 15 }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
     
@@ -892,7 +894,7 @@ strings:
     	$a0 = { E8 ?? ?? 00 00 E8 01 00 00 00 C3 55 89 E5 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -905,7 +907,7 @@ strings:
 	$a1 = { 89 25 ?? ?? ?? ?? 33 ED 55 8B EC E8 ?? ?? ?? ?? 8B D0 81 E2 FF 00 00 00 89 15 ?? ?? ?? ?? 8B D0 C1 EA 08 81 E2 FF 00 00 00 A3 ?? ?? ?? ?? D1 E0 0F 93 C3 33 C0 8A C3 A3 ?? ?? ?? ?? 68 FF 00 00 00 E8 ?? ?? ?? ?? 6A 00 E8 ?? ?? ?? ?? A3 ?? ?? ?? ?? BB ?? ?? ?? ?? C7 03 44 00 00 00 }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
     
@@ -917,7 +919,7 @@ strings:
     	$a0 = { 2E 8C 1E ?? ?? BB ?? ?? 8E DB 1E E8 ?? ?? 1F 8B 1E ?? ?? 0B DB 74 ?? 8C D1 8B D4 FA 8E D3 BC ?? ?? FB }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -929,7 +931,7 @@ strings:
     	$a0 = { B4 30 CD 21 3C 02 73 ?? C3 8C DF 8B 36 ?? ?? 2E }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -941,7 +943,7 @@ strings:
     	$a0 = { B8 ?? ?? 50 B8 ?? ?? 50 CB }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -953,7 +955,7 @@ strings:
     	$a0 = { 9A FF FF 00 00 0B C0 75 ?? E9 ?? ?? 8C ?? ?? ?? 89 ?? ?? ?? 89 ?? ?? ?? 89 ?? ?? ?? 89 ?? ?? ?? B8 FF FF 50 9A FF FF 00 00 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -967,7 +969,7 @@ strings:
 	$a2 = { EB 10 66 62 3A 43 2B 2B 48 4F 4F 4B 90 E9 }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint or $a2
+    	$a0 at manape.ep or $a1 at manape.ep or $a2
 }
 
     
@@ -981,7 +983,7 @@ strings:
 	$a2 = { 55 8B EC 56 57 BF ?? ?? ?? ?? 8B ?? ?? 3B F7 0F }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint or $a2 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
     
@@ -1030,7 +1032,7 @@ strings:
     	$a0 = { BA ?? ?? B4 30 CD 21 3C 02 73 ?? 33 C0 06 50 CB }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1042,7 +1044,7 @@ strings:
     	$a0 = { 55 8B EC 53 56 57 BB 00 ?? ?? 00 66 2E F7 05 ?? ?? ?? 00 04 00 0F 85 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1054,7 +1056,7 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 ?? ?? 40 00 68 ?? ?? 40 00 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 58 53 56 57 89 65 E8 FF 15 ?? ?? 40 00 33 D2 8A D4 89 15 ?? ?? 40 00 8B C8 81 E1 FF 00 00 00 89 0D }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1066,7 +1068,7 @@ strings:
     	$a0 = { 9A ?? ?? ?? ?? C8 ?? ?? ?? 9A ?? ?? ?? ?? 09 C0 75 ?? EB ?? 8D ?? ?? ?? 16 57 6A ?? 9A ?? ?? ?? ?? BF ?? ?? 1E 57 68 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1078,7 +1080,7 @@ strings:
     	$a0 = { 6A ?? 68 00 30 40 00 68 ?? 30 40 00 6A 00 E8 07 00 00 00 6A 00 E8 06 00 00 00 FF 25 08 20 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1090,7 +1092,7 @@ strings:
     	$a0 = { 83 EC 5C 53 55 56 57 FF 15 ?? ?? ?? 00 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1102,7 +1104,7 @@ strings:
     	$a0 = { B4 30 CD 21 86 E0 2E A3 ?? ?? 3D ?? ?? 73 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1115,7 +1117,7 @@ strings:
 	$a1 = { 41 00 00 00 00 00 00 00 63 00 00 00 00 00 ?? 00 ?? ?? ?? ?? ?? 00 ?? 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 ?? 00 ?? 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 ?? ?? 20 ?? ?? 00 ?? 00 ?? ?? ?? ?? ?? ?? ?? 00 }
 
 condition:
-    	$a0 at entrypoint or $a1
+    	$a0 at manape.ep or $a1
 }
 
     
@@ -1127,7 +1129,7 @@ strings:
     	$a0 = { 55 8B EC 83 C4 F0 B8 ?? ?? 40 00 E8 ?? ?? FF FF E8 ?? ?? FF FF E8 ?? ?? FF FF 8B C0 00 00 00 00 00 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1151,7 +1153,7 @@ strings:
     	$a0 = { 33 ED 55 9A ?? ?? ?? ?? 0B C0 74 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1163,7 +1165,7 @@ strings:
     	$a0 = { A1 ?? ?? ?? ?? C1 E0 02 A3 ?? ?? ?? ?? 57 51 33 C0 BF ?? ?? ?? ?? B9 ?? ?? ?? ?? 3B CF 76 05 2B CF FC F3 AA 59 5F }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1205,7 +1207,7 @@ strings:
 	$a5 = { 68 ?? ?? ?? ?? 64 A1 00 00 00 00 50 8B 44 24 10 89 6C 24 10 8D 6C 24 10 2B E0 53 56 57 8B 45 F8 89 65 E8 50 8B 45 FC C7 45 FC FF FF FF FF 89 45 F8 8D 45 F0 64 A3 00 00 00 00 C3 8B 4D F0 64 89 0D 00 00 00 00 59 5F 5E 5B C9 51 C3 }
 
 condition:
-    	$a0 or $a1 at entrypoint or $a2 or $a3 or $a4 or $a5
+    	$a0 or $a1 at manape.ep or $a2 or $a3 or $a4 or $a5
 }
 
     
@@ -1218,7 +1220,7 @@ strings:
 	$a1 = { 6A ?? 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? BF ?? ?? ?? ?? 8B C7 E8 ?? ?? ?? ?? 89 65 ?? 8B F4 89 3E 56 FF 15 ?? ?? ?? ?? 8B 4E ?? 89 0D ?? ?? ?? ?? 8B 46 ?? A3 }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
     
@@ -1230,7 +1232,7 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 68 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 53 56 57 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1243,7 +1245,7 @@ strings:
 	$a1 = { 55 89 E5 83 EC 08 C7 04 24 01 00 00 00 FF 15 E4 40 40 00 E8 68 00 00 00 89 EC 31 C0 5D C3 89 F6 55 89 E5 83 EC 08 C7 04 24 02 00 00 00 FF 15 E4 40 40 00 E8 48 00 00 00 89 EC 31 C0 5D C3 89 F6 55 89 E5 83 EC 08 8B 55 08 89 14 24 FF 15 00 41 40 00 89 EC 5D C3 8D 76 00 8D BC 27 00 00 00 00 55 89 E5 83 EC 08 8B 55 08 89 14 24 FF 15 F4 40 40 00 89 EC 5D C3 8D 76 00 8D BC 27 00 00 00 00 55 89 E5 53 83 EC 24 C7 04 24 A0 11 40 00 E8 8D 07 00 00 83 EC 04 E8 85 02 00 00 C7 04 24 00 20 40 00 8B 15 10 20 40 00 8D 4D F8 C7 45 F8 00 00 00 00 89 4C 24 10 89 54 24 0C 8D 55 F4 89 54 24 08 C7 44 24 04 04 20 40 00 E8 02 07 00 00 A1 20 20 40 00 85 C0 74 76 A3 30 20 40 00 A1 F0 40 40 00 85 C0 74 1F 89 04 24 E8 C3 06 00 00 8B 1D 20 20 40 00 89 04 24 89 5C 24 04 E8 C1 06 00 00 }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
     
@@ -1268,7 +1270,7 @@ strings:
 	$a1 = { E8 ?? ?? ?? ?? E9 8D FE FF FF CC CC CC CC CC 66 81 3D 00 00 00 01 4D 5A 74 04 33 C0 EB 51 A1 3C 00 00 01 81 B8 00 00 00 01 50 45 00 00 75 EB 0F B7 88 18 00 00 01 81 F9 0B 01 00 00 74 1B 81 F9 0B 02 00 00 75 D4 83 B8 84 00 00 01 0E 76 CB 33 C9 39 88 F8 00 00 01 EB 11 83 B8 74 00 00 01 0E 76 B8 33 C9 39 88 E8 00 00 01 0F 95 C1 8B C1 6A 01 A3 ?? ?? ?? 01 E8 ?? ?? 00 00 50 FF ?? ?? ?? 00 01 83 0D ?? ?? ?? 01 FF 83 0D ?? ?? ?? 01 FF 59 59 FF 15 ?? ?? 00 01 8B 0D ?? ?? ?? 01 89 08 FF 15 ?? ?? 00 01 8B 0D ?? ?? ?? 01 89 08 A1 ?? ?? 00 01 8B 00 A3 ?? ?? ?? 01 E8 ?? ?? 00 00 83 3D ?? ?? ?? 01 00 75 0C 68 ?? ?? ?? 01 FF 15 ?? ?? 00 01 59 E8 ?? ?? 00 00 33 C0 C3 CC CC CC CC CC }
 
 condition:
-    	$a0 or $a1 at entrypoint
+    	$a0 or $a1 at manape.ep
 }
 
     
@@ -1281,7 +1283,7 @@ strings:
 	$a1 = { E9 ?? ?? ?? ?? ?? ?? ?? ?? 57 41 54 43 4F 4D ?? 43 2F 43 2B 2B 33 32 ?? 52 75 }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
     
@@ -1293,7 +1295,7 @@ strings:
     	$a0 = { FB 83 ?? ?? 89 E3 89 ?? ?? ?? ?? ?? 89 ?? ?? ?? ?? ?? 66 ?? ?? ?? 66 ?? ?? ?? ?? ?? BB ?? ?? ?? ?? 29 C0 B4 30 CD 21 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1306,7 +1308,7 @@ strings:
 	$a1 = { 55 89 E5 E8 ?? ?? ?? ?? C9 C3 ?? ?? 45 58 45 }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
     
@@ -1318,7 +1320,7 @@ strings:
     	$a0 = { B4 51 CD 21 8E DB B8 ?? ?? 83 E8 ?? 8E C0 33 F6 33 FF B9 ?? ?? FC F3 A5 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1330,7 +1332,7 @@ strings:
     	$a0 = { 9A ?? ?? ?? ?? 9A ?? ?? ?? ?? 9A ?? ?? ?? ?? 33 DB BA ?? ?? 9A ?? ?? ?? ?? C7 06 ?? ?? ?? ?? 33 DB }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1342,7 +1344,7 @@ strings:
     	$a0 = { 90 90 CD AB ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 38 34 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1354,7 +1356,7 @@ strings:
     	$a0 = { 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? 00 00 00 00 00 00 30 00 00 00 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1366,7 +1368,7 @@ strings:
     	$a0 = { BA ?? ?? 2E 89 ?? ?? ?? B4 30 CD 21 8B ?? ?? ?? 8B ?? ?? ?? 8E DA }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1378,7 +1380,7 @@ strings:
     	$a0 = { 55 89 E5 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1390,7 +1392,7 @@ strings:
     	$a0 = { 8B FF 55 8B EC 53 8B 5D 08 56 8B 75 0C 85 F6 57 8B 7D 10 75 09 83 3D ?? ?? ?? ?? 00 EB 26 83 FE 01 74 05 83 FE 02 75 22 A1 ?? ?? ?? ?? 85 C0 74 09 57 56 53 FF D0 85 C0 74 0C 57 56 53 E8 ?? ?? ?? FF 85 C0 75 04 33 C0 EB 4E 57 56 53 E8 ?? ?? ?? FF 83 FE 01 89 45 0C 75 0C 85 C0 75 37 57 50 53 E8 ?? ?? ?? FF 85 F6 74 05 83 FE 03 75 26 57 56 53 E8 ?? ?? ?? FF 85 C0 75 03 21 45 0C 83 7D 0C 00 74 11 A1 ?? ?? ?? ?? 85 C0 74 08 57 56 53 FF D0 89 45 0C 8B 45 0C 5F 5E 5B 5D C2 0C 00 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1402,7 +1404,7 @@ strings:
     	$a0 = { 55 8B EC 53 56 57 BB 00 ?? 40 00 66 2E F7 05 ?? ?? 40 00 04 00 0F 85 DB 00 00 00 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1414,7 +1416,7 @@ strings:
     	$a0 = { FA B8 ?? ?? 8E D8 B8 ?? ?? 8E }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1427,7 +1429,7 @@ strings:
 	$a1 = { 6A ?? 68 ?? ?? ?? ?? E8 }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
     
@@ -1452,7 +1454,7 @@ strings:
     	$a0 = { B4 30 CD 21 3C 02 73 ?? 9A ?? ?? ?? ?? B8 ?? ?? 50 9A ?? ?? ?? ?? 92 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1464,7 +1466,7 @@ strings:
     	$a0 = { 6A 00 E8 ?? ?? 00 00 A3 ?? ?? 40 00 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1476,7 +1478,7 @@ strings:
     	$a0 = { 50 6A ?? E8 ?? ?? FF FF BA ?? ?? ?? ?? 52 89 05 ?? ?? ?? ?? 89 42 04 E8 ?? ?? ?? ?? 5A 58 E8 ?? ?? ?? ?? C3 55 8B EC 33 C0 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1489,7 +1491,7 @@ strings:
 	$a1 = { 6A 00 E8 2F 1E 00 00 A3 C4 35 40 00 E8 2B 1E 00 00 6A 0A 50 6A 00 FF 35 C4 35 40 00 E8 07 00 00 00 50 E8 1B 1E 00 00 CC 68 48 00 00 00 68 00 00 00 00 68 C8 35 40 00 E8 76 16 00 00 83 C4 0C 8B 44 24 04 A3 CC 35 40 00 68 00 00 00 00 68 A0 0F 00 00 68 00 00 }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
     
@@ -1513,7 +1515,7 @@ strings:
     	$a0 = { BA ?? ?? 2E 89 16 ?? ?? B4 30 CD 21 8B 2E ?? ?? 8B 1E ?? ?? 8E DA }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1526,7 +1528,7 @@ strings:
 	$a1 = { 55 89 E5 83 EC 08 C7 04 24 01 00 00 00 FF 15 FC 40 40 00 E8 68 00 00 00 89 EC 31 C0 5D C3 89 F6 55 89 E5 83 EC 08 C7 04 24 02 00 00 00 FF 15 FC 40 40 00 E8 48 00 00 00 89 EC 31 C0 5D C3 89 F6 55 89 E5 83 EC 08 8B 55 08 89 14 24 FF 15 18 41 40 00 89 EC 5D }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
     
@@ -1538,7 +1540,7 @@ strings:
     	$a0 = { FF 25 00 20 ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1550,7 +1552,7 @@ strings:
     	$a0 = { 6A 60 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? BF 94 00 00 00 8B C7 E8 ?? ?? ?? ?? 89 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1562,7 +1564,7 @@ strings:
     	$a0 = { EB 02 ?? ?? E8 26 00 00 00 EB 03 ?? ?? ?? EB 01 ?? 8B 54 24 0C EB 04 ?? ?? ?? ?? 83 82 B8 00 00 00 26 EB 01 ?? 33 C0 EB 02 ?? ?? C3 EB 01 ?? EB 04 ?? ?? ?? ?? 64 67 FF 36 00 00 EB 01 ?? 64 67 89 26 00 00 EB 01 ?? EB 03 ?? ?? ?? 50 EB 03 ?? ?? ?? 33 C0 EB 03 ?? ?? ?? 8B 00 EB 04 ?? ?? ?? ?? C3 EB 03 ?? ?? ?? E9 FA 00 00 00 EB 03 ?? ?? ?? E8 D5 FF FF FF EB 04 ?? ?? ?? ?? EB 01 ?? 58 EB 02 ?? ?? EB 03 ?? ?? ?? 64 67 8F 06 00 00 EB 01 ?? 83 C4 04 EB 03 ?? ?? ?? E8 23 27 00 00 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1574,7 +1576,7 @@ strings:
     	$a0 = { FA B8 ?? ?? 8E D8 8E D0 26 8B ?? ?? ?? 2B D8 F7 ?? ?? ?? 75 ?? B1 04 D3 E3 EB }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1586,7 +1588,7 @@ strings:
     	$a0 = { E8 ?? ?? 00 00 E9 ?? ?? FF FF }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1610,7 +1612,7 @@ strings:
     	$a0 = { FA B8 ?? ?? 05 ?? ?? B1 ?? D3 E8 8C CB 03 C3 8E D8 8E D0 26 ?? ?? ?? ?? 2B D8 F7 ?? ?? ?? 75 ?? B1 ?? D3 E3 EB }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1622,7 +1624,7 @@ strings:
     	$a0 = { 55 89 E5 83 EC 08 C7 04 24 ?? 00 00 00 FF 15 ?? ?? 40 00 E8 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 55 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1661,7 +1663,7 @@ strings:
 	$a3 = { 48 83 EC 28 E8 ?? ?? 00 00 48 83 C4 28 E9 ?? ?? FF FF CC CC CC CC CC CC CC CC CC CC CC CC CC CC }
 
 condition:
-    	$a0 at entrypoint or $a1 or $a2 at entrypoint or $a3 at entrypoint
+    	$a0 at manape.ep or $a1 or $a2 at manape.ep or $a3 at manape.ep
 }
 
     
@@ -1688,7 +1690,7 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 64 A1 ?? ?? ?? ?? 50 64 89 25 ?? ?? ?? ?? 83 C4 ?? 53 56 57 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1700,7 +1702,7 @@ strings:
     	$a0 = { 64 A1 00 00 00 00 55 8B EC 6A FF 68 00 A0 40 00 68 34 76 40 00 50 64 89 25 00 00 00 00 83 EC 60 53 56 57 89 65 E8 FF 15 8C E3 40 00 A3 70 B1 40 00 33 C0 A0 71 B1 40 00 A3 7C B1 40 00 A1 70 B1 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1712,7 +1714,7 @@ strings:
     	$a0 = { 55 89 E5 83 EC 08 C7 04 24 01 00 00 00 FF 15 ?? ?? ?? 00 E8 C8 FE FF FF 90 8D B4 26 00 00 00 00 55 89 E5 83 EC 08 C7 04 24 02 00 00 00 FF 15 ?? ?? ?? 00 E8 A8 FE FF FF 90 8D B4 26 00 00 00 00 55 8B 0D ?? ?? ?? 00 89 E5 5D FF E1 8D 74 26 00 55 8B 0D ?? ?? ?? 00 89 E5 5D FF E1 90 90 90 90 55 89 E5 5D E9 ?? ?? 00 00 90 90 90 90 90 90 90 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1736,7 +1738,7 @@ strings:
     	$a0 = { 83 EC 0C 53 56 57 FF 15 2C 81 40 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1760,7 +1762,7 @@ strings:
     	$a0 = { 64 A1 ?? ?? ?? ?? 55 89 E5 6A FF 68 ?? ?? ?? ?? 68 9A 10 40 ?? 50 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1772,7 +1774,7 @@ strings:
     	$a0 = { 55 89 E5 ?? ?? ?? ?? ?? ?? FF FF ?? ?? ?? ?? ?? 00 ?? ?? 00 ?? ?? ?? 00 00 00 00 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1784,7 +1786,7 @@ strings:
     	$a0 = { 55 89 E5 83 EC 08 6A 00 6A 00 6A 00 6A 00 E8 0D 00 00 00 B8 00 00 00 00 C9 C3 90 90 90 90 90 90 FF 25 38 20 40 00 90 90 00 00 00 00 00 00 00 00 FF FF FF FF 00 00 00 00 FF FF FF FF 00 00 00 00 00 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1796,7 +1798,7 @@ strings:
     	$a0 = { 83 7C 24 08 01 75 0E 8B 44 24 04 A3 ?? ?? ?? 10 E8 22 00 00 00 83 7C 24 08 02 75 00 83 7C 24 08 00 75 05 E8 ?? 00 00 00 83 7C 24 08 03 75 00 B8 01 00 00 00 C2 0C 00 68 00 00 00 00 68 00 10 00 00 68 00 00 00 00 E8 ?? 0F 00 00 A3 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1808,7 +1810,7 @@ strings:
     	$a0 = { E8 00 6E 00 00 55 89 E5 8B 7D 0C 8B 75 08 89 F8 8B 5D 10 29 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1857,7 +1859,7 @@ strings:
     	$a0 = { 53 56 57 BB ?? ?? ?? ?? 8B ?? ?? ?? 55 3B FB 75 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1872,7 +1874,7 @@ strings:
 	$a3 = { 6A 00 E8 ?? 0? 00 00 A3 ?? 32 40 00 E8 ?? 0? 00 00 }
 
 condition:
-    	$a0 or $a1 or $a2 at entrypoint or $a3 at entrypoint
+    	$a0 or $a1 or $a2 at manape.ep or $a3 at manape.ep
 }
 
     
@@ -1888,7 +1890,7 @@ strings:
 	$a4 = { 55 8B EC 81 EC 78 05 00 00 53 56 BE 04 01 00 00 57 8D 85 94 FD FF FF 56 33 DB 50 53 FF 15 34 20 40 00 8D 85 94 FD FF FF 56 50 8D 85 94 FD FF FF 50 FF 15 30 20 40 00 8B 3D 2C 20 40 00 53 53 6A 03 53 6A 01 8D 85 94 FD FF FF 68 00 00 00 80 50 FF D7 83 F8 FF 89 45 FC 0F 84 7B 01 00 00 8D 85 90 FC FF FF 50 56 FF 15 28 20 40 00 8D 85 98 FE FF FF 50 53 8D 85 90 FC FF FF 68 10 30 40 00 50 FF 15 24 20 40 00 53 68 80 00 00 00 6A 02 53 53 8D 85 98 FE FF FF 68 00 00 00 40 50 FF D7 83 F8 FF 89 45 F4 0F 84 2F 01 00 00 53 53 53 6A 02 53 FF 75 FC FF 15 00 20 40 00 53 53 53 6A 04 50 89 45 F8 FF 15 1C 20 40 00 8B F8 C7 45 FC 01 00 00 00 8D 47 01 8B 08 81 F9 4D 5A 9A 00 74 08 81 F9 4D 5A 90 00 75 06 80 78 04 03 74 0D FF 45 FC 40 81 7D FC 00 80 00 00 7C DB 8D 4D F0 53 51 68 }
 
 condition:
-    	$a0 at entrypoint or $a1 or $a2 or $a3 at entrypoint or $a4 at entrypoint
+    	$a0 at manape.ep or $a1 or $a2 or $a3 at manape.ep or $a4 at manape.ep
 }
 
     
@@ -1912,7 +1914,7 @@ strings:
     	$a0 = { 55 8B EC 81 EC 14 04 00 00 53 56 57 6A 00 FF 15 08 41 40 00 68 00 50 40 00 FF 15 04 41 40 00 85 C0 74 29 6A 00 A1 00 20 40 00 ?? ?? ?? ?? 41 40 00 8B F0 6A 06 56 FF 15 1C 41 40 00 6A 03 56 FF }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1924,7 +1926,7 @@ strings:
     	$a0 = { 55 89 E5 83 EC 04 83 3D }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1936,7 +1938,7 @@ strings:
     	$a0 = { B8 ?? ?? 8E D8 B8 ?? ?? CD 21 A3 ?? ?? 3C 03 7D ?? B4 09 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1949,7 +1951,7 @@ strings:
 	$a1 = { E8 00 00 00 00 58 BB 00 00 40 00 8B }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
     
@@ -1973,7 +1975,7 @@ strings:
     	$a0 = { 1E B8 ?? ?? 8E D8 B4 30 CD 21 3C 02 73 ?? BA ?? ?? E8 ?? ?? 06 33 C0 50 CB }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -1997,7 +1999,7 @@ strings:
     	$a0 = { BF ?? ?? 8B 36 ?? ?? 2B F7 81 FE ?? ?? 72 ?? BE ?? ?? FA 8E D7 81 C4 ?? ?? FB 73 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -2011,7 +2013,7 @@ strings:
 	$a2 = { C6 05 00 80 40 00 01 E8 74 00 00 00 C6 05 00 80 40 00 00 E8 68 00 00 00 50 E8 00 00 00 00 FF 25 D8 A1 40 00 90 90 90 90 90 90 90 90 90 90 90 90 55 89 E5 83 EC 04 89 5D FC E8 92 00 00 00 E8 ED 00 00 00 89 C3 B9 ?? 70 40 00 89 DA B8 00 00 00 00 E8 0A 01 00 00 E8 C5 01 00 00 89 D8 E8 3E 02 00 00 E8 B9 01 00 00 E8 54 02 00 00 8B 5D FC C9 C3 8D 76 00 00 00 00 00 00 00 00 00 00 00 00 00 55 89 E5 C6 05 10 80 40 00 00 E8 D1 03 00 00 6A 00 64 FF 35 00 00 00 00 89 E0 A3 ?? 70 40 00 55 31 ED 89 E0 A3 20 80 40 00 66 8C D5 89 2D 30 80 40 00 E8 B9 03 00 00 31 ED E8 72 FF FF FF 5D E8 BC 03 00 00 C9 C3 00 00 00 00 00 00 00 00 00 00 55 89 E5 83 EC 08 E8 15 04 00 00 A1 ?? 70 40 00 89 45 F8 B8 01 00 00 00 89 45 FC 3B 45 F8 7F 2A FF 4D FC 90 FF 45 FC 8B 45 FC 83 3C C5 ?? 70 40 00 00 74 09 8B 04 C5 ?? 70 40 }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint or $a2 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
     
@@ -2024,7 +2026,7 @@ strings:
 	$a1 = { 83 EC 0C 53 56 57 FF 15 20 71 40 00 05 E8 03 00 00 BE 60 FD 41 00 89 44 24 10 B3 20 FF 15 28 70 40 00 68 00 04 00 00 FF 15 28 71 40 00 50 56 FF 15 08 71 40 00 80 3D 60 FD 41 00 22 75 08 80 C3 02 BE 61 FD 41 00 8A 06 8B 3D F0 71 40 00 84 C0 74 0F 3A C3 74 }
 
 condition:
-    	$a0 at entrypoint or $a1
+    	$a0 at manape.ep or $a1
 }
 
     
@@ -2036,7 +2038,7 @@ strings:
     	$a0 = { 53 FF 15 ?? ?? ?? 00 B3 22 38 18 74 03 80 C3 FE 8A 48 01 40 33 D2 3A CA 74 0A 3A CB 74 06 8A 48 01 40 EB F2 38 10 74 01 40 ?? ?? ?? ?? FF 15 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -2062,7 +2064,7 @@ strings:
 	$a1 = { 55 89 E5 53 83 EC 48 55 B8 FF FF FF FF 50 50 68 E0 3E 42 00 64 FF 35 00 00 00 00 64 89 25 00 00 00 00 68 C0 69 44 00 E8 E4 80 FF FF 59 E8 4E 29 00 00 E8 C9 0D 00 00 85 C0 75 08 6A FF E8 6E 2B 00 00 59 E8 A8 2C 00 00 E8 23 2E 00 00 FF 15 4C C2 44 00 89 C3 EB 19 3C 22 75 14 89 C0 8D 40 00 43 8A 03 84 C0 74 04 3C 22 75 F5 3C 22 75 01 43 8A 03 84 C0 74 0B 3C 20 74 07 3C 09 75 D9 EB 01 43 8A 03 84 C0 74 04 3C 20 7E F5 8D 45 B8 50 FF 15 E4 C1 44 00 8B 45 E4 25 01 00 00 00 74 06 0F B7 45 E8 EB 05 B8 0A 00 00 00 50 53 6A 00 6A 00 FF 15 08 C2 44 00 50 E8 63 15 FF FF 50 E8 EE 2A 00 00 59 8D 65 FC 5B }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
     
@@ -2086,7 +2088,7 @@ strings:
     	$a0 = { 55 8B EC ?? ?? 0C 83 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 8B }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -2098,7 +2100,7 @@ strings:
     	$a0 = { 90 90 CD AB ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 38 35 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -2110,7 +2112,7 @@ strings:
     	$a0 = { 5A 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 52 E9 ?? ?? FF }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -2124,7 +2126,7 @@ strings:
 	$a2 = { 60 BE 00 A0 42 00 8D BE 00 70 FD FF 57 83 CD FF EB 10 90 90 90 90 90 90 8A 06 46 88 07 47 01 DB 75 07 8B 1E 83 EE FC 11 DB 72 ED B8 01 00 00 00 01 DB 75 07 8B 1E 83 EE FC 11 DB 11 C0 01 DB 73 EF 75 09 8B 1E 83 EE FC 11 DB 73 E4 31 C9 83 E8 03 72 0D C1 E0 08 8A 06 46 83 F0 FF 74 74 89 C5 01 DB 75 07 8B 1E 83 EE FC 11 DB 11 C9 01 DB 75 07 8B 1E 83 EE FC 11 DB 11 C9 75 20 41 01 DB 75 07 8B 1E 83 EE FC 11 DB 11 C9 01 DB 73 EF 75 09 8B 1E 83 EE FC 11 DB 73 E4 }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint or $a2 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep
 }
 
     
@@ -2175,7 +2177,7 @@ strings:
 	$a3 = { 8B 44 24 08 56 83 E8 ?? 74 ?? 48 75 }
 
 condition:
-    	$a0 at entrypoint or $a1 or $a2 at entrypoint or $a3 at entrypoint
+    	$a0 at manape.ep or $a1 or $a2 at manape.ep or $a3 at manape.ep
 }
 
     
@@ -2188,7 +2190,7 @@ strings:
 	$a1 = { 53 8B D8 33 C0 A3 ?? ?? ?? ?? 6A 00 E8 ?? ?? ?? FF A3 ?? ?? ?? ?? A1 ?? ?? ?? ?? A3 ?? ?? ?? ?? 33 C0 A3 ?? ?? ?? ?? 33 C0 A3 ?? ?? ?? ?? E8 }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
     
@@ -2202,7 +2204,7 @@ strings:
 	$a2 = { 55 8B EC 83 EC 50 53 56 57 BE ?? ?? ?? ?? 8D 7D F4 A5 A5 66 A5 8B }
 
 condition:
-    	$a0 or $a1 or $a2 at entrypoint
+    	$a0 or $a1 or $a2 at manape.ep
 }
 
     
@@ -2226,7 +2228,7 @@ strings:
     	$a0 = { 64 A1 00 00 00 00 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 50 64 89 25 00 00 00 00 83 EC ?? 53 56 57 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -2250,7 +2252,7 @@ strings:
     	$a0 = { 64 A1 00 00 00 00 55 ?? ?? 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 50 ?? ?? ?? ?? ?? 00 00 83 EC 10 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -2263,7 +2265,7 @@ strings:
 	$a1 = { EB 10 66 62 3A 43 2B 2B 48 4F 4F 4B 90 E9 ?? ?? ?? ?? A1 ?? ?? ?? ?? C1 E0 02 A3 ?? ?? ?? ?? 52 }
 
 condition:
-    	$a0 or $a1 at entrypoint
+    	$a0 or $a1 at manape.ep
 }
 
     
@@ -2287,7 +2289,7 @@ strings:
     	$a0 = { 48 83 EC 28 E8 ?? ?? 00 00 48 83 C4 28 E9 0E FD FF FF CC CC CC CC CC CC CC CC CC CC CC CC CC CC }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -2300,7 +2302,7 @@ strings:
 	$a1 = { FC 1E B8 ?? ?? 8E D8 9A ?? ?? ?? ?? 81 ?? ?? ?? 8B EC 8C DB 8E C3 BB ?? ?? 9A ?? ?? ?? ?? 9B DB E3 9B D9 2E ?? ?? 33 C9 }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
     
@@ -2336,7 +2338,7 @@ strings:
     	$a0 = { 55 8B EC 83 C4 B4 B8 ?? ?? ?? ?? E8 ?? ?? ?? ?? E8 ?? ?? ?? ?? 8D 40 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -2348,7 +2350,7 @@ strings:
     	$a0 = { 55 8B EC 51 ?? ?? ?? 01 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -2360,7 +2362,7 @@ strings:
     	$a0 = { 8B FF 55 8B EC 53 8B 5D 08 56 8B 75 0C 85 F6 57 8B 7D 10 0F 84 ?? ?? 00 00 83 FE 01 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -2409,7 +2411,7 @@ strings:
     	$a0 = { 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 64 A1 00 00 00 00 50 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -2445,7 +2447,7 @@ strings:
     	$a0 = { B4 30 CD 21 3C 02 73 ?? B8 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -2458,7 +2460,7 @@ strings:
 	$a1 = { 55 8B EC 53 8B 5D 08 56 8B 75 0C 85 F6 57 8B 7D 10 }
 
 condition:
-    	$a0 or $a1 at entrypoint
+    	$a0 or $a1 at manape.ep
 }
 
     
@@ -2471,7 +2473,7 @@ strings:
 	$a1 = { 50 6A ?? E8 ?? ?? FF FF BA ?? ?? ?? ?? 52 89 05 ?? ?? ?? ?? 89 42 04 C7 42 08 ?? ?? ?? ?? C7 42 0C ?? ?? ?? ?? E8 ?? ?? ?? ?? 5A 58 E8 ?? ?? ?? ?? C3 }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep
 }
 
     
@@ -2486,7 +2488,7 @@ strings:
 	$a3 = { 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 C4 E4 53 56 57 89 65 E8 C7 45 E4 01 00 00 00 C7 45 FC }
 
 condition:
-    	$a0 at entrypoint or $a1 at entrypoint or $a2 at entrypoint or $a3 at entrypoint
+    	$a0 at manape.ep or $a1 at manape.ep or $a2 at manape.ep or $a3 at manape.ep
 }
 
     
@@ -2510,7 +2512,7 @@ strings:
     	$a0 = { 55 89 E5 83 EC ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 55 89 E5 83 EC ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 55 ?? ?? ?? ?? ?? ?? ?? ?? ?? FF ?? ?? ?? ?? 00 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
 
@@ -2523,7 +2525,7 @@ strings:
     	$a0 = { 8C CA 2E 89 ?? ?? ?? B4 30 CD 21 8B 2E ?? ?? 8B 1E ?? ?? 8E DA A3 ?? ?? 8C }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -2535,7 +2537,7 @@ strings:
     	$a0 = { 2E 8C 06 ?? ?? 2E 8C 1E ?? ?? BB ?? ?? 8E DB 1E E8 ?? ?? 1F }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -2547,7 +2549,7 @@ strings:
     	$a0 = { 83 EC 0C 53 55 56 57 FF 15 ?? 70 40 00 8B 35 ?? 92 40 00 05 E8 03 00 00 89 44 24 14 B3 20 FF 15 2C 70 40 00 BF 00 04 00 00 68 ?? ?? ?? 00 57 FF 15 ?? ?? 40 00 57 FF 15 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -2559,7 +2561,7 @@ strings:
     	$a0 = { 55 8B EC 83 C4 C0 53 56 57 33 C0 89 45 F0 89 45 EC 89 45 C0 E8 5B 73 FF FF E8 D6 87 FF FF E8 C5 A9 FF FF E8 E0 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
     
@@ -2571,7 +2573,7 @@ strings:
     	$a0 = { FC 1E B8 ?? ?? 8E D8 9A ?? ?? ?? ?? 81 ?? ?? ?? 8B EC 8C DB 8E C3 BB ?? ?? B9 ?? ?? 9A ?? ?? ?? ?? 80 ?? ?? ?? ?? 74 ?? E9 }
 
 condition:
-    	$a0 at entrypoint
+    	$a0 at manape.ep
 }
 
 

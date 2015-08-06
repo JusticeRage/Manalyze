@@ -1,18 +1,18 @@
 /*
-    This file is part of Spike Guard.
+    This file is part of Manalyze.
 
-    Spike Guard is free software: you can redistribute it and/or modify
+    Manalyze is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Spike Guard is distributed in the hope that it will be useful,
+    Manalyze is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
+    along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #ifndef _PE_H_
@@ -43,11 +43,11 @@
 #include "section.h"	// Definition of the Section class
 #include "color.h"		// Allows changing the font color in the terminal
 
-// The structure used to communicate with the yara SGPE module.
-#include "yara/modules/sgpe_data.h"
+// The structure used to communicate with the yara ManaPE module.
+#include "yara/modules/manape_data.h"
 
 #if defined BOOST_WINDOWS_API && !defined DECLSPEC
-	#ifdef SGPE_EXPORT
+	#ifdef MANAPE_EXPORT
 		#define DECLSPEC    __declspec(dllexport)
 	#else
 		#define DECLSPEC    __declspec(dllimport)
@@ -81,8 +81,8 @@ public:
 
 	DECLSPEC size_t get_filesize() const;
 
-    DECLSPEC pString get_path() const { 
-		return pString(new std::string(_path)); 
+    DECLSPEC pString get_path() const {
+		return pString(new std::string(_path));
 	}
 
 	/**
@@ -90,7 +90,7 @@ public:
 	 *
 	 *	@return	A shared object containing the section information.
 	 */
-	DECLSPEC shared_sections get_sections() const { 
+	DECLSPEC shared_sections get_sections() const {
 		return shared_sections(new std::vector<pSection>(_sections));
 	}
 
@@ -107,7 +107,7 @@ public:
 	 *
 	 *	@param	const std::string& dll The DLL from which we want the imported functions.
 	 *
-	 *	@return	A shared vector in which the imported function names will be stored. Functions 
+	 *	@return	A shared vector in which the imported function names will be stored. Functions
 	 *			imported by ordinal will be returned as "#N",  N being the ordinal number.
 	 *
 	 *	Implementation is located in imports.cpp.
@@ -144,22 +144,22 @@ public:
 		return _ioh;
 	}
 
-	DECLSPEC shared_resources get_resources() const { 
-		return _initialized? shared_resources(new std::vector<pResource>(_resource_table)) : shared_resources(); 
-	}
-	
-	DECLSPEC shared_exports get_exports() const { 
-		return _initialized? shared_exports(new std::vector<pexported_function>(_exports)) : shared_exports(); 
+	DECLSPEC shared_resources get_resources() const {
+		return _initialized? shared_resources(new std::vector<pResource>(_resource_table)) : shared_resources();
 	}
 
-	DECLSPEC shared_debug_info get_debug_info() const { 
-		return _initialized? shared_debug_info(new std::vector<pdebug_directory_entry>(_debug_entries)) : 
-			shared_debug_info(); 
+	DECLSPEC shared_exports get_exports() const {
+		return _initialized? shared_exports(new std::vector<pexported_function>(_exports)) : shared_exports();
 	}
 
-	DECLSPEC shared_relocations get_relocations() const { 
-		return _initialized ? shared_relocations(new std::vector<pimage_base_relocation>(_relocations)) : 
-			shared_relocations(); 
+	DECLSPEC shared_debug_info get_debug_info() const {
+		return _initialized? shared_debug_info(new std::vector<pdebug_directory_entry>(_debug_entries)) :
+			shared_debug_info();
+	}
+
+	DECLSPEC shared_relocations get_relocations() const {
+		return _initialized ? shared_relocations(new std::vector<pimage_base_relocation>(_relocations)) :
+			shared_relocations();
 	}
 
 	DECLSPEC shared_tls get_tls() const {
@@ -167,7 +167,7 @@ public:
 	}
 
 	DECLSPEC shared_certificates get_certificates() const {
-		return _initialized ? shared_certificates(new shared_certificates::element_type(_certificates)) : 
+		return _initialized ? shared_certificates(new shared_certificates::element_type(_certificates)) :
 			shared_certificates(new shared_certificates::element_type());
 	}
 
@@ -208,20 +208,20 @@ public:
 	void operator delete(void* p);
 
 	/**
-	 *	@brief	Creates the data used by the SGPE Yara module.
+	 *	@brief	Creates the data used by the ManaPE Yara module.
 	 *
-	 *	This extracts a few of the PE's parsed elements and stores them inside a module that the SGPE Yara module
+	 *	This extracts a few of the PE's parsed elements and stores them inside a structure that the ManaPE Yara module
 	 *	can use to do its work.
-	 *	The sgpe_data object contains address information (entry point, sections, ...). Passing them to Yara prevents
-	 *	me from using their built in PE parser (since sgstatic has already done all the work).
+	 *	The manape_data object contains address information (entry point, sections, ...). Passing them to Yara prevents
+	 *	me from using their built in PE parser (since manalyze has already done all the work).
 	 */
-	DECLSPEC boost::shared_ptr<sgpe_data> create_sgpe_module_data() const;
+	DECLSPEC boost::shared_ptr<manape_data> create_manape_module_data() const;
 
 private:
 	/**
 	 *	@brief	The new operator, re-implemented only so it could be made private.
 	 *
-	 *	Users can't be allowed to allocate objects on the heap themselves. If this happens across DLL 
+	 *	Users can't be allowed to allocate objects on the heap themselves. If this happens across DLL
 	 *	boundaries, the heap will get corrupted.
 	 */
 	void* operator new(size_t);
@@ -235,7 +235,7 @@ private:
 	/**
 	 * Reads the PE header of an executable.
 	 * /!\ This relies on the information gathered in _parse_dos_header. Please do not call
-	 *     this function first! Actually, please don't call it at all. Let the constructor 
+	 *     this function first! Actually, please don't call it at all. Let the constructor
 	 *     handle the parsing.
 	 */
 	bool _parse_pe_header(FILE* f);
@@ -266,7 +266,7 @@ private:
 
 	/**
 	 *	@brief	Parses the imports of a PE.
-	 *	
+	 *
 	 *	Included in the _parse_directories call.
 	 *	/!\ This relies on the information gathered in _parse_image_optional_header.
 	 *
@@ -276,7 +276,7 @@ private:
 
 	/**
 	 *	@brief	Parses the exports of a PE.
-	 *	
+	 *
 	 *	Included in the _parse_directories call.
 	 *	/!\ This relies on the information gathered in _parse_image_optional_header.
 	 */
@@ -299,7 +299,7 @@ private:
 	 *	/!\ This relies on the information gathered in _parse_pe_header.
 	 */
 	bool _parse_relocations(FILE* f);
-	
+
 	/**
 	 *	@brief	Parses the Thread Local Storage callback table of a PE.
 	 *
@@ -360,7 +360,7 @@ private:
 	 *	@param	image_resource_directory& dir The structure to fill.
 	 *	@param	FILE* f The file to read from.
 	 *	@param	unsigned int offset The offset at which to jump before reading the directory.
-	 *			The offset is relative to the beginning of the resource "section" (NOT a RVA). 
+	 *			The offset is relative to the beginning of the resource "section" (NOT a RVA).
 	 *			If it is 0, the function reads from the cursor's current location.
 	 *
 	 *	Implementation is located in resources.cpp
@@ -382,7 +382,7 @@ private:
 	std::string							_path;
     bool								_initialized;
 
-	/* 
+	/*
 	    -----------------------------------
 	    Fields related to the PE structure.
 	    -----------------------------------

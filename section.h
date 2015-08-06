@@ -1,18 +1,18 @@
 /*
-    This file is part of Spike Guard.
+    This file is part of Manalyze.
 
-    Spike Guard is free software: you can redistribute it and/or modify
+    Manalyze is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Spike Guard is distributed in the hope that it will be useful,
+    Manalyze is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
+    along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #ifndef _SECTION_H_
@@ -29,7 +29,7 @@
 #include "utils.h"
 
 #if defined BOOST_WINDOWS_API
-	#ifdef SGPE_EXPORT
+	#ifdef MANAPE_EXPORT
 		#define DECLSPEC    __declspec(dllexport)
 	#else
 		#define DECLSPEC    __declspec(dllimport)
@@ -55,8 +55,8 @@ public:
 	 *	@param	const std::vector<pString>& coff_string_table An optional COFF string table, in case section
 	 *			names are located in it.
 	 */
-	Section(const image_section_header& header, 
-		    const std::string& path, 
+	Section(const image_section_header& header,
+		    const std::string& path,
 			const std::vector<pString>& coff_string_table = std::vector<pString>());
 
     virtual ~Section() {}
@@ -64,7 +64,7 @@ public:
 	/**
 	 *	@brief	Returns the raw bytes of the section.
 	 *
-	 *	Note that calling this function for PEs which have giant sections may end up 
+	 *	Note that calling this function for PEs which have giant sections may end up
 	 *	eating a lot of memory.
 	 *
 	 *	@return	A shared vector containing the raw bytes of the section. If an error occurs, the vector

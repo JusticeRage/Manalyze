@@ -1,18 +1,18 @@
 /*
-This file is part of Spike Guard.
+This file is part of Manalyze.
 
-Spike Guard is free software: you can redistribute it and/or modify
+Manalyze is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-Spike Guard is distributed in the hope that it will be useful,
+Manalyze is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
+along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "dump.h"
@@ -91,8 +91,8 @@ void dump_image_optional_header(const sg::PE& pe, io::OutputFormatter& formatter
 	ioh_header->append(io::pNode(new io::OutputTreeNode("SizeOfCode", ioh.SizeOfCode, io::OutputTreeNode::HEX)));
 	ioh_header->append(io::pNode(new io::OutputTreeNode("SizeOfInitializedData", ioh.SizeOfInitializedData, io::OutputTreeNode::HEX)));
 	ioh_header->append(io::pNode(new io::OutputTreeNode("SizeOfUninitializedData", ioh.SizeOfUninitializedData, io::OutputTreeNode::HEX)));
-	
-	
+
+
 	sg::pSection sec = sg::find_section(ioh.AddressOfEntryPoint, *pe.get_sections());
 	ss.str(std::string());
 	if (sec != NULL) {
@@ -149,7 +149,7 @@ void dump_section_table(const sg::PE& pe, io::OutputFormatter& formatter, bool c
 	}
 
 	io::pNode section_list(new io::OutputTreeNode("Sections", io::OutputTreeNode::LIST));
-	
+
 	for (sg::shared_sections::element_type::const_iterator it = sections->begin(); it != sections->end(); ++it)
 	{
 		io::pNode section_node(new io::OutputTreeNode(*(*it)->get_name(), io::OutputTreeNode::LIST));
@@ -243,7 +243,7 @@ void dump_resources(const sg::PE& pe, io::OutputFormatter& formatter, bool compu
 		res->append(io::pNode(new io::OutputTreeNode("Entropy", (*it)->get_entropy())));
 
 		yara::const_matches m = (*it)->detect_filetype();
-		if (m->size() > 0)
+		if (m && m->size() > 0)
 		{
 			for (yara::match_vector::const_iterator it = m->begin() ; it != m->end() ; ++it) {
 				res->append(io::pNode(new io::OutputTreeNode("Detected Filetype", (*it)->operator[]("description"))));
@@ -289,7 +289,7 @@ void dump_version_info(const sg::PE& pe, io::OutputFormatter& formatter)
 			else {
 				version_info_node = io::pNode(new io::OutputTreeNode("Version Info", io::OutputTreeNode::LIST));
 			}
-			
+
 			version_info_node->append(io::pNode(new io::OutputTreeNode("Resource LangID", *(*it)->get_language())));
 			io::pNode key_values = io::pNode(new io::OutputTreeNode(vi->Header.Key, io::OutputTreeNode::LIST));
 			key_values->append(io::pNode(new io::OutputTreeNode("Signature", vi->Value->Signature, io::OutputTreeNode::HEX)));
@@ -355,7 +355,7 @@ void dump_tls(const sg::PE& pe, io::OutputFormatter& formatter)
 		return;
 	}
 
-	io::pNode tls_node(new io::OutputTreeNode("TLS Callbacks", io::OutputTreeNode::LIST));	
+	io::pNode tls_node(new io::OutputTreeNode("TLS Callbacks", io::OutputTreeNode::LIST));
 	tls_node->append(io::pNode(new io::OutputTreeNode("StartAddressOfRawData", tls->StartAddressOfRawData, io::OutputTreeNode::HEX)));
 	tls_node->append(io::pNode(new io::OutputTreeNode("EndAddressOfRawData", tls->EndAddressOfRawData, io::OutputTreeNode::HEX)));
 	tls_node->append(io::pNode(new io::OutputTreeNode("AddressOfIndex", tls->AddressOfIndex, io::OutputTreeNode::HEX)));

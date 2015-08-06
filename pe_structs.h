@@ -1,18 +1,18 @@
 /*
-    This file is part of Spike Guard.
+    This file is part of Manalyze.
 
-    Spike Guard is free software: you can redistribute it and/or modify
+    Manalyze is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Spike Guard is distributed in the hope that it will be useful,
+    Manalyze is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
+    along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #ifndef _PE_STRUCTS_H_
@@ -24,7 +24,7 @@
 #include <boost/cstdint.hpp>
 #include <boost/shared_ptr.hpp>
 
-namespace sg 
+namespace sg
 {
 
 typedef struct dos_header_t
@@ -327,7 +327,7 @@ typedef struct image_base_relocation_t
 } image_base_relocation;
 typedef boost::shared_ptr<image_base_relocation_t> pimage_base_relocation;
 
-typedef struct image_debug_misc_t 
+typedef struct image_debug_misc_t
 {
 	boost::uint32_t	DataType;
 	boost::uint32_t	Length;

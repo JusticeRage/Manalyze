@@ -1,18 +1,18 @@
 /*
-    This file is part of Spike Guard.
+    This file is part of Manalyze.
 
-    Spike Guard is free software: you can redistribute it and/or modify
+    Manalyze is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Spike Guard is distributed in the hope that it will be useful,
+    Manalyze is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
+    along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #ifndef _COLOR_H_
@@ -28,14 +28,14 @@
 	#include <stdio.h>
 #endif
 
-#if defined BOOST_WINDOWS_API && !defined DECLSPEC_SGCOMMONS
-	#ifdef SGCOMMONS_EXPORT
-		#define DECLSPEC_SGCOMMONS    __declspec(dllexport)
+#if defined BOOST_WINDOWS_API && !defined DECLSPEC_MANACOMMONS
+	#ifdef MANACOMMONS_EXPORT
+		#define DECLSPEC_MANACOMMONS    __declspec(dllexport)
 	#else
-		#define DECLSPEC_SGCOMMONS    __declspec(dllimport)
+		#define DECLSPEC_MANACOMMONS    __declspec(dllimport)
 	#endif
-#elif !defined BOOST_WINDOWS_API && !defined DECLSPEC_SGCOMMONS
-	#define DECLSPEC_SGCOMMONS
+#elif !defined BOOST_WINDOWS_API && !defined DECLSPEC_MANACOMMONS
+	#define DECLSPEC_MANACOMMONS
 #endif
 
 namespace utils
@@ -63,10 +63,10 @@ void set_color(Color c);
  *
  *	@return	A reference to sink, so the operator "<<" can be chained.
  */
-DECLSPEC_SGCOMMONS std::ostream& print_colored_text(const std::string& text,
-								 Color c, 
-								 std::ostream& sink = std::cout, 
-								 const std::string& prefix = "", 
+	DECLSPEC_MANACOMMONS std::ostream& print_colored_text(const std::string& text,
+								 Color c,
+								 std::ostream& sink = std::cout,
+								 const std::string& prefix = "",
 								 const std::string& suffix = "");
 
 #define PRINT_ERROR utils::print_colored_text("!", utils::RED, std::cerr, "[", "] Error: ")

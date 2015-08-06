@@ -1,18 +1,18 @@
 /*
-    This file is part of Spike Guard.
+    This file is part of Manalyze.
 
-    Spike Guard is free software: you can redistribute it and/or modify
+    Manalyze is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Spike Guard is distributed in the hope that it will be useful,
+    Manalyze is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Spike Guard.  If not, see <http://www.gnu.org/licenses/>.
+    along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #ifndef _RESOURCES_H_
@@ -47,11 +47,11 @@ public:
 			 boost::uint32_t		size,
 			 unsigned int			offset_in_file,
 			 const std::string&		path_to_pe)
-		: _type(type), 
-		  _name(name), 
-		  _language(language), 
-		  _codepage(codepage), 
-		  _offset_in_file(offset_in_file), 
+		: _type(type),
+		  _name(name),
+		  _language(language),
+		  _codepage(codepage),
+		  _offset_in_file(offset_in_file),
 		  _size(size),
 		  _path_to_pe(path_to_pe),
 		  _id(0)
@@ -81,15 +81,15 @@ public:
 	DECLSPEC boost::uint32_t	get_codepage()	const { return _codepage; }
 	DECLSPEC boost::uint32_t	get_size()		const { return _size; }
 	DECLSPEC boost::uint32_t	get_id()		const { return _id; }
-	DECLSPEC double				get_entropy()	const { 
-		return utils::shannon_entropy(*get_raw_data()); 
+	DECLSPEC double				get_entropy()	const {
+		return utils::shannon_entropy(*get_raw_data());
 	}
 	DECLSPEC pString			get_name()		const
 	{
 		if (_name != "") {
 			return pString(new std::string(_name));
 		}
-		else 
+		else
 		{
 			std::stringstream ss;
 			ss << _id;
@@ -104,7 +104,7 @@ public:
 	 *			the resource could not be read.
 	 */
 	DECLSPEC shared_bytes get_raw_data() const;
-	
+
 	/**
 	 *	@brief	Interprets the resource as a given type.
 	 *
@@ -130,7 +130,7 @@ private:
 	static yara::pYara _yara;
 
 	std::string		_type;
-	
+
 	// Resources can either have an identifier or a name.
 	std::string		_name;
 	boost::uint32_t	_id;
