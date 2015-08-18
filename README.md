@@ -1,4 +1,4 @@
-# Manalyze
+﻿# Manalyze
 
 ## Introduction
 My work on Manalyze started when my antivirus tried to quarantine my malware sample collection for the thirtieth time. It is also born from my increasing frustration with AV products which make decisions without ever explaining why they deem a file malicious.
@@ -38,7 +38,11 @@ $> cd bin && ./manalyze --version
 - `git clone https://github.com/JusticeRage/Manalyze.git && cd Manalyze && cmake .`
 - A Visual Studio project `manalyze.sln` should have appeared in the `Manalyze` folder!
 
-Alternately, you can also download a precompiled version of the program! (link coming shortly)
+### Binaries
+[Windows x86 binaries](http://manalyzer.org/static/manalyze.rar)
+
+All the binaries in this archive are signed with a certificate ‎presenting the following fingerprint: `26fc24c12b2d84f77615cf6299e3e4ca4f3878fc`.
+
 
 ## Usage
 
@@ -81,3 +85,8 @@ Examples:
   manalyze.exe --dump=imports,sections --hashes program.exe
   manalyze.exe -r malwares/ --plugins=peid,clamav --dump all
 ````
+
+## Contact
+[![E-Mail](http://manalyzer.org/static/mail.png)](mailto:justicerage *at* manalyzer.org)
+[![Tw](http://manalyzer.org/static/twitter.png)](https://twitter.com/JusticeRage)
+[![GnuPG](http://manalyzer.org/static/gpg.png)](https://pgp.mit.edu/pks/lookup?op=vindex&search=0x40E9F0A8F5EA8754)

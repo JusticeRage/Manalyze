@@ -112,7 +112,7 @@ public:
 		sg::const_shared_strings imports = pe.find_imports(".*"); // Get all imports
 
 		// Read the minimum import number from the configuration
-		int min_imports;
+		unsigned int min_imports;
 		if (!_config->count("min_imports")) {
 			min_imports = 10;
 		}
