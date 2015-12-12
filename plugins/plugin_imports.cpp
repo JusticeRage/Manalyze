@@ -18,7 +18,7 @@
 #include "plugin_framework/plugin_interface.h"
 #include "plugin_framework/auto_register.h"
 
-#include "color.h"
+#include "manacommons/color.h"
 
 namespace plugin {
 
@@ -88,17 +88,17 @@ void check_functions(const sg::PE& pe,
 class ImportsPlugin : public IPlugin
 {
 public:
-	int get_api_version() { return 1; }
+	int get_api_version() override { return 1; }
 
-	pString get_id() const {
+	pString get_id() const override {
 		return pString(new std::string("imports"));
 	}
 
-	pString get_description() const {
+	pString get_description() const override {
 		return pString(new std::string("Looks for suspicious imports."));
 	}
 
-	pResult analyze(const sg::PE& pe)
+	pResult analyze(const sg::PE& pe) override
 	{
 		pResult res = create_result();
 		check_functions(pe, dynamic_import, NO_OPINION, "[!] The program may be hiding some of its imports", AT_LEAST_TWO, res);

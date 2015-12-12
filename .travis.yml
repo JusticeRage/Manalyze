@@ -1,0 +1,10 @@
+language: cpp
+compiler:
+  - gcc
+before_script:
+  - sudo apt-get update -qq
+  - sudo apt-get install libboost-regex-dev libboost-program-options-dev libboost-system-dev  libboost-filesystem-dev
+  - cmake .
+script:
+  - make
+  - bin/manalyze

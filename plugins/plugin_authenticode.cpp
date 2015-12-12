@@ -24,7 +24,7 @@
 #include <Softpub.h>
 #include <WinCrypt.h>
 
-#include "utils.h"
+#include "manape/utils.h"
 
 #include "plugin_framework/plugin_interface.h"
 #include "yara/yara_wrapper.h"
@@ -88,17 +88,17 @@ void check_version_info(const sg::PE& pe, pResult res);
 class AuthenticodePlugin : public IPlugin
 {
 public:
-	int get_api_version() { return 1; }
+	int get_api_version() override { return 1; }
 
-	pString get_id() const {
+	pString get_id() const override {
 		return pString(new std::string("authenticode"));
 	}
 
-	pString get_description() const {
+	pString get_description() const override {
 		return pString(new std::string("Checks if the digital signature of the PE is valid."));
 	}
 
-	pResult analyze(const sg::PE& pe)
+	pResult analyze(const sg::PE& pe) override
 	{
 		pResult res = create_result();
 
@@ -332,7 +332,7 @@ void GetCertNameString_wrapper(PCCERT_CONTEXT context, DWORD type, DWORD flags, 
 							 type,
 							 flags,
 							 NULL,		// ...I'm not too sure what this is.
-							 name,		// Destination buffer is NULL - we want the size for now
+							 name,		// Destination buffer
 							 size))		// Size of the destination buffer)
 	{
 		result->add_information(make_error("Could not get certificate details: CertGetNameString failed."));

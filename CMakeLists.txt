@@ -41,19 +41,20 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin)
 
 include_directories(
 						${PROJECT_SOURCE_DIR}
+						${PROJECT_SOURCE_DIR}/include
 						${PROJECT_SOURCE_DIR}/external
 						${PROJECT_SOURCE_DIR}/external/yara/include
 						${PROJECT_SOURCE_DIR}/plugins
 						${Boost_INCLUDE_DIRS}
                    )
 
-add_library(manape SHARED pe.cpp nt_values.cpp utils.cpp imports.cpp resources.cpp section.cpp)
+add_library(manape SHARED manape/pe.cpp manape/nt_values.cpp manape/utils.cpp manape/imports.cpp manape/resources.cpp manape/section.cpp)
 
-add_library(manacommons SHARED color.cpp output_tree_node.cpp plugin_framework/result.cpp)
+add_library(manacommons SHARED manacommons/color.cpp manacommons/output_tree_node.cpp manacommons/plugin_framework/result.cpp)
 
-add_executable(manalyze main.cpp config_parser.cpp output_formatter.cpp dump.cpp
-			   plugin_framework/dynamic_library.cpp plugin_framework/plugin_manager.cpp # Plugin system
-			   plugins/yara/plugins_yara.cpp plugins/plugin_packer_detection.cpp plugins/plugin_imports.cpp plugins/plugin_resources.cpp) # Bundled plugins
+add_executable(manalyze src/main.cpp src/config_parser.cpp src/output_formatter.cpp src/dump.cpp
+			   src/plugin_framework/dynamic_library.cpp src/plugin_framework/plugin_manager.cpp # Plugin system
+			   plugins/plugins_yara.cpp plugins/plugin_packer_detection.cpp plugins/plugin_imports.cpp plugins/plugin_resources.cpp) # Bundled plugins
 
 if (WIN32)
 			add_definitions(/D_CRT_SECURE_NO_WARNINGS) # Please don't complain about fopen()

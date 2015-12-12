@@ -25,7 +25,7 @@
 #include "plugin_framework/plugin_interface.h"
 #include "plugin_framework/auto_register.h"
 
-#include "nt_values.h"
+#include "manape/nt_values.h"
 
 namespace plugin {
 
@@ -50,17 +50,17 @@ const std::map<std::string, std::string> KNOWN_PACKER_SECTIONS =
 class PackerDetectionPlugin : public IPlugin
 {
 public:
-	int get_api_version() { return 1; }
+	int get_api_version() override { return 1; }
 
-	pString get_id() const {
+	pString get_id() const override {
 		return pString(new std::string("packer"));
 	}
 
-	pString get_description() const {
+	pString get_description() const override {
 		return pString(new std::string("Tries to structurally detect packer presence."));
 	}
 
-	pResult analyze(const sg::PE& pe)
+	pResult analyze(const sg::PE& pe) override
 	{
 		pResult res = create_result();
 

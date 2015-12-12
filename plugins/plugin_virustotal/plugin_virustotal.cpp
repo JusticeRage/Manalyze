@@ -27,9 +27,9 @@
 #include "plugin_framework/plugin_interface.h"
 #include "plugin_framework/auto_register.h"
 
-#include "color.h"
+#include "manacommons/color.h"
 #include "hash-library/hashes.h"
-#include "plugin_virustotal/json_spirit/json_spirit.h"
+#include "plugins/plugin_virustotal/json_spirit/json_spirit.h"
 
 namespace bai = boost::asio::ip;
 namespace js = json_spirit;
@@ -51,17 +51,17 @@ bool query_virus_total(const std::string& hash, const std::string& api_key, std:
 class VirusTotalPlugin : public IPlugin
 {
 public:
-	int get_api_version() { return 1; }
+	int get_api_version() override { return 1; }
 
-	pString get_id() const {
+	pString get_id() const override {
 		return pString(new std::string("virustotal"));
 	}
 
-	pString get_description() const {
+	pString get_description() const override {
 		return pString(new std::string("Checks existing AV results on VirusTotal."));
 	}
 
-	pResult analyze(const sg::PE& pe)
+	pResult analyze(const sg::PE& pe) override
 	{
 		pResult res = create_result();
 

@@ -31,17 +31,17 @@ namespace plugin {
 class ResourcesPlugin : public IPlugin
 {
 public:
-	int get_api_version() { return 1; }
+	int get_api_version() override { return 1; }
 
-	pString get_id() const {
+	pString get_id() const override {
 		return pString(new std::string("resources"));
 	}
 
-	pString get_description() const {
+	pString get_description() const override {
 		return pString(new std::string("Analyzes the program's resources."));
 	}
 
-	pResult analyze(const sg::PE& pe)
+	pResult analyze(const sg::PE& pe) override
 	{
 		pResult res = create_result();
 		yara::Yara y;

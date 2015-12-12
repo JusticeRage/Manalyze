@@ -22,7 +22,7 @@ There are few things I hate more than checking out an open-source project and sp
 
 ### On Linux (tested on Debian Jessie)
 ```
-$> [sudo or as root] apt-get install libboost-all-dev build-essential cmake
+$> [sudo or as root] apt-get install libboost-regex-dev libboost-program-options-dev libboost-system-dev  libboost-filesystem-dev build-essential cmake
 $> git clone https://github.com/JusticeRage/Manalyze.git && cd Manalyze
 $> cmake .
 $> make
@@ -42,6 +42,7 @@ $> cd bin && ./manalyze --version
 If you need to build Manalyze on a machine with no internet access, you have to manually check out the following projects:
 - [Yara](https://github.com/JusticeRage/yara/archive/master.zip)
 - [hash-library](https://github.com/JusticeRage/hash-library/archive/master.zip)
+
 Place the two folders in the `external` folder as `external/yara` and `external/hash-library` respectively. Then run `cmake . -DGitHub=OFF` and continue as you normally would.
 
 ### Binaries

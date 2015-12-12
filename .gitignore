@@ -24,8 +24,10 @@
 *.out
 *.app
 
-# Compiled Yara rules
+# Compiled Yara rules + ClamAV rules and databases
 *.yarac
+bin/yara_rules/clamav.*
+bin/yara_rules/*.cvd
 
 # CMake artifacts
 CMakeFiles
@@ -40,6 +42,7 @@ CMakeCache.txt
 *.opensdf
 *.suo
 *.ilk
+*.opendb
 Win32
 Release
 Debug
@@ -47,5 +50,15 @@ Debug
 # Intellij IDEA project files
 .idea
 
-# Malwares
-*.mal
+# External projects
+external/yara
+external/hash-library
+
+# Malwares and documentation
+resources/*.mal
+resources/*.bin
+resources/*.pdf
+resources/*.docx?
+
+# Signing script
+bin/sign_all.bat
