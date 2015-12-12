@@ -1,4 +1,4 @@
-﻿# Manalyze
+﻿# Manalyze [![Build Status](https://travis-ci.org/JusticeRage/Manalyze.svg?branch=master)](https://travis-ci.org/JusticeRage/Manalyze)
 
 ## Introduction
 My work on Manalyze started when my antivirus tried to quarantine my malware sample collection for the thirtieth time. It is also born from my increasing frustration with AV products which make decisions without ever explaining why they deem a file malicious.

@@ -262,12 +262,12 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
 		ss << "* Yara " << YR_MAJOR_VERSION << "." << YR_MINOR_VERSION << "." << YR_MICRO_VERSION << ". (Victor M. Alvarez, Apache 2.0 License)" << std::endl;
 		ss << "* hash-library " << HASH_LIBRARY_VERSION << " (Stephan Brumme, ZLib License)." << std::endl;
 		std::cout << ss.str();
-		return false;
+		exit(0);
 	}
 	else if (vm.count("help") || !vm.count("pe"))
 	{
 		print_help(desc, argv[0]);
-		return false;
+		exit(0);
 	}
 
 	return validate_args(vm, desc, argv);
