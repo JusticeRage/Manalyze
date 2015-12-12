@@ -27,7 +27,7 @@ PE::PE(const std::string& path)
 	: _path(path), _initialized(false)
 {
 	FILE* f = fopen(_path.c_str(), "rb");
-	if (f == NULL)
+	if (f == nullptr)
 	{
 		PRINT_ERROR << "Could not open " << _path << "." << std::endl;
 		goto END;
@@ -54,7 +54,7 @@ PE::PE(const std::string& path)
 	_parse_directories(f);
 
 	END:
-	if (f != NULL) {
+	if (f != nullptr) {
 		fclose(f);
 	}
 }
@@ -62,7 +62,7 @@ PE::PE(const std::string& path)
 // ----------------------------------------------------------------------------
 
 boost::shared_ptr<PE> PE::create(const std::string& path) {
-	return boost::shared_ptr<PE>(new PE(path));
+	return boost::make_shared<PE>(path);
 }
 
 // ----------------------------------------------------------------------------
@@ -70,7 +70,7 @@ boost::shared_ptr<PE> PE::create(const std::string& path) {
 void* PE::operator new(size_t size)
 {
 	void* p = malloc(size);
-	if (p == NULL)
+	if (p == nullptr)
 		throw std::bad_alloc();
 	return p;
 }
@@ -88,7 +88,7 @@ size_t PE::get_filesize() const
 {
 	FILE* f = fopen(_path.c_str(), "rb");
 	size_t res = 0;
-	if (f == NULL) {
+	if (f == nullptr) {
 		return res;
 	}
 	fseek(f, 0, SEEK_END);
@@ -173,7 +173,7 @@ bool PE::_parse_coff_symbols(FILE* f)
 
 	for (unsigned int i = 0 ; i < _h_pe->NumberOfSymbols ; ++i)
 	{
-		pcoff_symbol sym = pcoff_symbol(new coff_symbol);
+		pcoff_symbol sym = boost::make_shared<coff_symbol>();
 		memset(sym.get(), 0, sizeof(coff_symbol));
 
 		if (18 != fread(sym.get(), 1, 18, f)) // Each symbol has a fixed size of 18 bytes.
@@ -203,7 +203,7 @@ bool PE::_parse_coff_symbols(FILE* f)
 
 	while (count < st_size)
 	{
-		pString s = pString(new std::string(utils::read_ascii_string(f)));
+		pString s = boost::make_shared<std::string>(utils::read_ascii_string(f));
 		_coff_string_table.push_back(s);
 		count += s->size() + 1; // Count the null terminator as well.
 	}
@@ -311,7 +311,7 @@ bool PE::_parse_image_optional_header(FILE* f)
 		PRINT_WARNING << "NumberOfRvaAndSizes > 0x10. This PE may have manually been crafted." << std::endl;
 	}
 
-	for (unsigned int i = 0 ; i < std::min(ioh.NumberOfRvaAndSizes, (boost::uint32_t) 0x10) ; ++i)
+	for (unsigned int i = 0 ; i < std::min(ioh.NumberOfRvaAndSizes, static_cast<boost::uint32_t>(0x10)) ; ++i)
 	{
 		if (8 != fread(&ioh.directories[i], 1, 8, f))
 		{
@@ -348,7 +348,7 @@ bool PE::_parse_section_table(FILE* f)
 			PRINT_ERROR << "Could not read section " << i << "." << std::endl;
 			return false;
 		}
-		_sections.push_back(pSection(new Section(sec, _path, _coff_string_table)));
+		_sections.push_back(boost::make_shared<Section>(sec, _path, _coff_string_table));
 	}
 
 	return true;
@@ -381,7 +381,7 @@ unsigned int PE::_rva_to_offset(boost::uint64_t rva) const
 		}
 	}
 
-	if (section == NULL)
+	if (section == nullptr)
 	{
 		// No section found. Maybe the VirsualSize is erroneous? Try with the RawSizeOfData.
 		for (std::vector<pSection>::const_iterator it = _sections.begin() ; it != _sections.end() ; ++it)
@@ -393,7 +393,7 @@ unsigned int PE::_rva_to_offset(boost::uint64_t rva) const
 			}
 		}
 
-		if (section == NULL) {  // No section matches the RVA.
+		if (section == nullptr) {  // No section matches the RVA.
 			return 0;
 		}
 	}
@@ -526,7 +526,7 @@ bool PE::_parse_exports(FILE* f)
 
 	for (unsigned int i = 0 ; i < ied.NumberOfFunctions ; ++i)
 	{
-		pexported_function ex = pexported_function(new exported_function);
+		pexported_function ex = boost::make_shared<exported_function>();
 		if (4 != fread(&(ex->Address), 1, 4, f))
 		{
 			PRINT_ERROR << "Could not read an exported function's address." << std::endl;
@@ -608,7 +608,7 @@ bool PE::_parse_relocations(FILE* f)
 	unsigned int header_size =  2*sizeof(boost::uint32_t);
 	while (remaining_size > 0)
 	{
-		pimage_base_relocation reloc = pimage_base_relocation(new image_base_relocation);
+		pimage_base_relocation reloc = boost::make_shared<image_base_relocation>();
 		memset(reloc.get(), 0, header_size);
 		if (header_size != fread(reloc.get(), 1, header_size, f) || reloc->BlockSize > remaining_size)
 		{
@@ -703,7 +703,8 @@ bool PE::_parse_certificates(FILE* f)
 	}
 
 	if (!_ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].VirtualAddress ||		// In this case, "VirtualAddress" is actually a file offset.
-		fseek(f, _ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].VirtualAddress, SEEK_SET))	{
+		fseek(f, _ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].VirtualAddress, SEEK_SET))
+	{
 		return true;	// Unsigned binary
 	}
 
@@ -711,7 +712,7 @@ bool PE::_parse_certificates(FILE* f)
 	unsigned int header_size = sizeof(boost::uint32_t) + 2*sizeof(boost::uint16_t);
 	while (remaining_bytes > header_size)
 	{
-		pwin_certificate cert = pwin_certificate(new win_certificate);
+		pwin_certificate cert = boost::make_shared<win_certificate>();
 		memset(cert.get(), 0, header_size);
 		if (header_size != fread(cert.get(), 1, header_size, f))
 		{
@@ -767,7 +768,7 @@ bool PE::_parse_certificates(FILE* f)
 // Provide a destructor for the shared_ptr.
 void delete_manape_module_data(manape_data* data)
 {
-	if (data->sections != NULL) {
+	if (data->sections != nullptr) {
 		free(data->sections);
 	}
 }
@@ -778,7 +779,7 @@ boost::shared_ptr<manape_data> PE::create_manape_module_data() const
 	res->entrypoint = _ioh->AddressOfEntryPoint;
 	res->number_of_sections = _sections.size();
 	res->sections = (manape_section*) malloc(res->number_of_sections * sizeof(manape_section));
-	if (res->sections != NULL)
+	if (res->sections != nullptr)
 	{
 		for (boost::uint32_t i = 0 ; i < res->number_of_sections ; ++i)
 		{

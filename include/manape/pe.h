@@ -29,8 +29,8 @@
 #include <exception>
 
 #include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/scoped_array.hpp>
+#include <boost/make_shared.hpp>
 #include <boost/optional.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/regex.hpp>
@@ -82,7 +82,7 @@ public:
 	DECLSPEC size_t get_filesize() const;
 
     DECLSPEC pString get_path() const {
-		return pString(new std::string(_path));
+		return boost::make_shared<std::string>(_path);
 	}
 
 	/**
@@ -91,7 +91,7 @@ public:
 	 *	@return	A shared object containing the section information.
 	 */
 	DECLSPEC shared_sections get_sections() const {
-		return shared_sections(new std::vector<pSection>(_sections));
+		return boost::make_shared<std::vector<pSection> >(_sections);
 	}
 
 
@@ -145,30 +145,30 @@ public:
 	}
 
 	DECLSPEC shared_resources get_resources() const {
-		return _initialized? shared_resources(new std::vector<pResource>(_resource_table)) : shared_resources();
+		return _initialized? boost::make_shared<std::vector<pResource> >(_resource_table) : shared_resources();
 	}
 
 	DECLSPEC shared_exports get_exports() const {
-		return _initialized? shared_exports(new std::vector<pexported_function>(_exports)) : shared_exports();
+		return _initialized? boost::make_shared<std::vector<pexported_function> >(_exports) : shared_exports();
 	}
 
 	DECLSPEC shared_debug_info get_debug_info() const {
-		return _initialized? shared_debug_info(new std::vector<pdebug_directory_entry>(_debug_entries)) :
+		return _initialized? boost::make_shared<std::vector<pdebug_directory_entry> >(_debug_entries) :
 			shared_debug_info();
 	}
 
 	DECLSPEC shared_relocations get_relocations() const {
-		return _initialized ? shared_relocations(new std::vector<pimage_base_relocation>(_relocations)) :
+		return _initialized ? boost::make_shared<std::vector<pimage_base_relocation> >(_relocations) :
 			shared_relocations();
 	}
 
 	DECLSPEC shared_tls get_tls() const {
-		return (_initialized && _tls) ? shared_tls(new image_tls_directory(*_tls)) : shared_tls();
+		return (_initialized && _tls) ? boost::make_shared<image_tls_directory>(*_tls) : shared_tls();
 	}
 
 	DECLSPEC shared_certificates get_certificates() const {
-		return _initialized ? shared_certificates(new shared_certificates::element_type(_certificates)) :
-			shared_certificates(new shared_certificates::element_type());
+		return _initialized ? boost::make_shared<shared_certificates::element_type>(_certificates) :
+			boost::make_shared<shared_certificates::element_type>();
 	}
 
 	/**
@@ -367,7 +367,7 @@ private:
 	 *
 	 *	@return	Whether a structure was successfully read.
 	 */
-	bool _read_image_resource_directory(image_resource_directory& dir, FILE* f, unsigned int offset = 0);
+	bool _read_image_resource_directory(image_resource_directory& dir, FILE* f, unsigned int offset = 0) const;
 
 	/**
 	 *	@brief	Finds imported DLLs whose names match a particular regular expression.

@@ -21,9 +21,9 @@ namespace plugin {
 
 Result::Result(const std::string& plugin_name)
 {
-	_data = io::pNode(new io::OutputTreeNode(plugin_name, io::OutputTreeNode::LIST));
-	_data->append(io::pNode(new io::OutputTreeNode("level", NO_OPINION)));
-	_data->append(io::pNode(new io::OutputTreeNode("plugin_output", io::OutputTreeNode::LIST)));
+	_data = boost::make_shared<io::OutputTreeNode>(plugin_name, io::OutputTreeNode::LIST);
+	_data->append(boost::make_shared<io::OutputTreeNode>("level", NO_OPINION));
+	_data->append(boost::make_shared<io::OutputTreeNode>("plugin_output", io::OutputTreeNode::LIST));
 }
 
 // ----------------------------------------------------------------------------
@@ -35,7 +35,7 @@ void Result::set_level(LEVEL level)
 	{
 		PRINT_WARNING << "[Result] A result object has no level node. This should be investigated."
 			<< DEBUG_INFO << std::endl;
-		_data->append(io::pNode(new io::OutputTreeNode("level", level)));
+		_data->append(boost::make_shared<io::OutputTreeNode>("level", level));
 	}
 	else {
 		opt_level->update_value(level);
@@ -51,7 +51,7 @@ void Result::raise_level(LEVEL level)
 	{
 		PRINT_WARNING << "[Result] A result object has no level node. This should be investigated."
 			<< DEBUG_INFO << std::endl;
-		_data->append(io::pNode(new io::OutputTreeNode("level", level)));
+		_data->append(boost::make_shared<io::OutputTreeNode>("level", level));
 	}
 	else
 	{
@@ -83,7 +83,7 @@ void Result::set_summary(const std::string& s)
 {
 	io::pNode opt_summary = _data->find_node("summary");
 	if (!opt_summary) {
-		_data->append(io::pNode(new io::OutputTreeNode("summary", s)));
+		_data->append(boost::make_shared<io::OutputTreeNode>("summary", s));
 	}
 	else {
 		opt_summary->update_value(s);
@@ -112,7 +112,7 @@ io::pNode Result::get_information() const
 	{
 		PRINT_WARNING << "[Result] A result object's output data wasn't initialized!"
 			<< DEBUG_INFO << std::endl;
-		output = io::pNode(new io::OutputTreeNode("plugin_output", io::OutputTreeNode::LIST));
+		output = boost::make_shared<io::OutputTreeNode>("plugin_output", io::OutputTreeNode::LIST);
 		_data->append(output);
 	}
 	return output;
@@ -140,7 +140,7 @@ std::string Result::_create_node_name() const
 *	@brief	Template specialization for nodes.
 */
 template<>
-	DECLSPEC_MANACOMMONS void Result::add_information(io::pNode node)
+DECLSPEC_MANACOMMONS void Result::add_information(io::pNode node)
 {
 	io::pNode output = get_information();
 	output->append(node);

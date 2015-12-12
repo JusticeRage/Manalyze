@@ -21,7 +21,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
-#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 #include <boost/optional.hpp>
 
 #include "threat_level.h" // Contains the LEVEL enum.
@@ -72,7 +72,7 @@ public:
 	void add_information(T t)
 	{
 		io::pNode output = get_information();
-		output->append(io::pNode(new io::OutputTreeNode(_create_node_name(), t, io::OutputTreeNode::HIDE_NAME)));
+		output->append(boost::make_shared<io::OutputTreeNode>(_create_node_name(), t, io::OutputTreeNode::HIDE_NAME));
 	}
 
 	/**
@@ -89,7 +89,7 @@ public:
 	void add_information(const std::string& name, T t)
 	{
 		io::pNode output = get_information();
-		output->append(io::pNode(new io::OutputTreeNode(name, t)));
+		output->append(boost::make_shared<io::OutputTreeNode>(name, t));
 	}
 
 	io::pNode get_output() const { return _data; }

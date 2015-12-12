@@ -62,7 +62,7 @@ std::string read_unicode_string(FILE* f, unsigned int max_bytes)
 	}
 
 	// Convert the wstring into a string
-	boost::shared_array<char> conv = boost::shared_array<char>(new char[s.size() + 1]);
+	auto conv = boost::shared_array<char>(new char[s.size() + 1]);
 	memset(conv.get(), 0, sizeof(char) * (s.size() + 1));
 	wcstombs(conv.get(), s.c_str(), s.size());
 	return std::string(conv.get());
@@ -90,7 +90,7 @@ std::string read_prefixed_unicode_string(FILE* f)
 	s += L'\0';
 
 	// Convert the wstring into a string
-	boost::shared_array<char> conv = boost::shared_array<char>(new char[s.size() + 1]);
+	auto conv = boost::shared_array<char>(new char[s.size() + 1]);
 	memset(conv.get(), 0, sizeof(char) * (s.size() + 1));
 	wcstombs(conv.get(), s.c_str(), s.size());
 	return std::string(conv.get());
@@ -120,7 +120,7 @@ bool read_string_at_offset(FILE* f, unsigned int offset, std::string& out, bool 
 double DECLSPEC shannon_entropy(const std::vector<boost::uint8_t>& bytes)
 {
 	int frequency[256] = { 0 };
-	for (std::vector<boost::uint8_t>::const_iterator it = bytes.begin() ; it != bytes.end() ; ++it)	{
+	for (auto it = bytes.begin() ; it != bytes.end() ; ++it)	{
 		frequency[*it] += 1;
 	}
 

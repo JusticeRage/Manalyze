@@ -62,7 +62,7 @@ void get_certificate_info(const std::wstring& file_path, plugin::pResult result)
  */
 void make_information(const std::string& type, const std::wstring& data, pResult result)
 {
-	boost::shared_array<char> conv = boost::shared_array<char>(new char[data.size() + 1]);
+	auto conv = boost::shared_array<char>(new char[data.size() + 1]);
 	memset(conv.get(), 0, sizeof(char) * (data.size() + 1));
 	wcstombs(conv.get(), data.c_str(), data.size());
 
@@ -91,11 +91,11 @@ public:
 	int get_api_version() override { return 1; }
 
 	pString get_id() const override {
-		return pString(new std::string("authenticode"));
+		return boost::make_shared<std::string>("authenticode");
 	}
 
 	pString get_description() const override {
-		return pString(new std::string("Checks if the digital signature of the PE is valid."));
+		return boost::make_shared<std::string>("Checks if the digital signature of the PE is valid.");
 	}
 
 	pResult analyze(const sg::PE& pe) override
@@ -120,7 +120,6 @@ public:
 
 		GUID guid_verify = WINTRUST_ACTION_GENERIC_VERIFY_V2;
 		int error_code;
-
 
 		int retval = ::WinVerifyTrust(0, &guid_verify, &data);
 		switch (retval)
@@ -206,7 +205,7 @@ void get_publisher_information(PCMSG_SIGNER_INFO info, pResult result)
 {
 	DWORD size;
 	DWORD res;
-	PSPC_SP_OPUS_INFO opus = NULL;
+	PSPC_SP_OPUS_INFO opus = nullptr;
 
 	for (unsigned int i = 0 ; i < info->AuthAttrs.cAttr ; ++i)
 	{
@@ -217,7 +216,7 @@ void get_publisher_information(PCMSG_SIGNER_INFO info, pResult result)
 									  info->AuthAttrs.rgAttr[i].rgValue[0].pbData,	// Structure to decode
 									  info->AuthAttrs.rgAttr[i].rgValue[0].cbData,	// Size of the structure
 									  0,											// Flags
-									  NULL,											// NULL buffer: return the needed size
+									  nullptr,											// NULL buffer: return the needed size
 									  &size);										// Destination of the size
 
 			if (!res)
@@ -247,12 +246,12 @@ void get_publisher_information(PCMSG_SIGNER_INFO info, pResult result)
 				goto END;
 			}
 
-			if (opus->pwszProgramName != NULL)
+			if (opus->pwszProgramName != nullptr)
 			{
 				std::wstring wide_program_name(opus->pwszProgramName);
 				make_information("Program name", wide_program_name, result);
 			}
-			if (opus->pPublisherInfo != NULL)
+			if (opus->pPublisherInfo != nullptr)
 			{
 				std::wstring wide_publisher_info;
 				switch (opus->pPublisherInfo->dwLinkChoice)
@@ -266,7 +265,7 @@ void get_publisher_information(PCMSG_SIGNER_INFO info, pResult result)
 				}
 				make_information("Publisher information", wide_publisher_info, result);
 			}
-			if (opus->pMoreInfo != NULL)
+			if (opus->pMoreInfo != nullptr)
 			{
 				std::wstring wide_more_info;
 				switch (opus->pMoreInfo->dwLinkChoice)
@@ -311,8 +310,8 @@ void GetCertNameString_wrapper(PCCERT_CONTEXT context, DWORD type, DWORD flags, 
 	size = ::CertGetNameString(context,	// The certificate context
 							   type,
 							   flags,
-							   NULL,	// ...I'm not too sure what this is.
-							   NULL,	// Destination buffer is NULL - we want the size for now
+							   nullptr,	// ...I'm not too sure what this is.
+							   nullptr,	// Destination buffer is NULL - we want the size for now
 							   0);		// Size of the destination buffer
 
 	if (size == 0)
@@ -322,7 +321,7 @@ void GetCertNameString_wrapper(PCCERT_CONTEXT context, DWORD type, DWORD flags, 
 	}
 
 	char* name = (char*) malloc(size);
-	if (name == NULL)
+	if (name == nullptr)
 	{
 		result->add_information(make_error("Could not get certificate details: malloc failed."));
 		return;
@@ -331,7 +330,7 @@ void GetCertNameString_wrapper(PCCERT_CONTEXT context, DWORD type, DWORD flags, 
 	if (!::CertGetNameString(context,	// The certificate context
 							 type,
 							 flags,
-							 NULL,		// ...I'm not too sure what this is.
+							 nullptr,	// ...I'm not too sure what this is.
 							 name,		// Destination buffer
 							 size))		// Size of the destination buffer)
 	{
@@ -364,7 +363,7 @@ void get_certificate_details(PCMSG_SIGNER_INFO info, HCERTSTORE hStore, pResult 
 										   0,										// No flags
 										   CERT_FIND_SUBJECT_CERT,					// Find a certificate matching a serial number and an issuer
 										   &cert_info,								// The data to look for
-										   NULL);									// NULL on the first call - used to find the next matching certificate.
+										   nullptr);								// NULL on the first call - used to find the next matching certificate.
 
 	if (!context)
 	{
@@ -385,7 +384,7 @@ void get_certificate_details(PCMSG_SIGNER_INFO info, HCERTSTORE hStore, pResult 
 
 void get_certificate_timestamp(PCMSG_SIGNER_INFO info, pResult result)
 {
-	PCMSG_SIGNER_INFO cs_info = NULL;
+	PCMSG_SIGNER_INFO cs_info = nullptr;
 	FILETIME file_time;
 	SYSTEMTIME system_time;
 	struct tm time;
@@ -405,7 +404,7 @@ void get_certificate_timestamp(PCMSG_SIGNER_INFO info, pResult result)
 									  info->UnauthAttrs.rgAttr[i].rgValue->pbData,	// The data to decode
 									  info->UnauthAttrs.rgAttr[i].rgValue->cbData,	// Size of the data to decode
 									  0,											// Flags
-									  NULL,											// Destination buffer is null - we only want the size
+									  nullptr,										// Destination buffer is null - we only want the size
 									  &size);										// Put the size here
 			if (!res)
 			{
@@ -414,7 +413,7 @@ void get_certificate_timestamp(PCMSG_SIGNER_INFO info, pResult result)
 			}
 
 			cs_info = (PCMSG_SIGNER_INFO) malloc(size);
-			if (cs_info == NULL)
+			if (cs_info == nullptr)
 			{
 				result->add_information(make_error("Could not get certificate timestamp: malloc failed."));
 				return;
@@ -436,7 +435,7 @@ void get_certificate_timestamp(PCMSG_SIGNER_INFO info, pResult result)
 		}
 	}
 
-	if (cs_info == NULL) { // Timestamp unavailable
+	if (cs_info == nullptr) { // Timestamp unavailable
 		goto END;
 	}
 
@@ -487,9 +486,9 @@ void get_certificate_timestamp(PCMSG_SIGNER_INFO info, pResult result)
 
 void get_certificate_info(const std::wstring& file_path, pResult result)
 {
-	HCERTSTORE hStore = NULL;
-	HCRYPTMSG hMsg = NULL;
-	PCMSG_SIGNER_INFO info = NULL;
+	HCERTSTORE hStore = nullptr;
+	HCRYPTMSG hMsg = nullptr;
+	PCMSG_SIGNER_INFO info = nullptr;
 
 	BOOL res = ::CryptQueryObject(CERT_QUERY_OBJECT_FILE,						// The function targets a file (as opposed to a memory structure)
 								  file_path.c_str(),							// The file to query
@@ -501,7 +500,7 @@ void get_certificate_info(const std::wstring& file_path, pResult result)
 								  0,											// ...and we don't care about the format type either.
 								  &hStore,										// Destination of the certificate store
 								  &hMsg,										// Destination of the message
-								  NULL);										// No context
+								  nullptr);										// No context
 	if (!res)
 	{
 		result->add_information(make_error("Could not get certificate information: CryptQueryObject failed."));
@@ -512,7 +511,7 @@ void get_certificate_info(const std::wstring& file_path, pResult result)
 	res = CryptMsgGetParam(hMsg,					// Handle to the cryptographic message
 						   CMSG_SIGNER_INFO_PARAM,	// Information about the message signer
 						   0,						// Index of the required parameter - means nothing here.
-						   NULL,					// NULL buffer: return the needed size.
+						   nullptr,					// NULL buffer: return the needed size.
 						   &info_size);				// Destination of the size
 	if (!res)
 	{
@@ -545,10 +544,10 @@ void get_certificate_info(const std::wstring& file_path, pResult result)
 	END:
 	free(info);
 
-	if (hStore != NULL) {
+	if (hStore != nullptr) {
 		::CertCloseStore(hStore, 0);
 	}
-	if (hMsg != NULL) {
+	if (hMsg != nullptr) {
 		::CryptMsgClose(hMsg);
 	}
 }
@@ -558,9 +557,9 @@ void get_certificate_info(const std::wstring& file_path, pResult result)
 void check_version_info(const sg::PE& pe, pResult res)
 {
 	// Find the VERSION_INFO resource
-	sg::shared_resources resources = pe.get_resources();
+	auto resources = pe.get_resources();
 	sg::pResource version_info;
-	for (sg::shared_resources::element_type::const_iterator it = resources->begin() ; it != resources->end() ; ++it)
+	for (auto it = resources->begin() ; it != resources->end() ; ++it)
 	{
 		if (*(*it)->get_type() == "RT_VERSION")
 		{
@@ -580,11 +579,11 @@ void check_version_info(const sg::PE& pe, pResult res)
 		std::cerr << "Could not load company_names.yara!" << std::endl;
 		return;
 	}
-	yara::const_matches m = y.scan_bytes(*version_info->get_raw_data());
+	auto m = y.scan_bytes(*version_info->get_raw_data());
 	if (m && m->size() > 0)
 	{
 		std::stringstream ss;
-		std::set<std::string> found_strings = m->at(0)->get_found_strings();
+		auto found_strings = m->at(0)->get_found_strings();
 		if (found_strings.size() > 0)
 		{
 			ss << "PE pretends to be from " << *(m->at(0)->get_found_strings().begin())

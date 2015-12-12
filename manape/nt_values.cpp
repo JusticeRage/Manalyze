@@ -450,8 +450,8 @@ const flag_dict WIN_CERTIFICATE_TYPES =
 
 const_shared_strings translate_to_flags(int value, const flag_dict& dict)
 {
-	shared_strings res = shared_strings(new std::vector<std::string>());
-	for (flag_dict::const_iterator it = dict.begin() ; it != dict.end() ; ++it)
+	auto res = boost::make_shared<std::vector<std::string> >();
+	for (auto it = dict.begin() ; it != dict.end() ; ++it)
 	{
 		if ((value & it->second) != 0) { // The flag is present in the value
 			res->push_back(it->first);
@@ -464,18 +464,18 @@ const_shared_strings translate_to_flags(int value, const flag_dict& dict)
 
 pString translate_to_flag(int value, const flag_dict& dict)
 {
-	for (flag_dict::const_iterator it = dict.begin() ; it != dict.end() ; ++it)
+	for (auto it = dict.begin() ; it != dict.end() ; ++it)
 	{
 		if (value == it->second) {
-			return pString(new std::string(it->first));
+			return boost::make_shared<std::string>(it->first);
 		}
 	}
     #ifdef _DEBUG
         std::stringstream ss;
         ss << "UNKNOWN (0x" << std::hex << value << ")";
-	    return pString(new std::string(ss.str()));
+	    return boost::make_shared<std::string>(ss.str());
 	#else
-        return pString(new std::string("UNKNOWN"));
+        return boost::make_shared<std::string>("UNKNOWN");
     #endif
 }
 

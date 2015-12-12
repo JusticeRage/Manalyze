@@ -54,11 +54,11 @@ public:
 	int get_api_version() override { return 1; }
 
 	pString get_id() const override {
-		return pString(new std::string("virustotal"));
+		return boost::make_shared<std::string>("virustotal");
 	}
 
 	pString get_description() const override {
-		return pString(new std::string("Checks existing AV results on VirusTotal."));
+		return boost::make_shared<std::string>("Checks existing AV results on VirusTotal.");
 	}
 
 	pResult analyze(const sg::PE& pe) override
@@ -103,7 +103,7 @@ public:
 		js::Object root = val.get_obj();
 		unsigned int total = 0, positives = 0;
 		std::string scan_date;
-		for (js::Object::const_iterator it = root.begin() ; it != root.end() ; ++it)
+		for (auto it = root.begin() ; it != root.end() ; ++it)
 		{
 			if (it->name_ == "response_code")
 			{
@@ -132,11 +132,11 @@ public:
 			{
 				// Iterate on each AV's report
 				js::Object scans = it->value_.get_obj();
-				for (js::Object::const_iterator it2 = scans.begin() ; it2 != scans.end() ; ++it2)
+				for (auto it2 = scans.begin() ; it2 != scans.end() ; ++it2)
 				{
 					// Iterate on each report's elements
 					js::Object scan = it2->value_.get_obj();
-					for (js::Object::const_iterator it3 = scan.begin() ; it3 != scan.end() ; ++it3)
+					for (auto it3 = scan.begin() ; it3 != scan.end() ; ++it3)
 					{
 						if (it3->name_ == "detected" && !it3->value_.get_bool()) { // Not detected by this AV
 							break; // No result to read
@@ -236,7 +236,7 @@ bool query_virus_total(const std::string& hash, const std::string& api_key, std:
 			PRINT_ERROR << "VirusTotal API access denied. Please verify that your API key is valid." << std::endl;
 		}
 		else {
-			PRINT_ERROR << "VirusTotal query returned with status code " << status_code << std::endl;
+			PRINT_ERROR << "VirusTotal query returned with status code " << status_code << "." << std::endl;
 		}
 		return false;
 	}

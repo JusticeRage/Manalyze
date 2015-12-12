@@ -22,7 +22,7 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include <string>
 #include <set>
 #include <sstream>
-#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/optional.hpp>
 
@@ -119,7 +119,7 @@ public:
 	DECLSPEC_MANACOMMONS OutputTreeNode(const std::string& name, const string_set& strs, display_modifier mod = AFTER_NAME)
 		: _name(new std::string(name)), _type(STRINGS), _modifier(mod)
 	{
-		_strings_data = shared_opt_strings(new boost::optional<strings>(strings(strs.begin(), strs.end())));
+		_strings_data = boost::make_shared<boost::optional<strings> >(strings(strs.begin(), strs.end()));
 	}
 
 	DECLSPEC_MANACOMMONS OutputTreeNode(const std::string& name, plugin::LEVEL level, display_modifier mod = NONE)

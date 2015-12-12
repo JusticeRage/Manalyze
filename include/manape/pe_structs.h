@@ -284,7 +284,8 @@ typedef struct vs_version_info_header_t
 typedef boost::shared_ptr<vs_version_info_header> pvs_version_info_header;
 
 // Non-standard enum. The last two field have been added for convenience.
-typedef boost::shared_ptr<std::pair<std::string, std::string> > ppair;
+typedef std::pair<std::string, std::string> string_pair;
+typedef boost::shared_ptr<string_pair> ppair;
 typedef struct vs_version_info_t
 {
 	vs_version_info_header	Header;

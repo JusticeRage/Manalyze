@@ -19,7 +19,7 @@
 #define _SECTION_H_
 
 #include <stdio.h>
-#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/system/api_config.hpp>
 #include <vector>
@@ -72,7 +72,7 @@ public:
 	 */
 	DECLSPEC shared_bytes get_raw_data() const;
 
-	DECLSPEC pString		 get_name()						const { return pString(new std::string(_name)); }
+	DECLSPEC pString		 get_name()						const { return boost::make_shared<std::string>(_name); }
 	DECLSPEC boost::uint32_t get_virtual_size()				const { return _virtual_size; }
 	DECLSPEC boost::uint32_t get_virtual_address()			const { return _virtual_address; }
 	DECLSPEC boost::uint32_t get_size_of_raw_data()			const { return _size_of_raw_data; }

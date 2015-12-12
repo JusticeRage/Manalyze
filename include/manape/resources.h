@@ -23,7 +23,7 @@
 #include <sstream>
 
 #include <boost/cstdint.hpp>
-#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 #include <boost/shared_array.hpp>
 #include <boost/filesystem.hpp>
 
@@ -51,8 +51,8 @@ public:
 		  _name(name),
 		  _language(language),
 		  _codepage(codepage),
-		  _offset_in_file(offset_in_file),
 		  _size(size),
+		  _offset_in_file(offset_in_file),
 		  _path_to_pe(path_to_pe),
 		  _id(0)
 	{}
@@ -76,8 +76,8 @@ public:
 
 	virtual ~Resource() {}
 
-	DECLSPEC pString			get_type()		const { return pString(new std::string(_type)); }
-	DECLSPEC pString			get_language()	const { return pString(new std::string(_language)); }
+	DECLSPEC pString			get_type()		const { return boost::make_shared<std::string>(_type); }
+	DECLSPEC pString			get_language()	const { return boost::make_shared<std::string>(_language); }
 	DECLSPEC boost::uint32_t	get_codepage()	const { return _codepage; }
 	DECLSPEC boost::uint32_t	get_size()		const { return _size; }
 	DECLSPEC boost::uint32_t	get_id()		const { return _id; }
@@ -87,13 +87,13 @@ public:
 	DECLSPEC pString			get_name()		const
 	{
 		if (_name != "") {
-			return pString(new std::string(_name));
+			return boost::make_shared<std::string>(_name);
 		}
 		else
 		{
 			std::stringstream ss;
 			ss << _id;
-			return pString(new std::string(ss.str()));
+			return boost::make_shared<std::string>(ss.str());
 		}
 	}
 
@@ -124,7 +124,7 @@ public:
 	template <class T>
 	T interpret_as();
 
-	DECLSPEC yara::const_matches detect_filetype();
+	DECLSPEC yara::const_matches detect_filetype() const;
 
 private:
 	static yara::pYara _yara;

@@ -31,7 +31,7 @@ namespace sg
 // Initialize the Yara wrapper used by resource objects
 yara::pYara Resource::_yara = yara::Yara::create();
 
-bool PE::_read_image_resource_directory(image_resource_directory& dir, FILE* f, unsigned int offset)
+bool PE::_read_image_resource_directory(image_resource_directory& dir, FILE* f, unsigned int offset) const
 {
 	if (!_ioh) {
 		return false;
@@ -55,9 +55,9 @@ bool PE::_read_image_resource_directory(image_resource_directory& dir, FILE* f, 
 		return false;
 	}
 
-	for (int i = 0 ; i < dir.NumberOfIdEntries + dir.NumberOfNamedEntries ; ++i)
+	for (auto i = 0 ; i < dir.NumberOfIdEntries + dir.NumberOfNamedEntries ; ++i)
 	{
-		pimage_resource_directory_entry entry = pimage_resource_directory_entry(new image_resource_directory_entry);
+		auto entry = boost::make_shared<image_resource_directory_entry>();
 		size = 2*sizeof(boost::uint32_t);
 		memset(entry.get(), 0, size);
 		if (size != fread(entry.get(), 1, size, f))
@@ -70,9 +70,9 @@ bool PE::_read_image_resource_directory(image_resource_directory& dir, FILE* f, 
 		if (entry->NameOrId & 0x80000000)
 		{
 			// The offset of the string is relative
-			unsigned int offset = _rva_to_offset(_ioh->directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress)
+			auto name_offset = _rva_to_offset(_ioh->directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress)
 				+ (entry->NameOrId & 0x7FFFFFFF);
-			if (!offset || !utils::read_string_at_offset(f, offset, entry->NameStr, true))
+			if (!name_offset || !utils::read_string_at_offset(f, name_offset, entry->NameStr, true))
 			{
 				PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DIRECTORY_ENTRY's name." << DEBUG_INFO_INSIDEPE << std::endl;
 				return false;
@@ -186,22 +186,22 @@ bool PE::_parse_resources(FILE* f)
 				}
 				if (name != "")
 				{
-					res = pResource(new Resource(type,
-												 name,
-												 language,
-												 entry.Codepage,
-												 entry.Size,
-												 offset,
-												 _path));
+					res = boost::make_shared<Resource>(type,
+													   name,
+													   language,
+													   entry.Codepage,
+													   entry.Size,
+													   offset,
+													   _path);
 				}
 				else { // No name: call the constructor with the resource ID instead.
-					res = pResource(new Resource(type,
-												 id,
-												 language,
-												 entry.Codepage,
-												 entry.Size,
-												 offset,
-												 _path));
+					res = boost::make_shared<Resource>(type,
+													  id,
+													  language,
+													  entry.Codepage,
+													  entry.Size,
+													  offset,
+													  _path);
 				}
 
 				_resource_table.push_back(res);
@@ -228,7 +228,7 @@ bool PE::_parse_debug(FILE* f)
 
 	for (unsigned int i = 0 ; i < number_of_entries ; ++i)
 	{
-		pdebug_directory_entry debug = pdebug_directory_entry(new debug_directory_entry);
+		auto debug = boost::make_shared<debug_directory_entry>();
 		memset(debug.get(), 0, size);
 		if (size != fread(debug.get(), 1, size, f))
 		{
@@ -290,11 +290,11 @@ bool PE::_parse_debug(FILE* f)
 
 shared_bytes Resource::get_raw_data() const
 {
-	boost::shared_ptr<std::vector<boost::uint8_t> > res(new std::vector<boost::uint8_t>());
+	auto res = boost::make_shared<std::vector<boost::uint8_t> >();
 
 	FILE* f = _reach_data();
 	unsigned int read_bytes;
-	if (f == NULL) {
+	if (f == nullptr) {
 		goto END;
 	}
 
@@ -314,7 +314,7 @@ shared_bytes Resource::get_raw_data() const
 	}
 
 	END:
-	if (f != NULL) {
+	if (f != nullptr) {
 		fclose(f);
 	}
 	return res;
@@ -362,7 +362,7 @@ std::vector<std::string> Resource::interpret_as()
 	}
 
 	FILE* f = _reach_data();
-	if (f == NULL) {
+	if (f == nullptr) {
 		goto END;
 	}
 
@@ -372,7 +372,7 @@ std::vector<std::string> Resource::interpret_as()
 	}
 
 	END:
-	if (f != NULL) {
+	if (f != nullptr) {
 		fclose(f);
 	}
 	return res;
@@ -387,7 +387,7 @@ DECLSPEC pbitmap Resource::interpret_as()
 		return pbitmap();
 	}
 
-	pbitmap res = pbitmap(new bitmap);
+	auto res = boost::make_shared<bitmap>();
 	unsigned int header_size = 14;
 	res->Magic[0] = 'B';
 	res->Magic[1] = 'M';
@@ -418,11 +418,11 @@ DECLSPEC pgroup_icon_directory Resource::interpret_as()
 		return pgroup_icon_directory();
 	}
 	FILE* f = _reach_data();
-	if (f == NULL) {
+	if (f == nullptr) {
 		return pgroup_icon_directory();
 	}
 
-	pgroup_icon_directory res = pgroup_icon_directory(new group_icon_directory);
+	auto res = boost::make_shared<group_icon_directory>();
 	unsigned int size = sizeof(boost::uint16_t) * 3;
 	if (size != fread(res.get(), 1, size, f))
 	{
@@ -432,7 +432,7 @@ DECLSPEC pgroup_icon_directory Resource::interpret_as()
 
 	for (unsigned int i = 0; i < res->Count; ++i)
 	{
-		pgroup_icon_directory_entry entry = pgroup_icon_directory_entry(new group_icon_directory_entry);
+		auto entry = boost::make_shared<group_icon_directory_entry>();
 
 		memset(entry.get(), 0, sizeof(group_icon_directory_entry));
 
@@ -468,7 +468,7 @@ DECLSPEC pgroup_icon_directory Resource::interpret_as()
 	}
 
 	END:
-	if (f != NULL) {
+	if (f != nullptr) {
 		fclose(f);
 	}
 	return res;
@@ -484,11 +484,11 @@ DECLSPEC pversion_info Resource::interpret_as()
 	}
 
 	FILE* f = _reach_data();
-	if (f == NULL) {
+	if (f == nullptr) {
 		return pversion_info();
 	}
 
-	pversion_info res = pversion_info(new version_info);
+	auto res = boost::make_shared<version_info>();
 	unsigned int bytes_read; // Is calculated by calling ftell before and after reading a structure, and keeping the difference.
 	unsigned int bytes_remaining;
 	unsigned int padding;
@@ -497,13 +497,13 @@ DECLSPEC pversion_info Resource::interpret_as()
 
 	// We are going to read a lot of structures which look like a version info header.
 	// They will all be read into this variable, one at a time.
-	pvs_version_info_header current_structure = pvs_version_info_header(new vs_version_info_header);
+	auto current_structure = boost::make_shared<vs_version_info_header>();
 	if (!parse_version_info_header(res->Header, f))
 	{
 		res.reset();
 		goto END;
 	}
-	res->Value = pfixed_file_info(new fixed_file_info);
+	res->Value = boost::make_shared<fixed_file_info>();
 	memset(res->Value.get(), 0, sizeof(fixed_file_info));
 
 	// 0xFEEF04BD is a magic located at the beginning of the VS_FIXED_FILE_INFO structure.
@@ -589,7 +589,7 @@ DECLSPEC pversion_info Resource::interpret_as()
 		}
 
 		// Add the key/value to our internal representation
-		ppair p = ppair(new std::pair<std::string, std::string>(current_structure->Key, value));
+		auto p = boost::make_shared<string_pair>(current_structure->Key, value);
 		res->StringTable.push_back(p);
 
 		// The next structure is 4byte aligned.
@@ -633,15 +633,15 @@ DECLSPEC shared_bytes Resource::interpret_as() {
 FILE* Resource::_reach_data() const
 {
 	FILE* f = fopen(_path_to_pe.c_str(), "rb");
-	if (f == NULL) { // File has moved, or is already in use.
-		return NULL;
+	if (f == nullptr) { // File has moved, or is already in use.
+		return nullptr;
 	}
 
 	if (!_offset_in_file || fseek(f, _offset_in_file, SEEK_SET))
 	{
 		// Offset is invalid
 		fclose(f);
-		return NULL;
+		return nullptr;
 	}
 
 	return f;
@@ -653,7 +653,7 @@ std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, co
 {
 	std::vector<boost::uint8_t> res;
 
-	if (directory == NULL) {
+	if (directory == nullptr) {
 		return res;
 	}
 
@@ -665,7 +665,7 @@ std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, co
 	{
 		// Locate the RT_ICON with a matching ID.
 		pResource icon = pResource();
-		for (std::vector<pResource>::const_iterator it = resources.begin(); it != resources.end(); ++it)
+		for (auto it = resources.begin(); it != resources.end(); ++it)
 		{
 			if ((*it)->get_id() == directory->Entries[i]->Id)
 			{
@@ -673,7 +673,7 @@ std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, co
 				break;
 			}
 		}
-		if (icon == NULL)
+		if (icon == nullptr)
 		{
 			PRINT_ERROR << "Could not locate RT_ICON with ID " << directory->Entries[i]->Id << "!" << DEBUG_INFO << std::endl;
 			res.clear();
@@ -714,9 +714,9 @@ bool PE::extract_resources(const std::string& destination_folder)
 		return false;
 	}
 
-	std::string base = bfs::basename(_path);
+	auto base = bfs::basename(_path);
 	FILE* f;
-	for (std::vector<pResource>::iterator it = _resource_table.begin() ; it != _resource_table.end() ; ++it)
+	for (auto it = _resource_table.begin() ; it != _resource_table.end() ; ++it)
 	{
 		bfs::path destination_file;
 		std::stringstream ss;
@@ -735,8 +735,8 @@ bool PE::extract_resources(const std::string& destination_folder)
 		{
 			ss << base << "_" << (*it)->get_id() << "_RT_BITMAP.bmp";
 			unsigned int header_size = 2 * sizeof(boost::uint8_t) + 2 * sizeof(boost::uint16_t) + 2 * sizeof(boost::uint32_t);
-			pbitmap bmp = (*it)->interpret_as<pbitmap>();
-			if (bmp == NULL)
+			auto bmp = (*it)->interpret_as<pbitmap>();
+			if (bmp == nullptr)
 			{
 				PRINT_ERROR << "Bitmap " << *(*it)->get_name() << " is malformed!" << std::endl;
 				continue;
@@ -755,28 +755,28 @@ bool PE::extract_resources(const std::string& destination_folder)
 		else if (*(*it)->get_type() == "RT_STRING")
 		{
 			// Append all the strings to the same file.
-			std::vector<std::string> strings = (*it)->interpret_as<std::vector<std::string> >();
+			auto strings = (*it)->interpret_as<std::vector<std::string> >();
 			if (strings.size() == 0) {
 				continue;
 			}
 
 			destination_file = bfs::path(destination_folder) / bfs::path(base + "_RT_STRINGs.txt");
-			FILE* f = fopen(destination_file.string().c_str(), "a+");
-			if (f == NULL)
+			FILE* out = fopen(destination_file.string().c_str(), "a+");
+			if (out == nullptr)
 			{
 				PRINT_ERROR << "Could not open/create " << destination_file << "!" << std::endl;
 				continue;
 			}
 
-			for (std::vector<std::string>::iterator it = strings.begin(); it != strings.end(); ++it)
+			for (auto it2 = strings.begin(); it2 != strings.end(); ++it2)
 			{
-				if ((*it) != "")
+				if ((*it2) != "")
 				{
-					fwrite(it->c_str(), 1, it->size(), f);
-					fputc('\n', f);
+					fwrite(it2->c_str(), 1, it2->size(), out);
+					fputc('\n', out);
 				}
 			}
-			fclose(f);
+			fclose(out);
 			continue;
 		}
 		else // General case
@@ -790,7 +790,7 @@ bool PE::extract_resources(const std::string& destination_folder)
 			}
 
 			// Try to guess the file extension
-			yara::const_matches m = (*it)->detect_filetype();
+			auto m = (*it)->detect_filetype();
 			if (m && m->size() > 0) {
 				ss << "_" << *(*it)->get_type() << m->at(0)->operator[]("extension");
 			}
@@ -809,7 +809,7 @@ bool PE::extract_resources(const std::string& destination_folder)
 
 		destination_file = bfs::path(destination_folder) / bfs::path(ss.str());
 		f = fopen(destination_file.string().c_str(), "wb+");
-		if (f == NULL)
+		if (f == nullptr)
 		{
 			PRINT_ERROR << "Could not open " << destination_file << "." << DEBUG_INFO << std::endl;
 			return false;
@@ -828,7 +828,7 @@ bool PE::extract_resources(const std::string& destination_folder)
 
 // ----------------------------------------------------------------------------
 
-yara::const_matches Resource::detect_filetype()
+yara::const_matches Resource::detect_filetype() const
 {
 	if (_yara->load_rules("yara_rules/magic.yara"))
 	{

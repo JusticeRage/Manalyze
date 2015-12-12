@@ -24,7 +24,7 @@
 #include <sstream>
 #include <boost/assign.hpp>
 #include <boost/system/api_config.hpp>
-#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 
 #if defined BOOST_WINDOWS_API && !defined DECLSPEC
 	#ifdef MANAPE_EXPORT

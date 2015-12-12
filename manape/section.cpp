@@ -56,14 +56,14 @@ Section::Section(const image_section_header& header,
 
 shared_bytes Section::get_raw_data() const
 {
-	boost::shared_ptr<std::vector<boost::uint8_t> > res(new std::vector<boost::uint8_t>());
+	auto res = boost::make_shared<std::vector<boost::uint8_t> >();
 	if (_size_of_raw_data == 0)
 	{
 		PRINT_WARNING << "Section " << _name << " has a size of 0!" << DEBUG_INFO << std::endl;
 		return res;
 	}
 	FILE* f = fopen(_path.c_str(), "rb");
-	if (f == NULL || fseek(f, _pointer_to_raw_data, SEEK_SET))
+	if (f == nullptr || fseek(f, _pointer_to_raw_data, SEEK_SET))
 	{
 		fclose(f);
 		return res;
@@ -107,8 +107,7 @@ bool is_address_in_section(boost::uint64_t rva, sg::pSection section, bool check
 sg::pSection find_section(unsigned int rva, const std::vector<sg::pSection>& section_list)
 {
 	sg::pSection res = sg::pSection();
-	std::vector<sg::pSection>::const_iterator it;
-	for (it = section_list.begin() ; it != section_list.end() ; ++it)
+	for (auto it = section_list.begin() ; it != section_list.end() ; ++it)
 	{
 		if (is_address_in_section(rva, *it))
 		{
@@ -119,7 +118,7 @@ sg::pSection find_section(unsigned int rva, const std::vector<sg::pSection>& sec
 
 	if (!res) // VirtualSize may be erroneous. Check with RawSizeofData.
 	{
-		for (it = section_list.begin() ; it != section_list.end() ; ++it)
+		for (auto it = section_list.begin() ; it != section_list.end() ; ++it)
 		{
 			if (is_address_in_section(rva, *it, true))
 			{
