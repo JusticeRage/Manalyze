@@ -232,6 +232,23 @@ std::string uint64_to_version_number(boost::uint32_t msbytes, boost::uint32_t ls
 */
 std::string timestamp_to_string(boost::uint64_t epoch_timestamp);
 
-} // !namespace sg
+// ----------------------------------------------------------------------------
+
+/**
+*	@brief	Escapes problematic characters from a string.
+*
+*	This is especially useful for JSON output, because paths contained in debug
+*	information insert unescaped backslashes which cause the resulting JSON to
+*	be invalid.
+*
+*	WARNING: Single quotes are NOT escaped.
+*
+*	@param const std::string& s The string to escape.
+*
+*	@returns The escaped string.
+*/
+std::string escape(const std::string& s);
+
+} // !namespace io
 
 #endif // !_OUTPUT_FORMATTER_H_

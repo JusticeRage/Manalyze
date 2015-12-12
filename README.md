@@ -38,6 +38,12 @@ $> cd bin && ./manalyze --version
 - `git clone https://github.com/JusticeRage/Manalyze.git && cd Manalyze && cmake .`
 - A Visual Studio project `manalyze.sln` should have appeared in the `Manalyze` folder!
 
+### Offline builds
+If you need to build Manalyze on a machine with no internet access, you have to manually check out the following projects:
+- [Yara](https://github.com/JusticeRage/yara/archive/master.zip)
+- [hash-library](https://github.com/JusticeRage/hash-library/archive/master.zip)
+Place the two folders in the `external` folder as `external/yara` and `external/hash-library` respectively. Then run `cmake . -DGitHub=OFF` and continue as you normally would.
+
 ### Binaries
 [Windows x86 binaries](http://manalyzer.org/static/manalyze.rar)
 

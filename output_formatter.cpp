@@ -17,6 +17,8 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "output_formatter.h"
 
+namespace karma = boost::spirit::karma;
+
 namespace io {
 
 // ----------------------------------------------------------------------------
@@ -285,7 +287,7 @@ void JsonFormatter::_dump_node(std::ostream& sink, pNode node, int level, bool a
 		case OutputTreeNode::STRINGS:
 		{ // Separate scope because variable 'strs' is declared in here.
 			if (print_name) {
-				sink << std::string(level, '\t') << "\"" << utils::escape(*node->get_name()) << "\": [" << std::endl;
+				sink << std::string(level, '\t') << "\"" << io::escape(*node->get_name()) << "\": [" << std::endl;
 			}
 			else {
 				sink << std::string(level, '\t') << "[" << std::endl;
@@ -295,7 +297,7 @@ void JsonFormatter::_dump_node(std::ostream& sink, pNode node, int level, bool a
 			{
 				std::string str = *it;
 				boost::trim(str); // Delete unnecessary whitespace
-				sink << std::string(level + 1, '\t') << "\"" << utils::escape(str) << "\"";
+				sink << std::string(level + 1, '\t') << "\"" << io::escape(str) << "\"";
 				if (it != strs->end() - 1) {
 					sink << ",";
 				}
@@ -308,7 +310,7 @@ void JsonFormatter::_dump_node(std::ostream& sink, pNode node, int level, bool a
 		{ // Separate scope because variable 'children' is declared in here.
 
 			if (print_name) {
-				sink << std::string(level, '\t') << "\"" << utils::escape(*node->get_name()) << "\": {" << std::endl;
+				sink << std::string(level, '\t') << "\"" << io::escape(*node->get_name()) << "\": {" << std::endl;
 			}
 			else {
 				sink << std::string(level, '\t') << "{" << std::endl;
@@ -324,18 +326,18 @@ void JsonFormatter::_dump_node(std::ostream& sink, pNode node, int level, bool a
 			data = *node->to_string();
 			boost::trim(data); // Delete unnecessary whitespace
 			if (print_name) {
-				sink << std::string(level, '\t') << "\"" << utils::escape(*node->get_name()) << "\": \""
-					 << utils::escape(data) << "\"";
+				sink << std::string(level, '\t') << "\"" << io::escape(*node->get_name()) << "\": \""
+					 << io::escape(data) << "\"";
 			}
 			else {
-				sink << std::string(level, '\t') << "\"" << utils::escape(data) << "\"";
+				sink << std::string(level, '\t') << "\"" << io::escape(data) << "\"";
 			}
 			break;
 		default:
-			data = utils::escape(*node->to_string());
+			data = io::escape(*node->to_string());
 			boost::trim(data); // Delete unnecessary whitespace
 			if (print_name) {
-				sink << std::string(level, '\t') << "\"" << utils::escape(*node->get_name()) << "\": " << data;
+				sink << std::string(level, '\t') << "\"" << io::escape(*node->get_name()) << "\": " << data;
 			}
 			else {
 				sink << std::string(level, '\t') << data;
@@ -367,6 +369,54 @@ std::string timestamp_to_string(boost::uint64_t epoch_timestamp)
 	ss.imbue(loc);
 	ss << boost::posix_time::from_time_t(epoch_timestamp);
 	return ss.str();
+}
+
+// ----------------------------------------------------------------------------
+
+// Source: http://svn.boost.org/svn/boost/trunk/libs/spirit/example/karma/escaped_string.cpp
+template <typename OutputIterator>
+struct escaped_string
+	: karma::grammar<OutputIterator, std::string()>
+{
+	escaped_string()
+		: escaped_string::base_type(esc_str)
+	{
+		// We allow "'" because it will be used in messages (i.e. [... don't ...]).
+		// We don't care if those are not escaped because they will be printed between double quotes
+		// in JSON strings.
+		esc_char.add('\a', "\\a")('\b', "\\b")('\f', "\\f")('\n', "\\n")
+			('\r', "\\r")('\t', "\\t")('\v', "\\v")('\\', "\\\\")
+			('\"', "\\\"");
+
+		// JSON fails miserably on non-printable characters, but
+		// at the same time doesn't support the \x notation.
+		esc_str = *(esc_char | karma::print | "[0x" << karma::hex << "]");
+	}
+
+	karma::rule<OutputIterator, std::string()> esc_str;
+	karma::symbols<char, char const*> esc_char;
+};
+
+
+// ----------------------------------------------------------------------------
+
+std::string escape(const std::string& s)
+{
+	typedef std::back_insert_iterator<std::string> sink_type;
+
+	std::string generated;
+	sink_type sink(generated);
+
+	escaped_string<sink_type> g;
+	if (!karma::generate(sink, g, s))
+	{
+		PRINT_WARNING << "Could not escape \"" << s << "!" << std::endl;
+		return "\"(ERROR)\"";
+	}
+	else
+	{
+		return generated;
+	}
 }
 
 } // !namespace io

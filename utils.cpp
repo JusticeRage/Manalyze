@@ -19,8 +19,6 @@
 
 namespace utils {
 
-namespace karma = boost::spirit::karma;
-
 std::string read_ascii_string(FILE* f, unsigned int max_bytes)
 {
 	std::string s = std::string();
@@ -138,55 +136,6 @@ double DECLSPEC shannon_entropy(const std::vector<boost::uint8_t>& bytes)
 	}
 
 	return res;
-}
-
-// ----------------------------------------------------------------------------
-
-// Source: http://svn.boost.org/svn/boost/trunk/libs/spirit/example/karma/escaped_string.cpp
-template <typename OutputIterator>
-struct escaped_string
-		: karma::grammar<OutputIterator, std::string()>
-{
-	escaped_string()
-			: escaped_string::base_type(esc_str)
-	{
-        // We allow "'" because it will be used in messages (i.e. [... don't ...]).
-        // We don't care if those are not escaped because they will be printed between double quotes
-        // in JSON strings.
-		esc_char.add('\a', "\\a")('\b', "\\b")('\f', "\\f")('\n', "\\n")
-				('\r', "\\r")('\t', "\\t")('\v', "\\v")('\\', "\\\\")
-				('\"', "\\\"");
-
-		// JSON fails miserably on non-printable characters, but
-		// at the same time doesn't support the \x notation.
-		esc_str =   *(esc_char | karma::print | "[0x" << karma::hex << "]");
-	}
-
-	karma::rule<OutputIterator, std::string()> esc_str;
-	karma::symbols<char, char const*> esc_char;
-};
-
-
-
-// ----------------------------------------------------------------------------
-
-std::string DECLSPEC escape(const std::string& s)
-{
-    typedef std::back_insert_iterator<std::string> sink_type;
-
-    std::string generated;
-    sink_type sink(generated);
-
-    escaped_string<sink_type> g;
-    if (!karma::generate(sink, g, s))
-    {
-        PRINT_WARNING << "Could not escape \"" << s << "!" << std::endl;
-        return "\"(ERROR)\"";
-    }
-    else
-    {
-        return generated;
-    }
 }
 
 }

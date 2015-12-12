@@ -32,7 +32,6 @@
 #include <boost/shared_array.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/system/api_config.hpp>
-#include <boost/spirit/include/karma.hpp>
 
 #include "hash-library/hashes.h"
 
@@ -115,23 +114,6 @@ bool read_string_at_offset(FILE* f, unsigned int offset, std::string& out, bool 
  *	@return	The entropy of the byte stream.
  */
 double DECLSPEC shannon_entropy(const std::vector<boost::uint8_t>& bytes);
-
-// ----------------------------------------------------------------------------
-
-/**
- *	@brief	Escapes problematic characters from a string.
- *
- *	This is especially useful for JSON output, because paths contained in debug
- *	information insert unescaped backslashes which cause the resulting JSON to
- *	be invalid.
- *
- *	WARNING: Single quotes are NOT escaped.
- *
- *	@param const std::string& s The string to escape.
- *
- *	@returns The escaped string.
- */
-std::string DECLSPEC escape(const std::string& s);
 
 }
 
