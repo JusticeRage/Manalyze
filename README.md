@@ -20,9 +20,10 @@ Manalyze was written in C++ for Windows and Linux and is released under the term
 ## How to build
 There are few things I hate more than checking out an open-source project and spending two hours trying to build it. This is why I did my best to make Manalyze as easy to build as possible. If these few lines don't work for you, then I have failed at my job and you should drop me a line so I can fix this.
 
-### On Linux (tested on Debian Jessie)
+### On Linux and BSD (tested on Debian Jessie and FreeBSD 10.2)
 ```
 $> [sudo or as root] apt-get install libboost-regex-dev libboost-program-options-dev libboost-system-dev  libboost-filesystem-dev build-essential cmake
+$> [alternatively, also sudo or as root] pkg install boost-libs-1.55.0_8 cmake
 $> git clone https://github.com/JusticeRage/Manalyze.git && cd Manalyze
 $> cmake .
 $> make
@@ -50,6 +51,10 @@ Place the two folders in the `external` folder as `external/yara` and `external/
 
 All the binaries in this archive are signed with a certificate ‎presenting the following fingerprint: `26fc24c12b2d84f77615cf6299e3e4ca4f3878fc`.
 
+## Generating ClamAV rules
+Since ClamAV signatures are voluminous and updated regularly, it didn't make a lot of sense to distribute them from GitHub or with the binary. When you try using the ClamAV plugin for the first time, you will likely encounter the following error message: `[!] Error: Could not load yara_rules/clamav.yara`. In order to generate them, simply run the `update_clamav_signatures.py` Python script located in `bin/yara_rules`.
+
+Run the script whenever you want to refresh the signatures.
 
 ## Usage
 

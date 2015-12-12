@@ -74,11 +74,16 @@ if (WIN32)
 			add_library(plugin_authenticode SHARED plugins/plugin_authenticode.cpp)
 			target_link_libraries(plugin_authenticode manape hash-library manacommons ${Boost_LIBRARIES})
 else()
+			string (REGEX MATCH "BSD" IS_BSD ${CMAKE_SYSTEM_NAME}) # Detect if we are compiling on a BSD system.
+
             if (CMAKE_BUILD_TYPE MATCHES "[Dd][Ee][Bb][Uu][Gg]")
                 add_definitions("/D_DEBUG")
 				set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
             endif()
-			target_link_libraries(manalyze dl)
+
+			if (NOT IS_BSD) # No need to link against dl on BSD.
+				target_link_libraries(manalyze dl)
+			endif()
 			set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif()
 

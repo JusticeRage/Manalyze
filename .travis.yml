@@ -15,4 +15,4 @@ before_script:
   - cmake .
 script:
   - make
-  - bin/manalyze
+  - bin/manalyze --version
