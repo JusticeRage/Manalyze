@@ -21,6 +21,7 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include <set>
 #include <vector>
 #include <boost/algorithm/string/predicate.hpp>
+#include <boost/make_shared.hpp>
 
 #include "output_formatter.h"
 #include "manape/pe.h"
@@ -28,21 +29,21 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include "hash-library/hashes.h"
 #include "hash-library/ssdeep.h"
 
-namespace sg
+namespace mana
 {
 
-void dump_dos_header(const sg::PE& pe, io::OutputFormatter& formatter);
-void dump_pe_header(const sg::PE& pe, io::OutputFormatter& formatter);
-void dump_image_optional_header(const sg::PE& pe, io::OutputFormatter& formatter);
-void dump_section_table(const sg::PE& pe, io::OutputFormatter& formatter, bool compute_hashes = false);
-void dump_imports(const sg::PE& pe, io::OutputFormatter& formatter);
-void dump_exports(const sg::PE& pe, io::OutputFormatter& formatter);
-void dump_resources(const sg::PE& pe, io::OutputFormatter& formatter, bool compute_hashes = false);
-void dump_version_info(const sg::PE& pe, io::OutputFormatter& formatter);
-void dump_debug_info(const sg::PE& pe, io::OutputFormatter& formatter);
-void dump_tls(const sg::PE& pe, io::OutputFormatter& formatter);
-void dump_summary(const sg::PE& pe, io::OutputFormatter& formatter);
-void dump_hashes(const sg::PE& pe, io::OutputFormatter& formatter);
+void dump_dos_header(const mana::PE& pe, io::OutputFormatter& formatter);
+void dump_pe_header(const mana::PE& pe, io::OutputFormatter& formatter);
+void dump_image_optional_header(const mana::PE& pe, io::OutputFormatter& formatter);
+void dump_section_table(const mana::PE& pe, io::OutputFormatter& formatter, bool compute_hashes = false);
+void dump_imports(const mana::PE& pe, io::OutputFormatter& formatter);
+void dump_exports(const mana::PE& pe, io::OutputFormatter& formatter);
+void dump_resources(const mana::PE& pe, io::OutputFormatter& formatter, bool compute_hashes = false);
+void dump_version_info(const mana::PE& pe, io::OutputFormatter& formatter);
+void dump_debug_info(const mana::PE& pe, io::OutputFormatter& formatter);
+void dump_tls(const mana::PE& pe, io::OutputFormatter& formatter);
+void dump_summary(const mana::PE& pe, io::OutputFormatter& formatter);
+void dump_hashes(const mana::PE& pe, io::OutputFormatter& formatter);
 
 } // !namespace sg
 

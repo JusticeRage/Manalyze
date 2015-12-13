@@ -38,7 +38,7 @@
 	#define DECLSPEC
 #endif
 
-namespace sg {
+namespace mana {
 
 typedef boost::shared_ptr<std::string> pString;
 typedef boost::shared_ptr<const std::vector<boost::uint8_t> > shared_bytes;
@@ -114,7 +114,7 @@ typedef boost::shared_ptr<Section> pSection;
  *
  *	@return	Whether the RVA is between the bounds of the section.
  */
-bool DECLSPEC is_address_in_section(boost::uint64_t rva, sg::pSection section, bool check_raw_size = false);
+bool DECLSPEC is_address_in_section(boost::uint64_t rva, mana::pSection section, bool check_raw_size = false);
 
 /**
  *	@brief	Finds the section containing a given RVA.
@@ -124,7 +124,7 @@ bool DECLSPEC is_address_in_section(boost::uint64_t rva, sg::pSection section, b
  *
  *	@return	A pointer to the section containing the input address. NULL if no sections match.
  */
-sg::pSection DECLSPEC find_section(unsigned int rva, const std::vector<sg::pSection>& section_list);
+mana::pSection DECLSPEC find_section(unsigned int rva, const std::vector<mana::pSection>& section_list);
 
 } // !namespace sg
 

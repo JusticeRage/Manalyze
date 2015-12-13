@@ -51,7 +51,7 @@ public:
 	 *	@return	A shared pointer to a result object, representing the information obtained
 	 *			by the plugin.
 	 */
-	virtual pResult analyze(const sg::PE& pe) = 0;
+	virtual pResult analyze(const mana::PE& pe) = 0;
 
 	/**
 	 *	@brief	Returns the API version for which this plugin was compiled.

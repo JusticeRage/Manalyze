@@ -61,7 +61,7 @@ public:
 		return boost::make_shared<std::string>("Checks existing AV results on VirusTotal.");
 	}
 
-	pResult analyze(const sg::PE& pe) override
+	pResult analyze(const mana::PE& pe) override
 	{
 		pResult res = create_result();
 

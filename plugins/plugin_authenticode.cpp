@@ -77,10 +77,10 @@ void make_information(const std::string& type, const std::wstring& data, pResult
  *	The idea behind this check is that if the binary is unsigned but pretends to come from
  *	Microsoft, Adobe, etc. then it is very likely a malware.
  *
- *	@param	const sg::PE& pe The PE to analyze.
+ *	@param	const mana::PE& pe The PE to analyze.
  *	@param	pResult res The result to update if something is found.
  */
-void check_version_info(const sg::PE& pe, pResult res);
+void check_version_info(const mana::PE& pe, pResult res);
 
 /**
  *	@brief	This plugin uses the Windows API to verify the digital signature of a PE.
@@ -98,7 +98,7 @@ public:
 		return boost::make_shared<std::string>("Checks if the digital signature of the PE is valid.");
 	}
 
-	pResult analyze(const sg::PE& pe) override
+	pResult analyze(const mana::PE& pe) override
 	{
 		pResult res = create_result();
 
@@ -554,11 +554,11 @@ void get_certificate_info(const std::wstring& file_path, pResult result)
 
 // ----------------------------------------------------------------------------
 
-void check_version_info(const sg::PE& pe, pResult res)
+void check_version_info(const mana::PE& pe, pResult res)
 {
 	// Find the VERSION_INFO resource
 	auto resources = pe.get_resources();
-	sg::pResource version_info;
+	mana::pResource version_info;
 	for (auto it = resources->begin() ; it != resources->end() ; ++it)
 	{
 		if (*(*it)->get_type() == "RT_VERSION")

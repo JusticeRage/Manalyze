@@ -35,7 +35,7 @@ public:
 	/**
 	 *	@brief	Helper function designed to generically prepare a result based on a Yara scan.
 	 *
-	 *	@param	const sg::PE& pe The PE to scan.
+	 *	@param	const mana::PE& pe The PE to scan.
 	 *	const std::string& summary The summary to set if there is a match.
 	 *	Result::LEVEL level The threat level to set if there is a match.
 	 *	const std::string& meta_field_name The meta field name (of the yara rule) to query to
@@ -44,7 +44,7 @@ public:
 	 *
 	 *	@return	A pResult detailing the findings of the scan.
 	 */
-	pResult scan(const sg::PE& pe, const std::string& summary, LEVEL level, const std::string& meta_field_name, bool show_strings = false)
+	pResult scan(const mana::PE& pe, const std::string& summary, LEVEL level, const std::string& meta_field_name, bool show_strings = false)
 	{
 		pResult res = create_result();
 		if (!_load_rules()) {
@@ -101,7 +101,7 @@ class ClamavPlugin : public YaraPlugin
 public:
 	ClamavPlugin() : YaraPlugin("yara_rules/clamav.yara") {}
 
-	pResult analyze(const sg::PE& pe) override {
+	pResult analyze(const mana::PE& pe) override {
 		return scan(pe, "Matching ClamAV signature(s):", MALICIOUS, "signature");
 	}
 
@@ -119,7 +119,7 @@ class CompilerDetectionPlugin : public YaraPlugin
 public:
 	CompilerDetectionPlugin() : YaraPlugin("yara_rules/compilers.yara") {}
 
-	pResult analyze(const sg::PE& pe) override {
+	pResult analyze(const mana::PE& pe) override {
 		return scan(pe, "Matching compiler(s):", NO_OPINION, "description");
 	}
 
@@ -137,7 +137,7 @@ class PEiDPlugin : public YaraPlugin
 public:
 	PEiDPlugin() : YaraPlugin("yara_rules/peid.yara") {}
 
-	pResult analyze(const sg::PE& pe) {
+	pResult analyze(const mana::PE& pe) {
 		return scan(pe, "PEiD Signature:", SUSPICIOUS, "packer_name");
 	}
 
@@ -156,7 +156,7 @@ class SuspiciousStringsPlugin : public YaraPlugin
 public:
 	SuspiciousStringsPlugin() : YaraPlugin("yara_rules/suspicious_strings.yara") {}
 
-	pResult analyze(const sg::PE& pe) override {
+	pResult analyze(const mana::PE& pe) override {
 		return scan(pe, "Strings found in the binary may indicate undesirable behavior:", SUSPICIOUS, "description", true);
 	}
 
@@ -174,7 +174,7 @@ class FindCryptPlugin : public YaraPlugin
 public:
 	FindCryptPlugin() : YaraPlugin("yara_rules/findcrypt.yara") {}
 
-	pResult analyze(const sg::PE& pe) override
+	pResult analyze(const mana::PE& pe) override
 	{
 		pResult res = scan(pe, "Cryptographic algorithms detected in the binary:", NO_OPINION, "description");
 

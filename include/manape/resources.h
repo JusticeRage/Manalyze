@@ -31,7 +31,7 @@
 
 #include "manape/utils.h"
 
-namespace sg
+namespace mana
 {
 
 typedef boost::shared_ptr<std::string> pString;

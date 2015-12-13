@@ -24,7 +24,7 @@
 #include <boost/cstdint.hpp>
 #include <boost/shared_ptr.hpp>
 
-namespace sg
+namespace mana
 {
 
 typedef struct dos_header_t

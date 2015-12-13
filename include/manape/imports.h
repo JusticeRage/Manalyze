@@ -39,7 +39,7 @@ namespace hash {
  *
  *	Implementation is located in imports.cpp.
  */
-DECLSPEC pString hash_imports(const sg::PE& pe);
+DECLSPEC pString hash_imports(const mana::PE& pe);
 
 } //namespace hash
 

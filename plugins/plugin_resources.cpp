@@ -41,7 +41,7 @@ public:
 		return pString(new std::string("Analyzes the program's resources."));
 	}
 
-	pResult analyze(const sg::PE& pe) override
+	pResult analyze(const mana::PE& pe) override
 	{
 		pResult res = create_result();
 		yara::Yara y;
@@ -50,9 +50,9 @@ public:
 			return res;
 		}
 
-		sg::shared_resources r = pe.get_resources();
+		mana::shared_resources r = pe.get_resources();
 		unsigned int size = 0;
-		for (sg::shared_resources::element_type::const_iterator it = r->begin() ; it != r->end() ; ++it)
+		for (mana::shared_resources::element_type::const_iterator it = r->begin() ; it != r->end() ; ++it)
 		{
 			size += (*it)->get_size();
 			yara::const_matches matches = y.scan_bytes(*(*it)->get_raw_data());

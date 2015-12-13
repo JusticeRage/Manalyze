@@ -25,7 +25,7 @@
 namespace bfs = boost::filesystem;
 
 
-namespace sg
+namespace mana
 {
 
 // Initialize the Yara wrapper used by resource objects
@@ -840,4 +840,4 @@ yara::const_matches Resource::detect_filetype() const
 	}
 }
 
-} // !namespace sg
+} // !namespace mana

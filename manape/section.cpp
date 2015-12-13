@@ -17,7 +17,7 @@
 
 #include "manape/section.h"
 
-namespace sg
+namespace mana
 {
 
 Section::Section(const image_section_header& header,
@@ -92,7 +92,7 @@ shared_bytes Section::get_raw_data() const
 
 // ----------------------------------------------------------------------------
 
-bool is_address_in_section(boost::uint64_t rva, sg::pSection section, bool check_raw_size)
+bool is_address_in_section(boost::uint64_t rva, mana::pSection section, bool check_raw_size)
 {
 	if (!check_raw_size) {
 		return section->get_virtual_address() <= rva && rva < section->get_virtual_address() + section->get_virtual_size();
@@ -104,9 +104,9 @@ bool is_address_in_section(boost::uint64_t rva, sg::pSection section, bool check
 
 // ----------------------------------------------------------------------------
 
-sg::pSection find_section(unsigned int rva, const std::vector<sg::pSection>& section_list)
+mana::pSection find_section(unsigned int rva, const std::vector<mana::pSection>& section_list)
 {
-	sg::pSection res = sg::pSection();
+	mana::pSection res = mana::pSection();
 	for (auto it = section_list.begin() ; it != section_list.end() ; ++it)
 	{
 		if (is_address_in_section(rva, *it))
@@ -131,4 +131,4 @@ sg::pSection find_section(unsigned int rva, const std::vector<sg::pSection>& sec
 	return res;
 }
 
-} // !namespace sg
+} // !namespace mana

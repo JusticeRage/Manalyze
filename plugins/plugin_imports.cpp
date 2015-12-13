@@ -53,7 +53,7 @@ std::string temporary_files = "GetTempPath(A|W)|(Create|Write)File(A|W)";
  *	@brief	Checks the presence of some functions in the PE and updates the
  *			result accordingly.
  *
- *	@param	const sg::PE& pe The PE in which the imports should be looked for.
+ *	@param	const mana::PE& pe The PE in which the imports should be looked for.
  *	@param	const std::string& regex The regular expression against which the
  *			imports should be matched.
  *	@param	Result::LEVEL level The severity level to set if the imports are found.
@@ -63,14 +63,14 @@ std::string temporary_files = "GetTempPath(A|W)|(Create|Write)File(A|W)";
  *			be found before updating the result.
  *	@param	pResult res The result which will receive the information.
  */
-void check_functions(const sg::PE& pe,
+void check_functions(const mana::PE& pe,
 					 const std::string& regex,
 					 LEVEL level,
 					 const std::string& description,
 					 REQUIREMENT req,
 					 pResult res)
 {
-	sg::const_shared_strings found_imports = pe.find_imports(regex);
+	mana::const_shared_strings found_imports = pe.find_imports(regex);
 	if (found_imports->size() >= static_cast<unsigned int>(req))  // Safe cast: these are positive enum indexes
 	{
 		res->raise_level(level);
@@ -98,7 +98,7 @@ public:
 		return pString(new std::string("Looks for suspicious imports."));
 	}
 
-	pResult analyze(const sg::PE& pe) override
+	pResult analyze(const mana::PE& pe) override
 	{
 		pResult res = create_result();
 		check_functions(pe, dynamic_import, NO_OPINION, "[!] The program may be hiding some of its imports", AT_LEAST_TWO, res);

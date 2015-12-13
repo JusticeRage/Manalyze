@@ -18,7 +18,7 @@
 #include "manape/pe.h"
 #include "manape/imports.h" // Non-member functions related to imports
 
-namespace sg {
+namespace mana {
 
 bool PE::_parse_imports(FILE* f)
 {
@@ -243,11 +243,11 @@ const_shared_strings PE::find_imports(const std::string& function_name_regexp,
 	return destination;
 }
 
-} // !namespace sg
+} // !namespace mana
 
 namespace hash {
 
-pString hash_imports(const sg::PE& pe)
+pString hash_imports(const mana::PE& pe)
 {
 	std::stringstream ss;
 

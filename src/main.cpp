@@ -282,45 +282,45 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
  *	@param	const std::vector<std::string>& categories The types of information to dump.
  *			For the list of accepted categories, refer to the program help or the source
  *			below.
- *	@param	const sg::PE& pe The PE to dump.
+ *	@param	const mana::PE& pe The PE to dump.
  *	@param	bool compute_hashes Whether hashes should be calculated.
  */
-void handle_dump_option(io::OutputFormatter& formatter, const std::vector<std::string>& categories, bool compute_hashes, const sg::PE& pe)
+void handle_dump_option(io::OutputFormatter& formatter, const std::vector<std::string>& categories, bool compute_hashes, const mana::PE& pe)
 {
 	bool dump_all = (std::find(categories.begin(), categories.end(), "all") != categories.end());
 	if (dump_all || std::find(categories.begin(), categories.end(), "summary") != categories.end()) {
-		sg::dump_summary(pe, formatter);
+		mana::dump_summary(pe, formatter);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "dos") != categories.end())
 	{
-		sg::dump_dos_header(pe, formatter);
+		mana::dump_dos_header(pe, formatter);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "pe") != categories.end()) {
-		sg::dump_pe_header(pe, formatter);
+		mana::dump_pe_header(pe, formatter);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "opt") != categories.end()) {
-		sg::dump_image_optional_header(pe, formatter);
+		mana::dump_image_optional_header(pe, formatter);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "sections") != categories.end()) {
-		sg::dump_section_table(pe, formatter, compute_hashes);
+		mana::dump_section_table(pe, formatter, compute_hashes);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "imports") != categories.end()) {
-		sg::dump_imports(pe, formatter);
+		mana::dump_imports(pe, formatter);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "exports") != categories.end()) {
-		sg::dump_exports(pe, formatter);
+		mana::dump_exports(pe, formatter);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "resources") != categories.end()) {
-		sg::dump_resources(pe, formatter, compute_hashes);
+		mana::dump_resources(pe, formatter, compute_hashes);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "version") != categories.end()) {
-		sg::dump_version_info(pe, formatter);
+		mana::dump_version_info(pe, formatter);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "debug") != categories.end()) {
-		sg::dump_debug_info(pe, formatter);
+		mana::dump_debug_info(pe, formatter);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "tls") != categories.end()) {
-		sg::dump_tls(pe, formatter);
+		mana::dump_tls(pe, formatter);
 	}
 }
 
@@ -332,12 +332,12 @@ void handle_dump_option(io::OutputFormatter& formatter, const std::vector<std::s
  *	@param	io::OutputFormatter& formatter The object which will recieve the output.
  *	@param	const std::vector<std::string>& selected The names of the selected plugins.
  *	@param	const config& conf The configuration of the plugins.
- *	@param	const sg::PE& pe The PE to analyze.
+ *	@param	const mana::PE& pe The PE to analyze.
  */
 void handle_plugins_option(io::OutputFormatter& formatter,
 						   const std::vector<std::string>& selected,
 						   const config& conf,
-						   const sg::PE& pe)
+						   const mana::PE& pe)
 {
 	bool all_plugins = std::find(selected.begin(), selected.end(), "all") != selected.end();
 	std::vector<plugin::pIPlugin> plugins = plugin::PluginManager::get_instance().get_plugins();
@@ -455,7 +455,7 @@ void perform_analysis(const std::string& path,
 					  const config& conf,
 					  boost::shared_ptr<io::OutputFormatter> formatter)
 {
-	sg::PE pe(path);
+	mana::PE pe(path);
 
 	// Try to parse the PE
 	if (!pe.is_valid())
@@ -553,7 +553,7 @@ int main(int argc, char** argv)
 
 	// Do the actual analysis on all the input files
 	unsigned int count = 0;
-	for (std::set<std::string>::iterator it = targets.begin() ; it != targets.end() ; ++it)
+	for (auto it = targets.begin() ; it != targets.end() ; ++it)
 	{
 		perform_analysis(*it, vm, extraction_directory, selected_categories, selected_plugins, conf, formatter);
 		if (++count % 1000 == 0) {

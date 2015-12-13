@@ -21,7 +21,7 @@
 #undef min
 #undef max
 
-namespace sg {
+namespace mana {
 
 PE::PE(const std::string& path)
 	: _path(path), _initialized(false)
@@ -795,4 +795,4 @@ boost::shared_ptr<manape_data> PE::create_manape_module_data() const
 	return res;
 }
 
-} // !namespace sg
+} // !namespace mana

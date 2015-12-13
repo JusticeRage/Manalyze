@@ -60,12 +60,12 @@ public:
 		return pString(new std::string("Tries to structurally detect packer presence."));
 	}
 
-	pResult analyze(const sg::PE& pe) override
+	pResult analyze(const mana::PE& pe) override
 	{
 		pResult res = create_result();
 
-		sg::shared_sections sections = pe.get_sections();
-		for (sg::shared_sections::element_type::const_iterator it = sections->begin() ; it != sections->end() ; ++it)
+		mana::shared_sections sections = pe.get_sections();
+		for (mana::shared_sections::element_type::const_iterator it = sections->begin() ; it != sections->end() ; ++it)
 		{
 			if (common_names.end() == std::find(common_names.begin(), common_names.end(), *(*it)->get_name()))
 			{
@@ -109,7 +109,7 @@ public:
 		}
 
 		// A low number of imports indicates that the binary is packed.
-		sg::const_shared_strings imports = pe.find_imports(".*"); // Get all imports
+		mana::const_shared_strings imports = pe.find_imports(".*"); // Get all imports
 
 		// Read the minimum import number from the configuration
 		unsigned int min_imports;

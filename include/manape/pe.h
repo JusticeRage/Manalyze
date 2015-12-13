@@ -56,7 +56,7 @@
 	#define DECLSPEC
 #endif
 
-namespace sg {
+namespace mana {
 
 typedef boost::shared_ptr<Section> pSection;
 typedef boost::shared_ptr<std::vector<std::string> > shared_strings;
