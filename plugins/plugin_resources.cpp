@@ -34,11 +34,11 @@ public:
 	int get_api_version() override { return 1; }
 
 	pString get_id() const override {
-		return pString(new std::string("resources"));
+		return boost::make_shared<std::string>("resources");
 	}
 
 	pString get_description() const override {
-		return pString(new std::string("Analyzes the program's resources."));
+		return boost::make_shared<std::string>("Analyzes the program's resources.");
 	}
 
 	pResult analyze(const mana::PE& pe) override
@@ -52,7 +52,7 @@ public:
 
 		mana::shared_resources r = pe.get_resources();
 		unsigned int size = 0;
-		for (mana::shared_resources::element_type::const_iterator it = r->begin() ; it != r->end() ; ++it)
+		for (auto it = r->begin() ; it != r->end() ; ++it)
 		{
 			size += (*it)->get_size();
 			yara::const_matches matches = y.scan_bytes(*(*it)->get_raw_data());

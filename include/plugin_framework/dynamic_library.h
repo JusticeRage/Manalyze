@@ -22,7 +22,7 @@
 #include <sstream>
 #include <iostream>
 
-#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 #include <boost/system/api_config.hpp>
 
 #include "manacommons/color.h"
@@ -62,7 +62,7 @@ public:
 	 *
 	 *	@return	The address of the symbol in the module. May be NULL.
 	 */
-	void* resolve_symbol(const std::string& name);
+	void* resolve_symbol(const std::string& name) const;
 
 	/**
 	 *	@brief	Cleanly unloads the shared library.

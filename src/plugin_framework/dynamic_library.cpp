@@ -31,11 +31,11 @@ pSharedLibrary SharedLibrary::load(const std::string& name)
 		return pSharedLibrary();
 	}
 
-	void * handle = NULL;
+	void * handle = nullptr;
 
 	#ifdef BOOST_WINDOWS_API
 		handle = ::LoadLibraryA(name.c_str());
-		if (handle == NULL)
+		if (handle == nullptr)
 		{
 			PRINT_ERROR << "Could not open " << name << "." << std::endl;
 			return pSharedLibrary();
@@ -53,7 +53,7 @@ pSharedLibrary SharedLibrary::load(const std::string& name)
 
 void SharedLibrary::unload()
 {
-	if (_handle == NULL) {
+	if (_handle == nullptr) {
 		return;
 	}
 	#ifdef BOOST_WINDOWS_API
@@ -61,13 +61,13 @@ void SharedLibrary::unload()
 	#else
 		::dlclose(_handle);
 	#endif
-	_handle = NULL;
+	_handle = nullptr;
 }
 
-void* SharedLibrary::resolve_symbol(const std::string& symbol)
+void* SharedLibrary::resolve_symbol(const std::string& symbol) const
 {
 	if (!_handle)
-		return NULL;
+		return nullptr;
 
 	#ifdef BOOST_WINDOWS_API
 		return ::GetProcAddress((HMODULE) _handle, symbol.c_str());

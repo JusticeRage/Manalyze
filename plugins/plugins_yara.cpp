@@ -63,11 +63,11 @@ public:
 				}
 				else
 				{
-					io::pNode output = io::pNode(new io::OutputTreeNode((*it)->operator[](meta_field_name),
-						io::OutputTreeNode::STRINGS, io::OutputTreeNode::NEW_LINE));
+					io::pNode output = boost::make_shared<io::OutputTreeNode>((*it)->operator[](meta_field_name),
+						io::OutputTreeNode::STRINGS, io::OutputTreeNode::NEW_LINE);
 
 					std::set<std::string> found = (*it)->get_found_strings();
-					for (std::set<std::string>::iterator it2 = found.begin() ; it2 != found.end() ; ++it2) {
+					for (auto it2 = found.begin() ; it2 != found.end() ; ++it2) {
 						output->append(*it2);
 					}
 					res->add_information(output);
@@ -80,11 +80,11 @@ public:
 
 	int get_api_version() override { return 1; }
 
-private:
+protected:
 	std::string _rule_file;
 	yara::Yara _engine;
 
-	bool _load_rules()
+	virtual bool _load_rules()
 	{
 		if (!_engine.load_rules(_rule_file))
 		{
@@ -106,11 +106,30 @@ public:
 	}
 
 	pString get_id() const override {
-		return pString (new std::string("clamav"));
+		return boost::make_shared<std::string>("clamav");
 	}
 
 	pString  get_description() const override {
-		return pString (new std::string("Scans the binary with ClamAV virus definitions."));
+		return boost::make_shared<std::string>("Scans the binary with ClamAV virus definitions.");
+	}
+
+private:
+	/**
+	 *	@brief	This function is overriden only to display an error message specific to ClamAV
+	 *			rules, which need to be generated manually.
+	 *
+	 *	@return	Whether the rules were loaded successfully.
+	 */
+	virtual bool _load_rules() override
+	{
+		if (!_engine.load_rules(_rule_file))
+		{
+			PRINT_ERROR << "ClamAV rules haven't been generated yet!" << std::endl;
+			PRINT_ERROR << "Please run yara_rules/update_clamav_signatures.py to create them, "
+				"and refer to the documentation for additional information." << std::endl;
+			return false;
+		}
+		return true;
 	}
 };
 
@@ -123,12 +142,12 @@ public:
 		return scan(pe, "Matching compiler(s):", NO_OPINION, "description");
 	}
 
-	boost::shared_ptr<std::string> get_id() const override {
-		return boost::shared_ptr<std::string>(new std::string("compilers"));
+	pString get_id() const override {
+		return boost::make_shared<std::string>("compilers");
 	}
 
 	boost::shared_ptr<std::string> get_description() const override {
-		return boost::shared_ptr<std::string>(new std::string("Tries to determine which compiler generated the binary."));
+		return boost::make_shared<std::string>("Tries to determine which compiler generated the binary.");
 	}
 };
 
@@ -137,16 +156,16 @@ class PEiDPlugin : public YaraPlugin
 public:
 	PEiDPlugin() : YaraPlugin("yara_rules/peid.yara") {}
 
-	pResult analyze(const mana::PE& pe) {
+	pResult analyze(const mana::PE& pe) override {
 		return scan(pe, "PEiD Signature:", SUSPICIOUS, "packer_name");
 	}
 
 	boost::shared_ptr<std::string> get_id() const override {
-		return boost::shared_ptr<std::string>(new std::string("peid"));
+		return boost::make_shared<std::string>("peid");
 	}
 
 	boost::shared_ptr<std::string> get_description() const override {
-		return boost::shared_ptr<std::string>(new std::string("Returns the PEiD signature of the binary."));
+		return boost::make_shared<std::string>("Returns the PEiD signature of the binary.");
 	}
 };
 
@@ -161,11 +180,11 @@ public:
 	}
 
 	boost::shared_ptr<std::string> get_id() const override {
-		return boost::shared_ptr<std::string>(new std::string("strings"));
+		return boost::make_shared<std::string>("strings");
 	}
 
 	boost::shared_ptr<std::string> get_description() const override {
-		return boost::shared_ptr<std::string>(new std::string("Looks for suspicious strings (anti-VM, process names...)."));
+		return boost::make_shared<std::string>("Looks for suspicious strings (anti-VM, process names...).");
 	}
 };
 
@@ -196,11 +215,11 @@ public:
 	}
 
 	boost::shared_ptr<std::string> get_id() const override {
-		return boost::shared_ptr<std::string>(new std::string("findcrypt"));
+		return boost::make_shared<std::string>("findcrypt");
 	}
 
 	boost::shared_ptr<std::string> get_description() const override {
-		return boost::shared_ptr<std::string>(new std::string("Detects embedded cryptographic constants."));
+		return boost::make_shared<std::string>("Detects embedded cryptographic constants.");
 	}
 };
 

@@ -74,9 +74,9 @@ void check_functions(const mana::PE& pe,
 	if (found_imports->size() >= static_cast<unsigned int>(req))  // Safe cast: these are positive enum indexes
 	{
 		res->raise_level(level);
-		io::pNode info = io::pNode(new io::OutputTreeNode(description,
-														  io::OutputTreeNode::STRINGS,
-														  io::OutputTreeNode::NEW_LINE));
+		io::pNode info = boost::make_shared<io::OutputTreeNode>(description,
+																io::OutputTreeNode::STRINGS,
+																io::OutputTreeNode::NEW_LINE);
 
 		for (std::vector<std::string>::const_iterator it = found_imports->begin() ; it != found_imports->end() ; ++it) {
 			info->append(*it);
@@ -91,11 +91,11 @@ public:
 	int get_api_version() override { return 1; }
 
 	pString get_id() const override {
-		return pString(new std::string("imports"));
+		return boost::make_shared<std::string>("imports");
 	}
 
 	pString get_description() const override {
-		return pString(new std::string("Looks for suspicious imports."));
+		return boost::make_shared<std::string>("Looks for suspicious imports.");
 	}
 
 	pResult analyze(const mana::PE& pe) override

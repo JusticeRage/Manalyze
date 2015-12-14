@@ -20,7 +20,7 @@
 
 #include <string>
 #include <map>
-#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 #include <boost/system/api_config.hpp>
 
 #include "manape/pe.h"
@@ -79,7 +79,7 @@ public:
 	virtual boost::shared_ptr<std::string> get_description() const = 0;
 
 	void set_config(const string_map& config) {
-		_config = shared_string_map(new string_map(config));
+		_config = boost::make_shared<string_map>(config);
 	}
 
 	/**

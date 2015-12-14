@@ -53,11 +53,11 @@ public:
 	int get_api_version() override { return 1; }
 
 	pString get_id() const override {
-		return pString(new std::string("packer"));
+		return boost::make_shared<std::string>("packer");
 	}
 
 	pString get_description() const override {
-		return pString(new std::string("Tries to structurally detect packer presence."));
+		return boost::make_shared<std::string>("Tries to structurally detect packer presence.");
 	}
 
 	pResult analyze(const mana::PE& pe) override
@@ -70,7 +70,7 @@ public:
 			if (common_names.end() == std::find(common_names.begin(), common_names.end(), *(*it)->get_name()))
 			{
 				// Check section name against known packer section names and set summary accordingly.
-				for (std::map<std::string, std::string>::const_iterator it2 = KNOWN_PACKER_SECTIONS.begin() ;
+				for (auto it2 = KNOWN_PACKER_SECTIONS.begin() ;
 					it2 != KNOWN_PACKER_SECTIONS.end() ; ++it2)
 				{
 					boost::regex e(it2->first, boost::regex::icase);
@@ -113,7 +113,7 @@ public:
 
 		// Read the minimum import number from the configuration
 		unsigned int min_imports;
-		if (!_config->count("min_imports")) {
+		if (_config == nullptr || !_config->count("min_imports")) {
 			min_imports = 10;
 		}
 		else
@@ -136,7 +136,7 @@ public:
 			res->raise_level(SUSPICIOUS);
 		}
 
-		if (res->get_level() != NO_OPINION && res->get_summary() == NULL) {
+		if (res->get_level() != NO_OPINION && res->get_summary() == nullptr) {
 			res->set_summary("The PE is possibly packed.");
 		}
 

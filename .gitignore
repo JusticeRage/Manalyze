@@ -54,6 +54,9 @@ Debug
 external/yara
 external/hash-library
 
+# Sphinx build files
+docs/_build
+
 # Malwares and documentation
 resources/*.mal
 resources/*.bin
