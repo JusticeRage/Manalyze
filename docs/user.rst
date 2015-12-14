@@ -11,3 +11,4 @@ If you wish to contribute to the project, check out the :doc:`Developer Document
    
    obtaining-manalyze
    initial-configuration
+   usage

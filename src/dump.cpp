@@ -109,7 +109,7 @@ void dump_image_optional_header(const mana::PE& pe, io::OutputFormatter& formatt
 		ioh_header->append(boost::make_shared<io::OutputTreeNode>("BaseOfData", ioh.BaseOfData, io::OutputTreeNode::HEX));
 	}
 
-	ioh_header->append(boost::make_shared<io::OutputTreeNode>("ImageBase", ioh.ImageBase));
+	ioh_header->append(boost::make_shared<io::OutputTreeNode>("ImageBase", ioh.ImageBase, io::OutputTreeNode::HEX));
 	ioh_header->append(boost::make_shared<io::OutputTreeNode>("SectionAlignment", ioh.SectionAlignment, io::OutputTreeNode::HEX));
 	ioh_header->append(boost::make_shared<io::OutputTreeNode>("FileAlignment", ioh.FileAlignment, io::OutputTreeNode::HEX));
 

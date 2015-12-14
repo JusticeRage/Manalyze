@@ -616,6 +616,12 @@ bool PE::_parse_relocations(FILE* f)
 			return false;
 		}
 
+		// It seems that sometimes, the end of the section is padded with zeroes. Break here
+		// instead of reaching EOF. I have encountered this oddity in 4d7ca8d467770f657305c16474b845fe.
+		if (reloc->BlockSize == 0) {
+			return true;
+		}
+
 		// The remaining fields are an array of shorts. The number is deduced from the block size.
 		for (unsigned int i = 0 ; i < (reloc->BlockSize - header_size) / sizeof(boost::uint16_t) ; ++i)
 		{
