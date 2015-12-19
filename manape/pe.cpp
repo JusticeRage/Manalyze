@@ -774,8 +774,11 @@ bool PE::_parse_certificates(FILE* f)
 // Provide a destructor for the shared_ptr.
 void delete_manape_module_data(manape_data* data)
 {
-	if (data->sections != nullptr) {
+	if (data != nullptr && data->sections != nullptr) {
 		free(data->sections);
+	}
+	if (data != nullptr) {
+		free(data);
 	}
 }
 

@@ -18,8 +18,8 @@ In the general case, you can build this tool in four simple steps:
 
 1. Obtaining the tools and libraries Manalyze depends on:
 
-  * `CMake <https://cmake.org/>`_
-  * A recent version of `Boost <http://www.boost.org/>`_.
+  * `CMake <https://cmake.org/download/>`_
+  * A recent version of `Boost <http://www.boost.org/users/download/>`_.
   
 2. Checkout the program's source code from GitHub.
 3. Using CMake to generate system-dependent build files. The CMake script will also check out additional libraries from GitHub.
@@ -55,9 +55,10 @@ Step 1 requires a bit more work on Windows, because the Boost libraries have to 
 * First, get the latest version on the `official website <http://www.boost.org/users/download/>`_ and extract them somewhere (for instance, ``C:\code\boost_1_XX_0\``). Open a command prompt and navigate to that folder.
 * Run the following command to build the required libraries:
   ::
+
     ./bootstrap.bat && ./b2.exe --build-type=complete --with-regex --with-program_options --with-system --with-filesystem
 * Set up the ``BOOST_ROOT`` environment variable to help CMake locate the libraries you just built. In this example, the environment variable should contain: ``C:\code\boost_1_XX_0\``.
-* Finally, if you haven't done it already, don't forget to install `CMake <https://cmake.org/download/>`_ and `Git <https://git-scm.com/download/win>`_.
+* Finally, if you haven't done it already, don't forget to install `CMake`_ and `Git <https://git-scm.com/download/win>`_.
 
 That's it for the dependencies. Steps 2 and 3 can be tackled with a single command::
 
