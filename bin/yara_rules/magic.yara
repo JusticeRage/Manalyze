@@ -512,7 +512,7 @@ rule PDF_Document
         $a = { 25 50 44 46 }
 
     condition:
-        $a at 0
+        $a in (0..1024)
 }
 rule Word_Document
 {

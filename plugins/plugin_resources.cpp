@@ -58,20 +58,26 @@ public:
 			yara::const_matches matches = y.scan_bytes(*(*it)->get_raw_data());
 			if (matches->size() > 0)
 			{
-				std::string ext = matches->at(0)->operator[]("extension");
-				if (ext == ".exe" || ext == ".sys" || ext == ".cab")
+				for (int i = 0 ; i < matches->size() ; ++i)
 				{
-					res->raise_level(MALICIOUS);
-					std::stringstream ss;
-					ss << "Resource " << *(*it)->get_name() << " detected as a " << matches->at(0)->operator[]("description") << ".";
-					res->add_information(ss.str());
-				}
-				else if (ext == ".pdf")
-				{
-					res->raise_level(SUSPICIOUS);
-					std::stringstream ss;
-					ss << "Resource " << *(*it)->get_name() << " detected as a PDF document.";
-					res->add_information(ss.str());
+					std::string ext = matches->at(i)->operator[]("extension");
+					if (ext == ".exe" || ext == ".sys" || ext == ".cab")
+					{
+						res->raise_level(MALICIOUS);
+						std::stringstream ss;
+						ss << "Resource " << *(*it)->get_name() << " detected as a " << matches->at(i)->operator[]("description") << ".";
+						if (matches->size() > 1) {
+							ss << " It is also possibly a polyglot file.";
+						}
+						res->add_information(ss.str());
+					}
+					else if (ext == ".pdf")
+					{
+						res->raise_level(SUSPICIOUS);
+						std::stringstream ss;
+						ss << "Resource " << *(*it)->get_name() << " detected as a PDF document.";
+						res->add_information(ss.str());
+					}
 				}
 			}
 			else

@@ -53,7 +53,7 @@ All code contributions should make every effort to match Manalyze's coding style
 
         // ----------------------------------------------------------------------------
 
-    * Indent your code. You can use either tabluations of 4 spaces blocks.
+    * Indent your code. You can use either tabluations or blocks of 4 spaces.
     * Also indent preprocessor directives::
 
         #ifdef BOOST_WINDOWS_API
@@ -86,7 +86,7 @@ All code contributions should make every effort to match Manalyze's coding style
 
 		if (flag)
 		{
-		    perform_first_action(); // Frowned upon.
+		    perform_action(); // Frowned upon.
 		}
 
 
@@ -97,3 +97,11 @@ All code contributions should make every effort to match Manalyze's coding style
     * The ``goto`` keyword may be tolerated if it prevents code duplication and does not overly complicate the program flow. In particular, ``goto END;`` constructs can be used to go directly to the cleanup of a function before returning.
     * In order to prevent memory leaks, memory should not be managed manually. Use smart pointers.
     * For better encapsulation, prefer non-member non-friend functions `when adequate <http://cpptips.com/nmemfunc_encap>`_.
+
+Getting Help
+============
+
+Here is how you can request some assistance for problems encountered while trying to contribute to the project:
+
+* If you find a bug, or feel that the current API is not exhaustive enough for a something you're trying to do, create an issue on `GitHub <https://github.com/JusticeRage/Manalyze/issues>`_.
+* If you find this documentation lacking and don't know how where to begin in order to work on a feature you have in mind, contact the project's maintainer directly over `e-mail <mailto:justicerage(at)manalyzer(dot)org>`_. If the volume gets out of hand, and IRC channel and/or mailing list will be created.
