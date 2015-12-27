@@ -246,3 +246,11 @@ Internally, all the result data is stored as key-value pairs; if you don't provi
                        Two
                        Three
 
+PE objects
+==========
+
+Now that we know how to create results, we will look more closely at the ``analyze`` method. Here is how it's declared::
+
+	pResult analyze(const mana::PE& pe);
+
+It's return type has been covered already, but what about the argument? This ``PE`` object is all the plugin has to work with, but it contains a lot of information about the input file.

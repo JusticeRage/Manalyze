@@ -2,8 +2,8 @@ cmake_minimum_required (VERSION 2.8)
 
 project (manalyze)
 
-option(GitHub "GitHub" ON)
-option(Debug "Debug" OFF)
+option(GitHub "Allow checking out third-party projects from GitHub" ON)
+option(Tests "Generate unit tests" OFF)
 
 if (WIN32)
 	set(Boost_USE_STATIC_LIBS ON)
@@ -11,9 +11,13 @@ if (WIN32)
 	set(Boost_USE_STATIC_RUNTIME ON)
 endif()
 
-find_package(Boost REQUIRED COMPONENTS regex system filesystem program_options)
 if (GitHub STREQUAL ON)
 	find_package(Git REQUIRED)
+endif()
+if (Tests STREQUAL OFF)
+	find_package(Boost REQUIRED COMPONENTS regex system filesystem program_options)
+else()
+	find_package(Boost REQUIRED COMPONENTS regex system filesystem program_options unit_test_framework)
 endif()
 
 # Download or update external projects
@@ -77,10 +81,15 @@ if (WIN32)
 else()
 			string (REGEX MATCH "BSD" IS_BSD ${CMAKE_SYSTEM_NAME}) # Detect if we are compiling on a BSD system.
 
-            if (CMAKE_BUILD_TYPE MATCHES "[Dd][Ee][Bb][Uu][Gg]" OR Debug STREQUAL ON)
+            if (CMAKE_BUILD_TYPE MATCHES "[Dd][Ee][Bb][Uu][Gg]")
 			add_definitions("/D_DEBUG")
 			set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
             endif()
+
+			if (Tests STREQUAL ON) # Add coverage option if unit tests were requested.
+				set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
+				set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
+			endif()
 
 			if (NOT IS_BSD) # No need to link against dl on BSD.
 				target_link_libraries(manalyze dl)
@@ -99,6 +108,10 @@ add_subdirectory(external/yara)
 
 # hash-library dependency
 add_subdirectory(external/hash-library)
+
+if (Tests STREQUAL ON)
+	add_subdirectory(test)
+endif()
 
 target_link_libraries(manape yara hash-library manacommons ${Boost_LIBRARIES})
 

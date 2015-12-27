@@ -4,15 +4,25 @@ addons:
   apt:
     sources:
     - boost-latest
+    - ubuntu-toolchain-r-test
     packages:
     - libboost-regex1.55-dev
     - libboost-program-options1.55-dev
     - libboost-system1.55-dev
     - libboost-filesystem1.55-dev
+    - libboost-test1.55-dev
+    - gcc-4.8
+    - g++-4.8
 compiler:
-  - clang
-before_script: 
-  - cmake .
+  - gcc
+install:
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
+before_script:
+  - cmake . -DTests=ON -DCMAKE_BUILD_TYPE=Debug
+  - pip install --user cpp-coveralls
 script:
   - make
   - bin/manalyze --version
+  - bin/manalyze-tests
+after_success:
+  - coveralls --exclude external/yara --exclude test --gcov-options '\-lp'
