@@ -778,7 +778,7 @@ void delete_manape_module_data(manape_data* data)
 		free(data->sections);
 	}
 	if (data != nullptr) {
-		free(data);
+		delete data;
 	}
 }
 

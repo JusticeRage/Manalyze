@@ -19,7 +19,7 @@ rule System_Tools
 {
     meta:
         description = "Contains references to system / monitoring tools"
-        author = "JusticeRage"
+        author = "Ivan Kwiatkowski (@JusticeRage)"
     strings:
         $a0 = "wireshark.exe" nocase wide ascii
         $a1 = "ethereal.exe" nocase wide ascii
@@ -41,7 +41,7 @@ rule Browsers
 {
     meta:
         description = "Contains references to internet browsers"
-        author = "JusticeRage"
+        author = "Ivan Kwiatkowski (@JusticeRage)"
     strings:
         $ie = "iexplore.exe" nocase wide ascii
         $ff = "firefox.exe" nocase wide ascii
@@ -57,7 +57,7 @@ rule RE_Tools
 {
     meta:
         description = "Contains references to debugging or reversing tools"
-        author = "JusticeRage"
+        author = "Ivan Kwiatkowski (@JusticeRage)"
     strings:
         $a0 = /ida(q)?(64)?.exe/ nocase wide ascii
         $a1 = "ImmunityDebugger.exe" nocase wide ascii
@@ -582,7 +582,7 @@ rule Sandboxie_Detection : AntiVM
 {
     meta:
         description = "Looks for Sandboxie presence"
-        author = "JusticeRage"
+        author = "Ivan Kwiatkowski (@JusticeRage)"
 
     strings:
         $sbie = "SbieDll.dll" nocase wide ascii
@@ -666,7 +666,7 @@ rule Dropper_Strings
 {
     meta:
         description = "May have dropper capabilities"
-        author = "JusticeRage"
+        author = "Ivan Kwiatkowski (@JusticeRage)"
     strings:
         $a0 = "CurrentVersion\\Run" nocase wide ascii
         $a1 = "CurrentControlSet\\Services" nocase wide ascii
@@ -681,7 +681,7 @@ rule AutoIT_compiled_script
 {
     meta:
         description = "Is an AutoIT compiled script"
-        author = "JusticeRage"
+        author = "Ivan Kwiatkowski (@JusticeRage)"
     strings:
         $a0 = "AutoIt Error" ascii wide
         $a1 = "reserved for AutoIt internal use" ascii wide
@@ -693,7 +693,7 @@ rule Misc_Suspicious_Strings
 {
     meta:
         description = "Miscellaneous malware strings"
-        author = "JusticeRage"
+        author = "Ivan Kwiatkowski (@JusticeRage)"
     strings:
         $a0 = "backdoor" nocase ascii wide
         $a1 = "virus" nocase ascii wide

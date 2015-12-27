@@ -51,7 +51,7 @@ bool query_virus_total(const std::string& hash, const std::string& api_key, std:
 class VirusTotalPlugin : public IPlugin
 {
 public:
-	int get_api_version() override { return 1; }
+	int get_api_version() const override { return 1; }
 
 	pString get_id() const override {
 		return boost::make_shared<std::string>("virustotal");

@@ -31,7 +31,7 @@ namespace plugin {
 class ResourcesPlugin : public IPlugin
 {
 public:
-	int get_api_version() override { return 1; }
+	int get_api_version() const override { return 1; }
 
 	pString get_id() const override {
 		return boost::make_shared<std::string>("resources");

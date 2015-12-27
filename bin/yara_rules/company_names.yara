@@ -19,7 +19,7 @@ rule CompanyNames
 {
     meta:
         description = "Contains the names of famous IT companies"
-        author = "JusticeRage"
+        author = "Ivan Kwiatkowski (@JusticeRage)"
     strings:
         $adobe = "adobe" nocase wide ascii
         $ms = "microsoft" nocase wide ascii

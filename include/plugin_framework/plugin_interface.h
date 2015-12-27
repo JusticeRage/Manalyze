@@ -60,7 +60,7 @@ public:
 	 *
 	 *	@return	The API version of the plugin.
 	 */
-	virtual int get_api_version() = 0;
+	virtual int get_api_version() const = 0;
 
 	/**
 	 *	@brief	Returns the identifier of the plugin.

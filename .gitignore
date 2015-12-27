@@ -23,6 +23,7 @@
 *.dll
 *.out
 *.app
+bin/manalyze
 
 # Compiled Yara rules + ClamAV rules and databases
 *.yarac
@@ -33,6 +34,7 @@ bin/yara_rules/*.cvd
 CMakeFiles
 CMakeCache.txt
 *.cmake
+Makefile
 
 # VS Files
 *.vcxproj*
@@ -62,6 +64,9 @@ resources/*.mal
 resources/*.bin
 resources/*.pdf
 resources/*.docx?
+
+# Third-party libraries
+external/
 
 # Signing script
 bin/sign_all.bat

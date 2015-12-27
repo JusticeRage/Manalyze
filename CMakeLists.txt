@@ -3,6 +3,7 @@ cmake_minimum_required (VERSION 2.8)
 project (manalyze)
 
 option(GitHub "GitHub" ON)
+option(Debug "Debug" OFF)
 
 if (WIN32)
 	set(Boost_USE_STATIC_LIBS ON)
@@ -76,9 +77,9 @@ if (WIN32)
 else()
 			string (REGEX MATCH "BSD" IS_BSD ${CMAKE_SYSTEM_NAME}) # Detect if we are compiling on a BSD system.
 
-            if (CMAKE_BUILD_TYPE MATCHES "[Dd][Ee][Bb][Uu][Gg]")
-                add_definitions("/D_DEBUG")
-				set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
+            if (CMAKE_BUILD_TYPE MATCHES "[Dd][Ee][Bb][Uu][Gg]" OR Debug STREQUAL ON)
+			add_definitions("/D_DEBUG")
+			set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
             endif()
 
 			if (NOT IS_BSD) # No need to link against dl on BSD.

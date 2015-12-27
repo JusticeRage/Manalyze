@@ -23,6 +23,25 @@ namespace io {
 
 // ----------------------------------------------------------------------------
 
+/**
+ * @brief	Repeats a string multiple times.
+ *
+ * @param	const std::string& s The string to repeat.
+ * @param	int i The number of times to repeat the string.
+ *
+ * @returns	A string containing i times the string s.
+ */
+std::string repeat(const std::string& s, int i)
+{
+	std::stringstream ss;
+	for (int j = 0 ; j < i ; ++j) {
+		ss << s;
+	}
+	return ss.str();
+}
+
+// ----------------------------------------------------------------------------
+
 void RawFormatter::format(std::ostream& sink, bool end_stream)
 {
 	static bool print_header = true;
@@ -168,7 +187,7 @@ void RawFormatter::_dump_plugin_node(std::ostream& sink, pNode node)
 		}
 
 		pNodes output = info->get_children();
-		for (pNodes::element_type::const_iterator it2 = output->begin() ; it2 != output->end() ; ++it2)
+		for (auto it2 = output->begin() ; it2 != output->end() ; ++it2)
 		{
 			switch ((*it2)->get_type())
 			{
@@ -178,10 +197,10 @@ void RawFormatter::_dump_plugin_node(std::ostream& sink, pNode node)
 					break;
 				default:
 					if ((*it2)->get_modifier() == OutputTreeNode::HIDE_NAME) {
-						sink << "\t" << *(*it2)->to_string() << std::endl;
+						sink << "    " << *(*it2)->to_string() << std::endl;
 					}
 					else {
-						sink << "\t" << *(*it2)->get_name() << ": " << *(*it2)->to_string() << std::endl;
+						sink << "    " << *(*it2)->get_name() << ": " << *(*it2)->to_string() << std::endl;
 					}
 					break;
 			}
@@ -206,7 +225,7 @@ void RawFormatter::_dump_strings_node(std::ostream& sink, pNode node, int max_wi
 		return;
 	}
 
-	for (strings::const_iterator it = strs->begin() ; it != strs->end() ; ++it)
+	for (auto it = strs->begin() ; it != strs->end() ; ++it)
 	{
 		if (node->get_modifier() == OutputTreeNode::NEW_LINE) {
 			max_width = 0; // Ignore max width if we print after a line break: alignment is based on level only.
@@ -287,60 +306,60 @@ void JsonFormatter::_dump_node(std::ostream& sink, pNode node, int level, bool a
 		case OutputTreeNode::STRINGS:
 		{ // Separate scope because variable 'strs' is declared in here.
 			if (print_name) {
-				sink << std::string(level, '\t') << "\"" << io::escape(*node->get_name()) << "\": [" << std::endl;
+				sink << repeat("    ", level) << "\"" << io::escape(*node->get_name()) << "\": [" << std::endl;
 			}
 			else {
-				sink << std::string(level, '\t') << "[" << std::endl;
+				sink << repeat("    ", level) << "[" << std::endl;
 			}
 			shared_strings strs = node->get_strings();
-			for (strings::const_iterator it = strs->begin() ; it != strs->end() ; ++it)
+			for (auto it = strs->begin() ; it != strs->end() ; ++it)
 			{
 				std::string str = *it;
 				boost::trim(str); // Delete unnecessary whitespace
-				sink << std::string(level + 1, '\t') << "\"" << io::escape(str) << "\"";
+				sink << repeat("    ", level + 1) << "\"" << io::escape(str) << "\"";
 				if (it != strs->end() - 1) {
 					sink << ",";
 				}
 				sink << std::endl;
 			}
-			sink << std::string(level, '\t') << "]";
+			sink << repeat("    ", level) << "]";
 			break;
 		}
 		case OutputTreeNode::LIST:
 		{ // Separate scope because variable 'children' is declared in here.
 
 			if (print_name) {
-				sink << std::string(level, '\t') << "\"" << io::escape(*node->get_name()) << "\": {" << std::endl;
+				sink << repeat("    ", level) << "\"" << io::escape(*node->get_name()) << "\": {" << std::endl;
 			}
 			else {
-				sink << std::string(level, '\t') << "{" << std::endl;
+				sink << repeat("    ", level) << "{" << std::endl;
 			}
 			pNodes children = node->get_children();
 			for (nodes::const_iterator it = children->begin() ; it != children->end() ; ++it)	{
 				_dump_node(sink, *it, level + 1, it != children->end() - 1); // Append a comma for all elements but the last.
 			}
-			sink << std::string(level, '\t') << "}";
+			sink << repeat("    ", level) << "}";
 			break;
 		}
 		case OutputTreeNode::STRING:
 			data = *node->to_string();
 			boost::trim(data); // Delete unnecessary whitespace
 			if (print_name) {
-				sink << std::string(level, '\t') << "\"" << io::escape(*node->get_name()) << "\": \""
+				sink << repeat("    ", level) << "\"" << io::escape(*node->get_name()) << "\": \""
 					 << io::escape(data) << "\"";
 			}
 			else {
-				sink << std::string(level, '\t') << "\"" << io::escape(data) << "\"";
+				sink << repeat("    ", level) << "\"" << io::escape(data) << "\"";
 			}
 			break;
 		default:
 			data = io::escape(*node->to_string());
 			boost::trim(data); // Delete unnecessary whitespace
 			if (print_name) {
-				sink << std::string(level, '\t') << "\"" << io::escape(*node->get_name()) << "\": " << data;
+				sink << repeat("    ", level) << "\"" << io::escape(*node->get_name()) << "\": " << data;
 			}
 			else {
-				sink << std::string(level, '\t') << data;
+				sink << repeat("    ", level) << data;
 			}
 	}
 

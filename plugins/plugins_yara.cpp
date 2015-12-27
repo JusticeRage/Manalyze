@@ -78,7 +78,7 @@ public:
 		return res;
 	}
 
-	int get_api_version() override { return 1; }
+	int get_api_version() const override { return 1; }
 
 protected:
 	std::string _rule_file;

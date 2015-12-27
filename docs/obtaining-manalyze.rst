@@ -47,6 +47,8 @@ Next, get Manalyze's source code and try building it::
 
 If everything went well, the tool's version should be displayed. Otherwise, look for error messages during the build process and get in touch with the maintainer to request help!
 
+.. TIP:: You can enable debug builds with the following command: ``cmake . -DDebug=ON``
+
 Windows
 -------
 

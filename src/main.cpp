@@ -250,7 +250,7 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
 	}
 	catch(po::error& e)
 	{
-		PRINT_ERROR << "Could not parse command line (" << e.what() << ")." << std::endl << std::endl;
+		PRINT_ERROR << "Could not parse the command line (" << e.what() << ")." << std::endl << std::endl;
 		return false;
 	}
 

@@ -32,8 +32,11 @@ void PluginManager::load(const std::string& path)
 	DynamicPlugin::destroyer d = (DynamicPlugin::destroyer) lib->resolve_symbol("destroy");
 	if (!c || !d)
 	{
-		// Fail quietly. There may be non-plugin DLLs in the folder.
-		//PRINT_ERROR << "Could not resolve " << path << "'s creator or destroyer function!" << std::endl;
+		// Display an error message if the library is likely to be a malformed plugin.
+		std::string libname = boost::filesystem::basename(path);
+		if (libname.find("libplugin_") == 0 || libname.find("plugin_") == 0) {
+			PRINT_ERROR << "Could not resolve " << path << "'s creator or destroyer function!" << std::endl;
+		}
 		return;
 	}
 	pPlugin plugin = pPlugin(new DynamicPlugin(c, d));

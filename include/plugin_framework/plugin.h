@@ -65,7 +65,7 @@ public:
 
 	virtual ~DynamicPlugin() {}
 
-	virtual pIPlugin instantiate_plugin()
+	virtual pIPlugin instantiate_plugin() override
 	{
 		if (!_destroyer) {
 			return pIPlugin(_creator());
@@ -90,7 +90,7 @@ class StaticPlugin : public Plugin
 public:
 	StaticPlugin() {}
 	virtual ~StaticPlugin() {}
-	virtual pIPlugin instantiate_plugin() { return pIPlugin(new T()); }
+	virtual pIPlugin instantiate_plugin() override { return pIPlugin(new T()); }
 };
 
 } // !namespace plugin

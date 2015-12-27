@@ -277,7 +277,7 @@ void dump_version_info(const mana::PE& pe, io::OutputFormatter& formatter)
 			vi = (*it)->interpret_as<mana::pversion_info>();
 			if (vi == nullptr)
 			{
-				PRINT_WARNING << "Could not parse VERSION_INFO resource!" << std::endl;
+				PRINT_WARNING << "Could not parse a VERSION_INFO resource!" << std::endl;
 				continue;
 			}
 
