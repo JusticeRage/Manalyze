@@ -13,6 +13,7 @@ addons:
     - libboost-test1.55-dev
     - gcc-4.8
     - g++-4.8
+    - gcov-4.8
 compiler:
   - gcc
 install:
@@ -25,4 +26,4 @@ script:
   - bin/manalyze --version
   - bin/manalyze-tests
 after_success:
-  - coveralls --exclude external/yara --exclude test --gcov-options '\-lp'
+  - coveralls --exclude external/yara --exclude test --gcov gcov-4.8
