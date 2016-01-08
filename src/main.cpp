@@ -506,8 +506,6 @@ void perform_analysis(const std::string& path,
 
 int main(int argc, char** argv)
 {
-	// TODO: Unit tests.
-
 	po::variables_map vm;
 	std::string extraction_directory;
 	std::vector<std::string> selected_plugins, selected_categories;

@@ -17,10 +17,6 @@
 
 #include "manape/pe.h"
 
-// TODO: Remove when Yara doesn't mask min & max anymore
-#undef min
-#undef max
-
 namespace mana {
 
 PE::PE(const std::string& path)

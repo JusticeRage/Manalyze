@@ -82,14 +82,13 @@ else()
 			string (REGEX MATCH "BSD" IS_BSD ${CMAKE_SYSTEM_NAME}) # Detect if we are compiling on a BSD system.
 
             if (CMAKE_BUILD_TYPE MATCHES "[Dd][Ee][Bb][Uu][Gg]")
-			add_definitions("/D_DEBUG")
-			set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
+				add_definitions("/D_DEBUG")
+				set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
+				if (Tests STREQUAL ON) # Add coverage option if unit tests were requested.
+					set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
+					set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
+				endif()
             endif()
-
-			if (Tests STREQUAL ON) # Add coverage option if unit tests were requested.
-				set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
-				set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
-			endif()
 
 			if (NOT IS_BSD) # No need to link against dl on BSD.
 				target_link_libraries(manalyze dl)

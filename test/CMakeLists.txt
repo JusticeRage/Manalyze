@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 2.6)
 project (manalyze-tests)
 
-add_executable(manalyze-tests hash-library.cpp)
+add_executable(manalyze-tests hash-library.cpp pe.cpp)
 
 target_link_libraries(
 						manalyze-tests
@@ -10,7 +10,6 @@ target_link_libraries(
 						yara
 						hash-library
 						${Boost_LIBRARIES}
-						${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
                      )
 
 if (WIN32)

@@ -13,7 +13,6 @@ addons:
     - libboost-test1.55-dev
     - gcc-4.8
     - g++-4.8
-    - gcov-4.8
 compiler:
   - gcc
 install:
