@@ -58,7 +58,7 @@ public:
 			yara::const_matches matches = y.scan_bytes(*(*it)->get_raw_data());
 			if (matches->size() > 0)
 			{
-				for (int i = 0 ; i < matches->size() ; ++i)
+				for (size_t i = 0 ; i < matches->size() ; ++i)
 				{
 					std::string ext = matches->at(i)->operator[]("extension");
 					if (ext == ".exe" || ext == ".sys" || ext == ".cab")

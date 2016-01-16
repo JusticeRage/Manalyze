@@ -24,11 +24,15 @@
 *.out
 *.app
 bin/manalyze
+bin/manalyze-tests
 
 # Compiled Yara rules + ClamAV rules and databases
 *.yarac
 bin/yara_rules/clamav.*
 bin/yara_rules/*.cvd
+
+# Compiled Python scripts
+bin/yara_rules/*.pyc
 
 # CMake artifacts
 CMakeFiles

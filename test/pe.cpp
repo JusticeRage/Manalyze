@@ -47,8 +47,8 @@ private:
 
 BOOST_FIXTURE_TEST_CASE(parse_calc, SetWorkingDirectory)
 {
-    mana::PE pe("testfiles/calc.exe");
-	BOOST_CHECK_EQUAL(pe.get_filesize(), 115200);
+    mana::PE pe("testfiles/manatest.exe");
+	BOOST_CHECK_EQUAL(pe.get_filesize(), 16360);
 
     // DOS Header
     boost::optional<mana::dos_header> pdos = pe.get_dos_header();

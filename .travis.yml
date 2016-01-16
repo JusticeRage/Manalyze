@@ -23,6 +23,7 @@ before_script:
 script:
   - make
   - bin/manalyze --version
+  - python bin/yara_rules/update_clamav_signatures.py
   - bin/manalyze-tests
 after_success:
   - coveralls --exclude external/yara --exclude test --gcov gcov-4.8

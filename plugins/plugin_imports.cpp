@@ -30,7 +30,7 @@ std::string anti_debug =
 	"OutputDebugString|SwitchToThread|NtQueryInformationProcess"	// Standard anti-debug API calls
 	"QueryPerformanceCounter";	// Techniques based on timing. GetTickCount ignored (too many false positives)
 
-std::string vanilla_injection = "VirtualAlloc(.*)|WriteProcessMemory|CreateRemoteThread|OpenProcess";
+std::string vanilla_injection = "VirtualAlloc(.*)|WriteProcessMemory|CreateRemoteThread(Ex)?|OpenProcess";
 
 std::string keylogger_api = "SetWindowsHook(Ex)?|GetAsyncKeyState|GetForegroundWindow|AttachThreadInput|CallNextHook(Ex)?|MapVirtualKey";
 

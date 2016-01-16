@@ -783,19 +783,30 @@ boost::shared_ptr<manape_data> PE::create_manape_module_data() const
 	boost::shared_ptr<manape_data> res(new manape_data, delete_manape_module_data);
 	res->entrypoint = _ioh->AddressOfEntryPoint;
 	res->number_of_sections = _sections.size();
-	res->sections = (manape_section*) malloc(res->number_of_sections * sizeof(manape_section));
+	res->sections = (manape_file_portion*) malloc(res->number_of_sections * sizeof(manape_file_portion));
 	if (res->sections != nullptr)
 	{
 		for (boost::uint32_t i = 0 ; i < res->number_of_sections ; ++i)
 		{
-			res->sections[i].section_start = _sections[i]->get_pointer_to_raw_data();
-			res->sections[i].section_size = _sections[i]->get_size_of_raw_data();
+			res->sections[i].start = _sections[i]->get_pointer_to_raw_data();
+			res->sections[i].size = _sections[i]->get_size_of_raw_data();
 		}
 	}
 	else
 	{
 		PRINT_WARNING << "Not enough memory to allocate data for the MANAPE module!" << std::endl;
 		res->number_of_sections = 0;
+	}
+
+	// Add VERSION_INFO location for some ClamAV signatures
+	for (auto it = _resource_table.begin() ; it != _resource_table.end() ; ++it)
+	{
+		if (*(*it)->get_type() == "RT_VERSION")
+		{
+			res->version_info.start = (*it)->get_offset();
+			res->version_info.size = (*it)->get_size();
+			break;
+		}
 	}
 	return res;
 }

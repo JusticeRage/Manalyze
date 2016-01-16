@@ -22,9 +22,9 @@ import os
 import shutil
 import tarfile
 import zlib
-import subprocess
 import urllib2
 import argparse
+from parse_clamav import parse_ndb, parse_ldb
 
 
 URL_MAIN = "http://database.clamav.net/main.cvd"
@@ -59,7 +59,7 @@ def download_file(url):
         file_size_dl += len(buffer)
         outfile.write(buffer)
         status = r"%10d  [%3.2f%%]" % (file_size_dl, file_size_dl * 100. / file_size)
-        status = status + chr(8) * (len(status) + 1)
+        status += chr(8) * (len(status) + 1)
         print status,
 
     outfile.close()
@@ -114,14 +114,24 @@ def update_signatures(url, download):
     f.close()
     g.close()
 
+    # We need to keep a set of all the signatures seen, because there are duplicates in the ClamAV database and
+    # Yara doesn't like that.
+    RULES = set()
+
     # Excract the signatures
     zlib_decompress("%s.tar.gz" % file_basename, "%s.tar" % file_basename)
     tar = tarfile.open("%s.tar" % file_basename)
     tar.extract("%s.ndb" % file_basename)
     os.chmod("%s.ndb" % file_basename, 0644)
+    if "%s.ldb" % file_basename in tar.getnames():
+        tar.extract("%s.ldb" % file_basename)
+        os.chmod("%s.ldb" % file_basename, 0644)
     tar.close()
+    parse_ndb("%s.ndb" % file_basename, "clamav.yara", file_basename != "main")
+    if os.path.exists("%s.ldb" % file_basename):
+        parse_ldb("%s.ldb" % file_basename, "clamav.yara", file_basename != "main")
+        os.remove("%s.ldb" % file_basename)
     os.remove("%s.tar" % file_basename)
-    subprocess.call([sys.executable, "./parse_clamav.py", "-i", "%s.ndb" % file_basename, "-o", "clamav.yara"])
     os.remove("%s.ndb" % file_basename)
 
 # Work in the script's directory

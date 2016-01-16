@@ -45,7 +45,7 @@ public:
 			 const std::string&		language,
 			 boost::uint32_t		codepage,
 			 boost::uint32_t		size,
-			 unsigned int			offset_in_file,
+			 boost::uint32_t			offset_in_file,
 			 const std::string&		path_to_pe)
 		: _type(type),
 		  _name(name),
@@ -62,7 +62,7 @@ public:
 			const std::string&		language,
 			boost::uint32_t			codepage,
 			boost::uint32_t			size,
-			unsigned int			offset_in_file,
+			boost::uint32_t			offset_in_file,
 			const std::string&		path_to_pe)
 		: _type(type),
 		  _name(""),
@@ -81,6 +81,7 @@ public:
 	DECLSPEC boost::uint32_t	get_codepage()	const { return _codepage; }
 	DECLSPEC boost::uint32_t	get_size()		const { return _size; }
 	DECLSPEC boost::uint32_t	get_id()		const { return _id; }
+	DECLSPEC boost::uint32_t	get_offset()	const { return _offset_in_file; }
 	DECLSPEC double				get_entropy()	const {
 		return utils::shannon_entropy(*get_raw_data());
 	}
