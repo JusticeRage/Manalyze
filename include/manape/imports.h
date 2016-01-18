@@ -15,8 +15,7 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _IMPORTS_H_
-#define _IMPORTS_H_
+#pragma once
 
 #include <string>
 #include <algorithm>
@@ -42,5 +41,3 @@ namespace hash {
 DECLSPEC pString hash_imports(const mana::PE& pe);
 
 } //namespace hash
-
-#endif

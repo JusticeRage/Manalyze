@@ -15,8 +15,7 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _PE_H_
-#define _PE_H_
+#pragma once
 
 #include <stdio.h>
 #include <string.h>
@@ -406,5 +405,3 @@ private:
 
 
 } /* !namespace sg */
-
-#endif /* !_PE_H_ */

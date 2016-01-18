@@ -15,8 +15,7 @@ You should have received a copy of the GNU General Public License
 along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _OUTPUT_TREE_NODE_
-#define _OUTPUT_TREE_NODE_
+#pragma once
 
 #include <vector>
 #include <string>
@@ -292,5 +291,3 @@ typedef boost::shared_ptr<nodes> pNodes;
 DECLSPEC_MANACOMMONS unsigned int determine_max_width(pNode node);
 
 } // !namespace io
-
-#endif // !_OUTPUT_TREE_NODE_

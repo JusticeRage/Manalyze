@@ -15,8 +15,7 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _AUTO_REGISTER_H_
-#define _AUTO_REGISTER_H_
+#pragma once
 
 #include "plugin_manager.h"
 #include "plugin.h"
@@ -45,5 +44,3 @@ public:
 };
 
 } // !namespace plugin
-
-#endif // !_AUTO_REGISTER_H_

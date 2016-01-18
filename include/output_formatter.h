@@ -15,8 +15,7 @@ You should have received a copy of the GNU General Public License
 along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _OUTPUT_FORMATTER_H_
-#define _OUTPUT_FORMATTER_H_
+#pragma once
 
 #include <sstream>
 #include <ostream>
@@ -249,5 +248,3 @@ std::string timestamp_to_string(boost::uint64_t epoch_timestamp);
 std::string escape(const std::string& s);
 
 } // !namespace io
-
-#endif // !_OUTPUT_FORMATTER_H_

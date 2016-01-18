@@ -15,8 +15,7 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef  _NT_VALUES_H_
-# define _NT_VALUES_H_
+#pragma once
 
 #include <string>
 #include <map>
@@ -106,5 +105,3 @@ DECLSPEC const_shared_strings translate_to_flags(int value, const flag_dict& dic
 DECLSPEC pString translate_to_flag(int value, const flag_dict& dict);
 
 } // !namespace nt
-
-#endif

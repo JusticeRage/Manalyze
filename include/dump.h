@@ -15,8 +15,7 @@ You should have received a copy of the GNU General Public License
 along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _DUMP_H_
-#define _DUMP_H_
+#pragma once
 
 #include <set>
 #include <vector>
@@ -46,5 +45,3 @@ void dump_summary(const mana::PE& pe, io::OutputFormatter& formatter);
 void dump_hashes(const mana::PE& pe, io::OutputFormatter& formatter);
 
 } // !namespace sg
-
-#endif // !_DUMP_H_

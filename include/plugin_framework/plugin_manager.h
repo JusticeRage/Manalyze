@@ -15,8 +15,7 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _PLUGIN_MANAGER_H_
-#define _PLUGIN_MANAGER_H_
+#pragma once
 
 #include <vector>
 #include <iostream>
@@ -174,5 +173,3 @@ private:
 bool name_matches(const std::string& s, pIPlugin p);
 
 } // !namespace plugin
-
-#endif // !_PLUGIN_MANAGER_H_

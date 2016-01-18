@@ -15,10 +15,7 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _UTILS_H_
-#define _UTILS_H_
-
-#define BOOST_SPIRIT_USE_PHOENIX_V3
+#pragma once
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -116,5 +113,3 @@ bool read_string_at_offset(FILE* f, unsigned int offset, std::string& out, bool 
 double DECLSPEC shannon_entropy(const std::vector<boost::uint8_t>& bytes);
 
 }
-
-#endif

@@ -15,8 +15,7 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _RESOURCES_H_
-#define _RESOURCES_H_
+#pragma once
 
 #include <string>
 #include <vector>
@@ -178,5 +177,3 @@ std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, co
 bool parse_version_info_header(vs_version_info_header& header, FILE* f);
 
 } // !namespace sg
-
-#endif // !_RESOURCES_H_

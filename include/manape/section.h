@@ -15,8 +15,7 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _SECTION_H_
-#define _SECTION_H_
+#pragma once
 
 #include <stdio.h>
 #include <boost/make_shared.hpp>
@@ -127,5 +126,3 @@ bool DECLSPEC is_address_in_section(boost::uint64_t rva, mana::pSection section,
 mana::pSection DECLSPEC find_section(unsigned int rva, const std::vector<mana::pSection>& section_list);
 
 } // !namespace sg
-
-#endif // !_SECTION_H_

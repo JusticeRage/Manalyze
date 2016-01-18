@@ -15,8 +15,7 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _PE_STRUCTS_H_
-#define _PE_STRUCTS_H_
+#pragma once
 
 #include <vector>
 #include <string>
@@ -358,5 +357,3 @@ typedef struct win_certificate_t
 typedef boost::shared_ptr<win_certificate> pwin_certificate;
 
 } // !namespace sg
-
-#endif // !_PE_STRUCTS_H_

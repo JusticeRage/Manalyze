@@ -167,7 +167,6 @@ void dump_section_table(const mana::PE& pe, io::OutputFormatter& formatter, bool
 		section_node->append(boost::make_shared<io::OutputTreeNode>("PointerToRawData", (*it)->get_pointer_to_raw_data(), io::OutputTreeNode::HEX));
 		section_node->append(boost::make_shared<io::OutputTreeNode>("PointerToRelocations", (*it)->get_pointer_to_relocations(), io::OutputTreeNode::HEX));
 		section_node->append(boost::make_shared<io::OutputTreeNode>("PointerToLineNumbers", (*it)->get_pointer_to_line_numbers(), io::OutputTreeNode::HEX));
-		section_node->append(boost::make_shared<io::OutputTreeNode>("NumberOfRelocations", (*it)->get_number_of_relocations()));
 		section_node->append(boost::make_shared<io::OutputTreeNode>("NumberOfLineNumbers", (*it)->get_number_of_line_numbers()));
 		section_node->append(boost::make_shared<io::OutputTreeNode>("NumberOfRelocations", (*it)->get_number_of_relocations()));
 		section_node->append(boost::make_shared<io::OutputTreeNode>("Characteristics", *nt::translate_to_flags((*it)->get_characteristics(), nt::SECTION_CHARACTERISTICS)));
@@ -426,6 +425,19 @@ void dump_summary(const mana::PE& pe, io::OutputFormatter& formatter)
 	mana::image_optional_header ioh = *pe.get_image_optional_header();
 	summary->append(boost::make_shared<io::OutputTreeNode>("Subsystem", *nt::translate_to_flag(ioh.Subsystem, nt::SUBSYSTEMS)));
 	summary->append(boost::make_shared<io::OutputTreeNode>("Compilation Date", io::timestamp_to_string(h.TimeDateStamp)));
+	
+	// Exploit mitigation technologies
+	std::vector<std::string> mitigation;
+	auto characteristics = *nt::translate_to_flags(ioh.DllCharacteristics, nt::DLL_CHARACTERISTICS);
+	if (std::find(characteristics.begin(), characteristics.end(), "IMAGE_DLLCHARACTERISTICS_DYNAMIC_BASE") != characteristics.end()) {
+		mitigation.push_back("ASLR");
+	}
+	if (std::find(characteristics.begin(), characteristics.end(), "IMAGE_DLLCHARACTERISTICS_NX_COMPAT") != characteristics.end()) {
+		mitigation.push_back("DEP");
+	}
+	if (mitigation.size() > 0)	{
+		summary->append(boost::make_shared<io::OutputTreeNode>("Exploit mitigation", mitigation));
+	}
 
 	if (languages.size() > 0) {
 		summary->append(boost::make_shared<io::OutputTreeNode>("Detected languages", languages));

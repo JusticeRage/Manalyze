@@ -216,7 +216,7 @@ std::vector<pimage_library_descriptor> PE::_find_imported_dlls(const std::string
 // ----------------------------------------------------------------------------
 
 const_shared_strings PE::find_imports(const std::string& function_name_regexp,
-					  const std::string& dll_name_regexp) const
+									  const std::string& dll_name_regexp) const
 {
 	auto destination = boost::make_shared<std::vector<std::string> >();
 	if (!_initialized) {

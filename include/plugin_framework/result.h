@@ -15,8 +15,7 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _RESULT_H_
-#define _RESULT_H_
+#pragma once
 
 #include <vector>
 #include <string>
@@ -123,5 +122,3 @@ template<>
 	DECLSPEC_MANACOMMONS void Result::add_information(io::pNode node);
 
 } // !namespace plugin
-
-#endif // !_RESULT_H_

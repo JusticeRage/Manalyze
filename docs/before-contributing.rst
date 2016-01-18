@@ -42,7 +42,7 @@ All code contributions should make every effort to match Manalyze's coding style
 * Code structure
     * All your code should reside in a meaningful namespace.
     * Declare class and functions in header (".h") files.
-    * Protect header files against multiple inclusions.
+    * Protect header files against multiple inclusions with ``#pragma once``.
     * Inclusion of system headers should precede inclusion of user-defined headers. Boost headers are considered system headers.
     * Put function implementations in .cpp files.
     * Function declarations must be documented following the `Doxygen <https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html>`_ convention. 

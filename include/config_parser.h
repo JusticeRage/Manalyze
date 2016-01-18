@@ -15,8 +15,7 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _CONFIG_PARSER_H_
-#define _CONFIG_PARSER_H_
+#pragma once
 
 #include <string>
 #include <map>
@@ -49,5 +48,3 @@ typedef std::map<std::string, std::map<std::string, std::string> > config;
  *	@return	The parsed data.
  */
 config parse_config(const std::string& config_file);
-
-#endif // !_CONFIG_PARSER_H_

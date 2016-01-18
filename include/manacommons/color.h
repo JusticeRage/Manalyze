@@ -15,8 +15,7 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _COLOR_H_
-#define _COLOR_H_
+#pragma once
 
 #include <iostream>
 #include <string>
@@ -84,5 +83,3 @@ void set_color(Color c);
 #endif
 
 } //namespace utils
-
-#endif // !_COLOR_H_

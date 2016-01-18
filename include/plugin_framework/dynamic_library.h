@@ -15,8 +15,7 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _DYNAMIC_LIBRARY_H_
-#define _DYNAMIC_LIBRARY_H_
+#pragma once
 
 #include <string>
 #include <sstream>
@@ -81,5 +80,3 @@ private:
 typedef boost::shared_ptr<SharedLibrary> pSharedLibrary;
 
 } //!namespace plugin
-
-#endif // ! _DYNAMIC_LIBRARY_H_
