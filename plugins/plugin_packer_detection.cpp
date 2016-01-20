@@ -40,7 +40,8 @@ const std::vector<std::string> common_names = boost::assign::list_of(".text")
 																	(".reloc")
 																	(".bss")
 																	(".tls")
-																	(".sxdata"); // Apparently related to SafeSEH.
+																	(".sxdata") // Apparently related to SafeSEH.
+																	(".gfids");
 
 // Also check for known packer section names (i.e. UPX0, etc.)
 const std::map<std::string, std::string> KNOWN_PACKER_SECTIONS =
@@ -70,8 +71,7 @@ public:
 			if (common_names.end() == std::find(common_names.begin(), common_names.end(), *(*it)->get_name()))
 			{
 				// Check section name against known packer section names and set summary accordingly.
-				for (auto it2 = KNOWN_PACKER_SECTIONS.begin() ;
-					it2 != KNOWN_PACKER_SECTIONS.end() ; ++it2)
+				for (auto it2 = KNOWN_PACKER_SECTIONS.begin() ; it2 != KNOWN_PACKER_SECTIONS.end() ; ++it2)
 				{
 					boost::regex e(it2->first, boost::regex::icase);
 					if (boost::regex_match(*(*it)->get_name(), e)) {

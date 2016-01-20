@@ -81,7 +81,7 @@ Modifications to ``CMakeLists.txt``: declare a new library, for instance just un
     add_library(plugin_helloworld SHARED plugins/plugin_helloworld.cpp)
     target_link_libraries(plugin_helloworld manape hash-library manacommons)
 
-There are some parts missing, but it's okay for now. Points of interest are the mandatory included file(s), and the definition of a new class inheriting from ``plugin::IPlugin`` which defines the interface all plugins must adhere to. Internal plugins contain some additional magic to let the core know about them at startup. If you're building an external plugin, omit those two lines: Manalyze will find them by scanning its folder for library files. Instead, you have to define the ``create`` and ``destroy`` functions so the core can instantiate your plugin.
+There are some parts missing, but it's okay for now. Points of interest are the mandatory included file(s), and the definition of a new class inheriting from ``plugin::IPlugin`` which defines the interface all plugins must adhere to. Internal plugins contain some additional magic to let the core know about them at startup. If you're building an external plugin, omit the ``AutoRegister`` instance: Manalyze will find it by scanning its folder for library files. Instead, you have to define the ``create`` and ``destroy`` functions so the core can load and unload your plugin.
 
 If you try to build the plugin right now, you'll see that the compiler is very annoyed about some missing functions. Let's go back to our source file and finish our plugin's implementation::
 

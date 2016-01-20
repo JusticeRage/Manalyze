@@ -62,7 +62,7 @@ All code contributions should make every effort to match Manalyze's coding style
         #	define PLUGIN_API __attribute__((visibility("default")))
         #endif
 
-    * Do not import whole namespaces in headers (i.e. ``using  namespace std;`` is prohibited).
+    * Do not import whole namespaces in headers (i.e. ``using namespace std;`` is prohibited).
     * Pointer and reference being part of the type, write ``char* s1;`` or ``std::string& s2;`` instead of ``char *s1;`` or ``std::string &s2;``.
     * Trigraphs and digraphs are banned.
     * Never omit brackets in control structures.

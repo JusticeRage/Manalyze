@@ -352,6 +352,80 @@ bool PE::_parse_section_table(FILE* f)
 
 // ----------------------------------------------------------------------------
 
+bool PE::_parse_debug(FILE* f)
+{
+	if (!_ioh) {
+		return false;
+	}
+	if (!_reach_directory(f, IMAGE_DIRECTORY_ENTRY_DEBUG)) { // No debug information.
+		return true;
+	}
+
+	unsigned int size = 6 * sizeof(boost::uint32_t) + 2 * sizeof(boost::uint16_t);
+	unsigned int number_of_entries = _ioh->directories[IMAGE_DIRECTORY_ENTRY_DEBUG].Size / size;
+
+	for (unsigned int i = 0 ; i < number_of_entries ; ++i)
+	{
+		auto debug = boost::make_shared<debug_directory_entry>();
+		memset(debug.get(), 0, size);
+		if (size != fread(debug.get(), 1, size, f))
+		{
+			PRINT_ERROR << "Could not read the DEBUG_DIRECTORY_ENTRY" << DEBUG_INFO_INSIDEPE << std::endl;
+			return false;
+		}
+
+		// VC++ Debug information
+		if (debug->Type == nt::DEBUG_TYPES.at("IMAGE_DEBUG_TYPE_CODEVIEW"))
+		{
+			pdb_info pdb;
+			unsigned int pdb_size = 2 * sizeof(boost::uint32_t) + 16 * sizeof(boost::uint8_t);
+			memset(&pdb, 0, pdb_size);
+
+			unsigned int saved_offset = ftell(f);
+			fseek(f, debug->PointerToRawData, SEEK_SET);
+			if (pdb_size != fread(&pdb, 1, pdb_size, f) ||
+				(pdb.Signature != 0x53445352 && pdb.Signature != 0x3031424E)) // Signature: "RSDS" or "NB10"
+			{
+				PRINT_ERROR << "Could not read PDB file information of invalid magic number." << DEBUG_INFO_INSIDEPE << std::endl;
+				return false;
+			}
+			pdb.PdbFileName = utils::read_ascii_string(f); // Not optimal, but it'll help if I decide to
+														   // further parse these debug sub-structures.
+			debug->Filename = pdb.PdbFileName;
+			fseek(f, saved_offset, SEEK_SET);
+		}
+		else if (debug->Type == nt::DEBUG_TYPES.at("IMAGE_DEBUG_TYPE_MISC"))
+		{
+			image_debug_misc misc;
+			unsigned int misc_size = 2 * sizeof(boost::uint32_t) + 4 * sizeof(boost::uint8_t);
+			memset(&misc, 1, misc_size);
+			unsigned int saved_offset = ftell(f);
+			fseek(f, debug->PointerToRawData, SEEK_SET);
+			if (misc_size != fread(&misc, 1, misc_size, f))
+			{
+				PRINT_ERROR << "Could not read DBG file information" << DEBUG_INFO_INSIDEPE << std::endl;
+				return false;
+			}
+			switch (misc.Unicode)
+			{
+			case 1:
+				misc.DbgFile = utils::read_unicode_string(f, misc.Length - misc_size);
+				break;
+			case 0:
+				misc.DbgFile = utils::read_ascii_string(f, misc.Length - misc_size);
+				break;
+			}
+			debug->Filename = misc.DbgFile;
+			fseek(f, saved_offset, SEEK_SET);
+		}
+		_debug_entries.push_back(debug);
+	}
+
+	return true;
+}
+
+// ----------------------------------------------------------------------------
+
 unsigned int PE::_rva_to_offset(boost::uint64_t rva) const
 {
 	if (!_ioh) // Image Optional Header was not parsed.

@@ -15,42 +15,17 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <boost/system/api_config.hpp>
+
+#define BOOST_TEST_MODULE ManalyzeTests
+#if !defined BOOST_WINDOWS_API
+#	define BOOST_TEST_DYN_LINK
+#endif
+
 #include <boost/test/unit_test.hpp>
-#include <boost/filesystem.hpp>
 
+#include "fixtures.h"
 #include "manape/pe.h"
-#include "manape/imports.h" // Contains the hash::hash_imports function.
-
-namespace unit = boost::unit_test::framework;
-namespace fs = boost::filesystem;
-
-// ----------------------------------------------------------------------------
-
-/**
- * Fixture setting the current directory to "[project_dir]/test/".
- * The initial working directory is restored after the test.
- */
-class SetWorkingDirectory
-{
-public:
-    SetWorkingDirectory()
-    {
-        // Save the current working directory
-        _original_directory = fs::current_path().string();
-
-        // Go to the test directory
-        fs::path working_dir(unit::master_test_suite().argv[0]);
-        working_dir = working_dir.parent_path();
-        fs::current_path(working_dir / ".." / "test");
-    }
-
-    ~SetWorkingDirectory() {
-        fs::current_path(_original_directory);
-    }
-
-private:
-    std::string _original_directory;
-};
 
 // ----------------------------------------------------------------------------
 
@@ -82,9 +57,10 @@ void check_section(mana::pSection section,
 }
 
 // ----------------------------------------------------------------------------
+BOOST_FIXTURE_TEST_SUITE(resources, SetWorkingDirectory)
+// ----------------------------------------------------------------------------
 
-
-BOOST_FIXTURE_TEST_CASE(parse_testfile, SetWorkingDirectory)
+BOOST_AUTO_TEST_CASE(parse_testfile)
 {
     mana::PE pe("testfiles/manatest.exe");
 	BOOST_CHECK_EQUAL(pe.get_filesize(), 16360);
@@ -93,7 +69,7 @@ BOOST_FIXTURE_TEST_CASE(parse_testfile, SetWorkingDirectory)
 
 // ----------------------------------------------------------------------------
 
-BOOST_FIXTURE_TEST_CASE(parse_dos_header, SetWorkingDirectory)
+BOOST_AUTO_TEST_CASE(parse_dos_header)
 {
 	mana::PE pe("testfiles/manatest.exe");
 
@@ -127,7 +103,7 @@ BOOST_FIXTURE_TEST_CASE(parse_dos_header, SetWorkingDirectory)
 
 // ----------------------------------------------------------------------------
 
-BOOST_FIXTURE_TEST_CASE(parse_pe_header, SetWorkingDirectory)
+BOOST_AUTO_TEST_CASE(parse_pe_header)
 {
 	mana::PE pe("testfiles/manatest.exe");
 
@@ -148,7 +124,7 @@ BOOST_FIXTURE_TEST_CASE(parse_pe_header, SetWorkingDirectory)
 
 // ----------------------------------------------------------------------------
 
-BOOST_FIXTURE_TEST_CASE(parse_opt_header, SetWorkingDirectory)
+BOOST_AUTO_TEST_CASE(parse_opt_header)
 {
 	mana::PE pe("testfiles/manatest.exe");
 
@@ -205,7 +181,7 @@ BOOST_FIXTURE_TEST_CASE(parse_opt_header, SetWorkingDirectory)
 
 // ----------------------------------------------------------------------------
 
-BOOST_FIXTURE_TEST_CASE(parse_sections, SetWorkingDirectory)
+BOOST_AUTO_TEST_CASE(parse_sections)
 {
 	mana::PE pe("testfiles/manatest.exe");
 
@@ -222,110 +198,5 @@ BOOST_FIXTURE_TEST_CASE(parse_sections, SetWorkingDirectory)
 }
 
 // ----------------------------------------------------------------------------
-
-BOOST_FIXTURE_TEST_CASE(parse_resources, SetWorkingDirectory)
-{
-	mana::PE pe("testfiles/manatest.exe");
-	auto resources = pe.get_resources();
-	BOOST_ASSERT(resources);
-	BOOST_ASSERT(resources->size() == 1);
-	mana::pResource r = resources->at(0);
-	BOOST_CHECK(*r->get_type() == "RT_MANIFEST");
-	BOOST_CHECK(r->get_id() == 1);
-	BOOST_CHECK(r->get_size() == 381);
-	BOOST_CHECK(r->get_codepage() == 0);
-	BOOST_CHECK(r->get_offset() == 0x2a60);
-	BOOST_CHECK(*r->get_language() == "English - United States");
-	auto bytes = r->get_raw_data();
-	std::string rt_manifest(bytes->begin(), bytes->end());
-	std::string expected = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?>\r\n"
-		"<assembly xmlns='urn:schemas-microsoft-com:asm.v1' manifestVersion='1.0'>\r\n"
-		"  <trustInfo xmlns=\"urn:schemas-microsoft-com:asm.v3\">\r\n"
-		"    <security>\r\n"
-		"      <requestedPrivileges>\r\n"
-		"        <requestedExecutionLevel level='asInvoker' uiAccess='false' />\r\n"
-		"      </requestedPrivileges>\r\n"
-		"    </security>\r\n"
-		"  </trustInfo>\r\n"
-		"</assembly>\r\n";
-	BOOST_CHECK(rt_manifest == expected);
-}
-
+BOOST_AUTO_TEST_SUITE_END()
 // ----------------------------------------------------------------------------
-
-BOOST_FIXTURE_TEST_CASE(parse_imports, SetWorkingDirectory)
-{
-	mana::PE pe("testfiles/manatest.exe");
-	BOOST_ASSERT(pe.get_imported_dlls());
-	auto dlls = *pe.get_imported_dlls();
-	BOOST_ASSERT(dlls.size() == 8);
-	std::vector<std::string> expected_dlls;
-	expected_dlls.push_back("KERNEL32.dll");
-	expected_dlls.push_back("MSVCP140.dll");
-	expected_dlls.push_back("VCRUNTIME140.dll");
-	expected_dlls.push_back("api-ms-win-crt-runtime-l1-1-0.dll");
-	expected_dlls.push_back("api-ms-win-crt-math-l1-1-0.dll");
-	expected_dlls.push_back("api-ms-win-crt-stdio-l1-1-0.dll");
-	expected_dlls.push_back("api-ms-win-crt-locale-l1-1-0.dll");
-	expected_dlls.push_back("api-ms-win-crt-heap-l1-1-0.dll");
-	BOOST_ASSERT(dlls == expected_dlls);
-
-	BOOST_ASSERT(pe.get_imported_functions("KERNEL32.dll"));
-	auto functions = *pe.get_imported_functions("KERNEL32.dll");
-	BOOST_ASSERT(functions.size() == 15);
-	std::vector<std::string> expected_functions;
-	expected_functions.push_back("WriteProcessMemory");
-	expected_functions.push_back("OpenProcess");
-	expected_functions.push_back("CreateRemoteThread");
-	expected_functions.push_back("SetUnhandledExceptionFilter");
-	expected_functions.push_back("GetCurrentProcess");
-	expected_functions.push_back("TerminateProcess");
-	expected_functions.push_back("IsProcessorFeaturePresent");
-	expected_functions.push_back("QueryPerformanceCounter");
-	expected_functions.push_back("GetCurrentProcessId");
-	expected_functions.push_back("GetCurrentThreadId");
-	expected_functions.push_back("GetSystemTimeAsFileTime");
-	expected_functions.push_back("InitializeSListHead");
-	expected_functions.push_back("IsDebuggerPresent");
-	expected_functions.push_back("GetModuleHandleW");
-	expected_functions.push_back("UnhandledExceptionFilter");
-	BOOST_CHECK(functions == expected_functions);
-
-	auto imphash = hash::hash_imports(pe);
-	BOOST_ASSERT(imphash);
-	BOOST_CHECK(*imphash == "924ac5aa343a9f838d5c16a5d77de2ec");
-}
-
-// ----------------------------------------------------------------------------
-
-BOOST_FIXTURE_TEST_CASE(find_imports, SetWorkingDirectory)
-{
-	// Find functions by regular expression
-	mana::PE pe("testfiles/manatest.exe");
-	auto pfunctions = pe.find_imports(".*basic_ostream.*", "MSVCP\\d{3}.dll|KERNEL32.dll");
-	BOOST_ASSERT(pfunctions);
-	BOOST_ASSERT(pfunctions->size() == 6);
-	std::vector<std::string> expected_functions;
-	expected_functions.push_back("??6?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV01@P6AAAVios_base@1@AAV21@@Z@Z");
-	expected_functions.push_back("??6?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV01@P6AAAV01@AAV01@@Z@Z");
-	expected_functions.push_back("?cout@std@@3V?$basic_ostream@DU?$char_traits@D@std@@@1@A");
-	expected_functions.push_back("?_Osfx@?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEXXZ");
-	expected_functions.push_back("?flush@?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV12@XZ");
-	expected_functions.push_back("?put@?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV12@D@Z");
-	BOOST_CHECK(*pfunctions == expected_functions);
-
-	// Verify that the same search on all DLLs returns the same results
-	pfunctions = pe.find_imports(".*basic_ostream.*");
-	BOOST_ASSERT(pfunctions);
-	BOOST_CHECK(*pfunctions == expected_functions);
-}
-
-// ----------------------------------------------------------------------------
-
-BOOST_FIXTURE_TEST_CASE(find_imports_no_match, SetWorkingDirectory)
-{
-	mana::PE pe("testfiles/manatest.exe");
-	auto pfunctions = pe.find_imports("I DON'T EXIST");
-	BOOST_ASSERT(pfunctions);
-	BOOST_CHECK(pfunctions->size() == 0);
-}

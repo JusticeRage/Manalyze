@@ -15,21 +15,11 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <boost/system/api_config.hpp>
-
-#define BOOST_TEST_MODULE ManalyzeTests
-#if !defined BOOST_WINDOWS_API
-#	define BOOST_TEST_DYN_LINK
-#endif
-
-#include <fstream>
 #include <boost/filesystem.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include "hash-library/hashes.h"
-
-namespace fs = boost::filesystem;
-namespace bs = boost::system;
+#include "fixtures.h"
 
 BOOST_AUTO_TEST_CASE(hash_phrase)
 {
@@ -58,39 +48,18 @@ BOOST_AUTO_TEST_CASE(null_hash)
 
 // ----------------------------------------------------------------------------
 
-/**
- * Function taken from boost::filesystem's unit tests
- */
-void create_file(const fs::path & ph, const std::string & contents = std::string())
+// Make sure that null pointers are returned when asked to hash missing files.
+BOOST_AUTO_TEST_CASE(hash_missing_file)
 {
-    std::ofstream f(ph.c_str());
-    if (!f)
-        throw fs::filesystem_error("could not create a file",
-                                   ph, bs::error_code(errno, bs::system_category()));
-    if (!contents.empty()) f << contents;
+	hash::const_shared_strings hashes = hash::hash_file(hash::ALL_DIGESTS, "I_DON'T_EXIST.txt");
+	BOOST_ASSERT(!hashes);
+	hash::pString h = hash::hash_file(*hash::ALL_DIGESTS.at(ALL_DIGESTS_MD5), "I_DON'T_EXIST.txt");
+	BOOST_CHECK(!h);
 }
 
 // ----------------------------------------------------------------------------
-
-class SetupFiles {
-
-public:
-    SetupFiles()
-    {
-        create_file("fox", "The quick brown fox jumps over the lazy dog");
-        create_file("empty");
-    }
-
-    ~SetupFiles()
-    {
-        fs::remove("fox");
-        fs::remove("empty");
-    }
-};
-
-// ----------------------------------------------------------------------------
-
 BOOST_FIXTURE_TEST_SUITE(hash_files, SetupFiles)
+// ----------------------------------------------------------------------------
 
 BOOST_AUTO_TEST_CASE(hash_phrase_file)
 {
@@ -101,6 +70,8 @@ BOOST_AUTO_TEST_CASE(hash_phrase_file)
     BOOST_CHECK_EQUAL("4d741b6f1eb29cb2a9b9911c82f56fa8d73b04959d3d9d222895df6c0b28aa15", hashes->at(ALL_DIGESTS_SHA3));
 }
 
+// ----------------------------------------------------------------------------
+
 BOOST_AUTO_TEST_CASE(null_hash_file)
 {
     hash::const_shared_strings hashes = hash::hash_file(hash::ALL_DIGESTS, "empty");
@@ -110,4 +81,6 @@ BOOST_AUTO_TEST_CASE(null_hash_file)
     BOOST_CHECK_EQUAL("c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470", hashes->at(ALL_DIGESTS_SHA3));
 }
 
+// ----------------------------------------------------------------------------
 BOOST_AUTO_TEST_SUITE_END()
+// ----------------------------------------------------------------------------

@@ -62,6 +62,7 @@ external/hash-library
 
 # Sphinx build files
 docs/_build
+docs/html
 
 # Malwares and documentation
 resources/*.mal
