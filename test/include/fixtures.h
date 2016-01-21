@@ -20,10 +20,13 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include <fstream>
 #include <boost/filesystem.hpp>
 #include <boost/test/unit_test.hpp>
+#include <boost/shared_ptr.hpp>
 
-namespace unit = boost::unit_test::framework;
-namespace fs = boost::filesystem;
-namespace bs = boost::system;
+namespace unit	= boost::unit_test::framework;
+namespace fs	= boost::filesystem;
+namespace bs	= boost::system;
+
+typedef boost::shared_ptr<std::string> pString;
 
 // ----------------------------------------------------------------------------
 

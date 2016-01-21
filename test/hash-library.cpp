@@ -19,6 +19,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "hash-library/hashes.h"
+#include "hash-library/ssdeep.h"
 #include "fixtures.h"
 
 BOOST_AUTO_TEST_CASE(hash_phrase)
@@ -53,8 +54,53 @@ BOOST_AUTO_TEST_CASE(hash_missing_file)
 {
 	hash::const_shared_strings hashes = hash::hash_file(hash::ALL_DIGESTS, "I_DON'T_EXIST.txt");
 	BOOST_ASSERT(!hashes);
-	hash::pString h = hash::hash_file(*hash::ALL_DIGESTS.at(ALL_DIGESTS_MD5), "I_DON'T_EXIST.txt");
+	pString h = hash::hash_file(*hash::ALL_DIGESTS.at(ALL_DIGESTS_MD5), "I_DON'T_EXIST.txt");
 	BOOST_CHECK(!h);
+}
+
+// ----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(ssdeep_hash_buffer)
+{
+	std::vector<boost::uint8_t> buffer(65536);
+	memset(&buffer[0], 0x41, 65536);
+	pString s = ssdeep::hash_buffer(buffer);
+	BOOST_ASSERT(s);
+	BOOST_CHECK(*s == "3:Wttkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkw:Yu");
+}
+
+// ----------------------------------------------------------------------------
+
+BOOST_FIXTURE_TEST_CASE(ssdeep_hash_file, SetWorkingDirectory)
+{
+	pString s = ssdeep::hash_file("testfiles/manatest.exe");
+	BOOST_ASSERT(s);
+	BOOST_CHECK(*s == "384:l3a7DCXuMusPxN7gP/zP0JXZO708ijc3pVVPjqUeI7XQ62r:9U8v5N7YYtc708cc5VVPjze966");
+
+	// Verify that we obtain the same value by reading the file into a buffer and hashing it.
+	FILE* f = fopen("testfiles/manatest.exe", "rb");
+	BOOST_ASSERT(f != nullptr);
+	std::vector<boost::uint8_t> bytes(static_cast<unsigned int>(fs::file_size("testfiles/manatest.exe")));
+	int copied = fread(&bytes[0], 1, bytes.size(), f);
+	if (copied != bytes.size())
+	{
+		fclose(f);
+		BOOST_FAIL("[ssdeep_hash_file] Unable to copy the input file into a buffer.");
+	}
+	fclose(f);
+	s = ssdeep::hash_buffer(bytes);
+	BOOST_ASSERT(s);
+	BOOST_CHECK(*s == "384:l3a7DCXuMusPxN7gP/zP0JXZO708ijc3pVVPjqUeI7XQ62r:9U8v5N7YYtc708cc5VVPjze966");
+}
+
+// ----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(ssdeep_hash_empty_input)
+{
+	pString s = ssdeep::hash_file("I_DON'T_EXIST.txt");
+	BOOST_CHECK(!s);
+	s = ssdeep::hash_buffer(std::vector<boost::uint8_t>());
+	BOOST_CHECK(!s);
 }
 
 // ----------------------------------------------------------------------------
