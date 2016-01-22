@@ -198,5 +198,46 @@ BOOST_AUTO_TEST_CASE(parse_sections)
 }
 
 // ----------------------------------------------------------------------------
+
+/**
+ *	@brief	Helper function which checks that a section contains the expected data.
+ */
+void check_debug_directory_entry(mana::debug_directory_entry d,
+								 const std::string& type,
+								 boost::uint32_t size,
+								 boost::uint32_t address_raw_data,
+								 boost::uint32_t pointer_raw_data)
+{
+	BOOST_CHECK(*nt::translate_to_flag(d.Type, nt::DEBUG_TYPES) == type);
+	BOOST_CHECK(d.SizeofData == size);
+	BOOST_CHECK(d.AddressOfRawData == address_raw_data);
+	BOOST_CHECK(d.PointerToRawData == pointer_raw_data);
+	BOOST_CHECK(d.Characteristics == 0);
+	BOOST_CHECK(d.MajorVersion == 0);
+	BOOST_CHECK(d.MinorVersion == 0);
+	BOOST_CHECK(d.TimeDateStamp == 0x569a5cdb);
+}
+
+// ----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(parse_debug_info)
+{
+	mana::PE pe("testfiles/manatest.exe");
+	
+	auto pdebug = pe.get_debug_info();
+	BOOST_ASSERT(pdebug);
+	auto debug = *pdebug;
+	BOOST_ASSERT(debug.size() == 4);
+	for (int i = 0 ; i < 4 ; i++) {
+		BOOST_ASSERT(debug[i]);
+	}
+
+	check_debug_directory_entry(*debug[0], "IMAGE_DEBUG_TYPE_CODEVIEW", 71, 0x3280, 0x1880);
+	check_debug_directory_entry(*debug[1], "IMAGE_DEBUG_TYPE_VC_FEATURE", 20, 0x32c8, 0x18c8);
+	check_debug_directory_entry(*debug[2], "IMAGE_DEBUG_TYPE_POGO", 632, 0x32dc, 0x18dc);
+	check_debug_directory_entry(*debug[3], "IMAGE_DEBUG_TYPE_ILTCG", 0, 0, 0);
+}
+
+// ----------------------------------------------------------------------------
 BOOST_AUTO_TEST_SUITE_END()
 // ----------------------------------------------------------------------------
