@@ -63,7 +63,10 @@ shared_bytes Section::get_raw_data() const
 		return res;
 	}
 	FILE* f = fopen(_path.c_str(), "rb");
-	if (f == nullptr || fseek(f, _pointer_to_raw_data, SEEK_SET))
+	if (f == nullptr) {
+		return res;
+	}
+	if (fseek(f, _pointer_to_raw_data, SEEK_SET))
 	{
 		fclose(f);
 		return res;
@@ -77,6 +80,7 @@ shared_bytes Section::get_raw_data() const
 		PRINT_ERROR << "Failed to allocate enough space for section " << *get_name() << "! (" << e.what() << ")"
 			<< DEBUG_INFO << std::endl;
 		res->resize(0);
+		fclose(f);
 		return res;
 	}
 

@@ -66,7 +66,7 @@ void print_help(po::options_description& desc, const std::string& argv_0)
 	if (plugins.size() > 0)
 	{
 		std::cout << "Available plugins:" << std::endl;
-		for (std::vector<plugin::pIPlugin>::iterator it = plugins.begin() ; it != plugins.end() ; ++it) {
+		for (auto it = plugins.begin() ; it != plugins.end() ; ++it) {
 			std::cout << "  - " << *(*it)->get_id() << ": " << *(*it)->get_description() << std::endl;
 		}
 		std::cout << "  - all: Run all the available plugins." << std::endl;
@@ -104,13 +104,10 @@ std::vector<std::string> tokenize_args(const std::vector<std::string>& args)
 	// Categories may be comma-separated, so we have to separate them.
 	std::vector<std::string> tokenized_args;
 	boost::char_separator<char> sep(",");
-	for (std::vector<std::string>::const_iterator it = args.begin() ; it != args.end() ; ++it)
+	for (auto it = args.begin() ; it != args.end() ; ++it)
 	{
 		boost::tokenizer<boost::char_separator<char> > tokens(*it, sep);
-		for (boost::tokenizer<boost::char_separator<char> >::iterator tok_iter = tokens.begin();
-			tok_iter != tokens.end();
-			++tok_iter)
-		{
+		for (auto tok_iter = tokens.begin() ; tok_iter != tokens.end() ; ++tok_iter) {
 			tokenized_args.push_back(*tok_iter);
 		}
 	}
@@ -145,7 +142,7 @@ bool validate_args(po::variables_map& vm, po::options_description& desc, char** 
 		std::vector<std::string> selected_categories = tokenize_args(vm["dump"].as<std::vector<std::string> >());
 		const std::vector<std::string> categories = boost::assign::list_of("all")("summary")("dos")("pe")("opt")("sections")
 			("imports")("exports")("resources")("version")("debug")("tls");
-		for (std::vector<std::string>::const_iterator it = selected_categories.begin() ; it != selected_categories.end() ; ++it)
+		for (auto it = selected_categories.begin() ; it != selected_categories.end() ; ++it)
 		{
 			std::vector<std::string>::const_iterator found = std::find(categories.begin(), categories.end(), *it);
 			if (found == categories.end())
@@ -163,14 +160,13 @@ bool validate_args(po::variables_map& vm, po::options_description& desc, char** 
 	{
 		std::vector<std::string> selected_plugins = tokenize_args(vm["plugins"].as<std::vector<std::string> >());
 		std::vector<plugin::pIPlugin> plugins = plugin::PluginManager::get_instance().get_plugins();
-		for (std::vector<std::string>::const_iterator it = selected_plugins.begin() ; it != selected_plugins.end() ; ++it)
+		for (auto it = selected_plugins.begin() ; it != selected_plugins.end() ; ++it)
 		{
 			if (*it == "all") {
 				continue;
 			}
 
-			std::vector<plugin::pIPlugin>::iterator found =
-				std::find_if(plugins.begin(), plugins.end(), boost::bind(&plugin::name_matches, *it, _1));
+			auto found = std::find_if(plugins.begin(), plugins.end(), boost::bind(&plugin::name_matches, *it, _1));
 			if (found == plugins.end())
 			{
 				print_help(desc, argv[0]);
@@ -183,7 +179,7 @@ bool validate_args(po::variables_map& vm, po::options_description& desc, char** 
 
 	// Verify that all the input files exist.
 	std::vector<std::string> input_files = vm["pe"].as<std::vector<std::string> >();
-	for (std::vector<std::string>::iterator it = input_files.begin() ; it != input_files.end() ; ++it)
+	for (auto it = input_files.begin() ; it != input_files.end() ; ++it)
 	{
 		if (!bfs::exists(*it))
 		{
@@ -195,8 +191,8 @@ bool validate_args(po::variables_map& vm, po::options_description& desc, char** 
 	// Verify that the requested output formatter exists
 	if (vm.count("output"))
 	{
-		const std::vector<std::string> formatters = boost::assign::list_of("raw")("json");
-		std::vector<std::string>::const_iterator found = std::find(formatters.begin(), formatters.end(), vm["output"].as<std::string>());
+		auto formatters = boost::assign::list_of("raw")("json");
+		auto found = std::find(formatters.begin(), formatters.end(), vm["output"].as<std::string>());
 		if (found == formatters.end())
 		{
 			print_help(desc, argv[0]);
@@ -390,7 +386,7 @@ std::set<std::string> get_input_files(po::variables_map& vm)
 	if (vm.count("recursive"))
 	{
 		std::vector<std::string> input = vm["pe"].as<std::vector<std::string> >();
-		for (std::vector<std::string>::iterator it = input.begin() ; it != input.end() ; ++it)
+		for (auto it = input.begin() ; it != input.end() ; ++it)
 		{
 			if (!bfs::is_directory(*it))
 			{
@@ -422,8 +418,8 @@ std::set<std::string> get_input_files(po::variables_map& vm)
 	}
 	else
 	{
-		std::vector<std::string> vect = vm["pe"].as<std::vector<std::string> >();
-		for (std::vector<std::string>::const_iterator it = vect.begin() ; it != vect.end() ; ++it)
+		auto vect = vm["pe"].as<std::vector<std::string> >();
+		for (auto it = vect.begin() ; it != vect.end() ; ++it)
 		{
 			if (!bfs::is_directory(*it)) {
 				#if defined BOOST_WINDOWS_API
@@ -463,7 +459,7 @@ void perform_analysis(const std::string& path,
 		PRINT_ERROR << "Could not parse " << path << "!" << std::endl;
 		yara::Yara y = yara::Yara();
 		// In case of failure, we try to detect the file type to inform the user.
-		// Maybe he made a mistake and specified a wrong file?
+		// Maybe they made a mistake and specified a wrong file?
 		if (bfs::exists(path) &&
 			!bfs::is_directory(path) &&
 			y.load_rules("yara_rules/magic.yara"))
@@ -472,7 +468,7 @@ void perform_analysis(const std::string& path,
 			if (m && m->size() > 0)
 			{
 				std::cerr << "Detected file type(s):" << std::endl;
-				for (yara::const_matches::element_type::const_iterator it = m->begin() ; it != m->end() ; ++it) {
+				for (auto it = m->begin() ; it != m->end() ; ++it) {
 					std::cerr << "\t" << (*it)->operator[]("description") << std::endl;
 				}
 			}
@@ -484,7 +480,7 @@ void perform_analysis(const std::string& path,
 	if (vm.count("dump")) {
 		handle_dump_option(*formatter, selected_categories, vm.count("hashes") != 0, pe);
 	}
-	else { // No specific info required. Display the summary of the PE.
+	else { // No specific info requested. Display the summary of the PE.
 		dump_summary(pe, *formatter);
 	}
 
@@ -546,7 +542,7 @@ int main(int argc, char** argv)
 		formatter->set_header("* Manalyze " MANALYZE_VERSION " *");
 	}
 
-	// Set the working directory to the binary's folder.
+	// Set the working directory to Manalyze's folder.
 	chdir(working_dir.string().c_str());
 
 	// Do the actual analysis on all the input files

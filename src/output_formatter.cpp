@@ -409,7 +409,7 @@ struct escaped_string
 
 		// JSON fails miserably on non-printable characters, but
 		// at the same time doesn't support the \x notation.
-		esc_str = *(esc_char | karma::print | "[0x" << karma::hex << "]");
+		esc_str = *(esc_char | boost::spirit::karma::iso8859_1::print | "\\u00" << karma::hex);
 	}
 
 	karma::rule<OutputIterator, std::string()> esc_str;

@@ -54,11 +54,11 @@ public:
 	 *	@param	const std::vector<pString>& coff_string_table An optional COFF string table, in case section
 	 *			names are located in it.
 	 */
-	Section(const image_section_header& header,
+	DECLSPEC Section(const image_section_header& header,
 		    const std::string& path,
 			const std::vector<pString>& coff_string_table = std::vector<pString>());
 
-    virtual ~Section() {}
+	DECLSPEC virtual ~Section() {}
 
 	/**
 	 *	@brief	Returns the raw bytes of the section.
@@ -97,9 +97,8 @@ private:
 	boost::uint16_t _number_of_line_numbers;
 	boost::uint32_t _characteristics;
 
-	// Path to the executable file and location inside it:
+	// Path to the executable file.
 	std::string		_path;
-	boost::uint32_t	_offset;
 };
 
 typedef boost::shared_ptr<Section> pSection;
