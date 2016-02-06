@@ -28,6 +28,12 @@ PE::PE(const std::string& path)
 		PRINT_ERROR << "Could not open " << _path << "." << std::endl;
 		goto END;
 	}
+
+	// Get the file size
+	fseek(f, 0, SEEK_END);
+	_file_size = ftell(f);
+	fseek(f, 0, SEEK_SET);
+
 	if (!_parse_dos_header(f)) {
 		goto END;
 	}
@@ -80,17 +86,8 @@ void PE::operator delete(void* p) {
 
 // ----------------------------------------------------------------------------
 
-size_t PE::get_filesize() const
-{
-	FILE* f = fopen(_path.c_str(), "rb");
-	size_t res = 0;
-	if (f == nullptr) {
-		return res;
-	}
-	fseek(f, 0, SEEK_END);
-	res = ftell(f);
-	fclose(f);
-	return res;
+boost::uint64_t PE::get_filesize() const {
+	return _file_size;
 }
 
 // ----------------------------------------------------------------------------
@@ -886,6 +883,8 @@ void delete_manape_module_data(manape_data* data)
 		delete data;
 	}
 }
+
+// ----------------------------------------------------------------------------
 
 boost::shared_ptr<manape_data> PE::create_manape_module_data() const
 {

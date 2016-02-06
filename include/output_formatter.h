@@ -30,14 +30,18 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include <boost/cstdint.hpp>
 #include <boost/date_time.hpp>
 #include <boost/algorithm/string/trim.hpp>
-#include <boost/spirit/include/karma.hpp>
 
 #include "manacommons/output_tree_node.h"
+#include "manacommons/escape.h" // String escaping functions
 #include "manacommons/color.h"
 #include "plugin_framework/result.h" // Necessary to hold a threat level in a node.
 
 namespace io
 {
+
+// ----------------------------------------------------------------------------
+// Base class of all the formatters
+// ----------------------------------------------------------------------------
 
 /**
  *	@brief	Abstract class describing objects whose role is to display the output of the program
@@ -139,6 +143,8 @@ protected:
 	boost::shared_ptr<OutputTreeNode> _root; // The analysis data is contained in this field
 };
 
+// ----------------------------------------------------------------------------
+
 /**
  *	@brief	The default formatter. Displays the data as a human readable text.
  */
@@ -147,6 +153,7 @@ class RawFormatter : public OutputFormatter
 
 public:
 	virtual void format(std::ostream& sink, bool end_stream = true);
+	typedef escaped_string_raw<sink_type> escape_grammar;
 
 private:
 	/**
@@ -184,6 +191,8 @@ private:
 
 };
 
+// ----------------------------------------------------------------------------
+
 /**
 *	@brief	Formatter that prints the analysis result in JSON.
 */
@@ -191,6 +200,7 @@ class JsonFormatter : public OutputFormatter
 {
 public:
 	virtual void format(std::ostream& sink, bool end_stream = true);
+	typedef escaped_string_json<sink_type> escape_grammar;
 
 private:
 	/**
@@ -229,22 +239,5 @@ std::string uint64_to_version_number(boost::uint32_t msbytes, boost::uint32_t ls
 *	@return	A human readable string representing the given timestamp.
 */
 std::string timestamp_to_string(boost::uint64_t epoch_timestamp);
-
-// ----------------------------------------------------------------------------
-
-/**
-*	@brief	Escapes problematic characters from a string.
-*
-*	This is especially useful for JSON output, because paths contained in debug
-*	information insert unescaped backslashes which cause the resulting JSON to
-*	be invalid.
-*
-*	WARNING: Single quotes are NOT escaped.
-*
-*	@param const std::string& s The string to escape.
-*
-*	@returns The escaped string.
-*/
-std::string escape(const std::string& s);
 
 } // !namespace io

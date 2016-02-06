@@ -35,6 +35,10 @@ Section::Section(const image_section_header& header,
 		_path(path)
 {
 	_name = std::string((char*) header.Name);
+	pString escaped = io::escape(_name);
+	if (escaped != nullptr)	{
+		_name = *escaped;
+	}
 
 	if (_name.size() > 0 && _name[0] == '/')
 	{

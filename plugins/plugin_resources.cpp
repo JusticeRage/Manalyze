@@ -91,7 +91,7 @@ public:
 			}
 		}
 
-		float ratio = (float) size / (float) pe.get_filesize();
+		double ratio = static_cast<double>(size) / static_cast<double>(pe.get_filesize());
 		if (ratio > .75)
 		{
 			std::stringstream ss;

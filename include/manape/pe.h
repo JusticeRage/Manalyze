@@ -78,7 +78,7 @@ public:
 	DECLSPEC virtual ~PE() {}
 	DECLSPEC static boost::shared_ptr<PE> create(const std::string& path);
 
-	DECLSPEC size_t get_filesize() const;
+	DECLSPEC boost::uint64_t get_filesize() const;
 
     DECLSPEC pString get_path() const {
 		return boost::make_shared<std::string>(_path);
@@ -380,6 +380,7 @@ private:
 
 	std::string							_path;
     bool								_initialized;
+	boost::uint64_t						_file_size;
 
 	/*
 	    -----------------------------------
