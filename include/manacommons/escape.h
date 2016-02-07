@@ -147,7 +147,7 @@ template<typename T>
 pString escape(const std::string& s)
 {
 	BOOST_STATIC_ASSERT(boost::is_base_of<OutputFormatter, T>::value);
-	return _do_escape<T::escape_grammar>(s);
+	return _do_escape<typename T::escape_grammar>(s);
 }
 
 // ----------------------------------------------------------------------------
