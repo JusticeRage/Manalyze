@@ -31,16 +31,16 @@ namespace mana
 // Initialize the Yara wrapper used by resource objects
 yara::pYara Resource::_yara = yara::Yara::create();
 
-bool PE::_read_image_resource_directory(image_resource_directory& dir, FILE* f, unsigned int offset) const
+bool PE::_read_image_resource_directory(image_resource_directory& dir, unsigned int offset) const
 {
-	if (!_ioh) {
+	if (!_ioh || _file_handle == nullptr) {
 		return false;
 	}
 
 	if (offset)
 	{
 		offset = _rva_to_offset(_ioh->directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress) + offset;
-		if (!offset || fseek(f, offset, SEEK_SET))
+		if (!offset || fseek(_file_handle.get(), offset, SEEK_SET))
 		{
 			PRINT_ERROR << "Could not reach an IMAGE_RESOURCE_DIRECTORY." << DEBUG_INFO_INSIDEPE << std::endl;
 			return false;
@@ -49,7 +49,7 @@ bool PE::_read_image_resource_directory(image_resource_directory& dir, FILE* f, 
 
 	unsigned int size = 2*sizeof(boost::uint32_t) + 4*sizeof(boost::uint16_t);
 	dir.Entries.clear();
-	if (size != fread(&dir, 1, size, f))
+	if (size != fread(&dir, 1, size, _file_handle.get()))
 	{
 		PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DIRECTORY." << DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
@@ -60,7 +60,7 @@ bool PE::_read_image_resource_directory(image_resource_directory& dir, FILE* f, 
 		auto entry = boost::make_shared<image_resource_directory_entry>();
 		size = 2*sizeof(boost::uint32_t);
 		memset(entry.get(), 0, size);
-		if (size != fread(entry.get(), 1, size, f))
+		if (size != fread(entry.get(), 1, size, _file_handle.get()))
 		{
 			PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DIRECTORY_ENTRY." << DEBUG_INFO_INSIDEPE << std::endl;
 			return false;
@@ -72,7 +72,7 @@ bool PE::_read_image_resource_directory(image_resource_directory& dir, FILE* f, 
 			// The offset of the string is relative
 			auto name_offset = _rva_to_offset(_ioh->directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress)
 				+ (entry->NameOrId & 0x7FFFFFFF);
-			if (!name_offset || !utils::read_string_at_offset(f, name_offset, entry->NameStr, true))
+			if (!name_offset || !utils::read_string_at_offset(_file_handle.get(), name_offset, entry->NameStr, true))
 			{
 				PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DIRECTORY_ENTRY's name." << DEBUG_INFO_INSIDEPE << std::endl;
 				return false;
@@ -87,29 +87,29 @@ bool PE::_read_image_resource_directory(image_resource_directory& dir, FILE* f, 
 
 // ----------------------------------------------------------------------------
 
-bool PE::_parse_resources(FILE* f)
+bool PE::_parse_resources()
 {
-	if (!_ioh) {
+	if (!_ioh || _file_handle == nullptr) {
 		return false;
 	}
-	if (!_reach_directory(f, IMAGE_DIRECTORY_ENTRY_RESOURCE))	{ // No resources.
+	if (!_reach_directory(IMAGE_DIRECTORY_ENTRY_RESOURCE))	{ // No resources.
 		return true;
 	}
 
 	image_resource_directory root;
-	_read_image_resource_directory(root, f);
+	_read_image_resource_directory(root);
 
 	// Read Type directories
 	for (std::vector<pimage_resource_directory_entry>::iterator it = root.Entries.begin() ; it != root.Entries.end() ; ++it)
 	{
 		image_resource_directory type;
-		_read_image_resource_directory(type, f, (*it)->OffsetToData & 0x7FFFFFFF);
+		_read_image_resource_directory(type, (*it)->OffsetToData & 0x7FFFFFFF);
 
 		// Read Name directory
 		for (std::vector<pimage_resource_directory_entry>::iterator it2 = type.Entries.begin() ; it2 != type.Entries.end() ; ++it2)
 		{
 			image_resource_directory name;
-			_read_image_resource_directory(name, f, (*it2)->OffsetToData & 0x7FFFFFFF);
+			_read_image_resource_directory(name, (*it2)->OffsetToData & 0x7FFFFFFF);
 
 			// Read the IMAGE_RESOURCE_DATA_ENTRY
 			for (std::vector<pimage_resource_directory_entry>::iterator it3 = name.Entries.begin() ; it3 != name.Entries.end() ; ++it3)
@@ -118,13 +118,13 @@ bool PE::_parse_resources(FILE* f)
 				memset(&entry, 0, sizeof(image_resource_data_entry));
 
 				unsigned int offset = _rva_to_offset(_ioh->directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress + ((*it3)->OffsetToData & 0x7FFFFFFF));
-				if (!offset || fseek(f, offset, SEEK_SET))
+				if (!offset || fseek(_file_handle.get(), offset, SEEK_SET))
 				{
 					PRINT_ERROR << "Could not reach an IMAGE_RESOURCE_DATA_ENTRY." << DEBUG_INFO_INSIDEPE << std::endl;
 					return false;
 				}
 
-				if (sizeof(image_resource_data_entry) != fread(&entry, 1, sizeof(image_resource_data_entry), f))
+				if (sizeof(image_resource_data_entry) != fread(&entry, 1, sizeof(image_resource_data_entry), _file_handle.get()))
 				{
 					PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DATA_ENTRY." << DEBUG_INFO_INSIDEPE << std::endl;
 					return false;

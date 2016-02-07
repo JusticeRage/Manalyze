@@ -42,6 +42,7 @@ namespace mana {
 
 typedef boost::shared_ptr<std::string> pString;
 typedef boost::shared_ptr<const std::vector<boost::uint8_t> > shared_bytes;
+typedef boost::shared_ptr<FILE> pFile;
 
 class Section
 {
@@ -51,13 +52,14 @@ public:
 	 *	@brief	Create a Section object from a raw image_section_header structure.
 	 *
 	 *	@param	const image_section_header& header The structure on which the section will be based.
-	 *	@param	const std::string& path The path to the PE (in order to be able to access the section bytes)
+	 *	@param	pFile handle An open handle to the executable on the filesystem.
 	 *	@param	const std::vector<pString>& coff_string_table An optional COFF string table, in case section
 	 *			names are located in it.
 	 */
 	DECLSPEC Section(const image_section_header& header,
-		    const std::string& path,
-			const std::vector<pString>& coff_string_table = std::vector<pString>());
+					 pFile handle,
+					 boost::uint64_t file_size,
+					 const std::vector<pString>& coff_string_table = std::vector<pString>());
 
 	DECLSPEC virtual ~Section() {}
 
@@ -98,8 +100,10 @@ private:
 	boost::uint16_t _number_of_line_numbers;
 	boost::uint32_t _characteristics;
 
-	// Path to the executable file.
-	std::string		_path;
+	// Handle to the file on the filesystem.
+	pFile			_file_handle;
+	// Size of the file. This is used to reject sections with a wrong size.
+	boost::uint64_t	_file_size;
 };
 
 typedef boost::shared_ptr<Section> pSection;

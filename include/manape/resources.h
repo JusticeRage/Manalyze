@@ -44,7 +44,7 @@ public:
 			 const std::string&		language,
 			 boost::uint32_t		codepage,
 			 boost::uint32_t		size,
-			 boost::uint32_t			offset_in_file,
+			 boost::uint32_t		offset_in_file,
 			 const std::string&		path_to_pe)
 		: _type(type),
 		  _name(name),

@@ -20,12 +20,12 @@
 
 namespace mana {
 
-bool PE::_parse_imports(FILE* f)
+bool PE::_parse_imports()
 {
-	if (!_ioh) { // Image Optional Header wasn't parsed successfully.
+	if (!_ioh || _file_handle == nullptr) { // Image Optional Header wasn't parsed successfully.
 		return false;
 	}
-	if (!_reach_directory(f, IMAGE_DIRECTORY_ENTRY_IMPORT))	{ // No imports
+	if (!_reach_directory(IMAGE_DIRECTORY_ENTRY_IMPORT))	{ // No imports
 		return true;
 	}
 
@@ -34,7 +34,7 @@ bool PE::_parse_imports(FILE* f)
 		pimage_import_descriptor iid(new image_import_descriptor);
 		memset(iid.get(), 0, 5*sizeof(boost::uint32_t)); // Don't overwrite the last member (a string)
 
-		if (20 != fread(iid.get(), 1, 20, f))
+		if (20 != fread(iid.get(), 1, 20, _file_handle.get()))
 		{
 			PRINT_ERROR << "Could not read the IMAGE_IMPORT_DESCRIPTOR." << std::endl;
 			return true; // Don't give up on the rest of the parsing.
@@ -50,7 +50,7 @@ bool PE::_parse_imports(FILE* f)
 		if (!offset) { // Try to use the RVA as a direct address if the imports are outside of a section.
 			offset = iid->Name;
 		}
-		if (!utils::read_string_at_offset(f, offset, iid->NameStr))
+		if (!utils::read_string_at_offset(_file_handle.get(), offset, iid->NameStr))
 		{
 			// It seems that the Windows loader doesn't give up if such a thing happens.
 			if (_imports.size() > 0)
@@ -77,7 +77,7 @@ bool PE::_parse_imports(FILE* f)
 		else { // Some packed executables use FirstThunk and set OriginalFirstThunk to 0.
 			ilt_offset = _rva_to_offset((*it)->first->FirstThunk);
 		}
-		if (!ilt_offset || fseek(f, ilt_offset, SEEK_SET))
+		if (!ilt_offset || fseek(_file_handle.get(), ilt_offset, SEEK_SET))
 		{
 			PRINT_ERROR << "Could not reach an IMPORT_LOOKUP_TABLE." << std::endl;
 			return true;
@@ -91,7 +91,7 @@ bool PE::_parse_imports(FILE* f)
 
 			// The field has a size of 8 for x64 PEs
 			int size_to_read = (_ioh->Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32+") ? 8 : 4);
-			if (size_to_read != fread(&(import->AddressOfData), 1, size_to_read, f))
+			if (size_to_read != fread(&(import->AddressOfData), 1, size_to_read, _file_handle.get()))
 			{
 				PRINT_ERROR << "Could not read the IMPORT_LOOKUP_TABLE." << std::endl;
 				return true;
@@ -116,18 +116,18 @@ bool PE::_parse_imports(FILE* f)
 					return true;
 				}
 
-				unsigned int saved_offset = ftell(f);
-				if (saved_offset == -1 || fseek(f, table_offset, SEEK_SET) || 2 != fread(&(import->Hint), 1, 2, f))
+				unsigned int saved_offset = ftell(_file_handle.get());
+				if (saved_offset == -1 || fseek(_file_handle.get(), table_offset, SEEK_SET) || 2 != fread(&(import->Hint), 1, 2, _file_handle.get()))
 				{
 					PRINT_ERROR << "Could not read a HINT/NAME hint." << std::endl;
 					return true;
 				}
-				import->Name = utils::read_ascii_string(f);
+				import->Name = utils::read_ascii_string(_file_handle.get());
 
 				//TODO: Demangle the import name
 
 				// Go back to the import lookup table.
-				if (fseek(f, saved_offset, SEEK_SET)) {
+				if (fseek(_file_handle.get(), saved_offset, SEEK_SET)) {
 					return true;
 				}
 			}

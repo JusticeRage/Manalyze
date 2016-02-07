@@ -69,6 +69,7 @@ typedef boost::shared_ptr<const std::vector<pimage_base_relocation> > shared_rel
 typedef boost::shared_ptr<const image_tls_directory> shared_tls;
 typedef boost::shared_ptr<const std::vector<pwin_certificate> > shared_certificates;
 typedef boost::shared_ptr<std::string> pString;
+typedef boost::shared_ptr<FILE> pFile;
 
 class PE
 {
@@ -229,7 +230,7 @@ private:
 	/**
 	 * Reads the first bytes of the file to reconstruct the DOS header.
 	 */
-	bool _parse_dos_header(FILE* f);
+	bool _parse_dos_header();
 
 	/**
 	 * Reads the PE header of an executable.
@@ -237,31 +238,31 @@ private:
 	 *     this function first! Actually, please don't call it at all. Let the constructor
 	 *     handle the parsing.
 	 */
-	bool _parse_pe_header(FILE* f);
+	bool _parse_pe_header();
 
 	/**
 	 * Reads the (optional) PE COFF symbols of an executable.
 	 * /!\ This relies on the information gathered in _parse_pe_header.
 	 */
-	bool _parse_coff_symbols(FILE* f);
+	bool _parse_coff_symbols();
 
 	/**
 	 *	@brief	Parses the IMAGE_OPTIONAL_HEADER structure of a PE.
 	 *	/!\ This relies on the information gathered in _parse_pe_header.
 	 */
-	bool _parse_image_optional_header(FILE* f);
+	bool _parse_image_optional_header();
 
 	/**
 	 *	@brief	Parses the IMAGE_SECTION_HEADERs of a PE.
 	 *	/!\ This relies on the information gathered in _parse_pe_header.
 	 */
-	bool _parse_section_table(FILE* f);
+	bool _parse_section_table();
 
 	/**
 	 *	@brief	Courtesy function used to parse all the PE directories (imports, exports, resources, ...).
 	 *	/!\ This relies on the information gathered in _parse_image_optional_header.
 	 */
-	bool _parse_directories(FILE* f);
+	bool _parse_directories();
 
 	/**
 	 *	@brief	Parses the imports of a PE.
@@ -271,7 +272,7 @@ private:
 	 *
 	 *	Implemented in imports.cpp
 	 */
-	bool _parse_imports(FILE* f);
+	bool _parse_imports();
 
 	/**
 	 *	@brief	Parses the exports of a PE.
@@ -279,7 +280,7 @@ private:
 	 *	Included in the _parse_directories call.
 	 *	/!\ This relies on the information gathered in _parse_image_optional_header.
 	 */
-	bool _parse_exports(FILE* f);
+	bool _parse_exports();
 
 	/**
 	 *	@brief	Parses the resources of a PE.
@@ -289,7 +290,7 @@ private:
 	 *
 	 *	Implemented in resources.cpp
 	 */
-	bool _parse_resources(FILE* f);
+	bool _parse_resources();
 
 	/**
 	 *	@brief	Parses the relocation table of a PE.
@@ -297,7 +298,7 @@ private:
 	 *	Included in the _parse_directories call.
 	 *	/!\ This relies on the information gathered in _parse_pe_header.
 	 */
-	bool _parse_relocations(FILE* f);
+	bool _parse_relocations();
 
 	/**
 	 *	@brief	Parses the Thread Local Storage callback table of a PE.
@@ -305,7 +306,7 @@ private:
 	 *	Included in the _parse_directories call.
 	 *	/!\ This relies on the information gathered in _parse_pe_header.
 	 */
-	bool _parse_tls(FILE* f);
+	bool _parse_tls();
 
 	/**
 	 *	@brief	Parses the debug information of a PE.
@@ -315,7 +316,7 @@ private:
 	 *
 	 *	Implemented in resources.cpp
 	 */
-	bool _parse_debug(FILE* f);
+	bool _parse_debug();
 
 	/**
 	 *	@brief	Parses the certificate information (Authenticode) of a PE.
@@ -323,7 +324,7 @@ private:
 	 *	Included in the _parse_directories call.
 	 *	/!\ This relies on the information gathered in _parse_pe_header.
 	 */
-	bool _parse_certificates(FILE* f);
+	bool _parse_certificates();
 
 	/**
 	 *	@brief	Translates a Relative Virtual Address into an offset in the file.
@@ -346,18 +347,16 @@ private:
 	/**
 	 *	@brief	Moves the file cursor to the target directory.
 	 *
-	 *	@param	FILE* f			The PE file object.
 	 *	@param	int directory	The directory to reach, i.e. IMAGE_DIRECTORY_ENTRY_EXPORT.
 	 *
 	 *	@return	Whether the directory was successfully reached.
 	 */
-	bool _reach_directory(FILE* f, int directory) const;
+	bool _reach_directory(int directory) const;
 
 	/**
 	 *	@brief	Reads an image_resource_directory at the current position in a file.
 	 *
 	 *	@param	image_resource_directory& dir The structure to fill.
-	 *	@param	FILE* f The file to read from.
 	 *	@param	unsigned int offset The offset at which to jump before reading the directory.
 	 *			The offset is relative to the beginning of the resource "section" (NOT a RVA).
 	 *			If it is 0, the function reads from the cursor's current location.
@@ -366,7 +365,7 @@ private:
 	 *
 	 *	@return	Whether a structure was successfully read.
 	 */
-	bool _read_image_resource_directory(image_resource_directory& dir, FILE* f, unsigned int offset = 0) const;
+	bool _read_image_resource_directory(image_resource_directory& dir, unsigned int offset = 0) const;
 
 	/**
 	 *	@brief	Finds imported DLLs whose names match a particular regular expression.
@@ -381,6 +380,7 @@ private:
 	std::string							_path;
     bool								_initialized;
 	boost::uint64_t						_file_size;
+	pFile								_file_handle;
 
 	/*
 	    -----------------------------------

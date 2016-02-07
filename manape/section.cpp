@@ -21,7 +21,8 @@ namespace mana
 {
 
 Section::Section(const image_section_header& header,
-				 const std::string& path,
+				 pFile handle,
+				 boost::uint64_t file_size,
 				 const std::vector<pString>& coff_string_table)
 	  : _virtual_size(header.VirtualSize),
 		_virtual_address(header.VirtualAddress),
@@ -32,7 +33,8 @@ Section::Section(const image_section_header& header,
 		_number_of_relocations(header.NumberOfRelocations),
 		_number_of_line_numbers(header.NumberOfLineNumbers),
 		_characteristics(header.Characteristics),
-		_path(path)
+		_file_handle(handle),
+		_file_size(file_size)
 {
 	_name = std::string((char*) header.Name);
 	pString escaped = io::escape(_name);
@@ -66,13 +68,15 @@ shared_bytes Section::get_raw_data() const
 		PRINT_WARNING << "Section " << _name << " has a size of 0!" << DEBUG_INFO << std::endl;
 		return res;
 	}
-	FILE* f = fopen(_path.c_str(), "rb");
-	if (f == nullptr) {
+	if (_file_handle == nullptr) {
 		return res;
 	}
-	if (fseek(f, _pointer_to_raw_data, SEEK_SET))
+	if (_pointer_to_raw_data + _size_of_raw_data > _file_size)
 	{
-		fclose(f);
+		PRINT_WARNING << "Section " << _name << " is larger than the executable!" << DEBUG_INFO << std::endl;
+		return res;
+	}
+	if (fseek(_file_handle.get(), _pointer_to_raw_data, SEEK_SET)) {
 		return res;
 	}
 
@@ -84,17 +88,15 @@ shared_bytes Section::get_raw_data() const
 		PRINT_ERROR << "Failed to allocate enough space for section " << *get_name() << "! (" << e.what() << ")"
 			<< DEBUG_INFO << std::endl;
 		res->resize(0);
-		fclose(f);
 		return res;
 	}
 
-	if (_size_of_raw_data != fread(&(*res)[0], 1, _size_of_raw_data, f))
+	if (_size_of_raw_data != fread(&(*res)[0], 1, _size_of_raw_data, _file_handle.get()))
 	{
 		PRINT_WARNING << "Raw bytes from section " << _name << " could not be obtained." << std::endl;
 		res->resize(0);
 	}
 
-	fclose(f);
 	return res;
 }
 

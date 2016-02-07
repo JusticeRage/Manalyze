@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 2.6)
 project (manalyze-tests)
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
-add_executable(manalyze-tests fixtures.cpp hash-library.cpp pe.cpp imports.cpp resources.cpp section.cpp)
+add_executable(manalyze-tests fixtures.cpp hash-library.cpp pe.cpp imports.cpp resources.cpp section.cpp escape.cpp)
 
 target_link_libraries(
 						manalyze-tests

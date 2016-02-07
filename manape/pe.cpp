@@ -26,40 +26,37 @@ PE::PE(const std::string& path)
 	if (f == nullptr)
 	{
 		PRINT_ERROR << "Could not open " << _path << "." << std::endl;
-		goto END;
+		return;
 	}
+	_file_handle = boost::shared_ptr<FILE>(f, fclose);
 
 	// Get the file size
-	fseek(f, 0, SEEK_END);
-	_file_size = ftell(f);
-	fseek(f, 0, SEEK_SET);
+	fseek(_file_handle.get(), 0, SEEK_END);
+	_file_size = ftell(_file_handle.get());
+	fseek(_file_handle.get(), 0, SEEK_SET);
 
-	if (!_parse_dos_header(f)) {
-		goto END;
+	if (!_parse_dos_header()) {
+		return;
 	}
 
-	if (!_parse_pe_header(f)) {
-		goto END;
+	if (!_parse_pe_header()) {
+		return;
 	}
 
-	if (!_parse_image_optional_header(f)) {
-		goto END;
+	if (!_parse_image_optional_header()) {
+		return;
 	}
 
-	if (!_parse_section_table(f)) {
-		goto END;
+	if (!_parse_section_table()) {
+		return;
 	}
 
 	// Failure is acceptable from here on.
 	_initialized = true;
-	_parse_coff_symbols(f);
-	_parse_directories(f);
-
-	END:
-	if (f != nullptr) {
-		fclose(f);
-	}
+	_parse_coff_symbols();
+	_parse_directories();
 }
+
 
 // ----------------------------------------------------------------------------
 
@@ -92,8 +89,12 @@ boost::uint64_t PE::get_filesize() const {
 
 // ----------------------------------------------------------------------------
 
-bool PE::_parse_dos_header(FILE* f)
+bool PE::_parse_dos_header()
 {
+	if (_file_handle == nullptr) {
+		return false;
+	}
+
 	dos_header dos;
 	memset(&dos, 0, sizeof(dos));
 	if (sizeof(dos) > get_filesize())
@@ -102,7 +103,7 @@ bool PE::_parse_dos_header(FILE* f)
 		return false;
 	}
 
-	if (sizeof(dos) != fread(&dos, 1, sizeof(dos), f))
+	if (sizeof(dos) != fread(&dos, 1, sizeof(dos), _file_handle.get()))
 	{
 		PRINT_ERROR << "Could not read the DOS Header." << DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
@@ -118,22 +119,22 @@ bool PE::_parse_dos_header(FILE* f)
 
 // ----------------------------------------------------------------------------
 
-bool PE::_parse_pe_header(FILE* f)
+bool PE::_parse_pe_header()
 {
-	if (!_h_dos) {
+	if (!_h_dos || _file_handle == nullptr) {
 		return false;
 	}
 
 	pe_header peh;
 	memset(&peh, 0, sizeof(peh));
 
-	if (fseek(f, _h_dos->e_lfanew, SEEK_SET))
+	if (fseek(_file_handle.get(), _h_dos->e_lfanew, SEEK_SET))
 	{
 		PRINT_ERROR << "Could not reach PE header (fseek to offset " <<  _h_dos->e_lfanew << " failed)." 
 					<< DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
 	}
-	if (sizeof(peh) != fread(&peh, 1, sizeof(peh), f))
+	if (sizeof(peh) != fread(&peh, 1, sizeof(peh), _file_handle.get()))
 	{
 		PRINT_ERROR << "Could not read the PE Header." << DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
@@ -149,9 +150,9 @@ bool PE::_parse_pe_header(FILE* f)
 
 // ----------------------------------------------------------------------------
 
-bool PE::_parse_coff_symbols(FILE* f)
+bool PE::_parse_coff_symbols()
 {
-	if (!_h_pe) {
+	if (!_h_pe || _file_handle == nullptr) {
 		return false;
 	}
 
@@ -159,7 +160,7 @@ bool PE::_parse_coff_symbols(FILE* f)
 		return true;
 	}
 
-	if (fseek(f, _h_pe->PointerToSymbolTable, SEEK_SET))
+	if (fseek(_file_handle.get(), _h_pe->PointerToSymbolTable, SEEK_SET))
 	{
 		PRINT_ERROR << "Could not reach PE COFF symbols (fseek to offset " <<  _h_pe->PointerToSymbolTable << " failed)." 
 					<< DEBUG_INFO_INSIDEPE << std::endl;
@@ -171,7 +172,7 @@ bool PE::_parse_coff_symbols(FILE* f)
 		pcoff_symbol sym = boost::make_shared<coff_symbol>();
 		memset(sym.get(), 0, sizeof(coff_symbol));
 
-		if (18 != fread(sym.get(), 1, 18, f)) // Each symbol has a fixed size of 18 bytes.
+		if (18 != fread(sym.get(), 1, 18, _file_handle.get())) // Each symbol has a fixed size of 18 bytes.
 		{
 			PRINT_ERROR << "Could not read a COFF symbol." << DEBUG_INFO_INSIDEPE << std::endl;
 			return false;
@@ -190,8 +191,8 @@ bool PE::_parse_coff_symbols(FILE* f)
 	// Read the COFF string table
 	boost::uint32_t st_size = 0;
 	boost::uint32_t count = 0;
-	fread(&st_size, 4, 1, f);
-	if (st_size > get_filesize() - ftell(f)) // Weak error check, but I couldn't find a better one in the PE spec.
+	fread(&st_size, 4, 1, _file_handle.get());
+	if (st_size > get_filesize() - ftell(_file_handle.get())) // Weak error check, but I couldn't find a better one in the PE spec.
 	{
 		PRINT_WARNING << "COFF String Table's reported size is bigger than the remaining bytes!" 
 					  << DEBUG_INFO_INSIDEPE << std::endl;
@@ -200,7 +201,7 @@ bool PE::_parse_coff_symbols(FILE* f)
 
 	while (count < st_size)
 	{
-		pString s = boost::make_shared<std::string>(utils::read_ascii_string(f));
+		pString s = boost::make_shared<std::string>(utils::read_ascii_string(_file_handle.get()));
 		_coff_string_table.push_back(s);
 		count += s->size() + 1; // Count the null terminator as well.
 	}
@@ -210,9 +211,9 @@ bool PE::_parse_coff_symbols(FILE* f)
 
 // ----------------------------------------------------------------------------
 
-bool PE::_parse_image_optional_header(FILE* f)
+bool PE::_parse_image_optional_header()
 {
-	if (!_h_pe) {
+	if (!_h_pe || _file_handle == nullptr) {
 		return false;
 	}
 
@@ -225,7 +226,7 @@ bool PE::_parse_image_optional_header(FILE* f)
 		return true;
 	}
 
-	if (fseek(f, _h_dos->e_lfanew + sizeof(pe_header), SEEK_SET))
+	if (fseek(_file_handle.get(), _h_dos->e_lfanew + sizeof(pe_header), SEEK_SET))
 	{
 		PRINT_ERROR << "Could not reach the Image Optional Header (fseek to offset "
 			<<  _h_dos->e_lfanew + sizeof(pe_header) << " failed)." << DEBUG_INFO_INSIDEPE << std::endl;
@@ -233,7 +234,7 @@ bool PE::_parse_image_optional_header(FILE* f)
 	}
 
 	// Only read the first 0x18 bytes: after that, we have to fill the fields manually.
-	if (0x18 != fread(&ioh, 1, 0x18, f))
+	if (0x18 != fread(&ioh, 1, 0x18, _file_handle.get()))
 	{
 		PRINT_ERROR << "Could not read the Image Optional Header." << DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
@@ -246,7 +247,7 @@ bool PE::_parse_image_optional_header(FILE* f)
 	}
 	else if (ioh.Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32"))
 	{
-		if (4 != fread(&ioh.BaseOfData, 1, 4, f) || 4 != fread(&ioh.ImageBase, 1, 4, f))
+		if (4 != fread(&ioh.BaseOfData, 1, 4, _file_handle.get()) || 4 != fread(&ioh.ImageBase, 1, 4, _file_handle.get()))
 		{
 			PRINT_ERROR << "Error reading the PE32 specific part of ImageOptionalHeader." 
 						<< DEBUG_INFO_INSIDEPE << std::endl;
@@ -256,7 +257,7 @@ bool PE::_parse_image_optional_header(FILE* f)
 	else
 	{
 		// PE32+: BaseOfData doesn't exist, and ImageBase is a uint64.
-		if (8 != fread(&ioh.ImageBase, 1, 8, f))
+		if (8 != fread(&ioh.ImageBase, 1, 8, _file_handle.get()))
 		{
 			PRINT_ERROR << "Error reading the PE32+ specific part of ImageOptionalHeader." 
 						<< DEBUG_INFO_INSIDEPE << std::endl;
@@ -265,7 +266,7 @@ bool PE::_parse_image_optional_header(FILE* f)
 	}
 
 	// After this, PE32 and PE32+ structures are in sync for a while.
-	if (0x28 != fread(&ioh.SectionAlignment, 1, 0x28, f))
+	if (0x28 != fread(&ioh.SectionAlignment, 1, 0x28, _file_handle.get()))
 	{
 		PRINT_ERROR << "Error reading the common part of ImageOptionalHeader." 
 					<< DEBUG_INFO_INSIDEPE << std::endl;
@@ -284,7 +285,7 @@ bool PE::_parse_image_optional_header(FILE* f)
 	// We store them in uint64s in any case.
 	if (ioh.Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32+"))
 	{
-		if (40 != fread(&ioh.SizeofStackReserve, 1, 40, f))
+		if (40 != fread(&ioh.SizeofStackReserve, 1, 40, _file_handle.get()))
 		{
 			PRINT_ERROR << "Error reading SizeOfStackReserve for a PE32+ IMAGE OPTIONAL HEADER." 
 						<< DEBUG_INFO_INSIDEPE << std::endl;
@@ -293,13 +294,13 @@ bool PE::_parse_image_optional_header(FILE* f)
 	}
 	else
 	{
-		fread(&ioh.SizeofStackReserve, 1, 4, f);
-		fread(&ioh.SizeofStackCommit, 1, 4, f);
-		fread(&ioh.SizeofHeapReserve, 1, 4, f);
-		fread(&ioh.SizeofHeapCommit, 1, 4, f);
-		fread(&ioh.LoaderFlags, 1, 4, f);
-		fread(&ioh.NumberOfRvaAndSizes, 1, 4, f);
-		if (feof(f) || ferror(f))
+		fread(&ioh.SizeofStackReserve, 1, 4, _file_handle.get());
+		fread(&ioh.SizeofStackCommit, 1, 4, _file_handle.get());
+		fread(&ioh.SizeofHeapReserve, 1, 4, _file_handle.get());
+		fread(&ioh.SizeofHeapCommit, 1, 4, _file_handle.get());
+		fread(&ioh.LoaderFlags, 1, 4, _file_handle.get());
+		fread(&ioh.NumberOfRvaAndSizes, 1, 4, _file_handle.get());
+		if (feof(_file_handle.get()) || ferror(_file_handle.get()))
 		{
 			PRINT_ERROR << "Error reading SizeOfStackReserve for a PE32 IMAGE OPTIONAL HEADER." << DEBUG_INFO_INSIDEPE << std::endl;
 			return false;
@@ -315,7 +316,7 @@ bool PE::_parse_image_optional_header(FILE* f)
 
 	for (unsigned int i = 0 ; i < std::min(ioh.NumberOfRvaAndSizes, static_cast<boost::uint32_t>(0x10)) ; ++i)
 	{
-		if (8 != fread(&ioh.directories[i], 1, 8, f))
+		if (8 != fread(&ioh.directories[i], 1, 8, _file_handle.get()))
 		{
 			PRINT_ERROR << "Could not read directory entry " << i << "." << DEBUG_INFO_INSIDEPE << std::endl;
 			return false;
@@ -328,13 +329,13 @@ bool PE::_parse_image_optional_header(FILE* f)
 
 // ----------------------------------------------------------------------------
 
-bool PE::_parse_section_table(FILE* f)
+bool PE::_parse_section_table()
 {
-	if (!_h_pe || !_h_dos) {
+	if (!_h_pe || !_h_dos || _file_handle == nullptr) {
 		return false;
 	}
 
-	if (fseek(f, _h_dos->e_lfanew + sizeof(pe_header) + _h_pe->SizeOfOptionalHeader, SEEK_SET))
+	if (fseek(_file_handle.get(), _h_dos->e_lfanew + sizeof(pe_header) + _h_pe->SizeOfOptionalHeader, SEEK_SET))
 	{
 		PRINT_ERROR << "Could not reach the Section Table (fseek to offset "
 					<<  _h_dos->e_lfanew + sizeof(pe_header) + _h_pe->SizeOfOptionalHeader << " failed)." 
@@ -346,12 +347,12 @@ bool PE::_parse_section_table(FILE* f)
 	{
 		image_section_header sec;
 		memset(&sec, 0, sizeof(image_section_header));
-		if (sizeof(image_section_header) != fread(&sec, 1, sizeof(image_section_header), f))
+		if (sizeof(image_section_header) != fread(&sec, 1, sizeof(image_section_header), _file_handle.get()))
 		{
 			PRINT_ERROR << "Could not read section " << i << "." << DEBUG_INFO_INSIDEPE << std::endl;
 			return false;
 		}
-		_sections.push_back(boost::make_shared<Section>(sec, _path, _coff_string_table));
+		_sections.push_back(boost::make_shared<Section>(sec, _file_handle, _file_size, _coff_string_table));
 	}
 
 	return true;
@@ -359,12 +360,12 @@ bool PE::_parse_section_table(FILE* f)
 
 // ----------------------------------------------------------------------------
 
-bool PE::_parse_debug(FILE* f)
+bool PE::_parse_debug()
 {
-	if (!_ioh) {
+	if (!_ioh || _file_handle == nullptr) {
 		return false;
 	}
-	if (!_reach_directory(f, IMAGE_DIRECTORY_ENTRY_DEBUG)) { // No debug information.
+	if (!_reach_directory(IMAGE_DIRECTORY_ENTRY_DEBUG)) { // No debug information.
 		return true;
 	}
 
@@ -375,7 +376,7 @@ bool PE::_parse_debug(FILE* f)
 	{
 		auto debug = boost::make_shared<debug_directory_entry>();
 		memset(debug.get(), 0, size);
-		if (size != fread(debug.get(), 1, size, f))
+		if (size != fread(debug.get(), 1, size, _file_handle.get()))
 		{
 			PRINT_ERROR << "Could not read the DEBUG_DIRECTORY_ENTRY" << DEBUG_INFO_INSIDEPE << std::endl;
 			return false;
@@ -388,28 +389,28 @@ bool PE::_parse_debug(FILE* f)
 			unsigned int pdb_size = 2 * sizeof(boost::uint32_t) + 16 * sizeof(boost::uint8_t);
 			memset(&pdb, 0, pdb_size);
 
-			unsigned int saved_offset = ftell(f);
-			fseek(f, debug->PointerToRawData, SEEK_SET);
-			if (pdb_size != fread(&pdb, 1, pdb_size, f) ||
+			unsigned int saved_offset = ftell(_file_handle.get());
+			fseek(_file_handle.get(), debug->PointerToRawData, SEEK_SET);
+			if (pdb_size != fread(&pdb, 1, pdb_size, _file_handle.get()) ||
 				(pdb.Signature != 0x53445352 && pdb.Signature != 0x3031424E)) // Signature: "RSDS" or "NB10"
 			{
 				PRINT_ERROR << "Could not read PDB file information of invalid magic number." 
 							<< DEBUG_INFO_INSIDEPE << std::endl;
 				return false;
 			}
-			pdb.PdbFileName = utils::read_ascii_string(f); // Not optimal, but it'll help if I decide to
-														   // further parse these debug sub-structures.
+			pdb.PdbFileName = utils::read_ascii_string(_file_handle.get());	// Not optimal, but it'll help if I decide to
+																		// further parse these debug sub-structures.
 			debug->Filename = pdb.PdbFileName;
-			fseek(f, saved_offset, SEEK_SET);
+			fseek(_file_handle.get(), saved_offset, SEEK_SET);
 		}
 		else if (debug->Type == nt::DEBUG_TYPES.at("IMAGE_DEBUG_TYPE_MISC"))
 		{
 			image_debug_misc misc;
 			unsigned int misc_size = 2 * sizeof(boost::uint32_t) + 4 * sizeof(boost::uint8_t);
 			memset(&misc, 1, misc_size);
-			unsigned int saved_offset = ftell(f);
-			fseek(f, debug->PointerToRawData, SEEK_SET);
-			if (misc_size != fread(&misc, 1, misc_size, f))
+			unsigned int saved_offset = ftell(_file_handle.get());
+			fseek(_file_handle.get(), debug->PointerToRawData, SEEK_SET);
+			if (misc_size != fread(&misc, 1, misc_size, _file_handle.get()))
 			{
 				PRINT_ERROR << "Could not read DBG file information" << DEBUG_INFO_INSIDEPE << std::endl;
 				return false;
@@ -417,14 +418,14 @@ bool PE::_parse_debug(FILE* f)
 			switch (misc.Unicode)
 			{
 			case 1:
-				misc.DbgFile = utils::read_unicode_string(f, misc.Length - misc_size);
+				misc.DbgFile = utils::read_unicode_string(_file_handle.get(), misc.Length - misc_size);
 				break;
 			case 0:
-				misc.DbgFile = utils::read_ascii_string(f, misc.Length - misc_size);
+				misc.DbgFile = utils::read_ascii_string(_file_handle.get(), misc.Length - misc_size);
 				break;
 			}
 			debug->Filename = misc.DbgFile;
-			fseek(f, saved_offset, SEEK_SET);
+			fseek(_file_handle.get(), saved_offset, SEEK_SET);
 		}
 		_debug_entries.push_back(debug);
 	}
@@ -507,8 +508,12 @@ unsigned int PE::_va_to_offset(boost::uint64_t va) const
 
 // ----------------------------------------------------------------------------
 
-bool PE::_reach_directory(FILE* f, int directory) const
+bool PE::_reach_directory(int directory) const
 {
+	if (_file_handle == nullptr) {
+		return false;
+	}
+
 	if (directory > 0x10) // There can be no more than 16 directories.
 	{
 		PRINT_WARNING << "Tried to reach directory " << directory << ", maximum is 16." 
@@ -540,7 +545,7 @@ bool PE::_reach_directory(FILE* f, int directory) const
 
 	unsigned int offset = _rva_to_offset(_ioh->directories[directory].VirtualAddress);
 
-	if (!offset || fseek(f, offset, SEEK_SET))
+	if (!offset || fseek(_file_handle.get(), offset, SEEK_SET))
 	{
 		PRINT_ERROR << "Could not reach the requested directory (offset=0x" << std::hex << offset << ")." 
 					<< DEBUG_INFO_INSIDEPE << std::endl;
@@ -551,22 +556,26 @@ bool PE::_reach_directory(FILE* f, int directory) const
 
 // ----------------------------------------------------------------------------
 
-bool PE::_parse_directories(FILE* f)
+bool PE::_parse_directories()
 {
-	return _parse_imports(f) &&
-		   _parse_exports(f) &&
-		   _parse_resources(f) &&
-		   _parse_debug(f) &&
-		   _parse_relocations(f) &&
-		   _parse_tls(f) &&
-		   _parse_certificates(f);
+	if (_file_handle == nullptr) {
+		return false;
+	}
+
+	return _parse_imports() &&
+		   _parse_exports() &&
+		   _parse_resources() &&
+		   _parse_debug() &&
+		   _parse_relocations() &&
+		   _parse_tls() &&
+		   _parse_certificates();
 }
 
 // ----------------------------------------------------------------------------
 
-bool PE::_parse_exports(FILE* f)
+bool PE::_parse_exports()
 {
-	if (!_ioh) {
+	if (!_ioh || _file_handle == nullptr) {
 		return false;
 	}
 	image_export_directory ied;
@@ -575,11 +584,11 @@ bool PE::_parse_exports(FILE* f)
 	unsigned int ied_size = 9*sizeof(boost::uint32_t) + 2*sizeof(boost::uint16_t);
 	memset(&ied, 0, ied_size);
 
-	if (!_reach_directory(f, IMAGE_DIRECTORY_ENTRY_EXPORT))	{
+	if (!_reach_directory(IMAGE_DIRECTORY_ENTRY_EXPORT))	{
 		return true; // No exports
 	}
 
-	if (ied_size != fread(&ied, 1, ied_size, f))
+	if (ied_size != fread(&ied, 1, ied_size, _file_handle.get()))
 	{
 		PRINT_ERROR << "Could not read the IMAGE_EXPORT_DIRECTORY." << std::endl;
 		return false;
@@ -595,7 +604,7 @@ bool PE::_parse_exports(FILE* f)
 
 	// Read the export name
 	unsigned int offset = _rva_to_offset(ied.Name);
-	if (!offset || !utils::read_string_at_offset(f, offset, ied.NameStr))
+	if (!offset || !utils::read_string_at_offset(_file_handle.get(), offset, ied.NameStr))
 	{
 		PRINT_ERROR << "Could not read the exported DLL name." << DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
@@ -603,7 +612,7 @@ bool PE::_parse_exports(FILE* f)
 
 	// Get the address and ordinal of each exported function
 	offset = _rva_to_offset(ied.AddressOfFunctions);
-	if (!offset || fseek(f, offset, SEEK_SET))
+	if (!offset || fseek(_file_handle.get(), offset, SEEK_SET))
 	{
 		PRINT_ERROR << "Could not reach exported functions address table." 
 					<< DEBUG_INFO_INSIDEPE << std::endl;
@@ -613,7 +622,7 @@ bool PE::_parse_exports(FILE* f)
 	for (unsigned int i = 0 ; i < ied.NumberOfFunctions ; ++i)
 	{
 		pexported_function ex = boost::make_shared<exported_function>();
-		if (4 != fread(&(ex->Address), 1, 4, f))
+		if (4 != fread(&(ex->Address), 1, 4, _file_handle.get()))
 		{
 			PRINT_ERROR << "Could not read an exported function's address." 
 						<< DEBUG_INFO_INSIDEPE << std::endl;
@@ -626,7 +635,7 @@ bool PE::_parse_exports(FILE* f)
 		if (ex->Address > export_dir.VirtualAddress && ex->Address < export_dir.VirtualAddress + export_dir.Size)
 		{
 			offset = _rva_to_offset(ex->Address);
-			if (!offset || !utils::read_string_at_offset(f, offset, ex->ForwardName))
+			if (!offset || !utils::read_string_at_offset(_file_handle.get(), offset, ex->ForwardName))
 			{
 				PRINT_ERROR << "Could not read a forwarded export name." << DEBUG_INFO_INSIDEPE << std::endl;
 				return false;
@@ -652,25 +661,25 @@ bool PE::_parse_exports(FILE* f)
 		return false;
 	}
 	offset = _rva_to_offset(ied.AddressOfNames);
-	if (!offset || fseek(f, offset, SEEK_SET))
+	if (!offset || fseek(_file_handle.get(), offset, SEEK_SET))
 	{
 		PRINT_ERROR << "Could not reach exported function's name table." << DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
 	}
 
-	if (ied.NumberOfNames * sizeof(boost::uint32_t) != fread(names.get(), 1, ied.NumberOfNames * sizeof(boost::uint32_t), f))
+	if (ied.NumberOfNames * sizeof(boost::uint32_t) != fread(names.get(), 1, ied.NumberOfNames * sizeof(boost::uint32_t), _file_handle.get()))
 	{
 		PRINT_ERROR << "Could not read an exported function's name address." << DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
 	}
 
 	offset = _rva_to_offset(ied.AddressOfNameOrdinals);
-	if (!offset || fseek(f, offset, SEEK_SET))
+	if (!offset || fseek(_file_handle.get(), offset, SEEK_SET))
 	{
 		PRINT_ERROR << "Could not reach exported functions NameOrdinals table." << DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
 	}
-	if (ied.NumberOfNames * sizeof(boost::uint16_t) != fread(ords.get(), 1, ied.NumberOfNames * sizeof(boost::uint16_t), f))
+	if (ied.NumberOfNames * sizeof(boost::uint16_t) != fread(ords.get(), 1, ied.NumberOfNames * sizeof(boost::uint16_t), _file_handle.get()))
 	{
 		PRINT_ERROR << "Could not read an exported function's name ordinal." << DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
@@ -680,7 +689,7 @@ bool PE::_parse_exports(FILE* f)
 	for (unsigned int i = 0 ; i < ied.NumberOfNames ; ++i)
 	{
 		offset = _rva_to_offset(names[i]);
-		if (!offset || ords[i] >= _exports.size() || !utils::read_string_at_offset(f, offset, _exports.at(ords[i])->Name))
+		if (!offset || ords[i] >= _exports.size() || !utils::read_string_at_offset(_file_handle.get(), offset, _exports.at(ords[i])->Name))
 		{
 			PRINT_ERROR << "Could not match an export name with its address!" << DEBUG_INFO_INSIDEPE << std::endl;
 			return false;
@@ -693,13 +702,13 @@ bool PE::_parse_exports(FILE* f)
 
 // ----------------------------------------------------------------------------
 
-bool PE::_parse_relocations(FILE* f)
+bool PE::_parse_relocations()
 {
-	if (!_ioh) {
+	if (!_ioh || _file_handle == nullptr) {
 		return false;
 	}
 
-	if (!_reach_directory(f, IMAGE_DIRECTORY_ENTRY_BASERELOC))	{ // No relocation table
+	if (!_reach_directory(IMAGE_DIRECTORY_ENTRY_BASERELOC))	{ // No relocation table
 		return true;
 	}
 
@@ -709,7 +718,7 @@ bool PE::_parse_relocations(FILE* f)
 	{
 		pimage_base_relocation reloc = boost::make_shared<image_base_relocation>();
 		memset(reloc.get(), 0, header_size);
-		if (header_size != fread(reloc.get(), 1, header_size, f) || reloc->BlockSize > remaining_size)
+		if (header_size != fread(reloc.get(), 1, header_size, _file_handle.get()) || reloc->BlockSize > remaining_size)
 		{
 			PRINT_ERROR << "Could not read an IMAGE_BASE_RELOCATION!" << DEBUG_INFO_INSIDEPE << std::endl;
 			return false;
@@ -725,7 +734,7 @@ bool PE::_parse_relocations(FILE* f)
 		for (unsigned int i = 0 ; i < (reloc->BlockSize - header_size) / sizeof(boost::uint16_t) ; ++i)
 		{
 			boost::uint16_t type_or_offset = 0;
-			if (sizeof(boost::uint16_t) != fread(&type_or_offset, 1, sizeof(boost::uint16_t), f))
+			if (sizeof(boost::uint16_t) != fread(&type_or_offset, 1, sizeof(boost::uint16_t), _file_handle.get()))
 			{
 				PRINT_ERROR << "Could not read an IMAGE_BASE_RELOCATION's TypeOrOffset!" 
 							<< DEBUG_INFO_INSIDEPE << std::endl;
@@ -742,13 +751,13 @@ bool PE::_parse_relocations(FILE* f)
 
 // ----------------------------------------------------------------------------
 
-bool PE::_parse_tls(FILE* f)
+bool PE::_parse_tls()
 {
-	if (!_ioh) {
+	if (!_ioh || _file_handle == nullptr) {
 		return false;
 	}
 
-	if (!_reach_directory(f, IMAGE_DIRECTORY_ENTRY_TLS))	{ // No TLS callbacks
+	if (!_reach_directory(IMAGE_DIRECTORY_ENTRY_TLS))	{ // No TLS callbacks
 		return true;
 	}
 
@@ -757,18 +766,18 @@ bool PE::_parse_tls(FILE* f)
 	memset(&tls, 0, size);
 
 	if (_ioh->Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32+")) {
-		fread(&tls, 1, size, f);
+		fread(&tls, 1, size, _file_handle.get());
 	}
 	else
 	{
-		fread(&tls.StartAddressOfRawData, 1, sizeof(boost::uint32_t), f);
-		fread(&tls.EndAddressOfRawData, 1, sizeof(boost::uint32_t), f);
-		fread(&tls.AddressOfIndex, 1, sizeof(boost::uint32_t), f);
-		fread(&tls.AddressOfCallbacks, 1, sizeof(boost::uint32_t), f);
-		fread(&tls.SizeOfZeroFill, 1, 2 * sizeof(boost::uint32_t), f);
+		fread(&tls.StartAddressOfRawData, 1, sizeof(boost::uint32_t), _file_handle.get());
+		fread(&tls.EndAddressOfRawData, 1, sizeof(boost::uint32_t), _file_handle.get());
+		fread(&tls.AddressOfIndex, 1, sizeof(boost::uint32_t), _file_handle.get());
+		fread(&tls.AddressOfCallbacks, 1, sizeof(boost::uint32_t), _file_handle.get());
+		fread(&tls.SizeOfZeroFill, 1, 2 * sizeof(boost::uint32_t), _file_handle.get());
 	}
 
-	if (feof(f) || ferror(f))
+	if (feof(_file_handle.get()) || ferror(_file_handle.get()))
 	{
 		PRINT_ERROR << "Could not read the IMAGE_TLS_DIRECTORY." << DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
@@ -776,7 +785,7 @@ bool PE::_parse_tls(FILE* f)
 
 	// Go to the offset table
 	unsigned int offset = _va_to_offset(tls.AddressOfCallbacks);
-	if (!offset || fseek(f, offset, SEEK_SET))
+	if (!offset || fseek(_file_handle.get(), offset, SEEK_SET))
 	{
 		PRINT_ERROR << "Could not reach the TLS callback table." << DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
@@ -786,7 +795,7 @@ bool PE::_parse_tls(FILE* f)
 	unsigned int callback_size = _ioh->Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32+") ? sizeof(boost::uint64_t) : sizeof(boost::uint32_t);
 	while (true) // break on null callback
 	{
-		if (callback_size != fread(&callback_address, 1, callback_size, f) || !callback_address) { // Exit condition.
+		if (callback_size != fread(&callback_address, 1, callback_size, _file_handle.get()) || !callback_address) { // Exit condition.
 			break;
 		}
 		tls.Callbacks.push_back(callback_address);
@@ -803,14 +812,14 @@ bool PE::_parse_tls(FILE* f)
 
 // ----------------------------------------------------------------------------
 
-bool PE::_parse_certificates(FILE* f)
+bool PE::_parse_certificates()
 {
-	if (!_ioh) {
+	if (!_ioh || _file_handle == nullptr) {
 		return false;
 	}
 
 	if (!_ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].VirtualAddress ||		// In this case, "VirtualAddress" is actually a file offset.
-		fseek(f, _ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].VirtualAddress, SEEK_SET))
+		fseek(_file_handle.get(), _ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].VirtualAddress, SEEK_SET))
 	{
 		return true;	// Unsigned binary
 	}
@@ -821,7 +830,7 @@ bool PE::_parse_certificates(FILE* f)
 	{
 		pwin_certificate cert = boost::make_shared<win_certificate>();
 		memset(cert.get(), 0, header_size);
-		if (header_size != fread(cert.get(), 1, header_size, f))
+		if (header_size != fread(cert.get(), 1, header_size, _file_handle.get()))
 		{
 			PRINT_WARNING << "Could not read a WIN_CERTIFICATE's header." << std::endl;
 			return true; // Recoverable error.
@@ -850,7 +859,7 @@ bool PE::_parse_certificates(FILE* f)
 		}
 
 		if (cert->Length < remaining_bytes ||
-			cert->Length - header_size != fread(&(cert->Certificate[0]), 1, cert->Length - header_size, f))
+			cert->Length - header_size != fread(&(cert->Certificate[0]), 1, cert->Length - header_size, _file_handle.get()))
 		{
 			PRINT_ERROR << "Could not read a WIN_CERTIFICATE's data."
 						<< DEBUG_INFO_INSIDEPE << std::endl;
@@ -863,7 +872,7 @@ bool PE::_parse_certificates(FILE* f)
 		unsigned int padding = cert->Length % 8;
 		if (padding && remaining_bytes)
 		{
-			fseek(f, padding, SEEK_CUR);
+			fseek(_file_handle.get(), padding, SEEK_CUR);
 			remaining_bytes -= padding;
 		}
 	}
