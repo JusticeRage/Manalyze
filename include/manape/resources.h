@@ -110,8 +110,8 @@ public:
 	 *
 	 *	All the work is performed in one of the template specializations.
 	 *	Currently, the following interpretations are implemented:
-	 *	* std::string for RT_MANIFEST
-	 *	* std::vector<std::string> for RT_STRING
+	 *	* pString for RT_MANIFEST
+	 *	* const_shared_strings for RT_STRING
 	 *	* pgroup_icon_directory_t for RT_GROUP_ICON and RT_GROUP_CURSOR
 	 *	* pbitmap for RT_BITMAP
 	 *  * pversion_info for RT_VERSION

@@ -65,6 +65,9 @@ BOOST_AUTO_TEST_CASE(parse_testfile)
     mana::PE pe("testfiles/manatest.exe");
 	BOOST_CHECK_EQUAL(pe.get_filesize(), 16360);
 	BOOST_ASSERT(pe.is_valid());
+	mana::PE pe2("testfiles/manatest2.exe");
+	BOOST_CHECK_EQUAL(pe2.get_filesize(), 72704);
+	BOOST_ASSERT(pe2.is_valid());
 }
 
 // ----------------------------------------------------------------------------
@@ -216,6 +219,21 @@ void check_debug_directory_entry(mana::debug_directory_entry d,
 	BOOST_CHECK(d.MajorVersion == 0);
 	BOOST_CHECK(d.MinorVersion == 0);
 	BOOST_CHECK(d.TimeDateStamp == 0x569a5cdb);
+}
+
+// ----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(parse_exports)
+{
+	mana::PE pe("testfiles/manatest2.exe");
+	auto pexports = pe.get_exports();
+	BOOST_ASSERT(pexports);
+	BOOST_ASSERT(pexports->size() == 1);
+	auto exported = pexports->at(0);
+	BOOST_CHECK_EQUAL(exported->Address, 0x1000);
+	BOOST_CHECK_EQUAL(exported->ForwardName, "");
+	BOOST_CHECK_EQUAL(exported->Name, "exported");
+	BOOST_CHECK_EQUAL(exported->Ordinal, 1);
 }
 
 // ----------------------------------------------------------------------------

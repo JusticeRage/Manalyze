@@ -278,9 +278,9 @@ DECLSPEC pString Resource::interpret_as()
 // ----------------------------------------------------------------------------
 
 template<>
-std::vector<std::string> Resource::interpret_as()
+DECLSPEC const_shared_strings Resource::interpret_as()
 {
-	std::vector<std::string> res;
+	auto res = boost::make_shared<std::vector<std::string> >();
 	if (_type != "RT_STRING")
 	{
 		PRINT_WARNING << "Resources of type " << _type << " cannot be interpreted as vectors of strings." << DEBUG_INFO << std::endl;
@@ -294,7 +294,7 @@ std::vector<std::string> Resource::interpret_as()
 
 	// RT_STRING resources are made of 16 contiguous "unicode" strings.
 	for (int i = 0; i < 16; ++i) {
-		res.push_back(utils::read_prefixed_unicode_string(f));
+		res->push_back(utils::read_prefixed_unicode_string(f));
 	}
 
 	END:
@@ -681,8 +681,8 @@ bool PE::extract_resources(const std::string& destination_folder)
 		else if (*(*it)->get_type() == "RT_STRING")
 		{
 			// Append all the strings to the same file.
-			auto strings = (*it)->interpret_as<std::vector<std::string> >();
-			if (strings.size() == 0) {
+			auto strings = (*it)->interpret_as<const_shared_strings>();
+			if (strings->size() == 0) {
 				continue;
 			}
 
@@ -694,7 +694,7 @@ bool PE::extract_resources(const std::string& destination_folder)
 				continue;
 			}
 
-			for (auto it2 = strings.begin(); it2 != strings.end(); ++it2)
+			for (auto it2 = strings->begin(); it2 != strings->end(); ++it2)
 			{
 				if ((*it2) != "")
 				{
