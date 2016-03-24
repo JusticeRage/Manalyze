@@ -47,7 +47,7 @@ public:
 	 *
 	 *	@param	const std::string& path The path to the shared object file to load.
 	 *
-	 *	@return	A pointer to a SharedLibrary represented the loaded file. May be NULL
+	 *	@return	A pointer to a SharedLibrary representing the loaded file. May be NULL
 	 *			if for some reason, the library could not be loaded.
 	 */
 	static boost::shared_ptr<SharedLibrary> load(const std::string& path);

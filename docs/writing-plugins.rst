@@ -495,7 +495,118 @@ Results are returned as a shared string or a shared vector of strings respective
 Section objects
 ===============
 
+Section objects represent sections of a PE executable. They are very close to the structures defined in the norm, but have been enriched with a couple of utility functions.
 
+``get_name``, ``get_virtual_size``, ``get_virtual_address``, ``get_size_of_raw_data``, ``get_pointer_to_raw_data``, ``get_pointer_to_relocations``, ``get_pointer_to_line_numbers``, ``get_number_of_relocations``, ``get_number_of_line_numbers`` and ``get_characteristics`` are simple accessors to all the standard information describing a section.
+
+In addition, a ``get_entropy`` function was added to determine the entropy of a section.
+
+Finding a section
+-----------------
+
+A ``find_section`` function is available to locate a section based on a relative virtual address (RVA)::
+
+	mana::image_optional_header ioh = *pe.get_image_optional_header();
+	mana::pSection sec = mana::find_section(ioh.AddressOfEntryPoint, *pe.get_sections());
+	if (sec != nullptr) {
+		std::cout << "Found section: " << *sec->get_name() << std::endl;
+	}
+
+The first argument is a RVA which is contained in the section to locate, while de second one is a list of candidate sections (it will almost always be the return value of ``pe.get_sections``).
+
+Conversely, you can check whether an address belongs to a specific section with the following function::
+
+    bool is_address_in_section(boost::uint64_t rva, mana::pSection section, bool check_raw_size = false);
+
+The last argument can be used to perform the check by taking the raw size of the section into account instead of the virtual size, which may be useful for some malformed PEs.
+
+Accessing the raw bytes
+-----------------------
+
+If you need to perform some processing on the section's bytes, use ``get_raw_data()``. Be aware that the whole section will be loaded in memory, so you may encounter problems when processing very big files::
+
+	mana::pSection sec = mana::find_section(ioh.AddressOfEntryPoint, *pe.get_sections());
+	if (sec != nullptr)
+	{
+		mana::shared_bytes bytes = sec->get_raw_data();
+		for (auto it = bytes->begin() ; it != bytes->end() ; ++it)
+		{
+			// ...
+		}
+	}
 
 Resource objects
 ================
+
+In Manalyze, PE resources are represented as Resource objects that can be manipulated similarly to Sections. ``get_name``, ``get_type``, ``get_language``, ``get_codepage``, ``get_size``, ``get_id`` and ``get_offset`` provide access to basic information and ``get_entropy`` calculates the entropy of the resource.
+
+In addition, a ``detect_filetype`` function tries to determine the filetype of the resource based on magic numbers present in it (you can look at the rules used in ``bin/yara_rules/magic.yara``)::
+
+	auto m = (*it)->detect_filetype();
+	if (m && m->size() > 0)
+	{
+		for (auto it = m->begin() ; it != m->end() ; ++it2) 
+		{
+			std::cout << "Detected filetype: " << (*it)->operator[]("description");
+			std::cout << "Related extension: " << (*it)->operator[]("extension");
+		}
+	}
+
+Note that in the case of polyglot files, several filetypes may be detected.
+
+Accessing the underlying resource
+---------------------------------
+
+Most of the time, you'll want to look at the actual resource bytes. A ``get_raw_bytes`` function is provided and can be used just like the one described above in the context of sections. Some PE resources however have a well-known structure and can be converted into C++ objects to be reused immediately. This is where the function ``template <class T> T interpret_as();`` comes in. Depending on the template parameter, here are the resource types you can handle:
+
+* ``pString`` for ``RT_MANIFEST`` resources. The contents of the PE manifest are returned as a shared string::
+
+		if (*resource->get_type() == "RT_MANIFEST")
+		{
+			pString rt_manifest = r->interpret_as<pString>();
+			if (rt_manifest != nullptr) {
+				std::cout << "Manifest contents: " << *rt_manifest << std::endl;
+			}
+		}
+
+* ``const_shared_string`` for ``RT_STRING``: the strings contained in the resource are returned as a shared vector. ::
+
+		if (*resource->get_type() != "RT_STRING") {
+			return;
+		}
+		auto string_table = resource->interpret_as<const_shared_strings>();
+		std::cout << "Dumping a RT_STRING resource:" << std::endl;
+		for (auto it = string_table->begin() ; it != string_table->end() ; ++it) {
+			std::cout << *it << std::endl;
+		}
+
+* ``pgroup_icon_directory`` for ``RT_GROUP_ICON`` and ``RT_GROUP_CURSOR``. Because of the way icons and cursors are stored in resources, an additional function ``reconstruct_icon`` was added to recreate a valid ICO file. Here is how you'd do it::
+
+		if (*res->get_type() == "RT_GROUP_ICON" || *res->get_type() == "RT_GROUP_CURSOR") {
+			ico_file = reconstruct_icon((*it)->interpret_as<pgroup_icon_directory>(), *pe.get_resources());
+		}
+		FILE* f = fopen("icon.ico", "wb");
+		if (f == nullptr) {
+			return;
+		}
+		fwrite(&ico_file[0], 1, ico_file->size(), f);
+		fclose(f);
+
+* ``pbitmap`` for a ``RT_BITMAP``.
+* ``pversion_info`` for ``RT_VERSIONINFO`` resources.
+* And finally ``shared_bytes`` for any resource type, which will behave exactly like ``get_raw_data``.
+
+All these functions will return null pointers if for some reason the resource cannot be interpreted as the requested type.
+
+.. note:: What's up with all these pointers?
+	
+	Manalyze is built statically on Windows for a number of reasons which go beyond the scope of this documentation. This causes some issues when functions are called across DLLs, issues which can only be resolved through smart pointers ensuring that a module which allocated an object will be the one to free it. This ends up making all the interfaces a little more complex by having pointers everywhere.
+
+Anything missing?
+=================
+
+If you are trying to do something but still can't figure out how to do it, be sure to get in touch with the project's maintainer via `GitHub <https://github.com/JusticeRage/Manalyze/issues>`_. Possible problems might include:
+
+* API not providing access to data you need.
+* Some part of the PE being parsed incorrectly or insufficiently.
+* The documentation not being clear enough on a particular topic.

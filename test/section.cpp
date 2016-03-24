@@ -90,7 +90,7 @@ void check_section_entropy(mana::pSection section, double entropy)
 BOOST_FIXTURE_TEST_SUITE(sections, SetWorkingDirectory)
 // ----------------------------------------------------------------------------
 
-// Values in this test suite checked against 
+// Values in this test suite checked against
 // https://www.virustotal.com/en/file/f1f6992fe20fae686dc9d810554371ed4ef42db3f35f2b2c2cf4b5ad4c708a4b/analysis/
 
 BOOST_AUTO_TEST_CASE(section_get_raw_data)
@@ -138,6 +138,10 @@ BOOST_AUTO_TEST_CASE(find_section)
 	// Just at the start of .data and the end of .rdata, comparison has to be made with SizeOfRawData
 	s = mana::find_section(16384, *sections);
 	BOOST_CHECK(s && s->get_name() && *s->get_name() == ".data");
+
+	// Call find_section with an empty vector of sections.
+	s = mana::find_section(0, std::vector<mana::pSection>());
+	BOOST_CHECK(s == nullptr);
 }
 
 // ----------------------------------------------------------------------------
