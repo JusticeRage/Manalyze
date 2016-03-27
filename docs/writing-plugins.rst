@@ -246,6 +246,8 @@ Internally, all the result data is stored as key-value pairs; if you don't provi
                        Two
                        Three
 
+..  _pe_objects:
+
 PE objects
 ==========
 

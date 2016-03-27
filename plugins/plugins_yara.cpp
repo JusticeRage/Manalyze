@@ -16,6 +16,8 @@
 */
 
 #include "yara/yara_wrapper.h"
+// The structure used to communicate with the yara ManaPE module.
+#include "yara/modules/manape_data.h"
 
 // TODO: Remove when Yara doesn't mask get_object anymore
 #undef get_object
@@ -25,6 +27,21 @@
 
 namespace plugin
 {
+
+
+
+// Provide a destructor for the structure sent to Yara.
+void delete_manape_module_data(manape_data* data)
+{
+    if (data != nullptr && data->sections != nullptr) {
+        free(data->sections);
+    }
+    if (data != nullptr) {
+        delete data;
+    }
+}
+
+// ----------------------------------------------------------------------------
 
 class YaraPlugin : public IPlugin
 {
@@ -51,7 +68,7 @@ public:
 			return res;
 		}
 
-		yara::const_matches m = _engine.scan_file(*pe.get_path(), pe.create_manape_module_data());
+		yara::const_matches m = _engine.scan_file(*pe.get_path(), _create_manape_module_data(pe));
 		if (m && m->size() > 0)
 		{
 			res->set_level(level);
@@ -92,6 +109,64 @@ protected:
 			return false;
 		}
 		return true;
+	}
+
+private:
+	/**
+	 *	@brief	Creates the data used by the ManaPE Yara module.
+	 *
+	 *	This extracts a few of the PE's parsed elements and stores them inside a structure that the ManaPE Yara module
+	 *	can use to do its work.
+	 *	The manape_data object contains address information (entry point, sections, ...). Passing them to Yara prevents
+	 *	me from using their built in PE parser (since manalyze has already done all the work).
+	 */
+	boost::shared_ptr<manape_data> _create_manape_module_data(const mana::PE& pe)
+	{
+        boost::shared_ptr<manape_data> res(new manape_data, delete_manape_module_data);
+        auto ioh = pe.get_image_optional_header();
+        auto sections = pe.get_sections();
+
+        if (ioh) {
+            res->entrypoint = ioh->AddressOfEntryPoint;
+        }
+
+        if (sections == nullptr)
+        {
+            res->number_of_sections = 0;
+            res->sections = nullptr;
+        }
+        else
+        {
+            res->number_of_sections = sections->size();
+            res->sections = (manape_file_portion*) malloc(res->number_of_sections * sizeof(manape_file_portion));
+            if (res->sections != nullptr)
+            {
+                for (boost::uint32_t i = 0 ; i < res->number_of_sections ; ++i)
+                {
+                    res->sections[i].start = sections->at(i)->get_pointer_to_raw_data();
+                    res->sections[i].size = sections->at(i)->get_size_of_raw_data();
+                }
+            }
+            else
+            {
+                PRINT_WARNING << "Not enough memory to allocate data for the MANAPE module!"
+                << DEBUG_INFO << std::endl;
+                res->number_of_sections = 0;
+            }
+        }
+
+        // Add VERSION_INFO location for some ClamAV signatures
+        auto resources = pe.get_resources();
+        for (auto it = resources->begin() ; it != resources->end() ; ++it)
+        {
+            if (*(*it)->get_type() == "RT_VERSION")
+            {
+                res->version_info.start = (*it)->get_offset();
+                res->version_info.size = (*it)->get_size();
+                break;
+            }
+        }
+        return res;
 	}
 
 };

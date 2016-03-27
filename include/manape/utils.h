@@ -30,7 +30,7 @@
 #include <boost/make_shared.hpp>
 #include <boost/system/api_config.hpp>
 
-#include "manacommons/color.h"
+#include "manape/color.h"
 
 // Some miscellaneous functions are exported
 #if defined BOOST_WINDOWS_API

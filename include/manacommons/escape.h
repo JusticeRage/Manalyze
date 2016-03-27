@@ -20,7 +20,6 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include <string>
 #include <boost/static_assert.hpp>
 #include <boost/spirit/include/karma.hpp>
-#include <boost/static_assert.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
@@ -91,11 +90,11 @@ struct escaped_string_json
 	karma::rule<OutputIterator, std::string()> esc_str;
 	karma::symbols<char, char const*> esc_char;
 };
-	
+
 // ----------------------------------------------------------------------------
 
 /*
- *	Forward-declare the OutputFormatter class, so it can be used in a static 
+ *	Forward-declare the OutputFormatter class, so it can be used in a static
  *	assert in  template<typename T> std::string escape(const std::string&).
  */
 class OutputFormatter;
@@ -155,7 +154,7 @@ pString escape(const std::string& s)
 /*
  *	@brief	Escapes problematic characters from a string.
  *
- *	Non printable characters found in the input string will be escaped using 
+ *	Non printable characters found in the input string will be escaped using
  *	the C notation (i.e. \x0D).
  *
  *	@param const std::string& s The string to escape.

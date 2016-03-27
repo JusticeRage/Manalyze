@@ -40,10 +40,7 @@
 #include "manape/utils.h"
 #include "manape/resources.h"	// Definition of the Resource class
 #include "manape/section.h"		// Definition of the Section class
-#include "manacommons/color.h"	// Allows changing the font color in the terminal
-
-// The structure used to communicate with the yara ManaPE module.
-#include "yara/modules/manape_data.h"
+#include "manape/color.h"		// Colored output if available
 
 #if defined BOOST_WINDOWS_API && !defined DECLSPEC
 	#ifdef MANAPE_EXPORT
@@ -206,16 +203,6 @@ public:
 	 *	@param	void* p	The memory to free.
 	 */
 	void operator delete(void* p);
-
-	/**
-	 *	@brief	Creates the data used by the ManaPE Yara module.
-	 *
-	 *	This extracts a few of the PE's parsed elements and stores them inside a structure that the ManaPE Yara module
-	 *	can use to do its work.
-	 *	The manape_data object contains address information (entry point, sections, ...). Passing them to Yara prevents
-	 *	me from using their built in PE parser (since manalyze has already done all the work).
-	 */
-	DECLSPEC boost::shared_ptr<manape_data> create_manape_module_data() const;
 
 private:
 	/**

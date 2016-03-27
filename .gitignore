@@ -61,7 +61,8 @@ external/yara
 external/hash-library
 
 # Sphinx build files
-docs/_build
+docs/_*
+docs/.*
 docs/html
 
 # Malwares and documentation

@@ -15,16 +15,10 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#pragma once
-
-#include <string>
-#include <algorithm>
-
 #include <boost/filesystem.hpp>
-#include <boost/assign.hpp>
 
 #include "hash-library/hashes.h"
-#include "pe.h"
+#include "manape/pe.h"
 
 namespace bfs = boost::filesystem;
 
@@ -38,6 +32,6 @@ namespace hash {
  *
  *	Implementation is located in imports.cpp.
  */
-DECLSPEC pString hash_imports(const mana::PE& pe);
+std::string hash_imports(const mana::PE& pe);
 
 } //namespace hash

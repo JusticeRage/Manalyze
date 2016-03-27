@@ -25,8 +25,8 @@
 
 #include "manape/pe_structs.h"
 #include "manape/utils.h"
-#include "manacommons/color.h"
-#include "manacommons/escape.h"
+#include "manape/color.h"
+#include "manape/escape.h"
 
 #if defined BOOST_WINDOWS_API
 	#ifdef MANAPE_EXPORT

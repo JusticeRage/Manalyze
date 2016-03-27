@@ -19,7 +19,7 @@
 
 #include "fixtures.h"
 #include "manape/pe.h"
-#include "manape/imports.h"
+#include "import_hash.h"
 
 // ----------------------------------------------------------------------------
 BOOST_FIXTURE_TEST_SUITE(resources, SetWorkingDirectory)
@@ -62,10 +62,6 @@ BOOST_AUTO_TEST_CASE(parse_imports)
 	expected_functions.push_back("GetModuleHandleW");
 	expected_functions.push_back("UnhandledExceptionFilter");
 	BOOST_CHECK(functions == expected_functions);
-
-	auto imphash = hash::hash_imports(pe);
-	BOOST_ASSERT(imphash);
-	BOOST_CHECK(*imphash == "924ac5aa343a9f838d5c16a5d77de2ec");
 }
 
 // ----------------------------------------------------------------------------
@@ -107,9 +103,8 @@ BOOST_AUTO_TEST_CASE(find_imports_no_match)
 BOOST_AUTO_TEST_CASE(hash_imports)
 {
 	mana::PE pe("testfiles/manatest.exe");
-	pString h = hash::hash_imports(pe);
-	BOOST_ASSERT(h);
-	BOOST_CHECK(*h == "924ac5aa343a9f838d5c16a5d77de2ec");
+	std::string h = hash::hash_imports(pe);
+	BOOST_CHECK(h == "924ac5aa343a9f838d5c16a5d77de2ec");
 }
 
 // ----------------------------------------------------------------------------

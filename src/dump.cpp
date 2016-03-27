@@ -478,7 +478,7 @@ void dump_hashes(const mana::PE& pe, io::OutputFormatter& formatter)
 	hashes_node->append(boost::make_shared<io::OutputTreeNode>("SHA256", hashes->at(ALL_DIGESTS_SHA256)));
 	hashes_node->append(boost::make_shared<io::OutputTreeNode>("SHA3", hashes->at(ALL_DIGESTS_SHA3)));
 	hashes_node->append(boost::make_shared<io::OutputTreeNode>("SSDeep", *ssdeep::hash_file(*pe.get_path())));
-	hashes_node->append(boost::make_shared<io::OutputTreeNode>("Imports Hash", *hash::hash_imports(pe)));
+	hashes_node->append(boost::make_shared<io::OutputTreeNode>("Imports Hash", hash::hash_imports(pe)));
 	formatter.add_data(hashes_node, *pe.get_path());
 }
 

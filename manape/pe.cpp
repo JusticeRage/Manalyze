@@ -130,7 +130,7 @@ bool PE::_parse_pe_header()
 
 	if (fseek(_file_handle.get(), _h_dos->e_lfanew, SEEK_SET))
 	{
-		PRINT_ERROR << "Could not reach PE header (fseek to offset " <<  _h_dos->e_lfanew << " failed)." 
+		PRINT_ERROR << "Could not reach PE header (fseek to offset " <<  _h_dos->e_lfanew << " failed)."
 					<< DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
 	}
@@ -162,7 +162,7 @@ bool PE::_parse_coff_symbols()
 
 	if (fseek(_file_handle.get(), _h_pe->PointerToSymbolTable, SEEK_SET))
 	{
-		PRINT_ERROR << "Could not reach PE COFF symbols (fseek to offset " <<  _h_pe->PointerToSymbolTable << " failed)." 
+		PRINT_ERROR << "Could not reach PE COFF symbols (fseek to offset " <<  _h_pe->PointerToSymbolTable << " failed)."
 					<< DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
 	}
@@ -180,7 +180,7 @@ bool PE::_parse_coff_symbols()
 
 		if (sym->SectionNumber > _sections.size())
 		{
-			PRINT_WARNING << "COFF symbol's section number is bigger than the number of sections!" 
+			PRINT_WARNING << "COFF symbol's section number is bigger than the number of sections!"
 						  << DEBUG_INFO_INSIDEPE << std::endl;
 			continue;
 		}
@@ -194,7 +194,7 @@ bool PE::_parse_coff_symbols()
 	fread(&st_size, 4, 1, _file_handle.get());
 	if (st_size > get_filesize() - ftell(_file_handle.get())) // Weak error check, but I couldn't find a better one in the PE spec.
 	{
-		PRINT_WARNING << "COFF String Table's reported size is bigger than the remaining bytes!" 
+		PRINT_WARNING << "COFF String Table's reported size is bigger than the remaining bytes!"
 					  << DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
 	}
@@ -249,7 +249,7 @@ bool PE::_parse_image_optional_header()
 	{
 		if (4 != fread(&ioh.BaseOfData, 1, 4, _file_handle.get()) || 4 != fread(&ioh.ImageBase, 1, 4, _file_handle.get()))
 		{
-			PRINT_ERROR << "Error reading the PE32 specific part of ImageOptionalHeader." 
+			PRINT_ERROR << "Error reading the PE32 specific part of ImageOptionalHeader."
 						<< DEBUG_INFO_INSIDEPE << std::endl;
 			return false;
 		}
@@ -259,7 +259,7 @@ bool PE::_parse_image_optional_header()
 		// PE32+: BaseOfData doesn't exist, and ImageBase is a uint64.
 		if (8 != fread(&ioh.ImageBase, 1, 8, _file_handle.get()))
 		{
-			PRINT_ERROR << "Error reading the PE32+ specific part of ImageOptionalHeader." 
+			PRINT_ERROR << "Error reading the PE32+ specific part of ImageOptionalHeader."
 						<< DEBUG_INFO_INSIDEPE << std::endl;
 			return false;
 		}
@@ -268,7 +268,7 @@ bool PE::_parse_image_optional_header()
 	// After this, PE32 and PE32+ structures are in sync for a while.
 	if (0x28 != fread(&ioh.SectionAlignment, 1, 0x28, _file_handle.get()))
 	{
-		PRINT_ERROR << "Error reading the common part of ImageOptionalHeader." 
+		PRINT_ERROR << "Error reading the common part of ImageOptionalHeader."
 					<< DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
 	}
@@ -276,7 +276,7 @@ bool PE::_parse_image_optional_header()
 	// Reject malformed executables
 	if (ioh.FileAlignment == 0 || ioh.SectionAlignment == 0)
 	{
-		PRINT_ERROR << "FileAlignment or SectionAlignment is null: the PE is invalid." 
+		PRINT_ERROR << "FileAlignment or SectionAlignment is null: the PE is invalid."
 					<< DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
 	}
@@ -287,7 +287,7 @@ bool PE::_parse_image_optional_header()
 	{
 		if (40 != fread(&ioh.SizeofStackReserve, 1, 40, _file_handle.get()))
 		{
-			PRINT_ERROR << "Error reading SizeOfStackReserve for a PE32+ IMAGE OPTIONAL HEADER." 
+			PRINT_ERROR << "Error reading SizeOfStackReserve for a PE32+ IMAGE OPTIONAL HEADER."
 						<< DEBUG_INFO_INSIDEPE << std::endl;
 			return false;
 		}
@@ -338,7 +338,7 @@ bool PE::_parse_section_table()
 	if (fseek(_file_handle.get(), _h_dos->e_lfanew + sizeof(pe_header) + _h_pe->SizeOfOptionalHeader, SEEK_SET))
 	{
 		PRINT_ERROR << "Could not reach the Section Table (fseek to offset "
-					<<  _h_dos->e_lfanew + sizeof(pe_header) + _h_pe->SizeOfOptionalHeader << " failed)." 
+					<<  _h_dos->e_lfanew + sizeof(pe_header) + _h_pe->SizeOfOptionalHeader << " failed)."
 					<< DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
 	}
@@ -394,7 +394,7 @@ bool PE::_parse_debug()
 			if (pdb_size != fread(&pdb, 1, pdb_size, _file_handle.get()) ||
 				(pdb.Signature != 0x53445352 && pdb.Signature != 0x3031424E)) // Signature: "RSDS" or "NB10"
 			{
-				PRINT_ERROR << "Could not read PDB file information of invalid magic number." 
+				PRINT_ERROR << "Could not read PDB file information of invalid magic number."
 							<< DEBUG_INFO_INSIDEPE << std::endl;
 				return false;
 			}
@@ -482,7 +482,7 @@ unsigned int PE::_rva_to_offset(boost::uint64_t rva) const
 	if (section->get_pointer_to_raw_data() % _ioh->FileAlignment != 0)
 	{
 		PRINT_WARNING << "The PE's sections are not aligned to its reported FileAlignment. "
-					  << "It was almost certainly crafted manually." 
+					  << "It was almost certainly crafted manually."
 					  << DEBUG_INFO_INSIDEPE << std::endl;
 		int new_raw_pointer = (section->get_pointer_to_raw_data() / _ioh->FileAlignment) * _ioh->FileAlignment;
 		return (rva - section->get_virtual_address() + new_raw_pointer) & 0xFFFFFFFF;
@@ -516,7 +516,7 @@ bool PE::_reach_directory(int directory) const
 
 	if (directory > 0x10) // There can be no more than 16 directories.
 	{
-		PRINT_WARNING << "Tried to reach directory " << directory << ", maximum is 16." 
+		PRINT_WARNING << "Tried to reach directory " << directory << ", maximum is 16."
 					  << DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
 	}
@@ -532,13 +532,13 @@ bool PE::_reach_directory(int directory) const
 		return false; // Requested directory is empty.
 	}
 	else if (_ioh->directories[directory].Size == 0) // Weird, but continue anyway.
-	{ 
-		PRINT_WARNING << "directory " << directory << " has a size of 0! This PE may have been manually crafted!" 
+	{
+		PRINT_WARNING << "directory " << directory << " has a size of 0! This PE may have been manually crafted!"
 					  << DEBUG_INFO_INSIDEPE << std::endl;
 	}
 	else if (_ioh->directories[directory].VirtualAddress == 0)
 	{
-		PRINT_ERROR << "directory " << directory << " has a RVA of 0 but a non-null size." 
+		PRINT_ERROR << "directory " << directory << " has a RVA of 0 but a non-null size."
 					<< DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
 	}
@@ -547,7 +547,7 @@ bool PE::_reach_directory(int directory) const
 
 	if (!offset || fseek(_file_handle.get(), offset, SEEK_SET))
 	{
-		PRINT_ERROR << "Could not reach the requested directory (offset=0x" << std::hex << offset << ")." 
+		PRINT_ERROR << "Could not reach the requested directory (offset=0x" << std::hex << offset << ")."
 					<< DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
 	}
@@ -595,7 +595,7 @@ bool PE::_parse_exports()
 	}
 
 	if (ied.Characteristics != 0) {
-		PRINT_WARNING << "IMAGE_EXPORT_DIRECTORY field Characteristics is reserved and should be 0!" 
+		PRINT_WARNING << "IMAGE_EXPORT_DIRECTORY field Characteristics is reserved and should be 0!"
 					  << DEBUG_INFO_INSIDEPE << std::endl; // TODO: Move to structural plugin?
 	}
 	if (ied.NumberOfFunctions == 0) {
@@ -614,7 +614,7 @@ bool PE::_parse_exports()
 	offset = _rva_to_offset(ied.AddressOfFunctions);
 	if (!offset || fseek(_file_handle.get(), offset, SEEK_SET))
 	{
-		PRINT_ERROR << "Could not reach exported functions address table." 
+		PRINT_ERROR << "Could not reach exported functions address table."
 					<< DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
 	}
@@ -624,7 +624,7 @@ bool PE::_parse_exports()
 		pexported_function ex = boost::make_shared<exported_function>();
 		if (4 != fread(&(ex->Address), 1, 4, _file_handle.get()))
 		{
-			PRINT_ERROR << "Could not read an exported function's address." 
+			PRINT_ERROR << "Could not read an exported function's address."
 						<< DEBUG_INFO_INSIDEPE << std::endl;
 			return false;
 		}
@@ -648,7 +648,7 @@ bool PE::_parse_exports()
 	// Associate possible exported names with the RVAs we just obtained. First, read the name and ordinal table.
 	boost::scoped_array<boost::uint32_t> names;
 	boost::scoped_array<boost::uint16_t> ords;
-	try 
+	try
 	{
 		// ied.NumberOfNames is an untrusted value. Allocate in a try-catch block to prevent crashes. See issue #1.
 		names.reset(new boost::uint32_t[ied.NumberOfNames]);
@@ -656,7 +656,7 @@ bool PE::_parse_exports()
 	}
 	catch (const std::bad_alloc&)
 	{
-		PRINT_ERROR << "Could not allocate an array big enough to hold exported name RVAs. This PE may have been manually crafted." 
+		PRINT_ERROR << "Could not allocate an array big enough to hold exported name RVAs. This PE may have been manually crafted."
 					<< DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
 	}
@@ -736,7 +736,7 @@ bool PE::_parse_relocations()
 			boost::uint16_t type_or_offset = 0;
 			if (sizeof(boost::uint16_t) != fread(&type_or_offset, 1, sizeof(boost::uint16_t), _file_handle.get()))
 			{
-				PRINT_ERROR << "Could not read an IMAGE_BASE_RELOCATION's TypeOrOffset!" 
+				PRINT_ERROR << "Could not read an IMAGE_BASE_RELOCATION's TypeOrOffset!"
 							<< DEBUG_INFO_INSIDEPE << std::endl;
 				return false;
 			}
@@ -802,7 +802,7 @@ bool PE::_parse_tls()
 	}
 
 	if (tls.Characteristics != 0) {
-		PRINT_WARNING << "TLS Directory 'Characteristics' is reserved and should be 0." 
+		PRINT_WARNING << "TLS Directory 'Characteristics' is reserved and should be 0."
 					  << DEBUG_INFO_INSIDEPE << std::endl;
 	}
 
@@ -878,55 +878,6 @@ bool PE::_parse_certificates()
 	}
 
 	return true;
-}
-
-// ----------------------------------------------------------------------------
-
-// Provide a destructor for the shared_ptr.
-void delete_manape_module_data(manape_data* data)
-{
-	if (data != nullptr && data->sections != nullptr) {
-		free(data->sections);
-	}
-	if (data != nullptr) {
-		delete data;
-	}
-}
-
-// ----------------------------------------------------------------------------
-
-boost::shared_ptr<manape_data> PE::create_manape_module_data() const
-{
-	boost::shared_ptr<manape_data> res(new manape_data, delete_manape_module_data);
-	res->entrypoint = _ioh->AddressOfEntryPoint;
-	res->number_of_sections = _sections.size();
-	res->sections = (manape_file_portion*) malloc(res->number_of_sections * sizeof(manape_file_portion));
-	if (res->sections != nullptr)
-	{
-		for (boost::uint32_t i = 0 ; i < res->number_of_sections ; ++i)
-		{
-			res->sections[i].start = _sections[i]->get_pointer_to_raw_data();
-			res->sections[i].size = _sections[i]->get_size_of_raw_data();
-		}
-	}
-	else
-	{
-		PRINT_WARNING << "Not enough memory to allocate data for the MANAPE module!" 
-					  << DEBUG_INFO_INSIDEPE << std::endl;
-		res->number_of_sections = 0;
-	}
-
-	// Add VERSION_INFO location for some ClamAV signatures
-	for (auto it = _resource_table.begin() ; it != _resource_table.end() ; ++it)
-	{
-		if (*(*it)->get_type() == "RT_VERSION")
-		{
-			res->version_info.start = (*it)->get_offset();
-			res->version_info.size = (*it)->get_size();
-			break;
-		}
-	}
-	return res;
 }
 
 } // !namespace mana

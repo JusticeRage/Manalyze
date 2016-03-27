@@ -24,10 +24,11 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "output_formatter.h"
 #include "manape/pe.h"
-#include "manape/imports.h"
 #include "hash-library/hashes.h"
 #include "hash-library/ssdeep.h"
 #include "yara/yara_wrapper.h"
+
+#include "import_hash.h"
 
 namespace mana
 {

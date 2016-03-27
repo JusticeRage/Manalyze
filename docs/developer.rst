@@ -12,3 +12,4 @@ In this chapter, it is assumed that you have obtained a copy of the program's so
    before-contributing
    code-organization
    writing-plugins
+   reusing-manape

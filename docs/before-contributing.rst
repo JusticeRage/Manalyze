@@ -28,6 +28,8 @@ Manalyze is distributed under the terms of the `GPLv3 license <https://www.gnu.o
 
 If the code you are submitting depends on third-party libraries, make sure that their license is compatible - if it's not, we will not be able to accept your contribution. Refer to the `GNU website <https://www.gnu.org/licenses/license-list.en.html>`_ to check whether a particular license can be used alongside the GPLv3.
 
+.. note:: If you would like to use any part of Manalyze in a commercial product but the GPL license isn't compatible with it, get in touch with the maintainer: dual-licensing options are available.
+
 Coding style
 ============
 
