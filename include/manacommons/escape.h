@@ -103,11 +103,11 @@ class OutputFormatter;
 
 /**
  *	@brief	Performs the actual string escaping based on the grammar given as
-*			template parameter.
-*
-*	@param	const std::string& s The string to escape.
-*
-*	@return	A pointer to the escaped string, or a null pointer if an error occurred.
+ *			template parameter.
+ *
+ *	@param	const std::string& s The string to escape.
+ *
+ *	@return	A pointer to the escaped string, or a null pointer if an error occurred.
  */
 template<typename Grammar>
 pString _do_escape(const std::string& s)

@@ -45,7 +45,7 @@ Next, get Manalyze's source code and try building it::
     make
     cd bin && ./manalyze --version
 
-If everything went well, the tool's version should be displayed. Otherwise, look for error messages during the build process and get in touch with the maintainer to request help!
+If everything went well, the tool's version should be displayed. Otherwise, jump to the `Troubleshooting`_ section below or look for error messages during the build process and get in touch with the maintainer to request help!
 
 .. TIP:: You can enable debug builds with the following command: ``cmake . -DDebug=ON``
 
@@ -91,3 +91,29 @@ Now take the whole ``Manalyze`` folder to the computer on which you intend to bu
     cmake . -DGitHub=OFF
 	
 ...and continue as you normally would.
+
+Troubleshooting
+===============
+
+This section lists some common compilation errors you may face when building Manalyze, along with their solution.
+
+1. Boost is obsolete
+--------------------
+
+This compilation error is usually encountered on Debian 7 (Wheezy)::
+
+	In file included from ~/Manalyze/manacommons/escape.cpp:18:0:
+	~/Manalyze/include/manacommons/escape.h:115:97: error: macro "BOOST_STATIC_ASSERT" passed 3 arguments, but takes just 1
+	~/Manalyze/include/manacommons/escape.h:148:66: error: macro "BOOST_STATIC_ASSERT" passed 2 arguments, but takes just 1
+	~/Manalyze/include/manacommons/escape.h: In function ‘io::pString io::_do_escape(const string&)’:
+	~/Manalyze/include/manacommons/escape.h:115:2: error: ‘BOOST_STATIC_ASSERT’ was not declared in this scope
+	~/Manalyze/include/manacommons/escape.h: In function ‘io::pString io::escape(const string&)’:
+	~/Manalyze/include/manacommons/escape.h:148:2: error: ‘BOOST_STATIC_ASSERT’ was not declared in this scope
+	~/Manalyze/include/manacommons/escape.h: In instantiation of ‘io::pString io::_do_escape(const string&) [with Grammar = io::escaped_string_raw<std::back_insert_iterator<std::basic_string<char> > >; io::pString = boost::shared_ptr<std::basic_string<char> >; std::string = std::basic_string<char>]’:
+	~/Manalyze/manacommons/escape.cpp:24:53:   required from here
+	~/Manalyze/include/manacommons/escape.h:125:10: error: could not convert ‘nullptr’ from ‘std::nullptr_t’ to ‘io::pString {aka boost::shared_ptr<std::basic_string<char> >}’
+	make[2]: *** [CMakeFiles/manacommons.dir/manacommons/escape.cpp.o] Error 1
+	make[1]: *** [CMakeFiles/manacommons.dir/all] Error 2
+	make: *** [all] Error 2
+
+This issue has been traced to the `Boost libraries <http://www.boost.org/>`_ in Wheezy repositories being too old (1.49.0). You'll need to either upgrade them manually or switch to Debian Jessie.

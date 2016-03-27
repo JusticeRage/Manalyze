@@ -13,11 +13,11 @@ Let's start by writing some sample code that would read a PE file using Manalyze
 	{
 		mana::PE pe("file.exe");
 		if (pe.is_valid()) { // Always check this.
-		    std::cout << "File parsed successfully: " << *pe.get_path() << std::endl;
+			std::cout << "File parsed successfully: " << *pe.get_path() << std::endl;
 		}
 		else
 		{
-		    std::cout << "The file is invalid!" << std::endl;
+			std::cout << "The file is invalid!" << std::endl;
 			return 1;
 		}
 
@@ -46,4 +46,4 @@ You don't have to follow the same folder structure, it's only given as an exampl
 	.data
 	.rsrc
 
-Obviously, you'll want to write a Makefile or use CMake, but this should be enough to get you started. If you need detailed information on available methods that you can use from here, please see this section on by :ref:`pe_objects`.
+Obviously, you'll want to write a Makefile or use CMake, but this should be enough to get you started. If you need detailed information on available methods that you can use from here, please see this section on :ref:`pe_objects`.

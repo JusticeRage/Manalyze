@@ -22,7 +22,7 @@ There are few things I hate more than checking out an open-source project and sp
 
 ### On Linux and BSD (tested on Debian Jessie and FreeBSD 10.2)
 ```
-$> [sudo or as root] apt-get install libboost-regex-dev libboost-program-options-dev libboost-system-dev  libboost-filesystem-dev build-essential cmake
+$> [sudo or as root] apt-get install libboost-regex-dev libboost-program-options-dev libboost-system-dev libboost-filesystem-dev build-essential cmake git
 $> [alternatively, also sudo or as root] pkg install boost-libs-1.55.0_8 cmake
 $> git clone https://github.com/JusticeRage/Manalyze.git && cd Manalyze
 $> cmake .
