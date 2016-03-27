@@ -241,7 +241,7 @@ void dump_resources(const mana::PE& pe, io::OutputFormatter& formatter, bool com
 		res->append(boost::make_shared<io::OutputTreeNode>("Size", (*it)->get_size(), io::OutputTreeNode::HEX));
 		res->append(boost::make_shared<io::OutputTreeNode>("Entropy", (*it)->get_entropy()));
 
-		yara::const_matches m = (*it)->detect_filetype();
+		yara::const_matches m = detect_filetype(*it);
 		if (m && m->size() > 0)
 		{
 			for (auto it2 = m->begin() ; it2 != m->end() ; ++it2) {
@@ -425,7 +425,7 @@ void dump_summary(const mana::PE& pe, io::OutputFormatter& formatter)
 	mana::image_optional_header ioh = *pe.get_image_optional_header();
 	summary->append(boost::make_shared<io::OutputTreeNode>("Subsystem", *nt::translate_to_flag(ioh.Subsystem, nt::SUBSYSTEMS)));
 	summary->append(boost::make_shared<io::OutputTreeNode>("Compilation Date", io::timestamp_to_string(h.TimeDateStamp)));
-	
+
 	// Exploit mitigation technologies
 	std::vector<std::string> mitigation;
 	auto characteristics = *nt::translate_to_flags(ioh.DllCharacteristics, nt::DLL_CHARACTERISTICS);
@@ -480,6 +480,97 @@ void dump_hashes(const mana::PE& pe, io::OutputFormatter& formatter)
 	hashes_node->append(boost::make_shared<io::OutputTreeNode>("SSDeep", *ssdeep::hash_file(*pe.get_path())));
 	hashes_node->append(boost::make_shared<io::OutputTreeNode>("Imports Hash", *hash::hash_imports(pe)));
 	formatter.add_data(hashes_node, *pe.get_path());
+}
+
+// ----------------------------------------------------------------------------
+
+yara::const_matches detect_filetype(mana::pResource r)
+{
+    static yara::pYara y = yara::Yara::create();
+    if (y->load_rules("yara_rules/magic.yara"))
+    {
+        shared_bytes bytes = r->get_raw_data();
+        if (bytes != nullptr) {
+            return y->scan_bytes(*bytes);
+        }
+        else {
+            return yara::matches();
+        }
+    }
+    else {
+        return yara::matches();
+    }
+}
+
+// ----------------------------------------------------------------------------
+
+bool extract_resources(const mana::PE& pe, const std::string& destination_folder)
+{
+    if (!bfs::exists(destination_folder) && !bfs::create_directory(destination_folder))
+    {
+        PRINT_ERROR << "Could not create directory " << destination_folder << "." << DEBUG_INFO << std::endl;
+        return false;
+    }
+
+    bool res = true;
+    auto base = bfs::basename(*pe.get_path());
+    auto resources = pe.get_resources();
+    if (resources == nullptr) {
+        return true;
+    }
+
+    for (auto it = resources->begin() ; it != resources->end() ; ++it)
+    {
+        bfs::path destination_file;
+        std::stringstream ss;
+        if (*(*it)->get_type() == "RT_GROUP_ICON" || *(*it)->get_type() == "RT_GROUP_CURSOR")
+        {
+            ss << base << "_" << (*it)->get_id() << "_" << *(*it)->get_type() << ".ico";
+            res &= (*it)->icon_extract(bfs::path(destination_folder) / bfs::path(ss.str()), *pe.get_resources());
+        }
+        else if (*(*it)->get_type() == "RT_MANIFEST")
+        {
+            ss << base << "_" << (*it)->get_id() << "_RT_MANIFEST.xml";
+            res &= (*it)->extract(bfs::path(destination_folder) / bfs::path(ss.str()));
+        }
+        else if (*(*it)->get_type() == "RT_BITMAP")
+        {
+            ss << base << "_" << (*it)->get_id() << "_RT_BITMAP.bmp";
+            res &= (*it)->extract(bfs::path(destination_folder) / bfs::path(ss.str()));
+        }
+        else if (*(*it)->get_type() == "RT_ICON" || *(*it)->get_type() == "RT_CURSOR" || *(*it)->get_type() == "RT_VERSION") {
+            // Ignore the following resource types: we don't want to extract them.
+            continue;
+        }
+        else if (*(*it)->get_type() == "RT_STRING")
+        {
+            // Append all the strings to the same file.
+            destination_file = bfs::path(destination_folder) / bfs::path(base + "_RT_STRINGs.txt");
+            res &= (*it)->extract(destination_file.string());
+        }
+        else // General case
+        {
+            ss << base << "_";
+            if (*(*it)->get_name() != "") {
+                ss << *(*it)->get_name();
+            }
+            else {
+                ss << (*it)->get_id();
+            }
+
+            // Try to guess the file extension
+            auto m = detect_filetype(*it);
+            if (m && m->size() > 0) {
+                ss << "_" << *(*it)->get_type() << m->at(0)->operator[]("extension");
+            }
+            else {
+                ss << "_" << *(*it)->get_type() << ".raw";
+            }
+
+            res &= (*it)->extract(bfs::path(destination_folder) / bfs::path(ss.str()));
+        }
+    }
+    return res;
 }
 
 } // !namespace mana

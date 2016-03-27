@@ -486,7 +486,7 @@ void perform_analysis(const std::string& path,
 
 
 	if (vm.count("extract")) { // Extract resources if requested
-		pe.extract_resources(extraction_directory);
+		mana::extract_resources(pe, extraction_directory);
 	}
 
 	if (vm.count("hashes")) {

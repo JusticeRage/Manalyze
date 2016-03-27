@@ -26,8 +26,6 @@
 #include <boost/shared_array.hpp>
 #include <boost/filesystem.hpp>
 
-#include "yara/yara_wrapper.h"
-
 #include "manape/utils.h"
 
 namespace mana
@@ -81,9 +79,11 @@ public:
 	DECLSPEC boost::uint32_t	get_size()		const { return _size; }
 	DECLSPEC boost::uint32_t	get_id()		const { return _id; }
 	DECLSPEC boost::uint32_t	get_offset()	const { return _offset_in_file; }
+
 	DECLSPEC double				get_entropy()	const {
 		return utils::shannon_entropy(*get_raw_data());
 	}
+
 	DECLSPEC pString			get_name()		const
 	{
 		if (_name != "") {
@@ -124,11 +124,27 @@ public:
 	template <class T>
 	T interpret_as();
 
-	DECLSPEC yara::const_matches detect_filetype() const;
+    /**
+     * @brief   Extracts the resource to the specified path.
+     *
+     * @param   const boost::filesystem::path& destination The place where the resource should
+     *                                                     be written (i.e. "/tmp/image.bmp").
+     */
+    bool extract(const boost::filesystem::path& destination);
+
+    /**
+     * @brief   Extraction function dedicated to icons.
+     *
+     * Icon data may be spread over multiple resources. For this reason, it is necessary to have
+     * access to all the resources of the PE files to reconstruct it properly.
+     *
+     * @param   const boost::filesystem::path& destination The place where the resource should
+     *                                                     be written (i.e. "/tmp/icon.ico").
+     */
+    bool icon_extract(const boost::filesystem::path& destination,
+                      const std::vector<boost::shared_ptr<Resource> >& resources);
 
 private:
-	static yara::pYara _yara;
-
 	std::string		_type;
 
 	// Resources can either have an identifier or a name.

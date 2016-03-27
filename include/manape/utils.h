@@ -30,8 +30,6 @@
 #include <boost/make_shared.hpp>
 #include <boost/system/api_config.hpp>
 
-#include "hash-library/hashes.h"
-
 #include "manacommons/color.h"
 
 // Some miscellaneous functions are exported

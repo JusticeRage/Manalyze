@@ -84,10 +84,21 @@ BOOST_AUTO_TEST_CASE(interpret_manifest)
 
 BOOST_AUTO_TEST_CASE(extract_manifest)
 {
+	// TODO: Rewrite unit tests for the extract function.
+	// A test is needed for RT_BITMAPs and RT_STRINGs in particular.
+
 	mana::PE pe("testfiles/manatest.exe");
-	pe.extract_resources(".");
-	auto h = hash::hash_file(*hash::ALL_DIGESTS.at(ALL_DIGESTS_SHA256), "manatest_1_RT_MANIFEST.xml");
-	fs::remove("manatest_1_RT_MANIFEST.xml");
+	auto resources = pe.get_resources();
+    for (auto it = resources->begin() ; it != resources->end() ; ++it)
+    {
+        if (*(*it)->get_type() == "RT_MANIFEST")
+        {
+            (*it)->extract("manifest.xml");
+            break;
+        }
+    }
+	auto h = hash::hash_file(*hash::ALL_DIGESTS.at(ALL_DIGESTS_SHA256), "manifest.xml");
+	fs::remove("manifest.xml");
 	BOOST_ASSERT(h);
 	BOOST_CHECK_EQUAL(*h, "4bb79dcea0a901f7d9eac5aa05728ae92acb42e0cb22e5dd14134f4421a3d8df");
 }
@@ -95,7 +106,7 @@ BOOST_AUTO_TEST_CASE(extract_manifest)
 // ----------------------------------------------------------------------------
 
 /**
- *	@brief	Helper function which checks all of a Resource's fields against 
+ *	@brief	Helper function which checks all of a Resource's fields against
  *			given values.
  */
 void check_resource(mana::pResource r,
@@ -176,7 +187,7 @@ BOOST_AUTO_TEST_CASE(interpret_versioninfo)
 	BOOST_CHECK_EQUAL(vi->Value->Signature, 0xfeef04bd);
 	BOOST_CHECK_EQUAL(vi->Value->FileFlags, 0);
 	BOOST_CHECK_EQUAL(*nt::translate_to_flag(vi->Value->FileType, nt::FIXEDFILEINFO_FILETYPE), "VFT_APP");
-	std::vector<std::string> fileos_expected = 
+	std::vector<std::string> fileos_expected =
 		boost::assign::list_of("VOS_DOS_WINDOWS32")("VOS_NT")("VOS_NT_WINDOWS32")("VOS_WINCE")("VOS__WINDOWS32");
 	auto fileos = *nt::translate_to_flags(vi->Value->FileOs, nt::FIXEDFILEINFO_FILEOS);
 	BOOST_ASSERT(fileos.size() == fileos_expected.size());

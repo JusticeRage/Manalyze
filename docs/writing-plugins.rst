@@ -540,20 +540,6 @@ Resource objects
 
 In Manalyze, PE resources are represented as Resource objects that can be manipulated similarly to Sections. ``get_name``, ``get_type``, ``get_language``, ``get_codepage``, ``get_size``, ``get_id`` and ``get_offset`` provide access to basic information and ``get_entropy`` calculates the entropy of the resource.
 
-In addition, a ``detect_filetype`` function tries to determine the filetype of the resource based on magic numbers present in it (you can look at the rules used in ``bin/yara_rules/magic.yara``)::
-
-	auto m = (*it)->detect_filetype();
-	if (m && m->size() > 0)
-	{
-		for (auto it = m->begin() ; it != m->end() ; ++it2) 
-		{
-			std::cout << "Detected filetype: " << (*it)->operator[]("description");
-			std::cout << "Related extension: " << (*it)->operator[]("extension");
-		}
-	}
-
-Note that in the case of polyglot files, several filetypes may be detected.
-
 Accessing the underlying resource
 ---------------------------------
 
@@ -597,6 +583,27 @@ Most of the time, you'll want to look at the actual resource bytes. A ``get_raw_
 * And finally ``shared_bytes`` for any resource type, which will behave exactly like ``get_raw_data``.
 
 All these functions will return null pointers if for some reason the resource cannot be interpreted as the requested type.
+
+Extracting resources
+--------------------
+
+Utility functions are provided to extract resources into a file. Use `extract` or `icon_extract` depending on the resource type - the reason why two separate functions were written is that icon data may be spread over multiple resources, therefore a list of all the resources of the PE must be provided to reconstruct them properly. Here is how you can extract resources in the general case::
+
+	auto resources = pe.get_resources();
+	for (auto it = resources->begin() ; it != resources->end() ; ++it)
+	{
+		bool res;
+		if (*(*it)->get_type() == "RT_GROUP_ICON" || *(*it)->get_type() == "RT_GROUP_CURSOR") {
+			res = (*it)->icon_extract(*(*it)->get_name() + ".ico", resources);
+		}
+		else {
+			res = (*it)->extract(*(*it)->get_name() + ".bin");
+		}
+
+		if (!res) {
+			std::cerr << "Resource extraction failed :(" << std::endl;
+		}
+	}
 
 .. note:: What's up with all these pointers?
 	

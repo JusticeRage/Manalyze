@@ -27,6 +27,7 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include "manape/imports.h"
 #include "hash-library/hashes.h"
 #include "hash-library/ssdeep.h"
+#include "yara/yara_wrapper.h"
 
 namespace mana
 {
@@ -43,5 +44,27 @@ void dump_debug_info(const mana::PE& pe, io::OutputFormatter& formatter);
 void dump_tls(const mana::PE& pe, io::OutputFormatter& formatter);
 void dump_summary(const mana::PE& pe, io::OutputFormatter& formatter);
 void dump_hashes(const mana::PE& pe, io::OutputFormatter& formatter);
+
+/**
+ * @brief   Detects the filetype of a given resource based on magic numbers contained
+ *          inside it.
+ *
+ * @param   mana::pResource resource The resource whose type we want to identify.
+ * @return  yara::const_matches The list of matches found by Yara (only one in most
+ *          cases, but so-called polyglot files can be of multiple file types at the
+ *          same type.
+ */
+yara::const_matches detect_filetype(mana::pResource resource);
+
+/**
+ * @brief   Extracts resources from a PE file.
+ *
+ * @param   const mana::PE& pe The PE whose resources we want extracted.
+ * @param   const std::string& destination_folder The folder into which the
+ *          extracted files should be placed.
+ *
+ * @return  Whether the extraction was successful.
+ */
+bool extract_resources(const mana::PE& pe, const std::string& destination_folder);
 
 } // !namespace sg

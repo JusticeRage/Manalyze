@@ -28,9 +28,6 @@ namespace bfs = boost::filesystem;
 namespace mana
 {
 
-// Initialize the Yara wrapper used by resource objects
-yara::pYara Resource::_yara = yara::Yara::create();
-
 bool PE::_read_image_resource_directory(image_resource_directory& dir, unsigned int offset) const
 {
 	if (!_ioh || _file_handle == nullptr) {
@@ -394,9 +391,7 @@ DECLSPEC pgroup_icon_directory Resource::interpret_as()
 	}
 
 	END:
-	if (f != nullptr) {
-		fclose(f);
-	}
+	fclose(f);
 	return res;
 }
 
@@ -611,7 +606,7 @@ std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, co
 			   directory->Entries[i].get(),
 			   sizeof(group_icon_directory_entry) - sizeof(boost::uint32_t)); // Don't copy the last field.
 		// Fix the icon_directory_entry with the offset in the file instead of a RT_ICON id
-		unsigned int size_fix = res.size();
+		unsigned long size_fix = res.size();
 		memcpy(&res[3 * sizeof(boost::uint16_t) + (i+1) * sizeof(group_icon_directory_entry) - sizeof(boost::uint32_t)],
 			   &size_fix,
 			   sizeof(boost::uint32_t));
@@ -632,138 +627,114 @@ std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, co
 
 // ----------------------------------------------------------------------------
 
-bool PE::extract_resources(const std::string& destination_folder)
+/**
+ * @brief   Function which writes bytes to a given file. Created to prevent code
+ * duplication between extract and icon_extract.
+ *
+ * @param   const boost::filesystem::path& destination The path to the file to write.
+ * @param   std::vector<boost::uint8_t> data The data to write.
+ *
+ * @return  Whether the file creation succeeded.
+ */
+bool write_data_to_file(const boost::filesystem::path& destination, std::vector<boost::uint8_t> data)
 {
-	if (!bfs::exists(destination_folder) && !bfs::create_directory(destination_folder))
-	{
-		PRINT_ERROR << "Could not create directory " << destination_folder << "." << DEBUG_INFO << std::endl;
-		return false;
-	}
+    FILE* f = fopen(destination.string().c_str(), "wb+");
+    if (f == nullptr)
+    {
+        PRINT_ERROR << "Could not open " << destination.string() << "." << DEBUG_INFO << std::endl;
+        return false;
+    }
+    if (data.size() != fwrite(&data[0], 1, data.size(), f))
+    {
+        fclose(f);
+        PRINT_ERROR << "Could not write all the bytes for " << destination.string() << "." << DEBUG_INFO << std::endl;
+        return false;
+    }
 
-	auto base = bfs::basename(_path);
-	FILE* f;
-	for (auto it = _resource_table.begin() ; it != _resource_table.end() ; ++it)
-	{
-		bfs::path destination_file;
-		std::stringstream ss;
-		std::vector<boost::uint8_t> data;
-		if (*(*it)->get_type() == "RT_GROUP_ICON" || *(*it)->get_type() == "RT_GROUP_CURSOR")
-		{
-			ss << base << "_" << (*it)->get_id() << "_" << *(*it)->get_type() << ".ico";
-			data = reconstruct_icon((*it)->interpret_as<pgroup_icon_directory>(), _resource_table);
-		}
-		else if (*(*it)->get_type() == "RT_MANIFEST")
-		{
-			ss << base << "_" << (*it)->get_id() << "_RT_MANIFEST.xml";
-			data = *(*it)->get_raw_data();
-		}
-		else if (*(*it)->get_type() == "RT_BITMAP")
-		{
-			ss << base << "_" << (*it)->get_id() << "_RT_BITMAP.bmp";
-			unsigned int header_size = 2 * sizeof(boost::uint8_t) + 2 * sizeof(boost::uint16_t) + 2 * sizeof(boost::uint32_t);
-			auto bmp = (*it)->interpret_as<pbitmap>();
-			if (bmp == nullptr)
-			{
-				PRINT_ERROR << "Bitmap " << *(*it)->get_name() << " is malformed!" << std::endl;
-				continue;
-			}
-
-			// Copy the BMP header
-			data.resize(header_size, 0);
-			memcpy(&data[0], bmp.get(), header_size);
-			// Copy the image bytes.
-			data.insert(data.end(), bmp->data.begin(), bmp->data.end());
-		}
-		else if (*(*it)->get_type() == "RT_ICON" || *(*it)->get_type() == "RT_CURSOR" || *(*it)->get_type() == "RT_VERSION") {
-			// Ignore the following resource types: we don't want to extract them.
-			continue;
-		}
-		else if (*(*it)->get_type() == "RT_STRING")
-		{
-			// Append all the strings to the same file.
-			auto strings = (*it)->interpret_as<const_shared_strings>();
-			if (strings->size() == 0) {
-				continue;
-			}
-
-			destination_file = bfs::path(destination_folder) / bfs::path(base + "_RT_STRINGs.txt");
-			FILE* out = fopen(destination_file.string().c_str(), "a+");
-			if (out == nullptr)
-			{
-				PRINT_ERROR << "Could not open/create " << destination_file << "!" << std::endl;
-				continue;
-			}
-
-			for (auto it2 = strings->begin(); it2 != strings->end(); ++it2)
-			{
-				if ((*it2) != "")
-				{
-					fwrite(it2->c_str(), 1, it2->size(), out);
-					fputc('\n', out);
-				}
-			}
-			fclose(out);
-			continue;
-		}
-		else // General case
-		{
-			ss << base << "_";
-			if (*(*it)->get_name() != "") {
-				ss << *(*it)->get_name();
-			}
-			else {
-				ss << (*it)->get_id();
-			}
-
-			// Try to guess the file extension
-			auto m = (*it)->detect_filetype();
-			if (m && m->size() > 0) {
-				ss << "_" << *(*it)->get_type() << m->at(0)->operator[]("extension");
-			}
-			else {
-				ss << "_" << *(*it)->get_type() << ".raw";
-			}
-
-			data = *(*it)->get_raw_data();
-		}
-
-		if (data.size() == 0)
-		{
-			PRINT_WARNING << "Resource " << *(*it)->get_name() << " is empty!"  << DEBUG_INFO << std::endl;
-			continue;
-		}
-
-		destination_file = bfs::path(destination_folder) / bfs::path(ss.str());
-		f = fopen(destination_file.string().c_str(), "wb+");
-		if (f == nullptr)
-		{
-			PRINT_ERROR << "Could not open " << destination_file << "." << DEBUG_INFO << std::endl;
-			return false;
-		}
-		if (data.size() != fwrite(&data[0], 1, data.size(), f))
-		{
-			fclose(f);
-			PRINT_ERROR << "Could not write all the bytes for " << destination_file << "." << DEBUG_INFO << std::endl;
-			return false;
-		}
-
-		fclose(f);
-	}
-	return true;
+    fclose(f);
+    return true;
 }
 
 // ----------------------------------------------------------------------------
 
-yara::const_matches Resource::detect_filetype() const
+bool Resource::extract(const boost::filesystem::path& destination)
 {
-	if (_yara->load_rules("yara_rules/magic.yara"))
-	{
-		shared_bytes bytes = get_raw_data();
-		return _yara->scan_bytes(*bytes);
+    shared_bytes data;
+	if (_type == "RT_GROUP_ICON" || _type == "RT_GROUP_CURSOR")
+    {
+        PRINT_WARNING << "Use icon_extract to properly recreate icons." << std::endl;
+        data = get_raw_data();
 	}
-	else {
-		return yara::matches();
-	}
+    else if (_type == "RT_BITMAP")
+    {
+        unsigned int header_size = 2 * sizeof(boost::uint8_t) + 2 * sizeof(boost::uint16_t) + 2 * sizeof(boost::uint32_t);
+        auto bmp = interpret_as<pbitmap>();
+        if (bmp == nullptr)
+        {
+            PRINT_ERROR << "Bitmap " << _name << " is malformed!" << std::endl;
+            return false;
+        }
+
+        // Copy the BMP header
+        boost::shared_ptr<std::vector<boost::uint8_t> > bmp_bytes(new std::vector<boost::uint8_t>(header_size));
+        memcpy(bmp_bytes.get(), bmp.get(), header_size);
+        // Copy the image bytes.
+        bmp_bytes->insert(bmp_bytes->end(), bmp->data.begin(), bmp->data.end());
+        data = bmp_bytes;
+    }
+    else if (_type == "RT_STRING")
+    {
+        // RT_STRINGs are written immediately to the file instead of trying to reconstruct
+        // an original byte stream.
+        auto strings = interpret_as<const_shared_strings>();
+        if (strings->size() == 0) {
+            return true;
+        }
+
+        FILE* out = fopen(destination.string().c_str(), "w");
+        if (out == nullptr)
+        {
+            PRINT_ERROR << "Could not open/create " << destination << "!" << std::endl;
+            return false;
+        }
+
+        for (auto it2 = strings->begin(); it2 != strings->end(); ++it2)
+        {
+            if ((*it2) != "")
+            {
+                fwrite(it2->c_str(), 1, it2->size(), out);
+                fputc('\n', out);
+            }
+        }
+        fclose(out);
+        return true;
+    }
+    else {
+        data = get_raw_data();
+    }
+
+    if (data == nullptr || data->size() == 0)
+    {
+        PRINT_WARNING << "Resource " << _name << " is empty!"  << DEBUG_INFO << std::endl;
+        return true;
+    }
+
+    return write_data_to_file(destination, *data);
+}
+
+// ----------------------------------------------------------------------------
+
+bool Resource::icon_extract(const boost::filesystem::path& destination,
+                            const std::vector<pResource>& resources)
+{
+    std::vector<boost::uint8_t> data;
+    if (_type != "RT_GROUP_ICON" && _type != "RT_GROUP_CURSOR")
+    {
+        PRINT_WARNING << "Called icon_extract on a non-icon resource!" << std::endl;
+        return extract(destination);
+    }
+    data = reconstruct_icon(interpret_as<pgroup_icon_directory>(), resources);
+    return write_data_to_file(destination, data);
 }
 
 } // !namespace mana

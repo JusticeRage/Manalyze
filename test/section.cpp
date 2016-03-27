@@ -19,6 +19,7 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include "fixtures.h"
 #include "manape/section.h"
 #include "manape/pe.h"
+#include "hash-library/hashes.h"
 
 BOOST_AUTO_TEST_CASE(section_invalid_args)
 {
