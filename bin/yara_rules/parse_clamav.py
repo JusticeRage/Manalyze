@@ -236,7 +236,7 @@ class YaraRule:
                     conditions += " and "
                 elif t == "|":
                     conditions += " or "
-                elif t == ">" or t == "<" or t == ",":
+                elif t == ">" or t == "<" or t == "," or t == "=":
                     # If they haven't been detected while looking ahead, it means that
                     # they arrive after a full expression (i.e. (0&1)>X,Y), which can't
                     # be translated to a Yara rule as far as I know.
@@ -339,10 +339,11 @@ def parse_ldb(input, output, is_daily=False):
                     print "Rule %s seems to be malformed. Skipping..." % malware_name
                     continue
 
-                if not rule.get_meta_signature() in RULES:
+                translated_rule = rule.__str__()
+                if not rule.get_meta_signature() in RULES and translated_rule:
                     RULES.add(rule.get_meta_signature())
-                    g.write(rule.__str__())
-                else:
+                    g.write(translated_rule)
+                elif translated_rule:
                     print "Rule %s already exists!" % rule.get_meta_signature()
 
 
