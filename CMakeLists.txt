@@ -78,7 +78,7 @@ if (WIN32)
 
 			# Windows only plugins:
 			add_library(plugin_authenticode SHARED plugins/plugin_authenticode.cpp)
-			target_link_libraries(plugin_authenticode manape hash-library manacommons ${Boost_LIBRARIES})
+			target_link_libraries(plugin_authenticode manape hash-library manacommons yara ${Boost_LIBRARIES})
 else()
 			string (REGEX MATCH "BSD" IS_BSD ${CMAKE_SYSTEM_NAME}) # Detect if we are compiling on a BSD system.
 

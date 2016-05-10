@@ -24,6 +24,7 @@
 #include <iostream>
 #include <string.h>
 #include <math.h>
+#include <vector>
 
 #include <boost/cstdint.hpp>
 #include <boost/shared_array.hpp>

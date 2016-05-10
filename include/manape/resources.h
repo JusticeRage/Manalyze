@@ -130,7 +130,7 @@ public:
      * @param   const boost::filesystem::path& destination The place where the resource should
      *                                                     be written (i.e. "/tmp/image.bmp").
      */
-    bool extract(const boost::filesystem::path& destination);
+	DECLSPEC bool extract(const boost::filesystem::path& destination);
 
     /**
      * @brief   Extraction function dedicated to icons.
@@ -141,7 +141,7 @@ public:
      * @param   const boost::filesystem::path& destination The place where the resource should
      *                                                     be written (i.e. "/tmp/icon.ico").
      */
-    bool icon_extract(const boost::filesystem::path& destination,
+    DECLSPEC bool icon_extract(const boost::filesystem::path& destination,
                       const std::vector<boost::shared_ptr<Resource> >& resources);
 
 private:

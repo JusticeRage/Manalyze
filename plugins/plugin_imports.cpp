@@ -40,14 +40,27 @@ std::string wininet_api = "Internet(.*)|WSA(.*)|URLDownloadToFile(A|W)";
 
 std::string process_creation_api = "CreateProcess(.*)|system|WinExec|ShellExecute(A|W)";
 
+std::string process_manipulation_api = "EnumProcess*|OpenProcess|TerminateProcess|ReadProcessMemory|Process32(First|Next)(W)?";
+
+std::string service_manipulation_api = "OpenSCManager(A|W)|(Open|Control|Create|Delete)Service(A|W)?|QueryService*|"
+									   "ChangeServiceConfig(A|W)|EnumServicesStatus(Ex)?(A|W)";
+
 std::string privilege_api = "AdjustTokenPrivileges|IsNTAdmin|LsaEnumerateLogonSessions|SamQueryInformationUse|"
 							"SamIGetPrivateData|SfcTerminateWatcherThread|(Zw)?OpenProcessToken(Ex)?|(Zw)?DuplicateToken(Ex)?";
 
-std::string dynamic_import = "LoadLibrary(A|W)|GetProcAddress|LdrLoadDll|MmGetSystemRoutineAddress";
+std::string dacl_api = "SetKernelObjectSecurity|SetFileSecurity(A|W)|SetNamedSecurityInfo(A|W)|SetSecurityInfo";
+
+std::string dynamic_import = "(Co)?LoadLibrary(Ex)?(A|W)|GetProcAddress|LdrLoadDll|MmGetSystemRoutineAddress";
 
 std::string packer_api = "VirtualAlloc|VirtualProtect";
 
 std::string temporary_files = "GetTempPath(A|W)|(Create|Write)File(A|W)";
+
+std::string driver_enumeration = "EnumDeviceDrivers|GetDeviceDriver*";
+
+std::string eventlog_deletion = "EvtClearLog|ClearEventLog(A|W)";
+
+std::string screenshot_api = "CreateCompatibleDC|GetDC(Ex)?|FindWindow|PrintWindow|BitBlt";
 
 /**
  *	@brief	Checks the presence of some functions in the PE and updates the
@@ -115,6 +128,12 @@ public:
 		check_functions(pe, raw_socket_api, SUSPICIOUS, "Leverages the raw socket API to access the Internet", AT_LEAST_ONE, res);
 		check_functions(pe, wininet_api, NO_OPINION, "Has Internet access capabilities", AT_LEAST_ONE, res);
 		check_functions(pe, privilege_api, MALICIOUS, "Functions related to the privilege level", AT_LEAST_ONE, res);
+		check_functions(pe, service_manipulation_api, SUSPICIOUS, "Interacts with services", AT_LEAST_ONE, res);
+		check_functions(pe, driver_enumeration, SUSPICIOUS, "Enumerates drivers present on the system", AT_LEAST_ONE, res);
+		check_functions(pe, process_manipulation_api, SUSPICIOUS, "Manipulates other processes", AT_LEAST_ONE, res);
+		check_functions(pe, eventlog_deletion, MALICIOUS, "Deletes entries from the event log", AT_LEAST_ONE, res);
+		check_functions(pe, dacl_api, SUSPICIOUS, "Changes object ACLs", AT_LEAST_ONE, res);
+		check_functions(pe, screenshot_api, SUSPICIOUS, "Can take screenshots", AT_LEAST_TWO, res);
 
 		switch (res->get_level())
 		{

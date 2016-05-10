@@ -458,7 +458,7 @@ rule Antivirus
         $a454 = "srng.exe" nocase wide ascii
         $a455 = "ss3edit.exe" nocase wide ascii
         $a457 = "ssgrate.exe" nocase wide ascii
-        $a458 = "st2.exe" nocase wide ascii
+        $a458 = "st2.exe" nocase wide ascii fullword
         $a461 = "supftrl.exe" nocase wide ascii
         $a470 = "symproxysvc.exe" nocase wide ascii
         $a471 = "symtray.exe" nocase wide ascii
