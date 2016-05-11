@@ -117,6 +117,7 @@ public:
 	 *	@param	const std::string& function_name_regexp		The regular expression selecting function names.
 	 *	@param	const std::string& dll_name_regexp			The regular expression selecting imported dlls into which the
 	 *														functions should be searched.
+	 *	@param	bool case_sensitivity						Whethter the regular expression should be case sensitive (default is false).
 	 *
 	 *	@return	A shared vector containing the matching function names.
 	 *
@@ -127,7 +128,8 @@ public:
 	 *	Implementation is located in imports.cpp.
 	 */
 	DECLSPEC const_shared_strings find_imports(const std::string& function_name_regexp,
-											   const std::string& dll_name_regexp = ".*") const;
+											   const std::string& dll_name_regexp = ".*",
+											   bool  case_sensitivity = false) const;
 
 	DECLSPEC boost::optional<dos_header> get_dos_header() const {
 		return _h_dos;
@@ -359,10 +361,11 @@ private:
 	 *
 	 *	@param	const std::string& name_regexp The regular expression used to match DLL names.
 	 *	@param	std::vector<pimage_library_descriptor>& destination The vector into which the result should be stored.
+	 *	@param	bool case_sensitivity Whether the regular expression should be case sensitive (default is false).
 	 *
 	 *	Implementation is located in imports.cpp.
 	 */
-	std::vector<pimage_library_descriptor> _find_imported_dlls(const std::string& name_regexp) const;
+	std::vector<pimage_library_descriptor> _find_imported_dlls(const std::string& name_regexp, bool case_sensitivity = false) const;
 
 	std::string							_path;
     bool								_initialized;

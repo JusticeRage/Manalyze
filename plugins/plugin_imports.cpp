@@ -38,15 +38,18 @@ std::string raw_socket_api = "accept|bind|connect|recv|send|gethost(by)?name|ine
 
 std::string wininet_api = "Internet(.*)|WSA(.*)|URLDownloadToFile(A|W)";
 
+std::string registry_api = "Reg(.*)(Key|Value)(.*)|SH(.*)(Reg|Key)(.*)|SHQueryValueEx(A|W)|SHGetValue(A|W)";
+
 std::string process_creation_api = "CreateProcess(.*)|system|WinExec|ShellExecute(A|W)";
 
-std::string process_manipulation_api = "EnumProcess*|OpenProcess|TerminateProcess|ReadProcessMemory|Process32(First|Next)(W)?";
+std::string process_manipulation_api = "EnumProcess(.*)|OpenProcess|TerminateProcess|ReadProcessMemory|Process32(First|Next)(W)?";
 
-std::string service_manipulation_api = "OpenSCManager(A|W)|(Open|Control|Create|Delete)Service(A|W)?|QueryService*|"
+std::string service_manipulation_api = "OpenSCManager(A|W)|(Open|Control|Create|Delete)Service(A|W)?|QueryService(.*)|"
 									   "ChangeServiceConfig(A|W)|EnumServicesStatus(Ex)?(A|W)";
 
-std::string privilege_api = "AdjustTokenPrivileges|IsNTAdmin|LsaEnumerateLogonSessions|SamQueryInformationUse|"
-							"SamIGetPrivateData|SfcTerminateWatcherThread|(Zw)?OpenProcessToken(Ex)?|(Zw)?DuplicateToken(Ex)?";
+std::string privilege_api = "AdjustTokenPrivileges|IsNTAdmin|LsaEnumerateLogonSessions|SamQueryInformationUser|"
+							"SamIGetPrivateData|SfcTerminateWatcherThread|(Zw)?OpenProcessToken(Ex)?|(Zw)?DuplicateToken(Ex)?|"
+							"(SHTest|Check)TokenMembership";
 
 std::string dacl_api = "SetKernelObjectSecurity|SetFileSecurity(A|W)|SetNamedSecurityInfo(A|W)|SetSecurityInfo";
 
@@ -56,11 +59,17 @@ std::string packer_api = "VirtualAlloc|VirtualProtect";
 
 std::string temporary_files = "GetTempPath(A|W)|(Create|Write)File(A|W)";
 
-std::string driver_enumeration = "EnumDeviceDrivers|GetDeviceDriver*";
+std::string driver_enumeration = "EnumDeviceDrivers|GetDeviceDriver(.*)";
 
 std::string eventlog_deletion = "EvtClearLog|ClearEventLog(A|W)";
 
 std::string screenshot_api = "CreateCompatibleDC|GetDC(Ex)?|FindWindow|PrintWindow|BitBlt";
+
+std::string audio_api = "waveInOpen|DirectSoundCaptureCreate(.*)";
+
+std::string shutdown_functions = "Initiate(System)?Shutdown(Ex)?(A|W)|LockWorkStation|ExitWindows(Ex)?";
+
+std::string networking_api = "(Un)?EnableRouter|SetAdapterIpAddress|SetIp(Forward|Net|Statistics|TTL)(.*)|SetPerTcp(6)?ConnectionEStats";
 
 /**
  *	@brief	Checks the presence of some functions in the PE and updates the
@@ -117,7 +126,7 @@ public:
 		check_functions(pe, dynamic_import, NO_OPINION, "[!] The program may be hiding some of its imports", AT_LEAST_TWO, res);
 		check_functions(pe, anti_debug, SUSPICIOUS, "Functions which can be used for anti-debugging purposes", AT_LEAST_ONE, res);
 		check_functions(pe, vanilla_injection, MALICIOUS, "Code injection capabilities", AT_LEAST_THREE, res);
-		check_functions(pe, "Reg(.*)(Key|Value)(.*)", NO_OPINION, "Can access the registry", AT_LEAST_ONE, res);
+		check_functions(pe, "", NO_OPINION, "Can access the registry", AT_LEAST_ONE, res);
 		check_functions(pe, process_creation_api, NO_OPINION, "Possibly launches other programs", AT_LEAST_ONE, res);
 		check_functions(pe, "(Nt|Zw)(.*)", SUSPICIOUS, "Uses Windows' Native API", AT_LEAST_TWO, res);
 		check_functions(pe, "Crypt(.*)", NO_OPINION, "Uses Microsoft's cryptographic API", AT_LEAST_ONE, res);
@@ -134,6 +143,12 @@ public:
 		check_functions(pe, eventlog_deletion, MALICIOUS, "Deletes entries from the event log", AT_LEAST_ONE, res);
 		check_functions(pe, dacl_api, SUSPICIOUS, "Changes object ACLs", AT_LEAST_ONE, res);
 		check_functions(pe, screenshot_api, SUSPICIOUS, "Can take screenshots", AT_LEAST_TWO, res);
+		check_functions(pe, audio_api, SUSPICIOUS, "Can use the microphone to record audio.", AT_LEAST_ONE, res);
+		check_functions(pe, networking_api, SUSPICIOUS, "Modifies the network configuration", AT_LEAST_ONE, res);
+		check_functions(pe, "GetClipboardData", NO_OPINION, "Reads the contents of the clipboard", AT_LEAST_ONE, res);
+		check_functions(pe, "IsUserAnAdmin", NO_OPINION, "Checks if it has admin rights", AT_LEAST_ONE, res);
+		check_functions(pe, "Cert(Add|Open|Register|Remove|Save|Srv|Store)(.*)", SUSPICIOUS, "Interacts with the certificate store", AT_LEAST_ONE, res);
+		check_functions(pe, shutdown_functions, NO_OPINION, "Can shut the system down or lock the screen", AT_LEAST_ONE, res);
 
 		switch (res->get_level())
 		{

@@ -100,6 +100,22 @@ BOOST_AUTO_TEST_CASE(find_imports_no_match)
 
 // ----------------------------------------------------------------------------
 
+BOOST_AUTO_TEST_CASE(find_imports_case_insensitivity)
+{
+	mana::PE pe("testfiles/manatest.exe");
+	auto pfunctions = pe.find_imports("WRITEPROCESSMEMORY");
+	BOOST_ASSERT(pfunctions);
+	BOOST_ASSERT(pfunctions->size() == 1);
+	BOOST_CHECK_EQUAL(pfunctions->at(0), "WriteProcessMemory");
+
+	// Try again with case sensitivity on.
+	pfunctions = pe.find_imports("WRITEPROCESSMEMORY", ".*", true);
+	BOOST_ASSERT(pfunctions);
+	BOOST_ASSERT(pfunctions->size() == 0);
+}
+
+// ----------------------------------------------------------------------------
+
 BOOST_AUTO_TEST_CASE(hash_imports)
 {
 	mana::PE pe("testfiles/manatest.exe");

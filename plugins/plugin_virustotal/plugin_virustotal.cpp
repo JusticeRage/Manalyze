@@ -72,8 +72,6 @@ public:
 		}
 		else if (_config->at("api_key") == "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 		{
-			// If you really can't be bothered, you can find a lot of keys with the following
-			// GitHub dork: "https://www.virustotal.com/vtapi/v2"
 			PRINT_WARNING << "Please edit the configuration file with your VirusTotal API key." << std::endl;
 			return res;
 		}

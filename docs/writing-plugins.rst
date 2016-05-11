@@ -401,9 +401,12 @@ In Manalyze, looking up imports is a two-step process. You usually query the lis
 
 You can also use the ``find_imports`` function if you're looking for something specific. For instance::
 
-    auto functions = pe.find_imports(".*basic_ostream.*", "MSVCP\\d{3}.dll|KERNEL32.dll");
+    auto functions = pe.find_imports(".*basic_ostream.*", "MSVCP\\d{3}.dll|KERNEL32.dll", false);
 
-...where the first argument is a regular expression matching the functions to look for, and the second one is a regular expression matching the DLLs to search. You can omit the latter to look for the requested functions in any DLL.
+...where the first argument is a regular expression matching the functions to look for, the second one is a regular expression matching the DLLs to search, and the third one is whether the regular expression is case sensitive. 
+You can omit the latter two to look for the requested functions in any DLL with a case insensitive expression::
+
+    auto functions = pe.find_imports(".*bAsIc_OsTrEaM.*"); // Will search in any DLL, case insensitive
 
 Exports
 -------

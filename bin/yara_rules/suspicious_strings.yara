@@ -689,6 +689,18 @@ rule AutoIT_compiled_script
         any of them
 }
 
+rule WMI_strings
+{
+	meta:
+		description = "Accesses the WMI"
+		author = "Ivan Kwiatkowski (@JusticeRage)"
+	strings:
+		// WMI namespaces which may be referenced in the ConnectServer call. All in the form of "ROOT\something"
+		$a0 = /ROOT\\(CIMV2|AccessLogging|ADFS|aspnet|Cli|Hardware|interop|InventoryLogging|Microsoft.{10}|Policy|RSOP|SECURITY|ServiceModel|snmpStandardCimv2|subscription|virtualization|WebAdministration|WMI)/ nocase ascii wide
+	condition:
+		any of them
+}
+
 rule Misc_Suspicious_Strings
 {
     meta:
@@ -700,7 +712,6 @@ rule Misc_Suspicious_Strings
         $a2 = "hack" nocase ascii wide
         $a3 = "exploit" nocase ascii wide
         $a4 = "cmd.exe" nocase ascii wide
-
         $a5 = "CWSandbox" nocase wide ascii // Found in some Zeus/Citadel samples
     condition:
         any of them

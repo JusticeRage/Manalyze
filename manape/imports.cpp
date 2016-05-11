@@ -195,14 +195,22 @@ const_shared_strings PE::get_imported_functions(const std::string& dll) const
 
 // ----------------------------------------------------------------------------
 
-std::vector<pimage_library_descriptor> PE::_find_imported_dlls(const std::string& name_regexp) const
+std::vector<pimage_library_descriptor> PE::_find_imported_dlls(const std::string& name_regexp,
+															   bool  case_sensitivity) const
 {
 	std::vector<pimage_library_descriptor> destination;
 	if (!_initialized) {
 		return destination;
 	}
 
-	boost::regex e(name_regexp);
+	boost::regex e;
+	if (case_sensitivity) {
+		e = boost::regex(name_regexp);
+	}
+	else {
+		e = boost::regex(name_regexp, boost::regex::icase);
+	}
+
 	for (std::vector<pimage_library_descriptor>::const_iterator it = _imports.begin() ; it != _imports.end() ; ++it)
 	{
 		if (boost::regex_match((*it)->first->NameStr, e)) {
@@ -215,7 +223,8 @@ std::vector<pimage_library_descriptor> PE::_find_imported_dlls(const std::string
 // ----------------------------------------------------------------------------
 
 const_shared_strings PE::find_imports(const std::string& function_name_regexp,
-									  const std::string& dll_name_regexp) const
+									  const std::string& dll_name_regexp,
+									  bool  case_sensitivity) const
 {
 	auto destination = boost::make_shared<std::vector<std::string> >();
 	if (!_initialized) {
@@ -224,7 +233,14 @@ const_shared_strings PE::find_imports(const std::string& function_name_regexp,
 
 	auto matching_dlls = _find_imported_dlls(dll_name_regexp);
 
-	boost::regex e(function_name_regexp);
+	boost::regex e;
+	if (case_sensitivity) {
+		e = boost::regex(function_name_regexp);
+	}
+	else {
+		e = boost::regex(function_name_regexp, boost::regex::icase);
+	}
+
 	// Iterate on matching DLLs
 	for (auto it = matching_dlls.begin() ; it != matching_dlls.end() ; ++it)
 	{
