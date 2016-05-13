@@ -49,6 +49,8 @@ typedef struct dos_header_t
 	boost::uint32_t e_lfanew;
 } dos_header;
 
+// ----------------------------------------------------------------------------
+
 typedef struct pe_header_t
 {
 	boost::uint8_t  Signature[4];
@@ -61,11 +63,15 @@ typedef struct pe_header_t
 	boost::uint16_t Characteristics;
 } pe_header;
 
+// ----------------------------------------------------------------------------
+
 typedef struct image_data_directory_t
 {
 	boost::uint32_t VirtualAddress;
 	boost::uint32_t Size;
 } image_data_directory;
+
+// ----------------------------------------------------------------------------
 
 typedef struct image_optional_header_t
 {
@@ -102,6 +108,8 @@ typedef struct image_optional_header_t
 	image_data_directory directories[0x10];
 } image_optional_header;
 
+// ----------------------------------------------------------------------------
+
 typedef struct image_section_header_t
 {
 	boost::uint8_t  Name[8];
@@ -117,6 +125,8 @@ typedef struct image_section_header_t
 } image_section_header;
 typedef boost::shared_ptr<image_section_header> pimage_section_header;
 
+// ----------------------------------------------------------------------------
+
 // A field has been added at the end of the structure to keep the Name of the library.
 // The original Name field only contains a RVA, which is impractical.
 typedef struct image_import_descriptor_t
@@ -130,6 +140,8 @@ typedef struct image_import_descriptor_t
 } image_import_descriptor;
 typedef boost::shared_ptr<image_import_descriptor> pimage_import_descriptor;
 
+// ----------------------------------------------------------------------------
+
 // For convenience, this structure has been merged with the associated Hint/Name table
 typedef struct import_lookup_table_t
 {
@@ -139,10 +151,14 @@ typedef struct import_lookup_table_t
 } import_lookup_table;
 typedef boost::shared_ptr<import_lookup_table> pimport_lookup_table;
 
+// ----------------------------------------------------------------------------
+
 // This typedef isn't a Windows standard, but I find this representation useful when describing
 // all the imports related to a single DLL.
 typedef std::pair<pimage_import_descriptor, std::vector<pimport_lookup_table> > image_library_descriptor;
 typedef boost::shared_ptr<image_library_descriptor> pimage_library_descriptor;
+
+// ----------------------------------------------------------------------------
 
 // A field has been added at the end of the structure to keep the Name of the library.
 // The original Name field only contains a RVA, which is impractical.
@@ -163,6 +179,8 @@ typedef struct image_export_directory_t
 } image_export_directory;
 typedef boost::shared_ptr<image_export_directory> pexport_image_directory;
 
+// ----------------------------------------------------------------------------
+
 typedef struct coff_symbol_t
 {
 	boost::uint8_t  Name[8];
@@ -174,6 +192,8 @@ typedef struct coff_symbol_t
 } coff_symbol;
 typedef boost::shared_ptr<coff_symbol> pcoff_symbol;
 
+// ----------------------------------------------------------------------------
+
 // Not a standard Windows structure, but useful when it comes to representing exports.
 typedef struct exported_function_t
 {
@@ -184,6 +204,8 @@ typedef struct exported_function_t
 } exported_function;
 typedef boost::shared_ptr<exported_function> pexported_function;
 
+// ----------------------------------------------------------------------------
+
 typedef struct image_resource_directory_entry_t
 {
 	boost::uint32_t	NameOrId;
@@ -191,6 +213,8 @@ typedef struct image_resource_directory_entry_t
 	std::string		NameStr; // Non-standard!
 } image_resource_directory_entry;
 typedef boost::shared_ptr<image_resource_directory_entry> pimage_resource_directory_entry;
+
+// ----------------------------------------------------------------------------
 
 typedef struct image_resource_directory_t
 {
@@ -204,6 +228,8 @@ typedef struct image_resource_directory_t
 } image_resource_directory;
 typedef boost::shared_ptr<image_resource_directory> pimage_resource_directory;
 
+// ----------------------------------------------------------------------------
+
 typedef struct image_resource_data_entry_t
 {
 	boost::uint32_t	OffsetToData;
@@ -211,6 +237,8 @@ typedef struct image_resource_data_entry_t
 	boost::uint32_t	Codepage;
 	boost::uint32_t	Reserved;
 } image_resource_data_entry;
+
+// ----------------------------------------------------------------------------
 
 typedef struct group_icon_directory_entry_t
 {
@@ -228,6 +256,8 @@ typedef struct group_icon_directory_entry_t
 } group_icon_directory_entry;
 typedef boost::shared_ptr<group_icon_directory_entry> pgroup_icon_directory_entry;
 
+// ----------------------------------------------------------------------------
+
 typedef struct group_icon_directory_t
 {
 	boost::uint16_t	Reserved;
@@ -236,6 +266,8 @@ typedef struct group_icon_directory_t
 	std::vector<pgroup_icon_directory_entry> Entries;
 } group_icon_directory;
 typedef boost::shared_ptr<group_icon_directory> pgroup_icon_directory;
+
+// ----------------------------------------------------------------------------
 
 // Not a standard structure. Bitmaps stored as resources don't have a header.
 // This represents the reconstructed header, followed by the resource data.
@@ -251,6 +283,8 @@ typedef struct bitmap_t
 } bitmap;
 #pragma pack (pop)
 typedef boost::shared_ptr<bitmap_t> pbitmap;
+
+// ----------------------------------------------------------------------------
 
 typedef struct vs_fixed_file_info_t
 {
@@ -270,6 +304,7 @@ typedef struct vs_fixed_file_info_t
 } fixed_file_info;
 typedef boost::shared_ptr<fixed_file_info> pfixed_file_info;
 
+// ----------------------------------------------------------------------------
 
 // Non-standard enum. This sequence does return a lot, though, so it was
 // worth putting it in a separate structure.
@@ -281,6 +316,8 @@ typedef struct vs_version_info_header_t
 	std::string			Key;
 } vs_version_info_header;
 typedef boost::shared_ptr<vs_version_info_header> pvs_version_info_header;
+
+// ----------------------------------------------------------------------------
 
 // Non-standard enum. The last two field have been added for convenience.
 typedef std::pair<std::string, std::string> string_pair;
@@ -294,6 +331,7 @@ typedef struct vs_version_info_t
 } version_info;
 typedef boost::shared_ptr<vs_version_info_t> pversion_info;
 
+// ----------------------------------------------------------------------------
 
 // Non-standard enum. No information regarding underlying structures is kept.
 // If you need a more complete parsing here, let me know.
@@ -311,6 +349,8 @@ typedef struct debug_directory_entry_t
 } debug_directory_entry;
 typedef boost::shared_ptr<debug_directory_entry> pdebug_directory_entry;
 
+// ----------------------------------------------------------------------------
+
 typedef struct pdb_info_t
 {
 	boost::uint32_t	Signature;
@@ -318,6 +358,8 @@ typedef struct pdb_info_t
 	boost::uint32_t	Age;
 	std::string		PdbFileName;
 } pdb_info;
+
+// ----------------------------------------------------------------------------
 
 typedef struct image_base_relocation_t
 {
@@ -327,6 +369,8 @@ typedef struct image_base_relocation_t
 } image_base_relocation;
 typedef boost::shared_ptr<image_base_relocation_t> pimage_base_relocation;
 
+// ----------------------------------------------------------------------------
+
 typedef struct image_debug_misc_t
 {
 	boost::uint32_t	DataType;
@@ -335,6 +379,8 @@ typedef struct image_debug_misc_t
 	boost::uint8_t	Reserved[3];
 	std::string		DbgFile;
 } image_debug_misc;
+
+// ----------------------------------------------------------------------------
 
 typedef struct image_tls_directory_t
 {
@@ -347,6 +393,8 @@ typedef struct image_tls_directory_t
 	std::vector<boost::uint64_t>	Callbacks;	// Non-standard!
 } image_tls_directory;
 
+// ----------------------------------------------------------------------------
+
 typedef struct win_certificate_t
 {
 	boost::uint32_t				Length;
@@ -355,5 +403,31 @@ typedef struct win_certificate_t
 	std::vector<boost::uint8_t>	Certificate;
 } win_certificate;
 typedef boost::shared_ptr<win_certificate> pwin_certificate;
+
+// ----------------------------------------------------------------------------
+
+typedef struct image_load_config_directory_t
+{
+	boost::uint32_t	Size;
+	boost::uint32_t	TimeDateStamp;
+	boost::uint16_t	MajorVersion;
+	boost::uint16_t	MinorVersion;
+	boost::uint32_t GlobalFlagsClear;
+	boost::uint32_t GlobalFlagsSet;
+	boost::uint32_t CriticalSectionDefaultTimeout;
+	boost::uint64_t DeCommitFreeBlockThreshold;
+	boost::uint64_t DeCommitTotalFreeThreshold;
+	boost::uint64_t LockPrefixTable;
+	boost::uint64_t MaximumAllocationSize;
+	boost::uint64_t VirtualMemoryThreshold;
+	boost::uint64_t ProcessAffinityMask;
+	boost::uint32_t ProcessHeapFlags;
+	boost::uint16_t CSDVersion;
+	boost::uint16_t Reserved1;
+	boost::uint64_t EditList;
+	boost::uint64_t SecurityCookie;
+	boost::uint64_t SEHandlerTable;
+	boost::uint64_t SEHandlerCount;
+} image_load_config_directory;
 
 } // !namespace sg

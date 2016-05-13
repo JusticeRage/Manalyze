@@ -43,6 +43,7 @@ void dump_resources(const mana::PE& pe, io::OutputFormatter& formatter, bool com
 void dump_version_info(const mana::PE& pe, io::OutputFormatter& formatter);
 void dump_debug_info(const mana::PE& pe, io::OutputFormatter& formatter);
 void dump_tls(const mana::PE& pe, io::OutputFormatter& formatter);
+void dump_config(const mana::PE&pe, io::OutputFormatter& formatter);
 void dump_summary(const mana::PE& pe, io::OutputFormatter& formatter);
 void dump_hashes(const mana::PE& pe, io::OutputFormatter& formatter);
 

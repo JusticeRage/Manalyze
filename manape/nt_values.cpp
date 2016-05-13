@@ -125,19 +125,19 @@ const flag_dict MACHINE_TYPES =
 // ----------------------------------------------------------------------------
 
 const flag_dict SUBSYSTEMS =
-	boost::assign::map_list_of ("IMAGE_SUBSYSTEM_UNKNOWN", 0)
-							   ("IMAGE_SUBSYSTEM_NATIVE", 1)
-							   ("IMAGE_SUBSYSTEM_WINDOWS_GUI", 2)
-							   ("IMAGE_SUBSYSTEM_WINDOWS_CUI", 3)
-							   ("IMAGE_SUBSYSTEM_POSIX_CUI", 7)
-							   ("IMAGE_SUBSYSTEM_NATIVE_WINDOWS", 8)
-							   ("IMAGE_SUBSYSTEM_WINDOWS_CE_GUI", 9)
-							   ("IMAGE_SUBSYSTEM_EFI_APPLICATION", 10)
-							   ("IMAGE_SUBSYSTEM_EFI_BOOT_SERVICE_DRIVER", 11)
-							   ("IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER", 12)
-							   ("IMAGE_SUBSYSTEM_EFI_ROM", 13)
-							   ("IMAGE_SUBSYSTEM_XBOX", 14)
-							   ("IMAGE_SUBSYSTEM_WINDOWS_BOOT_APPLICATION", 16);
+	boost::assign::map_list_of ("IMAGE_SUBSYSTEM_UNKNOWN",					0)
+							   ("IMAGE_SUBSYSTEM_NATIVE",					1)
+							   ("IMAGE_SUBSYSTEM_WINDOWS_GUI",				2)
+							   ("IMAGE_SUBSYSTEM_WINDOWS_CUI",				3)
+							   ("IMAGE_SUBSYSTEM_POSIX_CUI",				7)
+							   ("IMAGE_SUBSYSTEM_NATIVE_WINDOWS",			8)
+							   ("IMAGE_SUBSYSTEM_WINDOWS_CE_GUI",			9)
+							   ("IMAGE_SUBSYSTEM_EFI_APPLICATION",			10)
+							   ("IMAGE_SUBSYSTEM_EFI_BOOT_SERVICE_DRIVER",	11)
+							   ("IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER",		12)
+							   ("IMAGE_SUBSYSTEM_EFI_ROM",					13)
+							   ("IMAGE_SUBSYSTEM_XBOX",						14)
+							   ("IMAGE_SUBSYSTEM_WINDOWS_BOOT_APPLICATION",	16);
 
 // ----------------------------------------------------------------------------
 
@@ -314,141 +314,184 @@ extern const DECLSPEC flag_dict LANG_IDS =
 // ----------------------------------------------------------------------------
 
 const flag_dict CODEPAGES =
-        boost::assign::map_list_of ("IBM EBCDIC US-Canada",			37)
-                                   ("IBM PC US",                    437)
-                                   ("Thai",                         874)
-                                   ("Japanese",                     932)
-                                   ("Chinese (simplified)",         936)
-                                   ("Korean",                       949)
-                                   ("Chinese (traditional)",        950)
-                                   ("Unicode (UTF 16LE)",           1200)
-                                   ("Unicode (UTF 16BE)",           1201)
-                                   ("Latin 2 / Central European",   1250)
-                                   ("Cyrillic",                     1251)
-                                   ("Latin 1 / Western European",   1252)
-                                   ("Greek",                        1253)
-                                   ("Turkish",                      1254)
-                                   ("Hebrew",                       1255)
-                                   ("Arabic",                       1256)
-                                   ("Baltic",                       1257)
-                                   ("Vietnamese",                   1258)
-                                   ("US-ASCII",                     20127)
-                                   ("Russian (KOI8-R)",             20866)
-                                   ("ISO 8859-1",                   28591)
-                                   ("ISO 8859-2",                   28592)
-                                   ("ISO 8859-3",                   28593)
-                                   ("Unicode (UTF-7)",              65000)
-                                   ("Unicode (UTF-8)",              65001);
+        boost::assign::map_list_of ("IBM EBCDIC US-Canada",				37)
+                                   ("IBM PC US",						437)
+                                   ("Thai",								874)
+                                   ("Japanese",							932)
+                                   ("Chinese (simplified)",				936)
+                                   ("Korean",							949)
+                                   ("Chinese (traditional)",			950)
+                                   ("Unicode (UTF 16LE)",				1200)
+                                   ("Unicode (UTF 16BE)",				1201)
+                                   ("Latin 2 / Central European",		1250)
+                                   ("Cyrillic",							1251)
+                                   ("Latin 1 / Western European",		1252)
+                                   ("Greek",							1253)
+                                   ("Turkish",							1254)
+                                   ("Hebrew",							1255)
+                                   ("Arabic",							1256)
+                                   ("Baltic",							1257)
+                                   ("Vietnamese",						1258)
+                                   ("US-ASCII",							20127)
+                                   ("Russian (KOI8-R)",					20866)
+                                   ("ISO 8859-1",						28591)
+                                   ("ISO 8859-2",						28592)
+                                   ("ISO 8859-3",						28593)
+                                   ("Unicode (UTF-7)",					65000)
+                                   ("Unicode (UTF-8)",					65001);
 
 // ----------------------------------------------------------------------------
 
 const flag_dict FIXEDFILEINFO_FILEFLAGS =
-	boost::assign::map_list_of ("VS_FF_DEBUG",					0x00000001)
-							   ("VS_FF_PRERELEASE",				0x00000002)
-							   ("VS_FF_PATCHED",				0x00000004)
-							   ("VS_FF_PRIVATEBUILD",			0x00000008)
-							   ("VS_FF_INFOINFERRED",			0x00000010)
-							   ("VS_FF_SPECIALBUILD",			0x00000020);
+	boost::assign::map_list_of ("VS_FF_DEBUG",							0x00000001)
+							   ("VS_FF_PRERELEASE",						0x00000002)
+							   ("VS_FF_PATCHED",						0x00000004)
+							   ("VS_FF_PRIVATEBUILD",					0x00000008)
+							   ("VS_FF_INFOINFERRED",					0x00000010)
+							   ("VS_FF_SPECIALBUILD",					0x00000020);
 
 // ----------------------------------------------------------------------------
 
 const flag_dict FIXEDFILEINFO_FILEOS =
-	boost::assign::map_list_of ("VOS_UNKNOWN",					0x00000000)
-							   ("VOS_DOS",						0x00010000)
-							   ("VOS_OS216",					0x00020000)
-							   ("VOS_OS232",					0x00030000)
-							   ("VOS_NT",						0x00040000)
-							   ("VOS_WINCE",					0x00050000)
-							   ("VOS__WINDOWS16",				0x00000001)
-							   ("VOS__PM16",					0x00000002)
-							   ("VOS__PM32",					0x00000003)
-							   ("VOS__WINDOWS32",				0x00000004)
-							   ("VOS_DOS_WINDOWS16",			0x00010001)
-							   ("VOS_DOS_WINDOWS32",			0x00010004)
-							   ("VOS_OS216_PM16",				0x00020002)
-							   ("VOS_OS232_PM32",				0x00030003)
-							   ("VOS_NT_WINDOWS32",				0x00040004);
+	boost::assign::map_list_of ("VOS_UNKNOWN",							0x00000000)
+							   ("VOS_DOS",								0x00010000)
+							   ("VOS_OS216",							0x00020000)
+							   ("VOS_OS232",							0x00030000)
+							   ("VOS_NT",								0x00040000)
+							   ("VOS_WINCE",							0x00050000)
+							   ("VOS__WINDOWS16",						0x00000001)
+							   ("VOS__PM16",							0x00000002)
+							   ("VOS__PM32",							0x00000003)
+							   ("VOS__WINDOWS32",						0x00000004)
+							   ("VOS_DOS_WINDOWS16",					0x00010001)
+							   ("VOS_DOS_WINDOWS32",					0x00010004)
+							   ("VOS_OS216_PM16",						0x00020002)
+							   ("VOS_OS232_PM32",						0x00030003)
+							   ("VOS_NT_WINDOWS32",						0x00040004);
 
 // ----------------------------------------------------------------------------
 
 const flag_dict FIXEDFILEINFO_FILETYPE =
-	boost::assign::map_list_of ("VFT_UNKNOWN",					0x00000000)
-							   ("VFT_APP",						0x00000001)
-							   ("VFT_DLL",						0x00000002)
-							   ("VFT_DRV",						0x00000003)
-							   ("VFT_FONT",						0x00000004)
-							   ("VFT_VXD",						0x00000005)
-							   ("VFT_STATIC_LIB",				0x00000007);
+	boost::assign::map_list_of ("VFT_UNKNOWN",							0x00000000)
+							   ("VFT_APP",								0x00000001)
+							   ("VFT_DLL",								0x00000002)
+							   ("VFT_DRV",								0x00000003)
+							   ("VFT_FONT",								0x00000004)
+							   ("VFT_VXD",								0x00000005)
+							   ("VFT_STATIC_LIB",						0x00000007);
 
 // ----------------------------------------------------------------------------
 
 const flag_dict FIXEDFILEINFO_FILESUBTYPE_DRV =
-	boost::assign::map_list_of ("VFT2_UNKNOWN",					0x00000000)
-							   ("VFT2_DRV_PRINTER",				0x00000001)
-							   ("VFT2_DRV_KEYBOARD",			0x00000002)
-							   ("VFT2_DRV_LANGUAGE",			0x00000003)
-							   ("VFT2_DRV_DISPLAY",				0x00000004)
-							   ("VFT2_DRV_MOUSE",				0x00000005)
-							   ("VFT2_DRV_NETWORK",				0x00000006)
-							   ("VFT2_DRV_SYSTEM",				0x00000007)
-							   ("VFT2_DRV_INSTALLABLE",			0x00000008)
-							   ("VFT2_DRV_SOUND",				0x00000009)
-							   ("VFT2_DRV_COMM",				0x0000000A)
-							   ("VFT2_DRV_INPUTMETHOD",			0x0000000B)
-							   ("VFT2_DRV_VERSIONED_PRINTER",	0x0000000C);
+	boost::assign::map_list_of ("VFT2_UNKNOWN",							0x00000000)
+							   ("VFT2_DRV_PRINTER",						0x00000001)
+							   ("VFT2_DRV_KEYBOARD",					0x00000002)
+							   ("VFT2_DRV_LANGUAGE",					0x00000003)
+							   ("VFT2_DRV_DISPLAY",						0x00000004)
+							   ("VFT2_DRV_MOUSE",						0x00000005)
+							   ("VFT2_DRV_NETWORK",						0x00000006)
+							   ("VFT2_DRV_SYSTEM",						0x00000007)
+							   ("VFT2_DRV_INSTALLABLE",					0x00000008)
+							   ("VFT2_DRV_SOUND",						0x00000009)
+							   ("VFT2_DRV_COMM",						0x0000000A)
+							   ("VFT2_DRV_INPUTMETHOD",					0x0000000B)
+							   ("VFT2_DRV_VERSIONED_PRINTER",			0x0000000C);
 
 // ----------------------------------------------------------------------------
 
 const flag_dict FIXEDFILEINFO_FILESUBTYPE_FONT =
-	boost::assign::map_list_of ("VFT2_FONT_RASTER",				0x00000001)
-							   ("VFT2_FONT_VECTOR",				0x00000002)
-							   ("VFT2_FONT_TRUETYPE",			0x00000003);
+	boost::assign::map_list_of ("VFT2_FONT_RASTER",						0x00000001)
+							   ("VFT2_FONT_VECTOR",						0x00000002)
+							   ("VFT2_FONT_TRUETYPE",					0x00000003);
 
 // ----------------------------------------------------------------------------
 
 const flag_dict DEBUG_TYPES =
-	boost::assign::map_list_of ("IMAGE_DEBUG_TYPE_UNKNOWN",			0)
-							   ("IMAGE_DEBUG_TYPE_COFF",			1)
-							   ("IMAGE_DEBUG_TYPE_CODEVIEW",		2)
-							   ("IMAGE_DEBUG_TYPE_FPO",				3)
-							   ("IMAGE_DEBUG_TYPE_MISC",			4)
-							   ("IMAGE_DEBUG_TYPE_EXCEPTION",		5)
-							   ("IMAGE_DEBUG_TYPE_FIXUP",			6)
-							   ("IMAGE_DEBUG_TYPE_OMAP_TO_SRC",		7)
-							   ("IMAGE_DEBUG_TYPE_OMAP_FROM_SRC",	8)
-							   ("IMAGE_DEBUG_TYPE_BORLAND",			9)
-							   ("IMAGE_DEBUG_TYPE_RESERVED",		10)
-							   ("IMAGE_DEBUG_TYPE_CLSID",			11)
-							   ("IMAGE_DEBUG_TYPE_VC_FEATURE",		12)
-							   ("IMAGE_DEBUG_TYPE_POGO",			13)
-							   ("IMAGE_DEBUG_TYPE_ILTCG",			14)
-							   ("IMAGE_DEBUG_TYPE_MPX",				15);
+	boost::assign::map_list_of ("IMAGE_DEBUG_TYPE_UNKNOWN",				0)
+							   ("IMAGE_DEBUG_TYPE_COFF",				1)
+							   ("IMAGE_DEBUG_TYPE_CODEVIEW",			2)
+							   ("IMAGE_DEBUG_TYPE_FPO",					3)
+							   ("IMAGE_DEBUG_TYPE_MISC",				4)
+							   ("IMAGE_DEBUG_TYPE_EXCEPTION",			5)
+							   ("IMAGE_DEBUG_TYPE_FIXUP",				6)
+							   ("IMAGE_DEBUG_TYPE_OMAP_TO_SRC",			7)
+							   ("IMAGE_DEBUG_TYPE_OMAP_FROM_SRC",		8)
+							   ("IMAGE_DEBUG_TYPE_BORLAND",				9)
+							   ("IMAGE_DEBUG_TYPE_RESERVED",			10)
+							   ("IMAGE_DEBUG_TYPE_CLSID",				11)
+							   ("IMAGE_DEBUG_TYPE_VC_FEATURE",			12)
+							   ("IMAGE_DEBUG_TYPE_POGO",				13)
+							   ("IMAGE_DEBUG_TYPE_ILTCG",				14)
+							   ("IMAGE_DEBUG_TYPE_MPX",					15);
 
 // ----------------------------------------------------------------------------
 
 const flag_dict BASE_RELOCATION_TYPES =
-	boost::assign::map_list_of ("IMAGE_REL_BASED_ABSOLUTE",			0)
-							   ("IMAGE_REL_BASED_HIGH",				1)
-							   ("IMAGE_REL_BASED_LOW",				2)
-							   ("IMAGE_REL_BASED_HIGHLOW",			3)
-							   ("IMAGE_REL_BASED_HIGHADJ",			4)
-							   ("IMAGE_REL_BASED_MIPS_JMPADDR16",	9)
-							   ("IMAGE_REL_BASED_IA64_IMM64",		9)
-							   ("IMAGE_REL_BASED_DIR64",			10);
+	boost::assign::map_list_of ("IMAGE_REL_BASED_ABSOLUTE",				0)
+							   ("IMAGE_REL_BASED_HIGH",					1)
+							   ("IMAGE_REL_BASED_LOW",					2)
+							   ("IMAGE_REL_BASED_HIGHLOW",				3)
+							   ("IMAGE_REL_BASED_HIGHADJ",				4)
+							   ("IMAGE_REL_BASED_MIPS_JMPADDR16",		9)
+							   ("IMAGE_REL_BASED_IA64_IMM64",			9)
+							   ("IMAGE_REL_BASED_DIR64",				10);
 
 // ----------------------------------------------------------------------------
 
 const flag_dict WIN_CERTIFICATE_REVISIONS =
-	boost::assign::map_list_of ("WIN_CERT_REVISION_1_0",			0x100)
-							   ("WIN_CERT_REVISION_2_0",			0x200);
+	boost::assign::map_list_of ("WIN_CERT_REVISION_1_0",				0x100)
+							   ("WIN_CERT_REVISION_2_0",				0x200);
+
+// ----------------------------------------------------------------------------
+
+const flag_dict GLOBAL_FLAGS =
+	boost::assign::map_list_of	("FLG_STOP_ON_EXCEPTION",				0x1)
+								("FLG_SHOW_LDR_SNAPS",					0x2)
+								("FLG_DEBUG_INITIAL_COMMAND",			0x4)
+								("FLG_STOP_ON_HUNG_GUI",				0x8)
+								("FLG_HEAP_ENABLE_TAIL_CHECK",			0x10)
+								("FLG_HEAP_ENABLE_FREE_CHECK",			0x20)
+								("FLG_HEAP_VALIDATE_PARAMETERS",		0x40)
+								("FLG_HEAP_VALIDATE_ALL",				0x80)
+								("FLG_APPLICATION_VERIFIER",			0x100)
+								("FLG_MONITOR_SILENT_PROCESS_EXIT ",	0x200)
+								("FLG_POOL_ENABLE_TAGGING",				0x400)
+								("FLG_HEAP_ENABLE_TAGGING",				0x800)
+								("FLG_USER_STACK_TRACE_DB",				0x1000)
+								("FLG_KERNEL_STACK_TRACE_DB",			0x2000)
+								("FLG_MAINTAIN_OBJECT_TYPELIST",		0x4000)
+								("FLG_HEAP_ENABLE_TAG_BY_DLL",			0x8000)
+								("FLG_DISABLE_STACK_EXTENSION",			0x10000)
+								("FLG_ENABLE_CSRDEBUG",					0x20000)
+								("FLG_ENABLE_KDEBUG_SYMBOL_LOAD",		0x40000)
+								("FLG_DISABLE_PAGE_KERNEL_STACKS",		0x80000)
+								("FLG_ENABLE_SYSTEM_CRIT_BREAKS",		0x100000)
+								("FLG_HEAP_DISABLE_COALESCING",			0x200000)
+								("FLG_ENABLE_CLOSE_EXCEPTIONS",			0x400000)
+								("FLG_ENABLE_EXCEPTION_LOGGING",		0x800000)
+								("FLG_ENABLE_HANDLE_TYPE_TAGGING",		0x1000000)
+								("FLG_HEAP_PAGE_ALLOCS",				0x2000000)
+								("FLG_DEBUG_INITIAL_COMMAND_EX",		0x4000000)
+								("FLG_DISABLE_DBGPRINT",				0x8000000)
+								("FLG_CRITSEC_EVENT_CREATION",			0x10000000)
+								("FLG_STOP_ON_UNHANDLED_EXCEPTION",		0x20000000)
+								("FLG_ENABLE_HANDLE_EXCEPTIONS",		0x40000000)
+								("FLG_DISABLE_PROTDLLS",				0x80000000);
 
 // ----------------------------------------------------------------------------
 
 const flag_dict WIN_CERTIFICATE_TYPES =
-	boost::assign::map_list_of ("WIN_CERT_TYPE_X509",				1)
-							   ("WIN_CERT_TYPE_PKCS_SIGNED_DATA",	2)
-							   ("WIN_CERT_TYPE_RESERVED",			3)
-							   ("WIN_CERT_TYPE_PKCS1_SIGN",			4);
+boost::assign::map_list_of	("WIN_CERT_TYPE_X509",						1)
+							("WIN_CERT_TYPE_PKCS_SIGNED_DATA",			2)
+							("WIN_CERT_TYPE_RESERVED",					3)
+							("WIN_CERT_TYPE_PKCS1_SIGN",				4);
+
+// ----------------------------------------------------------------------------
+
+const flag_dict HEAP_FLAGS =
+	boost::assign::map_list_of	("HEAP_NO_SERIALIZE",						1)
+								("HEAP_GENERATE_EXCEPTIONS",				4)
+								("HEAP_CREATE_ENABLE_EXECUTE",				0x40000);
 
 // ----------------------------------------------------------------------------
 

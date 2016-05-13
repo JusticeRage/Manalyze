@@ -350,7 +350,7 @@ void dump_debug_info(const mana::PE& pe, io::OutputFormatter& formatter)
 void dump_tls(const mana::PE& pe, io::OutputFormatter& formatter)
 {
 	mana::shared_tls tls = pe.get_tls();
-	if (!tls) {
+	if (tls == nullptr) {
 		return;
 	}
 
@@ -371,6 +371,40 @@ void dump_tls(const mana::PE& pe, io::OutputFormatter& formatter)
 	}
 	tls_node->append(boost::make_shared<io::OutputTreeNode>("Callbacks", callbacks));
 	formatter.add_data(tls_node, *pe.get_path());
+}
+
+// ----------------------------------------------------------------------------
+
+void dump_config(const mana::PE& pe, io::OutputFormatter& formatter)
+{
+	mana::shared_config config = pe.get_config();
+	if (config == nullptr) {
+		return;
+	}
+
+	io::pNode config_node(new io::OutputTreeNode("Load Configuration", io::OutputTreeNode::LIST));
+	config_node->append(boost::make_shared<io::OutputTreeNode>("Size", config->Size, io::OutputTreeNode::HEX));
+	config_node->append(boost::make_shared<io::OutputTreeNode>("TimeDateStamp", io::timestamp_to_string(config->TimeDateStamp)));
+	std::stringstream ss;
+	ss << config->MajorVersion << "." << config->MinorVersion;
+	config_node->append(boost::make_shared<io::OutputTreeNode>("Version", ss.str()));
+	config_node->append(boost::make_shared<io::OutputTreeNode>("GlobalFlagsClear", *nt::translate_to_flags(config->GlobalFlagsClear, nt::GLOBAL_FLAGS)));
+	config_node->append(boost::make_shared<io::OutputTreeNode>("GlobalFlagsSet", *nt::translate_to_flags(config->GlobalFlagsSet, nt::GLOBAL_FLAGS)));
+	config_node->append(boost::make_shared<io::OutputTreeNode>("CriticalSectionDefaultTimeout", config->CriticalSectionDefaultTimeout));
+	config_node->append(boost::make_shared<io::OutputTreeNode>("DeCommitFreeBlockThreshold", config->DeCommitFreeBlockThreshold, io::OutputTreeNode::HEX));
+	config_node->append(boost::make_shared<io::OutputTreeNode>("DeCommitTotalFreeThreshold", config->DeCommitTotalFreeThreshold, io::OutputTreeNode::HEX));
+	config_node->append(boost::make_shared<io::OutputTreeNode>("LockPrefixTable", config->LockPrefixTable, io::OutputTreeNode::HEX));
+	config_node->append(boost::make_shared<io::OutputTreeNode>("MaximumAllocationSize", config->MaximumAllocationSize, io::OutputTreeNode::HEX));
+	config_node->append(boost::make_shared<io::OutputTreeNode>("VirtualMemoryThreshold", config->VirtualMemoryThreshold, io::OutputTreeNode::HEX));
+	config_node->append(boost::make_shared<io::OutputTreeNode>("ProcessAffinityMask", config->ProcessAffinityMask, io::OutputTreeNode::HEX));
+	config_node->append(boost::make_shared<io::OutputTreeNode>("ProcessHeapFlags", *nt::translate_to_flags(config->GlobalFlagsClear, nt::HEAP_FLAGS)));
+	config_node->append(boost::make_shared<io::OutputTreeNode>("CSDVersion", config->CSDVersion));
+	config_node->append(boost::make_shared<io::OutputTreeNode>("Reserved1", config->Reserved1, io::OutputTreeNode::HEX));
+	config_node->append(boost::make_shared<io::OutputTreeNode>("EditList", config->EditList, io::OutputTreeNode::HEX));
+	config_node->append(boost::make_shared<io::OutputTreeNode>("SecurityCookie", config->SecurityCookie, io::OutputTreeNode::HEX));
+	config_node->append(boost::make_shared<io::OutputTreeNode>("SEHandlerTable", config->SEHandlerTable, io::OutputTreeNode::HEX));
+	config_node->append(boost::make_shared<io::OutputTreeNode>("SEHandlerCount", config->SEHandlerCount));
+	formatter.add_data(config_node, *pe.get_path());
 }
 
 // ----------------------------------------------------------------------------

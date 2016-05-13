@@ -64,6 +64,7 @@ typedef boost::shared_ptr<const std::vector<pexported_function> > shared_exports
 typedef boost::shared_ptr<const std::vector<pdebug_directory_entry> > shared_debug_info;
 typedef boost::shared_ptr<const std::vector<pimage_base_relocation> > shared_relocations;
 typedef boost::shared_ptr<const image_tls_directory> shared_tls;
+typedef boost::shared_ptr<const image_load_config_directory> shared_config;
 typedef boost::shared_ptr<const std::vector<pwin_certificate> > shared_certificates;
 typedef boost::shared_ptr<std::string> pString;
 typedef boost::shared_ptr<FILE> pFile;
@@ -163,6 +164,10 @@ public:
 
 	DECLSPEC shared_tls get_tls() const {
 		return (_initialized && _tls) ? boost::make_shared<image_tls_directory>(*_tls) : shared_tls();
+	}
+
+	DECLSPEC shared_config get_config() const {
+		return (_initialized && _config) ? boost::make_shared<image_load_config_directory>(*_config) : shared_config();
 	}
 
 	DECLSPEC shared_certificates get_certificates() const {
@@ -298,6 +303,14 @@ private:
 	bool _parse_tls();
 
 	/**
+	 *	@brief	Parses the Configuration Table of a PE.
+	 *
+	 *  Included in the _parse_directories call.
+	 *	/!\ This relies on the information gathered in _parse_pe_header.
+	 */
+	bool _parse_config();
+
+	/**
 	 *	@brief	Parses the debug information of a PE.
 	 *
 	 *	Included in the _parse_directories call.
@@ -378,20 +391,21 @@ private:
 	    -----------------------------------
 	    Those fields that are extremely close to the PE format and offer little abstraction.
 	*/
-	boost::optional<dos_header>				_h_dos;
-	boost::optional<pe_header>				_h_pe;
-	boost::optional<image_optional_header>	_ioh;
-	std::vector<pcoff_symbol>				_coff_symbols;		// This debug information is parsed (crudely) but
-	std::vector<pString>					_coff_string_table;	// not displayed, because that's IDA's job.
-	std::vector<pSection>					_sections;
-	std::vector<pimage_library_descriptor>	_imports;
-	boost::optional<image_export_directory>	_ied;
-	std::vector<pexported_function>			_exports;
-	std::vector<pResource>					_resource_table;
-	std::vector<pdebug_directory_entry>		_debug_entries;
-	std::vector<pimage_base_relocation>		_relocations;		// Not displayed either, because of how big it is.
-	boost::optional<image_tls_directory>	_tls;
-	std::vector<pwin_certificate>			_certificates;
+	boost::optional<dos_header>						_h_dos;
+	boost::optional<pe_header>						_h_pe;
+	boost::optional<image_optional_header>			_ioh;
+	std::vector<pcoff_symbol>						_coff_symbols;		// This debug information is parsed (crudely) but
+	std::vector<pString>							_coff_string_table;	// not displayed, because that's IDA's job.
+	std::vector<pSection>							_sections;
+	std::vector<pimage_library_descriptor>			_imports;
+	boost::optional<image_export_directory>			_ied;
+	std::vector<pexported_function>					_exports;
+	std::vector<pResource>							_resource_table;
+	std::vector<pdebug_directory_entry>				_debug_entries;
+	std::vector<pimage_base_relocation>				_relocations;		// Not displayed either, because of how big it is.
+	boost::optional<image_tls_directory>			_tls;
+	boost::optional<image_load_config_directory>	_config;
+	std::vector<pwin_certificate>					_certificates;
 };
 
 

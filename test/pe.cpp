@@ -257,5 +257,37 @@ BOOST_AUTO_TEST_CASE(parse_debug_info)
 }
 
 // ----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(parse_config)
+{
+	mana::PE pe("testfiles/manatest.exe");
+
+	auto pconfig = pe.get_config();
+	BOOST_ASSERT(pconfig);
+	auto config = *pconfig;
+	
+	BOOST_CHECK_EQUAL(config.Size, 0x5c);
+	BOOST_CHECK_EQUAL(config.TimeDateStamp, 0);
+	BOOST_CHECK_EQUAL(config.MajorVersion, 0);
+	BOOST_CHECK_EQUAL(config.MinorVersion, 0);
+	BOOST_CHECK_EQUAL(config.GlobalFlagsClear, 0);
+	BOOST_CHECK_EQUAL(config.GlobalFlagsSet, 0);
+	BOOST_CHECK_EQUAL(config.CriticalSectionDefaultTimeout, 0);
+	BOOST_CHECK_EQUAL(config.DeCommitFreeBlockThreshold, 0);
+	BOOST_CHECK_EQUAL(config.DeCommitTotalFreeThreshold, 0);
+	BOOST_CHECK_EQUAL(config.LockPrefixTable, 0);
+	BOOST_CHECK_EQUAL(config.MaximumAllocationSize, 0);
+	BOOST_CHECK_EQUAL(config.VirtualMemoryThreshold, 0);
+	BOOST_CHECK_EQUAL(config.ProcessAffinityMask, 0);
+	BOOST_CHECK_EQUAL(config.ProcessHeapFlags, 0);
+	BOOST_CHECK_EQUAL(config.CSDVersion, 0);
+	BOOST_CHECK_EQUAL(config.Reserved1, 0);
+	BOOST_CHECK_EQUAL(config.EditList, 0);
+	BOOST_CHECK_EQUAL(config.SecurityCookie, 0x404004);
+	BOOST_CHECK_EQUAL(config.SEHandlerTable, 0x403270);
+	BOOST_CHECK_EQUAL(config.SEHandlerCount, 4);
+}
+
+// ----------------------------------------------------------------------------
 BOOST_AUTO_TEST_SUITE_END()
 // ----------------------------------------------------------------------------

@@ -568,6 +568,7 @@ bool PE::_parse_directories()
 		   _parse_debug() &&
 		   _parse_relocations() &&
 		   _parse_tls() &&
+		   _parse_config() &&
 		   _parse_certificates();
 }
 
@@ -807,6 +808,77 @@ bool PE::_parse_tls()
 	}
 
 	_tls.reset(tls);
+	return true;
+}
+
+// ----------------------------------------------------------------------------
+
+bool PE::_parse_config()
+{
+	if (!_ioh || _file_handle == nullptr) {
+		return false;
+	}
+
+	if (!_reach_directory(IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG)) { // No TLS callbacks
+		return true;
+	}
+
+	image_load_config_directory config;
+	memset(&config, 0, sizeof(config));
+	if (24 != fread(&config, 1, 24, _file_handle.get())) 
+	{
+		PRINT_WARNING << "Error while reading the IMAGE_LOAD_CONFIG_DIRECTORY!"
+					  << DEBUG_INFO_INSIDEPE << std::endl;
+		return true; // Non fatal
+	}
+
+	// The next few fields are uint32s or uint64s depending on the architecture.
+	unsigned int field_size = (_ioh->Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32")) ? 4 : 8;
+	if (1 != fread(&config.DeCommitFreeBlockThreshold, field_size, 1, _file_handle.get()) ||
+		1 != fread(&config.DeCommitTotalFreeThreshold, field_size, 1, _file_handle.get()) ||
+		1 != fread(&config.LockPrefixTable, field_size, 1, _file_handle.get()) || 
+		1 != fread(&config.MaximumAllocationSize, field_size, 1, _file_handle.get()) || 
+		1 != fread(&config.VirtualMemoryThreshold, field_size, 1, _file_handle.get()) ||
+		1 != fread(&config.ProcessAffinityMask, field_size, 1, _file_handle.get()))
+	{
+		PRINT_WARNING << "Error while reading the IMAGE_LOAD_CONFIG_DIRECTORY!"
+			<< DEBUG_INFO_INSIDEPE << std::endl;
+		return true;
+	}
+
+	// Then a few fields have the same size on x86 and x64.
+	if (8 != fread(&config.ProcessHeapFlags, 1, 8, _file_handle.get()))
+	{
+		PRINT_WARNING << "Error while reading the IMAGE_LOAD_CONFIG_DIRECTORY!"
+			<< DEBUG_INFO_INSIDEPE << std::endl;
+		return true;
+	}
+
+	// The last fields have a variable size depending on the architecture again.
+	if (1 != fread(&config.EditList, field_size, 1, _file_handle.get()) ||
+		1 != fread(&config.SecurityCookie, field_size, 1, _file_handle.get())) 
+	{
+		PRINT_WARNING << "Error while reading the IMAGE_LOAD_CONFIG_DIRECTORY!"
+			<< DEBUG_INFO_INSIDEPE << std::endl;
+		return true;
+	}
+
+	// SafeSEH information may not be present in some XP-era binaries.
+	// The MSDN page for IMAGE_LOAD_CONFIG_DIRECTORY specifies that their size must be 64
+	// (https://msdn.microsoft.com/en-us/library/windows/desktop/ms680328(v=vs.85).aspx).
+	// SafeSEH is also not present on 64 bit binaries.
+	if (config.Size > 64 && _ioh->Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32"))
+	{
+		if (1 != fread(&config.SEHandlerTable, field_size, 1, _file_handle.get()) ||
+			1 != fread(&config.SEHandlerCount, field_size, 1, _file_handle.get()))
+		{
+			PRINT_WARNING << "Error while reading the IMAGE_LOAD_CONFIG_DIRECTORY!"
+				<< DEBUG_INFO_INSIDEPE << std::endl;
+			return true;
+		}
+	}
+
+	_config.reset(config);
 	return true;
 }
 

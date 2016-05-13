@@ -473,6 +473,70 @@ The function returns a shared vector containing pointers to instances of the fol
         boost::uint32_t    PointerToRawData;
         std::string        Filename;
     } debug_directory_entry;
+	
+Thread Local Storage
+--------------------
+
+If TLS callbacks are defined in the binary, you can look them up with ``get_tls``::
+
+	auto ptls = pe.get_tls();
+	if (tls == nullptr) {
+		return; // No TLS callbacks or failed to parse them.
+	}
+	for (auto it = tls->Callbacks.begin() ; it != tls->Callbacks.end() ; ++it) {
+		std::cout << "Callback address: 0x" << std::hex << *it);
+	}
+	
+The object returned by this function is a pointer to an instance of the following structure::
+
+	typedef struct image_tls_directory_t
+	{
+		boost::uint64_t					StartAddressOfRawData;
+		boost::uint64_t					EndAddressOfRawData;
+		boost::uint64_t					AddressOfIndex;
+		boost::uint64_t					AddressOfCallbacks;
+		boost::uint32_t					SizeOfZeroFill;
+		boost::uint32_t					Characteristics;
+		std::vector<boost::uint64_t>			Callbacks; // Non-standard!
+	} image_tls_directory;
+	
+It closely resembles the original IMAGE_TLS_DIRECTORY structure, but with a list of all the callback addresses already parsed and stored in the ``Callbacks`` vector for your convinience.
+	
+Load Configuration
+------------------
+
+You can query the load configuration of the PE with the following function::
+
+	auto pconfig = pe.get_config();
+	if (pconfig != nullptr && config->SecurityCookie == 0) {
+		std::cout << "/GS seems to be disabled!" << std::endl;
+	}
+	
+The structure returned by this function mirrors the one defined in the `MSDN <https://msdn.microsoft.com/en-us/library/windows/hardware/ff549596(v=vs.85).aspx>`_::
+
+	typedef struct image_load_config_directory_t
+	{
+		boost::uint32_t	Size;
+		boost::uint32_t	TimeDateStamp;
+		boost::uint16_t	MajorVersion;
+		boost::uint16_t	MinorVersion;
+		boost::uint32_t GlobalFlagsClear;
+		boost::uint32_t GlobalFlagsSet;
+		boost::uint32_t CriticalSectionDefaultTimeout;
+		boost::uint64_t DeCommitFreeBlockThreshold;
+		boost::uint64_t DeCommitTotalFreeThreshold;
+		boost::uint64_t LockPrefixTable;
+		boost::uint64_t MaximumAllocationSize;
+		boost::uint64_t VirtualMemoryThreshold;
+		boost::uint64_t ProcessAffinityMask;
+		boost::uint32_t ProcessHeapFlags;
+		boost::uint16_t CSDVersion;
+		boost::uint16_t Reserved1;
+		boost::uint64_t EditList;
+		boost::uint64_t SecurityCookie;
+		boost::uint64_t SEHandlerTable;
+		boost::uint64_t SEHandlerCount;
+	} image_load_config_directory;
 
 Miscellaneous
 -------------

@@ -141,7 +141,7 @@ bool validate_args(po::variables_map& vm, po::options_description& desc, char** 
 	{
 		std::vector<std::string> selected_categories = tokenize_args(vm["dump"].as<std::vector<std::string> >());
 		const std::vector<std::string> categories = boost::assign::list_of("all")("summary")("dos")("pe")("opt")("sections")
-			("imports")("exports")("resources")("version")("debug")("tls");
+			("imports")("exports")("resources")("version")("debug")("tls")("config");
 		for (auto it = selected_categories.begin() ; it != selected_categories.end() ; ++it)
 		{
 			std::vector<std::string>::const_iterator found = std::find(categories.begin(), categories.end(), *it);
@@ -229,7 +229,7 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
 		("dump,d", po::value<std::vector<std::string> >(),
 			"Dump PE information. Available choices are any combination of: "
 			"all, summary, dos (dos header), pe (pe header), opt (pe optional header), sections, "
-			"imports, exports, resources, version, debug, tls")
+			"imports, exports, resources, version, debug, tls, config (image load configuration)")
 		("hashes", "Calculate various hashes of the file (may slow down the analysis!)")
 		("extract,x", po::value<std::string>(), "Extract the PE resources to the target directory.")
 		("plugins,p", po::value<std::vector<std::string> >(),
@@ -317,6 +317,9 @@ void handle_dump_option(io::OutputFormatter& formatter, const std::vector<std::s
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "tls") != categories.end()) {
 		mana::dump_tls(pe, formatter);
+	}
+	if (dump_all || std::find(categories.begin(), categories.end(), "config") != categories.end()) {
+		mana::dump_config(pe, formatter);
 	}
 }
 
