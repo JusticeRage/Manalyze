@@ -115,7 +115,7 @@ bool PE::_parse_imports()
 					return true;
 				}
 
-				unsigned int saved_offset = ftell(_file_handle.get());
+				long saved_offset = ftell(_file_handle.get());
 				if (saved_offset == -1 || fseek(_file_handle.get(), table_offset, SEEK_SET) || 2 != fread(&(import->Hint), 1, 2, _file_handle.get()))
 				{
 					PRINT_ERROR << "Could not read a HINT/NAME hint." << std::endl;
@@ -136,6 +136,36 @@ bool PE::_parse_imports()
 	}
 
 	return true;
+}
+
+// ----------------------------------------------------------------------------
+
+bool PE::_parse_delayed_imports()
+{
+    if (!_ioh || _file_handle == nullptr) { // Image Optional Header wasn't parsed successfully.
+        return false;
+    }
+    if (!_reach_directory(IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT))	{ // No delayed imports
+        return true;
+    }
+
+    delay_load_directory_table dldt;
+	memset(&dldt, 0, sizeof(dldt));
+    if (1 != fread(&dldt, sizeof(delay_load_directory_table), 1, _file_handle.get()))
+    {
+        PRINT_WARNING << "Could not read the Delay-Load Directory Table!" << std::endl;
+        return true;
+    }
+    unsigned int offset = _rva_to_offset(dldt.Name);
+    if (offset == 0)
+    {
+        PRINT_WARNING << "Could not read the name of the DLL to be delay-loaded!" << std::endl;
+        return true;
+    }
+    std::string name;
+    utils::read_string_at_offset(_file_handle.get(), offset, name);
+    // TODO: Store this somewhere
+
 }
 
 // ----------------------------------------------------------------------------

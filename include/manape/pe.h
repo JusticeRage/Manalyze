@@ -269,6 +269,16 @@ private:
 	bool _parse_imports();
 
 	/**
+	 *	@brief	Parses the delayed imports of a PE.
+	 *
+	 *	Included in the _parse_directories call.
+	 *	/!\ This relies on the information gathered in _parse_image_optional_header.
+	 *
+	 *	Implemented in imports.cpp
+	 */
+	bool _parse_delayed_imports();
+
+	/**
 	 *	@brief	Parses the exports of a PE.
 	 *
 	 *	Included in the _parse_directories call.

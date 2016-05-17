@@ -430,4 +430,18 @@ typedef struct image_load_config_directory_t
 	boost::uint64_t SEHandlerCount;
 } image_load_config_directory;
 
-} // !namespace sg
+// ----------------------------------------------------------------------------
+
+typedef struct delay_load_directory_table_t
+{
+    boost::uint32_t Attributes;
+    boost::uint32_t Name;
+    boost::uint32_t ModuleHandle;
+    boost::uint32_t DelayImportAddressTable;
+    boost::uint32_t DelayImportNameTable;
+    boost::uint32_t BoundDelayImportTable;
+    boost::uint32_t UnloadDelayImportTable;
+    boost::uint32_t TimeStamp;
+} delay_load_directory_table;
+
+} // !namespace mana

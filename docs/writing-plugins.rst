@@ -97,7 +97,8 @@ If you try to build the plugin right now, you'll see that the compiler is very a
             return boost::make_shared<std::string>("A sample plugin.");
         }
 
-        pResult analyze(const mana::PE& pe) override {
+        pResult analyze(const mana::PE& pe) override
+        {
             pResult res = create_result();
             res->add_information("Hello world from the plugin!");
             return res;

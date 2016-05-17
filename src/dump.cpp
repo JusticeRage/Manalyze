@@ -460,19 +460,6 @@ void dump_summary(const mana::PE& pe, io::OutputFormatter& formatter)
 	summary->append(boost::make_shared<io::OutputTreeNode>("Subsystem", *nt::translate_to_flag(ioh.Subsystem, nt::SUBSYSTEMS)));
 	summary->append(boost::make_shared<io::OutputTreeNode>("Compilation Date", io::timestamp_to_string(h.TimeDateStamp)));
 
-	// Exploit mitigation technologies
-	std::vector<std::string> mitigation;
-	auto characteristics = *nt::translate_to_flags(ioh.DllCharacteristics, nt::DLL_CHARACTERISTICS);
-	if (std::find(characteristics.begin(), characteristics.end(), "IMAGE_DLLCHARACTERISTICS_DYNAMIC_BASE") != characteristics.end()) {
-		mitigation.push_back("ASLR");
-	}
-	if (std::find(characteristics.begin(), characteristics.end(), "IMAGE_DLLCHARACTERISTICS_NX_COMPAT") != characteristics.end()) {
-		mitigation.push_back("DEP");
-	}
-	if (mitigation.size() > 0)	{
-		summary->append(boost::make_shared<io::OutputTreeNode>("Exploit mitigation", mitigation));
-	}
-
 	if (languages.size() > 0) {
 		summary->append(boost::make_shared<io::OutputTreeNode>("Detected languages", languages));
 	}

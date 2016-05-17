@@ -274,16 +274,21 @@ public:
 
 		// Look for common cryptography libraries
 		if (pe.find_imports(".*", "libssl(32)?.dll|libcrypto.dll")->size() > 0) {
-			res->add_information("Imports functions from OpenSSL.");
+			res->add_information("OpenSSL.");
 		}
 		if (pe.find_imports(".*", "cryptopp.dll")->size() > 0) {
-			res->add_information("Imports functions from Crypto++");
+			res->add_information("Crypto++");
 		}
 		if (pe.find_imports(".*", "botan.dll")->size() > 0) {
-			res->add_information("Imports functions from Botan");
+			res->add_information("Botan");
 		}
 		if (pe.find_imports("Crypt(.*)")->size() > 0) {
-			res->add_information("Uses Microsoft's Cryptographic API");
+			res->add_information("Microsoft's Cryptography API");
+		}
+
+		// Set the summary if cryptographic libraries were detected.
+		if (res->get_summary() == nullptr && res->get_information()->size() > 0) {
+			res->set_summary("Libraries used to perform cryptographic operations:");
 		}
 
 		return res;
