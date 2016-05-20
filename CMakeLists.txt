@@ -54,7 +54,7 @@ include_directories(
                    )
 
 add_definitions(-DWITH_MANACOMMONS) # Use functions from manacommons.
-add_library(manape SHARED manape/pe.cpp manape/nt_values.cpp manape/utils.cpp manape/imports.cpp manape/resources.cpp manape/section.cpp)
+add_library(manape SHARED manape/pe.cpp manape/nt_values.cpp manape/utils.cpp manape/imports.cpp manape/resources.cpp manape/section.cpp manape/imported_library.cpp)
 
 add_library(manacommons SHARED manacommons/color.cpp manacommons/output_tree_node.cpp manacommons/escape.cpp manacommons/plugin_framework/result.cpp)
 

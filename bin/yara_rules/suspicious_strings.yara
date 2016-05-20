@@ -33,6 +33,8 @@ rule System_Tools
         $a9 = "regmon.exe" nocase wide ascii
         $a10 = "filemon.exe" nocase wide ascii
         $a11 = "msconfig.exe" nocase wide ascii
+		$a12 = "vssadmin.exe" nocase wide ascii
+		$a13 = "bcdedit.exe" nocase wide ascii
     condition:
         any of them
 }
@@ -523,8 +525,13 @@ rule VM_Generic_Detection : AntiVM
         $a0 = "HARDWARE\\DEVICEMAP\\Scsi\\Scsi Port 0\\Scsi Bus 0\\Target Id 0\\Logical Unit Id 0" nocase wide ascii
         $a1 = "HARDWARE\\Description\\System" nocase wide ascii
         $redpill = {0F 01 0D 00 00 00 00 C3} // Copied from the Cuckoo project
+		
+		// CLSIDs used to detect if speakers are present. Hoping this will not cause false positives.
+		$teslacrypt1 = { D1 29 06 E3 E5 27 CE 11 87 5D 00 60 8C B7 80 66 } // CLSID_AudioRender
+		$teslacrypt2 = { B3 EB 36 E4 4F 52 CE 11 9F 53 00 20 AF 0B A7 70 } // CLSID_FilterGraph
+		
     condition:
-        any of them
+        any of ($a*) or $redpill or all of ($teslacrypt*)
 }
 
 rule VMWare_Detection : AntiVM
@@ -713,6 +720,7 @@ rule Misc_Suspicious_Strings
         $a3 = "exploit" nocase ascii wide
         $a4 = "cmd.exe" nocase ascii wide
         $a5 = "CWSandbox" nocase wide ascii // Found in some Zeus/Citadel samples
+		$a6 = "System32\\drivers\\etc\\hosts" nocase wide ascii
     condition:
         any of them
 }

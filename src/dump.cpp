@@ -105,7 +105,7 @@ void dump_image_optional_header(const mana::PE& pe, io::OutputFormatter& formatt
 	ioh_header->append(boost::make_shared<io::OutputTreeNode>("BaseOfCode", ioh.BaseOfCode, io::OutputTreeNode::HEX));
 
 	// Field absent from PE32+ headers.
-	if (ioh.Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32")) {
+	if (pe.get_architecture() == PE::x86) {
 		ioh_header->append(boost::make_shared<io::OutputTreeNode>("BaseOfData", ioh.BaseOfData, io::OutputTreeNode::HEX));
 	}
 
@@ -360,7 +360,8 @@ void dump_tls(const mana::PE& pe, io::OutputFormatter& formatter)
 	tls_node->append(boost::make_shared<io::OutputTreeNode>("AddressOfIndex", tls->AddressOfIndex, io::OutputTreeNode::HEX));
 	tls_node->append(boost::make_shared<io::OutputTreeNode>("AddressOfCallbacks", tls->AddressOfCallbacks, io::OutputTreeNode::HEX));
 	tls_node->append(boost::make_shared<io::OutputTreeNode>("SizeOfZeroFill", tls->SizeOfZeroFill, io::OutputTreeNode::HEX));
-	tls_node->append(boost::make_shared<io::OutputTreeNode>("Characteristics", tls->Characteristics));
+	// According to the 9.3 revision of the PE specification, Characteristics is no longer reserved but one of IMAGE_SCN_ALIGN_*.
+	tls_node->append(boost::make_shared<io::OutputTreeNode>("Characteristics", *nt::translate_to_flag(tls->Characteristics, nt::SECTION_CHARACTERISTICS)));
 
 	std::vector<std::string> callbacks;
 	for (auto it = tls->Callbacks.begin() ; it != tls->Callbacks.end() ; ++it)

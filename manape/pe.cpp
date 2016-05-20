@@ -89,6 +89,12 @@ boost::uint64_t PE::get_filesize() const {
 
 // ----------------------------------------------------------------------------
 
+PE::PE_ARCHITECTURE PE::get_architecture() const {
+	return (_ioh->Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32+") ? PE::x64 : PE::x86);
+}
+
+// ----------------------------------------------------------------------------
+
 bool PE::_parse_dos_header()
 {
 	if (_file_handle == nullptr) {
@@ -564,7 +570,6 @@ bool PE::_parse_directories()
 
 	return _parse_imports() &&
 		   _parse_delayed_imports() &&
-		   _parse_debug() &&
 		   _parse_exports() &&
 		   _parse_resources() &&
 		   _parse_debug() &&
@@ -768,7 +773,7 @@ bool PE::_parse_tls()
 	unsigned int size = 4*sizeof(boost::uint64_t) + 2*sizeof(boost::uint32_t);
 	memset(&tls, 0, size);
 
-	if (_ioh->Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32+")) {
+	if (get_architecture() == x64) {
 		fread(&tls, 1, size, _file_handle.get());
 	}
 	else
@@ -802,11 +807,6 @@ bool PE::_parse_tls()
 			break;
 		}
 		tls.Callbacks.push_back(callback_address);
-	}
-
-	if (tls.Characteristics != 0) {
-		PRINT_WARNING << "TLS Directory 'Characteristics' is reserved and should be 0."
-					  << DEBUG_INFO_INSIDEPE << std::endl;
 	}
 
 	_tls.reset(tls);

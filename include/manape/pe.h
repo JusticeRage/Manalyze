@@ -35,12 +35,13 @@
 #include <boost/regex.hpp>
 #include <boost/system/api_config.hpp>
 
-#include "manape/nt_values.h"	// Windows-related #defines flags are declared in this file.
-#include "manape/pe_structs.h"	// All typedefs and structs are over there
+#include "manape/nt_values.h"			// Windows-related #defines flags are declared in this file.
+#include "manape/pe_structs.h"			// All typedefs and structs are over there
 #include "manape/utils.h"
-#include "manape/resources.h"	// Definition of the Resource class
-#include "manape/section.h"		// Definition of the Section class
-#include "manape/color.h"		// Colored output if available
+#include "manape/resources.h"			// Definition of the Resource class
+#include "manape/section.h"				// Definition of the Section class
+#include "manape/imported_library.h"	// Definition of the ImportedLibrary class
+#include "manape/color.h"				// Colored output if available
 
 #if defined BOOST_WINDOWS_API && !defined DECLSPEC
 	#ifdef MANAPE_EXPORT
@@ -195,6 +196,15 @@ public:
 	 */
 	DECLSPEC bool extract_resources(const std::string& destination_folder);
 
+	enum PE_ARCHITECTURE { x86, x64 };
+
+	/**
+	 *	@brief	Returns the architecture of the executable.
+	 *
+	 *	@return	Either x86 or x64.
+	 */
+	DECLSPEC PE_ARCHITECTURE get_architecture() const;
+
 	/**
 	 *	@brief	Tells whether the PE could be parsed.
 	 *
@@ -259,6 +269,13 @@ private:
 	bool _parse_directories();
 
 	/**
+	 *	@brief	Parses a Hint/Name table.
+	 *
+	 *	Implemented in imports.cpp.
+	 */
+	bool _parse_hint_name_table(pimport_lookup_table import) const;
+
+	/**
 	 *	@brief	Parses the imports of a PE.
 	 *
 	 *	Included in the _parse_directories call.
@@ -313,7 +330,7 @@ private:
 	bool _parse_tls();
 
 	/**
-	 *	@brief	Parses the Configuration Table of a PE.
+	 *	@brief	Parses the Load Configuration of a PE.
 	 *
 	 *  Included in the _parse_directories call.
 	 *	/!\ This relies on the information gathered in _parse_pe_header.
@@ -386,9 +403,11 @@ private:
 	 *	@param	std::vector<pimage_library_descriptor>& destination The vector into which the result should be stored.
 	 *	@param	bool case_sensitivity Whether the regular expression should be case sensitive (default is false).
 	 *
+	 *	@return	A vector of matching ImportedLibrary objects.
+	 *
 	 *	Implementation is located in imports.cpp.
 	 */
-	std::vector<pimage_library_descriptor> _find_imported_dlls(const std::string& name_regexp, bool case_sensitivity = false) const;
+	std::vector<pImportedLibrary> _find_imported_dlls(const std::string& name_regexp, bool case_sensitivity = false) const;
 
 	std::string							_path;
     bool								_initialized;
@@ -407,7 +426,7 @@ private:
 	std::vector<pcoff_symbol>						_coff_symbols;		// This debug information is parsed (crudely) but
 	std::vector<pString>							_coff_string_table;	// not displayed, because that's IDA's job.
 	std::vector<pSection>							_sections;
-	std::vector<pimage_library_descriptor>			_imports;
+	std::vector<pImportedLibrary>					_imports;
 	boost::optional<image_export_directory>			_ied;
 	std::vector<pexported_function>					_exports;
 	std::vector<pResource>							_resource_table;

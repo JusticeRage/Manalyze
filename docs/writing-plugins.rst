@@ -544,6 +544,8 @@ Miscellaneous
 
 ``pe.get_filesize()`` returns the size of the input file in bytes.
 
+``pe.get_architecture()`` returns either ``PE::x86`` or ``PE::x64`` depending on the program's target architecture.
+
 ``nt::translate_to_flag`` and ``nt::translate_to_flags`` are two functions that come in handy when you need to expand flags (i.e. the ``Characteristics`` field of many structures). Use the first function for values which translate into a single flag, and the second one for values which are composed of multiple ones::
 
     auto pType = nt::translate_to_flag(ppe_header->Machine, nt::MACHINE_TYPES);

@@ -25,7 +25,7 @@ namespace plugin {
 enum REQUIREMENT { AT_LEAST_ONE = 1, AT_LEAST_TWO = 2, AT_LEAST_THREE = 3 };
 
 std::string anti_debug =
-	"IsDebuggerPresent|FindWindow|ZwQuerySystemInformation|DbgBreakPoint|DbgPrint|"
+	"IsDebuggerPresent|FindWindow|(Zw|Nt)QuerySystemInformation|DbgBreakPoint|DbgPrint|"
 	"CheckRemoteDebuggerPresent|CreateToolhelp32Snapshot|Toolhelp32ReadProcessMemory|"
 	"OutputDebugString|SwitchToThread|NtQueryInformationProcess"	// Standard anti-debug API calls
 	"QueryPerformanceCounter";	// Techniques based on timing. GetTickCount ignored (too many false positives)
@@ -58,6 +58,8 @@ std::string dynamic_import = "(Co)?LoadLibrary(Ex)?(A|W)|GetProcAddress|LdrLoadD
 std::string packer_api = "VirtualAlloc|VirtualProtect";
 
 std::string temporary_files = "GetTempPath(A|W)|(Create|Write)File(A|W)";
+
+std::string hdd_enumeration = "GetVolumeInformation(ByHandle)?(A|W)|GetDriveType(A|W)|GetLogicalDriveStrings(A|W)";
 
 std::string driver_enumeration = "EnumDeviceDrivers|GetDeviceDriver(.*)";
 
@@ -138,6 +140,7 @@ public:
 		check_functions(pe, wininet_api, NO_OPINION, "Has Internet access capabilities", AT_LEAST_ONE, res);
 		check_functions(pe, privilege_api, MALICIOUS, "Functions related to the privilege level", AT_LEAST_ONE, res);
 		check_functions(pe, service_manipulation_api, SUSPICIOUS, "Interacts with services", AT_LEAST_ONE, res);
+		check_functions(pe, hdd_enumeration, NO_OPINION, "Enumerates local disk drives", AT_LEAST_ONE, res);
 		check_functions(pe, driver_enumeration, SUSPICIOUS, "Enumerates drivers present on the system", AT_LEAST_ONE, res);
 		check_functions(pe, process_manipulation_api, SUSPICIOUS, "Manipulates other processes", AT_LEAST_ONE, res);
 		check_functions(pe, eventlog_deletion, MALICIOUS, "Deletes entries from the event log", AT_LEAST_ONE, res);
