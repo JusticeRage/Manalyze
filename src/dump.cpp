@@ -105,7 +105,7 @@ void dump_image_optional_header(const mana::PE& pe, io::OutputFormatter& formatt
 	ioh_header->append(boost::make_shared<io::OutputTreeNode>("BaseOfCode", ioh.BaseOfCode, io::OutputTreeNode::HEX));
 
 	// Field absent from PE32+ headers.
-	if (ioh.Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32")) {
+	if (pe.get_architecture() == PE::x86) {
 		ioh_header->append(boost::make_shared<io::OutputTreeNode>("BaseOfData", ioh.BaseOfData, io::OutputTreeNode::HEX));
 	}
 
@@ -182,16 +182,21 @@ void dump_section_table(const mana::PE& pe, io::OutputFormatter& formatter, bool
 
 void dump_imports(const mana::PE& pe, io::OutputFormatter& formatter)
 {
-	const_shared_strings dlls = pe.get_imported_dlls();
-	if (dlls->size() == 0) {
+	auto imported_dlls = pe.get_imports();
+	if (imported_dlls->size() == 0)	{
 		return;
 	}
 
 	io::pNode imports(new io::OutputTreeNode("Imports", io::OutputTreeNode::LIST));
-	for (const_shared_strings::element_type::const_iterator it = dlls->begin() ; it != dlls->end() ; ++it)
+	for (auto it = imported_dlls->begin() ; it != imported_dlls->end() ; ++it)
 	{
-		const_shared_strings functions = pe.get_imported_functions(*it);
-		io::pNode dll(new io::OutputTreeNode(*it, *functions));
+		pString name = (*it)->get_name();
+		if (name == nullptr) {
+			continue;
+		}
+		const_shared_strings functions = pe.get_imported_functions(*name);
+		std::string display_name = (*it)->get_type() == ImportedLibrary::DELAY_LOADED ? *name + " (delay-loaded)" : *name;
+		io::pNode dll(new io::OutputTreeNode(display_name, *functions));
 		imports->append(dll);
 	}
 	formatter.add_data(imports, *pe.get_path());
@@ -360,7 +365,8 @@ void dump_tls(const mana::PE& pe, io::OutputFormatter& formatter)
 	tls_node->append(boost::make_shared<io::OutputTreeNode>("AddressOfIndex", tls->AddressOfIndex, io::OutputTreeNode::HEX));
 	tls_node->append(boost::make_shared<io::OutputTreeNode>("AddressOfCallbacks", tls->AddressOfCallbacks, io::OutputTreeNode::HEX));
 	tls_node->append(boost::make_shared<io::OutputTreeNode>("SizeOfZeroFill", tls->SizeOfZeroFill, io::OutputTreeNode::HEX));
-	tls_node->append(boost::make_shared<io::OutputTreeNode>("Characteristics", tls->Characteristics));
+	// According to the 9.3 revision of the PE specification, Characteristics is no longer reserved but one of IMAGE_SCN_ALIGN_*.
+	tls_node->append(boost::make_shared<io::OutputTreeNode>("Characteristics", *nt::translate_to_flag(tls->Characteristics, nt::SECTION_CHARACTERISTICS)));
 
 	std::vector<std::string> callbacks;
 	for (auto it = tls->Callbacks.begin() ; it != tls->Callbacks.end() ; ++it)
@@ -405,6 +411,28 @@ void dump_config(const mana::PE& pe, io::OutputFormatter& formatter)
 	config_node->append(boost::make_shared<io::OutputTreeNode>("SEHandlerTable", config->SEHandlerTable, io::OutputTreeNode::HEX));
 	config_node->append(boost::make_shared<io::OutputTreeNode>("SEHandlerCount", config->SEHandlerCount));
 	formatter.add_data(config_node, *pe.get_path());
+}
+
+// ----------------------------------------------------------------------------
+
+void dump_dldt(const mana::PE& pe, io::OutputFormatter& formatter)
+{
+	auto dldt = pe.get_delay_load_table();
+	if (dldt == nullptr) {
+		return; // No delayed imports.
+	}
+
+	io::pNode dldt_node(new io::OutputTreeNode("Delayed Imports", io::OutputTreeNode::LIST));
+	dldt_node->append(boost::make_shared<io::OutputTreeNode>("Attributes", dldt->Attributes, io::OutputTreeNode::HEX));
+	dldt_node->append(boost::make_shared<io::OutputTreeNode>("Name", dldt->NameStr));
+	dldt_node->append(boost::make_shared<io::OutputTreeNode>("ModuleHandle", dldt->ModuleHandle, io::OutputTreeNode::HEX));
+	dldt_node->append(boost::make_shared<io::OutputTreeNode>("DelayImportAddressTable", dldt->DelayImportAddressTable, io::OutputTreeNode::HEX));
+	dldt_node->append(boost::make_shared<io::OutputTreeNode>("DelayImportNameTable", dldt->DelayImportNameTable, io::OutputTreeNode::HEX));
+	dldt_node->append(boost::make_shared<io::OutputTreeNode>("BoundDelayImportTable", dldt->BoundDelayImportTable, io::OutputTreeNode::HEX));
+	dldt_node->append(boost::make_shared<io::OutputTreeNode>("UnloadDelayImportTable", dldt->UnloadDelayImportTable, io::OutputTreeNode::HEX));
+	dldt_node->append(boost::make_shared<io::OutputTreeNode>("TimeStamp", io::timestamp_to_string(dldt->TimeStamp), io::OutputTreeNode::HEX));
+
+	formatter.add_data(dldt_node, *pe.get_path());
 }
 
 // ----------------------------------------------------------------------------
@@ -459,19 +487,6 @@ void dump_summary(const mana::PE& pe, io::OutputFormatter& formatter)
 	mana::image_optional_header ioh = *pe.get_image_optional_header();
 	summary->append(boost::make_shared<io::OutputTreeNode>("Subsystem", *nt::translate_to_flag(ioh.Subsystem, nt::SUBSYSTEMS)));
 	summary->append(boost::make_shared<io::OutputTreeNode>("Compilation Date", io::timestamp_to_string(h.TimeDateStamp)));
-
-	// Exploit mitigation technologies
-	std::vector<std::string> mitigation;
-	auto characteristics = *nt::translate_to_flags(ioh.DllCharacteristics, nt::DLL_CHARACTERISTICS);
-	if (std::find(characteristics.begin(), characteristics.end(), "IMAGE_DLLCHARACTERISTICS_DYNAMIC_BASE") != characteristics.end()) {
-		mitigation.push_back("ASLR");
-	}
-	if (std::find(characteristics.begin(), characteristics.end(), "IMAGE_DLLCHARACTERISTICS_NX_COMPAT") != characteristics.end()) {
-		mitigation.push_back("DEP");
-	}
-	if (mitigation.size() > 0)	{
-		summary->append(boost::make_shared<io::OutputTreeNode>("Exploit mitigation", mitigation));
-	}
 
 	if (languages.size() > 0) {
 		summary->append(boost::make_shared<io::OutputTreeNode>("Detected languages", languages));

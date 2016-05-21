@@ -97,7 +97,8 @@ If you try to build the plugin right now, you'll see that the compiler is very a
             return boost::make_shared<std::string>("A sample plugin.");
         }
 
-        pResult analyze(const mana::PE& pe) override {
+        pResult analyze(const mana::PE& pe) override
+        {
             pResult res = create_result();
             res->add_information("Hello world from the plugin!");
             return res;
@@ -407,6 +408,8 @@ You can also use the ``find_imports`` function if you're looking for something s
 You can omit the latter two to look for the requested functions in any DLL with a case insensitive expression::
 
     auto functions = pe.find_imports(".*bAsIc_OsTrEaM.*"); // Will search in any DLL, case insensitive
+	
+Finally, if you're interested in looking into the underlying structures, ``pe.get_imports`` returns ``ImportedLibrary`` objects which give direct access to the ``IMAGE_IMPORT_DESCRIPTOR`` and ``IMPORT_LOOKUP_TABLE``s.
 
 Exports
 -------
@@ -537,11 +540,39 @@ The structure returned by this function mirrors the one defined in the `MSDN <ht
 		boost::uint64_t SEHandlerTable;
 		boost::uint64_t SEHandlerCount;
 	} image_load_config_directory;
+	
+Delay Load Table
+----------------
+
+For PE files which have delayed imports, the ``DELAY_LOAD_DIRECTORY_TABLE`` can be retreived through ``get_delay_load_table``::
+
+	auto dldt = pe.get_delay_load_table();
+	if (dldt == nullptr) {
+		return; // No delayed imports.
+	}
+	std::cout << dldt->NameStr << " is delay-loaded!" << std::endl;
+
+The function returns a pointer to the following structure::
+
+	typedef struct delay_load_directory_table_t
+	{
+		boost::uint32_t Attributes;
+		boost::uint32_t Name;
+		boost::uint32_t ModuleHandle;
+		boost::uint32_t DelayImportAddressTable;
+		boost::uint32_t DelayImportNameTable;
+		boost::uint32_t BoundDelayImportTable;
+		boost::uint32_t UnloadDelayImportTable;
+		boost::uint32_t TimeStamp;
+		std::string		NameStr; // Non-standard!
+	} delay_load_directory_table;
 
 Miscellaneous
 -------------
 
 ``pe.get_filesize()`` returns the size of the input file in bytes.
+
+``pe.get_architecture()`` returns either ``PE::x86`` or ``PE::x64`` depending on the program's target architecture.
 
 ``nt::translate_to_flag`` and ``nt::translate_to_flags`` are two functions that come in handy when you need to expand flags (i.e. the ``Characteristics`` field of many structures). Use the first function for values which translate into a single flag, and the second one for values which are composed of multiple ones::
 

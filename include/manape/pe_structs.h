@@ -127,8 +127,6 @@ typedef boost::shared_ptr<image_section_header> pimage_section_header;
 
 // ----------------------------------------------------------------------------
 
-// A field has been added at the end of the structure to keep the Name of the library.
-// The original Name field only contains a RVA, which is impractical.
 typedef struct image_import_descriptor_t
 {
 	boost::uint32_t OriginalFirstThunk;
@@ -136,7 +134,6 @@ typedef struct image_import_descriptor_t
 	boost::uint32_t ForwarderChain;
 	boost::uint32_t	Name;
 	boost::uint32_t FirstThunk;
-	std::string		NameStr; // Non-standard!
 } image_import_descriptor;
 typedef boost::shared_ptr<image_import_descriptor> pimage_import_descriptor;
 
@@ -150,13 +147,6 @@ typedef struct import_lookup_table_t
 	std::string		Name;
 } import_lookup_table;
 typedef boost::shared_ptr<import_lookup_table> pimport_lookup_table;
-
-// ----------------------------------------------------------------------------
-
-// This typedef isn't a Windows standard, but I find this representation useful when describing
-// all the imports related to a single DLL.
-typedef std::pair<pimage_import_descriptor, std::vector<pimport_lookup_table> > image_library_descriptor;
-typedef boost::shared_ptr<image_library_descriptor> pimage_library_descriptor;
 
 // ----------------------------------------------------------------------------
 
@@ -430,4 +420,19 @@ typedef struct image_load_config_directory_t
 	boost::uint64_t SEHandlerCount;
 } image_load_config_directory;
 
-} // !namespace sg
+// ----------------------------------------------------------------------------
+
+typedef struct delay_load_directory_table_t
+{
+    boost::uint32_t Attributes;
+    boost::uint32_t Name;
+    boost::uint32_t ModuleHandle;
+    boost::uint32_t DelayImportAddressTable;
+    boost::uint32_t DelayImportNameTable;
+    boost::uint32_t BoundDelayImportTable;
+    boost::uint32_t UnloadDelayImportTable;
+    boost::uint32_t TimeStamp;
+	std::string		NameStr; // Non-standard!
+} delay_load_directory_table;
+
+} // !namespace mana

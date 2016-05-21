@@ -289,5 +289,78 @@ BOOST_AUTO_TEST_CASE(parse_config)
 }
 
 // ----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(detect_architecture)
+{
+	mana::PE pe86("testfiles/manatest.exe");
+	BOOST_CHECK(pe86.get_architecture() == mana::PE::x86);
+	mana::PE pe64("testfiles/manatest3.exe");
+	BOOST_CHECK(pe64.get_architecture() == mana::PE::x64);
+}
+
+// ----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(parse_tls)
+{
+	mana::PE pe("testfiles/manatest3.exe");
+	auto tls = pe.get_tls();
+	BOOST_ASSERT(tls != nullptr);
+
+	BOOST_CHECK_EQUAL(tls->StartAddressOfRawData,					0x140007000);
+	BOOST_CHECK_EQUAL(tls->EndAddressOfRawData,						0x140007001);
+	BOOST_CHECK_EQUAL(tls->AddressOfIndex,							0x140005098);
+	BOOST_CHECK_EQUAL(tls->AddressOfCallbacks,						0x140003228);
+	BOOST_CHECK_EQUAL(tls->SizeOfZeroFill,							0);
+	BOOST_CHECK_EQUAL(*nt::translate_to_flag(tls->Characteristics,	nt::SECTION_CHARACTERISTICS), "IMAGE_SCN_ALIGN_1BYTES");
+	BOOST_ASSERT(tls->Callbacks.size() == 1);
+	BOOST_CHECK_EQUAL(tls->Callbacks[0],							0x140001070);
+
+	mana::PE control("testfiles/manatest.exe");
+	tls = control.get_tls();
+	BOOST_CHECK(tls == nullptr);
+}
+
+// ----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(parse_delayed_imports)
+{
+	mana::PE pe("testfiles/manatest3.exe");
+	auto dldt = pe.get_delay_load_table();
+	BOOST_ASSERT(dldt != nullptr);
+
+	BOOST_CHECK_EQUAL(dldt->Attributes,					1);
+	BOOST_CHECK_EQUAL(dldt->NameStr,					"ADVAPI32.dll");
+	BOOST_CHECK_EQUAL(dldt->ModuleHandle,				0x5050);
+	BOOST_CHECK_EQUAL(dldt->DelayImportAddressTable,	0x5038);
+	BOOST_CHECK_EQUAL(dldt->DelayImportNameTable,		0x3ab0);
+	BOOST_CHECK_EQUAL(dldt->BoundDelayImportTable,		0x3ad8);
+	BOOST_CHECK_EQUAL(dldt->UnloadDelayImportTable,		0);
+	BOOST_CHECK_EQUAL(dldt->TimeStamp,					0);
+
+	auto delay_loaded_import = pe.find_imports("CryptAcquireContextW");
+	BOOST_ASSERT(delay_loaded_import->size() == 1);
+	BOOST_CHECK_EQUAL(delay_loaded_import->at(0), "CryptAcquireContextW");
+
+	// Also check the underlying structure. First find the corresponding ImportedLibrary object.
+	auto imports = pe.get_imports();
+	BOOST_ASSERT(imports != nullptr);
+	mana::pImportedLibrary lib;
+	for (auto it = imports->begin() ; it != imports->end() ; ++it)
+	{
+		pString s = (*it)->get_name();
+		if (s != nullptr && *s == "ADVAPI32.dll")
+		{
+			lib = *it;
+			break;
+		}
+	}
+
+	BOOST_ASSERT(lib != nullptr);
+	BOOST_CHECK_EQUAL(lib->get_type(), mana::ImportedLibrary::DELAY_LOADED);
+	BOOST_CHECK(lib->get_image_import_descriptor() == nullptr); // No image import descriptor for delay-loaded DLLs.
+	BOOST_CHECK_EQUAL(lib->get_imports()->size(), 1);
+}
+
+// ----------------------------------------------------------------------------
 BOOST_AUTO_TEST_SUITE_END()
 // ----------------------------------------------------------------------------

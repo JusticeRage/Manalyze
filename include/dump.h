@@ -46,6 +46,7 @@ void dump_tls(const mana::PE& pe, io::OutputFormatter& formatter);
 void dump_config(const mana::PE&pe, io::OutputFormatter& formatter);
 void dump_summary(const mana::PE& pe, io::OutputFormatter& formatter);
 void dump_hashes(const mana::PE& pe, io::OutputFormatter& formatter);
+void dump_dldt(const mana::PE& pe, io::OutputFormatter& formatter);
 
 /**
  * @brief   Detects the filetype of a given resource based on magic numbers contained

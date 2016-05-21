@@ -35,12 +35,13 @@
 #include <boost/regex.hpp>
 #include <boost/system/api_config.hpp>
 
-#include "manape/nt_values.h"	// Windows-related #defines flags are declared in this file.
-#include "manape/pe_structs.h"	// All typedefs and structs are over there
+#include "manape/nt_values.h"			// Windows-related #defines flags are declared in this file.
+#include "manape/pe_structs.h"			// All typedefs and structs are over there
 #include "manape/utils.h"
-#include "manape/resources.h"	// Definition of the Resource class
-#include "manape/section.h"		// Definition of the Section class
-#include "manape/color.h"		// Colored output if available
+#include "manape/resources.h"			// Definition of the Resource class
+#include "manape/section.h"				// Definition of the Section class
+#include "manape/imported_library.h"	// Definition of the ImportedLibrary class
+#include "manape/color.h"				// Colored output if available
 
 #if defined BOOST_WINDOWS_API && !defined DECLSPEC
 	#ifdef MANAPE_EXPORT
@@ -65,7 +66,9 @@ typedef boost::shared_ptr<const std::vector<pdebug_directory_entry> > shared_deb
 typedef boost::shared_ptr<const std::vector<pimage_base_relocation> > shared_relocations;
 typedef boost::shared_ptr<const image_tls_directory> shared_tls;
 typedef boost::shared_ptr<const image_load_config_directory> shared_config;
+typedef boost::shared_ptr<const delay_load_directory_table> shared_dldt;
 typedef boost::shared_ptr<const std::vector<pwin_certificate> > shared_certificates;
+typedef boost::shared_ptr<const std::vector<pImportedLibrary> > shared_imports;
 typedef boost::shared_ptr<std::string> pString;
 typedef boost::shared_ptr<FILE> pFile;
 
@@ -170,9 +173,18 @@ public:
 		return (_initialized && _config) ? boost::make_shared<image_load_config_directory>(*_config) : shared_config();
 	}
 
+	DECLSPEC shared_dldt get_delay_load_table() const {
+		return (_initialized && _delay_load_directory_table) ?
+			boost::make_shared<delay_load_directory_table>(*_delay_load_directory_table) : shared_dldt();
+	}
+
 	DECLSPEC shared_certificates get_certificates() const {
 		return _initialized ? boost::make_shared<shared_certificates::element_type>(_certificates) :
 			boost::make_shared<shared_certificates::element_type>();
+	}
+
+	DECLSPEC shared_imports get_imports() const	{
+		return (_initialized) ? boost::make_shared<std::vector<pImportedLibrary> >(_imports) : shared_imports();
 	}
 
 	/**
@@ -194,6 +206,15 @@ public:
 	 *	Implementation is located in resources.cpp.
 	 */
 	DECLSPEC bool extract_resources(const std::string& destination_folder);
+
+	enum PE_ARCHITECTURE { x86, x64 };
+
+	/**
+	 *	@brief	Returns the architecture of the executable.
+	 *
+	 *	@return	Either x86 or x64.
+	 */
+	DECLSPEC PE_ARCHITECTURE get_architecture() const;
 
 	/**
 	 *	@brief	Tells whether the PE could be parsed.
@@ -259,6 +280,20 @@ private:
 	bool _parse_directories();
 
 	/**
+	 *	@brief	Parses a Hint/Name table.
+	 *
+	 *	Implemented in imports.cpp.
+	 */
+	bool _parse_hint_name_table(pimport_lookup_table import) const;
+
+	/**
+	 *	@brief	Parses an IMPORT_LOOKUP_TABLE.
+	 *
+	 *	Implemented in imports.cpp.
+	 */
+	bool _parse_import_lookup_table(unsigned int offset, pImportedLibrary library) const;
+
+	/**
 	 *	@brief	Parses the imports of a PE.
 	 *
 	 *	Included in the _parse_directories call.
@@ -267,6 +302,16 @@ private:
 	 *	Implemented in imports.cpp
 	 */
 	bool _parse_imports();
+
+	/**
+	 *	@brief	Parses the delayed imports of a PE.
+	 *
+	 *	Included in the _parse_directories call.
+	 *	/!\ This relies on the information gathered in _parse_image_optional_header.
+	 *
+	 *	Implemented in imports.cpp
+	 */
+	bool _parse_delayed_imports();
 
 	/**
 	 *	@brief	Parses the exports of a PE.
@@ -303,7 +348,7 @@ private:
 	bool _parse_tls();
 
 	/**
-	 *	@brief	Parses the Configuration Table of a PE.
+	 *	@brief	Parses the Load Configuration of a PE.
 	 *
 	 *  Included in the _parse_directories call.
 	 *	/!\ This relies on the information gathered in _parse_pe_header.
@@ -376,9 +421,11 @@ private:
 	 *	@param	std::vector<pimage_library_descriptor>& destination The vector into which the result should be stored.
 	 *	@param	bool case_sensitivity Whether the regular expression should be case sensitive (default is false).
 	 *
+	 *	@return	A vector of matching ImportedLibrary objects.
+	 *
 	 *	Implementation is located in imports.cpp.
 	 */
-	std::vector<pimage_library_descriptor> _find_imported_dlls(const std::string& name_regexp, bool case_sensitivity = false) const;
+	std::vector<pImportedLibrary> _find_imported_dlls(const std::string& name_regexp, bool case_sensitivity = false) const;
 
 	std::string							_path;
     bool								_initialized;
@@ -397,7 +444,7 @@ private:
 	std::vector<pcoff_symbol>						_coff_symbols;		// This debug information is parsed (crudely) but
 	std::vector<pString>							_coff_string_table;	// not displayed, because that's IDA's job.
 	std::vector<pSection>							_sections;
-	std::vector<pimage_library_descriptor>			_imports;
+	std::vector<pImportedLibrary>					_imports;
 	boost::optional<image_export_directory>			_ied;
 	std::vector<pexported_function>					_exports;
 	std::vector<pResource>							_resource_table;
@@ -405,6 +452,7 @@ private:
 	std::vector<pimage_base_relocation>				_relocations;		// Not displayed either, because of how big it is.
 	boost::optional<image_tls_directory>			_tls;
 	boost::optional<image_load_config_directory>	_config;
+	boost::optional<delay_load_directory_table>		_delay_load_directory_table;
 	std::vector<pwin_certificate>					_certificates;
 };
 

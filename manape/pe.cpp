@@ -89,6 +89,12 @@ boost::uint64_t PE::get_filesize() const {
 
 // ----------------------------------------------------------------------------
 
+PE::PE_ARCHITECTURE PE::get_architecture() const {
+	return (_ioh->Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32+") ? PE::x64 : PE::x86);
+}
+
+// ----------------------------------------------------------------------------
+
 bool PE::_parse_dos_header()
 {
 	if (_file_handle == nullptr) {
@@ -563,6 +569,7 @@ bool PE::_parse_directories()
 	}
 
 	return _parse_imports() &&
+		   _parse_delayed_imports() &&
 		   _parse_exports() &&
 		   _parse_resources() &&
 		   _parse_debug() &&
@@ -766,7 +773,7 @@ bool PE::_parse_tls()
 	unsigned int size = 4*sizeof(boost::uint64_t) + 2*sizeof(boost::uint32_t);
 	memset(&tls, 0, size);
 
-	if (_ioh->Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32+")) {
+	if (get_architecture() == x64) {
 		fread(&tls, 1, size, _file_handle.get());
 	}
 	else
@@ -802,11 +809,6 @@ bool PE::_parse_tls()
 		tls.Callbacks.push_back(callback_address);
 	}
 
-	if (tls.Characteristics != 0) {
-		PRINT_WARNING << "TLS Directory 'Characteristics' is reserved and should be 0."
-					  << DEBUG_INFO_INSIDEPE << std::endl;
-	}
-
 	_tls.reset(tls);
 	return true;
 }
@@ -825,7 +827,7 @@ bool PE::_parse_config()
 
 	image_load_config_directory config;
 	memset(&config, 0, sizeof(config));
-	if (24 != fread(&config, 1, 24, _file_handle.get())) 
+	if (24 != fread(&config, 1, 24, _file_handle.get()))
 	{
 		PRINT_WARNING << "Error while reading the IMAGE_LOAD_CONFIG_DIRECTORY!"
 					  << DEBUG_INFO_INSIDEPE << std::endl;
@@ -836,8 +838,8 @@ bool PE::_parse_config()
 	unsigned int field_size = (_ioh->Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32")) ? 4 : 8;
 	if (1 != fread(&config.DeCommitFreeBlockThreshold, field_size, 1, _file_handle.get()) ||
 		1 != fread(&config.DeCommitTotalFreeThreshold, field_size, 1, _file_handle.get()) ||
-		1 != fread(&config.LockPrefixTable, field_size, 1, _file_handle.get()) || 
-		1 != fread(&config.MaximumAllocationSize, field_size, 1, _file_handle.get()) || 
+		1 != fread(&config.LockPrefixTable, field_size, 1, _file_handle.get()) ||
+		1 != fread(&config.MaximumAllocationSize, field_size, 1, _file_handle.get()) ||
 		1 != fread(&config.VirtualMemoryThreshold, field_size, 1, _file_handle.get()) ||
 		1 != fread(&config.ProcessAffinityMask, field_size, 1, _file_handle.get()))
 	{
@@ -856,7 +858,7 @@ bool PE::_parse_config()
 
 	// The last fields have a variable size depending on the architecture again.
 	if (1 != fread(&config.EditList, field_size, 1, _file_handle.get()) ||
-		1 != fread(&config.SecurityCookie, field_size, 1, _file_handle.get())) 
+		1 != fread(&config.SecurityCookie, field_size, 1, _file_handle.get()))
 	{
 		PRINT_WARNING << "Error while reading the IMAGE_LOAD_CONFIG_DIRECTORY!"
 			<< DEBUG_INFO_INSIDEPE << std::endl;
