@@ -163,12 +163,12 @@ bool PE::_parse_imports()
 		else { // Some packed executables use FirstThunk and set OriginalFirstThunk to 0.
 			ilt_offset = _rva_to_offset(descriptor->FirstThunk);
 		}
-		
+
 		if (!_parse_import_lookup_table(ilt_offset, *it))
 		{
 			// Non fatal. Stop trying to parse imports, but the ones already read will still be available.
 			if ((*it)->get_name() != nullptr) {
-				PRINT_WARNING << "An error occurred while trying to read functions imported by " << *(*it)->get_name() 
+				PRINT_WARNING << "An error occurred while trying to read functions imported by " << *(*it)->get_name()
 							  << "." << DEBUG_INFO_INSIDEPE << std::endl;
 			}
 			return true;
@@ -190,8 +190,8 @@ bool PE::_parse_delayed_imports()
     }
 
     delay_load_directory_table dldt;
-	memset(&dldt, 0, sizeof(dldt));
-    if (1 != fread(&dldt, sizeof(delay_load_directory_table), 1, _file_handle.get()))
+	memset(&dldt, 0, 8*sizeof(boost::uint32_t));
+    if (1 != fread(&dldt, 8*sizeof(boost::uint32_t), 1, _file_handle.get()))
     {
         PRINT_WARNING << "Could not read the Delay-Load Directory Table!" << std::endl;
         return true;
@@ -230,7 +230,7 @@ const_shared_strings PE::get_imported_dlls() const
 		return destination;
 	}
 
-	for (auto it = _imports.begin() ; it != _imports.end() ; ++it) 
+	for (auto it = _imports.begin() ; it != _imports.end() ; ++it)
 	{
 		pString s = (*it)->get_name();
 		if (s != nullptr) {
