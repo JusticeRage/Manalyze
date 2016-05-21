@@ -66,7 +66,9 @@ typedef boost::shared_ptr<const std::vector<pdebug_directory_entry> > shared_deb
 typedef boost::shared_ptr<const std::vector<pimage_base_relocation> > shared_relocations;
 typedef boost::shared_ptr<const image_tls_directory> shared_tls;
 typedef boost::shared_ptr<const image_load_config_directory> shared_config;
+typedef boost::shared_ptr<const delay_load_directory_table> shared_dldt;
 typedef boost::shared_ptr<const std::vector<pwin_certificate> > shared_certificates;
+typedef boost::shared_ptr<const std::vector<pImportedLibrary> > shared_imports;
 typedef boost::shared_ptr<std::string> pString;
 typedef boost::shared_ptr<FILE> pFile;
 
@@ -171,9 +173,18 @@ public:
 		return (_initialized && _config) ? boost::make_shared<image_load_config_directory>(*_config) : shared_config();
 	}
 
+	DECLSPEC shared_dldt get_delay_load_table() const {
+		return (_initialized && _delay_load_directory_table) ?
+			boost::make_shared<delay_load_directory_table>(*_delay_load_directory_table) : shared_dldt();
+	}
+
 	DECLSPEC shared_certificates get_certificates() const {
 		return _initialized ? boost::make_shared<shared_certificates::element_type>(_certificates) :
 			boost::make_shared<shared_certificates::element_type>();
+	}
+
+	DECLSPEC shared_imports get_imports() const	{
+		return (_initialized) ? boost::make_shared<std::vector<pImportedLibrary> >(_imports) : shared_imports();
 	}
 
 	/**
@@ -274,6 +285,13 @@ private:
 	 *	Implemented in imports.cpp.
 	 */
 	bool _parse_hint_name_table(pimport_lookup_table import) const;
+
+	/**
+	 *	@brief	Parses an IMPORT_LOOKUP_TABLE.
+	 *
+	 *	Implemented in imports.cpp.
+	 */
+	bool _parse_import_lookup_table(unsigned int offset, pImportedLibrary library) const;
 
 	/**
 	 *	@brief	Parses the imports of a PE.
@@ -434,6 +452,7 @@ private:
 	std::vector<pimage_base_relocation>				_relocations;		// Not displayed either, because of how big it is.
 	boost::optional<image_tls_directory>			_tls;
 	boost::optional<image_load_config_directory>	_config;
+	boost::optional<delay_load_directory_table>		_delay_load_directory_table;
 	std::vector<pwin_certificate>					_certificates;
 };
 

@@ -182,16 +182,21 @@ void dump_section_table(const mana::PE& pe, io::OutputFormatter& formatter, bool
 
 void dump_imports(const mana::PE& pe, io::OutputFormatter& formatter)
 {
-	const_shared_strings dlls = pe.get_imported_dlls();
-	if (dlls->size() == 0) {
+	auto imported_dlls = pe.get_imports();
+	if (imported_dlls->size() == 0)	{
 		return;
 	}
 
 	io::pNode imports(new io::OutputTreeNode("Imports", io::OutputTreeNode::LIST));
-	for (const_shared_strings::element_type::const_iterator it = dlls->begin() ; it != dlls->end() ; ++it)
+	for (auto it = imported_dlls->begin() ; it != imported_dlls->end() ; ++it)
 	{
-		const_shared_strings functions = pe.get_imported_functions(*it);
-		io::pNode dll(new io::OutputTreeNode(*it, *functions));
+		pString name = (*it)->get_name();
+		if (name == nullptr) {
+			continue;
+		}
+		const_shared_strings functions = pe.get_imported_functions(*name);
+		std::string display_name = (*it)->get_type() == ImportedLibrary::DELAY_LOADED ? *name + " (delay-loaded)" : *name;
+		io::pNode dll(new io::OutputTreeNode(display_name, *functions));
 		imports->append(dll);
 	}
 	formatter.add_data(imports, *pe.get_path());
@@ -406,6 +411,28 @@ void dump_config(const mana::PE& pe, io::OutputFormatter& formatter)
 	config_node->append(boost::make_shared<io::OutputTreeNode>("SEHandlerTable", config->SEHandlerTable, io::OutputTreeNode::HEX));
 	config_node->append(boost::make_shared<io::OutputTreeNode>("SEHandlerCount", config->SEHandlerCount));
 	formatter.add_data(config_node, *pe.get_path());
+}
+
+// ----------------------------------------------------------------------------
+
+void dump_dldt(const mana::PE& pe, io::OutputFormatter& formatter)
+{
+	auto dldt = pe.get_delay_load_table();
+	if (dldt == nullptr) {
+		return; // No delayed imports.
+	}
+
+	io::pNode dldt_node(new io::OutputTreeNode("Delayed Imports", io::OutputTreeNode::LIST));
+	dldt_node->append(boost::make_shared<io::OutputTreeNode>("Attributes", dldt->Attributes, io::OutputTreeNode::HEX));
+	dldt_node->append(boost::make_shared<io::OutputTreeNode>("Name", dldt->NameStr));
+	dldt_node->append(boost::make_shared<io::OutputTreeNode>("ModuleHandle", dldt->ModuleHandle, io::OutputTreeNode::HEX));
+	dldt_node->append(boost::make_shared<io::OutputTreeNode>("DelayImportAddressTable", dldt->DelayImportAddressTable, io::OutputTreeNode::HEX));
+	dldt_node->append(boost::make_shared<io::OutputTreeNode>("DelayImportNameTable", dldt->DelayImportNameTable, io::OutputTreeNode::HEX));
+	dldt_node->append(boost::make_shared<io::OutputTreeNode>("BoundDelayImportTable", dldt->BoundDelayImportTable, io::OutputTreeNode::HEX));
+	dldt_node->append(boost::make_shared<io::OutputTreeNode>("UnloadDelayImportTable", dldt->UnloadDelayImportTable, io::OutputTreeNode::HEX));
+	dldt_node->append(boost::make_shared<io::OutputTreeNode>("TimeStamp", io::timestamp_to_string(dldt->TimeStamp), io::OutputTreeNode::HEX));
+
+	formatter.add_data(dldt_node, *pe.get_path());
 }
 
 // ----------------------------------------------------------------------------

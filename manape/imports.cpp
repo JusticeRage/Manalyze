@@ -59,6 +59,44 @@ bool PE::_parse_hint_name_table(pimport_lookup_table import) const
 
 // ----------------------------------------------------------------------------
 
+bool PE::_parse_import_lookup_table(unsigned int offset, pImportedLibrary library) const
+{
+	if (!offset || fseek(_file_handle.get(), offset, SEEK_SET))
+	{
+		PRINT_ERROR << "Could not reach an IMPORT_LOOKUP_TABLE." << std::endl;
+		return false;
+	}
+
+	while (true) // We stop at the first NULL IMPORT_LOOKUP_TABLE
+	{
+		pimport_lookup_table import = boost::make_shared<import_lookup_table>();
+		import->AddressOfData = 0;
+		import->Hint = 0;
+
+		// The field has a size of 8 for x64 PEs
+		int size_to_read = (get_architecture() == x86 ? 4 : 8);
+		if (size_to_read != fread(&(import->AddressOfData), 1, size_to_read, _file_handle.get()))
+		{
+			PRINT_ERROR << "Could not read the IMPORT_LOOKUP_TABLE." << std::endl;
+			return false;
+		}
+
+		// Exit condition
+		if (import->AddressOfData == 0) {
+			break;
+		}
+
+		if (!_parse_hint_name_table(import)) {
+			return false;
+		}
+
+		library->add_import(import);
+	}
+	return true;
+}
+
+// ----------------------------------------------------------------------------
+
 bool PE::_parse_imports()
 {
 	if (!_ioh || _file_handle == nullptr) { // Image Optional Header wasn't parsed successfully.
@@ -125,36 +163,15 @@ bool PE::_parse_imports()
 		else { // Some packed executables use FirstThunk and set OriginalFirstThunk to 0.
 			ilt_offset = _rva_to_offset(descriptor->FirstThunk);
 		}
-		if (!ilt_offset || fseek(_file_handle.get(), ilt_offset, SEEK_SET))
+		
+		if (!_parse_import_lookup_table(ilt_offset, *it))
 		{
-			PRINT_ERROR << "Could not reach an IMPORT_LOOKUP_TABLE." << std::endl;
+			// Non fatal. Stop trying to parse imports, but the ones already read will still be available.
+			if ((*it)->get_name() != nullptr) {
+				PRINT_WARNING << "An error occurred while trying to read functions imported by " << *(*it)->get_name() 
+							  << "." << DEBUG_INFO_INSIDEPE << std::endl;
+			}
 			return true;
-		}
-
-		while (true) // We stop at the first NULL IMPORT_LOOKUP_TABLE
-		{
-			pimport_lookup_table import = boost::make_shared<import_lookup_table>();
-			import->AddressOfData = 0;
-			import->Hint = 0;
-
-			// The field has a size of 8 for x64 PEs
-			int size_to_read = (get_architecture() == x86 ? 4 : 8);
-			if (size_to_read != fread(&(import->AddressOfData), 1, size_to_read, _file_handle.get()))
-			{
-				PRINT_ERROR << "Could not read the IMPORT_LOOKUP_TABLE." << std::endl;
-				return true;
-			}
-
-			// Exit condition
-			if (import->AddressOfData == 0) {
-				break;
-			}
-
-			if (!_parse_hint_name_table(import)) {
-				return true; // Return, already parsed imports will still be available.
-			}
-
-			(*it)->add_import(import);
 		}
 	}
 
@@ -179,6 +196,7 @@ bool PE::_parse_delayed_imports()
         PRINT_WARNING << "Could not read the Delay-Load Directory Table!" << std::endl;
         return true;
     }
+
     unsigned int offset = _rva_to_offset(dldt.Name);
     if (offset == 0)
     {
@@ -189,43 +207,18 @@ bool PE::_parse_delayed_imports()
 	// Read the delayed DLL's name
     std::string name;
     utils::read_string_at_offset(_file_handle.get(), offset, name);
-	dldt.DllName = name;
+	pImportedLibrary library(new ImportedLibrary(name));
+
+	dldt.NameStr = name;
+	_delay_load_directory_table.reset(dldt);
 
 	// Read the imports
 	offset = _rva_to_offset(dldt.DelayImportNameTable);
 
-	// ---- REFACTOR BELOW THIS
-	if (!offset || fseek(_file_handle.get(), offset, SEEK_SET))
-	{
-		PRINT_ERROR << "Could not reach an IMPORT_LOOKUP_TABLE." << std::endl;
-		return true;
+	if (_parse_import_lookup_table(offset, library)) {
+		_imports.push_back(library);
 	}
-
-	while (true) // We stop at the first NULL IMPORT_LOOKUP_TABLE
-	{
-		pimport_lookup_table import = boost::make_shared<import_lookup_table>();
-		import->AddressOfData = 0;
-		import->Hint = 0;
-
-		// The field has a size of 8 for x64 PEs
-		int size_to_read = (get_architecture() == x86 ? 4 : 8);
-		if (size_to_read != fread(&(import->AddressOfData), 1, size_to_read, _file_handle.get()))
-		{
-			PRINT_ERROR << "Could not read the IMPORT_LOOKUP_TABLE." << std::endl;
-			return true;
-		}
-
-		// Exit condition
-		if (import->AddressOfData == 0) {
-			break;
-		}
-
-		if (!_parse_hint_name_table(import)) {
-			return true; // Return, already parsed imports will still be available.
-		}
-
-		
-	}
+	return true;
 }
 
 // ----------------------------------------------------------------------------

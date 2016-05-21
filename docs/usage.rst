@@ -15,7 +15,7 @@ If you have managed to :doc:`obtain <obtaining-manalyze>` and :doc:`configure <i
       -d [ --dump ] arg     Dump PE information. Available choices are any
                             combination of: all, summary, dos (dos header), pe (pe
                             header), opt (pe optional header), sections, imports,
-                            exports, resources, version, debug, tls
+                            exports, resources, version, debug, tls, config, delay
       --hashes              Calculate various hashes of the file (may slow down the
                             analysis!)
       -x [ --extract ] arg  Extract the PE resources to the target directory.
@@ -31,6 +31,7 @@ If you have managed to :doc:`obtain <obtaining-manalyze>` and :doc:`configure <i
       - packer: Tries to structurally detect packer presence.
       - imports: Looks for suspicious imports.
       - resources: Analyzes the program's resources.
+	  - mitigation: Displays the enabled exploit mitigation techniques (DEP, ASLR, etc.).
       - authenticode: Checks if the digital signature of the PE is valid.
       - virustotal: Checks existing AV results on VirusTotal.
       - all: Run all the available plugins.
@@ -91,6 +92,7 @@ The following plugins are available:
 * **packer**: Applies PEiD signatures to try to detect if the file was packed. Warnings will also be raised based on unusual section names and a low number of imports (which can be set in the configuration file to better suit your needs).
 * **imports**: Guesses a PE file's capabilities through its imported functions.
 * **resources**: Analyzes a program's resources to see if it contains encrypted files and/or suspicious filetypes. This plugin also contains a couple of heuristic methods to determine if a file might be a `dropper <https://en.wikipedia.org/wiki/Dropper_%28malware%29>`_.
+* **mitigation**: Checks which exploit mitigation techniques (/GS, SafeSEH, ASLR and DEP) are enabled in the binary.
 * **authenticode**: Checks the validity of a PE file's signature. At the moment, this plugin is only available on Windows platforms, since it relies heavily on that operating system's API.
 * **virustotal**: Submits the hash of the input file to VirusTotal to see if any antivirus engine detects it as malware.
 * **all**: Run all plugins.

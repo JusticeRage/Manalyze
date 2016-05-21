@@ -432,7 +432,7 @@ typedef struct delay_load_directory_table_t
     boost::uint32_t BoundDelayImportTable;
     boost::uint32_t UnloadDelayImportTable;
     boost::uint32_t TimeStamp;
-	std::string		DllName; // Non-standard!
+	std::string		NameStr; // Non-standard!
 } delay_load_directory_table;
 
 } // !namespace mana

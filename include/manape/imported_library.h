@@ -24,6 +24,16 @@
 
 #include "manape/pe_structs.h"
 
+#if defined BOOST_WINDOWS_API && !defined DECLSPEC
+	#ifdef MANAPE_EXPORT
+		#define DECLSPEC    __declspec(dllexport)
+	#else
+		#define DECLSPEC    __declspec(dllimport)
+	#endif
+#elif !defined BOOST_WINDOWS_API && !defined DECLSPEC
+	#define DECLSPEC
+#endif
+
 namespace mana 
 {
 
@@ -47,9 +57,15 @@ public:
 	virtual ~ImportedLibrary() {}
 	ImportedLibrary(const std::string& library_name, pimage_import_descriptor image_import_descriptor);
 
-	LOAD_TYPE get_type()	const { return _load_type; }
-	pString   get_name()	const { return boost::make_shared<std::string>(_library_name); }
-	pImports  get_imports() const { return _imported_functions; }
+	/**
+	 *	@brief	This constructor is used for delay-loaded libraries which do not have an 
+	 *			IMAGE_IMPORT_DESCRIPTOR structure.
+	 */
+	ImportedLibrary(const std::string& library_name);
+
+	DECLSPEC LOAD_TYPE get_type()	const { return _load_type; }
+	DECLSPEC pString   get_name()	const { return boost::make_shared<std::string>(_library_name); }
+	DECLSPEC pImports  get_imports() const { return _imported_functions; }
 
 	/**
 	 *	@brief	Returns the underlying IMAGE_IMPORT_DESCRIPTOR structure.
@@ -60,7 +76,7 @@ public:
 	 *	@return	A pointer to the corresponding IMAGE_IMPORT_DESCRIPTOR, or nullptr for 
 	 *			delay-loaded DLLs.
 	 */
-	pimage_import_descriptor get_image_import_descriptor() const;
+	DECLSPEC pimage_import_descriptor get_image_import_descriptor() const { return _image_import_descriptor; }
 
 	void add_import(pimport_lookup_table import) { _imported_functions->push_back(import); }
 	

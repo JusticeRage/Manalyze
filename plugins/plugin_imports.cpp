@@ -24,8 +24,10 @@ namespace plugin {
 
 enum REQUIREMENT { AT_LEAST_ONE = 1, AT_LEAST_TWO = 2, AT_LEAST_THREE = 3 };
 
+// IsDebuggerPresent has been removed from this list, because it gets referenced in ___scrt_fastfail which seems to be present in any PE.
+// The presence of this function is therefore not meaningful of any particular intent.
 std::string anti_debug =
-	"IsDebuggerPresent|FindWindow|(Zw|Nt)QuerySystemInformation|DbgBreakPoint|DbgPrint|"
+	"FindWindow|(Zw|Nt)QuerySystemInformation|DbgBreakPoint|DbgPrint|"
 	"CheckRemoteDebuggerPresent|CreateToolhelp32Snapshot|Toolhelp32ReadProcessMemory|"
 	"OutputDebugString|SwitchToThread|NtQueryInformationProcess"	// Standard anti-debug API calls
 	"QueryPerformanceCounter";	// Techniques based on timing. GetTickCount ignored (too many false positives)
@@ -42,7 +44,7 @@ std::string registry_api = "Reg(.*)(Key|Value)(.*)|SH(.*)(Reg|Key)(.*)|SHQueryVa
 
 std::string process_creation_api = "CreateProcess(.*)|system|WinExec|ShellExecute(A|W)";
 
-std::string process_manipulation_api = "EnumProcess(.*)|OpenProcess|TerminateProcess|ReadProcessMemory|Process32(First|Next)(W)?";
+std::string process_manipulation_api = "EnumProcess(.*)|OpenProcess|ReadProcessMemory|Process32(First|Next)(W)?";
 
 std::string service_manipulation_api = "OpenSCManager(A|W)|(Open|Control|Create|Delete)Service(A|W)?|QueryService(.*)|"
 									   "ChangeServiceConfig(A|W)|EnumServicesStatus(Ex)?(A|W)";

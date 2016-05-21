@@ -29,15 +29,12 @@ ImportedLibrary::ImportedLibrary(const std::string& library_name, pimage_import_
 
 // ----------------------------------------------------------------------------
 
-pimage_import_descriptor ImportedLibrary::get_image_import_descriptor() const
-{
-	if (_load_type == STANDARD) {
-		return _image_import_descriptor;
-	}
-	else {
-		return nullptr;
-	}
-}
+ImportedLibrary::ImportedLibrary(const std::string& library_name)
+	: _image_import_descriptor(nullptr),
+	  _load_type(DELAY_LOADED),
+	  _library_name(library_name),
+	_imported_functions(new std::vector<pimport_lookup_table>())
+{}
 
 // ----------------------------------------------------------------------------
 
