@@ -58,6 +58,7 @@ namespace mana {
 typedef boost::shared_ptr<Section> pSection;
 typedef boost::shared_ptr<std::vector<std::string> > shared_strings;
 typedef boost::shared_ptr<const std::vector<std::string> > const_shared_strings;
+typedef boost::shared_ptr<const std::vector<std::wstring> > const_shared_wstrings;
 typedef boost::shared_ptr<std::vector<pSection> > shared_sections;
 typedef boost::shared_ptr<std::vector<pResource> > shared_resources;
 typedef boost::shared_ptr<const std::vector<boost::uint8_t> > shared_bytes;

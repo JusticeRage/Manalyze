@@ -21,6 +21,11 @@
 #include <vector>
 #include <sstream>
 
+// Used to write unicode STRING_TABLEs to files.
+#include <fstream>
+#include <codecvt>
+#include <locale>
+
 #include <boost/cstdint.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/shared_array.hpp>

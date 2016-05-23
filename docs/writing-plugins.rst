@@ -660,10 +660,10 @@ Most of the time, you'll want to look at the actual resource bytes. A ``get_raw_
 		if (*resource->get_type() != "RT_STRING") {
 			return;
 		}
-		auto string_table = resource->interpret_as<const_shared_strings>();
-		std::cout << "Dumping a RT_STRING resource:" << std::endl;
+		auto string_table = resource->interpret_as<const_shared_wstrings>();
+		std::wcout << L"Dumping a RT_STRING resource:" << std::endl;
 		for (auto it = string_table->begin() ; it != string_table->end() ; ++it) {
-			std::cout << *it << std::endl;
+			std::wcout << *it << std::endl;
 		}
 
 * ``pgroup_icon_directory`` for ``RT_GROUP_ICON`` and ``RT_GROUP_CURSOR``. Because of the way icons and cursors are stored in resources, an additional function ``reconstruct_icon`` was added to recreate a valid ICO file. Here is how you'd do it::

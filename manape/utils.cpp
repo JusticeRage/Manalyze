@@ -70,13 +70,13 @@ std::string read_unicode_string(FILE* f, unsigned int max_bytes)
 
 // ----------------------------------------------------------------------------
 
-std::string read_prefixed_unicode_string(FILE* f)
+std::wstring read_prefixed_unicode_wstring(FILE* f)
 {
 	std::wstring s = std::wstring();
 	wchar_t c = 0;
 	boost::uint16_t size;
-	if (2 !=fread(&size, 1, 2, f)) {
-		return "";
+	if (2 != fread(&size, 1, 2, f)) {
+		return L"";
 	}
 
 	// Microsoft's "unicode" strings are word aligned.
@@ -87,7 +87,14 @@ std::string read_prefixed_unicode_string(FILE* f)
 		}
 		s += c;
 	}
-	s += L'\0';
+	return s;
+}
+
+// ----------------------------------------------------------------------------
+
+std::string read_prefixed_unicode_string(FILE* f)
+{
+	std::wstring s = read_prefixed_unicode_wstring(f);
 
 	// Convert the wstring into a string
 	auto conv = boost::shared_array<char>(new char[s.size() + 1]);

@@ -73,6 +73,17 @@ std::string read_ascii_string(FILE* f, unsigned int max_bytes = 0);
 std::string read_prefixed_unicode_string(FILE* f);
 
 /**
+ *	@brief	Reads a unicode string prefixed by its length in a file.
+ *
+ *	/!\ The file cursor will be updated accordingly!
+ *
+ *	@param	FILE* f The file from which to read. The read will occur at the cursor's current position!
+ *
+ *	@return	The string at the current location in the file.
+ */
+std::wstring read_prefixed_unicode_wstring(FILE* f);
+
+/**
  *	@brief	Reads a (double-)null-terminated unicode string.
  *
  *	/!\ The file cursor will be updated accordingly!

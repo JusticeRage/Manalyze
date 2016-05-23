@@ -275,9 +275,9 @@ DECLSPEC pString Resource::interpret_as()
 // ----------------------------------------------------------------------------
 
 template<>
-DECLSPEC const_shared_strings Resource::interpret_as()
+DECLSPEC const_shared_wstrings Resource::interpret_as()
 {
-	auto res = boost::make_shared<std::vector<std::string> >();
+	auto res = boost::make_shared<std::vector<std::wstring> >();
 	if (_type != "RT_STRING")
 	{
 		PRINT_WARNING << "Resources of type " << _type << " cannot be interpreted as vectors of strings." << DEBUG_INFO << std::endl;
@@ -291,7 +291,7 @@ DECLSPEC const_shared_strings Resource::interpret_as()
 
 	// RT_STRING resources are made of 16 contiguous "unicode" strings.
 	for (int i = 0; i < 16; ++i) {
-		res->push_back(utils::read_prefixed_unicode_string(f));
+		res->push_back(utils::read_prefixed_unicode_wstring(f));
 	}
 
 	END:
@@ -686,13 +686,15 @@ bool Resource::extract(const boost::filesystem::path& destination)
     {
         // RT_STRINGs are written immediately to the file instead of trying to reconstruct
         // an original byte stream.
-        auto strings = interpret_as<const_shared_strings>();
+        auto strings = interpret_as<const_shared_wstrings>();
         if (strings->size() == 0) {
             return true;
         }
 
-        FILE* out = fopen(destination.string().c_str(), "w");
-        if (out == nullptr)
+		std::wofstream out(destination.wstring(), std::ios_base::out | std::ios_base::app);
+		const std::locale utf8_locale = std::locale(std::locale(), new std::codecvt_utf8<wchar_t>());
+		out.imbue(utf8_locale);
+        if (out.fail())
         {
             PRINT_ERROR << "Could not open/create " << destination << "!" << std::endl;
             return false;
@@ -700,13 +702,11 @@ bool Resource::extract(const boost::filesystem::path& destination)
 
         for (auto it2 = strings->begin(); it2 != strings->end(); ++it2)
         {
-            if ((*it2) != "")
-            {
-                fwrite(it2->c_str(), 1, it2->size(), out);
-                fputc('\n', out);
+            if (*it2 != L"") {
+				out << *it2 << std::endl;
             }
         }
-        fclose(out);
+		out.close();
         return true;
     }
     else {

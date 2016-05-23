@@ -159,10 +159,10 @@ BOOST_AUTO_TEST_CASE(interpret_stringtable)
 	mana::PE pe("testfiles/manatest2.exe");
 	auto resources = pe.get_resources();
 	BOOST_ASSERT(resources->size() == 14);
-	auto string_table = resources->at(10)->interpret_as<const_shared_strings>();
+	auto string_table = resources->at(10)->interpret_as<mana::const_shared_wstrings>();
 	BOOST_ASSERT(string_table && string_table->size() == 16);
-	BOOST_CHECK_EQUAL(string_table->at(7), "Test 1");
-	BOOST_CHECK_EQUAL(string_table->at(8), "Test 2");
+	BOOST_CHECK(string_table->at(7) == L"Test 1");
+	BOOST_CHECK(string_table->at(8) == L"Test 2");
 }
 
 // ----------------------------------------------------------------------------
