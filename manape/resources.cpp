@@ -691,22 +691,16 @@ bool Resource::extract(const boost::filesystem::path& destination)
             return true;
         }
 
-		std::wofstream out(destination.wstring(), std::ios_base::out | std::ios_base::app);
-		const std::locale utf8_locale = std::locale(std::locale(), new boost::locale::utf8_codecvt<wchar_t>());
-		out.imbue(utf8_locale);
-        if (out.fail())
-        {
-            PRINT_ERROR << "Could not open/create " << destination << "!" << std::endl;
-            return false;
-        }
-
-        for (auto it2 = strings->begin(); it2 != strings->end(); ++it2)
-        {
-            if (*it2 != L"") {
-				out << *it2 << std::endl;
-            }
-        }
-		out.close();
+		FILE* out = fopen(destination.string().c_str(), "a+,ccs=UTF-8");
+		for (auto it2 = strings->begin(); it2 != strings->end(); ++it2)
+		{
+			if (*it2 != L"")
+			{
+				fwrite(it2->c_str(), wcslen(it2->c_str()) * sizeof(wchar_t), 1, out);
+				fwrite(L"\n", 1, 2, out);
+			}
+		}
+		fclose(out);
         return true;
     }
     else {
