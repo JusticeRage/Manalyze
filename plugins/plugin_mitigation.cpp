@@ -67,7 +67,7 @@ class ExploitMitigationsPlugin : public IPlugin
         else
         {
             std::stringstream ss;
-			ss << "enabled (" << config->SEHandlerCount << " registered handler" << (config->SEHandlerCount > 1 ? "s" : "") << ")";
+			ss << "enabled (" << config->SEHandlerCount << " registered handler" << (config->SEHandlerCount == 1 ? "s" : "") << ")";
             res->add_information("SafeSEH", ss.str());
         }
 

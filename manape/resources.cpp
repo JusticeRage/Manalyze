@@ -677,7 +677,7 @@ bool Resource::extract(const boost::filesystem::path& destination)
 
         // Copy the BMP header
         boost::shared_ptr<std::vector<boost::uint8_t> > bmp_bytes(new std::vector<boost::uint8_t>(header_size));
-        memcpy(bmp_bytes.get(), bmp.get(), header_size);
+        memcpy(&bmp_bytes->at(0), bmp.get(), header_size);
         // Copy the image bytes.
         bmp_bytes->insert(bmp_bytes->end(), bmp->data.begin(), bmp->data.end());
         data = bmp_bytes;
