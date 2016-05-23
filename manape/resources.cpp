@@ -692,7 +692,7 @@ bool Resource::extract(const boost::filesystem::path& destination)
         }
 
 		std::wofstream out(destination.wstring(), std::ios_base::out | std::ios_base::app);
-		const std::locale utf8_locale = std::locale(std::locale(), new std::codecvt_utf8<wchar_t>());
+		const std::locale utf8_locale = std::locale(std::locale(), new boost::locale::utf8_codecvt<wchar_t>());
 		out.imbue(utf8_locale);
         if (out.fail())
         {

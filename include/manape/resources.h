@@ -23,8 +23,8 @@
 
 // Used to write unicode STRING_TABLEs to files.
 #include <fstream>
-#include <codecvt>
 #include <locale>
+#include <boost/locale/utf8_codecvt.hpp>
 
 #include <boost/cstdint.hpp>
 #include <boost/make_shared.hpp>
