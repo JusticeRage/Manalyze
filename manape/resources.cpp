@@ -275,9 +275,9 @@ DECLSPEC pString Resource::interpret_as()
 // ----------------------------------------------------------------------------
 
 template<>
-DECLSPEC const_shared_wstrings Resource::interpret_as()
+DECLSPEC const_shared_strings Resource::interpret_as()
 {
-	auto res = boost::make_shared<std::vector<std::wstring> >();
+	auto res = boost::make_shared<std::vector<std::string> >();
 	if (_type != "RT_STRING")
 	{
 		PRINT_WARNING << "Resources of type " << _type << " cannot be interpreted as vectors of strings." << DEBUG_INFO << std::endl;
@@ -290,8 +290,12 @@ DECLSPEC const_shared_wstrings Resource::interpret_as()
 	}
 
 	// RT_STRING resources are made of 16 contiguous "unicode" strings.
-	for (int i = 0; i < 16; ++i) {
-		res->push_back(utils::read_prefixed_unicode_wstring(f));
+	for (int i = 0; i < 16; ++i)
+	{
+		std::wstring s = utils::read_prefixed_unicode_wstring(f);
+		std::vector<boost::uint8_t> utf8result;
+		utf8::utf16to8(s.begin(), s.end(), std::back_inserter(utf8result));
+		res->push_back(std::string(utf8result.begin(), utf8result.end()));
 	}
 
 	END:
@@ -686,18 +690,18 @@ bool Resource::extract(const boost::filesystem::path& destination)
     {
         // RT_STRINGs are written immediately to the file instead of trying to reconstruct
         // an original byte stream.
-        auto strings = interpret_as<const_shared_wstrings>();
+        auto strings = interpret_as<const_shared_strings>();
         if (strings->size() == 0) {
             return true;
         }
 
-		FILE* out = fopen(destination.string().c_str(), "a+,ccs=UTF-8");
+		FILE* out = fopen(destination.string().c_str(), "a+");
 		for (auto it2 = strings->begin(); it2 != strings->end(); ++it2)
 		{
-			if (*it2 != L"")
+			if (*it2 != "")
 			{
-				fwrite(it2->c_str(), wcslen(it2->c_str()) * sizeof(wchar_t), 1, out);
-				fwrite(L"\n", 1, 2, out);
+				fwrite(it2->c_str(), it2->size(), 1, out);
+				fwrite("\n", 1, 1, out);
 			}
 		}
 		fclose(out);

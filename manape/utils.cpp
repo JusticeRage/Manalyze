@@ -79,7 +79,6 @@ std::wstring read_prefixed_unicode_wstring(FILE* f)
 		return L"";
 	}
 
-	// Microsoft's "unicode" strings are word aligned.
 	for (unsigned int i = 0 ; i < size ; ++i)
 	{
 		if (2 != fread(&c, 1, 2, f)) {

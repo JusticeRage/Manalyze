@@ -31,6 +31,8 @@
 #include <boost/make_shared.hpp>
 #include <boost/system/api_config.hpp>
 
+#include <manape/utf8/utf8.h> // Used to convert windows UTF-16 strings into UTF-8
+
 #include "manape/color.h"
 
 // Some miscellaneous functions are exported
