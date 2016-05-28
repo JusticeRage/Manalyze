@@ -1,4 +1,4 @@
-/*
+﻿/*
 This file is part of Manalyze.
 
 Manalyze is free software: you can redistribute it and/or modify
@@ -15,6 +15,7 @@ You should have received a copy of the GNU General Public License
 along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <vector>
 #include <boost/assign.hpp>
 
 #include "fixtures.h"
@@ -146,7 +147,7 @@ BOOST_AUTO_TEST_CASE(parse_resources_2)
 	check_resource(resources->at(7),  7,   "RT_ICON",       "English - United States", 0x25a8, 2.68);
 	check_resource(resources->at(8),  8,   "RT_ICON",       "English - United States", 0x10a8, 2.69);
 	check_resource(resources->at(9),  9,   "RT_ICON",       "English - United States", 0x468,  2.87);
-	check_resource(resources->at(10), 7,   "RT_STRING",     "German - Germany",        0x38,   1.54);
+	check_resource(resources->at(10), 7,   "RT_STRING",     "German - Germany",        0x76,   4.34);
 	check_resource(resources->at(11), 101, "RT_GROUP_ICON", "English - United States", 0x84,   3.00);
 	check_resource(resources->at(12), 1,   "RT_VERSION",    "English - United States", 0x2d4,  3.31);
 	check_resource(resources->at(13), 1,   "RT_MANIFEST",   "English - United States", 0x17d,  4.91);
@@ -161,8 +162,29 @@ BOOST_AUTO_TEST_CASE(interpret_stringtable)
 	BOOST_ASSERT(resources->size() == 14);
 	auto string_table = resources->at(10)->interpret_as<mana::const_shared_strings>();
 	BOOST_ASSERT(string_table && string_table->size() == 16);
-	BOOST_CHECK(string_table->at(7) == "Test 1");
-	BOOST_CHECK(string_table->at(8) == "Test 2");
+	for (int i = 0 ; i < 7 ; ++i) {
+		BOOST_CHECK(string_table->at(i) == "");
+	}
+	BOOST_CHECK_EQUAL(string_table->at(7), "Test 1");
+	BOOST_CHECK_EQUAL(string_table->at(8), "Test 2");
+
+	// Unicode representation of "无法对 %1 进行写操作，因为它是只读文件或已经被其他人打开。"
+	std::string utf8_string = string_table->at(9);
+	boost::uint8_t bytes[] = 
+					  { 0xE6, 0x97, 0xA0, 0xE6, 0xB3, 0x95, 0xE5, 0xAF, 0xB9, 0x20, 0x25, 0x31, 0x20, 
+						0xE8, 0xBF, 0x9B, 0xE8, 0xA1, 0x8C, 0xE5, 0x86, 0x99, 0xE6, 0x93, 0x8D, 0xE4, 
+						0xBD, 0x9C, 0xEF, 0xBC, 0x8C, 0xE5, 0x9B, 0xA0, 0xE4, 0xB8, 0xBA, 0xE5, 0xAE, 
+						0x83, 0xE6, 0x98, 0xAF, 0xE5, 0x8F, 0xAA, 0xE8, 0xAF, 0xBB, 0xE6, 0x96, 0x87, 
+						0xE4, 0xBB, 0xB6, 0xE6, 0x88, 0x96, 0xE5, 0xB7, 0xB2, 0xE7, 0xBB, 0x8F, 0xE8, 
+						0xA2, 0xAB, 0xE5, 0x85, 0xB6, 0xE4, 0xBB, 0x96, 0xE4, 0xBA, 0xBA, 0xE6, 0x89, 
+						0x93, 0xE5, 0xBC, 0x80, 0xE3, 0x80, 0x82 };
+	std::vector<boost::uint8_t> expected(bytes, bytes + sizeof(bytes));
+	std::vector<boost::uint8_t> found(utf8_string.begin(), utf8_string.end());
+	BOOST_CHECK(expected == found);
+
+	for (int i = 10 ; i < 16 ; ++i) {
+		BOOST_CHECK(string_table->at(i) == "");
+	}
 }
 
 // ----------------------------------------------------------------------------
