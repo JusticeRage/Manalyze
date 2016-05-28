@@ -574,17 +574,17 @@ bool extract_resources(const mana::PE& pe, const std::string& destination_folder
         std::stringstream ss;
         if (*(*it)->get_type() == "RT_GROUP_ICON" || *(*it)->get_type() == "RT_GROUP_CURSOR")
         {
-            ss << base << "_" << (*it)->get_id() << "_" << *(*it)->get_type() << ".ico";
+            ss << base << "_" << *(*it)->get_name() << "_" << *(*it)->get_type() << ".ico";
             res &= (*it)->icon_extract(bfs::path(destination_folder) / bfs::path(ss.str()), *pe.get_resources());
         }
         else if (*(*it)->get_type() == "RT_MANIFEST")
         {
-            ss << base << "_" << (*it)->get_id() << "_RT_MANIFEST.xml";
+            ss << base << "_" << *(*it)->get_name() << "_RT_MANIFEST.xml";
             res &= (*it)->extract(bfs::path(destination_folder) / bfs::path(ss.str()));
         }
         else if (*(*it)->get_type() == "RT_BITMAP")
         {
-            ss << base << "_" << (*it)->get_id() << "_RT_BITMAP.bmp";
+            ss << base << "_" << *(*it)->get_name() << "_RT_BITMAP.bmp";
             res &= (*it)->extract(bfs::path(destination_folder) / bfs::path(ss.str()));
         }
         else if (*(*it)->get_type() == "RT_ICON" || *(*it)->get_type() == "RT_CURSOR" || *(*it)->get_type() == "RT_VERSION") {
@@ -599,13 +599,7 @@ bool extract_resources(const mana::PE& pe, const std::string& destination_folder
         }
         else // General case
         {
-            ss << base << "_";
-            if (*(*it)->get_name() != "") {
-                ss << *(*it)->get_name();
-            }
-            else {
-                ss << (*it)->get_id();
-            }
+            ss << base << "_" << *(*it)->get_name();
 
             // Try to guess the file extension
             auto m = detect_filetype(*it);

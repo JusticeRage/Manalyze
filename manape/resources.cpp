@@ -294,8 +294,14 @@ DECLSPEC const_shared_strings Resource::interpret_as()
 	{
 		std::wstring s = utils::read_prefixed_unicode_wstring(f);
 		std::vector<boost::uint8_t> utf8result;
-		utf8::utf16to8(s.begin(), s.end(), std::back_inserter(utf8result));
-		res->push_back(std::string(utf8result.begin(), utf8result.end()));
+		try 
+		{
+			utf8::utf16to8(s.begin(), s.end(), std::back_inserter(utf8result));
+			res->push_back(std::string(utf8result.begin(), utf8result.end()));
+		}
+		catch (utf8::invalid_utf16)  {
+			PRINT_WARNING << "Couldn't convert a string from a RT_STRING resource to UTF-8!" << std::endl;
+		}
 	}
 
 	END:
@@ -329,8 +335,15 @@ DECLSPEC pbitmap Resource::interpret_as()
 	}
 	boost::uint32_t dib_header_size = 0;
 	boost::uint32_t colors_used = 0;
+	boost::uint16_t bit_count;
 	memcpy(&dib_header_size, &(res->data[0]), sizeof(boost::uint32_t)); // DIB header size is located at offset 0.
+	memcpy(&bit_count, &(res->data[14]), sizeof(boost::uint16_t));
 	memcpy(&colors_used, &(res->data[32]), sizeof(boost::uint32_t));
+	
+
+	if (colors_used == 0 && bit_count != 32 && bit_count != 24)	{
+		colors_used = 1 << bit_count;
+	}
 
 	res->OffsetToData = header_size + dib_header_size + 4*colors_used;
 	return res;
@@ -642,6 +655,10 @@ std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, co
  */
 bool write_data_to_file(const boost::filesystem::path& destination, std::vector<boost::uint8_t> data)
 {
+	if (data.size() == 0) {
+		return true;
+	}
+
     FILE* f = fopen(destination.string().c_str(), "wb+");
     if (f == nullptr)
     {
@@ -732,6 +749,12 @@ bool Resource::icon_extract(const boost::filesystem::path& destination,
         return extract(destination);
     }
     data = reconstruct_icon(interpret_as<pgroup_icon_directory>(), resources);
+	if (data.size() == 0)
+	{
+		PRINT_WARNING << "Resource " << _name << " is empty!" << DEBUG_INFO << std::endl;
+		return true;
+	}
+
     return write_data_to_file(destination, data);
 }
 
