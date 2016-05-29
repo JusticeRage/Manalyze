@@ -86,7 +86,6 @@ BOOST_AUTO_TEST_CASE(test_string_escape_json)
 	check_string_escaping_json("\"", "\\\"");
 	check_string_escaping_json("\\", "\\\\");
 	check_string_escaping_json("\\\\", "\\\\\\\\");
-	check_string_escaping_json("é", "\\u00e9");
-	check_string_escaping_json("\x01", "\\u0001");
+	check_string_escaping_json("\x01", "\x01");
 	check_string_escaping_json("\r\n", "\\r\\n");
 }

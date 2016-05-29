@@ -70,7 +70,7 @@ std::string read_ascii_string(FILE* f, unsigned int max_bytes = 0);
  *
  *	@param	FILE* f The file from which to read. The read will occur at the cursor's current position!
  *
- *	@return	The string at the current location in the file, converted to ASCII.
+ *	@return	The string at the current location in the file, encoded as UTF-8.
  */
 std::string read_prefixed_unicode_string(FILE* f);
 
@@ -94,7 +94,7 @@ std::wstring read_prefixed_unicode_wstring(FILE* f);
  *	@param	int max_bytes The maximum number of bytes to read from the file. 0 means no limit.
  *			If this parameter is odd, it will be rounded to max_bytes-1 since bytes are read two by two.
  *
- *	@return	The string at the current location in the file, converted to ASCII.
+ *	@return	The string at the current location in the file, encoded as UTF-8.
  */
 std::string read_unicode_string(FILE* f, unsigned int max_bytes = 0);
 

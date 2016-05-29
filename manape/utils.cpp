@@ -61,11 +61,17 @@ std::string read_unicode_string(FILE* f, unsigned int max_bytes)
 		}
 	}
 
-	// Convert the wstring into a string
-	auto conv = boost::shared_array<char>(new char[s.size() + 1]);
-	memset(conv.get(), 0, sizeof(char) * (s.size() + 1));
-	wcstombs(conv.get(), s.c_str(), s.size());
-	return std::string(conv.get());
+	try
+	{
+		std::vector<boost::uint8_t> utf8result;
+		utf8::utf16to8(s.begin(), s.end(), std::back_inserter(utf8result));
+		return std::string(utf8result.begin(), utf8result.end());
+	}
+	catch (utf8::invalid_utf16) {
+		PRINT_WARNING << "Couldn't convert a string from a RT_STRING resource to UTF-8!" 
+					  << DEBUG_INFO << std::endl;
+	}
+	return "";
 }
 
 // ----------------------------------------------------------------------------
@@ -95,11 +101,17 @@ std::string read_prefixed_unicode_string(FILE* f)
 {
 	std::wstring s = read_prefixed_unicode_wstring(f);
 
-	// Convert the wstring into a string
-	auto conv = boost::shared_array<char>(new char[s.size() + 1]);
-	memset(conv.get(), 0, sizeof(char) * (s.size() + 1));
-	wcstombs(conv.get(), s.c_str(), s.size());
-	return std::string(conv.get());
+	try
+	{
+		std::vector<boost::uint8_t> utf8result;
+		utf8::utf16to8(s.begin(), s.end(), std::back_inserter(utf8result));
+		return std::string(utf8result.begin(), utf8result.end());
+	}
+	catch (utf8::invalid_utf16) {
+		PRINT_WARNING << "Couldn't convert a string from a RT_STRING resource to UTF-8!" 
+					  << DEBUG_INFO << std::endl;
+	}
+	return "";
 }
 
 // ----------------------------------------------------------------------------

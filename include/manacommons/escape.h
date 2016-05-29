@@ -64,6 +64,8 @@ struct escaped_string_raw
  *
  *	Paths contained in debug information insert unescaped backslashes which cause
  *	the resulting JSON to be invalid.
+ *	Non-printable characters are not escaped in this grammar, because we expect
+ *	UTF-8 strings.
  *
  *	WARNING: Single quotes are NOT escaped.
  */
@@ -82,9 +84,7 @@ struct escaped_string_json
 			('\r', "\\r")('\t', "\\t")('\v', "\\v")('\\', "\\\\")
 			('\"', "\\\"");
 
-		// JSON fails miserably on non-printable characters, but
-		// at the same time doesn't support the \x notation.
-		esc_str = *(esc_char | boost::spirit::karma::iso8859_1::print | "\\u00" << karma::right_align(2, 0)[karma::hex]);
+		esc_str = *(esc_char | boost::spirit::karma::char_);
 	}
 
 	karma::rule<OutputIterator, std::string()> esc_str;

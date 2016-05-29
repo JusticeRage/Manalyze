@@ -292,16 +292,8 @@ DECLSPEC const_shared_strings Resource::interpret_as()
 	// RT_STRING resources are made of 16 contiguous "unicode" strings.
 	for (int i = 0; i < 16; ++i)
 	{
-		std::wstring s = utils::read_prefixed_unicode_wstring(f);
+		res->push_back(utils::read_prefixed_unicode_string(f));
 		std::vector<boost::uint8_t> utf8result;
-		try 
-		{
-			utf8::utf16to8(s.begin(), s.end(), std::back_inserter(utf8result));
-			res->push_back(std::string(utf8result.begin(), utf8result.end()));
-		}
-		catch (utf8::invalid_utf16)  {
-			PRINT_WARNING << "Couldn't convert a string from a RT_STRING resource to UTF-8!" << std::endl;
-		}
 	}
 
 	END:
