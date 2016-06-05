@@ -287,12 +287,12 @@ const_shared_strings PE::get_imported_functions(const std::string& dll) const
 
 // ----------------------------------------------------------------------------
 
-std::vector<pImportedLibrary> PE::_find_imported_dlls(const std::string& name_regexp,
-															   bool  case_sensitivity) const
+shared_imports PE::find_imported_dlls(const std::string& name_regexp,
+									  bool  case_sensitivity) const
 {
 	std::vector<pImportedLibrary> destination;
 	if (!_initialized) {
-		return destination;
+		return boost::make_shared<const std::vector<pImportedLibrary> >(destination);
 	}
 
 	boost::regex e;
@@ -310,7 +310,7 @@ std::vector<pImportedLibrary> PE::_find_imported_dlls(const std::string& name_re
 			destination.push_back(*it);
 		}
 	}
-	return destination;
+	return boost::make_shared<const std::vector<pImportedLibrary> >(destination);
 }
 
 // ----------------------------------------------------------------------------
@@ -324,7 +324,7 @@ const_shared_strings PE::find_imports(const std::string& function_name_regexp,
 		return destination;
 	}
 
-	auto matching_dlls = _find_imported_dlls(dll_name_regexp);
+	auto matching_dlls = find_imported_dlls(dll_name_regexp);
 
 	boost::regex e;
 	if (case_sensitivity) {
@@ -335,7 +335,7 @@ const_shared_strings PE::find_imports(const std::string& function_name_regexp,
 	}
 
 	// Iterate on matching DLLs
-	for (auto it = matching_dlls.begin() ; it != matching_dlls.end() ; ++it)
+	for (auto it = matching_dlls->begin() ; it != matching_dlls->end() ; ++it)
 	{
 		auto imported_functions = (*it)->get_imports();
 		if (imported_functions == nullptr) {
@@ -344,11 +344,18 @@ const_shared_strings PE::find_imports(const std::string& function_name_regexp,
 		// Iterate on functions imported by each of these DLLs
 		for (auto it2 = imported_functions->begin() ; it2 != imported_functions->end() ; ++it2)
 		{
-			if ((*it2)->Name == "") { // Functions imported by ordinal are skipped.
-				continue;
+			std::string name;
+			if ((*it2)->Name == "") 
+			{
+				std::stringstream ss;
+				ss << "#" << ((*it2)->AddressOfData & 0x7FFF);
+				name = ss.str();
 			}
-			if (boost::regex_match((*it2)->Name, e)) {
-				destination->push_back((*it2)->Name);
+			else {
+				name = (*it2)->Name;
+			}
+			if (boost::regex_match(name, e)) {
+				destination->push_back(name);
 			}
 		}
 	}

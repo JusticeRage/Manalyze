@@ -46,7 +46,8 @@ const std::vector<std::string> common_names = boost::assign::list_of(".text")
 // Also check for known packer section names (i.e. UPX0, etc.)
 const std::map<std::string, std::string> KNOWN_PACKER_SECTIONS =
 	boost::assign::map_list_of ("\\.ndata",	 "The PE is an NSIS installer.")
-							   ("upx[0-9]", "The PE is packed with UPX.");
+							   ("upx[0-9]", "The PE is packed with UPX.")
+							   (".mpress[0-9]", "The PE is packed with mpress");
 
 class PackerDetectionPlugin : public IPlugin
 {
@@ -110,6 +111,20 @@ public:
 
 		// A low number of imports indicates that the binary is packed.
 		mana::const_shared_strings imports = pe.find_imports(".*"); // Get all imports
+
+		// A single import could indicate that the file is a .NET executable; don't warn about that.
+		if (imports->size() == 1)
+		{
+			auto mscoree = pe.find_imported_dlls("mscoree.dll");
+			if (mscoree->size() > 0)
+			{
+				
+				auto corexemain = mscoree->at(0)->get_imports();
+				if (corexemain->size() > 0 && corexemain->at(0)->Name == "_CorExeMain") {
+					return res;
+				}
+			}
+		}
 
 		// Read the minimum import number from the configuration
 		unsigned int min_imports;

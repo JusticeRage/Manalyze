@@ -117,6 +117,19 @@ public:
 	DECLSPEC const_shared_strings get_imported_functions(const std::string& dll) const;
 
 	/**
+	*	@brief	Finds imported DLLs whose names match a particular regular expression.
+	*
+	*	@param	const std::string& name_regexp The regular expression used to match DLL names.
+	*	@param	std::vector<pimage_library_descriptor>& destination The vector into which the result should be stored.
+	*	@param	bool case_sensitivity Whether the regular expression should be case sensitive (default is false).
+	*
+	*	@return	A shared vector of matching ImportedLibrary objects.
+	*
+	*	Implementation is located in imports.cpp.
+	*/
+	DECLSPEC shared_imports find_imported_dlls(const std::string& name_regexp, bool case_sensitivity = false) const;
+
+	/**
 	 *	@brief	Finds imported functions matching regular expressions.
 	 *
 	 *	@param	const std::string& function_name_regexp		The regular expression selecting function names.
@@ -414,19 +427,6 @@ private:
 	 *	@return	Whether a structure was successfully read.
 	 */
 	bool _read_image_resource_directory(image_resource_directory& dir, unsigned int offset = 0) const;
-
-	/**
-	 *	@brief	Finds imported DLLs whose names match a particular regular expression.
-	 *
-	 *	@param	const std::string& name_regexp The regular expression used to match DLL names.
-	 *	@param	std::vector<pimage_library_descriptor>& destination The vector into which the result should be stored.
-	 *	@param	bool case_sensitivity Whether the regular expression should be case sensitive (default is false).
-	 *
-	 *	@return	A vector of matching ImportedLibrary objects.
-	 *
-	 *	Implementation is located in imports.cpp.
-	 */
-	std::vector<pImportedLibrary> _find_imported_dlls(const std::string& name_regexp, bool case_sensitivity = false) const;
 
 	std::string							_path;
     bool								_initialized;
