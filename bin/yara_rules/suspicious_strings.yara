@@ -35,6 +35,8 @@ rule System_Tools
         $a11 = "msconfig.exe" nocase wide ascii
 		$a12 = "vssadmin.exe" nocase wide ascii
 		$a13 = "bcdedit.exe" nocase wide ascii
+		$a14 = "dumpcap.exe" nocase wide ascii
+		$a15 = "tcpdump.exe" nocase wide ascii
     condition:
         any of them
 }
@@ -524,7 +526,9 @@ rule VM_Generic_Detection : AntiVM
     strings:
         $a0 = "HARDWARE\\DEVICEMAP\\Scsi\\Scsi Port 0\\Scsi Bus 0\\Target Id 0\\Logical Unit Id 0" nocase wide ascii
         $a1 = "HARDWARE\\Description\\System" nocase wide ascii
-        $redpill = {0F 01 0D 00 00 00 00 C3} // Copied from the Cuckoo project
+		$a2 = "SYSTEM\\CurrentControlSet\\Control\\SystemInformation" nocase wide ascii
+		$a3 = "SYSTEM\\CurrentControlSet\\Enum\\IDE" nocase wide ascii
+        $redpill = { 0F 01 0D 00 00 00 00 C3 } // Copied from the Cuckoo project
 		
 		// CLSIDs used to detect if speakers are present. Hoping this will not cause false positives.
 		$teslacrypt1 = { D1 29 06 E3 E5 27 CE 11 87 5D 00 60 8C B7 80 66 } // CLSID_AudioRender
@@ -594,6 +598,13 @@ rule Sandboxie_Detection : AntiVM
     strings:
         $sbie = "SbieDll.dll" nocase wide ascii
         $buster = /LOG_API(_VERBOSE)?.DLL/ nocase wide ascii
+		$sbie_process_1 = "SbieSvc.exe" nocase wide ascii
+		$sbie_process_2 = "SbieCtrl.exe" nocase wide ascii
+		$sbie_process_3 = "SandboxieRpcSs.exe" nocase wide ascii
+		$sbie_process_4 = "SandboxieDcomLaunch.exe" nocase wide ascii
+		$sbie_process_5 = "SandboxieCrypto.exe" nocase wide ascii
+		$sbie_process_6 = "SandboxieBITS.exe" nocase wide ascii
+		$sbie_process_7 = "SandboxieWUAU.exe" nocase wide ascii
 
     condition:
         any of them
@@ -640,6 +651,16 @@ rule VirtualBox_Detection : AntiVM
 
 		// PCI Vendor IDs, from Hacking Team's leak
 		$virtualbox_vid_1 = "VEN_80EE" nocase wide ascii
+		
+		// Registry keys
+		$virtualbox_reg_1 = "SOFTWARE\\Oracle\\VirtualBox Guest Additions" nocase wide ascii
+		$virtualbox_reg_2 = /HARDWARE\\ACPI\\(DSDT|FADT|RSDT)\\VBOX__/ nocase wide ascii
+		
+		// Other
+		$virtualbox_files = /C:\\Windows\\System32\\drivers\\vbox.{15}\.(sys|dll)/ nocase wide ascii
+		$virtualbox_services = "System\\ControlSet001\\Services\\VBox[A-Za-z]+" nocase wide ascii
+		$virtualbox_pipe = /\\\\.\\pipe\\(VBoxTrayIPC|VBoxMiniRdDN)/ nocase wide ascii
+		$virtualbox_window = /VBoxTrayToolWnd(Class)?/ nocase wide ascii
     condition:
         any of them
 }
@@ -715,8 +736,8 @@ rule Misc_Suspicious_Strings
         author = "Ivan Kwiatkowski (@JusticeRage)"
     strings:
         $a0 = "backdoor" nocase ascii wide
-        $a1 = "virus" nocase ascii wide
-        $a2 = "hack" nocase ascii wide
+        $a1 = "virus" nocase ascii wide fullword
+        $a2 = "hack" nocase ascii wide fullword
         $a3 = "exploit" nocase ascii wide
         $a4 = "cmd.exe" nocase ascii wide
         $a5 = "CWSandbox" nocase wide ascii // Found in some Zeus/Citadel samples
