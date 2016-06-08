@@ -66,12 +66,13 @@ public:
 	{
 		pResult res = create_result();
 
+		// Analyze sections
 		mana::shared_sections sections = pe.get_sections();
 		for (mana::shared_sections::element_type::const_iterator it = sections->begin() ; it != sections->end() ; ++it)
 		{
 			if (common_names.end() == std::find(common_names.begin(), common_names.end(), *(*it)->get_name()))
 			{
-				// Check section name against known packer section names and set summary accordingly.
+				// Check section name against known packer section names and set the summary accordingly.
 				for (auto it2 = KNOWN_PACKER_SECTIONS.begin() ; it2 != KNOWN_PACKER_SECTIONS.end() ; ++it2)
 				{
 					boost::regex e(it2->first, boost::regex::icase);
@@ -86,6 +87,7 @@ public:
 				res->raise_level(SUSPICIOUS);
 			}
 
+			// Look for WX sections
 			int characteristics = (*it)->get_characteristics();
 			if (characteristics & nt::SECTION_CHARACTERISTICS.at("IMAGE_SCN_MEM_EXECUTE") &&
 				characteristics & nt::SECTION_CHARACTERISTICS.at("IMAGE_SCN_MEM_WRITE"))
@@ -96,6 +98,7 @@ public:
 				res->raise_level(SUSPICIOUS);
 			}
 
+			// Check the section's entropy
 			if ((*it)->get_size_of_raw_data() == 0) { // TODO: Report this in a "structure" plugin?
 				continue;
 			}
@@ -151,6 +154,19 @@ public:
 			res->raise_level(SUSPICIOUS);
 		}
 
+		// Look for resources bigger than the file itself
+		auto resources = pe.get_resources();
+		boost::uint64_t sum = 0;
+		for (auto r = resources->begin() ; r != resources->end() ; ++r) {
+			sum += (*r)->get_size();
+		}
+		if (sum > pe.get_filesize())
+		{
+			res->raise_level(SUSPICIOUS);
+			res->add_information("The PE's resources are bigger than it is.");
+		}
+
+		// Put a default summary if none was set.
 		if (res->get_level() != NO_OPINION && res->get_summary() == nullptr) {
 			res->set_summary("The PE is possibly packed.");
 		}

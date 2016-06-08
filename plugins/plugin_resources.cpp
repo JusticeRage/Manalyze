@@ -54,7 +54,13 @@ public:
 		unsigned int size = 0;
 		for (auto it = r->begin() ; it != r->end() ; ++it)
 		{
-			size += (*it)->get_size();
+			// In some packed executables, resources still keep their original file size, which causes
+			// them to become bigger than the file itself. Disregard those cases when they happen
+			// because they make the resource to filesize rario bigger than 1. 
+			// These cases will be reported by the packer detection plugin.
+			if ((*it)->get_size() < pe.get_filesize()) {
+				size += (*it)->get_size();
+			}
 			yara::const_matches matches = y.scan_bytes(*(*it)->get_raw_data());
 			if (matches->size() > 0)
 			{

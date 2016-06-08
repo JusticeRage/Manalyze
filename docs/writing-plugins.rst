@@ -252,7 +252,7 @@ Internally, all the result data is stored as key-value pairs; if you don't provi
 PE objects
 ==========
 
-Now that we know how to create results, we will look more closely at the ``analyze`` method. Here is how it's declared::
+Now that we know how to create results, we will look more closely at the ``analyze`` method. This is where you should write all your plugin's logic. Here is how it's declared::
 
     pResult analyze(const mana::PE& pe);
 
@@ -413,7 +413,7 @@ You can omit the latter two to look for the requested functions in any DLL with 
 
     auto functions = pe.find_imports(".*bAsIc_OsTrEaM.*"); // Will search in any DLL, case insensitive
 	
-Finally, if you're interested in looking into the underlying structures, ``pe.get_imports`` returns ``ImportedLibrary`` objects which give direct access to the ``IMAGE_IMPORT_DESCRIPTOR`` and ``IMPORT_LOOKUP_TABLE``s.
+Finally, if you're interested in looking into the underlying structures, ``pe.get_imports`` returns ``ImportedLibrary`` objects which give direct access to the ``IMAGE_IMPORT_DESCRIPTOR`` and ``IMPORT_LOOKUP_TABLE``.
 
 Exports
 -------
@@ -714,7 +714,44 @@ Utility functions are provided to extract resources into a file. Use `extract` o
 .. note:: What's up with all these pointers?
 	
 	Manalyze is built statically on Windows for a number of reasons which go beyond the scope of this documentation. This causes some issues when functions are called across DLLs, issues which can only be resolved through smart pointers ensuring that a module which allocated an object will be the one to free it. This ends up making all the interfaces a little more complex by having pointers everywhere.
+	
+Using the configuration file
+============================
 
+If you want to give users additional control on the plugin's behavior, you can let them pass arguments through the configuration file, ``manalyze.conf``. For instance, this mechanism is used to provide a VirusTotal API key without having to hard-code it into the software. Each plugin has access to a protected ``_config`` variable through its parent class. It is a simple map between strings. Here is an example of how it is used, taken from the packer detection plugin::
+
+	unsigned int min_imports;
+	// Check that a value was set in the configuration, otherwise use a default one.
+	if (_config == nullptr || !_config->count("min_imports")) {
+		min_imports = 10;
+	}
+	else
+	{
+		try {
+			min_imports = std::stoi(_config->at("min_imports"));
+		}
+		catch (std::invalid_argument) // In case someone writes "packer.min_imports = ABC"
+		{
+			PRINT_WARNING << "Could not parse packer.min_imports in the configuration file." << std::endl;
+			min_imports = 10;
+		}
+	}
+	
+Using variables from the configuration doesn't require any additional work: lines added to the configuration files are automatically parsed and provided to the target plugin. Let's assume you add the following lines to the configuration file::
+
+	helloworld.msg = Hello World!
+	# Lines starting with # are comments, the parser ignores them.
+	helloworld.val = 0
+	
+...then the ``_config`` variable of a plugin whose name (as reported by the ``get_id`` function) is ``helloworld`` would contain the following map::
+
+	{
+		"msg":	"Hello World!",
+		"val":	"0" // Careful! That's still a string!
+	}
+
+.. note:: The configuration is only initialized before calling the ``analyze`` method. This means that you won't be able to reference your plugin's configuration from its constructor.
+	
 Anything missing?
 =================
 

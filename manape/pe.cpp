@@ -405,7 +405,7 @@ bool PE::_parse_debug()
 				return false;
 			}
 			pdb.PdbFileName = utils::read_ascii_string(_file_handle.get());	// Not optimal, but it'll help if I decide to
-																		// further parse these debug sub-structures.
+																			// further parse these debug sub-structures.
 			debug->Filename = pdb.PdbFileName;
 			fseek(_file_handle.get(), saved_offset, SEEK_SET);
 		}
