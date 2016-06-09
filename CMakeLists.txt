@@ -20,6 +20,13 @@ else()
 	find_package(Boost REQUIRED COMPONENTS regex system filesystem program_options unit_test_framework)
 endif()
 
+find_package(OpenSSL)
+if (OPENSSL_FOUND)
+	add_definitions(-DWITH_OPENSSL) # Enable OpenSSL if it was found.
+else()
+	message("Building without OpenSSL.")
+endif()
+
 # Download or update external projects
 if (EXISTS external/yara AND GitHub MATCHES [Oo][Nn])
     message("Updating yara...")
@@ -102,6 +109,9 @@ add_library(plugin_virustotal SHARED plugins/plugin_virustotal/plugin_virustotal
 									 plugins/plugin_virustotal/json_spirit/json_spirit_reader.cpp
 									 plugins/plugin_virustotal/json_spirit/json_spirit_value.cpp)
 target_link_libraries(plugin_virustotal manape hash-library manacommons ${Boost_LIBRARIES})
+if (OPENSSL_FOUND)
+	target_link_libraries(plugin_virustotal ${OPENSSL_LIBRARIES})
+endif()
 
 # yara dependency
 add_subdirectory(external/yara)
