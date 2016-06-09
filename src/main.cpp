@@ -40,12 +40,15 @@
 #include "yara/yara_wrapper.h"
 
 #include "manape/pe.h"
-#include "manape/resources.h"
 #include "manacommons/color.h"
 #include "output_formatter.h"
 #include "dump.h"
 
 #define MANALYZE_VERSION "0.9"
+
+#if defined WITH_OPENSSL
+# include <openssl/opensslv.h>  // Used to display OpenSSL's version
+#endif
 
 namespace po = boost::program_options;
 namespace bfs = boost::filesystem;
@@ -258,6 +261,9 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
 		ss << "* Boost " BOOST_LIB_VERSION " (Boost.org, Boost Software License)" << std::endl;
 		ss << "* Yara " << YR_MAJOR_VERSION << "." << YR_MINOR_VERSION << "." << YR_MICRO_VERSION << ". (Victor M. Alvarez, Apache 2.0 License)" << std::endl;
 		ss << "* hash-library " << HASH_LIBRARY_VERSION << " (Stephan Brumme, ZLib License)." << std::endl;
+		#if defined WITH_OPENSSL
+			ss << "* " << OPENSSL_VERSION_TEXT << " (OpenSSL Project, OpenSSL License)" << std::endl;
+		#endif
 		std::cout << ss.str();
 		exit(0);
 	}

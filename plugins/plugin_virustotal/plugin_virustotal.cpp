@@ -120,12 +120,14 @@ public:
 				if (!it->value_.get_int()) // Response Code = 0: VT does not know the file.
 				{
 					res->set_level(SUSPICIOUS); // Because VT knows all the files.
-					res->set_summary("This file has never been scanned on VirusTotal.");
+					res->set_summary("No VirusTotal score.");
+					res->add_information("This file has never been scanned on VirusTotal.");
 					return res;
 				}
 				else if (it->value_.get_int() == -2) // Response Code = -2: scan queued.
 				{
-					res->set_summary("A scan if the file is currently queued on VirusTotal.");
+					res->set_summary("No VirusTotal score.");
+					res->add_information("A scan if the file is currently queued.");
 					return res;
 				}
 			}
@@ -165,8 +167,10 @@ public:
 		std::stringstream ss;
 		ss << "VirusTotal score: " << positives << "/" << total << " (Scanned on " << scan_date << ")";
 		res->set_summary(ss.str());
-		if (positives == 0) {
+		if (positives == 0) 
+		{
 			res->set_level(SAFE);
+			res->add_information("All the AVs think this file is safe.");
 		}
 		else if (positives < 3) { // Allow reasonable doubt for paranoid AVs
 			res->set_level(SUSPICIOUS);

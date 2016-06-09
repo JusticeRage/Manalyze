@@ -587,8 +587,22 @@ std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, co
 		return res;
 	}
 
-	unsigned int header_size = 3 * sizeof(boost::uint16_t) + directory->Count * sizeof(group_icon_directory_entry);
-	res.resize(header_size);
+	// Sanity check.
+	if (directory->Count > resources.size())
+	{
+		PRINT_ERROR << "The number of ICON_DIRECTORY_ENTRIES is bigger than the number of resources in the file." << DEBUG_INFO << std::endl;
+		return std::vector<boost::uint8_t>();
+	}
+
+	boost::uint32_t header_size = 3 * sizeof(boost::uint16_t) + directory->Count * sizeof(group_icon_directory_entry);
+	try {
+		res.resize(header_size);
+	}
+	catch (const std::bad_alloc)
+	{
+		PRINT_ERROR << "Could not allocate enough memory to reconstruct an icon. This PE may have been manually modified." << DEBUG_INFO << std::endl;
+		return std::vector<boost::uint8_t>();
+	}
 	memcpy(&res[0], directory.get(), 3 * sizeof(boost::uint16_t));
 
 	for (int i = 0; i < directory->Count; ++i)
@@ -606,8 +620,7 @@ std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, co
 		if (icon == nullptr)
 		{
 			PRINT_ERROR << "Could not locate RT_ICON with ID " << directory->Entries[i]->Id << "!" << DEBUG_INFO << std::endl;
-			res.clear();
-			return res;
+			return std::vector<boost::uint8_t>();
 		}
 
 		shared_bytes icon_bytes = icon->get_raw_data();

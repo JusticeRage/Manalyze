@@ -11,6 +11,7 @@ addons:
     - libboost-system1.55-dev
     - libboost-filesystem1.55-dev
     - libboost-test1.55-dev
+    - libssl-dev
     - gcc-4.8
     - g++-4.8
 compiler:
