@@ -235,7 +235,8 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
 			"imports, exports, resources, version, debug, tls, config (image load configuration), "
 			"delay (delay-load table")
 		("hashes", "Calculate various hashes of the file (may slow down the analysis!)")
-		("extract,x", po::value<std::string>(), "Extract the PE resources to the target directory.")
+		("extract,x", po::value<std::string>(), "Extract the PE resources and authenticode certificates "
+			"to the target directory.")
 		("plugins,p", po::value<std::vector<std::string> >(),
 			"Analyze the binary with additional plugins. (may slow down the analysis!)");
 
@@ -498,8 +499,10 @@ void perform_analysis(const std::string& path,
 	}
 
 
-	if (vm.count("extract")) { // Extract resources if requested
+	if (vm.count("extract")) // Extract resources if requested 
+	{
 		mana::extract_resources(pe, extraction_directory);
+		mana::extract_authenticode_certificates(pe, extraction_directory);
 	}
 
 	if (vm.count("hashes")) {

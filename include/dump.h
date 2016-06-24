@@ -19,8 +19,16 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <set>
 #include <vector>
+#include <string>
+#include <sstream>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/make_shared.hpp>
+
+// Used to base64-encode certificates during extraction
+#include <boost/archive/iterators/base64_from_binary.hpp>
+#include <boost/archive/iterators/insert_linebreaks.hpp>
+#include <boost/archive/iterators/transform_width.hpp>
+#include <boost/archive/iterators/ostream_iterator.hpp>
 
 #include "output_formatter.h"
 #include "manape/pe.h"
@@ -29,6 +37,8 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include "yara/yara_wrapper.h"
 
 #include "import_hash.h"
+
+namespace biter = boost::archive::iterators;
 
 namespace mana
 {
@@ -62,6 +72,14 @@ yara::const_matches detect_filetype(mana::pResource resource);
 /**
  * @brief   Extracts resources from a PE file.
  *
+ *	In the general case, the resource's raw bytes are written to a file, but some resource
+ *	types can be handled more gracefully:
+ *	* RT_GROUP_ICON (and the referenced RT_ICON resources, which cannot be extracted alone)
+ *	  are saved as .ico files. (RT_GROUP_CURSORS are supported too, but don't seem to work
+ *	  as well.)
+ *	* RT_BITMAP as .bmp files. The bitmap header is reconstructed.
+ *	* RT_MANIFEST as .xml files.
+ *
  * @param   const mana::PE& pe The PE whose resources we want extracted.
  * @param   const std::string& destination_folder The folder into which the
  *          extracted files should be placed.
@@ -70,4 +88,20 @@ yara::const_matches detect_filetype(mana::pResource resource);
  */
 bool extract_resources(const mana::PE& pe, const std::string& destination_folder);
 
-} // !namespace sg
+/**
+ *	@brief	Extracts the certificates used for the Authenticode signature of the PE.
+ *
+ *  @param  const mana::PE& pe The PE whose certificates we want extracted.
+ *	@param	const std::string& destination_folder The folder into which the certificates should
+ *			be placed.
+ *	@param	const std::string& filename The name of the file which in which the certificate will
+ *			be stored. If none is provided, the name [PE name].pkcs7 will be used. 
+ *			/!\ Existing files will be overwritten!
+ *
+ *	@return	Whether the extraction was successful or not.
+ */
+bool extract_authenticode_certificates(const mana::PE& pe,
+                                       const std::string& destination_folder,
+                                       const std::string& filename = "");
+
+} // !namespace mana

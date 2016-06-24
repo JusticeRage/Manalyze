@@ -1,18 +1,18 @@
 /*
-This file is part of Manalyze.
+	This file is part of Manalyze.
 
-Manalyze is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+	Manalyze is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
 
-Manalyze is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+	Manalyze is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
+	You should have received a copy of the GNU General Public License
+	along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "dump.h"
@@ -614,6 +614,96 @@ bool extract_resources(const mana::PE& pe, const std::string& destination_folder
         }
     }
     return res;
+}
+
+// ----------------------------------------------------------------------------
+
+/**
+ *	@brief	Converts the input data into a Base64 encoded string.
+ *
+ *	Taken from the boost examples and slightly adaped to handle padding.
+ *
+ *	@param	std::vector<boost::uint8_t> bytes A vector of bytes to encode.
+ *			This argument is not passed by const reference because it may
+ *			need to be padded (hence, modified).
+ *
+ *	@return	A string containing the Base64 representation of the input.
+ */
+std::string b64encode(std::vector<boost::uint8_t> bytes)
+{	
+	unsigned int padding = bytes.size() % 3;
+	for (unsigned int i = 0 ; i < padding ; ++i) {
+		bytes.push_back(0);
+	}
+	
+	// Insert line breaks every 64 characters
+	typedef	biter::insert_linebreaks<
+		// Convert binary values to base64 characters
+		biter::base64_from_binary<
+			// Retrieve 6 bit integers from a sequence of 8 bit bytes
+			biter::transform_width<const boost::uint8_t*, 6, 8> 
+		> 
+		,64
+	> 
+	base64_encode; // compose all the above operations in to a new iterator
+	
+	std::stringstream ss;
+	std::copy(base64_encode(&bytes[0]), 
+			  base64_encode(&bytes[0] + bytes.size()), 
+			  std::ostream_iterator<char>(ss));
+			  
+	if (padding != 0) {
+		ss << std::string(padding, '=');
+	}
+			  
+	return ss.str();
+}
+
+// ----------------------------------------------------------------------------
+
+bool extract_authenticode_certificates(const mana::PE& pe,
+									   const std::string& destination_folder,
+									   const std::string& filename)
+{
+	auto certs = pe.get_certificates();
+	if (certs->size() == 0) { // The PE is unsigned, nothing to extract.
+		return true;
+	}
+	
+	std::string pkcs7_header = "-----BEGIN PKCS7-----\n";
+	std::string pkcs7_footer = "\n-----END PKCS7-----\n";
+	
+	// Generate the output file name if needed.
+	bfs::path out_path;
+	if (filename == "") {
+		out_path = bfs::path(destination_folder) / bfs::path(bfs::basename(*pe.get_path()) + ".pkcs7");
+	}
+	else {
+		out_path = bfs::path(destination_folder) / bfs::path(filename);
+	}
+	
+	FILE* f = fopen(out_path.string().c_str(), "w+");
+	if (f == nullptr)
+	{
+		PRINT_WARNING << "Could not write the authenticode certificates to " << out_path 
+					  << "." << std::endl;
+		return false;
+	}
+	
+	for (auto it = certs->begin() ; it != certs->end() ; ++it)
+	{
+		if ((*it)->CertificateType != WIN_CERT_TYPE_PKCS_SIGNED_DATA)
+		{
+			PRINT_WARNING << "Enountered a non-PKCS7 certificate. The extraction will not proceed." << std::endl;
+			break;
+		}
+		fwrite(pkcs7_header.c_str(), pkcs7_header.length(), 1, f);
+		auto cert_str = b64encode((*it)->Certificate);
+		fwrite(cert_str.c_str(), cert_str.length(), 1, f);
+		fwrite(pkcs7_footer.c_str(), pkcs7_footer.length(), 1, f);
+	}
+	
+	fclose(f);
 }
 
 } // !namespace mana

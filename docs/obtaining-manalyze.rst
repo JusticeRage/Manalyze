@@ -117,3 +117,19 @@ This compilation error is usually encountered on Debian 7 (Wheezy)::
 	make: *** [all] Error 2
 
 This issue has been traced to the `Boost libraries <http://www.boost.org/>`_ in Wheezy repositories being too old (1.49.0). You'll need to either upgrade them manually or switch to Debian Jessie.
+
+2. CMake does not find OpenSSL
+------------------------------
+
+Some versions of CMake (for instance 3.0.2, present in Debian Jessie's repositories) seem to have trouble locating OpenSSL and generate the following error messages::
+
+	CMake Error at /usr/share/cmake-3.0/Modules/FindOpenSSL.cmake:293 (list):
+	  list GET given empty list
+	Call Stack (most recent call first):
+	  CMakeLists.txt:23 (find_package)
+
+	[...]
+
+	-- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libssl.so;/usr/lib/x86_64-linux-gnu/libcrypto.so (found version ".0.0`") 
+
+Upgrading CMake to the latest release (3.5.2 at the time I'm writing this) solves this issue.

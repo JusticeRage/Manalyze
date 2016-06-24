@@ -919,7 +919,14 @@ bool PE::_parse_certificates()
 			PRINT_WARNING << "The WIN_CERTIFICATE appears to be invalid." << DEBUG_INFO_INSIDEPE << std::endl;
 			return true; // Recoverable error.
 		}
-
+		else if (cert->CertificateType != WIN_CERT_TYPE_PKCS_SIGNED_DATA)
+		{
+			PRINT_WARNING << "Encountered a certificate of type " 
+						  << *nt::translate_to_flag(cert->CertificateType, nt::WIN_CERTIFICATE_TYPES)
+						  << ", but only WIN_CERT_TYPE_PKCS_SIGNED_DATA is supported by Windows!"
+						  << DEBUG_INFO_INSIDEPE << std::endl;
+			// Get the certificate data anyway.
+		}
 
 		try {
 			cert->Certificate.resize(cert->Length);
@@ -928,7 +935,6 @@ bool PE::_parse_certificates()
 		{
 			PRINT_ERROR << "Failed to allocate enough space for a certificate! (" << e.what() << ")"
 						<< DEBUG_INFO_INSIDEPE << std::endl;
-			cert->Certificate.resize(0);
 			return false;
 		}
 
