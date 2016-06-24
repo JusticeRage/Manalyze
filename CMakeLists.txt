@@ -102,6 +102,12 @@ else()
 				target_link_libraries(manalyze dl)
 			endif()
 			set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+			
+			# Compile the *nix authenticode plugin if OpenSSL was found.
+			if (OPENSSL_FOUND)
+				add_library(plugin_authenticode SHARED plugins/plugin_authenticode_openssl.cpp)
+				target_link_libraries(plugin_authenticode ${OPENSSL_LIBRARIES})
+			endif()
 endif()
 
 # VirusTotal plugin

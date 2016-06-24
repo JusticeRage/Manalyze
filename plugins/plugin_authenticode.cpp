@@ -25,6 +25,7 @@
 #include <WinCrypt.h>
 
 #include "manape/utils.h"
+#include "manacommons/utf8/utf8.h"
 
 #include "plugin_framework/plugin_interface.h"
 #include "yara/yara_wrapper.h"
@@ -62,12 +63,21 @@ void get_certificate_info(const std::wstring& file_path, plugin::pResult result)
  */
 void make_information(const std::string& type, const std::wstring& data, pResult result)
 {
-	auto conv = boost::shared_array<char>(new char[data.size() + 1]);
-	memset(conv.get(), 0, sizeof(char) * (data.size() + 1));
-	wcstombs(conv.get(), data.c_str(), data.size());
-
 	std::stringstream ss;
-	ss << type << ": " << conv.get();
+	std::string out;
+	try
+	{
+		std::vector<boost::uint8_t> utf8result;
+		utf8::utf16to8(data.begin(), data.end(), std::back_inserter(utf8result));
+		out = std::string(utf8result.begin(), utf8result.end());
+	}
+	catch (utf8::invalid_utf16)
+	{
+		PRINT_WARNING << "[plugin_authenticode] Couldn't convert a string from UTF-16 to UTF-8!" 
+					  << DEBUG_INFO << std::endl;
+		return;
+	}
+	ss << type << ": " << out;
 	result->add_information(ss.str());
 }
 

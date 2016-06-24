@@ -633,7 +633,7 @@ bool extract_authenticode_certificates(const mana::PE& pe,
 	// Generate the output file name if needed.
 	bfs::path out_path;
 	if (filename == "") {
-		out_path = bfs::path(destination_folder) / bfs::path(bfs::basename(*pe.get_path()) + ".pkcs7");
+		out_path = bfs::path(destination_folder) / bfs::path(bfs::basename(*pe.get_path()) + ".p7b");
 	}
 	else {
 		out_path = bfs::path(destination_folder) / bfs::path(filename);

@@ -88,7 +88,7 @@ bool extract_resources(const mana::PE& pe, const std::string& destination_folder
  *	@param	const std::string& destination_folder The folder into which the certificates should
  *			be placed.
  *	@param	const std::string& filename The name of the file which in which the certificate will
- *			be stored. If none is provided, the name [PE name].pkcs7 will be used. 
+ *			be stored. If none is provided, the name [PE name].p7b will be used. 
  *			/!\ Existing files will be overwritten!
  *
  *	@return	Whether the extraction was successful or not.
