@@ -618,49 +618,6 @@ bool extract_resources(const mana::PE& pe, const std::string& destination_folder
 
 // ----------------------------------------------------------------------------
 
-/**
- *	@brief	Converts the input data into a Base64 encoded string.
- *
- *	Taken from the boost examples and slightly adaped to handle padding.
- *
- *	@param	std::vector<boost::uint8_t> bytes A vector of bytes to encode.
- *			This argument is not passed by const reference because it may
- *			need to be padded (hence, modified).
- *
- *	@return	A string containing the Base64 representation of the input.
- */
-std::string b64encode(std::vector<boost::uint8_t> bytes)
-{	
-	unsigned int padding = bytes.size() % 3;
-	for (unsigned int i = 0 ; i < padding ; ++i) {
-		bytes.push_back(0);
-	}
-	
-	// Insert line breaks every 64 characters
-	typedef	biter::insert_linebreaks<
-		// Convert binary values to base64 characters
-		biter::base64_from_binary<
-			// Retrieve 6 bit integers from a sequence of 8 bit bytes
-			biter::transform_width<const boost::uint8_t*, 6, 8> 
-		> 
-		,64
-	> 
-	base64_encode; // compose all the above operations in to a new iterator
-	
-	std::stringstream ss;
-	std::copy(base64_encode(&bytes[0]), 
-			  base64_encode(&bytes[0] + bytes.size()), 
-			  std::ostream_iterator<char>(ss));
-			  
-	if (padding != 0) {
-		ss << std::string(padding, '=');
-	}
-			  
-	return ss.str();
-}
-
-// ----------------------------------------------------------------------------
-
 bool extract_authenticode_certificates(const mana::PE& pe,
 									   const std::string& destination_folder,
 									   const std::string& filename)
@@ -698,7 +655,7 @@ bool extract_authenticode_certificates(const mana::PE& pe,
 			break;
 		}
 		fwrite(pkcs7_header.c_str(), pkcs7_header.length(), 1, f);
-		auto cert_str = b64encode((*it)->Certificate);
+		auto cert_str = *utils::b64encode((*it)->Certificate);
 		fwrite(cert_str.c_str(), cert_str.length(), 1, f);
 		fwrite(pkcs7_footer.c_str(), pkcs7_footer.length(), 1, f);
 	}

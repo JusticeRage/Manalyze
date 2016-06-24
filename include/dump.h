@@ -1,18 +1,18 @@
 /*
-This file is part of Manalyze.
+    This file is part of Manalyze.
 
-Manalyze is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+    Manalyze is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-Manalyze is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+    Manalyze is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU General Public License
+    along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #pragma once
@@ -24,12 +24,6 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/make_shared.hpp>
 
-// Used to base64-encode certificates during extraction
-#include <boost/archive/iterators/base64_from_binary.hpp>
-#include <boost/archive/iterators/insert_linebreaks.hpp>
-#include <boost/archive/iterators/transform_width.hpp>
-#include <boost/archive/iterators/ostream_iterator.hpp>
-
 #include "output_formatter.h"
 #include "manape/pe.h"
 #include "hash-library/hashes.h"
@@ -37,8 +31,7 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include "yara/yara_wrapper.h"
 
 #include "import_hash.h"
-
-namespace biter = boost::archive::iterators;
+#include "manacommons/base64.h"
 
 namespace mana
 {
