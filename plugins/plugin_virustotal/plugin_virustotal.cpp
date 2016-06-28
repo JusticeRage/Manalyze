@@ -280,8 +280,13 @@ bool vt_api_interact(const std::string& hash,
 		PRINT_ERROR << "Could not read the response (" << error.message() << ")." << std::endl;
 		return false;
 	}
-	else if (error == boost::asio::error::eof) {
-		socket.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
+	else if (error == boost::asio::error::eof)
+	{
+		#if defined WITH_OPENSSL
+			socket.shutdown();
+		#else
+			socket.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
+		#endif
 	}
 
 	destination = ss.str();

@@ -21,7 +21,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/cstdint.hpp>
 
-#include "manape/utf8/utf8.h"
+#include "manacommons/utf8/utf8.h"
 
 // ----------------------------------------------------------------------------
 

@@ -1,8 +1,7 @@
 {
-   Ignore dlopen bug.
+   <Ignore dlopen leak.>
    Memcheck:Leak
    ...
    fun:dlopen@@GLIBC_2.2.5
    ...
 }
-

@@ -1,18 +1,18 @@
 /*
-This file is part of Manalyze.
+	This file is part of Manalyze.
 
-Manalyze is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+	Manalyze is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
 
-Manalyze is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+	Manalyze is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
+	You should have received a copy of the GNU General Public License
+	along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "dump.h"
@@ -614,6 +614,54 @@ bool extract_resources(const mana::PE& pe, const std::string& destination_folder
         }
     }
     return res;
+}
+
+// ----------------------------------------------------------------------------
+
+bool extract_authenticode_certificates(const mana::PE& pe,
+									   const std::string& destination_folder,
+									   const std::string& filename)
+{
+	auto certs = pe.get_certificates();
+	if (certs->size() == 0) { // The PE is unsigned, nothing to extract.
+		return true;
+	}
+	
+	std::string pkcs7_header = "-----BEGIN PKCS7-----\n";
+	std::string pkcs7_footer = "\n-----END PKCS7-----\n";
+	
+	// Generate the output file name if needed.
+	bfs::path out_path;
+	if (filename == "") {
+		out_path = bfs::path(destination_folder) / bfs::path(bfs::basename(*pe.get_path()) + ".p7b");
+	}
+	else {
+		out_path = bfs::path(destination_folder) / bfs::path(filename);
+	}
+	
+	FILE* f = fopen(out_path.string().c_str(), "w+");
+	if (f == nullptr)
+	{
+		PRINT_WARNING << "Could not write the authenticode certificates to " << out_path 
+					  << "." << std::endl;
+		return false;
+	}
+	
+	for (auto it = certs->begin() ; it != certs->end() ; ++it)
+	{
+		if ((*it)->CertificateType != WIN_CERT_TYPE_PKCS_SIGNED_DATA)
+		{
+			PRINT_WARNING << "Enountered a non-PKCS7 certificate. The extraction will not proceed." << std::endl;
+			break;
+		}
+		fwrite(pkcs7_header.c_str(), pkcs7_header.length(), 1, f);
+		auto cert_str = *utils::b64encode((*it)->Certificate);
+		fwrite(cert_str.c_str(), cert_str.length(), 1, f);
+		fwrite(pkcs7_footer.c_str(), pkcs7_footer.length(), 1, f);
+	}
+	
+	fclose(f);
+	return true;
 }
 
 } // !namespace mana

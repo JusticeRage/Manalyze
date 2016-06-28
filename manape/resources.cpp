@@ -225,7 +225,7 @@ shared_bytes Resource::get_raw_data() const
 	// This workaround prevents Manalyze from crashing by bounding how much memory can be requested.
 	#ifdef BOOST_POSIX_API
 		struct stat st;
-		stat(_path_to_pe, &st);
+		stat(_path_to_pe.c_str(), &st);
 		if (_size > st.st_size)
 		{
 			PRINT_ERROR << "Resource " << *get_name() << " is bigger than the PE. Not trying to load it in memory."

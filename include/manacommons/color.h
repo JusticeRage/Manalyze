@@ -62,11 +62,11 @@ void set_color(Color c);
  *
  *	@return	A reference to sink, so the operator "<<" can be chained.
  */
-	DECLSPEC_MANACOMMONS std::ostream& print_colored_text(const std::string& text,
-								 Color c,
-								 std::ostream& sink = std::cout,
-								 const std::string& prefix = "",
-								 const std::string& suffix = "");
+DECLSPEC_MANACOMMONS std::ostream& print_colored_text(const std::string& text,
+													  Color c,
+													  std::ostream& sink = std::cout,
+													  const std::string& prefix = "",
+													  const std::string& suffix = "");
 
 #define PRINT_ERROR utils::print_colored_text("!", utils::RED, std::cerr, "[", "] Error: ")
 #define PRINT_WARNING utils::print_colored_text("*", utils::YELLOW, std::cerr, "[", "] Warning: ")
