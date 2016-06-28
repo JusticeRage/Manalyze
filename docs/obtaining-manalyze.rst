@@ -32,11 +32,11 @@ Linux and BSD
 
 How you take care of step 1 may vary depending on your package manager. On Debian Jessie, use the following command **as root**::
 
-    apt-get install libboost-regex-dev libboost-program-options-dev libboost-system-dev libboost-filesystem-dev build-essential cmake git
+    apt-get install libboost-regex-dev libboost-program-options-dev libboost-system-dev libboost-filesystem-dev libssl-dev build-essential cmake git
 	
 On FreeBSD 10.2, use this one instead (also **as root**)::
 
-    pkg install boost-libs-1.55.0_8 cmake git
+    pkg install boost-libs-1.55.0_8 libressl cmake git
 	
 Next, get Manalyze's source code and try building it::
 

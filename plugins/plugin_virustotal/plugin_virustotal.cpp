@@ -270,9 +270,18 @@ bool vt_api_interact(const std::string& hash,
 	while (boost::asio::read(socket, response, boost::asio::transfer_at_least(1), error)) {
 		ss << &response;
 	}
+	
+	#if defined WITH_OPENSSL
+	// SSL connexions may be terminated by a short read error.
+	if (error != boost::asio::error::eof && error.value() != ERR_PACK(ERR_LIB_SSL, 0, SSL_R_SHORT_READ)) {
+	#else
 	if (error != boost::asio::error::eof) {
-		PRINT_ERROR << "Could not read the response (" << error << ")." << std::endl;
+	#endif
+		PRINT_ERROR << "Could not read the response (" << error.message() << ")." << std::endl;
 		return false;
+	}
+	else if (error == boost::asio::error::eof) {
+		socket.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
 	}
 
 	destination = ss.str();

@@ -37,6 +37,7 @@ rule System_Tools
 		$a13 = "bcdedit.exe" nocase wide ascii
 		$a14 = "dumpcap.exe" nocase wide ascii
 		$a15 = "tcpdump.exe" nocase wide ascii
+		$a16 = "mshta.exe" nocase wide ascii // Used by DUBNIUM to download files
     condition:
         any of them
 }
@@ -123,7 +124,7 @@ rule Antivirus
         $a40 = "avgrsx.exe" nocase wide ascii
         $a41 = "avgserv.exe" nocase wide ascii
         $a42 = "avgserv9.exe" nocase wide ascii
-        $a43 = "avguard.exe" nocase wide ascii
+        $a43 = /av(gui|guard|center|gtray|gidsagent|gwdsvc|grsa|gcsrva|gcsrvx).exe/ nocase wide ascii
         $a44 = "avgw.exe" nocase wide ascii
         $a45 = "avkpop.exe" nocase wide ascii
         $a46 = "avkserv.exe" nocase wide ascii
@@ -514,7 +515,26 @@ rule Antivirus
         $a575 = "zapro.exe" nocase wide ascii
         $a577 = "zatutor.exe" nocase wide ascii
         $a579 = "zonealarm.exe" nocase wide ascii
-
+		// Strings from Dubnium below
+		$a580 = "QQPCRTP.exe" nocase wide ascii
+		$a581 = "QQPCTray.exe" nocase wide ascii
+		$a582 = "ZhuDongFangYu.exe" nocase wide ascii
+		$a583 = /360(tray|sd|rp).exe/ nocase wide ascii
+		$a584 = /qh(safetray|watchdog|activedefense).exe/ nocase wide ascii
+		$a585 = "McNASvc.exe" nocase wide ascii
+		$a586 = "MpfSrv.exe" nocase wide ascii
+		$a587 = "McProxy.exe" nocase wide ascii
+		$a588 = "mcmscsvc.exe" nocase wide ascii
+		$a589 = "McUICnt.exe" nocase wide ascii
+		$a590 = /ui(WatchDog|seagnt|winmgr).exe/ nocase wide ascii
+		$a591 = "ufseagnt.exe" nocase wide ascii
+		$a592 = /core(serviceshell|frameworkhost).exe/ nocase wide ascii
+		$a593 = /ay(agent|rtsrv|updsrv).aye/ nocase wide ascii
+		$a594 = /avast(ui|svc).exe/ nocase wide ascii
+		$a595 = /ms(seces|mpeng).exe/ nocase wide ascii
+		$a596 = "afwserv.exe" nocase wide ascii
+		$a597 = "FiddlerUser"
+		
     condition:
         any of them
 }

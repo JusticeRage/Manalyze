@@ -25,6 +25,11 @@
 #include <boost/make_shared.hpp>
 #include <boost/shared_array.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/system/api_config.hpp>
+
+#ifdef BOOST_POSIX_API
+# include <sys/stat.h>
+#endif
 
 #include "manape/utils.h"
 
