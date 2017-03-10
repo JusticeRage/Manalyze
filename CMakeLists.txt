@@ -140,4 +140,28 @@ target_link_libraries(
 						${Boost_LIBRARIES}
                      )
 
+# make install command for linux machines:
+if ("${CMAKE_SYSTEM}" MATCHES "Linux")
 
+	# Copy binaries
+	install(TARGETS manalyze manacommons manape
+			RUNTIME DESTINATION /usr/local/bin
+			LIBRARY DESTINATION /usr/local/lib
+			ARCHIVE DESTINATION /usr/local/lib/static)
+
+	# Copy the yara_rules folder to /etc/manalyze.
+	install(DIRECTORY bin/yara_rules 
+			DESTINATION /etc/manalyze)
+
+	# Copy the plugins to /etc/manalyze.
+	install(DIRECTORY bin/
+			DESTINATION /etc/manalyze
+			FILES_MATCHING PATTERN "libplugin_*.so")
+
+	# Copy the configuration file template.
+	install(FILES bin/manalyze.conf
+			DESTINATION /etc/manalyze)
+
+	# Run ldconfig.
+	execute_process(COMMAND ldconfig)
+endif()

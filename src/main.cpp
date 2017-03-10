@@ -525,6 +525,15 @@ int main(int argc, char** argv)
 	// Load the dynamic plugins.
 	bfs::path working_dir(argv[0]);
 	working_dir = working_dir.parent_path();
+
+	// Linux: look for the configuration file in /etc/manalyze if
+	// nothing is found in the current folder.
+	#ifdef BOOST_POSIX_API
+		if (!bfs::exists(working_dir / "manalyze.conf")) {
+			working_dir = "/etc/manalyze";
+		}
+	#endif
+
 	plugin::PluginManager::get_instance().load_all(working_dir.string());
 
 	// Load the configuration
