@@ -111,13 +111,13 @@ else()
 endif()
 
 # VirusTotal plugin
-add_library(plugin_virustotal SHARED plugins/plugin_virustotal/plugin_virustotal.cpp
-									 plugins/plugin_virustotal/json_spirit/json_spirit_reader.cpp
-									 plugins/plugin_virustotal/json_spirit/json_spirit_value.cpp)
-target_link_libraries(plugin_virustotal manape hash-library manacommons ${Boost_LIBRARIES})
-if (OPENSSL_FOUND)
-	target_link_libraries(plugin_virustotal ${OPENSSL_LIBRARIES})
-endif()
+# add_library(plugin_virustotal SHARED plugins/plugin_virustotal/plugin_virustotal.cpp
+# 									 plugins/plugin_virustotal/json_spirit/json_spirit_reader.cpp
+# 									 plugins/plugin_virustotal/json_spirit/json_spirit_value.cpp)
+# target_link_libraries(plugin_virustotal manape hash-library manacommons ${Boost_LIBRARIES})
+# if (OPENSSL_FOUND)
+#	target_link_libraries(plugin_virustotal ${OPENSSL_LIBRARIES})
+# endif()
 
 # yara dependency
 add_subdirectory(external/yara)
