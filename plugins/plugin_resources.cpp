@@ -38,7 +38,7 @@ public:
 	}
 
 	pString get_description() const override {
-		return boost::make_shared<std::string>("Analyzes the program's resources.");
+		return boost::make_shared<std::string>("Analyzes the program's resources");
 	}
 
 	pResult analyze(const mana::PE& pe) override
@@ -71,9 +71,9 @@ public:
 					{
 						res->raise_level(MALICIOUS);
 						std::stringstream ss;
-						ss << "Resource " << *(*it)->get_name() << " detected as a " << matches->at(i)->operator[]("description") << ".";
+						ss << "Resource " << *(*it)->get_name() << " detected as a " << matches->at(i)->operator[]("description");
 						if (matches->size() > 1) {
-							ss << " It is also possibly a polyglot file.";
+							ss << " It is also possibly a polyglot file";
 						}
 						res->add_information(ss.str());
 					}
@@ -81,7 +81,7 @@ public:
 					{
 						res->raise_level(SUSPICIOUS);
 						std::stringstream ss;
-						ss << "Resource " << *(*it)->get_name() << " detected as a PDF document.";
+						ss << "Resource " << *(*it)->get_name() << " detected as a PDF document";
 						res->add_information(ss.str());
 					}
 				}
@@ -91,7 +91,7 @@ public:
 				if ((*it)->get_entropy() > 7.)
 				{
 					std::stringstream ss;
-					ss << "Resource " << *(*it)->get_name() << " is possibly compressed or encrypted.";
+					ss << "Resource " << *(*it)->get_name() << " is possibly compressed or encrypted";
 					res->add_information(ss.str());
 				}
 			}
@@ -101,16 +101,16 @@ public:
 		if (ratio > .75)
 		{
 			std::stringstream ss;
-			ss << "Resources amount for "  << ratio*100 << "% of the executable.";
+			ss << "Resources amount for "  << ratio*100 << "% of the executable";
 			res->raise_level(SUSPICIOUS);
 			res->add_information(ss.str());
 		}
 
 		if (res->get_level() > NO_OPINION) {
-			res->set_summary("The PE is possibly a dropper.");
+			res->set_summary("The PE is possibly a dropper");
 		}
 		else if (res->get_information()->size() > 0) {
-			res->set_summary("The PE contains encrypted or compressed resources.");
+			res->set_summary("The PE contains encrypted or compressed resources");
 		}
 
 		return res;

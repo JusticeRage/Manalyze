@@ -185,7 +185,7 @@ public:
 	}
 
 	pString  get_description() const override {
-		return boost::make_shared<std::string>("Scans the binary with ClamAV virus definitions.");
+		return boost::make_shared<std::string>("Scans the binary with ClamAV virus definitions");
 	}
 
 private:
@@ -201,7 +201,7 @@ private:
 		{
 			PRINT_ERROR << "ClamAV rules haven't been generated yet!" << std::endl;
 			PRINT_ERROR << "Please run yara_rules/update_clamav_signatures.py to create them, "
-				"and refer to the documentation for additional information." << std::endl;
+				"and refer to the documentation for additional information" << std::endl;
 			return false;
 		}
 		return true;
@@ -222,7 +222,7 @@ public:
 	}
 
 	boost::shared_ptr<std::string> get_description() const override {
-		return boost::make_shared<std::string>("Tries to determine which compiler generated the binary.");
+		return boost::make_shared<std::string>("Tries to determine which compiler generated the binary");
 	}
 };
 
@@ -240,7 +240,7 @@ public:
 	}
 
 	boost::shared_ptr<std::string> get_description() const override {
-		return boost::make_shared<std::string>("Returns the PEiD signature of the binary.");
+		return boost::make_shared<std::string>("Returns the PEiD signature of the binary");
 	}
 };
 
@@ -259,7 +259,7 @@ public:
 	}
 
 	boost::shared_ptr<std::string> get_description() const override {
-		return boost::make_shared<std::string>("Looks for suspicious strings (anti-VM, process names...).");
+		return boost::make_shared<std::string>("Looks for suspicious strings (anti-VM, process names)");
 	}
 };
 
@@ -299,7 +299,7 @@ public:
 	}
 
 	boost::shared_ptr<std::string> get_description() const override {
-		return boost::make_shared<std::string>("Detects embedded cryptographic constants.");
+		return boost::make_shared<std::string>("Detects embedded cryptographic constants");
 	}
 };
 

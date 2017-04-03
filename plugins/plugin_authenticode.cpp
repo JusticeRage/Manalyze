@@ -105,7 +105,7 @@ public:
 	}
 
 	pString get_description() const override {
-		return boost::make_shared<std::string>("Checks if the digital signature of the PE is valid.");
+		return boost::make_shared<std::string>("Checks if the digital signature of the PE is valid");
 	}
 
 	pResult analyze(const mana::PE& pe) override
@@ -136,11 +136,11 @@ public:
 		{
 			case ERROR_SUCCESS:
 				res->set_level(SAFE);
-				res->set_summary("The PE's digital signature is valid.");
+				res->set_summary("The PE's digital signature is valid");
 				break;
 			case TRUST_E_EXPLICIT_DISTRUST:
 				res->set_level(MALICIOUS);
-				res->set_summary("The PE's digital signature has been explicitly blacklisted.");
+				res->set_summary("The PE's digital signature has been explicitly blacklisted");
 			case TRUST_E_NOSIGNATURE:
 				error_code = ::GetLastError();
 				if (TRUST_E_NOSIGNATURE == error_code ||
@@ -150,23 +150,23 @@ public:
 					// No digital signature.
 					break;
 				}
-				res->set_summary("Unknown error encountered while reading the signature.");
+				res->set_summary("Unknown error encountered while reading the signature");
 				break;
 			case TRUST_E_BAD_DIGEST:
 				res->set_level(MALICIOUS);
-				res->set_summary("The PE's digital signature is invalid.");
+				res->set_summary("The PE's digital signature is invalid");
 				break;
 			case CERT_E_REVOKED:
 				res->set_level(MALICIOUS);
-				res->set_summary("The PE's certificate was explicitly revoked by its issuer.");
+				res->set_summary("The PE's certificate was explicitly revoked by its issuer");
 				break;
 			case CERT_E_EXPIRED:
 				res->set_level(SUSPICIOUS);
-				res->set_summary("The PE's certificate has expired.");
+				res->set_summary("The PE's certificate has expired");
 				break;
 			default:
 				std::stringstream ss;
-				ss << "Unknown error encountered while reading the signature (0x" << std::hex << retval << ").";
+				ss << "Unknown error encountered while reading the signature (0x" << std::hex << retval << ")";
 				res->set_summary(ss.str());
 				break;
 		}
@@ -231,14 +231,14 @@ void get_publisher_information(PCMSG_SIGNER_INFO info, pResult result)
 
 			if (!res)
 			{
-				result->add_information(make_error("Could not get certificate information: CryptDecodeObject failed."));
+				result->add_information(make_error("Could not get certificate information: CryptDecodeObject failed"));
 				goto END;
 			}
 
 			opus =  (PSPC_SP_OPUS_INFO) malloc(size);
 			if (!opus)
 			{
-				result->add_information(make_error("Could not get certificate information: malloc failed."));
+				result->add_information(make_error("Could not get certificate information: malloc failed"));
 				goto END;
 			}
 
@@ -252,7 +252,7 @@ void get_publisher_information(PCMSG_SIGNER_INFO info, pResult result)
 
 			if (!res)
 			{
-				result->add_information(make_error("Could not get certificate information: CryptDecodeObject failed."));
+				result->add_information(make_error("Could not get certificate information: CryptDecodeObject failed"));
 				goto END;
 			}
 
@@ -326,14 +326,14 @@ void GetCertNameString_wrapper(PCCERT_CONTEXT context, DWORD type, DWORD flags, 
 
 	if (size == 0)
 	{
-		result->add_information(make_error("Could not get certificate details: CertGetNameString failed."));
+		result->add_information(make_error("Could not get certificate details: CertGetNameString failed"));
 		return;
 	}
 
 	char* name = (char*) malloc(size);
 	if (name == nullptr)
 	{
-		result->add_information(make_error("Could not get certificate details: malloc failed."));
+		result->add_information(make_error("Could not get certificate details: malloc failed"));
 		return;
 	}
 
@@ -344,7 +344,7 @@ void GetCertNameString_wrapper(PCCERT_CONTEXT context, DWORD type, DWORD flags, 
 							 name,		// Destination buffer
 							 size))		// Size of the destination buffer)
 	{
-		result->add_information(make_error("Could not get certificate details: CertGetNameString failed."));
+		result->add_information(make_error("Could not get certificate details: CertGetNameString failed"));
 		goto END;
 	}
 
@@ -377,7 +377,7 @@ void get_certificate_details(PCMSG_SIGNER_INFO info, HCERTSTORE hStore, pResult 
 
 	if (!context)
 	{
-		result->add_information(make_error("Could not get certificate information: CertFindCertificateInStore failed."));
+		result->add_information(make_error("Could not get certificate information: CertFindCertificateInStore failed"));
 		return;
 	}
 
@@ -418,14 +418,14 @@ void get_certificate_timestamp(PCMSG_SIGNER_INFO info, pResult result)
 									  &size);										// Put the size here
 			if (!res)
 			{
-				result->add_information(make_error("Could not get certificate timestamp: CryptDecodeObject failed."));
+				result->add_information(make_error("Could not get certificate timestamp: CryptDecodeObject failed"));
 				return;
 			}
 
 			cs_info = (PCMSG_SIGNER_INFO) malloc(size);
 			if (cs_info == nullptr)
 			{
-				result->add_information(make_error("Could not get certificate timestamp: malloc failed."));
+				result->add_information(make_error("Could not get certificate timestamp: malloc failed"));
 				return;
 			}
 
@@ -438,7 +438,7 @@ void get_certificate_timestamp(PCMSG_SIGNER_INFO info, pResult result)
 									  &size);										// Size of the destination buffer
 			if (!res)
 			{
-				result->add_information(make_error("Could not get certificate timestamp: CryptDecodeObject failed."));
+				result->add_information(make_error("Could not get certificate timestamp: CryptDecodeObject failed"));
 				goto END;
 			}
 			break;
@@ -464,13 +464,13 @@ void get_certificate_timestamp(PCMSG_SIGNER_INFO info, pResult result)
 									  &size);
 			if (!res)
 			{
-				result->add_information(make_error("Could not get certificate timestamp: CryptDecodeObject failed."));
+				result->add_information(make_error("Could not get certificate timestamp: CryptDecodeObject failed"));
 				goto END;
 			}
 
 			if (!::FileTimeToSystemTime(&file_time, &system_time))
 			{
-				result->add_information(make_error("Could not convert certificate timestamp: FileTimeToSystemTime failed."));
+				result->add_information(make_error("Could not convert certificate timestamp: FileTimeToSystemTime failed"));
 				goto END;
 			}
 
@@ -513,7 +513,7 @@ void get_certificate_info(const std::wstring& file_path, pResult result)
 								  nullptr);										// No context
 	if (!res)
 	{
-		result->add_information(make_error("Could not get certificate information: CryptQueryObject failed."));
+		result->add_information(make_error("Could not get certificate information: CryptQueryObject failed"));
 		goto END;
 	}
 
@@ -525,14 +525,14 @@ void get_certificate_info(const std::wstring& file_path, pResult result)
 						   &info_size);				// Destination of the size
 	if (!res)
 	{
-		result->add_information(make_error("Could not get certificate information: CryptMsgGetParam failed."));
+		result->add_information(make_error("Could not get certificate information: CryptMsgGetParam failed"));
 		goto END;
 	}
 
 	info = (PCMSG_SIGNER_INFO) malloc(info_size);
 	if (!info)
 	{
-		result->add_information(make_error("Could not get certificate information: malloc failed."));
+		result->add_information(make_error("Could not get certificate information: malloc failed"));
 		goto END;
 	}
 
@@ -543,7 +543,7 @@ void get_certificate_info(const std::wstring& file_path, pResult result)
 						   &info_size);				// Destination of the size
 	if (!res)
 	{
-		result->add_information(make_error("Could not get certificate information: CryptMsgGetParam failed."));
+		result->add_information(make_error("Could not get certificate information: CryptMsgGetParam failed"));
 		goto END;
 	}
 

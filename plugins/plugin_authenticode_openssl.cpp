@@ -42,7 +42,7 @@ std::string bio_to_string(pBIO bio)
     BIO_get_mem_ptr(bio.get(), &buf);
     if (buf == nullptr || buf->length == 0)
     {
-        PRINT_WARNING << "[plugin_authenticode] Tried to convert an empty BIO." << std::endl;
+        PRINT_WARNING << "[plugin_authenticode] Tried to convert an empty BIO" << std::endl;
         return "";
     }
     return std::string(buf->data, buf->length);
@@ -116,7 +116,7 @@ void add_certificate_information(pPKCS7 p, pResult res)
     STACK_OF(X509)* signers = PKCS7_get0_signers(p.get(), nullptr, 0);
     if (signers == nullptr)
     {
-        PRINT_WARNING << "[plugin_authenticode] Could not obtain the certificate signers." << std::endl;
+        PRINT_WARNING << "[plugin_authenticode] Could not obtain the certificate signers" << std::endl;
         return;
     }
     
@@ -156,7 +156,7 @@ class OpenSSLAuthenticodePlugin : public IPlugin
     }
 
     pString get_description() const override {
-        return boost::make_shared<std::string>("Checks if the digital signature of the PE is valid.");
+        return boost::make_shared<std::string>("Checks if the digital signature of the PE is valid");
     }
 
     pResult analyze(const mana::PE& pe) override
@@ -180,20 +180,20 @@ class OpenSSLAuthenticodePlugin : public IPlugin
             pBIO bio(BIO_new_mem_buf(&(*it)->Certificate[0], (*it)->Certificate.size()), BIO_free);
             if (bio == nullptr) 
             {
-                PRINT_WARNING << "[plugin_authenticode] Could not initialize a BIO." << std::endl;
+                PRINT_WARNING << "[plugin_authenticode] Could not initialize a BIO" << std::endl;
                 continue;
             }
             
             pPKCS7 p(d2i_PKCS7_bio(bio.get(), NULL), PKCS7_free);
             if (p == nullptr)
             {
-                PRINT_WARNING << "[plugin_authenticode] Error reading the PKCS7 certificate." << std::endl;
+                PRINT_WARNING << "[plugin_authenticode] Error reading the PKCS7 certificate" << std::endl;
                 continue;
             }
             
             // The PKCS7 certificate has been loaded successfully. Perform verifications.
             add_certificate_information(p, res);
-            res->set_summary("The PE is digitally signed.");
+            res->set_summary("The PE is digitally signed");
             
         }
         

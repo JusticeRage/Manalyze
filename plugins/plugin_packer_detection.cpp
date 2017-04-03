@@ -45,8 +45,8 @@ const std::vector<std::string> common_names = boost::assign::list_of(".text")
 
 // Also check for known packer section names (i.e. UPX0, etc.)
 const std::map<std::string, std::string> KNOWN_PACKER_SECTIONS =
-	boost::assign::map_list_of ("\\.ndata",	 "The PE is an NSIS installer.")
-							   ("upx[0-9]", "The PE is packed with UPX.")
+	boost::assign::map_list_of ("\\.ndata",	 "The PE is an NSIS installer")
+							   ("upx[0-9]", "The PE is packed with UPX")
 							   (".mpress[0-9]", "The PE is packed with mpress");
 
 class PackerDetectionPlugin : public IPlugin
@@ -59,7 +59,7 @@ public:
 	}
 
 	pString get_description() const override {
-		return boost::make_shared<std::string>("Tries to structurally detect packer presence.");
+		return boost::make_shared<std::string>("Tries to structurally detect packer presence");
 	}
 
 	pResult analyze(const mana::PE& pe) override
@@ -93,7 +93,7 @@ public:
 				characteristics & nt::SECTION_CHARACTERISTICS.at("IMAGE_SCN_MEM_WRITE"))
 			{
 				std::stringstream ss;
-				ss << "Section " << *(*it)->get_name() << " is both writable and executable.";
+				ss << "Section " << *(*it)->get_name() << " is both writable and executable";
 				res->add_information(ss.str());
 				res->raise_level(SUSPICIOUS);
 			}
@@ -107,7 +107,7 @@ public:
 			if (entropy > 7.)
 			{
 				std::stringstream ss;
-				ss << "Section " << *(*it)->get_name() << " has an unusually high entropy (" << entropy << ").";
+				ss << "Section " << *(*it)->get_name() << " has an unusually high entropy (" << entropy << ")";
 				res->raise_level(SUSPICIOUS);
 			}
 		}
@@ -141,7 +141,7 @@ public:
 			}
 			catch (std::invalid_argument)
             {
-                PRINT_WARNING << "Could not parse packer.min_imports in the configuration file." << std::endl;
+                PRINT_WARNING << "Could not parse packer-min_imports in the configuration file" << std::endl;
 				min_imports = 10;
 			}
 		}
@@ -149,7 +149,7 @@ public:
 		if (imports->size() < min_imports)
 		{
 			std::stringstream ss;
-			ss << "The PE only has " << imports->size() << " import(s).";
+			ss << "The PE only has " << imports->size() << " import(s)";
 			res->add_information(ss.str());
 			res->raise_level(SUSPICIOUS);
 		}
@@ -163,12 +163,12 @@ public:
 		if (sum > pe.get_filesize())
 		{
 			res->raise_level(SUSPICIOUS);
-			res->add_information("The PE's resources are bigger than it is.");
+			res->add_information("The PE's resources are bigger than it is");
 		}
 
 		// Put a default summary if none was set.
 		if (res->get_level() != NO_OPINION && res->get_summary() == nullptr) {
-			res->set_summary("The PE is possibly packed.");
+			res->set_summary("The PE is possibly packed");
 		}
 
 		return res;
