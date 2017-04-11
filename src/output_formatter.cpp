@@ -293,9 +293,10 @@ void JsonFormatter::format(std::ostream& sink, bool end_stream)
 
 void JsonFormatter::_dump_node(std::ostream& sink, pNode node, int level, bool append_comma, bool print_name)
 {
+    /*
 	if (node->get_modifier() == OutputTreeNode::HEX) { // Hexadecimal notation is not compatible with this formatter
 		node->set_modifier(OutputTreeNode::NONE);	   // ({ "my_int": 0xABC } isn't valid JSON).
-	}
+	}*/
 
 	std::string data;
 	auto node_name = io::escape<JsonFormatter>(*node->get_name());
@@ -379,10 +380,12 @@ void JsonFormatter::_dump_node(std::ostream& sink, pNode node, int level, bool a
 			}
 			boost::trim(data); // Delete unnecessary whitespace
 			if (print_name) {
-				sink << repeat("    ", level) << "\"" << *node_name << "\": " << data;
+			    //sink << repeat("    ", level) << "\"" << *node_name << "\": " << data;
+				sink << repeat("    ", level) << "\"" << *node_name << "\": \"" << data << "\"";
 			}
 			else {
-				sink << repeat("    ", level) << data;
+			    //sink << repeat("    ", level) << data;
+				sink << repeat("    ", level) << "\"" << data << "\"";
 			}
 		}
 	}
@@ -407,7 +410,7 @@ std::string uint64_to_version_number(boost::uint32_t msbytes, boost::uint32_t ls
 
 std::string timestamp_to_string(boost::uint64_t epoch_timestamp)
 {
-	static std::locale loc(std::cout.getloc(), new boost::posix_time::time_facet("%Y-%b-%d %H:%M:%S%F %z"));
+	static std::locale loc(std::cout.getloc(), new boost::posix_time::time_facet("%d-%b-%Y %H:%M:%S%F %z"));
 	std::stringstream ss;
 	ss.imbue(loc);
 	ss << boost::posix_time::from_time_t(epoch_timestamp);
