@@ -274,7 +274,7 @@ public:
 
 		// Look for common cryptography libraries
 		if (pe.find_imports(".*", "libssl(32)?.dll|libcrypto.dll")->size() > 0) {
-			res->add_information("OpenSSL.");
+			res->add_information("OpenSSL");
 		}
 		if (pe.find_imports(".*", "cryptopp.dll")->size() > 0) {
 			res->add_information("Crypto++");

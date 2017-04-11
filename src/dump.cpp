@@ -31,22 +31,22 @@ void dump_dos_header(const mana::PE& pe, io::OutputFormatter& formatter)
 	magic << header.e_magic[0] << header.e_magic[1];
 
 	io::pNode dos_header(new io::OutputTreeNode("DOS Header", io::OutputTreeNode::LIST));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_magic", magic.str()));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_cblp", header.e_cblp, io::OutputTreeNode::HEX));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_cp", header.e_cp, io::OutputTreeNode::HEX));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_crlc", header.e_crlc, io::OutputTreeNode::HEX));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_cparhdr", header.e_cparhdr, io::OutputTreeNode::HEX));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_minalloc", header.e_minalloc, io::OutputTreeNode::HEX));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_maxalloc", header.e_maxalloc, io::OutputTreeNode::HEX));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_ss", header.e_ss, io::OutputTreeNode::HEX));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_sp", header.e_sp, io::OutputTreeNode::HEX));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_csum", header.e_csum, io::OutputTreeNode::HEX));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_ip", header.e_ip, io::OutputTreeNode::HEX));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_cs", header.e_cs, io::OutputTreeNode::HEX));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_ovno", header.e_ovno, io::OutputTreeNode::HEX));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_oemid", header.e_oemid, io::OutputTreeNode::HEX));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_oeminfo", header.e_oeminfo, io::OutputTreeNode::HEX));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_lfanew", header.e_lfanew, io::OutputTreeNode::HEX));
+	dos_header->append(boost::make_shared<io::OutputTreeNode>("Magic number", magic.str()));
+	dos_header->append(boost::make_shared<io::OutputTreeNode>("Bytes on last page of file", header.e_cblp, io::OutputTreeNode::HEX));
+	dos_header->append(boost::make_shared<io::OutputTreeNode>("Pages in file", header.e_cp, io::OutputTreeNode::HEX));
+	dos_header->append(boost::make_shared<io::OutputTreeNode>("Relocations", header.e_crlc, io::OutputTreeNode::HEX));
+	dos_header->append(boost::make_shared<io::OutputTreeNode>("Size of header", header.e_cparhdr, io::OutputTreeNode::HEX));
+	dos_header->append(boost::make_shared<io::OutputTreeNode>("Min extra paragraphs", header.e_minalloc, io::OutputTreeNode::HEX));
+	dos_header->append(boost::make_shared<io::OutputTreeNode>("Max extra paragraphs", header.e_maxalloc, io::OutputTreeNode::HEX));
+	dos_header->append(boost::make_shared<io::OutputTreeNode>("Initial SS value", header.e_ss, io::OutputTreeNode::HEX));
+	dos_header->append(boost::make_shared<io::OutputTreeNode>("Initial SP value", header.e_sp, io::OutputTreeNode::HEX));
+	dos_header->append(boost::make_shared<io::OutputTreeNode>("Checksum", header.e_csum, io::OutputTreeNode::HEX));
+	dos_header->append(boost::make_shared<io::OutputTreeNode>("Initial IP value", header.e_ip, io::OutputTreeNode::HEX));
+	dos_header->append(boost::make_shared<io::OutputTreeNode>("Initial CS value", header.e_cs, io::OutputTreeNode::HEX));
+	dos_header->append(boost::make_shared<io::OutputTreeNode>("Overlay number", header.e_ovno, io::OutputTreeNode::HEX));
+	dos_header->append(boost::make_shared<io::OutputTreeNode>("OEM identifier", header.e_oemid, io::OutputTreeNode::HEX));
+	dos_header->append(boost::make_shared<io::OutputTreeNode>("OEM information", header.e_oeminfo, io::OutputTreeNode::HEX));
+	dos_header->append(boost::make_shared<io::OutputTreeNode>("Address of NE header", header.e_lfanew, io::OutputTreeNode::HEX));
 
 	formatter.add_data(dos_header, *pe.get_path());
 }
@@ -64,11 +64,11 @@ void dump_pe_header(const mana::PE& pe, io::OutputFormatter& formatter)
 	ss << header.Signature[0] << header.Signature[1];
 	pe_header->append(boost::make_shared<io::OutputTreeNode>("Signature", ss.str()));
 	pe_header->append(boost::make_shared<io::OutputTreeNode>("Machine", *nt::translate_to_flag(header.Machine, nt::MACHINE_TYPES)));
-	pe_header->append(boost::make_shared<io::OutputTreeNode>("NumberofSections", header.NumberofSections));
-	pe_header->append(boost::make_shared<io::OutputTreeNode>("TimeDateStamp", io::timestamp_to_string(header.TimeDateStamp)));
-	pe_header->append(boost::make_shared<io::OutputTreeNode>("PointerToSymbolTable", header.PointerToSymbolTable, io::OutputTreeNode::HEX));
-	pe_header->append(boost::make_shared<io::OutputTreeNode>("NumberOfSymbols", header.NumberOfSymbols));
-	pe_header->append(boost::make_shared<io::OutputTreeNode>("SizeOfOptionalHeader", header.SizeOfOptionalHeader, io::OutputTreeNode::HEX));
+	pe_header->append(boost::make_shared<io::OutputTreeNode>("Number of sections", header.NumberofSections));
+	pe_header->append(boost::make_shared<io::OutputTreeNode>("Time date stamp", io::timestamp_to_string(header.TimeDateStamp)));
+	pe_header->append(boost::make_shared<io::OutputTreeNode>("Pointer to Symbol Table", header.PointerToSymbolTable, io::OutputTreeNode::HEX));
+	pe_header->append(boost::make_shared<io::OutputTreeNode>("Number of symbols", header.NumberOfSymbols));
+	pe_header->append(boost::make_shared<io::OutputTreeNode>("Size of Optional Header", header.SizeOfOptionalHeader, io::OutputTreeNode::HEX));
 	pe_header->append(boost::make_shared<io::OutputTreeNode>("Characteristics", *nt::translate_to_flags(header.Characteristics, nt::PE_CHARACTERISTICS)));
 
 	formatter.add_data(pe_header, *pe.get_path());
@@ -128,7 +128,9 @@ void dump_image_optional_header(const mana::PE& pe, io::OutputFormatter& formatt
 	ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeOfHeaders", ioh.SizeOfHeaders, io::OutputTreeNode::HEX));
 	ioh_header->append(boost::make_shared<io::OutputTreeNode>("Checksum", ioh.Checksum, io::OutputTreeNode::HEX));
 	ioh_header->append(boost::make_shared<io::OutputTreeNode>("Subsystem", *nt::translate_to_flag(ioh.Subsystem, nt::SUBSYSTEMS)));
-	ioh_header->append(boost::make_shared<io::OutputTreeNode>("DllCharacteristics", *nt::translate_to_flags(ioh.DllCharacteristics, nt::DLL_CHARACTERISTICS)));
+	if(ioh.DllCharacteristics){
+	    	ioh_header->append(boost::make_shared<io::OutputTreeNode>("DllCharacteristics", *nt::translate_to_flags(ioh.DllCharacteristics, nt::DLL_CHARACTERISTICS)));
+	}
 	ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeofStackReserve", ioh.SizeofStackReserve, io::OutputTreeNode::HEX));
 	ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeofStackCommit", ioh.SizeofStackCommit, io::OutputTreeNode::HEX));
 	ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeofHeapReserve", ioh.SizeofHeapReserve, io::OutputTreeNode::HEX));
