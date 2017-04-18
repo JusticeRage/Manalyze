@@ -33,15 +33,14 @@ rule System_Tools
         $a9 = "regmon.exe" nocase wide ascii
         $a10 = "filemon.exe" nocase wide ascii
         $a11 = "msconfig.exe" nocase wide ascii
-<<<<<<< HEAD
         $a12 = "vssadmin.exe" nocase wide ascii
         $a13 = "bcdedit.exe" nocase wide ascii
         $a14 = "dumpcap.exe" nocase wide ascii
         $a15 = "tcpdump.exe" nocase wide ascii
 		$a16 = "mshta.exe" nocase wide ascii    // Used by DUBNIUM to download files
-        $a16 = "control.exe" nocase wide ascii  // Used by EquationGroup to launch DLLs
-        $a17 = "regsvr32.exe" nocase wide ascii
-        $a18 = "rundll32.exe" nocase wide ascii
+        $a17 = "control.exe" nocase wide ascii  // Used by EquationGroup to launch DLLs
+        $a18 = "regsvr32.exe" nocase wide ascii
+        $a19 = "rundll32.exe" nocase wide ascii
 		
     condition:
         any of them
