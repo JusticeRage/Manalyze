@@ -40,12 +40,15 @@
 #include "yara/yara_wrapper.h"
 
 #include "manape/pe.h"
-#include "manape/resources.h"
 #include "manacommons/color.h"
 #include "output_formatter.h"
 #include "dump.h"
 
 #define MANALYZE_VERSION "0.9"
+
+#if defined WITH_OPENSSL
+# include <openssl/opensslv.h>  // Used to display OpenSSL's version
+#endif
 
 namespace po = boost::program_options;
 namespace bfs = boost::filesystem;
@@ -232,7 +235,8 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
 			"imports, exports, resources, version, debug, tls, config (image load configuration), "
 			"delay (delay-load table")
 		("hashes", "Calculate various hashes of the file (may slow down the analysis!)")
-		("extract,x", po::value<std::string>(), "Extract the PE resources to the target directory.")
+		("extract,x", po::value<std::string>(), "Extract the PE resources and authenticode certificates "
+			"to the target directory.")
 		("plugins,p", po::value<std::vector<std::string> >(),
 			"Analyze the binary with additional plugins. (may slow down the analysis!)");
 
@@ -258,6 +262,9 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
 		ss << "* Boost " BOOST_LIB_VERSION " (Boost.org, Boost Software License)" << std::endl;
 		ss << "* Yara " << YR_MAJOR_VERSION << "." << YR_MINOR_VERSION << "." << YR_MICRO_VERSION << ". (Victor M. Alvarez, Apache 2.0 License)" << std::endl;
 		ss << "* hash-library " << HASH_LIBRARY_VERSION << " (Stephan Brumme, ZLib License)." << std::endl;
+		#if defined WITH_OPENSSL
+			ss << "* " << OPENSSL_VERSION_TEXT << " (OpenSSL Project, OpenSSL License)" << std::endl;
+		#endif
 		std::cout << ss.str();
 		exit(0);
 	}
@@ -492,8 +499,10 @@ void perform_analysis(const std::string& path,
 	}
 
 
-	if (vm.count("extract")) { // Extract resources if requested
+	if (vm.count("extract")) // Extract resources if requested 
+	{
 		mana::extract_resources(pe, extraction_directory);
+		mana::extract_authenticode_certificates(pe, extraction_directory);
 	}
 
 	if (vm.count("hashes")) {
@@ -516,6 +525,15 @@ int main(int argc, char** argv)
 	// Load the dynamic plugins.
 	bfs::path working_dir(argv[0]);
 	working_dir = working_dir.parent_path();
+
+	// Linux: look for the configuration file in /etc/manalyze if
+	// nothing is found in the current folder.
+	#ifdef BOOST_POSIX_API
+		if (!bfs::exists(working_dir / "manalyze.conf")) {
+			working_dir = "/etc/manalyze";
+		}
+	#endif
+
 	plugin::PluginManager::get_instance().load_all(working_dir.string());
 
 	// Load the configuration

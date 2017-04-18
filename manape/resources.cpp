@@ -221,14 +221,26 @@ shared_bytes Resource::get_raw_data() const
 		goto END;
 	}
 
+	// Linux doesn't throw std::bad_alloc, instead it has OOM Killer shutdown the process.
+	// This workaround prevents Manalyze from crashing by bounding how much memory can be requested.
+	#ifdef BOOST_POSIX_API
+		struct stat st;
+		stat(_path_to_pe.c_str(), &st);
+		if (_size > st.st_size)
+		{
+			PRINT_ERROR << "Resource " << *get_name() << " is bigger than the PE. Not trying to load it in memory."
+						<< DEBUG_INFO << std::endl;
+			return res;
+		}
+	#endif
+
 	try {
 		res->resize(_size);
 	}
 	catch (const std::exception& e)
 	{
 		PRINT_ERROR << "Failed to allocate enough space for resource " << *get_name() << "! (" << e.what() << ")"
-			<< DEBUG_INFO << std::endl;
-		res->resize(0);
+					<< DEBUG_INFO << std::endl;
 		return res;
 	}
 	read_bytes = fread(&(*res)[0], 1, _size, f);
@@ -587,8 +599,22 @@ std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, co
 		return res;
 	}
 
-	unsigned int header_size = 3 * sizeof(boost::uint16_t) + directory->Count * sizeof(group_icon_directory_entry);
-	res.resize(header_size);
+	// Sanity check.
+	if (directory->Count > resources.size())
+	{
+		PRINT_ERROR << "The number of ICON_DIRECTORY_ENTRIES is bigger than the number of resources in the file." << DEBUG_INFO << std::endl;
+		return std::vector<boost::uint8_t>();
+	}
+
+	boost::uint32_t header_size = 3 * sizeof(boost::uint16_t) + directory->Count * sizeof(group_icon_directory_entry);
+	try {
+		res.resize(header_size);
+	}
+	catch (const std::bad_alloc)
+	{
+		PRINT_ERROR << "Could not allocate enough memory to reconstruct an icon. This PE may have been manually modified." << DEBUG_INFO << std::endl;
+		return std::vector<boost::uint8_t>();
+	}
 	memcpy(&res[0], directory.get(), 3 * sizeof(boost::uint16_t));
 
 	for (int i = 0; i < directory->Count; ++i)
@@ -606,8 +632,7 @@ std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, co
 		if (icon == nullptr)
 		{
 			PRINT_ERROR << "Could not locate RT_ICON with ID " << directory->Entries[i]->Id << "!" << DEBUG_INFO << std::endl;
-			res.clear();
-			return res;
+			return std::vector<boost::uint8_t>();
 		}
 
 		shared_bytes icon_bytes = icon->get_raw_data();

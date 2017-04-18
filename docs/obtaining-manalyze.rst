@@ -32,11 +32,11 @@ Linux and BSD
 
 How you take care of step 1 may vary depending on your package manager. On Debian Jessie, use the following command **as root**::
 
-    apt-get install libboost-regex-dev libboost-program-options-dev libboost-system-dev libboost-filesystem-dev build-essential cmake git
+    apt-get install libboost-regex-dev libboost-program-options-dev libboost-system-dev libboost-filesystem-dev libssl-dev build-essential cmake git
 	
 On FreeBSD 10.2, use this one instead (also **as root**)::
 
-    pkg install boost-libs-1.55.0_8 cmake git
+    pkg install boost-libs-1.55.0_8 libressl cmake git
 	
 Next, get Manalyze's source code and try building it::
 
@@ -118,7 +118,23 @@ This compilation error is usually encountered on Debian 7 (Wheezy)::
 
 This issue has been traced to the `Boost libraries <http://www.boost.org/>`_ in Wheezy repositories being too old (1.49.0). You'll need to either upgrade them manually or switch to Debian Jessie.
 
-2. Incompatibilities between OpenSSL 1.1 and Boost
+2. CMake does not find OpenSSL
+------------------------------
+
+Some versions of CMake (for instance 3.0.2, present in Debian Jessie's repositories) seem to have trouble locating OpenSSL and generate the following error messages::
+
+	CMake Error at /usr/share/cmake-3.0/Modules/FindOpenSSL.cmake:293 (list):
+	  list GET given empty list
+	Call Stack (most recent call first):
+	  CMakeLists.txt:23 (find_package)
+
+	[...]
+
+	-- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libssl.so;/usr/lib/x86_64-linux-gnu/libcrypto.so (found version ".0.0`") 
+
+Upgrading CMake to the latest release (3.5.2 at the time I'm writing this) solves this issue.
+
+3. Incompatibilities between OpenSSL 1.1 and Boost
 --------------------------------------------------
 
 The following error may be encountered on Debian 9 (Stretch)::
@@ -126,3 +142,4 @@ The following error may be encountered on Debian 9 (Stretch)::
     In function ‘bool plugin::vt_api_interact(const string&, const string&, std::__cxx11::string&, plugin::sslsocket&)’: ~/Manalyze/plugins/plugin_virustotal/plugin_virustotal.cpp:276:84: error: ‘SSL_R_SHORT_READ’ was not declared in this scope if (error != boost::asio::error::eof && error.value() != ERR_PACK(ERR_LIB_SSL, 0, SSL_R_SHORT_READ))
 	
 Starting with Stretch, Debian ships with the 1.1 branch of OpenSSL which is `not compatible <https://github.com/chriskohlhoff/asio/issues/184>`_ with most versions of Boost. It is unclear from which version the problem has been fixed, but a workaround for this issue is to download one of the latest Boost distributions from upstream and build it instead of using the libraries provided by Debian.
+

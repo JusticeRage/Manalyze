@@ -58,6 +58,10 @@ typedef boost::shared_ptr<std::string> pString;
 #define IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT   13   // Delay Load Import Descriptors
 #define IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR 14   // COM Runtime descriptor
 
+#ifndef WIN_CERT_TYPE_PKCS_SIGNED_DATA
+# define WIN_CERT_TYPE_PKCS_SIGNED_DATA       2
+#endif
+
 namespace nt {
 
 typedef std::map<std::string, int> flag_dict;

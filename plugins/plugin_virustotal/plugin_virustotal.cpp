@@ -23,6 +23,9 @@
 
 #include <stdio.h>
 #include <boost/asio.hpp>
+#if defined WITH_OPENSSL
+# include <boost/asio/ssl.hpp>
+#endif
 
 #include "plugin_framework/plugin_interface.h"
 #include "plugin_framework/auto_register.h"
@@ -36,8 +39,17 @@ namespace js = json_spirit;
 
 namespace plugin {
 
+#if defined WITH_OPENSSL
+	namespace ssl = boost::asio::ssl;
+	typedef   ssl::stream<bai::tcp::socket> sslsocket;
+#endif
+
 /**
  *	@brief	Queries VirusTotal for a given hash.
+ *
+ *	Depending on whether OpenSSL is available, one of two versions of this function will
+ *	be compiled. One of them connects to VirusTotal through HTTPS, and the other one 
+ *	through plain HTTP.
  *
  *	@param	const std::string& hash The hash of the program whose AV results we want.
  *	@param	const std::string& api_key The VirusTotal API key used to submit queries.
@@ -108,12 +120,14 @@ public:
 				if (!it->value_.get_int()) // Response Code = 0: VT does not know the file.
 				{
 					res->set_level(SUSPICIOUS); // Because VT knows all the files.
-					res->set_summary("This file has never been scanned on VirusTotal.");
+					res->set_summary("No VirusTotal score.");
+					res->add_information("This file has never been scanned on VirusTotal.");
 					return res;
 				}
 				else if (it->value_.get_int() == -2) // Response Code = -2: scan queued.
 				{
-					res->set_summary("A scan if the file is currently queued on VirusTotal.");
+					res->set_summary("No VirusTotal score.");
+					res->add_information("A scan if the file is currently queued.");
 					return res;
 				}
 			}
@@ -153,8 +167,10 @@ public:
 		std::stringstream ss;
 		ss << "VirusTotal score: " << positives << "/" << total << " (Scanned on " << scan_date << ")";
 		res->set_summary(ss.str());
-		if (positives == 0) {
+		if (positives == 0) 
+		{
 			res->set_level(SAFE);
+			res->add_information("All the AVs think this file is safe.");
 		}
 		else if (positives < 3) { // Allow reasonable doubt for paranoid AVs
 			res->set_level(SUSPICIOUS);
@@ -169,30 +185,29 @@ public:
 
 // ----------------------------------------------------------------------------
 
-bool query_virus_total(const std::string& hash, const std::string& api_key, std::string& destination)
+/**
+ *	@brief	Performs the actual communication with the API after the communication
+ *			has been established.
+ *
+ *	@param	const std::string& hash The hash of the program whose AV results we want.
+ *	@param	const std::string& api_key The VirusTotal API key used to submit queries.
+ *	@param	std::string& destination The string which will recieve the REST JSON response.
+ *	@param	sslsocket& socket or bai::tcp::socket& socket The socket connected to the API.
+ *			Its type will vary depending on whether OpenSSL is available (in which case,
+ *			the socket will automatically be an SSL socket).
+ */
+#if defined WITH_OPENSSL
+bool vt_api_interact(const std::string& hash,
+					 const std::string& api_key,
+					 std::string& destination,
+					 sslsocket& socket)
+#else
+bool vt_api_interact(const std::string& hash,
+					 const std::string& api_key,
+					 std::string& destination,
+					 bai::tcp::socket& socket)
+#endif
 {
-	boost::asio::io_service io_service;
-
-	// Get a list of endpoints corresponding to the server name.
-	bai::tcp::resolver resolver(io_service);
-	bai::tcp::resolver::query query("www.virustotal.com", "http");
-	bai::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
-	bai::tcp::resolver::iterator end;
-
-	// Try each endpoint until we successfully establish a connection.
-	bai::tcp::socket socket(io_service);
-	boost::system::error_code error = boost::asio::error::host_not_found;
-	while (error && endpoint_iterator != end)
-	{
-		socket.close();
-		socket.connect(*endpoint_iterator++, error);
-	}
-	if (error)
-	{
-		PRINT_ERROR << "Could not resolve www.virustotal.com (plugin_virustotal)!" << std::endl;
-		return false;
-	}
-
 	// Build the request
 	boost::asio::streambuf request;
 	std::stringstream ss;
@@ -251,17 +266,102 @@ bool query_virus_total(const std::string& hash, const std::string& api_key, std:
 	}
 
 	// Read until EOF, writing data to output as we go.
+	boost::system::error_code error;
 	while (boost::asio::read(socket, response, boost::asio::transfer_at_least(1), error)) {
 		ss << &response;
 	}
+	
+	#if defined WITH_OPENSSL
+	// SSL connexions may be terminated by a short read error.
+	if (error != boost::asio::error::eof && error.value() != ERR_PACK(ERR_LIB_SSL, 0, SSL_R_SHORT_READ)) {
+	#else
 	if (error != boost::asio::error::eof) {
-		PRINT_ERROR << "Could not read the response (" << error << ")." << std::endl;
+	#endif
+		PRINT_ERROR << "Could not read the response (" << error.message() << ")." << std::endl;
 		return false;
+	}
+	else if (error == boost::asio::error::eof)
+	{
+		#if defined WITH_OPENSSL
+			socket.shutdown();
+		#else
+			socket.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
+		#endif
 	}
 
 	destination = ss.str();
 	return true;
 }
+
+// ----------------------------------------------------------------------------
+
+#if !defined WITH_OPENSSL
+// Version of the function which establishes a plain HTTP connexion.
+bool query_virus_total(const std::string& hash, const std::string& api_key, std::string& destination)
+{
+	boost::asio::io_service io_service;
+
+	// Get a list of endpoints corresponding to the server name.
+	bai::tcp::resolver resolver(io_service);
+	bai::tcp::resolver::query query("www.virustotal.com", "http");
+	bai::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
+	bai::tcp::resolver::iterator end;
+
+	// Try each endpoint until we successfully establish a connection.
+	bai::tcp::socket socket(io_service);
+	boost::system::error_code error = boost::asio::error::host_not_found;
+	while (error && endpoint_iterator != end)
+	{
+		socket.close();
+		socket.connect(*endpoint_iterator++, error);
+	}
+	if (error)
+	{
+		PRINT_ERROR << "Could not resolve www.virustotal.com (plugin_virustotal)! " << error.message() << std::endl;
+		return false;
+	}
+
+	return vt_api_interact(hash, api_key, destination, socket);
+}
+#endif
+
+// ----------------------------------------------------------------------------
+
+#if defined WITH_OPENSSL
+// Version of the function which establishes an SSL connexion.
+bool query_virus_total(const std::string& hash, const std::string& api_key, std::string& destination)
+{
+	ssl::context ctx(ssl::context::sslv23);
+	ctx.set_default_verify_paths();
+
+	boost::asio::io_service io_service;
+
+	// Get a list of endpoints corresponding to the server name.
+	bai::tcp::resolver resolver(io_service);
+	bai::tcp::resolver::query query("www.virustotal.com", "https");
+	bai::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
+	bai::tcp::resolver::iterator end;
+
+	// Try each endpoint until we successfully establish a connection.
+	sslsocket socket(io_service, ctx);
+	boost::system::error_code error = boost::asio::error::host_not_found;
+	while (error && endpoint_iterator != end)
+	{
+		socket.next_layer().close();
+		socket.next_layer().connect(*endpoint_iterator++, error);
+		socket.set_verify_mode(ssl::verify_peer);
+		socket.set_verify_callback(ssl::rfc2818_verification("www.virustotal.com"));
+		socket.handshake(sslsocket::client, error);
+	}
+	if (error)
+	{
+		PRINT_ERROR << "Could not connect to www.virustotal.com (plugin_virustotal)! " << error.message() << std::endl;
+		return false;
+	}
+
+	return vt_api_interact(hash, api_key, destination, socket);
+}
+#endif
 
 // ----------------------------------------------------------------------------
 
