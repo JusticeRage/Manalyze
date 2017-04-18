@@ -240,7 +240,7 @@ class YaraRule:
                     # If they haven't been detected while looking ahead, it means that
                     # they arrive after a full expression (i.e. (0&1)>X,Y), which can't
                     # be translated to a Yara rule as far as I know.
-                    print "Unable to translate a logical signature for %s" % self._meta_signature
+                    print "Unable to translate a logical signature for %s. Skipping..." % self._meta_signature
                     return ""
                 else:
                     try:
@@ -248,7 +248,7 @@ class YaraRule:
                         # Check for a negation or a count
                         if i + 2 < len(tokens) and (tokens[i+1] == "=" or tokens[i+1] == ">" or tokens[i+1] == "<"):
                             if i + 3 < len(tokens) and tokens[i+2] == ",":
-                                print "Unable to translate a logical signature for %s" % self._meta_signature
+                                print "Unable to translate a logical signature for %s. Skipping..." % self._meta_signature
                                 return ""
                             if tokens[i+1] == "=" and tokens[i+2] == "0":  # Negation
                                 conditions += "not %s" % self._conditions[index]
@@ -324,6 +324,9 @@ def parse_ldb(input, output, is_daily=False):
                 # Also disregard rules for files contained in other files
                 if "Container" in target_block:
                     continue
+
+                if any('!' in r for r in rules):  # Skip rules containing "!" such as "...!(01|02|03)..."
+                    continue                      # which do not translate to Yara rules.
 
                 signatures = []
                 for r in rules:

@@ -117,3 +117,12 @@ This compilation error is usually encountered on Debian 7 (Wheezy)::
 	make: *** [all] Error 2
 
 This issue has been traced to the `Boost libraries <http://www.boost.org/>`_ in Wheezy repositories being too old (1.49.0). You'll need to either upgrade them manually or switch to Debian Jessie.
+
+2. Incompatibilities between OpenSSL 1.1 and Boost
+--------------------------------------------------
+
+The following error may be encountered on Debian 9 (Stretch)::
+
+    In function ‘bool plugin::vt_api_interact(const string&, const string&, std::__cxx11::string&, plugin::sslsocket&)’: ~/Manalyze/plugins/plugin_virustotal/plugin_virustotal.cpp:276:84: error: ‘SSL_R_SHORT_READ’ was not declared in this scope if (error != boost::asio::error::eof && error.value() != ERR_PACK(ERR_LIB_SSL, 0, SSL_R_SHORT_READ))
+	
+Starting with Stretch, Debian ships with the 1.1 branch of OpenSSL which is `not compatible <https://github.com/chriskohlhoff/asio/issues/184>`_ with most versions of Boost. It is unclear from which version the problem has been fixed, but a workaround for this issue is to download one of the latest Boost distributions from upstream and build it instead of using the libraries provided by Debian.
