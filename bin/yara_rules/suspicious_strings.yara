@@ -790,7 +790,7 @@ rule Obfuscated_Strings
 		$a28 = { (5A | 7A) 78 69 (4D | 6D) 6F 72 7E (5C | 7C) 79 79 6F 78 6E 6E }
 		$a29 = { (59 | 79) 7B 6A (4E | 6E) 6C 71 7D (5F | 7F) 7A 7A 6C 7B 6D 6D }
 		$a30 = { (58 | 78) 7A 6B (4F | 6F) 6D 70 7C (5E | 7E) 7B 7B 6D 7A 6C 6C }
-		$a31 = { (67 | 47) 45 54 (70 | 50) 52 4F 43 (61 | 41) 44 44 52 45 53 53 }
+		// XOR 0x20 removed because it toggles capitalization and causes [Gg]ET[Pp]ROC[Aa]DDRESS to match.
 		$a32 = { (66 | 46) 44 55 (71 | 51) 53 4E 42 (60 | 40) 45 45 53 44 52 52 }
 		$a33 = { (65 | 45) 47 56 (72 | 52) 50 4D 41 (63 | 43) 46 46 50 47 51 51 }
 		$a34 = { (64 | 44) 46 57 (73 | 53) 51 4C 40 (62 | 42) 47 47 51 46 50 50 }
@@ -1044,7 +1044,7 @@ rule Obfuscated_Strings
 		$a282 = { (51 | 71) 72 7C 79 (51 | 71) 74 7F 6F 7C 6F 64 }
 		$a283 = { (52 | 72) 71 7F 7A (52 | 72) 77 7C 6C 7F 6C 67 }
 		$a284 = { (53 | 73) 70 7E 7B (53 | 73) 76 7D 6D 7E 6D 66 }
-		$a285 = { (6C | 4C) 4F 41 44 (6C | 4C) 49 42 52 41 52 59 }
+		// XOR 0x20 removed because it toggles capitalization and causes [lL]OAD[Ll]IBRARY to match.
 		$a286 = { (6D | 4D) 4E 40 45 (6D | 4D) 48 43 53 40 53 58 }
 		$a287 = { (6E | 4E) 4D 43 46 (6E | 4E) 4B 40 50 43 50 5B }
 		$a288 = { (6F | 4F) 4C 42 47 (6F | 4F) 4A 41 51 42 51 5A }

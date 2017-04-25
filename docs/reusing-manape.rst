@@ -2,7 +2,10 @@
 Reusing the PE parser
 *********************
 
-This section will explain how you can take the PE parser (ManaPE) out of Manalyze and re-use it in another project. We will focus on Linux environments, but the instructions given here should be easy to apply to other systems.
+Embedding the code
+==================
+
+This section will explain how you can take the PE parser (ManaPE) out of Manalyze and re-use it in another project. 
 
 Let's start by writing some sample code that would read a PE file using Manalyze's parser::
 
@@ -47,3 +50,37 @@ You don't have to follow the same folder structure, it's only given as an exampl
 	.rsrc
 
 Obviously, you'll want to write a Makefile or use CMake, but this should be enough to get you started. If you need detailed information on available methods that you can use from here, please see this section on :ref:`pe_objects`.
+
+Reusing binaries
+================
+
+On Linux
+--------
+
+Depending on your use-case, you may alternatively re-use the shared libraries which are distributed and/or generated with Manalyze and its build system.
+
+In that case, you still have to include the header files in your project as described above (except you only need the ``[...]/Manalyze/include/manape/`` directory). You also need to copy the shared objects::
+
+	~/code/project$ mkdir include lib
+	~/code/project$ cp -r [...]/Manalyze/include/manape/ include/
+	~/code/project$ cp [...]/Manalyze/bin/*.so lib/
+	
+Subsequently, add ``-Llib`` and ``-lmanape -lmanacommons`` to your compilation flags to indicate that the compiler should link against those libraries.
+
+On Windows
+----------
+
+Linking against DLLs requires a little more work on Windows. First, copy Manalyze's header files in your project directory as described above.
+
+Sadly, Visual Studio is *only* capable of linking against ``.lib`` files, even if the code will *in fine* be found in a DLL. Those files are generated when Manalyze is built but are not distributed with the program - this means that you have to checkout Manalyze's source code from GitHub and build it manually. Hopefully, this should be as simple as this::
+
+	$ git clone https://github.com/JusticeRage/Manalyze.git
+	$ cd Manalyze
+	$ cmake .
+
+...Then use Visual Studio to build everything. Following that, you will find a few ``.lib`` files in ``[...]\Manalyze\Debug\`` or ``[...]\Manalyze\Release\`` (use whichever matches your build profile). Copy ``*.lib`` to a ``lib`` folder in your project directory and configure VS so that they will be taken into account. This involves:
+
+- Adding the ``lib`` folder to ``Library Directories`` under ``VC++ Directories``.
+- Specifying ``manape.lib`` and ``manacommons.lib`` in ``Linker > Input > Additional Dependencies``
+
+From there, you should be able to write code relying on the PE parser!
