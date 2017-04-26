@@ -578,6 +578,17 @@ Miscellaneous
 
 ``pe.get_architecture()`` returns either ``PE::x86`` or ``PE::x64`` depending on the program's target architecture.
 
+``pe.rva_to_offset(boost::uint64_t rva)`` translates a relative virtual address into a file offset.
+
+``pe.get_raw_bytes(size_t size)`` returns the ``size`` first raw bytes of the file. If ``size`` is omitted, every byte from the file is returned::
+
+	auto bytes = pe.get_raw_bytes(1000);
+	for (auto it = bytes->begin() ; it != bytes->end() ; ++it) {
+		// Iterate on the bytes...
+	}
+	// Or access them directly:
+	if ((*bytes)[0] == 'M' && &(*bytes)[1] == 'Z') { ... }
+
 ``nt::translate_to_flag`` and ``nt::translate_to_flags`` are two functions that come in handy when you need to expand flags (i.e. the ``Characteristics`` field of many structures). Use the first function for values which translate into a single flag, and the second one for values which are composed of multiple ones::
 
     auto pType = nt::translate_to_flag(ppe_header->Machine, nt::MACHINE_TYPES);

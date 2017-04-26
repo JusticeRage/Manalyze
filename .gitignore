@@ -49,6 +49,7 @@ Makefile
 *.suo
 *.ilk
 *.opendb
+*.db
 Win32
 Release
 Debug
@@ -66,10 +67,7 @@ docs/.*
 docs/html
 
 # Malwares and documentation
-resources/*.mal
-resources/*.bin
-resources/*.pdf
-resources/*.docx?
+resources/*
 
 # Third-party libraries
 external/

@@ -149,6 +149,15 @@ public:
 											   const std::string& dll_name_regexp = ".*",
 											   bool  case_sensitivity = false) const;
 
+	/**
+	*	@brief	Translates a Relative Virtual Address into an offset in the file.
+	*
+	*	@param	boost::uint32_t rva The RVA to translate
+	*
+	*	@return	The corresponding offset in the file, or 0 if the RVA could not be translated.
+	*/
+	DECLSPEC unsigned int rva_to_offset(boost::uint64_t rva) const;
+
 	DECLSPEC boost::optional<dos_header> get_dos_header() const {
 		return _h_dos;
 	}
@@ -218,6 +227,18 @@ public:
 	DECLSPEC bool is_valid()	const {
 		return _initialized;
 	}
+
+	/**
+	 *	@brief	Provides direct access to the file's bytes.
+	 *
+	 *	/!\ Warning: the whole file will be loaded in memory!
+	 *
+	 *	@param	boost::uint64_t size If specified, only the [size] first bytes of the file
+	 *			will be provided. By default, the whole file is read.
+	 *
+	 *	@return	A vector containing the bytes of the file.
+	*/
+	DECLSPEC shared_bytes get_raw_bytes(size_t size = INT_MAX) const;
 
 	/**
 	 *	@brief	The delete operator. "new" had to be re-implemented in order to make it private.
@@ -366,15 +387,6 @@ private:
 	 *	/!\ This relies on the information gathered in _parse_pe_header.
 	 */
 	bool _parse_certificates();
-
-	/**
-	 *	@brief	Translates a Relative Virtual Address into an offset in the file.
-	 *
-	 *	@param	boost::uint32_t rva The RVA to translate
-	 *
-	 *	@return	The corresponding offset in the file, or 0 if the RVA could not be translated.
-	 */
-	unsigned int _rva_to_offset(boost::uint64_t rva) const;
 
 	/**
 	 *	@brief	Translates a Virtual Address (*not relative to the image base*) into an offset in the file.

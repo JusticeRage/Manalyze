@@ -72,6 +72,28 @@ BOOST_AUTO_TEST_CASE(parse_testfile)
 
 // ----------------------------------------------------------------------------
 
+BOOST_AUTO_TEST_CASE(get_raw_bytes)
+{
+	mana::PE pe("testfiles/manatest.exe");
+	auto bytes = pe.get_raw_bytes();
+	BOOST_CHECK_EQUAL(bytes->size(), 16360);
+	BOOST_CHECK_EQUAL(bytes->at(0), 'M');
+	BOOST_CHECK_EQUAL(bytes->at(1), 'Z');
+	BOOST_CHECK_EQUAL(bytes->at(16359), '\x00');
+	BOOST_CHECK_EQUAL(bytes->at(16358), '\x00');
+	BOOST_CHECK_EQUAL(bytes->at(16357), '\x00');
+	BOOST_CHECK_EQUAL(bytes->at(16356), '\x00');
+	BOOST_CHECK_EQUAL(bytes->at(16355), '\x0B');
+	BOOST_CHECK_EQUAL(bytes->at(16354), '\x7C');
+
+	bytes = pe.get_raw_bytes(0x80);
+	BOOST_CHECK_EQUAL(bytes->size(), 0x80);
+	std::string s(&(*bytes)[0x4E], &(*bytes)[0x75]);
+	BOOST_CHECK_EQUAL(s, "This program cannot be run in DOS mode.");
+}
+
+// ----------------------------------------------------------------------------
+
 BOOST_AUTO_TEST_CASE(parse_dos_header)
 {
 	mana::PE pe("testfiles/manatest.exe");

@@ -95,6 +95,19 @@ PE::PE_ARCHITECTURE PE::get_architecture() const {
 
 // ----------------------------------------------------------------------------
 
+shared_bytes PE::get_raw_bytes(size_t size) const
+{
+	fseek(_file_handle.get(), 0, SEEK_SET);
+	if (size > _file_size) {
+		size = static_cast<size_t>(_file_size);
+	}
+	auto res = boost::make_shared<std::vector<boost::uint8_t> >(size);
+	fread(&(*res)[0], 1, size , _file_handle.get());
+	return res;
+}
+
+// ----------------------------------------------------------------------------
+
 bool PE::_parse_dos_header()
 {
 	if (_file_handle == nullptr) {
@@ -441,7 +454,7 @@ bool PE::_parse_debug()
 
 // ----------------------------------------------------------------------------
 
-unsigned int PE::_rva_to_offset(boost::uint64_t rva) const
+unsigned int PE::rva_to_offset(boost::uint64_t rva) const
 {
 	if (!_ioh) // Image Optional Header was not parsed.
 	{
@@ -509,7 +522,7 @@ unsigned int PE::_va_to_offset(boost::uint64_t va) const
 					<< DEBUG_INFO_INSIDEPE << std::endl;
 		return 0;
 	}
-	return va > _ioh->ImageBase ? _rva_to_offset(va - _ioh->ImageBase) : 0;
+	return va > _ioh->ImageBase ? rva_to_offset(va - _ioh->ImageBase) : 0;
 }
 
 // ----------------------------------------------------------------------------
@@ -549,7 +562,7 @@ bool PE::_reach_directory(int directory) const
 		return false;
 	}
 
-	unsigned int offset = _rva_to_offset(_ioh->directories[directory].VirtualAddress);
+	unsigned int offset = rva_to_offset(_ioh->directories[directory].VirtualAddress);
 
 	if (!offset || fseek(_file_handle.get(), offset, SEEK_SET))
 	{
@@ -611,7 +624,7 @@ bool PE::_parse_exports()
 	}
 
 	// Read the export name
-	unsigned int offset = _rva_to_offset(ied.Name);
+	unsigned int offset = rva_to_offset(ied.Name);
 	if (!offset || !utils::read_string_at_offset(_file_handle.get(), offset, ied.NameStr))
 	{
 		PRINT_ERROR << "Could not read the exported DLL name." << DEBUG_INFO_INSIDEPE << std::endl;
@@ -619,7 +632,7 @@ bool PE::_parse_exports()
 	}
 
 	// Get the address and ordinal of each exported function
-	offset = _rva_to_offset(ied.AddressOfFunctions);
+	offset = rva_to_offset(ied.AddressOfFunctions);
 	if (!offset || fseek(_file_handle.get(), offset, SEEK_SET))
 	{
 		PRINT_ERROR << "Could not reach exported functions address table."
@@ -642,7 +655,7 @@ bool PE::_parse_exports()
 		image_data_directory export_dir = _ioh->directories[IMAGE_DIRECTORY_ENTRY_EXPORT];
 		if (ex->Address > export_dir.VirtualAddress && ex->Address < export_dir.VirtualAddress + export_dir.Size)
 		{
-			offset = _rva_to_offset(ex->Address);
+			offset = rva_to_offset(ex->Address);
 			if (!offset || !utils::read_string_at_offset(_file_handle.get(), offset, ex->ForwardName))
 			{
 				PRINT_ERROR << "Could not read a forwarded export name." << DEBUG_INFO_INSIDEPE << std::endl;
@@ -668,7 +681,7 @@ bool PE::_parse_exports()
 					<< DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
 	}
-	offset = _rva_to_offset(ied.AddressOfNames);
+	offset = rva_to_offset(ied.AddressOfNames);
 	if (!offset || fseek(_file_handle.get(), offset, SEEK_SET))
 	{
 		PRINT_ERROR << "Could not reach exported function's name table." << DEBUG_INFO_INSIDEPE << std::endl;
@@ -681,7 +694,7 @@ bool PE::_parse_exports()
 		return false;
 	}
 
-	offset = _rva_to_offset(ied.AddressOfNameOrdinals);
+	offset = rva_to_offset(ied.AddressOfNameOrdinals);
 	if (!offset || fseek(_file_handle.get(), offset, SEEK_SET))
 	{
 		PRINT_ERROR << "Could not reach exported functions NameOrdinals table." << DEBUG_INFO_INSIDEPE << std::endl;
@@ -696,7 +709,7 @@ bool PE::_parse_exports()
 	// Now match the names with with the exported addresses.
 	for (unsigned int i = 0 ; i < ied.NumberOfNames ; ++i)
 	{
-		offset = _rva_to_offset(names[i]);
+		offset = rva_to_offset(names[i]);
 		if (!offset || ords[i] >= _exports.size() || !utils::read_string_at_offset(_file_handle.get(), offset, _exports.at(ords[i])->Name))
 		{
 			PRINT_ERROR << "Could not match an export name with its address!" << DEBUG_INFO_INSIDEPE << std::endl;

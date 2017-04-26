@@ -36,7 +36,7 @@ bool PE::_read_image_resource_directory(image_resource_directory& dir, unsigned 
 
 	if (offset)
 	{
-		offset = _rva_to_offset(_ioh->directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress) + offset;
+		offset = rva_to_offset(_ioh->directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress) + offset;
 		if (!offset || fseek(_file_handle.get(), offset, SEEK_SET))
 		{
 			PRINT_ERROR << "Could not reach an IMAGE_RESOURCE_DIRECTORY." << DEBUG_INFO_INSIDEPE << std::endl;
@@ -67,7 +67,7 @@ bool PE::_read_image_resource_directory(image_resource_directory& dir, unsigned 
 		if (entry->NameOrId & 0x80000000)
 		{
 			// The offset of the string is relative
-			auto name_offset = _rva_to_offset(_ioh->directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress)
+			auto name_offset = rva_to_offset(_ioh->directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress)
 				+ (entry->NameOrId & 0x7FFFFFFF);
 			if (!name_offset || !utils::read_string_at_offset(_file_handle.get(), name_offset, entry->NameStr, true))
 			{
@@ -114,7 +114,7 @@ bool PE::_parse_resources()
 				image_resource_data_entry entry;
 				memset(&entry, 0, sizeof(image_resource_data_entry));
 
-				unsigned int offset = _rva_to_offset(_ioh->directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress + ((*it3)->OffsetToData & 0x7FFFFFFF));
+				unsigned int offset = rva_to_offset(_ioh->directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress + ((*it3)->OffsetToData & 0x7FFFFFFF));
 				if (!offset || fseek(_file_handle.get(), offset, SEEK_SET))
 				{
 					PRINT_ERROR << "Could not reach an IMAGE_RESOURCE_DATA_ENTRY." << DEBUG_INFO_INSIDEPE << std::endl;
@@ -157,7 +157,7 @@ bool PE::_parse_resources()
 					language = *nt::translate_to_flag((*it3)->NameOrId, nt::LANG_IDS);
 				}
 
-				offset = _rva_to_offset(entry.OffsetToData);
+				offset = rva_to_offset(entry.OffsetToData);
 				if (!offset)
 				{
 					PRINT_WARNING << "Could not locate the section containing resource " << DEBUG_INFO_INSIDEPE;

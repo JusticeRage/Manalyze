@@ -100,6 +100,6 @@ Examples:
 ````
 
 ## Contact
-[![E-Mail](https://manalyzer.org/static/mail.png)](justicerage@manalyzer[.]org)
+[![E-Mail](https://manalyzer.org/static/mail.png)](mailto:justicerage@manalyzer[.]org)
 [![Twitter](http://manalyzer.org/static/twitter.png)](https://twitter.com/JusticeRage)
 [![GnuPG](http://manalyzer.org/static/gpg.png)](https://pgp.mit.edu/pks/lookup?op=vindex&search=0x40E9F0A8F5EA8754)
