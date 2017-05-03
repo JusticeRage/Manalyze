@@ -74,6 +74,10 @@ rule RE_Tools
         $a3 = "lordpe.exe" nocase wide ascii
         $a4 = "peid.exe" nocase wide ascii
         $a5 = "windbg.exe" nocase wide ascii
+        // x64dbg (credit goes to @_pusher_0x90)
+        $a6 = "x32dbg.exe" nocase wide ascii
+        $a7 = "x64dbg.exe" nocase wide ascii
+
     condition:
         any of them
 }
