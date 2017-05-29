@@ -273,7 +273,7 @@ bool vt_api_interact(const std::string& hash,
 	
 	#if defined WITH_OPENSSL
 	// SSL connexions may be terminated by a short read error.
-	if (error != boost::asio::error::eof && error.value() != ERR_PACK(ERR_LIB_SSL, 0, SSL_R_SHORT_READ)) {
+	if (error != boost::asio::error::eof && error != ssl::error::stream_truncated) {
 	#else
 	if (error != boost::asio::error::eof) {
 	#endif

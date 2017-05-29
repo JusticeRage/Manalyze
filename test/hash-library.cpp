@@ -20,6 +20,7 @@
 
 #include "hash-library/hashes.h"
 #include "hash-library/ssdeep.h"
+#include "hash-library/bitcoin.h"
 #include "fixtures.h"
 
 BOOST_AUTO_TEST_CASE(hash_phrase)
@@ -67,6 +68,18 @@ BOOST_AUTO_TEST_CASE(ssdeep_hash_buffer)
 	pString s = ssdeep::hash_buffer(buffer);
 	BOOST_ASSERT(s);
 	BOOST_CHECK(*s == "3:Wttkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkw:Yu");
+}
+
+// ----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(btc_test_address)
+{
+	BOOST_CHECK(hash::test_btc_address("19wFVDUWhrjRe3rPCsokhcf1w9Stj3Sr6K"));
+	BOOST_CHECK(hash::test_btc_address("19wFVDUWhrjRe3rPCsokhcf1w9Stj3Sr6A") == false);
+	BOOST_CHECK(hash::test_btc_address("1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2"));
+	BOOST_CHECK(hash::test_btc_address("3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy"));
+	BOOST_CHECK(hash::test_btc_address("") == false);
+	BOOST_CHECK(hash::test_btc_address("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") == false);
 }
 
 // ----------------------------------------------------------------------------
