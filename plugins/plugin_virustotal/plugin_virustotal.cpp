@@ -271,8 +271,13 @@ bool vt_api_interact(const std::string& hash,
 		ss << &response;
 	}
 	
-	#if defined WITH_OPENSSL
+	// This #define mess is necessary because OpenSSL 1.1 does no longer define SSL_SHORT_READ,
+	// but earlier Boost version (such as 1.55.0) do not define ssl::error::stream_truncated yet.
+
+	#if defined WITH_OPENSSL && defined SSL_R_SHORT_READ
 	// SSL connexions may be terminated by a short read error.
+	if (error != boost::asio::error::eof && error.value() != ERR_PACK(ERR_LIB_SSL, 0, SSL_R_SHORT_READ)) {
+	#elif defined WITH_OPENSSL
 	if (error != boost::asio::error::eof && error != ssl::error::stream_truncated) {
 	#else
 	if (error != boost::asio::error::eof) {
