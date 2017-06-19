@@ -445,8 +445,11 @@ const flag_dict BASE_RELOCATION_TYPES =
 							   ("IMAGE_REL_BASED_LOW",					2)
 							   ("IMAGE_REL_BASED_HIGHLOW",				3)
 							   ("IMAGE_REL_BASED_HIGHADJ",				4)
+							   ("IMAGE_REL_BASED_MIPS_JMPADDR",			5)
+							   ("RESERVED",								6)
+							   ("IMAGE_REL_BASED_THUMB_MOV32",			7)
+							   ("IMAGE_REL_BASED_RISCV_LOW12S",			8)
 							   ("IMAGE_REL_BASED_MIPS_JMPADDR16",		9)
-							   ("IMAGE_REL_BASED_IA64_IMM64",			9)
 							   ("IMAGE_REL_BASED_DIR64",				10);
 
 // ----------------------------------------------------------------------------

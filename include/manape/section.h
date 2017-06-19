@@ -21,6 +21,7 @@
 #include <boost/make_shared.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/system/api_config.hpp>
+#include <boost/algorithm/string.hpp>
 #include <vector>
 
 #include "manape/pe_structs.h"

@@ -37,6 +37,8 @@ Section::Section(const image_section_header& header,
 		_file_size(file_size)
 {
 	_name = std::string((char*) header.Name, 8);
+	boost::trim_right_if(_name, [](char c) { return c == '\x00'; }); // Trim the string for \0 characters.
+
 	pString escaped = io::escape(_name);
 	if (escaped != nullptr)	{
 		_name = *escaped;
