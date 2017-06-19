@@ -525,6 +525,9 @@ int main(int argc, char** argv)
 	// Load the dynamic plugins.
 	bfs::path working_dir(argv[0]);
 	working_dir = working_dir.parent_path();
+	if (working_dir.empty()) {	// cmd.exe does not provide the full path to the executable.
+		working_dir = ".";		// Running ./manalyze.exe results in working_dir being empty,
+	}							// which makes this additional check necessary.
 
 	// Linux: look for the configuration file in /etc/manalyze if
 	// nothing is found in the current folder.
