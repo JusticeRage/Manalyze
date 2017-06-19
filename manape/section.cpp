@@ -36,7 +36,7 @@ Section::Section(const image_section_header& header,
 		_file_handle(handle),
 		_file_size(file_size)
 {
-	_name = std::string((char*) header.Name);
+	_name = std::string((char*) header.Name, 8);
 	pString escaped = io::escape(_name);
 	if (escaped != nullptr)	{
 		_name = *escaped;
