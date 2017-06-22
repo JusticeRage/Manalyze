@@ -37,17 +37,58 @@ const std::vector<std::string> common_names = boost::assign::list_of(".text")
 																	(".idata")
 																	(".edata")
 																	(".pdata")
+                                                                    (".rodata")
 																	(".reloc")
 																	(".bss")
 																	(".tls")
 																	(".sxdata") // Apparently related to SafeSEH.
-																	(".gfids");
+																	(".gfids")
+                                                                    (".00cfg")
+                                                                    (".code")
+                                                                    (".CRT");
 
 // Also check for known packer section names (i.e. UPX0, etc.)
+// This list was updated with information from
+// http://www.hexacorn.com/blog/2016/12/15/pe-section-names-re-visited/
 const std::map<std::string, std::string> KNOWN_PACKER_SECTIONS =
-	boost::assign::map_list_of ("\\.ndata",	 "The PE is an NSIS installer.")
-							   ("upx[0-9]", "The PE is packed with UPX.")
-							   (".mpress[0-9]", "The PE is packed with mpress");
+	boost::assign::map_list_of ("\\.ndata",	 "The PE is an NSIS installer")
+							   ("\\.?(upx|UPX)[0-9!]", "The PE is packed with UPX")
+							   ("\\.(mpress|MPRESS)[0-9]", "The PE is packed with mpress")
+							   ("\\.[Aa][Ss][Pp]ack", "The PE is packed with Aspack")
+							   ("\\.ccg", "The PE is packed with CCG")
+                               ("\\.charmve|\\.pinclie", "The program is instrumented with PIN")
+                               ("BitArts", "The PE is packed with Crunch 2.0")
+                               ("DAStub", "The PE is packed with Dragon Armor")
+                               ("!EPack", "The PE is packed with Epack")
+                               ("\\.gentee", "The PE is a gentee installer")
+                               ("kkrunchy", "The PE is packed with kkrunchy")
+                               ("\\.mackt", "The PE was fixed by ImpREC")
+                               ("\\.MaskPE", "The PE is packed with MaskPE")
+                               ("MEW", "The PE is packed with MEW")
+                               ("\\.neolite?", "The PE is packed with Neolite")
+                               ("\\.nsp[012]", "The PE is packed with NsPack")
+                               ("\\.RLPack", "The PE is packed with RLPack")
+                               ("(pe|PE)([Bb]undle|[cC][12]([TM]O)?|Compact2)", "The PE is packed with PEBundle")
+                               ("PELOCKnt", "This PE is packed with PELock")
+                               ("\\.perplex", "This PE is packed with Perplex")
+                               ("PESHiELD", "This PE is packed with PEShield")
+                               ("\\.petite", "This PE is packed with Petite")
+                               ("ProCrypt", "This PE is packed with ProCrypt")
+                               (".rmnet", "This PE is packed with Ramnit")
+                               ("\\.RPCrypt||Rcryptor", "This PE is packed with RPCrypt")
+                               ("\\.seau", "This PE is packed with SeauSFX")
+                               ("\\.spack", "This PE is packed with Simple Pack (by bagie)")
+                               ("\\.svkp", "This PE is packed with SVKP")
+                               ("(\\.?Themida)|(WinLicen)", "This PE is packed with Themida")
+                               ("\\.tsu(arch|stub)", "This PE is packed with TSULoader")
+                               ("PEPACK!!", "This PE is packed with PEPack")
+                               ("\\.(Upack|ByDwing)", "This PE is packed with Upack")
+                               ("\\.vmp[012]", "This PE is packed with VMProtect")
+                               ("VProtect", "This PE is packed with VProtect")
+                               ("\\.winapi", "This PE was modified with API Override")
+                               ("_winzip_", "This PE is a WinZip self-extractor")
+                               ("\\.WWPACK", "This PE is packed with WWPACK")
+                               ("\\.y(P|0da)", "This PE is packed with Y0da");
 
 class PackerDetectionPlugin : public IPlugin
 {
@@ -121,7 +162,7 @@ public:
 			auto mscoree = pe.find_imported_dlls("mscoree.dll");
 			if (mscoree->size() > 0)
 			{
-				
+
 				auto corexemain = mscoree->at(0)->get_imports();
 				if (corexemain->size() > 0 && corexemain->at(0)->Name == "_CorExeMain") {
 					return res;
