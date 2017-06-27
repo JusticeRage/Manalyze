@@ -48,10 +48,14 @@ Section::Section(const image_section_header& header,
 	{
 		std::stringstream ss;
 		unsigned int index;
-		ss << header.Name + 1; // Skip the trailing "/"
+		ss << _name.substr(1); // Skip the trailing "/"
 		ss >> index;
 
-		if (index >= coff_string_table.size()) {
+		if (ss.fail()) {
+			PRINT_WARNING << "Found a non-integer index of the COFF string table (" << _name << "). This PE "
+					         "was almost certainly manually crafted." << std::endl;
+		}
+		else if (index >= coff_string_table.size()) {
 			PRINT_WARNING << "Tried to read outside the COFF string table to get the name of section " << _name << "!" << std::endl;
 		}
 		else {

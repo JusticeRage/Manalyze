@@ -343,7 +343,7 @@ DECLSPEC pbitmap Resource::interpret_as()
 	memcpy(&dib_header_size, &(res->data[0]), sizeof(boost::uint32_t)); // DIB header size is located at offset 0.
 	memcpy(&bit_count, &(res->data[14]), sizeof(boost::uint16_t));
 	memcpy(&colors_used, &(res->data[32]), sizeof(boost::uint32_t));
-	
+
 
 	if (colors_used == 0 && bit_count != 32 && bit_count != 24)	{
 		colors_used = 1 << bit_count;
@@ -494,7 +494,14 @@ DECLSPEC pversion_info Resource::interpret_as()
 	// In the file, the language information is an int stored into a "unicode" string.
 	ss << std::hex << current_structure->Key;
 	ss >> language;
-	res->Language = *nt::translate_to_flag((language >> 16) & 0xFFFF, nt::LANG_IDS);
+	if (!ss.fail()) {
+		res->Language = *nt::translate_to_flag((language >> 16) & 0xFFFF, nt::LANG_IDS);
+	}
+	else
+	{
+		PRINT_WARNING << "A language ID could not be translated (" << std::hex << res->Language << ")!" << std::endl;
+		res->Language = "UNKNOWN";
+	}
 
 	bytes_read = ftell(f) - bytes_read;
 	if (current_structure->Length < bytes_read)
