@@ -230,39 +230,6 @@ namespace utf8
         return result;
     }
 
-    template <typename u16bit_iterator, typename octet_iterator>
-    u16bit_iterator utf8to16 (octet_iterator start, octet_iterator end, u16bit_iterator result)
-    {
-        while (start != end) {
-            uint32_t cp = utf8::next(start, end);
-            if (cp > 0xffff) { //make a surrogate pair
-                *result++ = static_cast<uint16_t>((cp >> 10)   + internal::LEAD_OFFSET);
-                *result++ = static_cast<uint16_t>((cp & 0x3ff) + internal::TRAIL_SURROGATE_MIN);
-            }
-            else
-                *result++ = static_cast<uint16_t>(cp);
-        }
-        return result;
-    }
-
-    template <typename octet_iterator, typename u32bit_iterator>
-    octet_iterator utf32to8 (u32bit_iterator start, u32bit_iterator end, octet_iterator result)
-    {
-        while (start != end)
-            result = utf8::append(*(start++), result);
-
-        return result;
-    }
-
-    template <typename octet_iterator, typename u32bit_iterator>
-    u32bit_iterator utf8to32 (octet_iterator start, octet_iterator end, u32bit_iterator result)
-    {
-        while (start != end)
-            (*result++) = utf8::next(start, end);
-
-        return result;
-    }
-
     // The iterator class
     template <typename octet_iterator>
     class iterator : public std::iterator <std::bidirectional_iterator_tag, uint32_t> {

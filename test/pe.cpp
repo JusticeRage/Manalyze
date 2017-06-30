@@ -65,9 +65,13 @@ BOOST_AUTO_TEST_CASE(parse_testfile)
     mana::PE pe("testfiles/manatest.exe");
 	BOOST_CHECK_EQUAL(pe.get_filesize(), 16360);
 	BOOST_ASSERT(pe.is_valid());
+	BOOST_ASSERT(pe.get_path());
+	BOOST_CHECK_EQUAL(*pe.get_path(), "testfiles/manatest.exe");
 	mana::PE pe2("testfiles/manatest2.exe");
 	BOOST_CHECK_EQUAL(pe2.get_filesize(), 72704);
 	BOOST_ASSERT(pe2.is_valid());
+	BOOST_ASSERT(pe2.get_path());
+	BOOST_CHECK_EQUAL(*pe2.get_path(), "testfiles/manatest2.exe");
 }
 
 // ----------------------------------------------------------------------------

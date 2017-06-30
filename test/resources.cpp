@@ -228,5 +228,28 @@ BOOST_AUTO_TEST_CASE(interpret_versioninfo)
 }
 
 // ----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(interpret_icon)
+{
+	mana::PE pe("testfiles/manatest2.exe");
+	auto resources = pe.get_resources();
+	for (auto it = resources->begin(); it != resources->end(); ++it)
+	{
+		if (*(*it)->get_type() == "RT_GROUP_ICON")
+		{
+			auto res = (*it)->icon_extract("testfiles/icon.ico", *pe.get_resources());
+			break;
+		}
+	}
+
+	auto h = hash::hash_file(*hash::ALL_DIGESTS.at(ALL_DIGESTS_SHA1), "testfiles/icon.ico");
+	BOOST_ASSERT(fs::exists("testfiles/icon.ico"));
+	fs::remove("testfiles/icon.ico");
+	BOOST_ASSERT(h);
+	BOOST_CHECK_EQUAL(*h, "ef6952d242906001e0d3269e5df0d8e22f3c56d1");
+	
+}
+
+// ----------------------------------------------------------------------------
 BOOST_AUTO_TEST_SUITE_END()
 // ----------------------------------------------------------------------------
