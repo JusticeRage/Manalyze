@@ -34,6 +34,8 @@ std::string anti_debug =
 
 std::string vanilla_injection = "VirtualAlloc.*|WriteProcessMemory|CreateRemoteThread(Ex)?|OpenProcess";
 
+std::string process_hollowing = "WriteProcessMemory|(Wow64)?SetThreadContext|ResumeThread";
+
 std::string keylogger_api = "SetWindowsHook(Ex)?|GetAsyncKeyState|GetForegroundWindow|AttachThreadInput|CallNextHook(Ex)?|MapVirtualKey";
 
 std::string raw_socket_api = "accept|bind|connect|recv|send|gethost(by)?name|inet_addr";
@@ -44,7 +46,7 @@ std::string registry_api = "Reg.*(Key|Value).*|SH.*(Reg|Key).*|SHQueryValueEx(A|
 
 std::string process_creation_api = "CreateProcess.*|system|WinExec|ShellExecute(A|W)";
 
-std::string process_manipulation_api = "EnumProcess.*|OpenProcess|ReadProcessMemory|Process32(First|Next)(W)?";
+std::string process_manipulation_api = "EnumProcess.*|OpenProcess|(Read|Write)ProcessMemory|Process32(First|Next)(W)?";
 
 std::string service_manipulation_api = "OpenSCManager(A|W)|(Open|Control|Create|Delete)Service(A|W)?|QueryService.*|"
 									   "ChangeServiceConfig(A|W)|EnumServicesStatus(Ex)?(A|W)";
@@ -57,7 +59,7 @@ std::string dacl_api = "SetKernelObjectSecurity|SetFileSecurity(A|W)|SetNamedSec
 
 std::string dynamic_import = "(Co)?LoadLibrary(Ex)?(A|W)|GetProcAddress|LdrLoadDll|MmGetSystemRoutineAddress";
 
-std::string packer_api = "VirtualAlloc|VirtualProtect";
+std::string packer_api = "VirtualAlloc(Ex)?|VirtualProtect(Ex)?";
 
 std::string temporary_files = "GetTempPath(A|W)|(Create|Write)File(A|W)";
 
@@ -79,15 +81,15 @@ std::string networking_api = "(Un)?EnableRouter|SetAdapterIpAddress|SetIp(Forwar
  *	@brief	Checks the presence of some functions in the PE and updates the
  *			result accordingly.
  *
- *	@param	const mana::PE& pe The PE in which the imports should be looked for.
- *	@param	const std::string& func_regex The regular expression against which the
+ *	@param	pe The PE in which the imports should be looked for.
+ *	@param	func_regex The regular expression against which the
  *			imports should be matched.
- *	@param	Result::LEVEL level The severity level to set if the imports are found.
- *	@param	const std::string& description The description to add to the result if
+ *	@param	level The severity level to set if the imports are found.
+ *	@param	description The description to add to the result if
  *			matching imports are found.
- *	@param	REQUIREMENT req A criteria indicating how many matching imports should
+ *	@param	req A criteria indicating how many matching imports should
  *			be found before updating the result.
- *	@param	pResult res The result which will receive the information.
+ *	@param	res The result which will receive the information.
  *
  *	@return	Whether imports matching the requested criteria were found.
  */
@@ -121,13 +123,13 @@ bool check_functions(const mana::PE& pe,
  *	@brief	Checks the presence of a given imported library and updates the 
  *			result accordingly.
  *
- *	@param	const mana::PE& pe The PE in which the imports should be looked for.
- *	@param	const std::string& dll_regex The regular expression against which the
+ *	@param	pe The PE in which the imports should be looked for.
+ *	@param	dll_regex The regular expression against which the
  *			imported libraries should be matched.
- *	@param	Result::LEVEL level The severity level to set if the imports are found.
- *	@param	const std::string& description The description to add to the result if
+ *	@param	level The severity level to set if the imports are found.
+ *	@param	description The description to add to the result if
  *			matching imports are found.
- *	@param	pResult res The result which will receive the information.
+ *	@param	res The result which will receive the information.
  */
 bool check_dlls(const mana::PE& pe,
 				const std::string& dll_regex,
@@ -172,6 +174,7 @@ public:
 		check_functions(pe, dynamic_import, NO_OPINION, "[!] The program may be hiding some of its imports", AT_LEAST_TWO, res);
 		check_functions(pe, anti_debug, SUSPICIOUS, "Functions which can be used for anti-debugging purposes", AT_LEAST_ONE, res);
 		check_functions(pe, vanilla_injection, MALICIOUS, "Code injection capabilities", AT_LEAST_THREE, res);
+		check_functions(pe, process_hollowing, MALICIOUS, "Code injection capabilities (process hollowing)", AT_LEAST_THREE, res);
 		check_functions(pe, "", NO_OPINION, "Can access the registry", AT_LEAST_ONE, res);
 		check_functions(pe, process_creation_api, NO_OPINION, "Possibly launches other programs", AT_LEAST_ONE, res);
 		check_functions(pe, "(Nt|Zw).*", SUSPICIOUS, "Uses Windows' Native API", AT_LEAST_TWO, res);
