@@ -70,7 +70,7 @@ Subsequently, add ``-Llib`` and ``-lmanape -lmanacommons`` to your compilation f
 On Windows
 ----------
 
-Linking against DLLs requires a little more work on Windows. First, copy Manalyze's header files in your project directory as described above.
+Linking against DLLs requires a little more work on Windows. First, copy Manalyze's header files in your project directory as described above. Also put Manalyze's DLLs somewhere in the PATH of your project (likely the folder where your executable will be generated). You'll need ``manape.dll``, ``manacommons.dll``, ``hash-library.dll`` and ``yara.dll``.
 
 Sadly, Visual Studio is *only* capable of linking against ``.lib`` files, even if the code will *in fine* be found in a DLL. Those files are generated when Manalyze is built but are not distributed with the program - this means that you have to checkout Manalyze's source code from GitHub and build it manually. Hopefully, this should be as simple as this::
 
