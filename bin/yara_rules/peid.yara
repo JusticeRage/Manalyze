@@ -1296,19 +1296,6 @@ condition:
 }
 
 
-rule Armadillo_v1_71
-{
-meta:
-    packer_name = "Armadillo v1.71"
-strings:
-    	$a0 = { 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 64 A1 }
-	$a1 = { 55 8B EC 6A FF 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? 64 A1 }
-
-condition:
-    	$a0 at manape.ep or $a1
-}
-
-
 rule Xtreme_Protector_v1_06
 {
 meta:
