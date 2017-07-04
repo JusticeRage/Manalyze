@@ -59,6 +59,10 @@ include_directories(
 						${PROJECT_SOURCE_DIR}/plugins
 						${Boost_INCLUDE_DIRS}
                    )
+# Explicitly add OpenSSL include directories if it has been found.
+if(OPENSSL_FOUND)
+	include_directories(${OPENSSL_INCLUDE_DIR})
+endif()
 
 add_definitions(-DWITH_MANACOMMONS) # Use functions from manacommons.
 add_library(manape SHARED manape/pe.cpp manape/nt_values.cpp manape/utils.cpp manape/imports.cpp manape/resources.cpp manape/section.cpp manape/imported_library.cpp)
@@ -84,7 +88,8 @@ if (WIN32)
 			add_definitions(-DBOOST_ALL_NO_LIB -DNOMINMAX) # Problems with autolink and MSVC + don't hide std::min and std::max.
 
 			# Windows only plugins:
-			add_library(plugin_authenticode SHARED plugins/plugin_authenticode.cpp)
+			add_library(plugin_authenticode SHARED plugins/plugin_authenticode/plugin_authenticode.cpp 
+												   plugins/plugin_authenticode/plugin_authenticode_commons.cpp)
 			target_link_libraries(plugin_authenticode manape hash-library manacommons yara ${Boost_LIBRARIES})
 else()
 			string (REGEX MATCH "BSD" IS_BSD ${CMAKE_SYSTEM_NAME}) # Detect if we are compiling on a BSD system.
@@ -105,7 +110,8 @@ else()
 			
 			# Compile the *nix authenticode plugin if OpenSSL was found.
 			if (OPENSSL_FOUND)
-				add_library(plugin_authenticode SHARED plugins/plugin_authenticode_openssl.cpp)
+				add_library(plugin_authenticode SHARED plugins/plugin_authenticode/plugin_authenticode_openssl.cpp 
+													   plugins/plugin_authenticode/plugin_authenticode_commons.cpp)
 				target_link_libraries(plugin_authenticode ${OPENSSL_LIBRARIES})
 			endif()
 endif()

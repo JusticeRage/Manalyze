@@ -30,6 +30,13 @@ namespace plugin
 {
 
 /**
+ *	@brief	Looks for well-known company names in the RT_VERSION resource of the PE.
+ *
+ *	Defined in plugin_authenticode_common.cpp.
+ */
+void check_version_info(const mana::PE& pe, pResult res);
+
+/**
  *  @brief  Returns the contents of an OpenSSL BIO as a string.
  *
  *  @param  pBIO bio The BIO to convert.
@@ -164,8 +171,10 @@ class OpenSSLAuthenticodePlugin : public IPlugin
         pResult res = create_result();
         
         auto certs = pe.get_certificates();
-        if (certs == nullptr || certs->size() == 0) {
-            return res; // No authenticode signature.
+        if (certs == nullptr || certs->size() == 0) // No authenticode signature.
+        {
+			check_version_info(pe, res);
+            return res;
         }
         
         for (auto it = certs->begin() ; it != certs->end() ; ++it)

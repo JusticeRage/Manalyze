@@ -21,9 +21,11 @@ rule CompanyNames
         description = "Contains the names of famous IT companies"
         author = "Ivan Kwiatkowski (@JusticeRage)"
     strings:
-        $adobe = "adobe" nocase wide ascii
-        $ms = "microsoft" nocase wide ascii
+		// Not checking for Microsoft, because many MS binaries are verified through the 
+		// security catalog and do not embed a digital signature.
+		$adobe = "adobe" nocase wide ascii
         $google = "google" nocase wide ascii
+		$firefox = "firefox" nocase wide ascii
         $intel = "intel" nocase wide ascii
         $amd = "advanced micro devices" nocase wide ascii
         $amd2 = "amd" nocase wide ascii fullword
@@ -43,4 +45,24 @@ rule CompanyNames
         $mcafee = "mcafee" nocase wide ascii
     condition:
         any of them
+}
+
+rule CompanyNamesHomographs
+{
+    meta:
+        description = "Tries to impersonate a famous IT company with homographs"
+        author = "Ivan Kwiatkowski (@JusticeRage)"
+		type = "homograph"
+    strings:
+		$adobe = "adobe" nocase wide ascii
+		$adobe_homograph = { (41 00 | 10 04 | 91 03 | 21 FF) (64 00 | 01 05 | 7E 21 | 44 FF) (6F 00 | BF 03 | 3E 04 | 4F FF) (62 00 | 2C 04 | 42 FF) (65 00 | 35 04 | 45 FF) }
+		$microsoft = "microsoft" nocase wide ascii
+		$microsoft_homograph = { (4D 00 | 9C 03 | 1C 04 | 6F 21 | 2D FF) (69 00 | 56 04 | 70 21 | 49 FF) (63 00 | F2 03 | 41 04 | 7D 21 | 43 FF) (72 00 | 52 FF) (6F 00 | BF 03 | 3E 04 | 4F FF) (73 00 | 55 04 | 53 FF) (6F 00 | BF 03 | 3E 04 | 4F FF) (66 00 | 46 FF) (74 00 | 54 FF) }
+		$google = "google" nocase wide ascii
+		$google_homograph = { (47 00 | 0C 05 | 27 FF) (6F 00 | BF 03 | 3E 04 | 4F FF) (6F 00 | BF 03 | 3E 04 | 4F FF) (67 00 | 47 FF) (6C 00 | 7C 21 | 4C FF) (65 00 | 35 04 | 45 FF) }
+	condition:
+		// Do not match on the original strings, as that will have been caught above.
+		($adobe_homograph and not $adobe) or 
+		($google_homograph and not $google) or 
+		($microsoft_homograph and not $microsoft)
 }
