@@ -191,6 +191,24 @@ void OutputTreeNode::append(pNode node)
 	if (!_list_data || !*_list_data) {
 		_list_data = boost::make_shared<boost::optional<nodes> >(nodes());
 	}
+
+	// The JSON formatter cannot handle identical names in a list. Rename duplicates if necessary.
+	int i = 2;
+	auto initial_name = *node->get_name();
+	auto current_name = initial_name;
+	for (auto it = (*_list_data)->begin() ; it != (*_list_data)->end() ; ++it)
+	{
+		if (*(*it)->get_name() == current_name)
+		{
+			std::stringstream ss;
+			ss << initial_name << " (#" << i++ << ")";
+			current_name = ss.str();
+		}
+	}
+	if (current_name != initial_name) {
+		node->set_name(current_name);
+	}
+
 	(*_list_data)->push_back(node);
 }
 
