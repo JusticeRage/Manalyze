@@ -185,7 +185,8 @@ public:
 		check_functions(pe, packer_api, SUSPICIOUS, "Memory manipulation functions often used by packers", AT_LEAST_TWO, res);
 		check_functions(pe, http_api, NO_OPINION, "Has Internet access capabilities", AT_LEAST_ONE, res);
 		// WS2_32.dll seems to be imported by ordinal more often than not, so check for DLL presence instead of individual functions.
-		check_dlls(pe, "WS2_32.dll", SUSPICIOUS, "Leverages the raw socket API to access the Internet", res);
+		check_dlls(pe, "WS2_32.dll|WSOCK32.dll", SUSPICIOUS, "Leverages the raw socket API to access the Internet", res);
+		check_dlls(pe, "wpcap.dll", SUSPICIOUS, "Has network sniffing capabilities", res);
 		check_functions(pe, privilege_api, MALICIOUS, "Functions related to the privilege level", AT_LEAST_ONE, res);
 		check_functions(pe, service_manipulation_api, SUSPICIOUS, "Interacts with services", AT_LEAST_ONE, res);
 		check_functions(pe, hdd_enumeration, NO_OPINION, "Enumerates local disk drives", AT_LEAST_ONE, res);
