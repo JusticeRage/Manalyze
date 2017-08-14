@@ -359,6 +359,10 @@ typedef struct image_base_relocation_t
 } image_base_relocation;
 typedef boost::shared_ptr<image_base_relocation_t> pimage_base_relocation;
 
+
+#define CountRelocationEntries(BlockSize)					\
+	(BlockSize - 2*sizeof(boost::uint32_t)) /				\ 
+	sizeof(boost::uint16_t) 
 // ----------------------------------------------------------------------------
 
 typedef struct image_debug_misc_t

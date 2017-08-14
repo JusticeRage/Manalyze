@@ -465,7 +465,7 @@ unsigned int PE::rva_to_offset(boost::uint64_t rva) const
 
 	// Special case: PE with no sections
 	if (_sections.size() == 0) {
-		return rva & 0xFFFFFFFF; // If the file is bigger than 4Go, this assumption may not be true.
+		return rva & 0xFFFFFFFF; // If the file is bigger than 4GB, this assumption may not be true.
 	}
 
 	// Find the corresponding section.
@@ -750,9 +750,11 @@ bool PE::_parse_relocations()
 		if (reloc->BlockSize == 0) {
 			return true;
 		}
+		
+		unsigned int reloc_count = CountRelocationEntries(reloc->BlockSize);
 
 		// The remaining fields are an array of shorts. The number is deduced from the block size.
-		for (unsigned int i = 0 ; i < (reloc->BlockSize - header_size) / sizeof(boost::uint16_t) ; ++i)
+		for (unsigned int i = 0 ; i < reloc_count ; ++i)
 		{
 			boost::uint16_t type_or_offset = 0;
 			if (sizeof(boost::uint16_t) != fread(&type_or_offset, 1, sizeof(boost::uint16_t), _file_handle.get()))
