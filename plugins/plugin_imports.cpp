@@ -27,7 +27,7 @@ enum REQUIREMENT { AT_LEAST_ONE = 1, AT_LEAST_TWO = 2, AT_LEAST_THREE = 3 };
 // IsDebuggerPresent has been removed from this list, because it gets referenced in ___scrt_fastfail which seems to be present in any PE.
 // The presence of this function is therefore not meaningful of any particular intent.
 std::string anti_debug =
-	"FindWindow|(Zw|Nt)QuerySystemInformation|DbgBreakPoint|DbgPrint|"
+	"FindWindow(A|W)|(Zw|Nt)QuerySystemInformation|DbgBreakPoint|DbgPrint|"
 	"CheckRemoteDebuggerPresent|CreateToolhelp32Snapshot|Toolhelp32ReadProcessMemory|"
 	"OutputDebugString|SwitchToThread|NtQueryInformationProcess"	// Standard anti-debug API calls
 	"QueryPerformanceCounter";	// Techniques based on timing. GetTickCount ignored (too many false positives)
@@ -35,6 +35,10 @@ std::string anti_debug =
 std::string vanilla_injection = "VirtualAlloc.*|WriteProcessMemory|CreateRemoteThread(Ex)?|OpenProcess";
 
 std::string process_hollowing = "WriteProcessMemory|(Wow64)?SetThreadContext|ResumeThread";
+
+std::string power_loader = "FindWindow(A|W)|GetWindowLong(A|W)";
+
+std::string atom_bombing = "GlobalAddAtom(A|W)|GlobalGetAtomName(A|W)|QueueUserAPC";
 
 std::string keylogger_api = "SetWindowsHook(Ex)?|GetAsyncKeyState|GetForegroundWindow|AttachThreadInput|CallNextHook(Ex)?|MapVirtualKey";
 
@@ -69,7 +73,7 @@ std::string driver_enumeration = "EnumDeviceDrivers|GetDeviceDriver.*";
 
 std::string eventlog_deletion = "EvtClearLog|ClearEventLog(A|W)";
 
-std::string screenshot_api = "CreateCompatibleDC|GetDC(Ex)?|FindWindow|PrintWindow|BitBlt";
+std::string screenshot_api = "CreateCompatibleDC|GetDC(Ex)?|FindWindow(A|W)|PrintWindow|BitBlt";
 
 std::string audio_api = "waveInOpen|DirectSoundCaptureCreate.*";
 
@@ -175,6 +179,8 @@ public:
 		check_functions(pe, anti_debug, SUSPICIOUS, "Functions which can be used for anti-debugging purposes", AT_LEAST_ONE, res);
 		check_functions(pe, vanilla_injection, MALICIOUS, "Code injection capabilities", AT_LEAST_THREE, res);
 		check_functions(pe, process_hollowing, MALICIOUS, "Code injection capabilities (process hollowing)", AT_LEAST_THREE, res);
+		check_functions(pe, power_loader, MALICIOUS, "Code injection capabilities (PowerLoader)", AT_LEAST_TWO, res);
+		check_functions(pe, atom_bombing, MALICIOUS, "Code injection capabilities (atom bombing)", AT_LEAST_THREE, res);
 		check_functions(pe, "", NO_OPINION, "Can access the registry", AT_LEAST_ONE, res);
 		check_functions(pe, process_creation_api, NO_OPINION, "Possibly launches other programs", AT_LEAST_ONE, res);
 		check_functions(pe, "(Nt|Zw).*", SUSPICIOUS, "Uses Windows' Native API", AT_LEAST_TWO, res);
