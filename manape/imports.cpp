@@ -354,7 +354,8 @@ const_shared_strings PE::find_imports(const std::string& function_name_regexp,
 			else {
 				name = (*it2)->Name;
 			}
-			if (boost::regex_match(name, e)) {
+			// Functions may be imported multiple times, don't add the same one twice.
+			if (boost::regex_match(name, e) && std::find(destination->begin(), destination->end(), name) == destination->end()) {
 				destination->push_back(name);
 			}
 		}

@@ -144,6 +144,12 @@ public:
 
 	// ----------------------------------------------------------------------------
 
+	DECLSPEC_MANACOMMONS void set_name(const std::string& name) {
+		_name->assign(name);
+	}
+
+	// ----------------------------------------------------------------------------
+
 	DECLSPEC_MANACOMMONS node_type get_type() const {
 		return _type;
 	}

@@ -15,6 +15,9 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <set>
+#include <boost/algorithm/string/predicate.hpp>
+
 #include "plugin_framework/plugin_interface.h"
 #include "plugin_framework/auto_register.h"
 
@@ -50,7 +53,7 @@ std::string registry_api = "Reg.*(Key|Value).*|SH.*(Reg|Key).*|SHQueryValueEx(A|
 
 std::string process_creation_api = "CreateProcess.*|system|WinExec|ShellExecute(A|W)";
 
-std::string process_manipulation_api = "EnumProcess.*|OpenProcess|(Read|Write)ProcessMemory|Process32(First|Next)(W)?";
+std::string process_manipulation_api = "EnumProcess.*|OpenProcess|(Read|Write)ProcessMemory|Process32(First|Next)(A|W)?";
 
 std::string service_manipulation_api = "OpenSCManager(A|W)|(Open|Control|Create|Delete)Service(A|W)?|QueryService.*|"
 									   "ChangeServiceConfig(A|W)|EnumServicesStatus(Ex)?(A|W)";
@@ -81,6 +84,40 @@ std::string shutdown_functions = "Initiate(System)?Shutdown(Ex)?(A|W)|LockWorkSt
 
 std::string networking_api = "(Un)?EnableRouter|SetAdapterIpAddress|SetIp(Forward|Net|Statistics|TTL).*|SetPerTcp(6)?ConnectionEStats";
 
+// ----------------------------------------------------------------------------
+
+/**
+ *	@brief Counts the number of different function names in a vector.
+ *
+ *	A, W and Ex variants of the same function are considered to be the same.
+ *
+ *	@param v The vector containing the function names.
+ *
+ *	@return The number of different functions in the vector.
+ */
+unsigned int count_functions(const std::vector<std::string>& v)
+{
+	unsigned int count = 0;
+	std::set<std::string> string_set;
+	for (std::string s : v)
+	{
+		if (s.empty()) {
+			continue;
+		}
+		std::string tmp(s);
+		if (boost::algorithm::ends_with(tmp, "A") || boost::algorithm::ends_with(tmp, "W")) {
+			tmp.pop_back();
+		}
+		if (tmp.size() > 2 && boost::algorithm::ends_with(tmp, "Ex")) {
+			tmp = tmp.substr(0, tmp.size() - 2);
+		}
+		string_set.insert(tmp);
+	}
+	return string_set.size();
+}
+
+// ----------------------------------------------------------------------------
+
 /**
  *	@brief	Checks the presence of some functions in the PE and updates the
  *			result accordingly.
@@ -105,7 +142,7 @@ bool check_functions(const mana::PE& pe,
 					 pResult res)
 {
 	mana::const_shared_strings found_imports = pe.find_imports(func_regex);
-	if (found_imports->size() >= static_cast<unsigned int>(req))  // Safe cast: these are positive enum indexes
+	if (found_imports && count_functions(*found_imports) >= static_cast<unsigned int>(req))  // Safe cast: these are positive enum indexes
 	{
 		res->raise_level(level);
 		io::pNode info = boost::make_shared<io::OutputTreeNode>(description,
