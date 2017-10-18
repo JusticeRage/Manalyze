@@ -737,6 +737,12 @@ bool Resource::extract(const boost::filesystem::path& destination)
         }
 
 		FILE* out = fopen(destination.string().c_str(), "a+");
+
+		if(out == nullptr) {
+			PRINT_ERROR << "Opening file " << destination.string().c_str() << " failed!" << std::endl;
+			return false;
+		}
+
 		for (auto it2 = strings->begin(); it2 != strings->end(); ++it2)
 		{
 			if (*it2 != "")
