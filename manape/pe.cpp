@@ -97,6 +97,9 @@ PE::PE_ARCHITECTURE PE::get_architecture() const {
 
 shared_bytes PE::get_raw_bytes(size_t size) const
 {
+	if(_file_handle == nullptr) {
+		return nullptr;
+	}
 	fseek(_file_handle.get(), 0, SEEK_SET);
 	if (size > _file_size) {
 		size = static_cast<size_t>(_file_size);
