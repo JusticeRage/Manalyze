@@ -84,9 +84,10 @@ class YaraRule:
         self._logical_expression = logical_expression
         # Sanitize the rule name: no whitespace and must not start with a number
         self._rulename = malware_name.translate(maketrans(" \t", "__"))
-        self._rulename = self._rulename.replace(".", "_dot_")   # Necessary, to avoid conflicts. Just replacing by
-        self._rulename = self._rulename.replace("-", "_dash_")  # underscores just doesn't cut it when signatures
-        try:                                                    # exist for Dialer-317 and Dialer.317
+        self._rulename = self._rulename.replace(".", "_dot_")     # Necessary, to avoid conflicts. Just replacing by
+        self._rulename = self._rulename.replace("-", "_dash_")    # underscores just doesn't cut it when signatures
+        self._rulename = self._rulename.replace(":", "_column_")  # exist for Dialer-317 and Dialer.317
+        try:
             int(self._rulename)
             self._rulename = "_%s" % self._rulename
         except ValueError:
@@ -101,6 +102,9 @@ class YaraRule:
             self._translate_offset(signatures[i][1], i)
 
     def _translate_signature(self, sig, index):
+        if not sig:
+            raise MalformedRuleError("Received an empty signature!")
+
         s = sig
         s = s.replace("*", " [-] ")  # Unbounded jump
         s = s.replace("{0}", "")  # Skipping no bytes. Useless but appears in one signature.
@@ -200,8 +204,7 @@ class YaraRule:
                     else:  # x == y
                         self._conditions.append("$a%d in (%s - %d .. %s)" % (index, base_yara_offset, x, base_yara_offset))
         else:
-            print "Unable to understand the following offset: %s" % offset
-            sys.exit(1)
+            raise MalformedRuleError("Unable to understand the following offset: %s" % offset)
 
     def get_meta_signature(self):
         return self._meta_signature
@@ -259,11 +262,14 @@ class YaraRule:
                                 # I realize that some nuance is lost here. Unfortunately, Yara does not support
                                 # expressions like "#a0 in a .. b > N". I'm generating "$a0 and #a0 > N" instead,
                                 # I assume that not many rules will be meaningfully affected by this choice.
-                                conditions += "(%s and #a%d %s %d)" % ((self._conditions[index],
-                                                                        index,
-                                                                        tokens[i+1],
-                                                                        int(tokens[i+2])))
-                                i += 2
+                                try:
+                                    conditions += "(%s and #a%d %s %d)" % ((self._conditions[index],
+                                                                            index,
+                                                                            tokens[i+1],
+                                                                            int(tokens[i+2])))
+                                    i += 2
+                                except ValueError:
+                                    raise MalformedRuleError("Unexpected count.")
 
                         else:
                             conditions += self._conditions[index]  # The token is the number of the rule
@@ -338,11 +344,11 @@ def parse_ldb(input, output, is_daily=False):
 
                 try:
                     rule = YaraRule(malware_name, signatures, logical_expression=logical_expression, is_daily=is_daily)
+                    translated_rule = rule.__str__()
                 except MalformedRuleError:
                     print "Rule %s seems to be malformed. Skipping..." % malware_name
                     continue
 
-                translated_rule = rule.__str__()
                 if not rule.get_meta_signature() in RULES and translated_rule:
                     RULES.add(rule.get_meta_signature())
                     g.write(translated_rule)
