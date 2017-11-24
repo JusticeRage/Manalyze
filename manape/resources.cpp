@@ -76,6 +76,13 @@ bool PE::_read_image_resource_directory(image_resource_directory& dir, unsigned 
 			}
 		}
 
+		// Immediately reject obvious bogus entries.
+		if ((entry->OffsetToData & 0x7FFFFFFF) > _file_size)
+		{
+			PRINT_WARNING << "Ignored an invalid IMAGE_RESOURCE_DIRECTORY_ENTRY." << DEBUG_INFO_INSIDEPE << std::endl;
+			continue;
+		}
+
 		dir.Entries.push_back(entry);
 	}
 
@@ -125,6 +132,14 @@ bool PE::_parse_resources()
 				{
 					PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DATA_ENTRY." << DEBUG_INFO_INSIDEPE << std::endl;
 					return false;
+				}
+
+				if (entry.Size > _file_size)
+				{
+					// TODO: Logging feature which stops spamming stderr after a message has been shown 10 times?
+					// The warning below is commented out as it tends to be displayed way too many times for offending binaries.
+					// PRINT_WARNING << "Ignored an invalid IMAGE_RESOURCE_DATA_ENTRY" << DEBUG_INFO_INSIDEPE << std::endl;
+					continue;
 				}
 
 				// Flatten the resource tree.
@@ -181,6 +196,23 @@ bool PE::_parse_resources()
 					}
 					continue;
 				}
+
+				// Sanity check: verify that no resource is already pointing to the given offset.
+				bool is_malformed = false;
+				for (auto it4 = _resource_table.begin() ; it4 != _resource_table.end() ; ++it4)
+				{
+					if (*it4 != nullptr && (*it4)->get_offset() == offset && (*it4)->get_size() == entry.Size)
+					{
+						PRINT_WARNING << "The PE contains duplicate resources. It was almost certainly crafted manually." 
+									  << DEBUG_INFO_INSIDEPE << std::endl;
+						is_malformed = true;
+						break;
+					}
+				}
+				if (is_malformed) {  // Duplicate resource. Do not add it again.
+					continue;
+				}
+
 				if (name != "")
 				{
 					res = boost::make_shared<Resource>(type,
