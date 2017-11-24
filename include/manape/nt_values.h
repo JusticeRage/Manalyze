@@ -87,6 +87,7 @@ extern const DECLSPEC flag_dict WIN_CERTIFICATE_REVISIONS;
 extern const DECLSPEC flag_dict WIN_CERTIFICATE_TYPES;
 extern const DECLSPEC flag_dict GLOBAL_FLAGS;
 extern const DECLSPEC flag_dict HEAP_FLAGS;
+extern const DECLSPEC flag_dict GUARD_FLAGS;
 
 /**
  *	@brief	Breaks down an integer given as input as a combination of flags.

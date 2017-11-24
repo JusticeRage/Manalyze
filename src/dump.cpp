@@ -384,12 +384,13 @@ void dump_tls(const mana::PE& pe, io::OutputFormatter& formatter)
 void dump_config(const mana::PE& pe, io::OutputFormatter& formatter)
 {
 	mana::shared_config config = pe.get_config();
-	if (config == nullptr) {
+	auto opt = pe.get_image_optional_header();
+	if (config == nullptr || !opt) {
 		return;
 	}
 
 	io::pNode config_node(new io::OutputTreeNode("Load Configuration", io::OutputTreeNode::LIST));
-	config_node->append(boost::make_shared<io::OutputTreeNode>("Size", config->Size, io::OutputTreeNode::HEX));
+	config_node->append(boost::make_shared<io::OutputTreeNode>("Size", config->Size));
 	config_node->append(boost::make_shared<io::OutputTreeNode>("TimeDateStamp", io::timestamp_to_string(config->TimeDateStamp)));
 	std::stringstream ss;
 	ss << config->MajorVersion << "." << config->MinorVersion;
@@ -408,8 +409,36 @@ void dump_config(const mana::PE& pe, io::OutputFormatter& formatter)
 	config_node->append(boost::make_shared<io::OutputTreeNode>("Reserved1", config->Reserved1, io::OutputTreeNode::HEX));
 	config_node->append(boost::make_shared<io::OutputTreeNode>("EditList", config->EditList, io::OutputTreeNode::HEX));
 	config_node->append(boost::make_shared<io::OutputTreeNode>("SecurityCookie", config->SecurityCookie, io::OutputTreeNode::HEX));
-	config_node->append(boost::make_shared<io::OutputTreeNode>("SEHandlerTable", config->SEHandlerTable, io::OutputTreeNode::HEX));
-	config_node->append(boost::make_shared<io::OutputTreeNode>("SEHandlerCount", config->SEHandlerCount));
+
+	// The SE Handler fields are only available on x86.
+	if (opt->Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32"))
+	{
+		config_node->append(boost::make_shared<io::OutputTreeNode>("SEHandlerTable", config->SEHandlerTable, io::OutputTreeNode::HEX));
+		config_node->append(boost::make_shared<io::OutputTreeNode>("SEHandlerCount", config->SEHandlerCount));
+	}
+	
+	// Only show CFG fields if the binary was compiled with that option.
+	auto characteristics = *nt::translate_to_flags(opt->DllCharacteristics, nt::DLL_CHARACTERISTICS);
+	if (std::find(characteristics.begin(), characteristics.end(), "IMAGE_DLLCHARACTERISTICS_GUARD_CF") !=
+		characteristics.end())
+	{
+		config_node->append(boost::make_shared<io::OutputTreeNode>("GuardCFCheckFunctionPointer", config->GuardCFCheckFunctionPointer, io::OutputTreeNode::HEX));
+		config_node->append(boost::make_shared<io::OutputTreeNode>("GuardCFDispatchFunctionPointer", config->GuardCFDispatchFunctionPointer, io::OutputTreeNode::HEX));
+		config_node->append(boost::make_shared<io::OutputTreeNode>("GuardCFFunctionTable", config->GuardCFFunctionTable, io::OutputTreeNode::HEX));
+		config_node->append(boost::make_shared<io::OutputTreeNode>("GuardCFFunctionCount", config->GuardCFFunctionCount, io::OutputTreeNode::HEX));
+		config_node->append(boost::make_shared<io::OutputTreeNode>("GuardFlags", *nt::translate_to_flags(config->GuardFlags, nt::GUARD_FLAGS)));
+		
+		config_node->append(boost::make_shared<io::OutputTreeNode>("CodeIntegrity.Flags", config->CodeIntegrity.Flags, io::OutputTreeNode::HEX));
+		config_node->append(boost::make_shared<io::OutputTreeNode>("CodeIntegrity.Catalog", config->CodeIntegrity.Catalog, io::OutputTreeNode::HEX));
+		config_node->append(boost::make_shared<io::OutputTreeNode>("CodeIntegrity.CatalogOffset", config->CodeIntegrity.CatalogOffset, io::OutputTreeNode::HEX));
+		config_node->append(boost::make_shared<io::OutputTreeNode>("CodeIntegrity.Reserved", config->CodeIntegrity.Reserved, io::OutputTreeNode::HEX));
+
+		config_node->append(boost::make_shared<io::OutputTreeNode>("GuardAddressTakenIatEntryTable", config->GuardAddressTakenIatEntryTable, io::OutputTreeNode::HEX));
+		config_node->append(boost::make_shared<io::OutputTreeNode>("GuardAddressTakenIatEntryCount", config->GuardAddressTakenIatEntryCount));
+		config_node->append(boost::make_shared<io::OutputTreeNode>("GuardLongJumpTargetTable", config->GuardLongJumpTargetTable, io::OutputTreeNode::HEX));
+		config_node->append(boost::make_shared<io::OutputTreeNode>("GuardLongJumpTargetCount", config->GuardLongJumpTargetCount));
+	}
+
 	formatter.add_data(config_node, *pe.get_path());
 }
 

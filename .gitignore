@@ -29,7 +29,10 @@ bin/manalyze-tests
 # Compiled Yara rules + ClamAV rules and databases
 *.yarac
 bin/yara_rules/clamav.*
+bin/yara_rules/daily.tar
 bin/yara_rules/*.cvd
+bin/yara_rules/*.ndb
+bin/yara_rules/*.ldb
 
 # Compiled Python scripts
 bin/yara_rules/*.pyc
@@ -39,6 +42,8 @@ CMakeFiles
 CMakeCache.txt
 *.cmake
 Makefile
+
+# Linux compilation artifacts
 
 # VS Files
 *.vcxproj*
@@ -53,6 +58,8 @@ Makefile
 Win32
 Release
 Debug
+.vs
+.vscode
 
 # Intellij IDEA project files
 .idea

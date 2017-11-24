@@ -511,6 +511,20 @@ const flag_dict HEAP_FLAGS =
 
 // ----------------------------------------------------------------------------
 
+const flag_dict GUARD_FLAGS =
+	boost::assign::map_list_of	("IMAGE_GUARD_CF_INSTRUMENTED",						0x00000100)
+								("IMAGE_GUARD_CFW_INSTRUMENTED",					0x00000200)
+								("IMAGE_GUARD_CF_FUNCTION_TABLE_PRESENT",			0x00000400)
+								("IMAGE_GUARD_SECURITY_COOKIE_UNUSED",				0x00000800)
+								("IMAGE_GUARD_PROTECT_DELAYLOAD_IAT",				0x00001000)
+								("IMAGE_GUARD_DELAYLOAD_IAT_IN_ITS_OWN_SECTION",	0x00002000)
+								("IMAGE_GUARD_CF_EXPORT_SUPPRESSION_INFO_PRESENT",	0x00004000)
+								("IMAGE_GUARD_CF_ENABLE_EXPORT_SUPPRESSION",		0x00008000)
+								("IMAGE_GUARD_CF_LONGJUMP_TABLE_PRESENT",			0x00010000)
+								("IMAGE_GUARD_CF_FUNCTION_TABLE_SIZE_MASK ",		0xF0000000);
+
+// ----------------------------------------------------------------------------
+
 const_shared_strings translate_to_flags(int value, const flag_dict& dict)
 {
 	auto res = boost::make_shared<std::vector<std::string> >();

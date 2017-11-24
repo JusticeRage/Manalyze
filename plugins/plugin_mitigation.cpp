@@ -92,6 +92,16 @@ class ExploitMitigationsPlugin : public IPlugin
         if (res->get_information()->size() > 0) {
             res->set_summary("The following exploit mitigation techniques have been detected");
         }
+
+		// CFG
+		if (std::find(characteristics.begin(), characteristics.end(), "IMAGE_DLLCHARACTERISTICS_GUARD_CF") !=
+			characteristics.end()) {
+			res->add_information("CFG", "enabled");
+		}
+		else {
+			res->add_information("CFG", "disabled");
+		}
+
         return res;
     }
 };

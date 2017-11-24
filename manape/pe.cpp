@@ -831,6 +831,38 @@ bool PE::_parse_tls()
 
 // ----------------------------------------------------------------------------
 
+/**
+ *	@brief	Helper function which simplifies the process of reading a field from
+ *			the file's load configuration while checking if there are enough
+ *			bytes available.
+ *			
+ *	@param	config		The structure that was read so far.
+ *	@param	source		A pointer to the file to read from.
+ *	@param	destination	Where the read value is to be put.
+ *	@param	field_size	The size of the value to read.
+ *	@param	read_bytes	The number of bytes read so far, will be incremented.
+ *	
+ *	@return	Whether the value should be read. If false, EOF has been reached or
+ *			the stucture has no more fields to read.
+ */
+bool read_config_field(const			image_load_config_directory& config,
+					   FILE*			source,
+					   void*			destination,
+					   unsigned int		field_size,
+					   unsigned int&	read_bytes)
+{
+	if (read_bytes + field_size > config.Size) {
+		return false;
+	}
+	if (1 != fread(destination, field_size, 1, source))	{
+		return false;
+	}
+	read_bytes += field_size;
+	return true;
+}
+
+// ----------------------------------------------------------------------------
+
 bool PE::_parse_config()
 {
 	if (!_ioh || _file_handle == nullptr) {
@@ -880,12 +912,13 @@ bool PE::_parse_config()
 			<< DEBUG_INFO_INSIDEPE << std::endl;
 		return true;
 	}
+	unsigned int read_bytes = 32 + 8 * field_size; // The number of bytes read so far
 
 	// SafeSEH information may not be present in some XP-era binaries.
 	// The MSDN page for IMAGE_LOAD_CONFIG_DIRECTORY specifies that their size must be 64
 	// (https://msdn.microsoft.com/en-us/library/windows/desktop/ms680328(v=vs.85).aspx).
-	// SafeSEH is also not present on 64 bit binaries.
-	if (config.Size > 64 && _ioh->Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32"))
+	// Those fields should be 0 in 64 bit binaries.
+	if (config.Size > read_bytes)
 	{
 		if (1 != fread(&config.SEHandlerTable, field_size, 1, _file_handle.get()) ||
 			1 != fread(&config.SEHandlerCount, field_size, 1, _file_handle.get()))
@@ -895,6 +928,21 @@ bool PE::_parse_config()
 			return true;
 		}
 	}
+	read_bytes += 2 * field_size;
+
+	// Read the remaining fields. The OR operator allows this code to stop whenever a read returns false, 
+	// i.e. when trying to read more bytes than are available in the structure. This construction is necessary
+	// because fields are added to the structure as Windows evolves.
+	read_config_field(config, _file_handle.get(), &config.GuardCFCheckFunctionPointer, field_size, read_bytes) ||
+	read_config_field(config, _file_handle.get(), &config.GuardCFDispatchFunctionPointer, field_size, read_bytes) ||
+	read_config_field(config, _file_handle.get(), &config.GuardCFFunctionTable, field_size, read_bytes) ||
+	read_config_field(config, _file_handle.get(), &config.GuardCFFunctionCount, field_size, read_bytes) ||
+	read_config_field(config, _file_handle.get(), &config.GuardFlags, 4, read_bytes) ||
+	read_config_field(config, _file_handle.get(), &config.CodeIntegrity, 12, read_bytes) ||
+	read_config_field(config, _file_handle.get(), &config.GuardAddressTakenIatEntryTable, field_size, read_bytes) ||
+	read_config_field(config, _file_handle.get(), &config.GuardAddressTakenIatEntryCount, field_size, read_bytes) ||
+	read_config_field(config, _file_handle.get(), &config.GuardLongJumpTargetTable, field_size, read_bytes) ||
+	read_config_field(config, _file_handle.get(), &config.GuardLongJumpTargetCount, field_size, read_bytes);
 
 	_config.reset(config);
 	return true;

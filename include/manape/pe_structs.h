@@ -396,6 +396,16 @@ typedef boost::shared_ptr<win_certificate> pwin_certificate;
 
 // ----------------------------------------------------------------------------
 
+typedef struct image_load_config_code_integrity_t
+{
+	boost::uint16_t	Flags;
+	boost::uint16_t Catalog;
+	boost::uint32_t	CatalogOffset;
+	boost::uint32_t	Reserved;
+} image_load_config_code_integrity;
+
+// ----------------------------------------------------------------------------
+
 typedef struct image_load_config_directory_t
 {
 	boost::uint32_t	Size;
@@ -418,6 +428,16 @@ typedef struct image_load_config_directory_t
 	boost::uint64_t SecurityCookie;
 	boost::uint64_t SEHandlerTable;
 	boost::uint64_t SEHandlerCount;
+	boost::uint64_t GuardCFCheckFunctionPointer;
+	boost::uint64_t GuardCFDispatchFunctionPointer;
+	boost::uint64_t GuardCFFunctionTable;
+	boost::uint64_t GuardCFFunctionCount;
+	boost::uint32_t GuardFlags;
+	image_load_config_code_integrity CodeIntegrity;
+	boost::uint64_t GuardAddressTakenIatEntryTable;
+	boost::uint64_t GuardAddressTakenIatEntryCount;
+	boost::uint64_t	GuardLongJumpTargetTable;
+	boost::uint64_t GuardLongJumpTargetCount;
 } image_load_config_directory;
 
 // ----------------------------------------------------------------------------
