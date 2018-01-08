@@ -43,6 +43,8 @@ std::string power_loader = "FindWindow(A|W)|GetWindowLong(A|W)";
 
 std::string atom_bombing = "GlobalAddAtom(A|W)|GlobalGetAtomName(A|W)|QueueUserAPC";
 
+std::string process_doppelganging = "CreateTransaction|CreateFileTransacted|RollbackTransaction|WriteFile";
+
 std::string keylogger_api = "SetWindowsHook(Ex)?|GetAsyncKeyState|GetForegroundWindow|AttachThreadInput|CallNextHook(Ex)?|MapVirtualKey";
 
 std::string raw_socket_api = "accept|bind|connect|recv|send|gethost(by)?name|inet_addr";
@@ -218,6 +220,7 @@ public:
 		check_functions(pe, process_hollowing, MALICIOUS, "Code injection capabilities (process hollowing)", AT_LEAST_THREE, res);
 		check_functions(pe, power_loader, MALICIOUS, "Code injection capabilities (PowerLoader)", AT_LEAST_TWO, res);
 		check_functions(pe, atom_bombing, MALICIOUS, "Code injection capabilities (atom bombing)", AT_LEAST_THREE, res);
+		check_functions(pe, process_doppelganging, MALICIOUS, "Code injection capabilities (process doppelganging)", AT_LEAST_THREE, res);
 		check_functions(pe, "", NO_OPINION, "Can access the registry", AT_LEAST_ONE, res);
 		check_functions(pe, process_creation_api, NO_OPINION, "Possibly launches other programs", AT_LEAST_ONE, res);
 		check_functions(pe, "(Nt|Zw).*", SUSPICIOUS, "Uses Windows' Native API", AT_LEAST_TWO, res);
