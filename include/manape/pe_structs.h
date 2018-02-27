@@ -455,4 +455,12 @@ typedef struct delay_load_directory_table_t
 	std::string		NameStr; // Non-standard!
 } delay_load_directory_table;
 
+// ----------------------------------------------------------------------------
+
+typedef struct rich_header_t
+{
+	boost::uint32_t xor_key;
+	std::vector<std::tuple<boost::uint16_t, boost::uint16_t, boost::uint32_t> > values;
+} rich_header;
+
 } // !namespace mana

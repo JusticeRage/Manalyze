@@ -389,6 +389,14 @@ private:
 	bool _parse_certificates();
 
 	/**
+	 *	@brief	Parses the opaque RICH header.
+	 *	
+	 *	Included in the _parse_directories call.
+	 *	/!\ This relies on the information gathered in _parse_pe_header.
+	 */
+	bool _parse_rich_header();
+
+	/**
 	 *	@brief	Translates a Virtual Address (*not relative to the image base*) into an offset in the file.
 	 *
 	 *	@param	boost::uint32_t rva The VA to translate
@@ -447,6 +455,7 @@ private:
 	boost::optional<image_load_config_directory>	_config;
 	boost::optional<delay_load_directory_table>		_delay_load_directory_table;
 	std::vector<pwin_certificate>					_certificates;
+	boost::optional<rich_header>					_rich_header;
 };
 
 

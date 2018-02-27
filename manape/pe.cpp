@@ -592,7 +592,8 @@ bool PE::_parse_directories()
 		   _parse_relocations() &&
 		   _parse_tls() &&
 		   _parse_config() &&
-		   _parse_certificates();
+		   _parse_certificates() &&
+		   _parse_rich_header();
 }
 
 // ----------------------------------------------------------------------------
@@ -1021,6 +1022,69 @@ bool PE::_parse_certificates()
 		}
 	}
 
+	return true;
+}
+
+// ----------------------------------------------------------------------------
+
+bool PE::_parse_rich_header()
+{
+	if (!_h_dos || _file_handle == nullptr) {
+		return false;
+	}
+
+	// Star searching for the RICH header at offset 0, but before the PE header.
+	if (fseek(_file_handle.get(), 0, SEEK_SET))	{
+		return true;
+	}
+
+	unsigned int read;
+	int bytes_left = _h_dos->e_lfanew;
+
+	do
+	{
+		if (1 != fread(&read, 4, 1, _file_handle.get())) {
+			break;
+		}
+		bytes_left -= 4;  // Stay between offset 0x80 and the PE header.
+	} while (read != 0x68636952 && bytes_left > 0);
+
+	if (read != 0x68636952)	{
+		return true;  // The RICH magic was not found.
+	}
+	rich_header h;
+	if (1 != fread(&h.xor_key, 4, 1, _file_handle.get())) 
+	{
+		PRINT_WARNING << "XOR key absent after the RICH header!" << DEBUG_INFO_INSIDEPE << std::endl;
+		return true;
+	}
+
+	// Start parsing the values backwards.
+	while (true)
+	{
+		if (fseek(_file_handle.get(), -16, SEEK_CUR)) 
+		{
+			PRINT_WARNING << "Error while reading the RICH header!" << DEBUG_INFO_INSIDEPE << std::endl;
+			return true;
+		}
+		boost::uint64_t data;
+		if (1 != fread(&data, 8, 1, _file_handle.get())) 
+		{
+			PRINT_WARNING << "Error while reading the RICH header!" << DEBUG_INFO_INSIDEPE << std::endl;
+			return true;
+		}
+		boost::uint32_t count = (data >> 32) ^ h.xor_key;
+		boost::uint32_t id_value = (data & 0xFFFFFFFF) ^ h.xor_key;
+
+		// Stop if we reach the start marker, "DanS".
+		if (id_value == 0x536E6144) {
+			break;
+		}
+		auto t = std::make_tuple(static_cast<boost::uint16_t>((id_value >> 16) & 0xFFFF), static_cast<boost::uint16_t>(id_value & 0xFFFF), count);
+		h.values.insert(h.values.begin(), t);
+	};
+
+	_rich_header.reset(h);
 	return true;
 }
 

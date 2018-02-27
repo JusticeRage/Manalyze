@@ -233,7 +233,7 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
 			"Dump PE information. Available choices are any combination of: "
 			"all, summary, dos (dos header), pe (pe header), opt (pe optional header), sections, "
 			"imports, exports, resources, version, debug, tls, config (image load configuration), "
-			"delay (delay-load table")
+			"delay (delay-load table), rich")
 		("hashes", "Calculate various hashes of the file (may slow down the analysis!)")
 		("extract,x", po::value<std::string>(), "Extract the PE resources and authenticode certificates "
 			"to the target directory.")
