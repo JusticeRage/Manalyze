@@ -1084,6 +1084,8 @@ bool PE::_parse_rich_header()
 		h.values.insert(h.values.begin(), t);
 	};
 
+	// Keep a trace of where this header starts, as it is not easy to locate and is useful to calculate the checksum.
+	h.file_offset = ftell(_file_handle.get()) - 8;
 	_rich_header.reset(h);
 	return true;
 }

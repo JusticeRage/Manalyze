@@ -547,6 +547,26 @@ void dump_summary(const mana::PE& pe, io::OutputFormatter& formatter)
 
 // ----------------------------------------------------------------------------
 
+void dump_rich_header(const mana::PE& pe, io::OutputFormatter& formatter)
+{
+	auto rich = pe.get_rich_header();
+	if (rich == nullptr) {
+		return; // No delayed imports.
+	}
+
+	io::pNode rich_node(new io::OutputTreeNode("RICH Header", io::OutputTreeNode::LIST));
+	rich_node->append(boost::make_shared<io::OutputTreeNode>("XOR Key", rich->xor_key, io::OutputTreeNode::HEX));
+	for (auto it = rich->values.begin() ; it != rich->values.end() ; ++it)
+	{
+		std::stringstream ss;
+		ss << "id " << std::get<0>(*it) << "=" << std::get<1>(*it);
+		rich_node->append(boost::make_shared<io::OutputTreeNode>(ss.str(), std::get<2>(*it)));
+	}
+	formatter.add_data(rich_node, *pe.get_path());
+}
+
+// ----------------------------------------------------------------------------
+
 void dump_hashes(const mana::PE& pe, io::OutputFormatter& formatter)
 {
 	const_shared_strings hashes = hash::hash_file(hash::ALL_DIGESTS, *pe.get_path());

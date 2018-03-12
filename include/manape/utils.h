@@ -51,6 +51,24 @@ namespace utils
 
 typedef boost::shared_ptr<std::string> pString;
 
+// Disable the "unary minus operator applied to unsigned type" warning.
+#pragma warning(push)
+#pragma warning(disable : 4146)
+/**
+ *	@brief	Performs a ROL operation on a 32 bit integer.
+ *	
+ *	@param	x The integer to operate on.
+ *	@param	n How much to rotate.
+ *	
+ *	@return x ROL n
+ */
+inline boost::uint32_t rol32(boost::uint32_t x, boost::uint32_t n)
+{
+	n = n % 32;
+	return (x << n) | (x >> (-n & 31));
+}
+#pragma warning(pop)
+
 /**
  *	@brief	Reads a null-terminated ASCII string in a file.
  *

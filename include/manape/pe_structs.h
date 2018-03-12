@@ -460,6 +460,8 @@ typedef struct delay_load_directory_table_t
 typedef struct rich_header_t
 {
 	boost::uint32_t xor_key;
+	boost::uint32_t file_offset;  // We keep a reference of where the structure starts.
+	// Structure : id, product_id, count
 	std::vector<std::tuple<boost::uint16_t, boost::uint16_t, boost::uint32_t> > values;
 } rich_header;
 

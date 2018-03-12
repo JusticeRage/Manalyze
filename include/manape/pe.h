@@ -70,6 +70,7 @@ typedef boost::shared_ptr<const image_load_config_directory> shared_config;
 typedef boost::shared_ptr<const delay_load_directory_table> shared_dldt;
 typedef boost::shared_ptr<const std::vector<pwin_certificate> > shared_certificates;
 typedef boost::shared_ptr<const std::vector<pImportedLibrary> > shared_imports;
+typedef boost::shared_ptr<const rich_header> shared_rich_header;
 typedef boost::shared_ptr<std::string> pString;
 typedef boost::shared_ptr<FILE> pFile;
 
@@ -204,6 +205,11 @@ public:
 	DECLSPEC shared_certificates get_certificates() const {
 		return _initialized ? boost::make_shared<shared_certificates::element_type>(_certificates) :
 			boost::make_shared<shared_certificates::element_type>();
+	}
+
+	DECLSPEC shared_rich_header get_rich_header() const	{
+		return (_initialized && _rich_header) ?
+			boost::make_shared<rich_header>(*_rich_header) : shared_rich_header();
 	}
 
 	DECLSPEC shared_imports get_imports() const	{

@@ -144,7 +144,7 @@ bool validate_args(po::variables_map& vm, po::options_description& desc, char** 
 	{
 		std::vector<std::string> selected_categories = tokenize_args(vm["dump"].as<std::vector<std::string> >());
 		const std::vector<std::string> categories = boost::assign::list_of("all")("summary")("dos")("pe")("opt")("sections")
-			("imports")("exports")("resources")("version")("debug")("tls")("config")("delay");
+			("imports")("exports")("resources")("version")("debug")("tls")("config")("delay")("rich");
 		for (auto it = selected_categories.begin() ; it != selected_categories.end() ; ++it)
 		{
 			std::vector<std::string>::const_iterator found = std::find(categories.begin(), categories.end(), *it);
@@ -331,6 +331,9 @@ void handle_dump_option(io::OutputFormatter& formatter, const std::vector<std::s
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "delay") != categories.end()) {
 		mana::dump_dldt(pe, formatter);
+	}
+	if (dump_all || std::find(categories.begin(), categories.end(), "rich") != categories.end()) {
+		mana::dump_rich_header(pe, formatter);
 	}
 }
 
