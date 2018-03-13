@@ -559,7 +559,23 @@ void dump_rich_header(const mana::PE& pe, io::OutputFormatter& formatter)
 	for (auto it = rich->values.begin() ; it != rich->values.end() ; ++it)
 	{
 		std::stringstream ss;
-		ss << "id " << std::get<0>(*it) << "=" << std::get<1>(*it);
+		if (nt::COMP_ID_TYPE.find(std::get<0>(*it)) != nt::COMP_ID_TYPE.end()) {
+			ss << nt::COMP_ID_TYPE.at(std::get<0>(*it));
+		}
+		else {
+			ss << std::get<0>(*it);
+		}
+
+		if (std::get<1>(*it) != 0) 
+		{
+			auto s = *nt::translate_to_flag(std::get<1>(*it), nt::COMP_ID_PRODID);
+			if (s.find("UNKNOWN") != 0) {
+				ss << " (" << s << ")";
+			}
+			else {
+				ss << " (" << std::get<1>(*it) << ")";
+			}
+		}
 		rich_node->append(boost::make_shared<io::OutputTreeNode>(ss.str(), std::get<2>(*it)));
 	}
 	formatter.add_data(rich_node, *pe.get_path());

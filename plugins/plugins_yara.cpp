@@ -242,41 +242,8 @@ class CompilerDetectionPlugin : public YaraPlugin
 public:
 	CompilerDetectionPlugin() : YaraPlugin("yara_rules/compilers.yara") {}
 
-	pResult analyze(const mana::PE& pe) override 
-	{
-		auto res = scan(pe, "Matching compiler(s):", NO_OPINION, "description");
-
-		// Check the checksum in the RICH header
-		auto rich = pe.get_rich_header();
-		if (rich)
-		{
-			boost::uint32_t checksum = rich->file_offset;
-			auto bytes = pe.get_raw_bytes(rich->file_offset);
-			// Checksum of the DOS header
-			for (unsigned int i = 0 ; i < rich->file_offset ; ++i)
-			{
-				// Ignore e_lfanew?
-				if (0x3c <= i && i < 0x40) {
-					continue;
-				}
-				checksum += utils::rol32(bytes->at(i), i);
-			}
-			// Checksum of the @comp.ids.
-			for (unsigned int i = 0 ; i < rich->values.size() ; ++i)
-			{
-				auto v = rich->values.at(i);
-				checksum += utils::rol32((std::get<0>(v) << 16) | std::get<1>(v), std::get<2>(v));
-			}
-			
-			if (checksum != rich->xor_key)
-			{
-				res->raise_level(MALICIOUS);
-				res->set_summary("The file headers were almost certainly tampered with.");
-				res->add_information("The RICH header checksum is invalid.");
-			}
-		}
-
-		return res;
+	pResult analyze(const mana::PE& pe) override {
+		return scan(pe, "Matching compiler(s):", NO_OPINION, "description");
 	}
 
 	pString get_id() const override {

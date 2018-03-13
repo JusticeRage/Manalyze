@@ -103,6 +103,61 @@ public:
 		return boost::make_shared<std::string>("Tries to structurally detect packer presence.");
 	}
 
+	void rich_header_tests(const mana::PE& pe, pResult res) const
+	{
+		auto rich = pe.get_rich_header();
+		if (!rich) {
+			return;
+		}
+
+		// Validate the checksum in the RICH header
+		boost::uint32_t checksum = rich->file_offset;
+		auto bytes = pe.get_raw_bytes(rich->file_offset);
+		// Checksum of the DOS header
+		for (unsigned int i = 0; i < rich->file_offset; ++i)
+		{
+			// Ignore e_lfanew?
+			if (0x3c <= i && i < 0x40) {
+				continue;
+			}
+			checksum += utils::rol32(bytes->at(i), i);
+		}
+		// Checksum of the @comp.ids.
+		for (unsigned int i = 0; i < rich->values.size(); ++i)
+		{
+			auto v = rich->values.at(i);
+			checksum += utils::rol32((std::get<0>(v) << 16) | std::get<1>(v), std::get<2>(v));
+		}
+
+		if (checksum != rich->xor_key)
+		{
+			res->raise_level(MALICIOUS);
+			if (res->get_summary() == nullptr) {
+				res->set_summary("The file headers were tampered with.");
+			}
+			res->add_information("The RICH header checksum is invalid.");
+		}
+
+		// Verify that the number of imports is consistent with the one reported in the header
+		for (auto it = rich->values.begin() ; it != rich->values.end() ; ++it)
+		{
+			// Look for the "Total imports" @comp.id.
+			if (std::get<0>(*it) == 1) 
+			{
+				auto imports = pe.find_imports(".*");
+				if (std::get<2>(*it) != imports->size())
+				{
+					if (res->get_summary() == nullptr) {
+						res->set_summary("The PE is packed or was manually edited.");
+					}
+					res->add_information("The number of imports reported in the RICH header is inconsistent.");
+					res->raise_level(SUSPICIOUS);
+				}
+			}
+		}
+		
+	}
+
 	pResult analyze(const mana::PE& pe) override
 	{
 		pResult res = create_result();
@@ -206,6 +261,9 @@ public:
 			res->raise_level(SUSPICIOUS);
 			res->add_information("The PE's resources are bigger than it is.");
 		}
+
+		// Perform tests on the RICH header.
+		rich_header_tests(pe, res);
 
 		// Put a default summary if none was set.
 		if (res->get_level() != NO_OPINION && res->get_summary() == nullptr) {
