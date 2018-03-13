@@ -145,7 +145,9 @@ public:
 			if (std::get<0>(*it) == 1) 
 			{
 				auto imports = pe.find_imports(".*");
-				if (std::get<2>(*it) != imports->size())
+				// For some reason, the number of imports present here seems to be wrong in a lot of goodware.
+				// It seems however that that number is never smaller than the actual number of imports.
+				if (std::get<2>(*it) < imports->size())
 				{
 					if (res->get_summary() == nullptr) {
 						res->set_summary("The PE is packed or was manually edited.");
