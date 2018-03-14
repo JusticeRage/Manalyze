@@ -127,7 +127,7 @@ public:
 				else if (it->value_.get_int() == -2) // Response Code = -2: scan queued.
 				{
 					res->set_summary("No VirusTotal score.");
-					res->add_information("A scan if the file is currently queued.");
+					res->add_information("A scan of the file is currently queued.");
 					return res;
 				}
 			}

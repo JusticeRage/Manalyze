@@ -61,7 +61,7 @@ void check_version_info(const mana::PE& pe, pResult res)
 		auto found_strings = m->at(0)->get_found_strings();
 		if (found_strings.size() > 0)
 		{
-			res->set_summary("The programs tries to mislead users about its origins.");
+			res->set_summary("The program tries to mislead users about its origins.");
 			if ((m->at(0)->get_metadata()["type"] == "homograph")) {
 				res->add_information("The PE uses homographs to impersonate a well known company!");
 			}
@@ -71,7 +71,7 @@ void check_version_info(const mana::PE& pe, pResult res)
 				   << " but is not signed!";
 				res->add_information(ss.str());
 			}
-			
+
 			res->raise_level(MALICIOUS);
 		}
 	}
