@@ -496,9 +496,9 @@ void do_winverifytrust(GUID& guid, WINTRUST_DATA& data, pResult res)
 /**
  *	@brief	A simple function used to translate the PE path into a std::wstring
  *			as is required by Microsoft's API.
- *			
+ *
  *	@param	s The string to convert.
- *	
+ *
  *	@return	a std::wstring representing the input.
  */
 std::wstring multibytetowide_helper(const std::string& s)
@@ -527,7 +527,7 @@ void make_information(const std::string& type, const std::wstring& data, pResult
 	}
 	catch (utf8::invalid_utf16)
 	{
-		PRINT_WARNING << "[plugin_authenticode] Couldn't convert a string from UTF-16 to UTF-8!" 
+		PRINT_WARNING << "[plugin_authenticode] Couldn't convert a string from UTF-16 to UTF-8!"
 					  << DEBUG_INFO << std::endl;
 		return;
 	}
@@ -567,7 +567,7 @@ void check_catalog_signature(const mana::PE& pe, pResult res)
 	if (!::CryptCATAdminCalcHashFromFileHandle(handle, &size, hash_buffer, 0) || hash_buffer == nullptr) { // ...and one to get the hash.
 		goto end;
 	}
-	
+
 	// The hash is used as a reference in the catalog. Convert it to a string.
 	for (unsigned int i = 0; i < size; i++)	{
 		ss << boost::wformat(L"%02X") % hash_buffer[i];

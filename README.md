@@ -99,6 +99,12 @@ Examples:
   manalyze.exe -r malwares/ --plugins=peid,clamav --dump all
 ````
 
+## People using Manalyze
+
+- [ANY.RUN](https://any.run/)
+
+Contact me or open a pull request if you would like to be added to this list!
+
 ## Contact
 [![E-Mail](https://manalyzer.org/static/mail.png)](mailto:justicerage@manalyzer[.]org)
 [![Twitter](http://manalyzer.org/static/twitter.png)](https://twitter.com/JusticeRage)

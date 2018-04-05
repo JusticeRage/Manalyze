@@ -123,7 +123,7 @@ void add_certificate_information(pPKCS7 p, pResult res)
     STACK_OF(X509)* signers = PKCS7_get0_signers(p.get(), nullptr, 0);
     if (signers == nullptr)
     {
-        PRINT_WARNING << "[plugin_authenticode] Could not obtain the certificate signers." << std::endl;
+        PRINT_WARNING << "[plugin_authenticode] Could not obtain the certificate signers" << std::endl;
         return;
     }
     

@@ -223,7 +223,7 @@ public:
 		check_functions(pe, process_doppelganging, MALICIOUS, "Code injection capabilities (process doppelganging)", AT_LEAST_THREE, res);
 		check_functions(pe, "", NO_OPINION, "Can access the registry", AT_LEAST_ONE, res);
 		check_functions(pe, process_creation_api, NO_OPINION, "Possibly launches other programs", AT_LEAST_ONE, res);
-		check_functions(pe, "(Nt|Zw).*", SUSPICIOUS, "Uses Windows' Native API", AT_LEAST_TWO, res);
+		check_functions(pe, "(Nt|Zw).*", SUSPICIOUS, "Uses Windows's Native API", AT_LEAST_TWO, res);
 		check_functions(pe, "Crypt.*", NO_OPINION, "Uses Microsoft's cryptographic API", AT_LEAST_ONE, res);
 		check_functions(pe, temporary_files, NO_OPINION, "Can create temporary files", AT_LEAST_TWO, res);
 		check_functions(pe, "Wlx.*", MALICIOUS, "Possibly attempts GINA replacement", AT_LEAST_THREE, res);
@@ -240,7 +240,7 @@ public:
 		check_functions(pe, eventlog_deletion, MALICIOUS, "Deletes entries from the event log", AT_LEAST_ONE, res);
 		check_functions(pe, dacl_api, SUSPICIOUS, "Changes object ACLs", AT_LEAST_ONE, res);
 		check_functions(pe, screenshot_api, SUSPICIOUS, "Can take screenshots", AT_LEAST_TWO, res);
-		check_functions(pe, audio_api, SUSPICIOUS, "Can use the microphone to record audio.", AT_LEAST_ONE, res);
+		check_functions(pe, audio_api, SUSPICIOUS, "Can use the microphone to record audio", AT_LEAST_ONE, res);
 		check_functions(pe, networking_api, SUSPICIOUS, "Modifies the network configuration", AT_LEAST_ONE, res);
 		check_functions(pe, "GetClipboardData", NO_OPINION, "Reads the contents of the clipboard", AT_LEAST_ONE, res);
 		check_functions(pe, "IsUserAnAdmin", NO_OPINION, "Checks if it has admin rights", AT_LEAST_ONE, res);
@@ -258,7 +258,7 @@ public:
 				res->set_summary("The PE contains functions most legitimate programs don't use.");
 				break;
 			case MALICIOUS:
-				res->set_summary("The PE contains functions mostly used by malwares.");
+				res->set_summary("The PE contains functions mostly used by malware.");
 				break;
 			default:
 				break;

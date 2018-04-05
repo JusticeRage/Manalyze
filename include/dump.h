@@ -35,7 +35,6 @@
 
 namespace mana
 {
-
 void dump_dos_header(const mana::PE& pe, io::OutputFormatter& formatter);
 void dump_pe_header(const mana::PE& pe, io::OutputFormatter& formatter);
 void dump_image_optional_header(const mana::PE& pe, io::OutputFormatter& formatter);

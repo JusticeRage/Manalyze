@@ -15,6 +15,8 @@ You should have received a copy of the GNU General Public License
 along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <iomanip>
+
 #include "manacommons/output_tree_node.h"
 
 namespace io
@@ -103,8 +105,23 @@ pString OutputTreeNode::to_string() const
 	}
 
 	std::stringstream ss;
-	if (_modifier == HEX) {
-		ss << std::hex << "0x";
+	if (_modifier == HEX)
+	{
+		ss << std::hex << "0x" << std::uppercase << std::setfill('0');
+        switch (_type)
+        {
+            case UINT32:
+                ss << std::setw(8);
+                break;
+            case UINT16:
+                ss << std::setw(4);
+                break;
+            case UINT64:
+                ss << std::setw(16);
+                break;
+            default:
+                break;
+        }
 	}
 	else if (_modifier == DEC) {
 		ss << std::dec;

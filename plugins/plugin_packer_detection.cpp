@@ -116,7 +116,7 @@ public:
 		// Checksum of the DOS header
 		for (unsigned int i = 0; i < rich->file_offset; ++i)
 		{
-			// Ignore e_lfanew?
+			// Ignore e_lfanew.
 			if (0x3c <= i && i < 0x40) {
 				continue;
 			}
@@ -142,7 +142,7 @@ public:
 		for (auto it = rich->values.begin() ; it != rich->values.end() ; ++it)
 		{
 			// Look for the "Total imports" @comp.id.
-			if (std::get<0>(*it) == 1) 
+			if (std::get<0>(*it) == 1)
 			{
 				auto imports = pe.find_imports(".*");
 				// For some reason, the number of imports present here seems to be wrong in a lot of goodware.
@@ -157,7 +157,6 @@ public:
 				}
 			}
 		}
-		
 	}
 
 	pResult analyze(const mana::PE& pe) override
@@ -186,7 +185,7 @@ public:
 			}
 
 			// Look for WX sections
-			int characteristics = (*it)->get_characteristics();
+			unsigned int characteristics = (*it)->get_characteristics();
 			if (characteristics & nt::SECTION_CHARACTERISTICS.at("IMAGE_SCN_MEM_EXECUTE") &&
 				characteristics & nt::SECTION_CHARACTERISTICS.at("IMAGE_SCN_MEM_WRITE"))
 			{
@@ -217,11 +216,11 @@ public:
 		if (imports->size() == 1)
 		{
 			auto mscoree = pe.find_imported_dlls("mscoree.dll");
-			if (mscoree->size() > 0)
+			if (!mscoree->empty())
 			{
 
 				auto corexemain = mscoree->at(0)->get_imports();
-				if (corexemain->size() > 0 && corexemain->at(0)->Name == "_CorExeMain") {
+				if (!corexemain->empty() && corexemain->at(0)->Name == "_CorExeMain") {
 					return res;
 				}
 			}
@@ -237,7 +236,7 @@ public:
 			try {
 				min_imports = std::stoi(_config->at("min_imports"));
 			}
-			catch (std::invalid_argument)
+			catch (std::invalid_argument&)
             {
                 PRINT_WARNING << "Could not parse packer.min_imports in the configuration file." << std::endl;
 				min_imports = 10;
