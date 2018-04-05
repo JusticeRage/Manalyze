@@ -38,9 +38,7 @@ void delete_manape_module_data(manape_data* data)
     if (data != nullptr && data->sections != nullptr) {
         free(data->sections);
     }
-    if (data != nullptr) {
-        delete data;
-    }
+	delete data;
 }
 
 // ----------------------------------------------------------------------------
@@ -145,9 +143,10 @@ private:
 	 *	The manape_data object contains address information (entry point, sections, ...). Passing them to Yara prevents
 	 *	me from using their built in PE parser (since manalyze has already done all the work).
 	 */
-	boost::shared_ptr<manape_data> _create_manape_module_data(const mana::PE& pe)
+	static boost::shared_ptr<manape_data> _create_manape_module_data(const mana::PE& pe)
 	{
         boost::shared_ptr<manape_data> res(new manape_data, delete_manape_module_data);
+		memset(res.get(), 0, sizeof(manape_data));
         auto ioh = pe.get_image_optional_header();
         auto sections = pe.get_sections();
 
@@ -163,7 +162,7 @@ private:
         else
         {
             res->number_of_sections = sections->size();
-            res->sections = (manape_file_portion*) malloc(res->number_of_sections * sizeof(manape_file_portion));
+            res->sections = static_cast<manape_file_portion*>(malloc(res->number_of_sections * sizeof(manape_file_portion)));
             if (res->sections != nullptr)
             {
                 for (boost::uint32_t i = 0 ; i < res->number_of_sections ; ++i)
@@ -181,16 +180,27 @@ private:
         }
 
         // Add VERSION_INFO location for some ClamAV signatures
-        auto resources = pe.get_resources();
-        for (auto it = resources->begin() ; it != resources->end() ; ++it)
-        {
-            if (*(*it)->get_type() == "RT_VERSION")
-            {
-                res->version_info.start = (*it)->get_offset();
-                res->version_info.size = (*it)->get_size();
-                break;
-            }
-        }
+        const auto resources = pe.get_resources();
+		if (resources != nullptr)
+		{
+			for (auto& it : *resources)
+			{
+				if (*it->get_type() == "RT_VERSION")
+				{
+					res->version_info.start = it->get_offset();
+					res->version_info.size = it->get_size();
+					break;
+				}
+			}
+		}
+
+		// Add authenticode signature location for the findcrypt rules.
+		if (ioh)
+		{
+			res->authenticode.start = ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].VirtualAddress;
+			res->authenticode.size = ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].Size;
+		}
+
         return res;
 	}
 

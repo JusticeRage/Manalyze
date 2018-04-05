@@ -15,6 +15,8 @@
   along with Manalyze. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import "manape"
+
 rule CRC32
 {
   meta:
@@ -103,7 +105,9 @@ rule MD5
     $md5_c63 = { 91 D3 86 EB }
 
   condition:
-    $pkcs or any of ($mac_*) or 20 of ($md5_c*)
+	// Exclude the authenticode signature of the PE which contains OIDs.
+    $pkcs in (0..manape.authenticode.start) or $pkcs in (manape.authenticode.start + manape.authenticode.size..filesize) or 
+	any of ($mac_*) or 20 of ($md5_c*)
 }
 
 rule SHA1
@@ -121,7 +125,8 @@ rule SHA1
     $sha1_f4 = { d6 c1 62 ca }
 
   condition:
-    $sha1_pkcs or all of ($sha1_f*)
+    $sha1_pkcs in (0..manape.authenticode.start) or $sha1_pkcs in (manape.authenticode.start + manape.authenticode.size..filesize) or 
+	all of ($sha1_f*)
 }
 
 rule SHA256
@@ -206,7 +211,8 @@ rule SHA256
     $sha256_k62 = { F2 78 71 C6 }
 
   condition:
-    $sha256_pkcs or all of ($sha256_init*) or 20 of ($sha256_k*)
+    $sha256_pkcs in (0..manape.authenticode.start) or $sha256_pkcs in (manape.authenticode.start + manape.authenticode.size..filesize) or 
+	all of ($sha256_init*) or 20 of ($sha256_k*)
 }
 
 rule SHA512
@@ -298,7 +304,8 @@ rule SHA512
     $sha512_k79 = { 17 58 47 4A 8C 19 44 6C }
 
   condition:
-    $sha512_pkcs or 30 of ($sha512_k*)
+    $sha512_pkcs in (0..manape.authenticode.start) or $sha512_pkcs in (manape.authenticode.start + manape.authenticode.size..filesize) or 
+	30 of ($sha512_k*)
 }
 
 rule Whirlpool

@@ -20,8 +20,9 @@ All scripts relying on Manalyze's PE module must start by importing it with the 
 
 * The entry point of the executable is designated by ``manape.ep``.
 * The number of sections is exposed through ``manape.num_sections``.
-* For each section, you can access the size and start address with ``manape.section[i].size`` and ``manape.section[i].start``, ``i`` being the zero-based index of the section.
-* You can scan the ``VERSION_INFO`` resource with ``manape.version_info.size`` and ``manape.version_info.start``.
+* For each section, you can access the start address and the size with ``manape.section[i].start`` and ``manape.section[i].size``, ``i`` being the zero-based index of the section.
+* You can scan the ``VERSION_INFO`` resource with ``manape.version_info.start`` and ``manape.version_info.size``.
+* The authenticode signature of the binary can be located through ``manape.authenticode.start`` and ``manape.authenticode.size``.
 
 Sample rule
 ===========

@@ -413,7 +413,6 @@ BOOST_AUTO_TEST_CASE(parse_rich_header)
 	BOOST_CHECK_EQUAL(std::get<0>(rich->values.at(10)), 0x0102);
 	BOOST_CHECK_EQUAL(std::get<1>(rich->values.at(10)), 0x5bd2);
 	BOOST_CHECK_EQUAL(std::get<2>(rich->values.at(10)), 1);
-
 }
 
 // ----------------------------------------------------------------------------
