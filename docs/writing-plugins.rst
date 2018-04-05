@@ -571,6 +571,33 @@ The function returns a pointer to the following structure::
 		std::string		NameStr; // Non-standard!
 	} delay_load_directory_table;
 
+RICH Header
+-----------
+
+The RICH header can be can be obtained with the ``get_rich_header`` function::
+
+	auto rich = pe.get_rich_header();
+	if (rich == nullptr) {
+		return; // No RICH header.
+	}
+	std::cout << "XOR key: " << rich->xor_key << std::endl;
+	std::cout << "File offset: " << rich->file_offset << std::endl;
+	for (auto v : rich->values)	{
+		std::cout << "Type: " << std::get<0>(v) << " - Prodid: " << std::get<1>(v) << " - Count: " << std::get<2>(v) << std::endl;
+	}
+	
+As there is no official documentation for this structure, it is defined like this in Manalyze::
+
+	typedef struct rich_header_t
+	{
+		boost::uint32_t xor_key;
+		boost::uint32_t file_offset;
+		// Structure : id, product_id, count
+		std::vector<std::tuple<boost::uint16_t, boost::uint16_t, boost::uint32_t> > values;
+	} rich_header;
+
+The `file_offset` field is the absolute position in bytes of the structure in the file (usually ``0x80``). For more information regarding the origin of this structure and what information is contained in it, you can consult `this article <http://www.ntcore.com/files/richsign.htm>`_.
+	
 Miscellaneous
 -------------
 

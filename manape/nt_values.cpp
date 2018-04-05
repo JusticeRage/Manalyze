@@ -630,7 +630,11 @@ const flag_dict COMP_ID_PRODID =
 								("VS2015 UPD3 build 24210",							0x5e92)
 								("VS2015 UPD3 build 24213",							0x5e95)
 								("VS2015 UPD3.1 build 24215",						0x5e97)
+								("VS2017 v15.?.? build 25203",						0x6273)
+								("VS2017 v15.4.2 build 25547",						0x63cb)
 								("VS2017 v15.5.4 build 25834",						0x64ea)
+								("VS2017 v15.?.? build 25930",						0x654a)
+								("VS2017 v15.6.5 build 26129",						0x6611)
 								
 	;
 

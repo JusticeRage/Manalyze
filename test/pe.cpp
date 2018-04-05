@@ -388,5 +388,34 @@ BOOST_AUTO_TEST_CASE(parse_delayed_imports)
 }
 
 // ----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(parse_rich_header)
+{
+	mana::PE pe("testfiles/manatest.exe");
+	auto rich = pe.get_rich_header();
+	BOOST_ASSERT(rich != nullptr);
+	BOOST_CHECK_EQUAL(rich->xor_key, 0x374baddd);
+	BOOST_CHECK_EQUAL(rich->file_offset, 0x80);
+	BOOST_CHECK_EQUAL(rich->values.size(), 11);
+
+	BOOST_CHECK_EQUAL(std::get<0>(rich->values.at(0)), 0);
+	BOOST_CHECK_EQUAL(std::get<1>(rich->values.at(0)), 0);
+	BOOST_CHECK_EQUAL(std::get<2>(rich->values.at(0)), 0);
+	BOOST_CHECK_EQUAL(std::get<0>(rich->values.at(1)), 0x0093);
+	BOOST_CHECK_EQUAL(std::get<1>(rich->values.at(1)), 0x7809);
+	BOOST_CHECK_EQUAL(std::get<2>(rich->values.at(1)), 0xa);
+	BOOST_CHECK_EQUAL(std::get<0>(rich->values.at(2)), 0x0103);
+	BOOST_CHECK_EQUAL(std::get<1>(rich->values.at(2)), 0x5b6e);
+	BOOST_CHECK_EQUAL(std::get<2>(rich->values.at(2)), 1);
+	BOOST_CHECK_EQUAL(std::get<0>(rich->values.at(3)), 0x105);
+	BOOST_CHECK_EQUAL(std::get<1>(rich->values.at(3)), 0x5b6e);
+	BOOST_CHECK_EQUAL(std::get<2>(rich->values.at(3)), 17);
+	BOOST_CHECK_EQUAL(std::get<0>(rich->values.at(10)), 0x0102);
+	BOOST_CHECK_EQUAL(std::get<1>(rich->values.at(10)), 0x5bd2);
+	BOOST_CHECK_EQUAL(std::get<2>(rich->values.at(10)), 1);
+
+}
+
+// ----------------------------------------------------------------------------
 BOOST_AUTO_TEST_SUITE_END()
 // ----------------------------------------------------------------------------
