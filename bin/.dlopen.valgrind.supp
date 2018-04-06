@@ -5,3 +5,18 @@
    fun:dlopen@@GLIBC_2.2.5
    ...
 }
+{
+   <Ignore dlopen leak.>
+   Memcheck:Leak
+   ...
+   fun:_dl_open
+   ...
+}
+{
+   <Ignore dlopen leak.>
+   Memcheck:Leak
+   ...
+   fun:_dl_close
+   ...
+}
+
