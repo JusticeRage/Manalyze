@@ -468,7 +468,7 @@ unsigned int PE::rva_to_offset(boost::uint64_t rva) const
 
 	// Special case: PE with no sections
 	if (_sections.size() == 0) {
-		return rva & 0xFFFFFFFF; // If the file is bigger than 4Go, this assumption may not be true.
+		return rva & 0xFFFFFFFF; // If the file is bigger than 4GB, this assumption may not be true.
 	}
 
 	// Find the corresponding section.
@@ -1033,7 +1033,7 @@ bool PE::_parse_rich_header()
 		return false;
 	}
 
-	// Star searching for the RICH header at offset 0, but before the PE header.
+	// Start searching for the RICH header at offset 0, but before the PE header.
 	if (fseek(_file_handle.get(), 0, SEEK_SET))	{
 		return true;
 	}
