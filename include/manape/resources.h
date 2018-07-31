@@ -47,6 +47,7 @@ public:
 			 const std::string&		language,
 			 boost::uint32_t		codepage,
 			 boost::uint32_t		size,
+			 boost::uint32_t		timestamp,
 			 boost::uint32_t		offset_in_file,
 			 const std::string&		path_to_pe)
 		: _type(type),
@@ -54,6 +55,7 @@ public:
 		  _language(language),
 		  _codepage(codepage),
 		  _size(size),
+		  _timestamp(timestamp),
 		  _offset_in_file(offset_in_file),
 		  _path_to_pe(path_to_pe),
 		  _id(0)
@@ -64,6 +66,7 @@ public:
 			const std::string&		language,
 			boost::uint32_t			codepage,
 			boost::uint32_t			size,
+			boost::uint32_t			timestamp,
 			boost::uint32_t			offset_in_file,
 			const std::string&		path_to_pe)
 		: _type(type),
@@ -72,6 +75,7 @@ public:
 		  _codepage(codepage),
 		  _offset_in_file(offset_in_file),
 		  _size(size),
+		  _timestamp(timestamp),
 		  _path_to_pe(path_to_pe),
 		  _id(id)
 	{}
@@ -84,6 +88,7 @@ public:
 	DECLSPEC boost::uint32_t	get_size()		const { return _size; }
 	DECLSPEC boost::uint32_t	get_id()		const { return _id; }
 	DECLSPEC boost::uint32_t	get_offset()	const { return _offset_in_file; }
+	DECLSPEC boost::uint32_t	get_timestamp() const { return _timestamp; }
 
 	DECLSPEC double				get_entropy()	const {
 		return utils::shannon_entropy(*get_raw_data());
@@ -159,6 +164,9 @@ private:
 	std::string		_language;
 	boost::uint32_t	_codepage;
 	boost::uint32_t	_size;
+
+	// Keep the timestamp provided in the resource directory
+	boost::uint32_t _timestamp;
 
 	// These fields do not describe the PE structure.
 	unsigned int	_offset_in_file;

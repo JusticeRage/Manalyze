@@ -143,22 +143,22 @@ bool PE::_parse_resources()
 				}
 
 				// Flatten the resource tree.
-				std::string name;
-				std::string type;
-				std::string language;
+				std::string r_name;
+				std::string r_type;
+				std::string r_language;
 				int id = 0;
 
 				// Translate resource type.
 				if ((*it)->NameOrId & 0x80000000) {// NameOrId is an offset to a string, we already recovered it
-					type = (*it)->NameStr;
+					r_type = (*it)->NameStr;
 				}
 				else { // Otherwise, it's a MAKERESOURCEINT constant.
-					type = *nt::translate_to_flag((*it)->NameOrId, nt::RESOURCE_TYPES);
+					r_type = *nt::translate_to_flag((*it)->NameOrId, nt::RESOURCE_TYPES);
 				}
 
 				// Translate resource name
 				if ((*it2)->NameOrId & 0x80000000) {
-					name = (*it2)->NameStr;
+					r_name = (*it2)->NameStr;
 				}
 				else {
 					id = (*it2)->NameOrId;
@@ -166,10 +166,10 @@ bool PE::_parse_resources()
 
 				// Translate the language.
 				if ((*it3)->NameOrId & 0x80000000) {
-					language = (*it3)->NameStr;
+					r_language = (*it3)->NameStr;
 				}
 				else {
-					language = *nt::translate_to_flag((*it3)->NameOrId, nt::LANG_IDS);
+					r_language = *nt::translate_to_flag((*it3)->NameOrId, nt::LANG_IDS);
 				}
 
 				offset = rva_to_offset(entry.OffsetToData);
@@ -180,7 +180,7 @@ bool PE::_parse_resources()
 						std::cerr << id;
 					}
 					else {
-						std::cerr << name;
+						std::cerr << r_name;
 					}
 					std::cerr << ". Trying to use the RVA as an offset..." << DEBUG_INFO_INSIDEPE << std::endl;
 					offset = entry.OffsetToData;
@@ -188,8 +188,8 @@ bool PE::_parse_resources()
 				pResource res;
 				if (entry.Size == 0)
 				{
-					if (name != "") {
-						PRINT_WARNING << "Resource " << name << " has a size of 0!" << DEBUG_INFO_INSIDEPE << std::endl;
+					if (r_name != "") {
+						PRINT_WARNING << "Resource " << r_name << " has a size of 0!" << DEBUG_INFO_INSIDEPE << std::endl;
 					}
 					else {
 						PRINT_WARNING << "Resource " << id << " has a size of 0!" << DEBUG_INFO_INSIDEPE << std::endl;
@@ -213,24 +213,26 @@ bool PE::_parse_resources()
 					continue;
 				}
 
-				if (name != "")
+				if (r_name != "")
 				{
-					res = boost::make_shared<Resource>(type,
-													   name,
-													   language,
+					res = boost::make_shared<Resource>(r_type,
+													   r_name,
+													   r_language,
 													   entry.Codepage,
 													   entry.Size,
+													   name.TimeDateStamp,
 													   offset,
 													   _path);
 				}
 				else { // No name: call the constructor with the resource ID instead.
-					res = boost::make_shared<Resource>(type,
-													  id,
-													  language,
-													  entry.Codepage,
-													  entry.Size,
-													  offset,
-													  _path);
+					res = boost::make_shared<Resource>(r_type,
+													   id,
+													   r_language,
+													   entry.Codepage,
+													   entry.Size,
+													   name.TimeDateStamp,
+													   offset,
+													   _path);
 				}
 
 				_resource_table.push_back(res);

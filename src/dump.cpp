@@ -65,7 +65,7 @@ void dump_pe_header(const mana::PE& pe, io::OutputFormatter& formatter)
 	pe_header->append(boost::make_shared<io::OutputTreeNode>("Signature", ss.str()));
 	pe_header->append(boost::make_shared<io::OutputTreeNode>("Machine", *nt::translate_to_flag(header.Machine, nt::MACHINE_TYPES)));
 	pe_header->append(boost::make_shared<io::OutputTreeNode>("NumberofSections", header.NumberofSections));
-	pe_header->append(boost::make_shared<io::OutputTreeNode>("TimeDateStamp", io::timestamp_to_string(header.TimeDateStamp)));
+	pe_header->append(boost::make_shared<io::OutputTreeNode>("TimeDateStamp", *utils::timestamp_to_string(header.TimeDateStamp)));
 	pe_header->append(boost::make_shared<io::OutputTreeNode>("PointerToSymbolTable", header.PointerToSymbolTable, io::OutputTreeNode::HEX));
 	pe_header->append(boost::make_shared<io::OutputTreeNode>("NumberOfSymbols", header.NumberOfSymbols));
 	pe_header->append(boost::make_shared<io::OutputTreeNode>("SizeOfOptionalHeader", header.SizeOfOptionalHeader, io::OutputTreeNode::HEX));
@@ -268,6 +268,7 @@ void dump_resources(const mana::PE& pe, io::OutputFormatter& formatter, bool com
 		res->append(boost::make_shared<io::OutputTreeNode>("Language", *(*it)->get_language()));
         res->append(boost::make_shared<io::OutputTreeNode>("Codepage", *nt::translate_to_flag((*it)->get_codepage(), nt::CODEPAGES)));
 		res->append(boost::make_shared<io::OutputTreeNode>("Size", (*it)->get_size(), io::OutputTreeNode::DEC));
+		res->append(boost::make_shared<io::OutputTreeNode>("TimeDateStamp", *utils::dosdate_to_string((*it)->get_timestamp())));
 		res->append(boost::make_shared<io::OutputTreeNode>("Entropy", (*it)->get_entropy()));
 
 		yara::const_matches m = detect_filetype(*it);
@@ -358,7 +359,7 @@ void dump_debug_info(const mana::PE& pe, io::OutputFormatter& formatter)
 	{
 		io::pNode debug_info_node(new io::OutputTreeNode(*nt::translate_to_flag((*it)->Type, nt::DEBUG_TYPES), io::OutputTreeNode::LIST));
 		debug_info_node->append(boost::make_shared<io::OutputTreeNode>("Characteristics", (*it)->Characteristics));
-		debug_info_node->append(boost::make_shared<io::OutputTreeNode>("TimeDateStamp", io::timestamp_to_string((*it)->TimeDateStamp)));
+		debug_info_node->append(boost::make_shared<io::OutputTreeNode>("TimeDateStamp", *utils::timestamp_to_string((*it)->TimeDateStamp)));
 		std::stringstream ss;
 		ss << (*it)->MajorVersion << "." << (*it)->MinorVersion;
 		debug_info_node->append(boost::make_shared<io::OutputTreeNode>("Version", ss.str()));
@@ -431,7 +432,7 @@ void dump_config(const mana::PE& pe, io::OutputFormatter& formatter)
 
 	io::pNode config_node(new io::OutputTreeNode("Load Configuration", io::OutputTreeNode::LIST));
 	config_node->append(boost::make_shared<io::OutputTreeNode>("Size", config->Size));
-	config_node->append(boost::make_shared<io::OutputTreeNode>("TimeDateStamp", io::timestamp_to_string(config->TimeDateStamp)));
+	config_node->append(boost::make_shared<io::OutputTreeNode>("TimeDateStamp", *utils::timestamp_to_string(config->TimeDateStamp)));
 	std::stringstream ss;
 	ss << config->MajorVersion << "." << config->MinorVersion;
 	config_node->append(boost::make_shared<io::OutputTreeNode>("Version", ss.str()));
@@ -523,7 +524,7 @@ void dump_dldt(const mana::PE& pe, io::OutputFormatter& formatter)
 	dldt_node->append(boost::make_shared<io::OutputTreeNode>("DelayImportNameTable", dldt->DelayImportNameTable, io::OutputTreeNode::HEX));
 	dldt_node->append(boost::make_shared<io::OutputTreeNode>("BoundDelayImportTable", dldt->BoundDelayImportTable, io::OutputTreeNode::HEX));
 	dldt_node->append(boost::make_shared<io::OutputTreeNode>("UnloadDelayImportTable", dldt->UnloadDelayImportTable, io::OutputTreeNode::HEX));
-	dldt_node->append(boost::make_shared<io::OutputTreeNode>("TimeStamp", io::timestamp_to_string(dldt->TimeStamp), io::OutputTreeNode::HEX));
+	dldt_node->append(boost::make_shared<io::OutputTreeNode>("TimeStamp", *utils::timestamp_to_string(dldt->TimeStamp), io::OutputTreeNode::HEX));
 
 	formatter.add_data(dldt_node, *pe.get_path());
 }
@@ -579,7 +580,7 @@ void dump_summary(const mana::PE& pe, io::OutputFormatter& formatter)
 	summary->append(boost::make_shared<io::OutputTreeNode>("Architecture", *nt::translate_to_flag(h.Machine, nt::MACHINE_TYPES)));
 	mana::image_optional_header ioh = *pe.get_image_optional_header();
 	summary->append(boost::make_shared<io::OutputTreeNode>("Subsystem", *nt::translate_to_flag(ioh.Subsystem, nt::SUBSYSTEMS)));
-	summary->append(boost::make_shared<io::OutputTreeNode>("Compilation Date", io::timestamp_to_string(h.TimeDateStamp)));
+	summary->append(boost::make_shared<io::OutputTreeNode>("Compilation Date", *utils::timestamp_to_string(h.TimeDateStamp)));
 
 	if (languages.size() > 0) {
 		summary->append(boost::make_shared<io::OutputTreeNode>("Detected languages", languages));

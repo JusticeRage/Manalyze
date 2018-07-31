@@ -17,6 +17,8 @@
 
 #include "manape/utils.h"
 
+namespace btime = boost::posix_time;
+
 namespace utils {
 
 std::string read_ascii_string(FILE* f, unsigned int max_bytes)
@@ -156,4 +158,47 @@ double DECLSPEC shannon_entropy(const std::vector<boost::uint8_t>& bytes)
 	return res;
 }
 
+// ----------------------------------------------------------------------------
+
+pString timestamp_to_string(boost::uint64_t epoch_timestamp)
+{
+	static std::locale loc(std::cout.getloc(), new btime::time_facet("%Y-%b-%d %H:%M:%S%F %z"));
+	std::stringstream ss;
+	ss.imbue(loc);
+	ss << boost::posix_time::from_time_t(epoch_timestamp);
+	return boost::make_shared<std::string>(ss.str());
 }
+
+// ----------------------------------------------------------------------------
+
+pString dosdate_to_string(boost::uint32_t dosdate)
+{
+	static std::locale loc(std::cout.getloc(), new btime::time_facet("%Y-%b-%d %H:%M:%S%F %z"));
+	boost::uint16_t date = dosdate >> 16;
+	boost::uint16_t time = dosdate & 0xFFFF;
+	boost::uint16_t year = ((date & 0xFE00) >> 9) + 1980;
+	boost::uint16_t month = (date & 0x1E0) >> 5;
+	boost::uint16_t day = date & 0x1F;
+	boost::uint16_t hour = (time & 0xF800) >> 11;
+	boost::uint16_t minute = (time & 0x7E0) >> 5;
+	boost::uint16_t second = (time & 0x1F) << 1;
+	if (second == 60) {
+		second = 59;
+	}
+	std::stringstream ss;
+	ss.imbue(loc);
+	try
+	{
+		btime::ptime t(boost::gregorian::date(year, month, day), btime::hours(hour) + btime::minutes(minute) + btime::seconds(second));
+		ss << t;
+		return boost::make_shared<std::string>(ss.str());
+	}
+	catch (std::exception&)
+	{
+		PRINT_WARNING << "Tried to convert an invalid DosDate: " << dosdate << "." << DEBUG_INFO << std::endl;
+		ss << boost::posix_time::from_time_t(0) << " (ERROR)";
+		return boost::make_shared<std::string>(ss.str());
+	}
+}
+
+} // namespace utils

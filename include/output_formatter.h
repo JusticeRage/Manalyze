@@ -28,7 +28,6 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/cstdint.hpp>
-#include <boost/date_time.hpp>
 #include <boost/algorithm/string/trim.hpp>
 
 #include "manacommons/output_tree_node.h"
@@ -228,16 +227,5 @@ private:
 *	@return	A string containing the "translated" version number.
 */
 std::string uint64_to_version_number(boost::uint32_t msbytes, boost::uint32_t lsbytes);
-
-// ----------------------------------------------------------------------------
-
-/**
-*	@brief	Converts a POSIX timestamp into a human-readable string.
-*
-*	@param	uint32_t epoch_timestamp The timestamp to convert.
-*
-*	@return	A human readable string representing the given timestamp.
-*/
-std::string timestamp_to_string(boost::uint64_t epoch_timestamp);
 
 } // !namespace io

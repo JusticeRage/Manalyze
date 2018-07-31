@@ -403,15 +403,4 @@ std::string uint64_to_version_number(boost::uint32_t msbytes, boost::uint32_t ls
 	return ss.str();
 }
 
-// ----------------------------------------------------------------------------
-
-std::string timestamp_to_string(boost::uint64_t epoch_timestamp)
-{
-	static std::locale loc(std::cout.getloc(), new boost::posix_time::time_facet("%Y-%b-%d %H:%M:%S%F %z"));
-	std::stringstream ss;
-	ss.imbue(loc);
-	ss << boost::posix_time::from_time_t(epoch_timestamp);
-	return ss.str();
-}
-
 } // !namespace io

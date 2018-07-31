@@ -16,7 +16,7 @@
 */
 
 #include <sstream>
-#include <algorithm>
+#include <set>
 
 #include "yara/yara_wrapper.h"
 
@@ -50,28 +50,31 @@ public:
 			return res;
 		}
 
-		mana::shared_resources r = pe.get_resources();
+		const auto r = pe.get_resources();
+		if (!r) {
+			return res;
+		}
 		unsigned int size = 0;
-		for (auto it = r->begin() ; it != r->end() ; ++it)
+		for (auto& it : *r)
 		{
 			// In some packed executables, resources still keep their original file size, which causes
 			// them to become bigger than the file itself. Disregard those cases when they happen
 			// because they make the resource to filesize rario bigger than 1. 
 			// These cases will be reported by the packer detection plugin.
-			if ((*it)->get_size() < pe.get_filesize()) {
-				size += (*it)->get_size();
+			if (it->get_size() < pe.get_filesize()) {
+				size += it->get_size();
 			}
-			yara::const_matches matches = y.scan_bytes(*(*it)->get_raw_data());
-			if (matches->size() > 0)
+			yara::const_matches matches = y.scan_bytes(*it->get_raw_data());
+			if (!matches->empty())
 			{
 				for (size_t i = 0 ; i < matches->size() ; ++i)
 				{
-					std::string ext = matches->at(i)->operator[]("extension");
+					const std::string ext = matches->at(i)->operator[]("extension");
 					if (ext == ".exe" || ext == ".sys" || ext == ".cab")
 					{
 						res->raise_level(MALICIOUS);
 						std::stringstream ss;
-						ss << "Resource " << *(*it)->get_name() << " detected as a " << matches->at(i)->operator[]("description") << ".";
+						ss << "Resource " << *it->get_name() << " detected as a " << matches->at(i)->operator[]("description") << ".";
 						if (matches->size() > 1) {
 							ss << " It is also possibly a polyglot file.";
 						}
@@ -81,23 +84,51 @@ public:
 					{
 						res->raise_level(SUSPICIOUS);
 						std::stringstream ss;
-						ss << "Resource " << *(*it)->get_name() << " detected as a PDF document.";
+						ss << "Resource " << *it->get_name() << " detected as a PDF document.";
 						res->add_information(ss.str());
 					}
 				}
 			}
 			else
 			{
-				if ((*it)->get_entropy() > 7.)
+				if (it->get_entropy() > 7.)
 				{
 					std::stringstream ss;
-					ss << "Resource " << *(*it)->get_name() << " is possibly compressed or encrypted.";
+					ss << "Resource " << *it->get_name() << " is possibly compressed or encrypted.";
 					res->add_information(ss.str());
 				}
 			}
 		}
 
-		double ratio = static_cast<double>(size) / static_cast<double>(pe.get_filesize());
+		// Check for anomalies in resource timestamps. Compare them as strings as they are not in the same format.
+		const auto pe_timestamp = utils::timestamp_to_string(pe.get_pe_header()->TimeDateStamp);
+		auto timestamps = std::set<std::string>();
+		for (const auto& it : *r)
+		{
+			if (it->get_timestamp() == 0) { // Ignore empty timestamps.
+				continue;
+			}
+
+			// Create a set of timestamps which differ from the one reported in the PE header.
+			const auto res_timestamp = utils::dosdate_to_string(it->get_timestamp());
+			if (*res_timestamp != *pe_timestamp) {
+				timestamps.insert(*res_timestamp);
+			}
+		}
+		if (!timestamps.empty()) // New timestamps have been found.
+		{
+			res->raise_level(SUSPICIOUS);
+			res->set_summary("The PE header may have been manually modified.");
+			auto info = boost::make_shared<io::OutputTreeNode>("The resource timestamps differ from the PE header",
+															   io::OutputTreeNode::STRINGS,
+															   io::OutputTreeNode::NEW_LINE);
+			for (const auto& timestamp : timestamps) {
+				info->append(timestamp);
+			}
+			res->add_information(info);
+		}
+
+		const double ratio = static_cast<double>(size) / static_cast<double>(pe.get_filesize());
 		if (ratio > .75)
 		{
 			std::stringstream ss;
@@ -106,10 +137,10 @@ public:
 			res->add_information(ss.str());
 		}
 
-		if (res->get_level() > NO_OPINION) {
+		if (res->get_level() > NO_OPINION && !res->get_summary()) {
 			res->set_summary("The PE is possibly a dropper.");
 		}
-		else if (res->get_information()->size() > 0) {
+		else if (res->get_information()->size() > 0 && !res->get_summary()) {
 			res->set_summary("The PE contains encrypted or compressed resources.");
 		}
 
