@@ -187,18 +187,25 @@ pString dosdate_to_string(boost::uint32_t dosdate)
 	}
 	std::stringstream ss;
 	ss.imbue(loc);
+
+	if (dosdate == 0)
+	{
+		btime::ptime t(boost::gregorian::date(1980, 1, 1));
+		ss << t;
+		return boost::make_shared<std::string>(ss.str());
+	}
+
 	try
 	{
 		btime::ptime t(boost::gregorian::date(year, month, day), btime::hours(hour) + btime::minutes(minute) + btime::seconds(second));
 		ss << t;
-		return boost::make_shared<std::string>(ss.str());
 	}
 	catch (std::exception&)
 	{
 		PRINT_WARNING << "Tried to convert an invalid DosDate: " << dosdate << "." << DEBUG_INFO << std::endl;
 		ss << boost::posix_time::from_time_t(0) << " (ERROR)";
-		return boost::make_shared<std::string>(ss.str());
 	}
+	return boost::make_shared<std::string>(ss.str());
 }
 
 } // namespace utils
