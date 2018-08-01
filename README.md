@@ -56,9 +56,8 @@ If you need to build Manalyze on a machine with no internet access, you have to 
 Place the two folders in the `external` folder as `external/yara` and `external/hash-library` respectively. Then run `cmake . -DGitHub=OFF` and continue as you normally would.
 
 ### Binaries
-[Windows x86 binaries](https://manalyzer.org/static/manalyze.rar)
-
-All the binaries in this archive are signed with a certificate ‎presenting the following fingerprint: `26fc24c12b2d84f77615cf6299e3e4ca4f3878fc`.
+- [Windows >= XP x86 binaries](https://manalyzer.org/static/manalyze_win32.zip)
+- [Windows > XP x64 binaries](https://manalyzer.org/static/manalyze_x64.zip)
 
 ## Generating ClamAV rules
 Since ClamAV signatures are voluminous and updated regularly, it didn't make a lot of sense to distribute them from GitHub or with the binary. When you try using the ClamAV plugin for the first time, you will likely encounter the following error message: `[!] Error: Could not load yara_rules/clamav.yara`. In order to generate them, simply run the `update_clamav_signatures.py` Python script located in `bin/yara_rules`.
