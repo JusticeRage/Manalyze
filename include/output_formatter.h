@@ -164,7 +164,7 @@ private:
 	 *			printing purposes).
 	 *	@param	int level The hierarchical level of the node to dump (higher is deeper in the tree).
 	 */
-	void _dump_node(std::ostream& sink, pNode node, int max_width = 0, int level = 0);
+	void _dump_node(std::ostream& sink, pNode node, size_t max_width = 0, int level = 0);
 
 	/**
 	 *	@brief	Special printing handling for plugin output.
@@ -186,7 +186,7 @@ private:
 	*			printing purposes).
 	*	@param	int level The hierarchical level of the node to dump (higher is deeper in the tree).
 	*/
-	void _dump_strings_node(std::ostream& sink, pNode node, int max_width = 0, int level = 0);
+	void _dump_strings_node(std::ostream& sink, pNode node, size_t max_width = 0, int level = 0);
 
 };
 

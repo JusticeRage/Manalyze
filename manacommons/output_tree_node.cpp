@@ -22,14 +22,14 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 namespace io
 {
 
-unsigned int determine_max_width(pNode node)
+size_t determine_max_width(pNode node)
 {
 	if (node->get_type() != OutputTreeNode::LIST)
 	{
 		PRINT_WARNING << "[RawFormatter] Tried to get the maximum width, but is not a list of nodes!" << std::endl;
 		return 0;
 	}
-	unsigned int max = 0;
+	size_t max = 0;
 	pNodes children = node->get_children();
 	for (nodes::const_iterator it = children->begin() ; it != children->end() ; ++it)
 	{
@@ -249,7 +249,7 @@ pNodes OutputTreeNode::get_children() const
 
 // ----------------------------------------------------------------------------
 
-unsigned int OutputTreeNode::size() const
+size_t OutputTreeNode::size() const
 {
 	if (_type != LIST)
 	{

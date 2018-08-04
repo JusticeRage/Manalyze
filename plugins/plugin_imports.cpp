@@ -97,7 +97,7 @@ std::string networking_api = "(Un)?EnableRouter|SetAdapterIpAddress|SetIp(Forwar
  *
  *	@return The number of different functions in the vector.
  */
-unsigned int count_functions(const std::vector<std::string>& v)
+size_t count_functions(const std::vector<std::string>& v)
 {
 	unsigned int count = 0;
 	std::set<std::string> string_set;

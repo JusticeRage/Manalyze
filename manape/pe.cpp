@@ -211,8 +211,8 @@ bool PE::_parse_coff_symbols()
 	}
 
 	// Read the COFF string table
-	boost::uint32_t st_size = 0;
-	boost::uint32_t count = 0;
+	size_t st_size = 0;
+	size_t count = 0;
 	fread(&st_size, 4, 1, _file_handle.get());
 	if (st_size > get_filesize() - ftell(_file_handle.get())) // Weak error check, but I couldn't find a better one in the PE spec.
 	{

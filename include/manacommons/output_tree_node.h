@@ -207,7 +207,7 @@ public:
 	/**
 	 *	@brief	Returns the size of a LIST node.
 	 */
-	DECLSPEC_MANACOMMONS unsigned int size() const;
+	DECLSPEC_MANACOMMONS size_t size() const;
 
 	// ----------------------------------------------------------------------------
 
@@ -294,6 +294,6 @@ typedef boost::shared_ptr<nodes> pNodes;
 *
 *	@return	The maximum size of the children's names.
 */
-DECLSPEC_MANACOMMONS unsigned int determine_max_width(pNode node);
+DECLSPEC_MANACOMMONS size_t determine_max_width(pNode node);
 
 } // !namespace io

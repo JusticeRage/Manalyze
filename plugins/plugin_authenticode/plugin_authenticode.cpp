@@ -503,9 +503,8 @@ void do_winverifytrust(GUID& guid, WINTRUST_DATA& data, pResult res)
  */
 std::wstring multibytetowide_helper(const std::string& s)
 {
-	int len;
-	int input_len = s.length() + 1;
-	len = MultiByteToWideChar(CP_ACP, 0, s.c_str(), input_len, nullptr, 0);
+	size_t input_len = s.length() + 1;
+	size_t len = MultiByteToWideChar(CP_ACP, 0, s.c_str(), input_len, nullptr, 0);
 	auto buffer = new wchar_t[len];
 	MultiByteToWideChar(CP_ACP, 0, s.c_str(), input_len, buffer, len);
 	std::wstring r(buffer);

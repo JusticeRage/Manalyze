@@ -94,7 +94,7 @@ BOOST_FIXTURE_TEST_CASE(ssdeep_hash_file, SetWorkingDirectory)
 	FILE* f = fopen("testfiles/manatest.exe", "rb");
 	BOOST_ASSERT(f != nullptr);
 	std::vector<boost::uint8_t> bytes(static_cast<unsigned int>(fs::file_size("testfiles/manatest.exe")));
-	int copied = fread(&bytes[0], 1, bytes.size(), f);
+	size_t copied = fread(&bytes[0], 1, bytes.size(), f);
 	if (copied != bytes.size())
 	{
 		fclose(f);

@@ -60,7 +60,7 @@ void RawFormatter::format(std::ostream& sink, bool end_stream)
 
 // ----------------------------------------------------------------------------
 
-void RawFormatter::_dump_node(std::ostream& sink, pNode node, int max_width, int level)
+void RawFormatter::_dump_node(std::ostream& sink, pNode node, size_t max_width, int level)
 {
 	if (*node->get_name() == "Plugins") // Handle plugin output separately.
 	{
@@ -203,16 +203,16 @@ void RawFormatter::_dump_plugin_node(std::ostream& sink, pNode node)
 					break;
 			}
 		}
-		if (summary || output->size() > 0) {
+		if (summary || !output->empty()) {
 			sink << std::endl;
 		}
 	}
 }
 
-void RawFormatter::_dump_strings_node(std::ostream& sink, pNode node, int max_width, int level)
+void RawFormatter::_dump_strings_node(std::ostream& sink, pNode node, size_t max_width, int level)
 {
 	shared_strings strs = node->get_strings();
-	if (strs->size() == 0) // Special case : empty array of strings.
+	if (strs->empty()) // Special case : empty array of strings.
 	{
 		if (max_width > 0) {
 			sink << ": " << std::string(max_width - node->get_name()->length(), ' ') << "(EMPTY)" << std::endl;

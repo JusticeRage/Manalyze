@@ -22,9 +22,6 @@
 
 #include "manape/resources.h"
 
-namespace bfs = boost::filesystem;
-
-
 namespace mana
 {
 
@@ -50,6 +47,18 @@ bool PE::_read_image_resource_directory(image_resource_directory& dir, unsigned 
 	{
 		PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DIRECTORY." << DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
+	}
+
+	// Do not parse corrupted tables as it will take an extremely long time.
+	// If Characteristics is not 0 (which it should always be according to the specification) and the number of entries is
+	// unusually high, assume that the file is corrupted.
+	if (dir.NumberOfIdEntries + dir.NumberOfNamedEntries > 0x100 && dir.Characteristics != 0)
+	{
+		PRINT_ERROR << "The PE's resource section is invalid or has been manually modified. Resources will not be parsed." << DEBUG_INFO_INSIDEPE << std::endl;
+		return false;
+	}
+	else if (dir.Characteristics != 0) {
+		PRINT_WARNING << "An IMAGE_RESOURCE_DIRECTORY's characteristics should always be 0. The PE may have been manually edited." << DEBUG_INFO_INSIDEPE << std::endl;
 	}
 
 	for (auto i = 0 ; i < dir.NumberOfIdEntries + dir.NumberOfNamedEntries ; ++i)
@@ -101,19 +110,25 @@ bool PE::_parse_resources()
 	}
 
 	image_resource_directory root;
-	_read_image_resource_directory(root);
+	if (!_read_image_resource_directory(root)) {
+		return false;
+	}
 
 	// Read Type directories
 	for (std::vector<pimage_resource_directory_entry>::iterator it = root.Entries.begin() ; it != root.Entries.end() ; ++it)
 	{
 		image_resource_directory type;
-		_read_image_resource_directory(type, (*it)->OffsetToData & 0x7FFFFFFF);
+		if (! _read_image_resource_directory(type, (*it)->OffsetToData & 0x7FFFFFFF)) {
+			continue;
+		}
 
 		// Read Name directory
 		for (std::vector<pimage_resource_directory_entry>::iterator it2 = type.Entries.begin() ; it2 != type.Entries.end() ; ++it2)
 		{
 			image_resource_directory name;
-			_read_image_resource_directory(name, (*it2)->OffsetToData & 0x7FFFFFFF);
+			if (!_read_image_resource_directory(name, (*it2)->OffsetToData & 0x7FFFFFFF)) {
+				continue;
+			}
 
 			// Read the IMAGE_RESOURCE_DATA_ENTRY
 			for (std::vector<pimage_resource_directory_entry>::iterator it3 = name.Entries.begin() ; it3 != name.Entries.end() ; ++it3)
@@ -250,7 +265,7 @@ shared_bytes Resource::get_raw_data() const
 	auto res = boost::make_shared<std::vector<boost::uint8_t> >();
 
 	FILE* f = _reach_data();
-	unsigned int read_bytes;
+	size_t read_bytes;
 	if (f == nullptr) {
 		goto END;
 	}
@@ -681,7 +696,7 @@ std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, co
 			   directory->Entries[i].get(),
 			   sizeof(group_icon_directory_entry) - sizeof(boost::uint32_t)); // Don't copy the last field.
 		// Fix the icon_directory_entry with the offset in the file instead of a RT_ICON id
-		unsigned long size_fix = res.size();
+		size_t size_fix = res.size();
 		memcpy(&res[3 * sizeof(boost::uint16_t) + (i+1) * sizeof(group_icon_directory_entry) - sizeof(boost::uint32_t)],
 			   &size_fix,
 			   sizeof(boost::uint32_t));
