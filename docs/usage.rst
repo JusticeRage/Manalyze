@@ -31,7 +31,7 @@ If you have managed to :doc:`obtain <obtaining-manalyze>` and :doc:`configure <i
       - packer: Tries to structurally detect packer presence.
       - imports: Looks for suspicious imports.
       - resources: Analyzes the program's resources.
-	  - mitigation: Displays the enabled exploit mitigation techniques (DEP, ASLR, etc.).
+      - mitigation: Displays the enabled exploit mitigation techniques (DEP, ASLR, etc.).
       - authenticode: Checks if the digital signature of the PE is valid.
       - virustotal: Checks existing AV results on VirusTotal.
       - all: Run all the available plugins.
