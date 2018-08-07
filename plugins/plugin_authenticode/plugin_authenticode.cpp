@@ -83,7 +83,7 @@ public:
 extern "C"
 {
 	PLUGIN_API IPlugin* create() { return new AuthenticodePlugin(); }
-	PLUGIN_API void destroy(IPlugin* p) { if (p) delete p; }
+	PLUGIN_API void destroy(IPlugin* p) { delete p; }
 };
 
 // ----------------------------------------------------------------------------

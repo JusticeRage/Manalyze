@@ -373,7 +373,7 @@ bool query_virus_total(const std::string& hash, const std::string& api_key, std:
 extern "C"
 {
 	PLUGIN_API IPlugin* create() { return new VirusTotalPlugin(); }
-	PLUGIN_API void destroy(IPlugin* p) { if (p) delete p; }
+	PLUGIN_API void destroy(IPlugin* p) { delete p; }
 };
 
 } // !namespace plugin

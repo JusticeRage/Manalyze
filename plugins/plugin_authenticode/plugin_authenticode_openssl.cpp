@@ -43,7 +43,7 @@ void check_version_info(const mana::PE& pe, pResult res);
  *
  *  @return A string containing the contents of the BIO.
  */
-std::string bio_to_string(pBIO bio)
+std::string bio_to_string(const pBIO& bio)
 {
     BUF_MEM* buf = nullptr; // The memory pointed by this is freed with the BIO.
     BIO_get_mem_ptr(bio.get(), &buf);
@@ -118,7 +118,7 @@ std::string get_CN(const std::string& x509_name)
  *  @param  pPKCS7 p The PKCS7 object containing the digital signature.
  *  @param  pResult res The result in which the names should be added.
  */
-void add_certificate_information(pPKCS7 p, pResult res)
+void add_certificate_information(const pPKCS7& p, const pResult& res)
 {
     STACK_OF(X509)* signers = PKCS7_get0_signers(p.get(), nullptr, 0);
     if (signers == nullptr)
@@ -171,29 +171,29 @@ class OpenSSLAuthenticodePlugin : public IPlugin
         pResult res = create_result();
         
         auto certs = pe.get_certificates();
-        if (certs == nullptr || certs->size() == 0) // No authenticode signature.
+        if (certs == nullptr || certs->empty()) // No authenticode signature.
         {
 			check_version_info(pe, res);
             return res;
         }
         
-        for (auto it = certs->begin() ; it != certs->end() ; ++it)
+        for (const auto& it : *certs)
         {
             // Disregard non-PKCS7 certificates. According to the spec, they are not
             // supported by Windows.
-            if ((*it)->CertificateType != WIN_CERT_TYPE_PKCS_SIGNED_DATA) {
+            if (it->CertificateType != WIN_CERT_TYPE_PKCS_SIGNED_DATA) {
                 continue;
             }
             
             // Copy the certificate bytes into an OpenSSL BIO.
-            pBIO bio(BIO_new_mem_buf(&(*it)->Certificate[0], (*it)->Certificate.size()), BIO_free);
+            pBIO bio(BIO_new_mem_buf(&it->Certificate[0], it->Certificate.size()), BIO_free);
             if (bio == nullptr) 
             {
                 PRINT_WARNING << "[plugin_authenticode] Could not initialize a BIO." << std::endl;
                 continue;
             }
             
-            pPKCS7 p(d2i_PKCS7_bio(bio.get(), NULL), PKCS7_free);
+            pPKCS7 p(d2i_PKCS7_bio(bio.get(), nullptr), PKCS7_free);
             if (p == nullptr)
             {
                 PRINT_WARNING << "[plugin_authenticode] Error reading the PKCS7 certificate." << std::endl;
@@ -215,7 +215,7 @@ class OpenSSLAuthenticodePlugin : public IPlugin
 extern "C"
 {
     PLUGIN_API IPlugin* create() { return new OpenSSLAuthenticodePlugin(); }
-    PLUGIN_API void destroy(IPlugin* p) { if (p) delete p; }
+    PLUGIN_API void destroy(IPlugin* p) { delete p; }
 };
 
 } //!namespace plugin

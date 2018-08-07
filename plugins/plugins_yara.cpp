@@ -35,7 +35,7 @@ namespace plugin
 // Provide a destructor for the structure sent to Yara.
 void delete_manape_module_data(manape_data* data)
 {
-    if (data != nullptr && data->sections != nullptr) {
+    if (data != nullptr) {
         free(data->sections);
     }
 	delete data;
