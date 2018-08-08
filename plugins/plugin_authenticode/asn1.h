@@ -26,6 +26,7 @@
 #include <openssl/pkcs7.h>
 #include <openssl/x509.h>
 #include <openssl/bio.h>
+#include <openssl/opensslv.h>
 
 #include "manacommons/color.h"
 
@@ -41,7 +42,9 @@ struct AuthenticodeDigest
     bytes digest;
 };
 
-// Redefine the ASN1_OBJECT structure because OpenSSL 1.1 can't seem to find it otherwise.
+
+#if OPENSSL_VERSION_NUMBER > 0x01010000f
+// Redefine the ASN1_OBJECT structure for OpenSSL >= 1.1 as it can't seem to find it otherwise.
 struct asn1_object_st
 {
     const char *sn, *ln;
@@ -50,6 +53,7 @@ struct asn1_object_st
     const unsigned char *data;  /* data remains const after init */
     int flags;                  /* Should we free this one */
 };
+#endif
 
 namespace plugin {
 
