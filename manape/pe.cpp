@@ -467,17 +467,17 @@ unsigned int PE::rva_to_offset(boost::uint64_t rva) const
 	}
 
 	// Special case: PE with no sections
-	if (_sections.size() == 0) {
+	if (_sections.empty()) {
 		return rva & 0xFFFFFFFF; // If the file is bigger than 4GB, this assumption may not be true.
 	}
 
 	// Find the corresponding section.
 	pSection section = pSection();
-	for (std::vector<pSection>::const_iterator it = _sections.begin() ; it != _sections.end() ; ++it)
+	for (const auto& it : _sections)
 	{
-		if (is_address_in_section(rva, *it))
+		if (is_address_in_section(rva, it))
 		{
-			section = *it;
+			section = it;
 			break;
 		}
 	}
@@ -485,11 +485,11 @@ unsigned int PE::rva_to_offset(boost::uint64_t rva) const
 	if (section == nullptr)
 	{
 		// No section found. Maybe the VirsualSize is erroneous? Try with the RawSizeOfData.
-		for (std::vector<pSection>::const_iterator it = _sections.begin() ; it != _sections.end() ; ++it)
+		for (const auto& it : _sections)
 		{
-			if (is_address_in_section(rva, *it, true))
+			if (is_address_in_section(rva, it, true))
 			{
-				section = *it;
+				section = it;
 				break;
 			}
 		}
@@ -547,7 +547,7 @@ bool PE::_reach_directory(int directory) const
 	{
 		PRINT_ERROR << "Tried to reach a directory, but ImageOptionalHeader was not parsed!"
 					<< DEBUG_INFO_INSIDEPE << std::endl;
-		return 0;
+		return false;
 	}
 
 	if (_ioh->directories[directory].VirtualAddress == 0 && _ioh->directories[directory].Size == 0) {

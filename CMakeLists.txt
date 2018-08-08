@@ -111,7 +111,9 @@ else()
 			# Compile the *nix authenticode plugin if OpenSSL was found.
 			if (OPENSSL_FOUND)
 				add_library(plugin_authenticode SHARED plugins/plugin_authenticode/plugin_authenticode_openssl.cpp 
-													   plugins/plugin_authenticode/plugin_authenticode_commons.cpp)
+													   plugins/plugin_authenticode/commons.cpp
+                                                       plugins/plugin_authenticode/asn1.cpp
+                                                       plugins/plugin_authenticode/pe_authenticode_digest.cpp)
 				target_link_libraries(plugin_authenticode ${OPENSSL_LIBRARIES})
 			endif()
 endif()
