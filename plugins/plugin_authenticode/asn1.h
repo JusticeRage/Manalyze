@@ -43,7 +43,7 @@ struct AuthenticodeDigest
 };
 
 
-#if OPENSSL_VERSION_NUMBER > 0x01010000f
+#if OPENSSL_VERSION_NUMBER >= 0x01010000f
 // Redefine the ASN1_OBJECT structure for OpenSSL >= 1.1 as it can't seem to find it otherwise.
 struct asn1_object_st
 {

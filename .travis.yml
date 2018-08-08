@@ -25,5 +25,6 @@ script:
   - make
   - bin/manalyze --version
   - bin/manalyze-tests
+  - bin/hash-library-test
 after_success:
   - coveralls --exclude external/yara --exclude test --exclude plugins/plugin_virustotal/json_spirit --gcov gcov-4.8

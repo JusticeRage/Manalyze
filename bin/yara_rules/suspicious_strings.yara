@@ -41,6 +41,7 @@ rule System_Tools
         $a17 = "control.exe" nocase wide ascii  // Used by EquationGroup to launch DLLs
         $a18 = "regsvr32.exe" nocase wide ascii
         $a19 = "rundll32.exe" nocase wide ascii
+        $a20 = /schtask(.exe)?/ nocase wide ascii
 		
     condition:
         any of them
