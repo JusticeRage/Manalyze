@@ -25,6 +25,7 @@
 *.app
 bin/manalyze
 bin/manalyze-tests
+bin/hash-library-test
 
 # Compiled Yara rules + ClamAV rules and databases
 *.yarac
@@ -42,6 +43,7 @@ CMakeFiles
 CMakeCache.txt
 *.cmake
 Makefile
+*.cbp
 
 # Linux compilation artifacts
 

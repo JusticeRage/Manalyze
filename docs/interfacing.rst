@@ -145,11 +145,11 @@ The reports also contain a whole section dedicated to the output of any plugin c
 		"plugin_output": {
 		    "key 1": [
 		        "value 1", 
-		        "value 2", 
-		        "..."
+		        "value 2"
+		        // ...
 		    ],
-			"key 2": "value 3"
-			// ...
+		    "key 2": "value 3"
+		    // ...
 		}, 
 		"summary": "A single string"
 	}
