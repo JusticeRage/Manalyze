@@ -88,16 +88,34 @@ std::string get_authenticode_hash(const mana::PE& pe, const std::string& digest_
     }
 
     // Step 14: Check for additional data at the end of the file
+    if (pe.get_filesize() < sum_of_bytes_hashed + ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].Size)
+    {
+        // This can happen if the section table is weird, for instance if multiple sections point to the same
+        // data. In that case, the same data could end up hashed twice and the total number of bytes hashed
+        // would be greater than the file's size. Example: 0dc6c06ce160b14df5dda5019b96adf6
+        PRINT_ERROR << "[plugin_authenticode] Hashed more bytes than there are in the file. The PE's section "
+                       "table may be corrupted." << std::endl;
+        return "";
+    }
     auto length_of_additional_data = pe.get_filesize() - sum_of_bytes_hashed
             - ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].Size;
     if (length_of_additional_data > 0)
     {
         FILE* f = fopen(pe.get_path()->c_str(), "rb");
         fseek(f, sum_of_bytes_hashed, SEEK_SET);
-        boost::scoped_array<boost::uint8_t> buffer(new boost::uint8_t[length_of_additional_data]);
-        fread(&buffer.operator[](0), 1, length_of_additional_data, f);
-        h->add(&buffer.operator[](0), length_of_additional_data);
-        fclose(f);
+        try
+        {
+            boost::scoped_array<boost::uint8_t> buffer(new boost::uint8_t[length_of_additional_data]);
+            fread(&buffer.operator[](0), 1, length_of_additional_data, f);
+            h->add(&buffer.operator[](0), length_of_additional_data);
+            fclose(f);
+        }
+        catch (const std::exception& e)
+        {
+            PRINT_ERROR << "[plugin_authenticode] Could not allocate memory to get the additional PE bytes." << std::endl;
+            fclose(f);
+            return "";
+        }
     }
 
     // Step 15: Finalize hash
