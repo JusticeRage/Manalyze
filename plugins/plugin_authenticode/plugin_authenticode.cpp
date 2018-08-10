@@ -188,7 +188,6 @@ void GetCertNameString_wrapper(PCCERT_CONTEXT context, DWORD type, DWORD flags, 
 {
 
 	DWORD size;
-	std::stringstream ss;
 
 	size = ::CertGetNameString(context,	// The certificate context
 							   type,
@@ -258,9 +257,7 @@ void get_certificate_details(PCMSG_SIGNER_INFO info, HCERTSTORE hStore, pResult 
 	GetCertNameString_wrapper(context, CERT_NAME_SIMPLE_DISPLAY_TYPE, 0, "Issued to", result);
 	GetCertNameString_wrapper(context, CERT_NAME_EMAIL_TYPE, 0, "Subject's email", result);
 
-	if (!context) {
-		::CertFreeCertificateContext(context);
-	}
+	::CertFreeCertificateContext(context);
 }
 
 // ----------------------------------------------------------------------------
@@ -504,9 +501,9 @@ void do_winverifytrust(GUID& guid, WINTRUST_DATA& data, pResult res)
 std::wstring multibytetowide_helper(const std::string& s)
 {
 	size_t input_len = s.length() + 1;
-	size_t len = MultiByteToWideChar(CP_ACP, 0, s.c_str(), input_len, nullptr, 0);
+	size_t len = ::MultiByteToWideChar(CP_ACP, 0, s.c_str(), input_len, nullptr, 0);
 	auto buffer = new wchar_t[len];
-	MultiByteToWideChar(CP_ACP, 0, s.c_str(), input_len, buffer, len);
+	::MultiByteToWideChar(CP_ACP, 0, s.c_str(), input_len, buffer, len);
 	std::wstring r(buffer);
 	delete[] buffer;
 	return r;
@@ -524,7 +521,7 @@ void make_information(const std::string& type, const std::wstring& data, pResult
 		utf8::utf16to8(data.begin(), data.end(), std::back_inserter(utf8result));
 		out = std::string(utf8result.begin(), utf8result.end());
 	}
-	catch (utf8::invalid_utf16)
+	catch (utf8::invalid_utf16&)
 	{
 		PRINT_WARNING << "[plugin_authenticode] Couldn't convert a string from UTF-16 to UTF-8!"
 					  << DEBUG_INFO << std::endl;
@@ -596,7 +593,7 @@ void check_catalog_signature(const mana::PE& pe, pResult res)
 	if (catalog != nullptr) ::CryptCATAdminReleaseCatalogContext(context, catalog, 0);
 	if (context != nullptr) ::CryptCATAdminReleaseContext(context, 0);
 	if (handle != INVALID_HANDLE_VALUE) ::CloseHandle(handle);
-	if (hash_buffer != nullptr) free(hash_buffer);
+	free(hash_buffer);
 }
 
 

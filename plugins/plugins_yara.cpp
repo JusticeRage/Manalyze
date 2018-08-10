@@ -19,9 +19,6 @@
 // The structure used to communicate with the yara ManaPE module.
 #include "yara/modules/manape_data.h"
 
-// TODO: Remove when Yara doesn't mask get_object anymore
-#undef get_object
-
 // Used to validate bitcoin addresses.
 #include "hash-library/bitcoin.h"
 
@@ -47,7 +44,7 @@ class YaraPlugin : public IPlugin
 {
 
 public:
-	YaraPlugin(const std::string& rule_file) : _rule_file(rule_file) {}
+	YaraPlugin(std::string rule_file) : _rule_file(std::move(rule_file)) {}
 
 	/**
 	 *	@brief	Helper function designed to generically prepare a result based on a Yara scan.
@@ -75,34 +72,34 @@ public:
 		}
 
 		yara::const_matches m = _engine.scan_file(*pe.get_path(), _create_manape_module_data(pe));
-		if (m && m->size() > 0)
+		if (m && !m->empty())
 		{
 			bool found_valid = false;  // False as long as a valid string hasn't been found
-			for (yara::match_vector::const_iterator it = m->begin() ; it != m->end() ; ++it)
+			for (const auto& it : *m)
 			{
 				// Filter matches based on the input predicate if one was given.
-				auto found = (*it)->get_found_strings();
+				auto found = it->get_found_strings();
 				if (callback != nullptr)
 				{
 					std::set<std::string> found_filtered;
 					std::copy_if(found.begin(), found.end(), std::inserter(found_filtered, found_filtered.end()), callback);
 					found = found_filtered;
 				}
-				if (found.size() == 0) {
+				if (found.empty()) {
 					continue;
 				}
 
 				found_valid = true;
 				if (!show_strings) {
-					res->add_information((*it)->operator[](meta_field_name));
+					res->add_information(it->operator[](meta_field_name));
 				}
 				else
 				{
-					io::pNode output = boost::make_shared<io::OutputTreeNode>((*it)->operator[](meta_field_name),
+					io::pNode output = boost::make_shared<io::OutputTreeNode>(it->operator[](meta_field_name),
 						io::OutputTreeNode::STRINGS, io::OutputTreeNode::NEW_LINE);
 
-					for (auto it2 = found.begin() ; it2 != found.end() ; ++it2) {
-						output->append(*it2);
+					for (const auto& it2 : found) {
+						output->append(it2);
 					}
 					res->add_information(output);
 				}
@@ -232,7 +229,7 @@ private:
 	 *
 	 *	@return	Whether the rules were loaded successfully.
 	 */
-	virtual bool _load_rules() override
+	bool _load_rules() override
 	{
 		if (!_engine.load_rules(_rule_file))
 		{
@@ -315,16 +312,16 @@ public:
 		pResult res = scan(pe, "Cryptographic algorithms detected in the binary:", NO_OPINION, "description");
 
 		// Look for common cryptography libraries
-		if (pe.find_imports(".*", "libssl(32)?.dll|libcrypto.dll")->size() > 0) {
+		if (!pe.find_imports(".*", "libssl(32)?.dll|libcrypto.dll")->empty()) {
 			res->add_information("OpenSSL");
 		}
-		if (pe.find_imports(".*", "cryptopp.dll")->size() > 0) {
+		if (!pe.find_imports(".*", "cryptopp.dll")->empty()) {
 			res->add_information("Crypto++");
 		}
-		if (pe.find_imports(".*", "botan.dll")->size() > 0) {
+		if (!pe.find_imports(".*", "botan.dll")->empty()) {
 			res->add_information("Botan");
 		}
-		if (pe.find_imports("Crypt(.*)")->size() > 0) {
+		if (!pe.find_imports("Crypt(.*)")->empty()) {
 			res->add_information("Microsoft's Cryptography API");
 		}
 

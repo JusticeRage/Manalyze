@@ -69,7 +69,7 @@ std::string read_unicode_string(FILE* f, unsigned int max_bytes)
 		utf8::utf16to8(s.begin(), s.end(), std::back_inserter(utf8result));
 		return std::string(utf8result.begin(), utf8result.end());
 	}
-	catch (utf8::invalid_utf16) {
+	catch (utf8::invalid_utf16&) {
 		PRINT_WARNING << "Couldn't convert a string from a RT_STRING resource to UTF-8!" 
 					  << DEBUG_INFO << std::endl;
 	}
@@ -109,7 +109,7 @@ std::string read_prefixed_unicode_string(FILE* f)
 		utf8::utf16to8(s.begin(), s.end(), std::back_inserter(utf8result));
 		return std::string(utf8result.begin(), utf8result.end());
 	}
-	catch (utf8::invalid_utf16) {
+	catch (utf8::invalid_utf16&) {
 		PRINT_WARNING << "Couldn't convert a string from a RT_STRING resource to UTF-8!" 
 					  << DEBUG_INFO << std::endl;
 	}
@@ -120,7 +120,7 @@ std::string read_prefixed_unicode_string(FILE* f)
 
 bool read_string_at_offset(FILE* f, unsigned int offset, std::string& out, bool unicode)
 {
-	unsigned int saved_offset = ftell(f);
+	auto saved_offset = ftell(f);
 	if (saved_offset == -1 || fseek(f, offset, SEEK_SET))
 	{
 		PRINT_ERROR << "Could not reach offset 0x" << std::hex << offset << "." << std::endl;
@@ -132,7 +132,7 @@ bool read_string_at_offset(FILE* f, unsigned int offset, std::string& out, bool 
 	else {
 		out = read_prefixed_unicode_string(f);
 	}
-	return !fseek(f, saved_offset, SEEK_SET) && out != "";
+	return !fseek(f, saved_offset, SEEK_SET) && !out.empty();
 }
 
 // ----------------------------------------------------------------------------
@@ -140,12 +140,12 @@ bool read_string_at_offset(FILE* f, unsigned int offset, std::string& out, bool 
 double DECLSPEC shannon_entropy(const std::vector<boost::uint8_t>& bytes)
 {
 	int frequency[256] = { 0 };
-	for (auto it = bytes.begin() ; it != bytes.end() ; ++it)	{
-		frequency[*it] += 1;
+	for (const auto& it : bytes)	{
+		frequency[it] += 1;
 	}
 
 	double res = 0.;
-	double size = static_cast<double>(bytes.size());
+	auto size = static_cast<double>(bytes.size());
 	for (int i = 0 ; i < 256 ; ++i)
 	{
 		if (frequency[i] == 0) {

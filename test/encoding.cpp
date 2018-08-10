@@ -25,7 +25,7 @@
 
 // ----------------------------------------------------------------------------
 
-void check_conversion(std::wstring input, std::string expected)
+void check_conversion(std::wstring input, const std::string& expected)
 {
 	std::vector<boost::uint8_t> utf8result;
 	utf8::utf16to8(input.begin(), input.end(), std::back_inserter(utf8result));

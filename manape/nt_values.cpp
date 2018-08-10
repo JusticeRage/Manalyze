@@ -645,10 +645,10 @@ const flag_dict COMP_ID_PRODID =
 const_shared_strings translate_to_flags(int value, const flag_dict& dict)
 {
 	auto res = boost::make_shared<std::vector<std::string> >();
-	for (auto it = dict.begin() ; it != dict.end() ; ++it)
+	for (const auto& it : dict)
 	{
-		if ((value & it->second) != 0) { // The flag is present in the value
-			res->push_back(it->first);
+		if ((value & it.second) != 0) { // The flag is present in the value
+			res->push_back(it.first);
 		}
 	}
 	return res;
@@ -658,10 +658,10 @@ const_shared_strings translate_to_flags(int value, const flag_dict& dict)
 
 pString translate_to_flag(int value, const flag_dict& dict)
 {
-	for (auto it = dict.begin() ; it != dict.end() ; ++it)
+	for (const auto& it : dict)
 	{
-		if (value == it->second) {
-			return boost::make_shared<std::string>(it->first);
+		if (value == it.second) {
+			return boost::make_shared<std::string>(it.first);
 		}
 	}
     #ifdef _DEBUG

@@ -40,9 +40,11 @@ void create_file(const fs::path & ph, const std::string & contents)
 {
 	std::ofstream f(ph.c_str());
 	if (!f)
-		throw fs::filesystem_error("could not create a file",
+		throw fs::filesystem_error("Could not create a file",
 			ph, bs::error_code(errno, bs::system_category()));
-	if (!contents.empty()) f << contents;
+	if (!contents.empty()) {
+		f << contents;
+	}
 }
 
 // ----------------------------------------------------------------------------

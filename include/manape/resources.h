@@ -18,6 +18,7 @@
 #pragma once
 
 #include <string>
+#include <utility>
 #include <vector>
 #include <sstream>
 
@@ -32,6 +33,7 @@
 #endif
 
 #include "manape/utils.h"
+#include "manape/pe_structs.h"
 
 namespace mana
 {
@@ -42,45 +44,45 @@ typedef boost::shared_ptr<const std::vector<boost::uint8_t> > shared_bytes;
 class Resource
 {
 public:
-	Resource(const std::string&		type,
-			 const std::string&		name,
-			 const std::string&		language,
+	Resource(std::string            type,
+			 std::string            name,
+			 std::string            language,
 			 boost::uint32_t		codepage,
 			 boost::uint32_t		size,
 			 boost::uint32_t		timestamp,
 			 boost::uint32_t		offset_in_file,
-			 const std::string&		path_to_pe)
-		: _type(type),
-		  _name(name),
-		  _language(language),
+			 std::string path_to_pe)
+		: _type(std::move(type)),
+		  _name(std::move(name)),
+		  _language(std::move(language)),
 		  _codepage(codepage),
 		  _size(size),
 		  _timestamp(timestamp),
 		  _offset_in_file(offset_in_file),
-		  _path_to_pe(path_to_pe),
+		  _path_to_pe(std::move(path_to_pe)),
 		  _id(0)
 	{}
 
-	Resource(const std::string&		type,
-			boost::uint32_t			id,
-			const std::string&		language,
-			boost::uint32_t			codepage,
-			boost::uint32_t			size,
-			boost::uint32_t			timestamp,
-			boost::uint32_t			offset_in_file,
-			const std::string&		path_to_pe)
-		: _type(type),
-		  _name(""),
-		  _language(language),
+	Resource(std::string type,
+			 boost::uint32_t			id,
+			 std::string                language,
+			 boost::uint32_t			codepage,
+			 boost::uint32_t			size,
+			 boost::uint32_t			timestamp,
+			 boost::uint32_t			offset_in_file,
+			 std::string path_to_pe)
+		: _type(std::move(type)),
+		  _name(),
+		  _language(std::move(language)),
 		  _codepage(codepage),
 		  _offset_in_file(offset_in_file),
 		  _size(size),
 		  _timestamp(timestamp),
-		  _path_to_pe(path_to_pe),
+		  _path_to_pe(std::move(path_to_pe)),
 		  _id(id)
 	{}
 
-	virtual ~Resource() {}
+	virtual ~Resource() = default;
 
 	DECLSPEC pString			get_type()		const { return boost::make_shared<std::string>(_type); }
 	DECLSPEC pString			get_language()	const { return boost::make_shared<std::string>(_language); }
@@ -96,7 +98,7 @@ public:
 
 	DECLSPEC pString			get_name()		const
 	{
-		if (_name != "") {
+		if (!_name.empty()) {
 			return boost::make_shared<std::string>(_name);
 		}
 		else

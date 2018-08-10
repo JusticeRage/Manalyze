@@ -113,7 +113,7 @@ public:
 	*
 	*	@return	A boost::optional which may contain the located node, if it was found.
 	*/
-	pNode find_node(const std::string& name, const std::string file_path)
+	pNode find_node(const std::string& name, const std::string& file_path)
 	{
 		pNode file_node = _root->find_node(file_path);
 		if (!file_node) {
@@ -128,7 +128,7 @@ public:
 	 *	@brief	Dumps the formatted data into target output stream.
 	 *
 	 *	@param	std::ostream& sink	The output stream.
-	 *	@param	Whether the stream ends here. Set to false if more data should be appended later on.
+	 *	@param	Whether the stream ends here. Set to false if more data will be appended later on.
 	 *
 	 *	This last parameter was added because writing the output at the end may cause too much information
 	 *	to be stored in the RAM. Using end_stream enables the caller to flush the formatter's data from time
@@ -151,7 +151,7 @@ class RawFormatter : public OutputFormatter
 {
 
 public:
-	virtual void format(std::ostream& sink, bool end_stream = true);
+	void format(std::ostream& sink, bool end_stream = true) override;
 	typedef escaped_string_raw<sink_type> escape_grammar;
 
 private:

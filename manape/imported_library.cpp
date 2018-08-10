@@ -21,7 +21,7 @@ namespace mana
 {
 
 ImportedLibrary::ImportedLibrary(const std::string& library_name, pimage_import_descriptor image_import_descriptor)
-	: _image_import_descriptor(image_import_descriptor), 
+	: _image_import_descriptor(std::move(image_import_descriptor)),
 	  _load_type(ImportedLibrary::STANDARD), 
 	  _library_name(library_name),
 	  _imported_functions(new std::vector<pimport_lookup_table>())

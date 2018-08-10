@@ -111,52 +111,52 @@ public:
 		}
 
 		js::Object root = val.get_obj();
-		unsigned int total = 0, positives = 0;
+		int total = 0, positives = 0;
 		std::string scan_date;
-		for (auto it = root.begin() ; it != root.end() ; ++it)
+		for (const auto& it : root)
 		{
-			if (it->name_ == "response_code")
+			if (it.name_ == "response_code")
 			{
-				if (!it->value_.get_int()) // Response Code = 0: VT does not know the file.
+				if (!it.value_.get_int()) // Response Code = 0: VT does not know the file.
 				{
 					res->set_level(SUSPICIOUS); // Because VT knows all the files.
 					res->set_summary("No VirusTotal score.");
 					res->add_information("This file has never been scanned on VirusTotal.");
 					return res;
 				}
-				else if (it->value_.get_int() == -2) // Response Code = -2: scan queued.
+				else if (it.value_.get_int() == -2) // Response Code = -2: scan queued.
 				{
 					res->set_summary("No VirusTotal score.");
 					res->add_information("A scan of the file is currently queued.");
 					return res;
 				}
 			}
-			else if (it->name_ == "total") {
-				total = it->value_.get_int();
+			else if (it.name_ == "total") {
+				total = it.value_.get_int();
 			}
-			else if (it->name_ == "positives") {
-				positives = it->value_.get_int();
+			else if (it.name_ == "positives") {
+				positives = it.value_.get_int();
 			}
-			else if (it->name_ == "scan_date") {
-				scan_date = it->value_.get_str();
+			else if (it.name_ == "scan_date") {
+				scan_date = it.value_.get_str();
 			}
-			else if (it->name_ == "scans")
+			else if (it.name_ == "scans")
 			{
 				// Iterate on each AV's report
-				js::Object scans = it->value_.get_obj();
-				for (auto it2 = scans.begin() ; it2 != scans.end() ; ++it2)
+				js::Object scans = it.value_.get_obj();
+				for (const auto& it2 : scans)
 				{
 					// Iterate on each report's elements
-					js::Object scan = it2->value_.get_obj();
-					for (auto it3 = scan.begin() ; it3 != scan.end() ; ++it3)
+					js::Object scan = it2.value_.get_obj();
+					for (const auto& it3 : scan)
 					{
-						if (it3->name_ == "detected" && !it3->value_.get_bool()) { // Not detected by this AV
+						if (it3.name_ == "detected" && !it3.value_.get_bool()) { // Not detected by this AV
 							break; // No result to read
 						}
-						else if (it3->name_ == "result")
+						else if (it3.name_ == "result")
 						{
 							std::stringstream av_result;
-							res->add_information(it2->name_, it3->value_.get_str());
+							res->add_information(it2.name_, it3.value_.get_str());
 							break; // The information has been found, ignore whatever is left
 						}
 					}
@@ -237,19 +237,19 @@ bool vt_api_interact(const std::string& hash,
 	std::getline(response_stream, status_message);
 	if (!response_stream || http_version.substr(0, 5) != "HTTP/")
 	{
-		PRINT_ERROR << "Received a malformed response from the server. (plugin_virustotal)" << std::endl;
+		PRINT_ERROR << "[plugin_virustotal] Received a malformed response from the server." << std::endl;
 		return false;
 	}
 	if (status_code != 200)
 	{
 		if (status_code == 204)	{
-			PRINT_ERROR << "VirusTotal API request rate limit reached!" << std::endl;
+			PRINT_ERROR << "[plugin_virustotal] VirusTotal API request rate limit reached!" << std::endl;
 		}
 		else if (status_code == 403) {
-			PRINT_ERROR << "VirusTotal API access denied. Please verify that your API key is valid." << std::endl;
+			PRINT_ERROR << "[plugin_virustotal] VirusTotal API access denied. Please verify that your API key is valid." << std::endl;
 		}
 		else {
-			PRINT_ERROR << "VirusTotal query returned with status code " << status_code << "." << std::endl;
+			PRINT_ERROR << "[plugin_virustotal] VirusTotal query returned with status code " << status_code << "." << std::endl;
 		}
 		return false;
 	}
@@ -272,7 +272,7 @@ bool vt_api_interact(const std::string& hash,
 	}
 	
 	// This #define mess is necessary because OpenSSL 1.1 does no longer define SSL_SHORT_READ,
-	// but earlier Boost version (such as 1.55.0) do not define ssl::error::stream_truncated yet.
+	// but earlier Boost versions (such as 1.55.0) do not define ssl::error::stream_truncated yet.
 
 	#if defined WITH_OPENSSL && defined SSL_R_SHORT_READ
 	// SSL connexions may be terminated by a short read error.
@@ -282,7 +282,7 @@ bool vt_api_interact(const std::string& hash,
 	#else
 	if (error != boost::asio::error::eof) {
 	#endif
-		PRINT_ERROR << "Could not read the response (" << error.message() << ")." << std::endl;
+		PRINT_ERROR << "[plugin_virustotal] Could not read the response (" << error.message() << ")." << std::endl;
 		return false;
 	}
 	else if (error == boost::asio::error::eof)
@@ -301,7 +301,7 @@ bool vt_api_interact(const std::string& hash,
 // ----------------------------------------------------------------------------
 
 #if !defined WITH_OPENSSL
-// Version of the function which establishes a plain HTTP connexion.
+// Version of the function which establishes a plain HTTP connection.
 bool query_virus_total(const std::string& hash, const std::string& api_key, std::string& destination)
 {
 	boost::asio::io_service io_service;
@@ -333,7 +333,7 @@ bool query_virus_total(const std::string& hash, const std::string& api_key, std:
 // ----------------------------------------------------------------------------
 
 #if defined WITH_OPENSSL
-// Version of the function which establishes an SSL connexion.
+// Version of the function which establishes an SSL connection.
 bool query_virus_total(const std::string& hash, const std::string& api_key, std::string& destination)
 {
 	ssl::context ctx(ssl::context::sslv23);
@@ -360,7 +360,7 @@ bool query_virus_total(const std::string& hash, const std::string& api_key, std:
 	}
 	if (error)
 	{
-		PRINT_ERROR << "Could not connect to www.virustotal.com (plugin_virustotal)! " << error.message() << std::endl;
+		PRINT_ERROR << "[plugin_virustotal] Could not connect to www.virustotal.com: " << error.message() << std::endl;
 		return false;
 	}
 

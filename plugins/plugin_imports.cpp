@@ -99,9 +99,8 @@ std::string networking_api = "(Un)?EnableRouter|SetAdapterIpAddress|SetIp(Forwar
  */
 size_t count_functions(const std::vector<std::string>& v)
 {
-	unsigned int count = 0;
 	std::set<std::string> string_set;
-	for (std::string s : v)
+	for (const std::string& s : v)
 	{
 		if (s.empty()) {
 			continue;
@@ -151,8 +150,8 @@ bool check_functions(const mana::PE& pe,
 																io::OutputTreeNode::STRINGS,
 																io::OutputTreeNode::NEW_LINE);
 
-		for (auto it = found_imports->begin() ; it != found_imports->end() ; ++it) {
-			info->append(*it);
+		for (const auto& it : *found_imports) {
+			info->append(it);
 		}
 		res->add_information(info);
 		return true;
@@ -181,14 +180,14 @@ bool check_dlls(const mana::PE& pe,
 				pResult res)
 {
 	mana::const_shared_strings found_imports = pe.find_imports(".*", dll_regex);
-	if (found_imports->size() > 0)
+	if (!found_imports->empty())
 	{
 		res->raise_level(level);
 		io::pNode info = boost::make_shared<io::OutputTreeNode>(description,
 																io::OutputTreeNode::STRINGS,
 																io::OutputTreeNode::NEW_LINE);
-		for (auto it = found_imports->begin(); it != found_imports->end(); ++it) {
-			info->append(*it);
+		for (const auto& it : *found_imports) {
+			info->append(it);
 		}
 		res->add_information(info);
 		return true;
