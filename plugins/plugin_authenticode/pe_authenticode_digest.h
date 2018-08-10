@@ -18,6 +18,7 @@
 #pragma once
 
 #include <stdio.h>
+#include <algorithm>
 #include <boost/shared_ptr.hpp>
 
 #include "hash-library/hashes.h"

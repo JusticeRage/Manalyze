@@ -38,87 +38,51 @@ std::string get_authenticode_hash(const mana::PE& pe, const std::string& digest_
         return "";
     }
 
-    auto bytes = pe.get_raw_bytes(ioh->SizeOfHeaders);
-    if (bytes == nullptr)
-    {
-        PRINT_ERROR << "[plugin_authenticode] Could not load the PE headers in memory." << std::endl;
-        return "";
-    }
-
-    // Start hashing the file as described in the Authenticode documentation.
-    // Step 3: hash the file up to ioh.Checksum.
-    auto offset = dosh->e_lfanew + sizeof(mana::pe_header) + 0x40;
-    h->add(&bytes->at(0), offset);
-
-    // Step 4: skip the Checksum
-    offset += 4;
-
-    // Step 5: hash the file up to the Certificate Table entry.
-    size_t bytes_to_read = 0x1C;
+    // The authenticode specification describes a 15-step process to compute the PE's digest.
+    // Sadly, it doesn't work for slightly malformed executables (i.e. unusual SizeOfHeaders, spacing
+    // between sections, etc. The following way is much simpler and works in all cases: just hash everything
+    // before the certificate data, only excluding two fields (Checksum and the IMAGE_DIRECTORY_ENTRY_SECURITY
+    // information.
+    FILE* f = fopen(pe.get_path()->c_str(), "rb");
+    auto size = dosh->e_lfanew + sizeof(mana::pe_header) + 0x40; // Offset of the Checksum.
+    boost::scoped_array<boost::uint8_t> buffer(new boost::uint8_t[size]);
+    fread(&buffer.operator[](0), 1, size, f);
+    h->add(&buffer.operator[](0), size);
+    // Hash everything up to the Checksum then skip it.
+    fseek(f, 4, SEEK_CUR);
+    // Now reach the SECURITY directory information. For x64 binaries, it's 0x10 bytes further.
+    size = 0x3C;
     if (pe.get_architecture() == mana::PE::x64) {
-        bytes_to_read += 0x10;      // The Image Optional Header is longer for x64 binaries.
+        size += 0x10;
     }
-    bytes_to_read += 0x20;          // Reach the SECURITY directory entry.
-    h->add(&bytes->at(offset), bytes_to_read);
+    buffer.reset(new boost::uint8_t[size]);
+    fread(&buffer.operator[](0), 1, size, f);
+    h->add(&buffer.operator[](0), size);
+    // Again, hash everything up to here then skip the ignored field.
+    fseek(f, 8, SEEK_CUR);
 
-    // Step 6 omitted: Manalyze has already parsed the directories.
-    // Step 7: hash the rest of the Image Optional Header, including the section table.
-    offset += bytes_to_read + 8;    // Skip the SECURITY directory.
-    h->add(&bytes->at(offset), bytes->size() - offset);
-
-    // Step 8:
-    auto sum_of_bytes_hashed = ioh->SizeOfHeaders;
-
-    // Step 9 omitted: Manalyze already has a list of sections.
-    // Step 10: Sort the sections in ascending PointerToRawData order.
-    std::sort(sections->begin(), sections->end(),
-              [](mana::pSection a, mana::pSection b) -> bool {
-        return a->get_pointer_to_raw_data() < b->get_pointer_to_raw_data();
-    });
-
-    // Step 11-13: Hash each section.
-    for (const auto& s : *sections)
+    // Now hash everything else in the file up to the certificate data.
+    if (ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].VirtualAddress < ftell(f))
     {
-        if (s->get_size_of_raw_data() == 0) {
-            continue;
-        }
-        auto data = s->get_raw_data();
-        h->add(&data->at(0), data->size());
-        sum_of_bytes_hashed += s->get_size_of_raw_data();
+        PRINT_WARNING << "[plugin_authenticode] Error: the certificate data is located in the PE header. "
+                         "The PE was almost certainly crafted manually." << std::endl;
+        return h->getHash(); // Return the current meaningless hash to make sure the verification will fail.
     }
 
-    // Step 14: Check for additional data at the end of the file
-    if (pe.get_filesize() < sum_of_bytes_hashed + ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].Size)
+    size_t remaining = ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].VirtualAddress - static_cast<size_t>(ftell(f));
+    while (remaining)
     {
-        // This can happen if the section table is weird, for instance if multiple sections point to the same
-        // data. In that case, the same data could end up hashed twice and the total number of bytes hashed
-        // would be greater than the file's size. Example: 0dc6c06ce160b14df5dda5019b96adf6
-        PRINT_ERROR << "[plugin_authenticode] Hashed more bytes than there are in the file. The PE's section "
-                       "table may be corrupted." << std::endl;
-        return "";
-    }
-    auto length_of_additional_data = pe.get_filesize() - sum_of_bytes_hashed
-            - ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].Size;
-    if (length_of_additional_data > 0)
-    {
-        FILE* f = fopen(pe.get_path()->c_str(), "rb");
-        fseek(f, sum_of_bytes_hashed, SEEK_SET);
-        try
-        {
-            boost::scoped_array<boost::uint8_t> buffer(new boost::uint8_t[length_of_additional_data]);
-            fread(&buffer.operator[](0), 1, length_of_additional_data, f);
-            h->add(&buffer.operator[](0), length_of_additional_data);
-            fclose(f);
+        size_t chunk_size = std::min(remaining, static_cast<size_t>(4096));
+        buffer.reset(new boost::uint8_t[chunk_size]);
+        auto read_bytes = fread(&buffer.operator[](0), 1, chunk_size, f);
+        if (read_bytes == 0) { // Read error or EOF. Try hashing what we have, but things are bleak.
+            break;
         }
-        catch (const std::exception& e)
-        {
-            PRINT_ERROR << "[plugin_authenticode] Could not allocate memory to get the additional PE bytes." << std::endl;
-            fclose(f);
-            return "";
-        }
+        h->add(&buffer.operator[](0), read_bytes);
+        remaining -= read_bytes;
     }
+    fclose(f);
 
-    // Step 15: Finalize hash
     // Usually, I would need to use a smart pointer here as the received std::string is allocated in another module.
     // However, this is Linux only code, so there won't be a memory corruption when this plugin tries to free it.
     return h->getHash();
