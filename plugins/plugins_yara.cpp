@@ -19,6 +19,9 @@
 // The structure used to communicate with the yara ManaPE module.
 #include "yara/modules/manape_data.h"
 
+// TODO: Remove when Yara doesn't mask get_object anymore
+#undef get_object
+
 // Used to validate bitcoin addresses.
 #include "hash-library/bitcoin.h"
 
