@@ -296,6 +296,10 @@ def parse_ndb(input, output, is_daily=False):
                 if target_type != TargetType.PE and target_type != TargetType.ANY:
                     continue
 
+                # Ignore exploits, are we are only interested in malware signatures
+                if ".Exploit." in malware_name:
+                    continue
+
                 try:
                     rule = YaraRule(malware_name, [[signature, offset]], is_daily=is_daily)
                 except MalformedRuleError:
