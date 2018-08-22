@@ -595,6 +595,8 @@ const std::map<int, std::string> COMP_ID_TYPE =
 
 // ----------------------------------------------------------------------------
 
+// Source for a few of those: https://blogs.msdn.microsoft.com/chuckw/2018/05/07/vs-2017-15-7-update/
+// and linked pages.
 const flag_dict COMP_ID_PRODID =
 	boost::assign::map_list_of	("VS97 SP3 link 5.10.7303",							0x1c87)
 								("VS97 SP3 cvtres 5.00.1668",						0x0684)
@@ -630,14 +632,33 @@ const flag_dict COMP_ID_PRODID =
 								("VS2015 UPD3 build 24210",							0x5e92)
 								("VS2015 UPD3 build 24213",							0x5e95)
 								("VS2015 UPD3.1 build 24215",						0x5e97)
+								("VS2015/2017 runtime 25008",						0x61b0)
+								("VS2017 v15.0 compiler 25017",						0x61b9)
+								("VS2017 v15.2 compiler 25019",						0x61bb)
 								("VS2017 v15.?.? build 25203",						0x6273)
-								("VS2017 v15.4.2 build 25547",						0x63cb)
-								("VS2017 v15.5.4 build 25834",						0x64ea)
+								("VS2015/2017 runtime 25325",						0x62ed)
+								("VS2017 v15.3.* compiler 25506",					0x63a2)
+								("VS2017 v15.4.* compiler 25547",					0x63cb)
+								("VS2015/2017 runtime 25711",						0x646f)
+								("VS2015/2017 runtime 25810",						0x64d2)
+								("VS2017 v15.5 compiler 25830",						0x64e6)
+								("VS2017 v15.5.2 compiler 25831",					0x64e7)
+								("VS2017 v15.5.3-4 build 25834",					0x64ea)
+								("VS2017 v15.5.5 build 25835",						0x64eb)
 								("VS2017 v15.?.? build 25930",						0x654a)
-								("VS2017 v15.6.5 build 26129",						0x6611)
-								("VS2017 v15.6.6 build 26129",						0x6613)
-								("VS2017 v15.7.4 build 26431",						0x673F)
-								("VS2017 v15.7.5 build 26433",						0x6741)
+								("VS 2015/2017 runtime 26020",						0x65A4)
+								("VS2017 v15.6 compiler 26128",						0x6610)
+								("VS2017 v15.6.3-5 compiler 26129",					0x6611)
+								("VS2017 v15.6.6 compiler 26131",					0x6613)
+								("VS2017 v15.6.7 compiler 26132",					0x6614)
+								("VS 2015/2017 runtime 26405",						0x6725)
+								("VS2017 v15.7 compiler 26428",						0x673C)
+								("VS2017 v15.7.2 compiler 26429",					0x673D)
+								("VS2017 v15.7.3 compiler 26430",					0x673E)
+								("VS2017 v15.7.4 compiler 26431",					0x673F)
+								("VS2017 v15.7.5 compiler 26433",					0x6741)
+								("VS 2015/2017 runtime 26706",						0x6852)
+								("VS2017 v15.8.1 compiler 26726",					0x6866)
 	;
 
 // ----------------------------------------------------------------------------
