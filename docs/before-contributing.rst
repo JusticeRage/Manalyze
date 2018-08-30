@@ -40,7 +40,7 @@ All code contributions should make every effort to match Manalyze's coding style
     * Use lowercase for function names, function members and local variables. Separate words with underscores (i.e. ``void process_int(int i);``).
     * Use capital letters for global variables and program-wide contants, and underscores to separate words (i.e. ``#define NUMBER_OF_TRIES 10``).
     * Prefix private class method and member names with an underscore (i.e ``private: std::string _private_string;``).
-    * Choose lowercase, preferrably short namespace names (i.e. ``namespace plugins { ... }``).
+    * Choose lowercase, preferably short namespace names (i.e. ``namespace plugins { ... }``).
 * Code structure
     * All your code should reside in a meaningful namespace.
     * Declare class and functions in header (".h") files.

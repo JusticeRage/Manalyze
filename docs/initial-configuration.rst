@@ -11,13 +11,13 @@ When you use this plugin for the first time, you're likely to encounter the foll
 
     [*] Warning: The VirusTotal API key was not found in the configuration file.
 	
-In order to submit hashes to VirusTotal, it is necessary to `register <https://www.virustotal.com/en/>`_ on their website and retreive an API key. If you really can't be bothered, many of these can be found on `GitHub <https://github.com/search?q=%22https%3A%2F%2Fwww.virustotal.com%2Fvtapi%2Fv2%22&type=Code&utf8=%E2%9C%93>`_.
+In order to submit hashes to VirusTotal, it is necessary to `register <https://www.virustotal.com/en/>`_ on their website and retrieve an API key. If you really can't be bothered, many of these can be found on `GitHub <https://github.com/search?q=%22https%3A%2F%2Fwww.virustotal.com%2Fvtapi%2Fv2%22&type=Code&utf8=%E2%9C%93>`_.
 
 VirusTotal offers two types of API access: public and private. Right now, Manalyze doesn't support any of the "private" features, but if you're lucky enough to have a such a key, at least you won't be bound by the request rate limit. After you have obtained an API key, edit ``bin/manalyze.conf`` and add the following line::
 
     virustotal.api_key = [your key here]
 	
-After this, the plugin will be able to retreive hashes from VirusTotal.
+After this, the plugin will be able to retrieve hashes from VirusTotal.
 
 ClamAV plugin
 =============

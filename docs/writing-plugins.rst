@@ -108,7 +108,7 @@ If you try to build the plugin right now, you'll see that the compiler is very a
 These functions serve the following purpose:
 
 * ``get_api_version``: the version of the API used by this plugin, in case it evolves and breaks retro-compatibility in the future. Just return 1 for now.
-* ``get_id``: the name of the plugin. This is how it will be refered to in the program's help and on the command-line; make sure to pick something unique!
+* ``get_id``: the name of the plugin. This is how it will be referred to in the program's help and on the command-line; make sure to pick something unique!
 * ``get_description``: a short explanation of what the plugin does. It is only printed when the user calls Manalyze with the ``--help`` option.
 * ``analyze``: performs the analysis of the program. We'll get back to this one very soon, for now, it just creates a result object containing a message.
 

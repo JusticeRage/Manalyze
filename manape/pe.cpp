@@ -844,7 +844,7 @@ bool PE::_parse_tls()
  *	@param	read_bytes	The number of bytes read so far, will be incremented.
  *	
  *	@return	Whether the value should be read. If false, EOF has been reached or
- *			the stucture has no more fields to read.
+ *			the structure has no more fields to read.
  */
 bool read_config_field(const			image_load_config_directory& config,
 					   FILE*			source,
