@@ -111,7 +111,7 @@ long asn1_read(const unsigned char** data,
  *
  *  The SpcIndirectDataContent contains the digest and algorithm of the authenticode
  *  hash generated for the PE. This function's role is to go down the ASN1 rabbit hole
- *  and retreive this information so that the digest can be computed independently and
+ *  and retrieve this information so that the digest can be computed independently and
  *  verified against the information contained in this signature.
  *
  *  @param  ASN1_STRING* asn1 The ASN1 string pointing to the SpcIndirectDataContent object.

@@ -116,7 +116,7 @@ std::string hexlify(const bytes& buffer)
 
 /**
  *  @brief  This function navigates through the digital signature's
- *          certificate chain to retreive the successive common names.
+ *          certificate chain to retrieve the successive common names.
  *
  *  @param  pPKCS7 p The PKCS7 object containing the digital signature.
  *  @param  pResult res The result in which the names should be added.

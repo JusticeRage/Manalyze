@@ -53,7 +53,7 @@ namespace plugin {
  *
  *	@param	const std::string& hash The hash of the program whose AV results we want.
  *	@param	const std::string& api_key The VirusTotal API key used to submit queries.
- *	@param	std::string& destination The string which will recieve the REST JSON response.
+ *	@param	std::string& destination The string which will receive the REST JSON response.
  *
  *	@return	Whether the query was completed successfully.
  */
@@ -191,7 +191,7 @@ public:
  *
  *	@param	const std::string& hash The hash of the program whose AV results we want.
  *	@param	const std::string& api_key The VirusTotal API key used to submit queries.
- *	@param	std::string& destination The string which will recieve the REST JSON response.
+ *	@param	std::string& destination The string which will receive the REST JSON response.
  *	@param	sslsocket& socket or bai::tcp::socket& socket The socket connected to the API.
  *			Its type will vary depending on whether OpenSSL is available (in which case,
  *			the socket will automatically be an SSL socket).

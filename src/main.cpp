@@ -282,7 +282,7 @@ bool parse_args(po::variables_map& vm, int argc, char**argv)
 /**
  *	@brief	Dumps select information from a PE.
  *
- *	@param	io::OutputFormatter& formatter The object which will recieve the output.
+ *	@param	io::OutputFormatter& formatter The object which will receive the output.
  *	@param	const std::vector<std::string>& categories The types of information to dump.
  *			For the list of accepted categories, refer to the program help or the source
  *			below.
@@ -342,7 +342,7 @@ void handle_dump_option(io::OutputFormatter& formatter, const std::vector<std::s
 /**
  *	@brief	Analyze the PE with each selected plugin.
  *
- *	@param	io::OutputFormatter& formatter The object which will recieve the output.
+ *	@param	io::OutputFormatter& formatter The object which will receive the output.
  *	@param	const std::vector<std::string>& selected The names of the selected plugins.
  *	@param	const config& conf The configuration of the plugins.
  *	@param	const mana::PE& pe The PE to analyze.
