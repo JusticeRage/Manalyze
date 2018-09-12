@@ -45,7 +45,7 @@ std::string atom_bombing = "GlobalAddAtom(A|W)|GlobalGetAtomName(A|W)|QueueUserA
 
 std::string process_doppelganging = "CreateTransaction|CreateFileTransacted|RollbackTransaction|WriteFile";
 
-std::string keylogger_api = "SetWindowsHook(Ex)?|GetAsyncKeyState|GetForegroundWindow|AttachThreadInput|CallNextHook(Ex)?|MapVirtualKey";
+std::string keylogger_api = "SetWindowsHook(Ex)?|GetAsyncKeyState|GetForegroundWindow|AttachThreadInput|CallNextHook(Ex)?|MapVirtualKey(A|W|Ex)";
 
 std::string raw_socket_api = "accept|bind|connect|recv|send|gethost(by)?name|inet_addr";
 
