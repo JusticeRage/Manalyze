@@ -111,6 +111,52 @@ shared_bytes PE::get_raw_bytes(size_t size) const
 
 // ----------------------------------------------------------------------------
 
+shared_bytes PE::get_overlay_bytes(size_t size) const
+{
+    if (_file_handle == nullptr || !_ioh) {
+        return nullptr;
+    }
+
+    const auto sections = get_sections();
+    if (!sections) {
+        return nullptr;
+    }
+
+    // Find where the overlay data would be located.
+    boost::uint64_t max_offset = 0;
+
+    // If the binary is signed, look after the authenticode signature.
+    if (_ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].VirtualAddress) 
+    {
+        max_offset = _ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].VirtualAddress + 
+            _ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].Size;
+    }
+    else // Otherwise, look after the last section.
+    {
+        for (const auto& it : *sections)
+        {
+            if (it->get_pointer_to_raw_data() + it->get_size_of_raw_data() > max_offset) {
+                max_offset = it->get_pointer_to_raw_data() + it->get_size_of_raw_data();
+            }
+        }
+    }
+
+    // The PE has no overlay data.
+    if (max_offset >= get_filesize()) {
+        return nullptr;
+    }
+
+    fseek(_file_handle.get(), max_offset, SEEK_SET);
+    if (size > _file_size - max_offset) {
+        size = static_cast<size_t>(_file_size - max_offset);
+    }
+    auto res = boost::make_shared<std::vector<boost::uint8_t> >(size);
+    fread(&(*res)[0], 1, size, _file_handle.get());
+    return res;
+}
+
+// ----------------------------------------------------------------------------
+
 bool PE::_parse_dos_header()
 {
 	if (_file_handle == nullptr) {

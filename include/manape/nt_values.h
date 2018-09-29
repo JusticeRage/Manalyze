@@ -64,7 +64,7 @@ typedef boost::shared_ptr<std::string> pString;
 
 namespace nt {
 
-typedef std::map<std::string, int> flag_dict;
+typedef std::map<std::string, unsigned int> flag_dict;
 
 // Exported flag translation maps. Definition in nt_values.cpp.
 extern const DECLSPEC flag_dict PE_CHARACTERISTICS;

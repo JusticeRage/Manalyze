@@ -616,6 +616,8 @@ Miscellaneous
 	// Or access them directly:
 	if ((*bytes)[0] == 'M' && &(*bytes)[1] == 'Z') { ... }
 
+``pe.get_overlay_bytes(size_t size)`` returns the ``size`` first bytes of the overlay data of the PE. If ``size`` is omitted, every byte from the overlay data is returned; and if the file contains no such data, ``nullptr`` is returned.
+	
 ``nt::translate_to_flag`` and ``nt::translate_to_flags`` are two functions that come in handy when you need to expand flags (i.e. the ``Characteristics`` field of many structures). Use the first function for values which translate into a single flag, and the second one for values which are composed of multiple ones::
 
     auto pType = nt::translate_to_flag(ppe_header->Machine, nt::MACHINE_TYPES);

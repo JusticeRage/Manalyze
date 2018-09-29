@@ -246,6 +246,20 @@ public:
 	*/
 	DECLSPEC shared_bytes get_raw_bytes(size_t size = INT_MAX) const;
 
+    /**
+	 *	@brief	Returns the bytes of the file located after the PE.
+	 *
+	 *  Some malware embed additional data at the end of the file, which can be accessed 
+	 *  through this function.
+	 *	/!\ Warning: the whole file will be loaded in memory!
+	 *
+	 *	@param	boost::uint64_t size If specified, only the [size] first bytes of the file
+	 *			will be provided. By default, the whole file is read.
+	 *
+	 *	@return	A vector containing the bytes of the overlay.
+	*/
+	DECLSPEC shared_bytes get_overlay_bytes(size_t size = INT_MAX) const;
+
 	/**
 	 *	@brief	The delete operator. "new" had to be re-implemented in order to make it private.
 	 *
