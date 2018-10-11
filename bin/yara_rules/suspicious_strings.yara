@@ -42,6 +42,8 @@ rule System_Tools
         $a18 = "regsvr32.exe" nocase wide ascii
         $a19 = "rundll32.exe" nocase wide ascii
         $a20 = /schtask(.exe)?/ nocase wide ascii
+		$a21 = "wbadmin.exe" nocase wide ascii
+		$a22 = "wevutil.exe" nocase wide ascii
 		
     condition:
         any of them
@@ -753,7 +755,7 @@ rule WMI_strings
         author = "Ivan Kwiatkowski (@JusticeRage)"
     strings:
         // WMI namespaces which may be referenced in the ConnectServer call. All in the form of "ROOT\something"
-        $a0 = /ROOT\\(CIMV2|AccessLogging|ADFS|aspnet|Cli|Hardware|interop|InventoryLogging|Microsoft.{10}|Policy|RSOP|SECURITY|ServiceModel|snmpStandardCimv2|subscription|virtualization|WebAdministration|WMI)/ nocase ascii wide
+        $a0 = /ROOT\\(CIMV2|AccessLogging|ADFS|aspnet|Cli|Hardware|interop|InventoryLogging|Microsoft|Policy|RSOP|SECURITY|ServiceModel|snmp|StandardCimv2|subscription|virtualization|WebAdministration|WMI)/ nocase ascii wide
     condition:
         any of them
 }
