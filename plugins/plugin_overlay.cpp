@@ -52,6 +52,9 @@ public:
 
         res->raise_level(SUSPICIOUS);
         res->set_summary("The file contains overlay data.");
+        std::stringstream ss;
+        ss << overlay_bytes->size() << " bytes of data starting at offset 0x" << std::hex << pe.get_filesize() - overlay_bytes->size() << ".";
+        res->add_information(ss.str());
 
         // Try to detect the file type of the overlay data.
         yara::Yara y;
