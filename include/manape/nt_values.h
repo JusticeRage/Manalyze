@@ -107,12 +107,12 @@ DECLSPEC const_shared_strings translate_to_flags(int value, const flag_dict& dic
 /**
  *	@brief	Looks up the flag corresponding to a given value, if any.
  *
- *	@param	int value The integer to translate
+ *	@param	unsigned int value The integer to translate
  *	@param	flag_dict& dict A map containing the list of available flags and corresponding
  *			integer values.
  *
  *	@return	The corresponding flag, or "UNKNOWN" if no match is found.
  */
-DECLSPEC pString translate_to_flag(int value, const flag_dict& dict);
+DECLSPEC pString translate_to_flag(unsigned int value, const flag_dict& dict);
 
 } // !namespace nt

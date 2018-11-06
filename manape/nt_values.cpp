@@ -662,7 +662,8 @@ const flag_dict COMP_ID_PRODID =
                                 ("VS2017 v15.8.2 compiler 26727",              0x6867)
                                 ("VS2017 v15.8.3 compiler 26728",              0x6868)
                                 ("VS2017 v15.8.4 compiler 26729",              0x6869)
-                                ("VS2017 v15.8.5-7 compiler 26730",            0x686A)
+                                ("VS2017 v15.8.5-8 compiler 26730",            0x686A)
+                                ("VS2017 v15.8.9 compiler 26732",              0x686C)
     ;
 
 // ----------------------------------------------------------------------------
@@ -681,7 +682,7 @@ const_shared_strings translate_to_flags(int value, const flag_dict& dict)
 
 // ----------------------------------------------------------------------------
 
-pString translate_to_flag(int value, const flag_dict& dict)
+pString translate_to_flag(unsigned int value, const flag_dict& dict)
 {
     for (const auto& it : dict)
     {

@@ -442,3 +442,15 @@ rule Twofish
   condition:
     any of them
 }
+
+rule TEA 
+{
+	meta:
+		description = "Uses constants related to TEA"
+		author = "Ivan Kwiatkowski (@JusticeRage)"
+	strings:
+		$c1 = { B9 79 37 9E }
+		$c2 = { 20 37 EF C6 }
+	condition:
+		all of them
+}
