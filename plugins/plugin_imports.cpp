@@ -35,15 +35,15 @@ std::string anti_debug =
 	"OutputDebugString|SwitchToThread|NtQueryInformationProcess|"	// Standard anti-debug API calls
 	"QueryPerformanceCounter";	// Techniques based on timing. GetTickCount ignored (too many false positives)
 
-std::string vanilla_injection = "VirtualAlloc.*|WriteProcessMemory|CreateRemoteThread(Ex)?|OpenProcess";
+std::string vanilla_injection = "(Nt)?VirtualAlloc.*|(Nt)?WriteProcessMemory|CreateRemoteThread(Ex)?|(Nt)?OpenProcess";
 
-std::string process_hollowing = "WriteProcessMemory|(Wow64)?SetThreadContext|ResumeThread";
+std::string process_hollowing = "(Nt)?WriteProcessMemory|(Nt)?WriteVirtualMemory|(Wow64)?SetThreadContext|(Nt)?ResumeThread|(Nt)?SetContextThread";
 
 std::string power_loader = "FindWindow(A|W)|GetWindowLong(A|W)";
 
 std::string atom_bombing = "GlobalAddAtom(A|W)|GlobalGetAtomName(A|W)|QueueUserAPC";
 
-std::string process_doppelganging = "CreateTransaction|CreateFileTransacted|RollbackTransaction|WriteFile";
+std::string process_doppelganging = "CreateTransaction|CreateFileTransacted|RollbackTransaction|(Nt)?WriteFile";
 
 std::string keylogger_api = "SetWindowsHook(Ex)?|GetAsyncKeyState|GetForegroundWindow|AttachThreadInput|CallNextHook(Ex)?|MapVirtualKey(A|W|Ex)";
 
@@ -53,9 +53,9 @@ std::string http_api = "Internet.*|URL(Download|Open).*|WinHttp.*";
 
 std::string registry_api = "Reg.*(Key|Value).*|SH.*(Reg|Key).*|SHQueryValueEx(A|W)|SHGetValue(A|W)";
 
-std::string process_creation_api = "CreateProcess.*|system|WinExec|ShellExecute(A|W)";
+std::string process_creation_api = "(Nt)?CreateProcess.*|system|WinExec|ShellExecute(A|W)";
 
-std::string process_manipulation_api = "EnumProcess.*|OpenProcess|(Read|Write)ProcessMemory|Process32(First|Next)(A|W)?";
+std::string process_manipulation_api = "EnumProcess.*|(Nt)?OpenProcess|(Nt)?(Read|Write)ProcessMemory|Process32(First|Next)(A|W)?";
 
 std::string service_manipulation_api = "OpenSCManager(A|W)|(Open|Control|Create|Delete)Service(A|W)?|QueryService.*|"
 									   "ChangeServiceConfig(A|W)|EnumServicesStatus(Ex)?(A|W)";
@@ -68,7 +68,7 @@ std::string dacl_api = "SetKernelObjectSecurity|SetFileSecurity(A|W)|SetNamedSec
 
 std::string dynamic_import = "(Co)?LoadLibrary(Ex)?(A|W)|GetProcAddress|LdrLoadDll|MmGetSystemRoutineAddress";
 
-std::string packer_api = "VirtualAlloc(Ex)?|VirtualProtect(Ex)?";
+std::string packer_api = "(Nt)?VirtualAlloc(Ex)?|(Nt)?VirtualProtect(Ex)?";
 
 std::string temporary_files = "GetTempPath(A|W)|(Create|Write)File(A|W)";
 
@@ -91,7 +91,7 @@ std::string networking_api = "(Un)?EnableRouter|SetAdapterIpAddress|SetIp(Forwar
 /**
  *	@brief Counts the number of different function names in a vector.
  *
- *	A, W and Ex variants of the same function are considered to be the same.
+ *	A, W, Ex and Nt/Zw variants of the same function are considered to be the same.
  *
  *	@param v The vector containing the function names.
  *
@@ -112,6 +112,9 @@ size_t count_functions(const std::vector<std::string>& v)
 		if (tmp.size() > 2 && boost::algorithm::ends_with(tmp, "Ex")) {
 			tmp = tmp.substr(0, tmp.size() - 2);
 		}
+        if (tmp.size() > 2 && (boost::algorithm::starts_with(tmp, "Nt") || boost::algorithm::starts_with(tmp, "Zw"))) {
+            tmp = tmp.substr(2, tmp.size());
+        }
 		string_set.insert(tmp);
 	}
 	return string_set.size();
