@@ -37,9 +37,90 @@ public:
 		return boost::make_shared<std::string>("resources");
 	}
 
+    // ----------------------------------------------------------------------------
+
 	pString get_description() const override {
 		return boost::make_shared<std::string>("Analyzes the program's resources.");
 	}
+
+    // ----------------------------------------------------------------------------
+
+    /**
+     * @brief   This function inspects the timestamps of the resources.
+     * 
+     * It makes sure that the reported timestamps match the one contained in the PE header.
+     * 
+     * @param   pe  The PE file to analyze.
+     * @param   res The result object to fill.
+     */
+    void check_resource_timestamps(const mana::PE& pe, pResult res)
+	{
+        const auto r = pe.get_resources();
+        const auto pe_timestamp = boost::posix_time::from_time_t(pe.get_pe_header()->TimeDateStamp);
+        auto timestamps = std::set<std::string>();
+        auto timezones = std::set<int>();
+        for (const auto& it : *r)
+        {
+            if (it->get_timestamp() == 0) { // Ignore empty timestamps.
+                continue;
+            }
+
+            // Create a set of timestamps which differ from the one reported in the PE header.
+            const auto res_timestamp = utils::dosdate_to_btime(it->get_timestamp());
+            if (!res_timestamp) { // Ignore un-convertable timestamps.
+                continue;
+            }
+
+            auto delta = *res_timestamp - pe_timestamp;
+            // There might be a slight delta between the PE timestamp and the one found in the resources.
+            // Assume nobody will tamper them to fake the compilation date by less than 12 hours.
+            if (delta > btime::hours(12) || delta < btime::hours(-12)) {
+                timestamps.insert(*utils::dosdate_to_string(it->get_timestamp()));
+            }
+
+            // I have noticed that some timestamps differ from exactly [1-12] hours.
+            // Could it be that something in the build chain uses local timestamps?
+            // Report it if we have a delta of exactly 1-12h.
+
+            auto hours = delta.hours();
+            // There can be a delta of 1 second between the two timestamps, possibly due to delays during the compilation.
+            // Account for it by rounding up to the next hour if needed.
+            if (abs(delta.minutes()) == 59 && abs(delta.seconds()) > 50) 
+            {
+                if (hours < 0) {
+                    hours -= 1;
+                }
+                else {
+                    hours += 1;
+                }
+            }
+
+            if (hours != 0 && abs(hours) <= 12 &&
+                timezones.find(hours) == timezones.end())
+            {
+                if (abs(delta.minutes()) == 59 || abs(delta.minutes()) <= 1) {
+                    std::stringstream ss;
+                    ss << "The binary may have been compiled on a machine on the UTC" << std::showpos << hours << " timezone.";
+                    res->add_information(ss.str());
+                    timezones.insert(hours);
+                }
+            }
+        }
+        if (!timestamps.empty()) // New timestamps have been found.
+        {
+            res->raise_level(SUSPICIOUS);
+            res->set_summary("The PE header may have been manually modified.");
+            auto info = boost::make_shared<io::OutputTreeNode>("The resource timestamps differ from the PE header",
+                io::OutputTreeNode::STRINGS,
+                io::OutputTreeNode::NEW_LINE);
+            for (const auto& timestamp : timestamps) {
+                info->append(timestamp);
+            }
+            res->add_information(info);
+        }
+	}
+
+    // ----------------------------------------------------------------------------
 
 	pResult analyze(const mana::PE& pe) override
 	{
@@ -100,33 +181,8 @@ public:
 			}
 		}
 
-		// Check for anomalies in resource timestamps. Compare them as strings as they are not in the same format.
-		const auto pe_timestamp = utils::timestamp_to_string(pe.get_pe_header()->TimeDateStamp);
-		auto timestamps = std::set<std::string>();
-		for (const auto& it : *r)
-		{
-			if (it->get_timestamp() == 0) { // Ignore empty timestamps.
-				continue;
-			}
-
-			// Create a set of timestamps which differ from the one reported in the PE header.
-			const auto res_timestamp = utils::dosdate_to_string(it->get_timestamp());
-			if (*res_timestamp != *pe_timestamp) {
-				timestamps.insert(*res_timestamp);
-			}
-		}
-		if (!timestamps.empty()) // New timestamps have been found.
-		{
-			res->raise_level(SUSPICIOUS);
-			res->set_summary("The PE header may have been manually modified.");
-			auto info = boost::make_shared<io::OutputTreeNode>("The resource timestamps differ from the PE header",
-															   io::OutputTreeNode::STRINGS,
-															   io::OutputTreeNode::NEW_LINE);
-			for (const auto& timestamp : timestamps) {
-				info->append(timestamp);
-			}
-			res->add_information(info);
-		}
+        // Check for anomalies in the resource timestamps.
+        check_resource_timestamps(pe, res);
 
 		const double ratio = static_cast<double>(size) / static_cast<double>(pe.get_filesize());
 		if (ratio > .75)

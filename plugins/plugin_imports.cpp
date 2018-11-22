@@ -22,6 +22,7 @@
 #include "plugin_framework/auto_register.h"
 
 #include "manacommons/color.h"
+#include <yara/atoms.h>
 
 namespace plugin {
 
@@ -145,7 +146,7 @@ bool check_functions(const mana::PE& pe,
 					 REQUIREMENT req,
 					 pResult res)
 {
-	mana::const_shared_strings found_imports = pe.find_imports(func_regex);
+	auto found_imports = pe.find_imports(func_regex);
 	if (found_imports && count_functions(*found_imports) >= static_cast<unsigned int>(req))  // Safe cast: these are positive enum indexes
 	{
 		res->raise_level(level);
@@ -223,7 +224,7 @@ public:
 		check_functions(pe, power_loader, MALICIOUS, "Code injection capabilities (PowerLoader)", AT_LEAST_TWO, res);
 		check_functions(pe, atom_bombing, MALICIOUS, "Code injection capabilities (atom bombing)", AT_LEAST_THREE, res);
 		check_functions(pe, process_doppelganging, MALICIOUS, "Code injection capabilities (process doppelganging)", AT_LEAST_THREE, res);
-		check_functions(pe, "", NO_OPINION, "Can access the registry", AT_LEAST_ONE, res);
+		check_functions(pe, registry_api, NO_OPINION, "Can access the registry", AT_LEAST_ONE, res);
 		check_functions(pe, process_creation_api, NO_OPINION, "Possibly launches other programs", AT_LEAST_ONE, res);
 		check_functions(pe, "(Nt|Zw).*", SUSPICIOUS, "Uses Windows's Native API", AT_LEAST_TWO, res);
 		check_functions(pe, "Crypt.*", NO_OPINION, "Uses Microsoft's cryptographic API", AT_LEAST_ONE, res);

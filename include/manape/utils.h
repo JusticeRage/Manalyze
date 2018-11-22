@@ -47,10 +47,13 @@
 	#define DECLSPEC
 #endif
 
+namespace btime = boost::posix_time;
+
 namespace utils
 {
 
 typedef boost::shared_ptr<std::string> pString;
+typedef boost::shared_ptr<btime::ptime> pptime;
 
 // Disable the "unary minus operator applied to unsigned type" warning.
 #pragma warning(push)
@@ -156,23 +159,34 @@ double DECLSPEC shannon_entropy(const std::vector<boost::uint8_t>& bytes);
 // ----------------------------------------------------------------------------
 
 /**
-*	@brief	Converts a POSIX timestamp into a human-readable string.
-*
-*	@param	uint32_t epoch_timestamp The timestamp to convert.
-*
-*	@return	A human readable string representing the given timestamp.
-*/
+ *	@brief	Converts a POSIX timestamp into a human-readable string.
+ *
+ *	@param	uint32_t epoch_timestamp The timestamp to convert.
+ *
+ *	@return	A human readable string representing the given timestamp.
+ */
 pString DECLSPEC timestamp_to_string(boost::uint64_t epoch_timestamp);
 
 // ----------------------------------------------------------------------------
 
 /**
-*	@brief	Converts a DosDate timestamp into a human-readable string.
-*
-*	@param	uint32_t dosdate The timestamp to convert.
-*
-*	@return	A human readable string representing the given timestamp.
-*/
+ *	@brief	Converts a DosDate timestamp into a boost::time object.
+ *
+ *	@param	uint32_t dosdate The timestamp to convert.
+ *
+ *	@return	A shared boost ptime object representing the given timestamp.
+ */
+pptime DECLSPEC dosdate_to_btime(boost::uint32_t dosdate);
+
+// ----------------------------------------------------------------------------
+
+/**
+ *	@brief	Converts a DosDate timestamp into a human-readable string.
+ *
+ *	@param	uint32_t dosdate The timestamp to convert.
+ *
+ *	@return	A human readable string representing the given timestamp.
+ */
 pString DECLSPEC dosdate_to_string(boost::uint32_t dosdate);
 
 }
