@@ -441,10 +441,10 @@ DECLSPEC pgroup_icon_directory Resource::interpret_as()
 		}
 		else // Cursors have a different structure. Adapt it to a .ico.
 		{
-			// I know I am casting bytes to shorts here. I'm not proud of it.
 			fread(&(entry->Width), 1, sizeof(boost::uint8_t), f);
 			fseek(f, 1, SEEK_CUR);
 			fread(&(entry->Height), 1, sizeof(boost::uint8_t), f);
+            entry->Height /= 2; // TODO: verify that this is the case!
 			fseek(f, 1, SEEK_CUR);
 			fread(&(entry->Planes), 1, sizeof(boost::uint16_t), f);
 			fread(&(entry->BitCount), 1, sizeof(boost::uint16_t), f);
@@ -704,8 +704,12 @@ std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, co
 		if (directory->Type == 1) { // General case for icons
 			res.insert(res.end(), icon_bytes->begin(), icon_bytes->end());
 		}
-		else if (icon_bytes->size() > 2 * sizeof(boost::uint16_t)) { // Cursors have a "hotspot" structure that we have to discard to create a valid ico.
+		else if (icon_bytes->size() > 4 && directory->Entries[i]->BytesInRes > 4) // Cursors have a "hotspot" structure that we have to discard to create a valid ico.
+        {
 			res.insert(res.end(), icon_bytes->begin() + 2 * sizeof(boost::uint16_t), icon_bytes->end());
+            // Remove 4 from the size to account for this suppression
+            int new_size = directory->Entries[i]->BytesInRes - 4;
+            memcpy(&res[3 * sizeof(boost::uint16_t) + i * sizeof(group_icon_directory_entry) + 8], &new_size, 4);
 		}
 		else { // Invalid cursor.
 			res.clear();
