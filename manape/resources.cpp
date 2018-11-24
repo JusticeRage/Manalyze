@@ -444,7 +444,7 @@ DECLSPEC pgroup_icon_directory Resource::interpret_as()
 			fread(&(entry->Width), 1, sizeof(boost::uint8_t), f);
 			fseek(f, 1, SEEK_CUR);
 			fread(&(entry->Height), 1, sizeof(boost::uint8_t), f);
-            entry->Height /= 2; // TODO: verify that this is the case!
+            entry->Height /= 2; // For some reason, twice the actual height is stored here.
 			fseek(f, 1, SEEK_CUR);
 			fread(&(entry->Planes), 1, sizeof(boost::uint16_t), f);
 			fread(&(entry->BitCount), 1, sizeof(boost::uint16_t), f);
@@ -679,7 +679,8 @@ std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, co
 		pResource icon = pResource();
 		for (auto it = resources.begin(); it != resources.end(); ++it)
 		{
-			if ((*it)->get_id() == directory->Entries[i]->Id)
+            auto type = (*it)->get_type();
+			if ((*it)->get_id() == directory->Entries[i]->Id && type && *type == "RT_ICON")
 			{
 				icon = *it;
 				break;
@@ -825,16 +826,15 @@ bool Resource::extract(const boost::filesystem::path& destination)
 bool Resource::icon_extract(const boost::filesystem::path& destination,
                             const std::vector<pResource>& resources)
 {
-    std::vector<boost::uint8_t> data;
     if (_type != "RT_GROUP_ICON" && _type != "RT_GROUP_CURSOR")
     {
         PRINT_WARNING << "Called icon_extract on a non-icon resource!" << std::endl;
         return extract(destination);
     }
-    data = reconstruct_icon(interpret_as<pgroup_icon_directory>(), resources);
-	if (data.size() == 0)
+    auto data = reconstruct_icon(interpret_as<pgroup_icon_directory>(), resources);
+	if (data.empty())
 	{
-		PRINT_WARNING << "Resource " << _name << " is empty!" << DEBUG_INFO << std::endl;
+		PRINT_WARNING << "Resource " << _id << " is empty!" << DEBUG_INFO << std::endl;
 		return true;
 	}
 
