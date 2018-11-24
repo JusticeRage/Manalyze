@@ -213,7 +213,7 @@ bool is_actually_posix(boost::uint32_t dosdate, boost::uint32_t pe_timestamp, fl
         variation = static_cast<float>(pe_timestamp - dosdate) / static_cast<float>(dosdate);
     }
     
-    return abs(variation) <= threshold;
+    return fabs(variation) <= threshold;
 }
 
 // ----------------------------------------------------------------------------
