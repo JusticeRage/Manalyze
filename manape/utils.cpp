@@ -163,7 +163,7 @@ pString timestamp_to_string(boost::uint64_t epoch_timestamp)
 	static std::locale loc(std::cout.getloc(), new btime::time_facet("%Y-%b-%d %H:%M:%S%F %z"));
 	std::stringstream ss;
 	ss.imbue(loc);
-	ss << boost::posix_time::from_time_t(epoch_timestamp);
+	ss << btime::from_time_t(epoch_timestamp);
 	return boost::make_shared<std::string>(ss.str());
 }
 
@@ -171,6 +171,10 @@ pString timestamp_to_string(boost::uint64_t epoch_timestamp)
 
 pptime dosdate_to_btime(boost::uint32_t dosdate)
 {
+    if (dosdate == 0) {
+        return boost::make_shared<btime::ptime>(btime::ptime(boost::gregorian::date(1980, 1, 1)));
+    }
+
     boost::uint16_t date = dosdate >> 16;
     boost::uint16_t time = dosdate & 0xFFFF;
     boost::uint16_t year = ((date & 0xFE00) >> 9) + 1980;
@@ -183,18 +187,33 @@ pptime dosdate_to_btime(boost::uint32_t dosdate)
         second = 59;
     }
 
-    if (dosdate == 0) {
-        return boost::make_shared<btime::ptime>(btime::ptime(boost::gregorian::date(1980, 1, 1)));
-    }
-
     try {
         return boost::make_shared<btime::ptime>(btime::ptime(boost::gregorian::date(year, month, day), btime::hours(hour) + btime::minutes(minute) + btime::seconds(second)));
     }
     catch (std::exception&)
     {
-        PRINT_WARNING << "Tried to convert an invalid DosDate: " << dosdate << "." << DEBUG_INFO << std::endl;
-        return pptime();
+        PRINT_WARNING << "Tried to convert an invalid DosDate: " << dosdate << ". Falling back to posix timestamp." << DEBUG_INFO << std::endl;
+        // Some samples seem to be using a standard epoch timestamp (i.e. be7dc7c927caa47740c369daf35fc5e5). Try falling back to that.
+        return boost::make_shared<btime::ptime>(btime::from_time_t(dosdate));
     }
+}
+
+// ----------------------------------------------------------------------------
+
+bool is_actually_posix(boost::uint32_t dosdate, boost::uint32_t pe_timestamp, float threshold)
+{
+    if (dosdate == 0) {
+        return false;
+    }
+    float variation;
+    if (dosdate > pe_timestamp) {
+        variation = static_cast<float>(dosdate - pe_timestamp) / static_cast<float>(dosdate);
+    }
+    else {
+        variation = static_cast<float>(pe_timestamp - dosdate) / static_cast<float>(dosdate);
+    }
+    
+    return abs(variation) <= threshold;
 }
 
 // ----------------------------------------------------------------------------

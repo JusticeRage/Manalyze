@@ -189,4 +189,16 @@ pptime DECLSPEC dosdate_to_btime(boost::uint32_t dosdate);
  */
 pString DECLSPEC dosdate_to_string(boost::uint32_t dosdate);
 
+// ----------------------------------------------------------------------------
+/**
+ *  @brief  This helper function compares a dosdate and the PE timestamp to
+ *          check whether the dosdate is actually a posix timestamp.
+ *          
+ *  @param  dosdate The dosdate to test.
+ *  @param  pe_timestamp The reference posix time (typically, the PE compilation
+ *          date from the PE header.
+ *  @param  threshold How close the two timestamps should be to determine that
+ *          the dosdate is actually a posix timestamp (default is 0.1%).
+ */
+bool DECLSPEC is_actually_posix(boost::uint32_t dosdate, boost::uint32_t pe_timestamp, float threshold = 0.001);
 }

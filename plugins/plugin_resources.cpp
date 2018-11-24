@@ -65,12 +65,19 @@ public:
                 continue;
             }
 
-            // Create a set of timestamps which differ from the one reported in the PE header.
-            const auto res_timestamp = utils::dosdate_to_btime(it->get_timestamp());
+            utils::pptime res_timestamp;
+            // Some compilers seem to use posix times as timestamps. Determine which situation we are in.
+            if (utils::is_actually_posix(it->get_timestamp(), pe.get_pe_header()->TimeDateStamp)) {
+                res_timestamp = boost::make_shared<btime::ptime>(boost::posix_time::from_time_t(it->get_timestamp()));
+            }
+            else {
+                res_timestamp = utils::dosdate_to_btime(it->get_timestamp());
+            }
             if (!res_timestamp) { // Ignore un-convertable timestamps.
                 continue;
             }
 
+            // Create a set of timestamps which differ from the one reported in the PE header.
             auto delta = *res_timestamp - pe_timestamp;
             // There might be a slight delta between the PE timestamp and the one found in the resources.
             // Assume nobody will tamper them to fake the compilation date by less than 12 hours.
@@ -100,7 +107,7 @@ public:
             {
                 if (abs(delta.minutes()) == 59 || abs(delta.minutes()) <= 1) {
                     std::stringstream ss;
-                    ss << "The binary may have been compiled on a machine on the UTC" << std::showpos << hours << " timezone.";
+                    ss << "The binary may have been compiled on a machine in the UTC" << std::showpos << hours << " timezone.";
                     res->add_information(ss.str());
                     timezones.insert(hours);
                 }
@@ -197,7 +204,7 @@ public:
 			res->set_summary("The PE is possibly a dropper.");
 		}
 		else if (res->get_information()->size() > 0 && !res->get_summary()) {
-			res->set_summary("The PE contains encrypted or compressed resources.");
+			res->set_summary("The PE's resources present abnormal characteristics.");
 		}
 
 		return res;

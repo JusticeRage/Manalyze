@@ -256,7 +256,7 @@ void dump_exports(const mana::PE& pe, io::OutputFormatter& formatter)
 void dump_resources(const mana::PE& pe, io::OutputFormatter& formatter, bool compute_hashes /* = false */)
 {
 	shared_resources resources = pe.get_resources();
-	if (resources->size() == 0) {
+	if (resources->empty()) {
 		return;
 	}
 
@@ -268,11 +268,17 @@ void dump_resources(const mana::PE& pe, io::OutputFormatter& formatter, bool com
 		res->append(boost::make_shared<io::OutputTreeNode>("Language", *(*it)->get_language()));
         res->append(boost::make_shared<io::OutputTreeNode>("Codepage", *nt::translate_to_flag((*it)->get_codepage(), nt::CODEPAGES)));
 		res->append(boost::make_shared<io::OutputTreeNode>("Size", (*it)->get_size(), io::OutputTreeNode::DEC));
-		res->append(boost::make_shared<io::OutputTreeNode>("TimeDateStamp", *utils::dosdate_to_string((*it)->get_timestamp())));
+        if (utils::is_actually_posix((*it)->get_timestamp(), pe.get_pe_header()->TimeDateStamp)) {
+            res->append(boost::make_shared<io::OutputTreeNode>("TimeDateStamp", *utils::timestamp_to_string((*it)->get_timestamp())));
+        }
+        else {
+            res->append(boost::make_shared<io::OutputTreeNode>("TimeDateStamp", *utils::dosdate_to_string((*it)->get_timestamp())));
+        }
+        
 		res->append(boost::make_shared<io::OutputTreeNode>("Entropy", (*it)->get_entropy()));
 
 		yara::const_matches m = detect_filetype(*it);
-		if (m && m->size() > 0)
+		if (m && !m->empty())
 		{
 			for (auto it2 = m->begin() ; it2 != m->end() ; ++it2) {
 				res->append(boost::make_shared<io::OutputTreeNode>("Detected Filetype", (*it2)->operator[]("description")));

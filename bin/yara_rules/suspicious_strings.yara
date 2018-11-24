@@ -1578,7 +1578,7 @@ rule Misc_Suspicious_Strings
 rule BITS_CLSID
 {
     meta:
-        description = "References the BITS service."
+        description = "References the BITS service"
         author = "Ivan Kwiatkowski (@JusticeRage)"
         // The BITS service seems to be used heavily by EquationGroup.
     strings:
