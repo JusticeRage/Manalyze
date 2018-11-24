@@ -680,7 +680,9 @@ std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, co
 		for (auto it = resources.begin(); it != resources.end(); ++it)
 		{
             auto type = (*it)->get_type();
-			if ((*it)->get_id() == directory->Entries[i]->Id && type && *type == "RT_ICON")
+            // Because there can be duplicate resource IDs, only consider the ones exhibiting the right type.
+			if ((*it)->get_id() == directory->Entries[i]->Id && type &&
+                ((*type == "RT_ICON" && directory->Type == 1) || (*type == "RT_CURSOR" && directory->Type == 2)))
 			{
 				icon = *it;
 				break;
