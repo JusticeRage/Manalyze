@@ -194,7 +194,9 @@ void dump_section_table(const mana::PE& pe, io::OutputFormatter& formatter, bool
 		section_node->append(boost::make_shared<io::OutputTreeNode>("NumberOfLineNumbers", (*it)->get_number_of_line_numbers()));
 		section_node->append(boost::make_shared<io::OutputTreeNode>("NumberOfRelocations", (*it)->get_number_of_relocations()));
 		section_node->append(boost::make_shared<io::OutputTreeNode>("Characteristics", *nt::translate_to_flags((*it)->get_characteristics(), nt::SECTION_CHARACTERISTICS)));
-		section_node->append(boost::make_shared<io::OutputTreeNode>("Entropy", (*it)->get_entropy()));
+        if ((*it)->get_size_of_raw_data()) {
+            section_node->append(boost::make_shared<io::OutputTreeNode>("Entropy", (*it)->get_entropy()));
+        }
 
 		section_list->append(section_node);
 	}

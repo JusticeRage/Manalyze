@@ -28,6 +28,8 @@ script:
   - bin/hash-library-test
 after_success:
   - git clone https://github.com/radare/radare2-regressions.git
-  - bin/manalyze -r radare2-regressions/bins/pe/
-  - bin/manalyze -r radare2-regressions/bins/
-  - coveralls --exclude external/yara --exclude test --exclude plugins/plugin_virustotal/json_spirit --gcov gcov-4.8
+  # Run Manalyze on r2's problematic binaries with all plugins except ClamAV and VirusTotal:
+  - bin/manalyze -r radare2-regressions/bins/pe/ >/dev/null 2>&1
+  - bin/manalyze -r radare2-regressions/bins/fuzzed/ -ojson >/dev/null 2>&1
+  - bin/manalyze -d all -p all test/testfiles/manatest*
+  - coveralls --exclude external/yara --exclude test --exclude plugins/plugin_virustotal/json_spirit --exclude examples --exclude radare2-regressions --gcov gcov-4.8 >/dev/null
