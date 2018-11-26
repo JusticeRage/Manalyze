@@ -100,7 +100,7 @@ bool PE::_parse_import_lookup_table(unsigned int offset, pImportedLibrary librar
         }
 
         // Verify that the import is not already in the list (avoid parsing loops)
-        auto found = std::find_if(imports->begin(), imports->end(), [import](const auto& it)->bool
+        auto found = std::find_if(imports->begin(), imports->end(), [import](const pimport_lookup_table& it)->bool
 		{
 		    return import->AddressOfData == it->AddressOfData &&
                    import->Hint == it->Hint &&
