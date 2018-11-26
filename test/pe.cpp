@@ -389,6 +389,25 @@ BOOST_AUTO_TEST_CASE(parse_delayed_imports)
 
 // ----------------------------------------------------------------------------
 
+BOOST_AUTO_TEST_CASE(parse_overlay)
+{
+    mana::PE pe("testfiles/manatest3.exe");
+    auto overlay = pe.get_overlay_bytes();
+    BOOST_ASSERT(overlay);
+    std::string s(overlay->begin(), overlay->end());
+    BOOST_CHECK_EQUAL(s, "Overlay Bytes :)");
+
+    overlay = pe.get_overlay_bytes(8);
+    BOOST_ASSERT(overlay);
+    std::string s2(overlay->begin(), overlay->end());
+    BOOST_CHECK_EQUAL(s2, "Overlay ");
+
+    overlay = pe.get_overlay_bytes(0);
+    BOOST_ASSERT(!overlay);
+}
+
+// ----------------------------------------------------------------------------
+
 BOOST_AUTO_TEST_CASE(parse_rich_header)
 {
 	mana::PE pe("testfiles/manatest.exe");

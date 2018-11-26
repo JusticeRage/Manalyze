@@ -113,7 +113,7 @@ shared_bytes PE::get_raw_bytes(size_t size) const
 
 shared_bytes PE::get_overlay_bytes(size_t size) const
 {
-    if (_file_handle == nullptr || !_ioh) {
+    if (_file_handle == nullptr || !_ioh || size == 0) {
         return nullptr;
     }
 

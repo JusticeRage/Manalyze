@@ -67,6 +67,7 @@ bool PE::_parse_import_lookup_table(unsigned int offset, pImportedLibrary librar
 		return false;
 	}
 
+    auto imports = library->get_imports();
 	while (true) // We stop at the first NULL IMPORT_LOOKUP_TABLE
 	{
 		pimport_lookup_table import = boost::make_shared<import_lookup_table>();
@@ -74,7 +75,7 @@ bool PE::_parse_import_lookup_table(unsigned int offset, pImportedLibrary librar
 		import->Hint = 0;
 
 		// The field has a size of 8 for x64 PEs
-		int size_to_read = (get_architecture() == x86 ? 4 : 8);
+		unsigned int size_to_read = (get_architecture() == x86 ? 4 : 8);
 		if (size_to_read != fread(&(import->AddressOfData), 1, size_to_read, _file_handle.get()))
 		{
 			PRINT_ERROR << "Could not read the IMPORT_LOOKUP_TABLE." << std::endl;
@@ -89,6 +90,30 @@ bool PE::_parse_import_lookup_table(unsigned int offset, pImportedLibrary librar
 		if (!_parse_hint_name_table(import)) {
 			return false;
 		}
+
+        // Verify that the number of imports is sane:
+        if (imports->size() > 10000) 
+        {
+            PRINT_ERROR << "Gave up on parsing the import table after reading 10000 entries! This PE was almost certainly crafted manually!"
+                        << DEBUG_INFO_INSIDEPE << std::endl;
+            return false;
+        }
+
+        // Verify that the import is not already in the list (avoid parsing loops)
+        auto found = std::find_if(imports->begin(), imports->end(), [import](const auto& it)->bool
+		{
+		    return import->AddressOfData == it->AddressOfData &&
+                   import->Hint == it->Hint &&
+                   import->Name == it->Name;
+		});
+
+
+        if (found != imports->end()) 
+        {
+            PRINT_ERROR << "Read the same import twice! This PE was almost certainly crafted manually!" 
+                        << DEBUG_INFO_INSIDEPE << std::endl;
+            return false;
+        }
 
 		library->add_import(import);
 	}
@@ -168,7 +193,7 @@ bool PE::_parse_imports()
 		{
 			// Non fatal. Stop trying to parse imports, but the ones already read will still be available.
 			if ((*it)->get_name() != nullptr) {
-				PRINT_WARNING << "An error occurred while trying to read functions imported by " << *(*it)->get_name()
+				PRINT_WARNING << "An error occurred while trying to read functions imported by module " << *(*it)->get_name()
 							  << "." << DEBUG_INFO_INSIDEPE << std::endl;
 			}
 			return true;

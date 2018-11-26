@@ -27,4 +27,7 @@ script:
   - bin/manalyze-tests
   - bin/hash-library-test
 after_success:
+  - git clone https://github.com/radare/radare2-regressions.git
+  - bin/manalyze -r radare2-regressions/bins/pe/
+  - bin/manalyze -r radare2-regressions/bins/
   - coveralls --exclude external/yara --exclude test --exclude plugins/plugin_virustotal/json_spirit --gcov gcov-4.8
