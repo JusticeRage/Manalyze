@@ -241,6 +241,10 @@ void dump_exports(const mana::PE& pe, io::OutputFormatter& formatter)
 	for (auto it = exports->begin() ; it != exports->end() ; ++it)
 	{
 		// TODO: Demangle C++ names here
+        auto name = (*it)->Name;
+        if (name.empty()) {
+            name = "(Unnamed function)";
+        }
 		io::pNode ex(new io::OutputTreeNode((*it)->Name, io::OutputTreeNode::LIST));
 		ex->append(boost::make_shared<io::OutputTreeNode>("Ordinal", (*it)->Ordinal));
 		ex->append(boost::make_shared<io::OutputTreeNode>("Address", (*it)->Address, io::OutputTreeNode::HEX));

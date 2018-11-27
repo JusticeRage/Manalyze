@@ -56,7 +56,7 @@ public:
 	 *	@param	summary The summary to set if there is a match.
 	 *	@param	level The threat level to set if there is a match.
 	 *	@param	meta_field_name The meta field name (of the yara rule) to query to
-	 *									   extract results.
+	 *							extract results.
 	 *	@param	show_strings Adds the matched strings/patterns to the result.
 	 *	@param	callback A post-processing function to accept or reject matches.
 	 *
@@ -93,7 +93,7 @@ public:
 				}
 
 				found_valid = true;
-				if (!show_strings) {
+				if (!show_strings || (it->operator[]("show_strings") == "false")) {
 					res->add_information(it->operator[](meta_field_name));
 				}
 				else

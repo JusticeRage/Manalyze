@@ -665,41 +665,43 @@ bool PE::_parse_exports()
 		return false;
 	}
 
-	if (ied.Characteristics != 0) {
+    _ied.reset(ied);
+
+	if (_ied->Characteristics != 0) {
 		PRINT_WARNING << "IMAGE_EXPORT_DIRECTORY field Characteristics is reserved and should be 0!"
 					  << DEBUG_INFO_INSIDEPE << std::endl; // TODO: Move to structural plugin?
 	}
-	if (ied.NumberOfFunctions == 0) {
+	if (_ied->NumberOfFunctions == 0) {
 		return true; // No exports
 	}
 
 	// Read the export name
-	unsigned int offset = rva_to_offset(ied.Name);
-	if (!offset || !utils::read_string_at_offset(_file_handle.get(), offset, ied.NameStr))
+	unsigned int offset = rva_to_offset(_ied->Name);
+	if (!offset || !utils::read_string_at_offset(_file_handle.get(), offset, _ied->NameStr))
 	{
 		PRINT_ERROR << "Could not read the exported DLL name." << DEBUG_INFO_INSIDEPE << std::endl;
-		return false;
+		return true;
 	}
 
 	// Get the address and ordinal of each exported function
-	offset = rva_to_offset(ied.AddressOfFunctions);
+	offset = rva_to_offset(_ied->AddressOfFunctions);
 	if (!offset || fseek(_file_handle.get(), offset, SEEK_SET))
 	{
 		PRINT_ERROR << "Could not reach exported functions address table."
 					<< DEBUG_INFO_INSIDEPE << std::endl;
-		return false;
+		return true;
 	}
 
-	for (unsigned int i = 0 ; i < ied.NumberOfFunctions ; ++i)
+	for (unsigned int i = 0 ; i < _ied->NumberOfFunctions ; ++i)
 	{
 		pexported_function ex = boost::make_shared<exported_function>();
 		if (4 != fread(&(ex->Address), 1, 4, _file_handle.get()))
 		{
 			PRINT_ERROR << "Could not read an exported function's address."
 						<< DEBUG_INFO_INSIDEPE << std::endl;
-			return false;
+			return true;
 		}
-		ex->Ordinal = ied.Base + i;
+		ex->Ordinal = _ied->Base + i;
 
 		// If the address is located in the export directory, then it is a forwarded export.
 		image_data_directory export_dir = _ioh->directories[IMAGE_DIRECTORY_ENTRY_EXPORT];
@@ -709,12 +711,16 @@ bool PE::_parse_exports()
 			if (!offset || !utils::read_string_at_offset(_file_handle.get(), offset, ex->ForwardName))
 			{
 				PRINT_ERROR << "Could not read a forwarded export name." << DEBUG_INFO_INSIDEPE << std::endl;
-				return false;
+				return true;
 			}
 		}
 
 		_exports.push_back(ex);
 	}
+
+    if (_ied->NumberOfNames == 0) {
+        return true;
+    }
 
 	// Associate possible exported names with the RVAs we just obtained. First, read the name and ordinal table.
 	boost::scoped_array<boost::uint32_t> names;
@@ -722,52 +728,50 @@ bool PE::_parse_exports()
 	try
 	{
 		// ied.NumberOfNames is an untrusted value. Allocate in a try-catch block to prevent crashes. See issue #1.
-		names.reset(new boost::uint32_t[ied.NumberOfNames]);
-		ords.reset(new boost::uint16_t[ied.NumberOfNames]);
+		names.reset(new boost::uint32_t[_ied->NumberOfNames]);
+		ords.reset(new boost::uint16_t[_ied->NumberOfNames]);
 	}
 	catch (const std::bad_alloc&)
 	{
 		PRINT_ERROR << "Could not allocate an array big enough to hold exported name RVAs. This PE may have been manually crafted."
 					<< DEBUG_INFO_INSIDEPE << std::endl;
-		return false;
+		return true;
 	}
-	offset = rva_to_offset(ied.AddressOfNames);
+	offset = rva_to_offset(_ied->AddressOfNames);
 	if (!offset || fseek(_file_handle.get(), offset, SEEK_SET))
 	{
 		PRINT_ERROR << "Could not reach exported function's name table." << DEBUG_INFO_INSIDEPE << std::endl;
-		return false;
+		return true;
 	}
 
-	if (ied.NumberOfNames * sizeof(boost::uint32_t) != fread(names.get(), 1, ied.NumberOfNames * sizeof(boost::uint32_t), _file_handle.get()))
+	if (_ied->NumberOfNames * sizeof(boost::uint32_t) != fread(names.get(), 1, _ied->NumberOfNames * sizeof(boost::uint32_t), _file_handle.get()))
 	{
 		PRINT_ERROR << "Could not read an exported function's name address." << DEBUG_INFO_INSIDEPE << std::endl;
-		return false;
+		return true;
 	}
 
-	offset = rva_to_offset(ied.AddressOfNameOrdinals);
+	offset = rva_to_offset(_ied->AddressOfNameOrdinals);
 	if (!offset || fseek(_file_handle.get(), offset, SEEK_SET))
 	{
 		PRINT_ERROR << "Could not reach exported functions NameOrdinals table." << DEBUG_INFO_INSIDEPE << std::endl;
-		return false;
+		return true;
 	}
-	if (ied.NumberOfNames * sizeof(boost::uint16_t) != fread(ords.get(), 1, ied.NumberOfNames * sizeof(boost::uint16_t), _file_handle.get()))
+	if (_ied->NumberOfNames * sizeof(boost::uint16_t) != fread(ords.get(), 1, _ied->NumberOfNames * sizeof(boost::uint16_t), _file_handle.get()))
 	{
 		PRINT_ERROR << "Could not read an exported function's name ordinal." << DEBUG_INFO_INSIDEPE << std::endl;
-		return false;
+		return true;
 	}
 
 	// Now match the names with with the exported addresses.
-	for (unsigned int i = 0 ; i < ied.NumberOfNames ; ++i)
+	for (unsigned int i = 0 ; i < _ied->NumberOfNames ; ++i)
 	{
 		offset = rva_to_offset(names[i]);
 		if (!offset || ords[i] >= _exports.size() || !utils::read_string_at_offset(_file_handle.get(), offset, _exports.at(ords[i])->Name))
 		{
 			PRINT_ERROR << "Could not match an export name with its address!" << DEBUG_INFO_INSIDEPE << std::endl;
-			return false;
+			return true;
 		}
 	}
-
-	_ied.reset(ied);
 	return true;
 }
 

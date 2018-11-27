@@ -1578,8 +1578,9 @@ rule Misc_Suspicious_Strings
 rule BITS_CLSID
 {
     meta:
-        description = "References the BITS service"
+        description = "References the BITS service."
         author = "Ivan Kwiatkowski (@JusticeRage)"
+		show_strings = "false"
         // The BITS service seems to be used heavily by EquationGroup.
     strings:
         $uuid_background_copy_manager_1_5 =     { 1F 77 87 F0 4F D7 1A 4C BB 8A E1 6A CA 91 24 EA }
@@ -1595,4 +1596,49 @@ rule BITS_CLSID
         $uuid_background_copy_callback =        { C7 99 EA 97 86 01 D4 4A 8D F9 C5 B4 E0 ED 6B 22 }
     condition:
         any of them
+}
+
+rule Mimikatz
+{
+	meta:
+		description = "Contains code from Mimikatz."
+		author = "Ivan Kwiatkowski (@JusticeRage)"
+		show_strings = "false"
+	strings:
+		$x64_W2K3_SecData =    { 48 8d 6e 30 48 8d 0d }
+		$x64_W2K8_SecData =    { 48 8d 94 24 b0 00 00 00 48 8d 0d }
+		$x64_W2K12_SecData =   { 4c 8d 85 30 01 00 00 48 8d 15 }
+		$x64_W2K12R2_SecData = { 0f b6 4c 24 30 85 c0 0f 45 cf 8a c1 }
+		$x64_WI52_SysCred =    { b9 14 00 00 00 f3 aa 48 8d 3d }
+		$x64_WI60_SysCred =    { 48 8b ca f3 aa 48 8d 3d }
+		$x64_WI61_SysCred =    { 8b ca f3 aa 48 8d 3d }
+		$x86_W2K3_SecData =    { 53 56 8d 45 98 50 b9 }
+		$x86_W2K8_SecData =    { 8b 45 14 83 c0 18 50 b9 }
+		$x86_WI51_SysCred =    { 00 ab 33 c0 bf }
+		$x86_WI52_SysCred =    { 59 33 d2 88 10 40 49 75 }
+		$x86_WI60_SysCred =    { 6a 14 59 b8 }
+		$x86_WI62_SysCred =    { 6a 14 5a 8b f2 b9 }
+		$x86_WI63_SysCred =    { 6a 14 59 8b d1 b8 }
+	condition:
+		all of ($x64_*) or all of ($x86_*)
+}
+
+rule Mimikatz_2
+{
+	meta:
+		description = "Contains strings from Mimikatz"
+		author = "Ivan Kwiatkowski (@JusticeRage)"
+	strings:
+		$primary = "Primary" fullword
+		$credentialkeys = "CredentialKeys" fullword
+		$bcrypt1 = "BCryptCloseAlgorithmProvider" fullword
+		$bcrypt2 = "BCryptDestroyKey" fullword
+		$bcrypt3 = "BCryptDecrypt" fullword
+		$bcrypt4 = "BCryptEncrypt" fullword
+		$bcrypt5 = "BCryptGenerateSymmetricKey" fullword
+		$bcrypt6 = "BCryptGetProperty" fullword
+		$bcrypt7 = "BCryptSetProperty" fullword
+		$bcrypt8 = "BCryptOpenAlgorithmProvider" fullword
+	condition:
+		$primary and $credentialkeys and 5 of ($bcrypt*)
 }
