@@ -295,8 +295,7 @@ void handle_dump_option(io::OutputFormatter& formatter, const std::vector<std::s
 	if (dump_all || std::find(categories.begin(), categories.end(), "summary") != categories.end()) {
 		mana::dump_summary(pe, formatter);
 	}
-	if (dump_all || std::find(categories.begin(), categories.end(), "dos") != categories.end())
-	{
+	if (dump_all || std::find(categories.begin(), categories.end(), "dos") != categories.end())	{
 		mana::dump_dos_header(pe, formatter);
 	}
 	if (dump_all || std::find(categories.begin(), categories.end(), "pe") != categories.end()) {
@@ -356,7 +355,7 @@ void handle_plugins_option(io::OutputFormatter& formatter,
 	std::vector<plugin::pIPlugin> plugins = plugin::PluginManager::get_instance().get_plugins();
 	io::pNode plugins_node(new io::OutputTreeNode("Plugins", io::OutputTreeNode::LIST));
 
-	for (std::vector<plugin::pIPlugin>::iterator it = plugins.begin() ; it != plugins.end() ; ++it)
+	for (auto it = plugins.begin() ; it != plugins.end() ; ++it)
 	{
 		// Verify that the plugin was selected
 		if (!all_plugins && std::find(selected.begin(), selected.end(), *(*it)->get_id()) == selected.end()) {
@@ -484,9 +483,9 @@ void perform_analysis(const std::string& path,
 			yara::const_matches m = y.scan_file(*pe.get_path());
 			if (m && m->size() > 0)
 			{
-				std::cerr << "Detected file type(s):" << std::endl;
+				std::cerr << "Detected file type(s):\t" << std::endl;
 				for (auto it = m->begin() ; it != m->end() ; ++it) {
-					std::cerr << "\t" << (*it)->operator[]("description") << std::endl;
+					std::cerr << (*it)->operator[]("description") << std::endl;
 				}
 			}
 		}

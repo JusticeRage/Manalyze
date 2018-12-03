@@ -34,4 +34,5 @@ after_success:
   - bin/manalyze -r radare2-regressions/bins/fuzzed/ -ojson >/dev/null 2>&1
   - bin/manalyze -d all -p all --hashes --extract /tmp/ test/testfiles/manatest.exe test/testfiles/manatest2.exe >/dev/null
   - bin/manalyze -d all -p all --hashes -o json test/testfiles/manatest3.exe >/dev/null
-  - coveralls --exclude external/yara --exclude test --exclude plugins/plugin_virustotal/json_spirit --exclude examples --exclude radare2-regressions --gcov gcov-4.8 >/dev/null
+  # The VT plugin is excluded as testing it properly would require commiting API keys.
+  - coveralls --exclude external/yara --exclude test --exclude plugins/plugin_virustotal/ --exclude examples --exclude radare2-regressions --gcov gcov-4.8 >/dev/null
