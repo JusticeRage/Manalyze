@@ -62,7 +62,7 @@ public:
 			return res;
 		}
         yara::const_matches matches = y.scan_bytes(*overlay_bytes);
-        if (!matches->empty())
+        if (matches && !matches->empty())
         {
             for (size_t i = 0; i < matches->size(); ++i)
             {

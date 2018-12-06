@@ -147,13 +147,13 @@ public:
 		{
 			// In some packed executables, resources still keep their original file size, which causes
 			// them to become bigger than the file itself. Disregard those cases when they happen
-			// because they make the resource to filesize rario bigger than 1. 
+			// because they make the resource to filesize ratio bigger than 1. 
 			// These cases will be reported by the packer detection plugin.
 			if (it->get_size() < pe.get_filesize()) {
 				size += it->get_size();
 			}
 			yara::const_matches matches = y.scan_bytes(*it->get_raw_data());
-			if (!matches->empty())
+			if (matches && !matches->empty())
 			{
 				for (size_t i = 0 ; i < matches->size() ; ++i)
 				{

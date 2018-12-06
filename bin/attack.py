@@ -12,7 +12,8 @@ from collections import OrderedDict
 mapping = {
     # Plugin Imports
     "Code injection capabilities":                          [("Defense Evasion", "Process Injection")],
-    "Code injection capabilities (process hollowing)":      [("Defense Evasion", "Process Injection")],
+    "Code injection capabilities (process hollowing)":      [("Defense Evasion", "Process Injection"),
+                                                             ("Defense Evasion", "Process Hollowing")],
     "Manipulates other processes":                          [("Discovery", "Process Discovery"),
                                                              ("Defense Evasion", "Process Injection")],
     "Code injection capabilities (PowerLoader)":            [("Defense Evasion", "Extra Window Memory Injection"),

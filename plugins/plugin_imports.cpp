@@ -33,8 +33,7 @@ enum REQUIREMENT { AT_LEAST_ONE = 1, AT_LEAST_TWO = 2, AT_LEAST_THREE = 3 };
 std::string anti_debug =
 	"FindWindow(A|W)|(Zw|Nt)QuerySystemInformation|DbgBreakPoint|DbgPrint|"
 	"CheckRemoteDebuggerPresent|CreateToolhelp32Snapshot|Toolhelp32ReadProcessMemory|"
-	"OutputDebugString|SwitchToThread|NtQueryInformationProcess|"	// Standard anti-debug API calls
-	"QueryPerformanceCounter";	// Techniques based on timing. GetTickCount ignored (too many false positives)
+	"OutputDebugString|SwitchToThread|NtQueryInformationProcess";	// Standard anti-debug API calls
 
 std::string vanilla_injection = "(Nt)?VirtualAlloc.*|(Nt)?WriteProcessMemory|CreateRemoteThread(Ex)?|(Nt)?OpenProcess";
 
