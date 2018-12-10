@@ -1642,3 +1642,14 @@ rule Mimikatz_2
 	condition:
 		$primary and $credentialkeys and 5 of ($bcrypt*)
 }
+
+rule MiningPool
+{
+    meta:
+        description = "Contains references to mining pools"
+        author = "Ivan Kwiatkowski (@JusticeRage), based on an idea from @__Emilien__"
+    strings:
+        $stratum = /stratum\+tcp:\/\/[A-Za-z0-9-.:]*/
+    condition:
+        $stratum
+}

@@ -31,7 +31,6 @@ namespace plugin
 
 
 typedef boost::shared_ptr<std::string> pString;
-typedef boost::shared_ptr<std::vector<std::string> > pInformation;
 
 /**
  *	@brief	Represents the result of a PE analysis, as returned by plugins.
@@ -100,6 +99,12 @@ public:
 	 */
 	DECLSPEC_MANACOMMONS io::pNode get_information() const;
 
+	/**
+	 * @brief	Combines the information of target result with this one.
+	 * @param res	The result containing the information to merge.
+	 */
+	DECLSPEC_MANACOMMONS void merge(const Result& res);
+
 private:
 	// Constructor is made private, so only IPlugin::make_result() calls it.
 	DECLSPEC_MANACOMMONS Result(const std::string& plugin_name);
@@ -119,6 +124,6 @@ typedef boost::shared_ptr<Result> pResult;
 *	@brief	Template specialization for io::pNodes.
 */
 template<>
-	DECLSPEC_MANACOMMONS void Result::add_information(io::pNode node);
+DECLSPEC_MANACOMMONS void Result::add_information(io::pNode node);
 
 } // !namespace plugin

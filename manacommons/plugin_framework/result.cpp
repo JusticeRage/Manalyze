@@ -120,6 +120,24 @@ io::pNode Result::get_information() const
 
 // ----------------------------------------------------------------------------
 
+void Result::merge(const Result& res)
+{
+	raise_level(res.get_level());
+	auto info = res.get_information();
+	if (!info) {
+		return;
+	}
+	auto children = info->get_children();
+	if (!children) {
+		return;
+	}
+	for (auto child : *children) {
+		add_information(child);
+	}
+}
+
+// ----------------------------------------------------------------------------
+
 std::string Result::_create_node_name() const
 {
 	std::stringstream ss;

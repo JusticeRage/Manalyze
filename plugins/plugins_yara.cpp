@@ -23,7 +23,7 @@
 #undef get_object
 
 // Used to validate bitcoin addresses.
-#include "hash-library/bitcoin.h"
+#include "hash-library/cryptocurrency.h"
 
 #include "plugin_framework/plugin_interface.h"
 #include "plugin_framework/auto_register.h"
@@ -347,21 +347,37 @@ public:
 
 // ----------------------------------------------------------------------------
 
-class FindBTCAddressPlugin : public YaraPlugin
+class CryptoCurrencyAddress : public YaraPlugin
 {
 public:
-	FindBTCAddressPlugin() : YaraPlugin("yara_rules/bitcoin.yara") {}
+	CryptoCurrencyAddress() : YaraPlugin("yara_rules/bitcoin.yara") {}
 
-	pResult analyze(const mana::PE& pe) override {
-		return scan(pe, "This program may be a ransomware.", MALICIOUS, "description", true, hash::test_btc_address);
+	pResult analyze(const mana::PE& pe) override
+	{
+		auto btc = scan(pe, "This program may be a ransomware.", MALICIOUS, "description", true, hash::test_btc_address);
+		_rule_file = "yara_rules/monero.yara";
+		auto monero = scan(pe, "This program may be a miner.", MALICIOUS, "description", true, hash::test_xmr_address);
+
+		// If one of the plugins didn't return anything, return the output of the other one (which may be empty too).
+		if (!btc || !btc->get_output()) {
+			return monero;
+		}
+		else if (!monero || !monero->get_output()) {
+			return btc;
+		}
+
+		// Otherwise, merge the results.
+		btc->set_summary("This program contains valid cryptocurrency addresses.");
+		btc->merge(*monero);
+		return btc;
 	}
 
 	boost::shared_ptr<std::string> get_id() const override {
-		return boost::make_shared<std::string>("btcaddress");
+		return boost::make_shared<std::string>("cryptoaddress");
 	}
 
 	boost::shared_ptr<std::string> get_description() const override {
-		return boost::make_shared<std::string>("Looks for valid Bitcoin addresses in the binary.");
+		return boost::make_shared<std::string>("Looks for valid BTC / XMR addresses in the binary.");
 	}
 };
 
@@ -374,6 +390,6 @@ AutoRegister<CompilerDetectionPlugin> auto_register_compiler;
 AutoRegister<PEiDPlugin> auto_register_peid;
 AutoRegister<SuspiciousStringsPlugin> auto_register_strings;
 AutoRegister<FindCryptPlugin> auto_register_findcrypt;
-AutoRegister<FindBTCAddressPlugin> auto_register_btcaddress;
+AutoRegister<CryptoCurrencyAddress> auto_register_cryptoaddress;
 
 }

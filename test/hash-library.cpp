@@ -20,7 +20,7 @@
 
 #include "hash-library/hashes.h"
 #include "hash-library/ssdeep.h"
-#include "hash-library/bitcoin.h"
+#include "hash-library/cryptocurrency.h"
 #include "fixtures.h"
 
 BOOST_AUTO_TEST_CASE(hash_phrase)
@@ -34,6 +34,7 @@ BOOST_AUTO_TEST_CASE(hash_phrase)
 	BOOST_CHECK_EQUAL("d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592", hashes->at(ALL_DIGESTS_SHA256));
 	BOOST_CHECK_EQUAL("07e547d9586f6a73f73fbac0435ed76951218fb7d0c8d788a309d785436bbb642e93a252a954f23912547d1e8a3b5ed6e1bfd7097821233fa0538f3db854fee6", hashes->at(ALL_DIGESTS_SHA512));
 	BOOST_CHECK_EQUAL("69070dda01975c8c120c3aada1b282394e7f032fa9cf32f4cb2259a0897dfc04", hashes->at(ALL_DIGESTS_SHA3));
+	BOOST_CHECK_EQUAL("4d741b6f1eb29cb2a9b9911c82f56fa8d73b04959d3d9d222895df6c0b28aa15", hashes->at(ALL_DIGESTS_KECCAK));
 }
 
 // ----------------------------------------------------------------------------
@@ -48,6 +49,7 @@ BOOST_AUTO_TEST_CASE(null_hash)
 	BOOST_CHECK_EQUAL("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", hashes->at(ALL_DIGESTS_SHA256));
 	BOOST_CHECK_EQUAL("cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e", hashes->at(ALL_DIGESTS_SHA512));
 	BOOST_CHECK_EQUAL("a7ffc6f8bf1ed76651c14756a061d662f580ff4de43b49fa82d80a4b80f8434a", hashes->at(ALL_DIGESTS_SHA3));
+    BOOST_CHECK_EQUAL("c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470", hashes->at(ALL_DIGESTS_KECCAK));
 }
 
 BOOST_AUTO_TEST_CASE(SHA512TEST)
@@ -86,11 +88,24 @@ BOOST_AUTO_TEST_CASE(ssdeep_hash_buffer)
 BOOST_AUTO_TEST_CASE(btc_test_address)
 {
 	BOOST_CHECK(hash::test_btc_address("19wFVDUWhrjRe3rPCsokhcf1w9Stj3Sr6K"));
-	BOOST_CHECK(hash::test_btc_address("19wFVDUWhrjRe3rPCsokhcf1w9Stj3Sr6A") == false);
+	BOOST_CHECK(!hash::test_btc_address("19wFVDUWhrjRe3rPCsokhcf1w9Stj3Sr6A"));
 	BOOST_CHECK(hash::test_btc_address("1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2"));
 	BOOST_CHECK(hash::test_btc_address("3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy"));
-	BOOST_CHECK(hash::test_btc_address("") == false);
-	BOOST_CHECK(hash::test_btc_address("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") == false);
+	BOOST_CHECK(!hash::test_btc_address(""));
+	BOOST_CHECK(!hash::test_btc_address("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+}
+
+// ----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(xmr_test_address)
+{
+    BOOST_CHECK(hash::test_xmr_address("475NqVg9G3a5TC1NQvj5etELipZXP9r9T9JsvxK6LV39Xs3ZbqbmaXPbtK8bQxkWhPGd2m1Ab89XVETQVe3g9KYpJg3KPrL"));
+	BOOST_CHECK(!hash::test_xmr_address("475NqVg9G3a5TC1NQvj5etELipZXP9r9T9JsvxK6LV39Xs3ZbqbmaXPbtK8bQxkWhPGd2m1Ab89XVETQVe3g9KYpJg3KPrM"));
+	BOOST_CHECK(!hash::test_xmr_address("375NqVg9G3a5TC1NQvj5etELipZXP9r9T9JsvxK6LV39Xs3ZbqbmaXPbtK8bQxkWhPGd2m1Ab89XVETQVe3g9KYpJg3KPrL"));
+	BOOST_CHECK(hash::test_xmr_address("49RE83FnhxQdDdqK2Ac6REU5qNe9hZBuFKydsg9cH86353MjB4bhqAuNB4Wj8gubEfAcus349NnGkWuwoAv7gXMQNqGP1G6"));
+	BOOST_CHECK(hash::test_xmr_address("42xi8beBHWbARKEL29RJVTCJVfuqHPb7MR44b2Vf9tteRX3qSKyiaeKE2aSiNR5Adi2dtrZQfXQ1y2Mjd9hDVXB4Fzg5TU8"));
+	BOOST_CHECK(!hash::test_xmr_address(""));
+	BOOST_CHECK(!hash::test_xmr_address("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
 }
 
 // ----------------------------------------------------------------------------
@@ -139,6 +154,7 @@ BOOST_AUTO_TEST_CASE(hash_phrase_file)
     BOOST_CHECK_EQUAL("d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592", hashes->at(ALL_DIGESTS_SHA256));
 	BOOST_CHECK_EQUAL("07e547d9586f6a73f73fbac0435ed76951218fb7d0c8d788a309d785436bbb642e93a252a954f23912547d1e8a3b5ed6e1bfd7097821233fa0538f3db854fee6", hashes->at(ALL_DIGESTS_SHA512));
     BOOST_CHECK_EQUAL("69070dda01975c8c120c3aada1b282394e7f032fa9cf32f4cb2259a0897dfc04", hashes->at(ALL_DIGESTS_SHA3));
+    BOOST_CHECK_EQUAL("4d741b6f1eb29cb2a9b9911c82f56fa8d73b04959d3d9d222895df6c0b28aa15", hashes->at(ALL_DIGESTS_KECCAK));
 }
 
 // ----------------------------------------------------------------------------
@@ -151,6 +167,7 @@ BOOST_AUTO_TEST_CASE(null_hash_file)
     BOOST_CHECK_EQUAL("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", hashes->at(ALL_DIGESTS_SHA256));
     BOOST_CHECK_EQUAL("cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e", hashes->at(ALL_DIGESTS_SHA512));
     BOOST_CHECK_EQUAL("a7ffc6f8bf1ed76651c14756a061d662f580ff4de43b49fa82d80a4b80f8434a", hashes->at(ALL_DIGESTS_SHA3));
+    BOOST_CHECK_EQUAL("c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470", hashes->at(ALL_DIGESTS_KECCAK));
 }
 
 // ----------------------------------------------------------------------------

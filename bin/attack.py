@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # Manalyzer output to ATT&CK mapping
 # Created by Ronan Mouchoux, Daniel Creus and Ivan Kwiatkowski for BotConf 2018.
@@ -105,11 +106,14 @@ mapping = {
                                                              ("Adversary OPSEC", "Obfuscation or cryptography"),
                                                              ("Adversary OPSEC", "Obfuscate or encrypt code")],
     "References the BITS service":                          [("Defense Evasion", "BITS Jobs")],
+    "Contains references to mining pools":                  [("Adversary OPSEC", "Non-traditional or less attributable payment options")],
 
     # Plugin Findcrypt
     "Cryptographic algorithms detected in the binary":      [("Adversary OPSEC", "Obfuscate or encrypt code")],
     "Libraries used to perform cryptographic operations":   [("Adversary OPSEC", "Obfuscate or encrypt code")],
-    "Contains a valid Bitcoin address":                     [("Adversary OPSEC", "Non-traditional or less attributable payment options")],
+
+    # Plugin CryptoAddress
+    "Contains a valid (Bitcoin|Monero) address":            [("Adversary OPSEC", "Non-traditional or less attributable payment options")],
 
     # Plugin authenticode
     "The PE's digital signature has been explicitly blacklisted.":

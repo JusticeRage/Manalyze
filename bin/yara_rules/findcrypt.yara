@@ -454,3 +454,14 @@ rule TEA
 	condition:
 		all of them
 }
+
+rule Base58
+{
+	meta:
+		description = "Uses constants related to base58"
+		author = "Ivan Kwiatkowski (@JusticeRage)"
+	strings:
+		$alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+	condition:
+		all of them
+}
