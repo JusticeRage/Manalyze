@@ -238,8 +238,16 @@ void dump_exports(const mana::PE& pe, io::OutputFormatter& formatter)
 	}
 
 	io::pNode exports_list(new io::OutputTreeNode("Exports", io::OutputTreeNode::LIST));
+    boost::uint32_t ignored_exports = 0;
 	for (auto it = exports->begin() ; it != exports->end() ; ++it)
 	{
+        // Make sure that the export points to a real RVA. This ensures that bogus tables
+        // do not create an enormous number of entries.
+        if (pe.rva_to_offset((*it)->Address) == 0) {
+            ++ignored_exports;
+            continue;
+        }
+
 		// TODO: Demangle C++ names here
         auto name = (*it)->Name;
         if (name.empty()) {
@@ -254,6 +262,9 @@ void dump_exports(const mana::PE& pe, io::OutputFormatter& formatter)
 		exports_list->append(ex);
 	}
 
+    if (ignored_exports > 0) {
+        PRINT_WARNING << ignored_exports << " invalid export(s) not shown." << std::endl;
+    }
 	formatter.add_data(exports_list, *pe.get_path());
 }
 
