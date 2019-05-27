@@ -24943,6 +24943,7 @@ condition:
 }
 
 
+/* false positive - https://www.zscaler.com/blogs/research/your-windows-8-packed
 rule Armadillo_v1_xx___v2_xx
 {
 meta:
@@ -24953,6 +24954,7 @@ strings:
 condition:
     	$a0 at manape.ep
 }
+*/
 
 
 rule NsPack_2_9____North_Star
