@@ -595,8 +595,7 @@ const std::map<int, std::string> COMP_ID_TYPE =
 
 // ----------------------------------------------------------------------------
 
-// Source for a few of those: https://blogs.msdn.microsoft.com/chuckw/2018/05/07/vs-2017-15-7-update/
-// and linked pages.
+// Source for a few of those: https://walbourn.github.io/
 const flag_dict COMP_ID_PRODID =
     boost::assign::map_list_of  ("VS97 SP3 link 5.10.7303",                    0x1c87)
                                 ("VS97 SP3 cvtres 5.00.1668",                  0x0684)
@@ -668,7 +667,15 @@ const flag_dict COMP_ID_PRODID =
                                 ("VS 2015/2017 runtime 27012",                 0x6984)
                                 ("VS2017 v15.9.2-3 compiler 27024",            0x6990)
                                 ("VS2017 v15.9.4 compiler 27025",              0x6991)
-                                ("VS2017 v15.9.5 compiler 27026",              0x6992)
+                                ("VS2017 v15.9.5-6 compiler 27026",            0x6992)
+                                ("VS2017 v15.9.7-10 compiler 27027",           0x6993)
+                                ("VS2017 v15.9.11 compiler 27030",             0x6996)
+                                ("VS2017 v15.9.12-13 compiler 27031",          0x6997)
+                                ("VS2017 v15.9.14-15 compiler 27032",          0x6998)
+                                ("VS2019 RTM compiler 27508",                  0x6B74)
+                                ("VS2019 Update 1 compiler 27702",             0x6C36)
+                                ("VS 2015/2017/2019 runtime 27821",            0x6CAD)
+                                ("VS2019 Update 2 compiler 27905",             0x6D01)
     ;
 
 // ----------------------------------------------------------------------------

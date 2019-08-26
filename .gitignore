@@ -57,6 +57,7 @@ Makefile
 *.ilk
 *.opendb
 *.db
+*.TMP
 Win32
 Release
 Debug

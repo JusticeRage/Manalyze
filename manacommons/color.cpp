@@ -29,19 +29,35 @@ void set_color(Color c)
 		return;
 	}
 
+	// Save console style on the first call. This is needed as cmd.exe and powershell.exe use different background and text colors.
+	CONSOLE_SCREEN_BUFFER_INFO info;
+	static WORD background = 0xFFFF;
+	static WORD foreground = FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE; // Default to white.
+	if (background == 0xFFFF)
+	{
+		if (!::GetConsoleScreenBufferInfo(h, &info)) {
+			background = 0;  // Default to black.
+		}
+		else 
+		{
+			background = info.wAttributes & (BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_INTENSITY | BACKGROUND_RED);
+			foreground = info.wAttributes & (FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+		}
+	}
+
 	switch(c)
 	{
 	case RED:
-		::SetConsoleTextAttribute(h, 4);
+		::SetConsoleTextAttribute(h, FOREGROUND_INTENSITY | FOREGROUND_RED | background);
 		break;
 	case GREEN:
-		::SetConsoleTextAttribute(h, 2);
+		::SetConsoleTextAttribute(h, FOREGROUND_INTENSITY | FOREGROUND_GREEN | background);
 		break;
 	case YELLOW:
-		::SetConsoleTextAttribute(h, 14);
+		::SetConsoleTextAttribute(h, FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | background);
 		break;
 	case RESET:
-		::SetConsoleTextAttribute(h, 7);
+		::SetConsoleTextAttribute(h, foreground | background);
 		break;
 	}
 
