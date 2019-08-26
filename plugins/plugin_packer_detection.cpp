@@ -31,7 +31,7 @@ namespace plugin {
 
 // Check the section names against a list of known names.
 const std::vector<std::string> common_names = boost::assign::list_of(".text")
-                                                                    (".textnss")
+                                                                    (".textbss")
                                                                     (".data")
                                                                     (".DATA")
                                                                     (".eh_fram")

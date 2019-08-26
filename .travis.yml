@@ -1,23 +1,17 @@
 language: cpp
 sudo: false
+dist: bionic
 addons:
   apt:
-    sources:
-    - boost-latest
-    - ubuntu-toolchain-r-test
     packages:
-    - libboost-regex1.55-dev
-    - libboost-program-options1.55-dev
-    - libboost-system1.55-dev
-    - libboost-filesystem1.55-dev
-    - libboost-test1.55-dev
+    - libboost-regex-dev
+    - libboost-program-options-dev
+    - libboost-system-dev
+    - libboost-filesystem-dev
+    - libboost-test-dev
     - libssl-dev
-    - gcc-4.8
-    - g++-4.8
 compiler:
   - gcc
-install:
-  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
 before_script:
   - cmake . -DTests=ON -DCMAKE_BUILD_TYPE=Debug
   - pip install --user cpp-coveralls
@@ -29,8 +23,8 @@ script:
   - bin/hash-library-test
 after_success:
   - git clone https://github.com/radare/radare2-regressions.git
-  # Run Manalyze on r2's problematic binaries with all plugins except ClamAV and VirusTotal:
-  - bin/manalyze -r radare2-regressions/bins/pe/ >/dev/null 2>&1
+  # Run Manalyze on r2's problematic binaries
+  - travis_wait 30 bin/manalyze -r radare2-regressions/bins/pe/ >/dev/null 2>&1
   - bin/manalyze -r radare2-regressions/bins/fuzzed/ -ojson >/dev/null 2>&1
   - bin/manalyze -d all -p all --hashes --extract /tmp/ test/testfiles/manatest.exe test/testfiles/manatest2.exe >/dev/null
   - bin/manalyze -d all -p all --hashes -o json test/testfiles/manatest3.exe >/dev/null
