@@ -86,6 +86,8 @@ std::string shutdown_functions = "Initiate(System)?Shutdown(Ex)?(A|W)|LockWorkSt
 
 std::string networking_api = "(Un)?EnableRouter|SetAdapterIpAddress|SetIp(Forward|Net|Statistics|TTL).*|SetPerTcp(6)?ConnectionEStats";
 
+std::string netwksta_api = "NetWksta(GetInfo|UserEnum|UserGetInfo)";
+
 // ----------------------------------------------------------------------------
 
 /**
@@ -244,6 +246,7 @@ public:
 		check_functions(pe, screenshot_api, SUSPICIOUS, "Can take screenshots", AT_LEAST_TWO, res);
 		check_functions(pe, audio_api, SUSPICIOUS, "Can use the microphone to record audio", AT_LEAST_ONE, res);
 		check_functions(pe, networking_api, SUSPICIOUS, "Modifies the network configuration", AT_LEAST_ONE, res);
+        check_functions(pe, netwksta_api, SUSPICIOUS, "Queries user information on remote machines", AT_LEAST_ONE, res);
 		check_functions(pe, "GetClipboardData", NO_OPINION, "Reads the contents of the clipboard", AT_LEAST_ONE, res);
 		check_functions(pe, "IsUserAnAdmin", NO_OPINION, "Checks if it has admin rights", AT_LEAST_ONE, res);
 		check_functions(pe, "Cert(Add|Open|Register|Remove|Save|Srv|Store).*", SUSPICIOUS, "Interacts with the certificate store", AT_LEAST_ONE, res);
