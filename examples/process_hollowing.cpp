@@ -19,7 +19,7 @@
 #include <iostream>
 #include <Windows.h>
 #include <boost/filesystem.hpp>
-
+#include <conio.h>
 #include <manape/pe.h>
 
 namespace bfs = boost::filesystem;
@@ -179,7 +179,7 @@ bool check_prerequisites(mana::PE& target, mana::PE& to_inject)
 
 /**
  *	@brief	This function maps the sections of the injected process into the host.
- *	
+ *	meaning that this will see for anomaly in host machine
  *	Each section is copied to its virtual address in the remote process, then its
  *	permissions are set to what they should be.
  *	
