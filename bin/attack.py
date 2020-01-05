@@ -21,6 +21,7 @@ mapping = {
                                                              ("Defense Evasion", "Process Injection")],
     "Code injection capabilities (process doppelganging)":  [("Defense Evasion", "Process Doppelgänging"),
                                                              ("Defense Evasion", "Process Injection")],
+	"Code injection capabilities (mapping injection)":      [("Defense Evasion", "Process Injection")],
     "Possibly attempts GINA replacement":                   [("Persistence", "Winlogon Helper DLL"),
                                                              ("Defense Evasion", "Process Injection")],
     "Uses functions commonly found in keyloggers":          [("Credential Access", "Input Prompt")],

@@ -39,6 +39,8 @@ std::string vanilla_injection = "(Nt)?VirtualAlloc.*|(Nt)?WriteProcessMemory|Cre
 
 std::string process_hollowing = "(Nt)?WriteProcessMemory|(Nt)?WriteVirtualMemory|(Wow64)?SetThreadContext|(Nt)?ResumeThread|(Nt)?SetContextThread";
 
+std::string mapping_injection = "CreateFileMapping(Numa)?(A|W)|MapViewOfFile(Ex)?(2|3)?|CreateRemoteThread(Ex)?";
+
 std::string power_loader = "FindWindow(A|W)|GetWindowLong(A|W)";
 
 std::string atom_bombing = "GlobalAddAtom(A|W)|GlobalGetAtomName(A|W)|QueueUserAPC";
@@ -224,6 +226,7 @@ public:
 		check_functions(pe, process_hollowing, MALICIOUS, "Code injection capabilities (process hollowing)", AT_LEAST_THREE, res);
 		check_functions(pe, power_loader, MALICIOUS, "Code injection capabilities (PowerLoader)", AT_LEAST_TWO, res);
 		check_functions(pe, atom_bombing, MALICIOUS, "Code injection capabilities (atom bombing)", AT_LEAST_THREE, res);
+		check_functions(pe, mapping_injection, MALICIOUS, "Code injection capabilities (mapping injection)", AT_LEAST_THREE, res);
 		check_functions(pe, process_doppelganging, MALICIOUS, "Code injection capabilities (process doppelganging)", AT_LEAST_THREE, res);
 		check_functions(pe, registry_api, NO_OPINION, "Can access the registry", AT_LEAST_ONE, res);
 		check_functions(pe, process_creation_api, NO_OPINION, "Possibly launches other programs", AT_LEAST_ONE, res);
