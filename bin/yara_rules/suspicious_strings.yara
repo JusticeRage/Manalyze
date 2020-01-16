@@ -14,6 +14,7 @@
     You should have received a copy of the GNU General Public License
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
+import "manape"
 
 rule System_Tools
 {
@@ -44,6 +45,7 @@ rule System_Tools
         $a20 = /schtask(.exe)?/ nocase wide ascii
 		$a21 = "wbadmin.exe" nocase wide ascii
 		$a22 = "wevutil.exe" nocase wide ascii
+        $a23 = "iacls" fullword nocase wide ascii
 		
     condition:
         any of them
@@ -1566,7 +1568,6 @@ rule Misc_Suspicious_Strings
     strings:
         $a0 = "backdoor" nocase ascii wide
         $a1 = "virus" nocase ascii wide fullword
-        $a2 = "hack" nocase ascii wide fullword
         $a3 = "exploit" nocase ascii wide
         $a4 = "cmd.exe" nocase ascii wide
         $a5 = "CWSandbox" nocase wide ascii // Found in some Zeus/Citadel samples
@@ -1578,7 +1579,7 @@ rule Misc_Suspicious_Strings
 rule BITS_CLSID
 {
     meta:
-        description = "References the BITS service."
+        description = "References the BITS service"
         author = "Ivan Kwiatkowski (@JusticeRage)"
 		show_strings = "false"
         // The BITS service seems to be used heavily by EquationGroup.
@@ -1653,3 +1654,16 @@ rule MiningPool
     condition:
         $stratum
 }
+
+rule CVE_2020_0601
+{
+    meta:
+        description = "The binary is signed with a non-standard elliptic-curve (see CVE-2020-0601)."
+        author = "Benjamin Delpy (@gentilkiwi)"
+        show_strings = "false"
+    strings:
+        $oid = { 06 07 2a 86 48 ce 3d 01 01 }
+    condition:
+        $oid in (manape.authenticode.start..filesize)        
+}
+

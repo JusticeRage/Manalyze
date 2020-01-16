@@ -465,3 +465,15 @@ rule Base58
 	condition:
 		all of them
 }
+
+rule DH
+{
+    meta:
+        description = "Uses constants related to Diffie-Helman"
+        author = "Ivan Kwiatkowski (@JusticeRage)"
+    strings:
+        $tls_dh_prime = "D67DE440CBBBDC1936D693D34AFD0AD50C84D239A45F520BB881$
+        $oakley_prime = "FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD12902$
+    condition:
+        any of them
+}

@@ -62,7 +62,7 @@ public:
 			get_certificate_info(wide_path, res);
 		}
 		else { // If no certificate was found, check if the file is known in the security catalog:
-			//check_catalog_signature(pe, res);
+			check_catalog_signature(pe, res);
 		}
 
 		// Still not verified: try to determine if the application should be signed.
