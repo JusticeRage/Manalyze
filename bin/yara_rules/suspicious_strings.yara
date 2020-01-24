@@ -578,7 +578,7 @@ rule VMWare_Detection : AntiVM
         author = "Cuckoo project"
 
     strings:
-        $a0 = "VMXh"
+        $a0 = { BA 58 56 00 00 ED 81 FB 68 58 4D 56 } // mov edx, 'VX'; in eax, dx; cmp ebx, 'VMXh'
         $a1 = "vmware" nocase wide ascii
         $vmware4 = "hgfs.sys" nocase wide ascii
         $vmware5 = "mhgfs.sys" nocase wide ascii
