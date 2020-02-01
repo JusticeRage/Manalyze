@@ -575,7 +575,7 @@ rule VMWare_Detection : AntiVM
 {
     meta:
         description = "Looks for VMWare presence"
-        author = "Cuckoo project"
+        author = "Cuckoo project + @JusticeRage additions"
 
     strings:
         $a0 = { BA 58 56 00 00 ED 81 FB 68 58 4D 56 } // mov edx, 'VX'; in eax, dx; cmp ebx, 'VMXh'
