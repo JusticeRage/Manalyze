@@ -99,7 +99,7 @@ public:
 				else
 				{
 					io::pNode output = boost::make_shared<io::OutputTreeNode>(it->operator[](meta_field_name),
-						io::OutputTreeNode::STRINGS, io::OutputTreeNode::NEW_LINE);
+					io::OutputTreeNode::STRINGS, io::OutputTreeNode::NEW_LINE);
 
 					for (const auto& it2 : found) {
 						output->append(it2);
