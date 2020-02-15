@@ -59,6 +59,9 @@ Place the two folders in the `external` folder as `external/yara` and `external/
 - [Windows >= XP x86 binaries](https://manalyzer.org/static/manalyze_win32.zip)
 - [Windows > XP x64 binaries](https://manalyzer.org/static/manalyze_x64.zip)
 
+### Docker image
+A Docker image for Manalyze is provided by the community. Run `docker pull evanowe/manalyze` and get additional information [here](https://hub.docker.com/r/evanowe/manalyze).
+
 ## Generating ClamAV rules
 Since ClamAV signatures are voluminous and updated regularly, it didn't make a lot of sense to distribute them from GitHub or with the binary. When you try using the ClamAV plugin for the first time, you will likely encounter the following error message: `[!] Error: Could not load yara_rules/clamav.yara`. In order to generate them, simply run the `update_clamav_signatures.py` Python script located in `bin/yara_rules`.
 
@@ -79,7 +82,7 @@ Usage:
   -d [ --dump ] arg     Dump PE information. Available choices are any
                         combination of: all, summary, dos (dos header), pe (pe
                         header), opt (pe optional header), sections, imports,
-                        exports, resources, version, debug, tls, config, delay
+                        exports, resources, version, debug, tls, config, delay, rich
   --hashes              Calculate various hashes of the file (may slow down the
                         analysis!)
   -x [ --extract ] arg  Extract the PE resources to the target directory.
@@ -96,6 +99,7 @@ Available plugins:
   - imports: Looks for suspicious imports.
   - resources: Analyzes the program's resources.
   - mitigation: Displays the enabled exploit mitigation techniques (DEP, ASLR, etc.).
+  - overlay: Analyzes data outside of the PE's boundaries.
   - authenticode: Checks if the digital signature of the PE is valid.
   - virustotal: Checks existing AV results on VirusTotal.
   - all: Run all the available plugins.
@@ -110,7 +114,10 @@ Examples:
 ## People using Manalyze
 
 - [ANY.RUN](https://any.run/)
+- [CinCan](https://cincan.io/)
 - [DFN-CERT](https://www.dfn-cert.de/)
+- [The Hive](https://blog.thehive-project.org/tag/manalyze/)
+- [Yomi](https://yomi.yoroi.company)
 
 Contact me or open a pull request if you would like to be added to this list!
 
