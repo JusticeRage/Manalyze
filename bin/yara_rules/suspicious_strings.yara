@@ -1583,12 +1583,12 @@ rule Domains_URLs
     strings:
 		// TLD list taken from: https://data.iana.org/TLD/tlds-alpha-by-domain.txt
         $domain1 = /www\.[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/
-        $domain2 = /[a-zA-Z0-9\-\.]+\.(com|org|net|de|uk|fr|ru|info|top|xyz|tk|cn|br|jp|it|ir|nl|ca|au|es|ch|gov|edu|se|us)/ nocase fullword
+        $domain2 = /[a-zA-Z0-9\-\.]{5,}\.(com|org|net|de|uk|fr|ru|info|top|xyz|tk|cn|br|jp|it|ir|nl|ca|au|es|ch|gov|edu|se|us)/ nocase fullword
         $domain3 = /(https?|ftp):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-]*[\w\-])?/
         $domain4 = /(ht|f)tps?\:\/\/[a-zA-Z0-9\-\._]+(\.[a-zA-Z0-9\-\._]+){2,}(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&%\$#_]*)/
         $domain5 = /https?\:\/\/www.[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}/ fullword
-        $domain6 = /[a-zA-Z0-9\-\.]+\.[a-zA-Z0-9\-\.]+\.((com|org|net|de|uk|fr|ru|info|top|xyz|tk|cn|br|jp|it|ir|nl|ca|au|es|ch|gov|edu|se|us))/ fullword nocase
-        $domain7 = /[a-zA-Z0-9\-\.]+\.[a-zA-Z0-9\-\.]+\.[a-zA-Z0-9\-\.]+\.(com|org|net|de|uk|fr|ru|info|top|xyz|tk|cn|br|jp|it|ir|nl|ca|au|es|ch|gov|edu|se|us)/ fullword nocase
+        $domain6 = /[a-zA-Z0-9\-\.]+\.[a-zA-Z0-9\-\.]{5,}\.((com|org|net|de|uk|fr|ru|info|top|xyz|tk|cn|br|jp|it|ir|nl|ca|au|es|ch|gov|edu|se|us))/ fullword nocase
+        $domain7 = /[a-zA-Z0-9\-\.]+\.[a-zA-Z0-9\-\.]+\.[a-zA-Z0-9\-\.]{5,}\.(com|org|net|de|uk|fr|ru|info|top|xyz|tk|cn|br|jp|it|ir|nl|ca|au|es|ch|gov|edu|se|us)/ fullword nocase
     condition:
 		// Exclude the authenticode signature because it often contains URLs related to the certificate authority.
         for any of them: ($ in (0..manape.authenticode.start) or $ in (manape.authenticode.start..filesize))
