@@ -29,13 +29,13 @@ Manalyze was written in C++ for Windows and Linux and is released under the term
 ## How to build
 There are few things I hate more than checking out an open-source project and spending two hours trying to build it. This is why I did my best to make Manalyze as easy to build as possible. If these few lines don't work for you, then I have failed at my job and you should drop me a line so I can fix this.
 
-### On Linux and BSD (tested on Debian Jessie and FreeBSD 10.2)
+### On Linux and BSD (tested on Debian Buster and FreeBSD 10.2)
 ```
 $> [sudo or as root] apt-get install libboost-regex-dev libboost-program-options-dev libboost-system-dev libboost-filesystem-dev libssl-dev build-essential cmake git
 $> [alternatively, also sudo or as root] pkg install boost-libs-1.55.0_8 libressl cmake git
 $> git clone https://github.com/JusticeRage/Manalyze.git && cd Manalyze
 $> cmake .
-$> make
+$> make -j5
 $> cd bin && ./manalyze --version
 ```
 
@@ -47,6 +47,18 @@ $> cd bin && ./manalyze --version
 - Download and install [Git](https://git-scm.com/download/win)
 - `git clone https://github.com/JusticeRage/Manalyze.git && cd Manalyze && cmake .`
 - A Visual Studio project `manalyze.sln` should have appeared in the `Manalyze` folder!
+
+### On OS X (tested on Mojave)
+```
+# Skip these two lines if you already have a sane build environment
+user$ xcode-select --install
+user$ sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /
+
+user$ git clone https://github.com/JusticeRage/Manalyze.git && cd Manalyze
+user$ brew install openssl boost
+user$ cmake . -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl/ && make -j5
+user$ bin && ./manalyze --version
+```
 
 ### Offline builds
 If you need to build Manalyze on a machine with no internet access, you have to manually check out the following projects:

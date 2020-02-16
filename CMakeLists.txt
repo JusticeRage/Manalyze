@@ -11,6 +11,10 @@ if (WIN32)
     set(Boost_USE_STATIC_RUNTIME ON)
 endif()
 
+if (APPLE)
+    set(CMAKE_MACOSX_RPATH 1)
+endif()
+
 if (GitHub MATCHES [Oo][Nn])
     find_package(Git REQUIRED)
 endif()
@@ -115,7 +119,7 @@ else()
                                                        plugins/plugin_authenticode/commons.cpp
                                                        plugins/plugin_authenticode/asn1.cpp
                                                        plugins/plugin_authenticode/pe_authenticode_digest.cpp)
-                target_link_libraries(plugin_authenticode ${OPENSSL_LIBRARIES})
+                target_link_libraries(plugin_authenticode manacommons manape hash-library yara ${OPENSSL_LIBRARIES})
             endif()
 endif()
 

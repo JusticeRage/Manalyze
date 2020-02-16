@@ -73,7 +73,11 @@ void PluginManager::load_all(const std::string& path)
 	#ifdef BOOST_WINDOWS_API
 		std::string ext(".dll");
 	#elif defined BOOST_POSIX_API
+	# if defined __APPLE__
+		std::string ext(".dylib");
+	# else
 		std::string ext(".so");
+	# endif
 	#endif
 
 	if (!bfs::exists(path)) {
