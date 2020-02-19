@@ -603,16 +603,12 @@ rule VMWare_Detection : AntiVM
         // VMware MAC addresses
         $vmware_mac_1a = "00-05-69" wide ascii
         $vmware_mac_1b = "00:05:69" wide ascii
-        $vmware_mac_1c = "000569" wide ascii
         $vmware_mac_2a = "00-50-56" wide ascii
         $vmware_mac_2b = "00:50:56" wide ascii
-        $vmware_mac_2c = "005056" wide ascii
         $vmware_mac_3a = "00-0C-29" nocase wide ascii
         $vmware_mac_3b = "00:0C:29" nocase wide ascii
-        $vmware_mac_3c = "000C29" nocase wide ascii
         $vmware_mac_4a = "00-1C-14" nocase wide ascii
         $vmware_mac_4b = "00:1C:14" nocase wide ascii
-        $vmware_mac_4c = "001C14" nocase wide ascii
 
         // PCI Vendor IDs, from Hacking Team's leak
         $virtualbox_vid_1 = "VEN_15ad" nocase wide ascii
@@ -1559,6 +1555,17 @@ rule Base64d_PE
         any of them
 }
 
+rule Embedded_PE
+{
+	meta:
+		description = "Contains another PE executable"
+		author = "Ivan Kwiatkowski (@JusticeRage)"
+	strings:
+		$a = "This program cannot be run in DOS mode."
+	condition:
+		for any i in (1..#a): ( @a[i] > 0x4E  and uint16(@a[i]-0x4E) == 0x5A4D )
+}
+
 rule Misc_Suspicious_Strings
 {
     meta:
@@ -1573,25 +1580,6 @@ rule Misc_Suspicious_Strings
         $a6 = "System32\\drivers\\etc\\hosts" nocase wide ascii
     condition:
         any of them
-}
-
-rule Domains_URLs
-{
-    meta:
-        description = "Contains domain names or URLs"
-        author = "Sergey Mineev"
-    strings:
-		// TLD list taken from: https://data.iana.org/TLD/tlds-alpha-by-domain.txt
-        $domain1 = /www\.[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/
-        $domain2 = /[a-zA-Z0-9\-\.]{5,}\.(com|org|net|de|uk|fr|ru|info|top|xyz|tk|cn|br|jp|it|ir|nl|ca|au|es|ch|gov|edu|se|us)/ nocase fullword
-        $domain3 = /(https?|ftp):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-]*[\w\-])?/
-        $domain4 = /(ht|f)tps?\:\/\/[a-zA-Z0-9\-\._]+(\.[a-zA-Z0-9\-\._]+){2,}(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&%\$#_]*)/
-        $domain5 = /https?\:\/\/www.[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}/ fullword
-        $domain6 = /[a-zA-Z0-9\-\.]+\.[a-zA-Z0-9\-\.]{5,}\.((com|org|net|de|uk|fr|ru|info|top|xyz|tk|cn|br|jp|it|ir|nl|ca|au|es|ch|gov|edu|se|us))/ fullword nocase
-        $domain7 = /[a-zA-Z0-9\-\.]+\.[a-zA-Z0-9\-\.]+\.[a-zA-Z0-9\-\.]{5,}\.(com|org|net|de|uk|fr|ru|info|top|xyz|tk|cn|br|jp|it|ir|nl|ca|au|es|ch|gov|edu|se|us)/ fullword nocase
-    condition:
-		// Exclude the authenticode signature because it often contains URLs related to the certificate authority.
-        for any of them: ($ in (0..manape.authenticode.start) or $ in (manape.authenticode.start..filesize))
 }
 
 rule BITS_CLSID
@@ -1682,6 +1670,6 @@ rule CVE_2020_0601
     strings:
         $oid = { 06 07 2a 86 48 ce 3d 01 01 }
     condition:
-        $oid in (manape.authenticode.start..filesize)        
+        $oid in (manape.authenticode.start..manape.authenticode.end)
 }
 

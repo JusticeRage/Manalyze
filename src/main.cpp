@@ -169,7 +169,7 @@ bool validate_args(po::variables_map& vm, po::options_description& desc, char** 
 				continue;
 			}
 
-			auto found = std::find_if(plugins.begin(), plugins.end(), boost::bind(&plugin::name_matches, *it, _1));
+			auto found = std::find_if(plugins.begin(), plugins.end(), boost::bind(&plugin::name_matches, *it, boost::placeholders::_1));
 			if (found == plugins.end())
 			{
 				print_help(desc, argv[0]);
