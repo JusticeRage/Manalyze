@@ -252,6 +252,15 @@ public:
 	// ----------------------------------------------------------------------------
 
 	/**
+	 *	@brief	Checks whether the node contains data.
+	 *
+	 *	@return	Whether the node is empty or not.
+	 */
+	DECLSPEC_MANACOMMONS bool is_empty();
+
+	// ----------------------------------------------------------------------------
+
+	/**
 	*	@brief	Find a node in a list of nodes based on its name.
 	*
 	*	The search will stop at the first occurrence of the name, so using duplicate

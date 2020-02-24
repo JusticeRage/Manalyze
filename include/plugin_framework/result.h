@@ -105,6 +105,13 @@ public:
 	 */
 	DECLSPEC_MANACOMMONS void merge(const Result& res);
 
+	/**
+	 *	@brief	Tests if a result contains any data.
+	 *
+	 *	@return	Whether the result is empty or not.
+	 */
+	DECLSPEC_MANACOMMONS bool is_empty();
+
 private:
 	// Constructor is made private, so only IPlugin::make_result() calls it.
 	DECLSPEC_MANACOMMONS Result(const std::string& plugin_name);

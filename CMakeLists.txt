@@ -176,5 +176,5 @@ if ("${CMAKE_SYSTEM}" MATCHES "Linux")
             DESTINATION /etc/manalyze)
 
     # Run ldconfig.
-    execute_process(COMMAND ldconfig)
+    install(CODE "execute_process(COMMAND ldconfig)")
 endif()

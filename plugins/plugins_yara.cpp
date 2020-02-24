@@ -358,10 +358,10 @@ public:
 		auto domains = scan(pe, "Interesting strings found in the binary:", NO_OPINION, "description", true, exclude_microsoft_data);
 
 		// If one of the rules didn't return anything, return the output of the other one (which may be empty too).
-		if (!res || !res->get_output()) {
+		if (!res || res->is_empty()) {
 			return domains;
 		}
-		else if (!domains || !domains->get_output()) {
+		else if (!domains || domains->is_empty()) {
 			return res;
 		}
 
@@ -438,10 +438,10 @@ public:
 			[] (const mana::PE&, yara::Match::pSingleMatch m) { return hash::test_xmr_address(m->get_str()); });
 
 		// If one of the plugins didn't return anything, return the output of the other one (which may be empty too).
-		if (!btc || !btc->get_output()) {
+		if (!btc || btc->is_empty()) {
 			return monero;
 		}
-		else if (!monero || !monero->get_output()) {
+		else if (!monero || monero->is_empty()) {
 			return btc;
 		}
 

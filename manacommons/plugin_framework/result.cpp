@@ -79,6 +79,21 @@ LEVEL Result::get_level() const
 
 // ----------------------------------------------------------------------------
 
+bool Result::is_empty() {
+	if (!_data || _data->is_empty()) {
+		return true;
+	}
+	if (get_summary()) {
+		return false;
+	}
+	if (get_information() && !get_information()->is_empty()) {
+		return false;
+	}
+	return true;
+}
+
+// ----------------------------------------------------------------------------
+
 void Result::set_summary(const std::string& s)
 {
 	io::pNode opt_summary = _data->find_node("summary");

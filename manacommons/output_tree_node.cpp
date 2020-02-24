@@ -372,4 +372,33 @@ void OutputTreeNode::append(const strings& strs)
 	}
 }
 
+// ----------------------------------------------------------------------------
+
+bool OutputTreeNode::is_empty()
+{
+	switch (_type)
+	{
+		case LIST:
+			return !_list_data || (*_list_data)->empty();
+		case STRING:
+			return !_string_data || (*_string_data)->empty();
+		case STRINGS:
+			return !_strings_data || (*_strings_data)->empty();
+		case UINT16:
+			return !_uint16_data;
+		case UINT32:
+			return !_uint32_data;
+		case UINT64:
+			return !_uint64_data;
+		case DOUBLE:
+			return !_double_data;
+		case FLOAT:
+			return !_float_data;
+		case THREAT_LEVEL:
+			return !_level_data;
+		default:
+			return true;
+	}
+}
+
 } // !namespace io
