@@ -630,16 +630,17 @@ bool PE::_parse_directories()
 		return false;
 	}
 
-	return _parse_imports() &&
-		   _parse_delayed_imports() &&
-		   _parse_exports() &&
-		   _parse_resources() &&
-		   _parse_debug() &&
-		   _parse_relocations() &&
-		   _parse_tls() &&
-		   _parse_config() &&
-		   _parse_certificates() &&
-		   _parse_rich_header();
+	_parse_imports();
+	_parse_delayed_imports();
+	_parse_exports();
+	_parse_resources();
+	_parse_debug();
+	_parse_relocations();
+	_parse_tls();
+	_parse_config();
+	_parse_certificates();
+	_parse_rich_header();
+	return true;
 }
 
 // ----------------------------------------------------------------------------
@@ -649,15 +650,15 @@ bool PE::_parse_exports()
 	if (!_ioh || _file_handle == nullptr) {
 		return false;
 	}
+	if (!_reach_directory(IMAGE_DIRECTORY_ENTRY_EXPORT))	{
+		return true; // No exports
+	}
+
 	image_export_directory ied;
 
 	// Don't overwrite the std::string at the end of the structure.
 	unsigned int ied_size = 9*sizeof(boost::uint32_t) + 2*sizeof(boost::uint16_t);
 	memset(&ied, 0, ied_size);
-
-	if (!_reach_directory(IMAGE_DIRECTORY_ENTRY_EXPORT))	{
-		return true; // No exports
-	}
 
 	if (ied_size != fread(&ied, 1, ied_size, _file_handle.get()))
 	{
@@ -855,7 +856,7 @@ bool PE::_parse_tls()
 	if (feof(_file_handle.get()) || ferror(_file_handle.get()))
 	{
 		PRINT_ERROR << "Could not read the IMAGE_TLS_DIRECTORY." << DEBUG_INFO_INSIDEPE << std::endl;
-		return false;
+		return true; // Non-fatal
 	}
 
 	// Go to the offset table
@@ -863,7 +864,7 @@ bool PE::_parse_tls()
 	if (!offset || fseek(_file_handle.get(), offset, SEEK_SET))
 	{
 		PRINT_ERROR << "Could not reach the TLS callback table." << DEBUG_INFO_INSIDEPE << std::endl;
-		return false;
+		return true; // Non-fatal
 	}
 
 	boost::uint64_t callback_address = 0;
@@ -920,7 +921,7 @@ bool PE::_parse_config()
 		return false;
 	}
 
-	if (!_reach_directory(IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG)) { // No TLS callbacks
+	if (!_reach_directory(IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG)) { // No load configuration
 		return true;
 	}
 
