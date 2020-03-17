@@ -22,13 +22,13 @@ rule Domains_URLs
         description = "Contains domain names"
         author = "Sergey Mineev"
     strings:
-        $domain1 = /www\.[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/
-        $domain2 = /[a-zA-Z0-9\-\.]{5,}\.(com|org|net|de|uk|fr|ru|info|top|xyz|tk|cn|br|jp|it|ir|nl|ca|au|es|ch|gov|edu|se|us)/ fullword
-        $domain3 = /(https?|ftp):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-]*[\w\-])?/
-        $domain4 = /(ht|f)tps?\:\/\/[a-zA-Z0-9\-\._]+(\.[a-zA-Z0-9\-\._]+){2,}(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&%\$#_]*)/
-        $domain5 = /https?\:\/\/www.[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}/ fullword
-        $domain6 = /[a-zA-Z0-9\-\.]+\.[a-zA-Z0-9\-\.]{5,}\.((com|org|net|de|uk|fr|ru|info|top|xyz|tk|cn|br|jp|it|ir|nl|ca|au|es|ch|gov|edu|se|us))/ fullword
-        $domain7 = /[a-zA-Z0-9\-\.]+\.[a-zA-Z0-9\-\.]+\.[a-zA-Z0-9\-\.]{5,}\.(com|org|net|de|uk|fr|ru|info|top|xyz|tk|cn|br|jp|it|ir|nl|ca|au|es|ch|gov|edu|se|us)/ fullword
+        $domain1 = /www\.[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/ wide ascii
+        $domain2 = /[a-zA-Z0-9\-\.]{5,}\.(com|org|net|de|uk|fr|ru|info|top|xyz|tk|cn|br|jp|it|ir|nl|ca|au|es|ch|gov|edu|se|us)/ fullword wide ascii
+        $domain3 = /(https?|ftp):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-]*[\w\-])?/ wide ascii
+        $domain4 = /(ht|f)tps?\:\/\/[a-zA-Z0-9\-\._]+(\.[a-zA-Z0-9\-\._]+){2,}(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&%\$#_]*)/ wide ascii
+        $domain5 = /https?\:\/\/www.[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}/ fullword wide ascii
+        $domain6 = /[a-zA-Z0-9\-\.]+\.[a-zA-Z0-9\-\.]{5,}\.((com|org|net|de|uk|fr|ru|info|top|xyz|tk|cn|br|jp|it|ir|nl|ca|au|es|ch|gov|edu|se|us))/ fullword wide ascii
+        $domain7 = /[a-zA-Z0-9\-\.]+\.[a-zA-Z0-9\-\.]+\.[a-zA-Z0-9\-\.]{5,}\.(com|org|net|de|uk|fr|ru|info|top|xyz|tk|cn|br|jp|it|ir|nl|ca|au|es|ch|gov|edu|se|us)/ fullword wide ascii
     condition:
 		// Calling C++ code in Manalyze takes care of filtering results in the authenticode signature or RT_MANIFEST resource.
 		// This is needed because Yara reports all matching strings if the condition evaluates to "true", even if some of the strings
