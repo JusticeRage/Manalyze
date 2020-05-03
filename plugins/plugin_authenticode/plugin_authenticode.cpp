@@ -480,10 +480,11 @@ void do_winverifytrust(GUID& guid, WINTRUST_DATA& data, pResult res)
 		res->set_level(SUSPICIOUS);
 		res->set_summary("The PE's certificate has expired.");
 		break;
+	case CRYPT_E_FILE_ERROR:
+		PRINT_ERROR << "[plugin_authenticode] Windows' API could not open the target PE. It's possible another process is currently manipulating it." << std::endl;
+		break;
 	default:
-		std::stringstream ss;
-		ss << "Unknown error encountered while reading the signature (0x" << std::hex << retval << ").";
-		res->set_summary(ss.str());
+		PRINT_ERROR << "[plugin_authenticode] Unknown error encountered while reading the signature (0x" << std::hex << retval << ")." << std::endl;
 		break;
 	}
 }

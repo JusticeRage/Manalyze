@@ -570,6 +570,24 @@ DECLSPEC pversion_info Resource::interpret_as()
 			res.reset();
 			goto END;
 		}
+
+		// Ignore empty entries
+		if (current_structure->ValueLength == 0)
+		{
+			padding = 16 - ftell(f) % 16;
+			if (padding != 16) {
+				fseek(f, padding, SEEK_CUR);  // Realign on a 16-byte boundray. I'm not 100% sure it's what's needed here.
+			}
+			bytes_read = ftell(f) - bytes_read;
+			if (bytes_read < bytes_remaining) {  // Padding in the last entry isn't included in the length.
+				bytes_remaining -= bytes_read;
+			}
+			else {
+				bytes_remaining = 0;
+			}
+			continue;
+		}
+
 		std::string value;
 		// If the string is null, there won't even be a null terminator.
 		if (ftell(f) - bytes_read < current_structure->Length) {
@@ -590,7 +608,7 @@ DECLSPEC pversion_info Resource::interpret_as()
 		auto p = boost::make_shared<string_pair>(current_structure->Key, value);
 		res->StringTable.push_back(p);
 
-		// The next structure is 4byte aligned.
+		// The next structure is 4-byte aligned.
 		padding = ftell(f) % 4;
 		if (padding)
 		{

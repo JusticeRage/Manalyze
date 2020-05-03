@@ -67,7 +67,7 @@ void check_version_info(const mana::PE& pe, pResult res)
 			}
 			else
 			{
-				ss << "The PE pretends to be from " << *(m->at(0)->get_found_strings().begin())
+				ss << "The PE pretends to be from " << (*(m->at(0)->get_found_strings().begin()))->get_str()
 				   << " but is not signed!";
 				res->add_information(ss.str());
 			}
