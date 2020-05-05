@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # Manalyzer output to ATT&CK mapping
 # Created by Ronan Mouchoux, Daniel Creus and Ivan Kwiatkowski for BotConf 2018.
@@ -161,15 +161,14 @@ def apply_mapping(report):
         ("Command and Control", [])
     ])
 
-    plugins = report[report.keys()[0]]["Plugins"]
+    plugins = report[list(report.keys())[0]]["Plugins"]
     for p in plugins:
         for o in plugins[p]["plugin_output"]:
             for key in mapping:
-                if re.match(key, o) or (type(plugins[p]["plugin_output"][o]) is unicode and re.match(key, plugins[p]["plugin_output"][o])):
+                if re.match(key, o) or (type(plugins[p]["plugin_output"][o]) is str and re.match(key, plugins[p]["plugin_output"][o])):
                     for m in mapping[key]:
                         if not m[1] in mapped_output[m[0]]:  # Do not add the same element twice.
                             mapped_output[m[0]].append(m[1])
-
 
     # Remove empty columns.
     empty = [k for k in mapped_output if not mapped_output[k]]
@@ -187,9 +186,12 @@ def main():
     else:
         report = sys.stdin.read()
 
-    report = json.loads(report)
-    mapped = apply_mapping(report)
-    print json.dumps(mapped, indent=4)
+    try:
+        report = json.loads(report)
+        mapped = apply_mapping(report)
+        print(json.dumps(mapped, indent=4))
+    except json.decoder.JSONDecodeError:
+        print("The input is not a valid JSON document.")
 
 
 if __name__ == "__main__":
