@@ -184,7 +184,7 @@ def validate_args():
     parser.add_argument('--no-color', action='store_true', help='Disables color in the graphs')
     # The rationale for this is that we want to exclude samples which have an obvious fake compilation date, as well
     # as those that have a default timestamp set in the nineties.
-    parser.add_argument('--ignore-older-than', '-i', default=10,
+    parser.add_argument('--ignore-older-than', '-i', default=10, type=int,
                         help="Ignore samples that are more than N years old. (Default: 10)")
     parser.add_argument('--rebase-timezone', '-t',
                         help="Translates all the timestamps to the desired timezone. (Ex: 'UTC+2', 'UTC-6'...)")
@@ -262,11 +262,12 @@ def main():
 
     # Print the charts.
     print("\n###############################################################################")
-    if "day" in args.charts:
+    # The any() condition verifies that the input contains data to plot.
+    if "day" in args.charts and any(x for x in r.activity_hourly.values()):
         print_charts(r.activity_hourly, "Distribution of timestamps over the day", args)
-    if "week" in args.charts:
+    if "week" in args.charts and any(x for x in r.activity_weekly.values()):
         print_charts(r.activity_weekly, "Distribution of timestamps over the week", args, weekday=True)
-    if "year" in args.charts:
+    if "year" in args.charts and any(x for x in r.activity_yearly.values()):
         print_charts(r.activity_yearly, "Distribution of timestamps over the years", args)
 
 

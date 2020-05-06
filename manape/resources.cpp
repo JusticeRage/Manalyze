@@ -482,7 +482,6 @@ DECLSPEC pversion_info Resource::interpret_as()
 	auto res = boost::make_shared<version_info>();
 	unsigned int bytes_read; // Is calculated by calling ftell before and after reading a structure, and keeping the difference.
 	unsigned int bytes_remaining;
-	unsigned int padding;
 	unsigned int language;
 	std::stringstream ss;
 
@@ -564,63 +563,39 @@ DECLSPEC pversion_info Resource::interpret_as()
 	// Read the StringTable
 	while (bytes_remaining > 0)
 	{
-		bytes_read = ftell(f);
+		unsigned int current_offset = ftell(f);
 		if (!parse_version_info_header(*current_structure, f))
 		{
 			res.reset();
 			goto END;
 		}
 
-		// Ignore empty entries
-		if (current_structure->ValueLength == 0)
-		{
-			padding = 16 - ftell(f) % 16;
-			if (padding != 16) {
-				fseek(f, padding, SEEK_CUR);  // Realign on a 16-byte boundray. I'm not 100% sure it's what's needed here.
-			}
-			bytes_read = ftell(f) - bytes_read;
-			if (bytes_read < bytes_remaining) {  // Padding in the last entry isn't included in the length.
-				bytes_remaining -= bytes_read;
-			}
-			else {
-				bytes_remaining = 0;
-			}
-			continue;
+		// Structures are aligned on DWORD boundaries, but the Length field doesn't reflect that. Update
+		// it here to facilitate the parsing.
+		if (current_structure->Length % 4 != 0) {
+			current_structure->Length += 4 - current_structure->Length % 4;
 		}
 
-		std::string value;
-		// If the string is null, there won't even be a null terminator.
-		if (ftell(f) - bytes_read < current_structure->Length) {
-			value = utils::read_unicode_string(f);
-		}
-		bytes_read = ftell(f) - bytes_read;
-		if (bytes_remaining < bytes_read)
+		// Only process structures that contain data.
+		if (current_structure->ValueLength != 0)
 		{
-			bytes_remaining = 0;
-			PRINT_WARNING << bytes_read - bytes_remaining << " excess bytes have been read from a StringFileInfo!"
-				<< DEBUG_INFO << std::endl;
+			std::string value;
+			if (ftell(f) - current_offset < current_structure->Length) {
+				value = utils::read_unicode_string(f);
+			}
+			// Add the key/value to our internal representation
+			auto p = boost::make_shared<string_pair>(current_structure->Key, value);
+			res->StringTable.push_back(p);
+		}
+
+		if (current_structure->Length < bytes_remaining)
+		{
+			bytes_remaining -= current_structure->Length;
+			unsigned int next_structure_offset = current_offset + current_structure->Length;
+			fseek(f, next_structure_offset, SEEK_SET);
 		}
 		else {
-			bytes_remaining -= bytes_read;
-		}
-
-		// Add the key/value to our internal representation
-		auto p = boost::make_shared<string_pair>(current_structure->Key, value);
-		res->StringTable.push_back(p);
-
-		// The next structure is 4-byte aligned.
-		padding = ftell(f) % 4;
-		if (padding)
-		{
-			fseek(f, padding, SEEK_CUR);
-			// The last padding doesn't seem to be included in the length given by the structure.
-			// So if there are no more remaining bytes, don't stop here. (Otherwise, integer underflow.)
-			if (padding < bytes_remaining) {
-				bytes_remaining -= padding;
-			}
-			else {
-				bytes_remaining = 0;
-			}
+			bytes_remaining = 0;
 		}
 	}
 
