@@ -39,6 +39,8 @@ $> make -j5
 $> cd bin && ./manalyze --version
 ```
 
+Finally, if you want to access Manalyze from every directory on your machine, install it using `$> make install` from the root folder of the project.
+
 ### On Windows
 - Get the Boost libraries from [boost.org](http://boost.org) and install [CMake](http://www.cmake.org/download/).
 - Build the boost libraries
