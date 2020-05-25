@@ -61,7 +61,6 @@ user$ brew install openssl boost
 user$ cmake . -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl/ && make -j5
 user$ bin && ./manalyze --version
 ```
-Finally, if you want to access Manalyze from every directory on your machine, install it using `$> make install` from the root folder of the project.
 
 ### Offline builds
 If you need to build Manalyze on a machine with no internet access, you have to manually check out the following projects:
