@@ -691,8 +691,11 @@ const flag_dict COMP_ID_PRODID =
                                 ("VS2019 Update 5 (16.5.4-5) compiler 28614",  0x6FC6)
                                 ("VS 2015/2017/2019 runtime 28619",            0x6FCB)
                                 ("VS 2015/2017/2019 runtime 28720",            0x7030)
+                                ("VS 2015/2017/2019 runtime 28720",            0x7030)
+                                ("VS 2015/2017/2019 runtime 28920",            0x70F8)
                                 ("VS2019 Update 6 (16.6.0) compiler 28805",    0x7085)
-                                ("VS2019 Update 6 (16.6.1) compiler 28806",    0x7086)
+                                ("VS2019 Update 6 (16.6.1-5) compiler 28806",  0x7086)
+                                ("VS2019 Update 7 (16.7.0-1) compiler 29111",  0x71B7)
     ;
 
 // ----------------------------------------------------------------------------
