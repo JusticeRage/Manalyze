@@ -112,12 +112,12 @@ void dump_image_optional_header(const mana::PE& pe, io::OutputFormatter& formatt
 		ioh_header->append(boost::make_shared<io::OutputTreeNode>("BaseOfData", ioh.BaseOfData, io::OutputTreeNode::HEX));
 	}
 
-    if (is_64) {
-    	ioh_header->append(boost::make_shared<io::OutputTreeNode>("ImageBase", ioh.ImageBase, io::OutputTreeNode::HEX));
-    }
-    else {
-	    ioh_header->append(boost::make_shared<io::OutputTreeNode>("ImageBase", (boost::uint32_t) ioh.ImageBase, io::OutputTreeNode::HEX));
-    }
+	if (is_64) {
+		ioh_header->append(boost::make_shared<io::OutputTreeNode>("ImageBase", ioh.ImageBase, io::OutputTreeNode::HEX));
+	}
+	else {
+		ioh_header->append(boost::make_shared<io::OutputTreeNode>("ImageBase", static_cast<boost::uint32_t>(ioh.ImageBase), io::OutputTreeNode::HEX));
+	}
 
 	ioh_header->append(boost::make_shared<io::OutputTreeNode>("SectionAlignment", ioh.SectionAlignment, io::OutputTreeNode::HEX));
 	ioh_header->append(boost::make_shared<io::OutputTreeNode>("FileAlignment", ioh.FileAlignment, io::OutputTreeNode::HEX));
@@ -139,22 +139,22 @@ void dump_image_optional_header(const mana::PE& pe, io::OutputFormatter& formatt
 	ioh_header->append(boost::make_shared<io::OutputTreeNode>("Subsystem", *nt::translate_to_flag(ioh.Subsystem, nt::SUBSYSTEMS)));
 
 	if (ioh.DllCharacteristics) {
-	    	ioh_header->append(boost::make_shared<io::OutputTreeNode>("DllCharacteristics", *nt::translate_to_flags(ioh.DllCharacteristics, nt::DLL_CHARACTERISTICS)));
+			ioh_header->append(boost::make_shared<io::OutputTreeNode>("DllCharacteristics", *nt::translate_to_flags(ioh.DllCharacteristics, nt::DLL_CHARACTERISTICS)));
 	}
 
 	if (is_64)
 	{
 		ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeofStackReserve", ioh.SizeofStackReserve, io::OutputTreeNode::HEX));
-    	ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeofStackCommit", ioh.SizeofStackCommit, io::OutputTreeNode::HEX));
-    	ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeofHeapReserve", ioh.SizeofHeapReserve, io::OutputTreeNode::HEX));
-    	ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeofHeapCommit", ioh.SizeofHeapCommit, io::OutputTreeNode::HEX));
+		ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeofStackCommit", ioh.SizeofStackCommit, io::OutputTreeNode::HEX));
+		ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeofHeapReserve", ioh.SizeofHeapReserve, io::OutputTreeNode::HEX));
+		ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeofHeapCommit", ioh.SizeofHeapCommit, io::OutputTreeNode::HEX));
 	}
 	else
 	{
-        ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeofStackReserve", (boost::uint32_t) ioh.SizeofStackReserve, io::OutputTreeNode::HEX));
-        ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeofStackCommit", (boost::uint32_t) ioh.SizeofStackCommit, io::OutputTreeNode::HEX));
-        ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeofHeapReserve", (boost::uint32_t) ioh.SizeofHeapReserve, io::OutputTreeNode::HEX));
-        ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeofHeapCommit", (boost::uint32_t) ioh.SizeofHeapCommit, io::OutputTreeNode::HEX));
+		ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeofStackReserve", (boost::uint32_t) ioh.SizeofStackReserve, io::OutputTreeNode::HEX));
+		ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeofStackCommit", (boost::uint32_t) ioh.SizeofStackCommit, io::OutputTreeNode::HEX));
+		ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeofHeapReserve", (boost::uint32_t) ioh.SizeofHeapReserve, io::OutputTreeNode::HEX));
+		ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeofHeapCommit", (boost::uint32_t) ioh.SizeofHeapCommit, io::OutputTreeNode::HEX));
 	}
 
 	ioh_header->append(boost::make_shared<io::OutputTreeNode>("LoaderFlags", ioh.LoaderFlags, io::OutputTreeNode::HEX));
@@ -168,35 +168,45 @@ void dump_image_optional_header(const mana::PE& pe, io::OutputFormatter& formatt
 void dump_section_table(const mana::PE& pe, io::OutputFormatter& formatter, bool compute_hashes)
 {
 	mana::shared_sections sections = pe.get_sections();
-	if (sections->size() == 0) {
+	if (sections->empty()) {
 		return;
 	}
 
 	io::pNode section_list(new io::OutputTreeNode("Sections", io::OutputTreeNode::LIST));
 
-	for (auto it = sections->begin(); it != sections->end(); ++it)
+	for (const auto& it : *sections | boost::adaptors::indexed(1))
 	{
-		io::pNode section_node(new io::OutputTreeNode(*(*it)->get_name(), io::OutputTreeNode::LIST));
+		auto section = it.value();
+		io::pNode section_node;
+		if (section->get_name() && !section->get_name()->empty()) {
+			section_node.reset(new io::OutputTreeNode(*section->get_name(), io::OutputTreeNode::LIST));
+		}
+		else 
+		{
+			std::stringstream ss;
+			ss << "Section_" << it.index();
+			section_node.reset(new io::OutputTreeNode(ss.str(), io::OutputTreeNode::LIST));
+		}
 		if (compute_hashes)
 		{
-			const_shared_strings hashes = hash::hash_bytes(hash::ALL_DIGESTS, *(*it)->get_raw_data());
+			const_shared_strings hashes = hash::hash_bytes(hash::ALL_DIGESTS, *section->get_raw_data());
 			section_node->append(boost::make_shared<io::OutputTreeNode>("MD5", hashes->at(ALL_DIGESTS_MD5)));
 			section_node->append(boost::make_shared<io::OutputTreeNode>("SHA1", hashes->at(ALL_DIGESTS_SHA1)));
 			section_node->append(boost::make_shared<io::OutputTreeNode>("SHA256", hashes->at(ALL_DIGESTS_SHA256)));
 			section_node->append(boost::make_shared<io::OutputTreeNode>("SHA3", hashes->at(ALL_DIGESTS_SHA3)));
 		}
-		section_node->append(boost::make_shared<io::OutputTreeNode>("VirtualSize", (*it)->get_virtual_size(), io::OutputTreeNode::HEX));
-		section_node->append(boost::make_shared<io::OutputTreeNode>("VirtualAddress", (*it)->get_virtual_address(), io::OutputTreeNode::HEX));
-		section_node->append(boost::make_shared<io::OutputTreeNode>("SizeOfRawData", (*it)->get_size_of_raw_data(), io::OutputTreeNode::HEX));
-		section_node->append(boost::make_shared<io::OutputTreeNode>("PointerToRawData", (*it)->get_pointer_to_raw_data(), io::OutputTreeNode::HEX));
-		section_node->append(boost::make_shared<io::OutputTreeNode>("PointerToRelocations", (*it)->get_pointer_to_relocations(), io::OutputTreeNode::HEX));
-		section_node->append(boost::make_shared<io::OutputTreeNode>("PointerToLineNumbers", (*it)->get_pointer_to_line_numbers(), io::OutputTreeNode::HEX));
-		section_node->append(boost::make_shared<io::OutputTreeNode>("NumberOfLineNumbers", (*it)->get_number_of_line_numbers()));
-		section_node->append(boost::make_shared<io::OutputTreeNode>("NumberOfRelocations", (*it)->get_number_of_relocations()));
-		section_node->append(boost::make_shared<io::OutputTreeNode>("Characteristics", *nt::translate_to_flags((*it)->get_characteristics(), nt::SECTION_CHARACTERISTICS)));
-        if ((*it)->get_size_of_raw_data()) {
-            section_node->append(boost::make_shared<io::OutputTreeNode>("Entropy", (*it)->get_entropy()));
-        }
+		section_node->append(boost::make_shared<io::OutputTreeNode>("VirtualSize", section->get_virtual_size(), io::OutputTreeNode::HEX));
+		section_node->append(boost::make_shared<io::OutputTreeNode>("VirtualAddress", section->get_virtual_address(), io::OutputTreeNode::HEX));
+		section_node->append(boost::make_shared<io::OutputTreeNode>("SizeOfRawData", section->get_size_of_raw_data(), io::OutputTreeNode::HEX));
+		section_node->append(boost::make_shared<io::OutputTreeNode>("PointerToRawData", section->get_pointer_to_raw_data(), io::OutputTreeNode::HEX));
+		section_node->append(boost::make_shared<io::OutputTreeNode>("PointerToRelocations", section->get_pointer_to_relocations(), io::OutputTreeNode::HEX));
+		section_node->append(boost::make_shared<io::OutputTreeNode>("PointerToLineNumbers", section->get_pointer_to_line_numbers(), io::OutputTreeNode::HEX));
+		section_node->append(boost::make_shared<io::OutputTreeNode>("NumberOfLineNumbers", section->get_number_of_line_numbers()));
+		section_node->append(boost::make_shared<io::OutputTreeNode>("NumberOfRelocations", section->get_number_of_relocations()));
+		section_node->append(boost::make_shared<io::OutputTreeNode>("Characteristics", *nt::translate_to_flags(section->get_characteristics(), nt::SECTION_CHARACTERISTICS)));
+		if (section->get_size_of_raw_data()) {
+			section_node->append(boost::make_shared<io::OutputTreeNode>("Entropy", section->get_entropy()));
+		}
 
 		section_list->append(section_node);
 	}
@@ -209,19 +219,19 @@ void dump_section_table(const mana::PE& pe, io::OutputFormatter& formatter, bool
 void dump_imports(const mana::PE& pe, io::OutputFormatter& formatter)
 {
 	auto imported_dlls = pe.get_imports();
-	if (imported_dlls->size() == 0)	{
+	if (imported_dlls->empty())	{
 		return;
 	}
 
 	io::pNode imports(new io::OutputTreeNode("Imports", io::OutputTreeNode::LIST));
-	for (auto it = imported_dlls->begin() ; it != imported_dlls->end() ; ++it)
+	for (const auto& it : *imported_dlls)
 	{
-		pString name = (*it)->get_name();
+		pString name = it->get_name();
 		if (name == nullptr) {
 			continue;
 		}
 		const_shared_strings functions = pe.get_imported_functions(*name);
-		std::string display_name = (*it)->get_type() == ImportedLibrary::DELAY_LOADED ? *name + " (delay-loaded)" : *name;
+		std::string display_name = it->get_type() == ImportedLibrary::DELAY_LOADED ? *name + " (delay-loaded)" : *name;
 		io::pNode dll(new io::OutputTreeNode(display_name, *functions));
 		imports->append(dll);
 	}
@@ -233,38 +243,38 @@ void dump_imports(const mana::PE& pe, io::OutputFormatter& formatter)
 void dump_exports(const mana::PE& pe, io::OutputFormatter& formatter)
 {
 	shared_exports exports = pe.get_exports();
-	if (exports->size() == 0) {
+	if (exports->empty()) {
 		return;
 	}
 
 	io::pNode exports_list(new io::OutputTreeNode("Exports", io::OutputTreeNode::LIST));
-    boost::uint32_t ignored_exports = 0;
-	for (auto it = exports->begin() ; it != exports->end() ; ++it)
+	boost::uint32_t ignored_exports = 0;
+	for (const auto& it : *exports)
 	{
-        // Make sure that the export points to a real RVA. This ensures that bogus tables
-        // do not create an enormous number of entries.
-        if (pe.rva_to_offset((*it)->Address) == 0) {
-            ++ignored_exports;
-            continue;
-        }
+		// Make sure that the export points to a real RVA. This ensures that bogus tables
+		// do not create an enormous number of entries.
+		if (pe.rva_to_offset(it->Address) == 0) {
+			++ignored_exports;
+			continue;
+		}
 
 		// TODO: Demangle C++ names here
-        auto name = (*it)->Name;
-        if (name.empty()) {
-            name = "(Unnamed function)";
-        }
-		io::pNode ex(new io::OutputTreeNode((*it)->Name, io::OutputTreeNode::LIST));
-		ex->append(boost::make_shared<io::OutputTreeNode>("Ordinal", (*it)->Ordinal));
-		ex->append(boost::make_shared<io::OutputTreeNode>("Address", (*it)->Address, io::OutputTreeNode::HEX));
-		if ((*it)->ForwardName != "") {
-			ex->append(boost::make_shared<io::OutputTreeNode>("ForwardName", (*it)->ForwardName));
+		auto name = it->Name;
+		if (name.empty()) {
+			name = "(Unnamed function)";
+		}
+		io::pNode ex(new io::OutputTreeNode(it->Name, io::OutputTreeNode::LIST));
+		ex->append(boost::make_shared<io::OutputTreeNode>("Ordinal", it->Ordinal));
+		ex->append(boost::make_shared<io::OutputTreeNode>("Address", it->Address, io::OutputTreeNode::HEX));
+		if (it->ForwardName != "") {
+			ex->append(boost::make_shared<io::OutputTreeNode>("ForwardName", it->ForwardName));
 		}
 		exports_list->append(ex);
 	}
 
-    if (ignored_exports > 0) {
-        PRINT_WARNING << ignored_exports << " invalid export(s) not shown." << std::endl;
-    }
+	if (ignored_exports > 0) {
+		PRINT_WARNING << ignored_exports << " invalid export(s) not shown." << std::endl;
+	}
 	formatter.add_data(exports_list, *pe.get_path());
 }
 
@@ -278,23 +288,23 @@ void dump_resources(const mana::PE& pe, io::OutputFormatter& formatter, bool com
 	}
 
 	io::pNode resource_list(new io::OutputTreeNode("Resources", io::OutputTreeNode::LIST));
-	for (auto it = resources->begin() ; it != resources->end() ; ++it)
+	for (const auto& it : *resources)
 	{
-		io::pNode res(new io::OutputTreeNode(*(*it)->get_name(), io::OutputTreeNode::LIST));
-		res->append(boost::make_shared<io::OutputTreeNode>("Type", *(*it)->get_type()));
-		res->append(boost::make_shared<io::OutputTreeNode>("Language", *(*it)->get_language()));
-        res->append(boost::make_shared<io::OutputTreeNode>("Codepage", *nt::translate_to_flag((*it)->get_codepage(), nt::CODEPAGES)));
-		res->append(boost::make_shared<io::OutputTreeNode>("Size", (*it)->get_size(), io::OutputTreeNode::DEC));
-        if (utils::is_actually_posix((*it)->get_timestamp(), pe.get_pe_header()->TimeDateStamp)) {
-            res->append(boost::make_shared<io::OutputTreeNode>("TimeDateStamp", *utils::timestamp_to_string((*it)->get_timestamp())));
-        }
-        else {
-            res->append(boost::make_shared<io::OutputTreeNode>("TimeDateStamp", *utils::dosdate_to_string((*it)->get_timestamp())));
-        }
-        
-		res->append(boost::make_shared<io::OutputTreeNode>("Entropy", (*it)->get_entropy()));
+		io::pNode res(new io::OutputTreeNode(*it->get_name(), io::OutputTreeNode::LIST));
+		res->append(boost::make_shared<io::OutputTreeNode>("Type", *it->get_type()));
+		res->append(boost::make_shared<io::OutputTreeNode>("Language", *it->get_language()));
+		res->append(boost::make_shared<io::OutputTreeNode>("Codepage", *nt::translate_to_flag(it->get_codepage(), nt::CODEPAGES)));
+		res->append(boost::make_shared<io::OutputTreeNode>("Size", it->get_size(), io::OutputTreeNode::DEC));
+		if (utils::is_actually_posix(it->get_timestamp(), pe.get_pe_header()->TimeDateStamp)) {
+			res->append(boost::make_shared<io::OutputTreeNode>("TimeDateStamp", *utils::timestamp_to_string(it->get_timestamp())));
+		}
+		else {
+			res->append(boost::make_shared<io::OutputTreeNode>("TimeDateStamp", *utils::dosdate_to_string(it->get_timestamp())));
+		}
+		
+		res->append(boost::make_shared<io::OutputTreeNode>("Entropy", it->get_entropy()));
 
-		yara::const_matches m = detect_filetype(*it);
+		yara::const_matches m = detect_filetype(it);
 		if (m && !m->empty())
 		{
 			for (auto it2 = m->begin() ; it2 != m->end() ; ++it2) {
@@ -304,7 +314,7 @@ void dump_resources(const mana::PE& pe, io::OutputFormatter& formatter, bool com
 
 		if (compute_hashes)
 		{
-			const_shared_strings hashes = hash::hash_bytes(hash::ALL_DIGESTS, *(*it)->get_raw_data());
+			const_shared_strings hashes = hash::hash_bytes(hash::ALL_DIGESTS, *it->get_raw_data());
 			res->append(boost::make_shared<io::OutputTreeNode>("MD5", hashes->at(ALL_DIGESTS_MD5)));
 			res->append(boost::make_shared<io::OutputTreeNode>("SHA1", hashes->at(ALL_DIGESTS_SHA1)));
 			res->append(boost::make_shared<io::OutputTreeNode>("SHA256", hashes->at(ALL_DIGESTS_SHA256)));
@@ -322,11 +332,15 @@ void dump_version_info(const mana::PE& pe, io::OutputFormatter& formatter)
 {
 	pversion_info vi;
 	mana::shared_resources resources = pe.get_resources();
-	for (auto it = resources->begin() ; it != resources->end() ; ++it)
+	if (resources->empty()) {
+		return;
+	}
+
+	for (const auto& it : *resources)
 	{
-		if (*(*it)->get_type() == "RT_VERSION")
+		if (*it->get_type() == "RT_VERSION")
 		{
-			vi = (*it)->interpret_as<mana::pversion_info>();
+			vi = it->interpret_as<mana::pversion_info>();
 			if (vi == nullptr)
 			{
 				PRINT_WARNING << "Could not parse a VERSION_INFO resource!" << std::endl;
@@ -342,7 +356,7 @@ void dump_version_info(const mana::PE& pe, io::OutputFormatter& formatter)
 				version_info_node = boost::make_shared<io::OutputTreeNode>("Version Info", io::OutputTreeNode::LIST);
 			}
 
-			version_info_node->append(boost::make_shared<io::OutputTreeNode>("Resource LangID", *(*it)->get_language()));
+			version_info_node->append(boost::make_shared<io::OutputTreeNode>("Resource LangID", *it->get_language()));
 			io::pNode key_values = boost::make_shared<io::OutputTreeNode>(vi->Header.Key, io::OutputTreeNode::LIST);
 			key_values->append(boost::make_shared<io::OutputTreeNode>("Signature", vi->Value->Signature, io::OutputTreeNode::HEX));
 			key_values->append(boost::make_shared<io::OutputTreeNode>("StructVersion", vi->Value->StructVersion, io::OutputTreeNode::HEX));
@@ -374,23 +388,23 @@ void dump_version_info(const mana::PE& pe, io::OutputFormatter& formatter)
 void dump_debug_info(const mana::PE& pe, io::OutputFormatter& formatter)
 {
 	mana::shared_debug_info di = pe.get_debug_info();
-	if (di->size() == 0) {
+	if (di->empty()) {
 		return;
 	}
 	io::pNode debug_info_list(new io::OutputTreeNode("Debug Info", io::OutputTreeNode::LIST));
-	for (auto it = di->begin() ; it != di->end() ; ++it)
+	for (const auto& it : *di)
 	{
-		io::pNode debug_info_node(new io::OutputTreeNode(*nt::translate_to_flag((*it)->Type, nt::DEBUG_TYPES), io::OutputTreeNode::LIST));
-		debug_info_node->append(boost::make_shared<io::OutputTreeNode>("Characteristics", (*it)->Characteristics));
-		debug_info_node->append(boost::make_shared<io::OutputTreeNode>("TimeDateStamp", *utils::timestamp_to_string((*it)->TimeDateStamp)));
+		io::pNode debug_info_node(new io::OutputTreeNode(*nt::translate_to_flag(it->Type, nt::DEBUG_TYPES), io::OutputTreeNode::LIST));
+		debug_info_node->append(boost::make_shared<io::OutputTreeNode>("Characteristics", it->Characteristics));
+		debug_info_node->append(boost::make_shared<io::OutputTreeNode>("TimeDateStamp", *utils::timestamp_to_string(it->TimeDateStamp)));
 		std::stringstream ss;
-		ss << (*it)->MajorVersion << "." << (*it)->MinorVersion;
+		ss << it->MajorVersion << "." << it->MinorVersion;
 		debug_info_node->append(boost::make_shared<io::OutputTreeNode>("Version", ss.str()));
-		debug_info_node->append(boost::make_shared<io::OutputTreeNode>("SizeofData", (*it)->SizeofData));
-		debug_info_node->append(boost::make_shared<io::OutputTreeNode>("AddressOfRawData", (*it)->AddressOfRawData, io::OutputTreeNode::HEX));
-		debug_info_node->append(boost::make_shared<io::OutputTreeNode>("PointerToRawData", (*it)->PointerToRawData, io::OutputTreeNode::HEX));
-		if ((*it)->Filename != "") {
-			debug_info_node->append(boost::make_shared<io::OutputTreeNode>("Referenced File", (*it)->Filename));
+		debug_info_node->append(boost::make_shared<io::OutputTreeNode>("SizeofData", it->SizeofData));
+		debug_info_node->append(boost::make_shared<io::OutputTreeNode>("AddressOfRawData", it->AddressOfRawData, io::OutputTreeNode::HEX));
+		debug_info_node->append(boost::make_shared<io::OutputTreeNode>("PointerToRawData", it->PointerToRawData, io::OutputTreeNode::HEX));
+		if (it->Filename != "") {
+			debug_info_node->append(boost::make_shared<io::OutputTreeNode>("Referenced File", it->Filename));
 		}
 		debug_info_list->append(debug_info_node);
 	}
@@ -403,7 +417,7 @@ void dump_debug_info(const mana::PE& pe, io::OutputFormatter& formatter)
 void dump_tls(const mana::PE& pe, io::OutputFormatter& formatter)
 {
 	mana::shared_tls tls = pe.get_tls();
-	if (tls == nullptr) {
+	if (!tls) {
 		return;
 	}
 
@@ -413,17 +427,17 @@ void dump_tls(const mana::PE& pe, io::OutputFormatter& formatter)
 
 	if (is_64)
 	{
-        tls_node->append(boost::make_shared<io::OutputTreeNode>("StartAddressOfRawData", (boost::uint64_t) tls->StartAddressOfRawData, io::OutputTreeNode::HEX));
-        tls_node->append(boost::make_shared<io::OutputTreeNode>("EndAddressOfRawData", (boost::uint64_t) tls->EndAddressOfRawData, io::OutputTreeNode::HEX));
-        tls_node->append(boost::make_shared<io::OutputTreeNode>("AddressOfIndex", (boost::uint64_t) tls->AddressOfIndex, io::OutputTreeNode::HEX));
-        tls_node->append(boost::make_shared<io::OutputTreeNode>("AddressOfCallbacks", (boost::uint64_t) tls->AddressOfCallbacks, io::OutputTreeNode::HEX));
+		tls_node->append(boost::make_shared<io::OutputTreeNode>("StartAddressOfRawData", (boost::uint64_t) tls->StartAddressOfRawData, io::OutputTreeNode::HEX));
+		tls_node->append(boost::make_shared<io::OutputTreeNode>("EndAddressOfRawData", (boost::uint64_t) tls->EndAddressOfRawData, io::OutputTreeNode::HEX));
+		tls_node->append(boost::make_shared<io::OutputTreeNode>("AddressOfIndex", (boost::uint64_t) tls->AddressOfIndex, io::OutputTreeNode::HEX));
+		tls_node->append(boost::make_shared<io::OutputTreeNode>("AddressOfCallbacks", (boost::uint64_t) tls->AddressOfCallbacks, io::OutputTreeNode::HEX));
 	}
 	else
 	{
-        tls_node->append(boost::make_shared<io::OutputTreeNode>("StartAddressOfRawData", (boost::uint32_t) tls->StartAddressOfRawData, io::OutputTreeNode::HEX));
-        tls_node->append(boost::make_shared<io::OutputTreeNode>("EndAddressOfRawData", (boost::uint32_t) tls->EndAddressOfRawData, io::OutputTreeNode::HEX));
-        tls_node->append(boost::make_shared<io::OutputTreeNode>("AddressOfIndex", (boost::uint32_t) tls->AddressOfIndex, io::OutputTreeNode::HEX));
-        tls_node->append(boost::make_shared<io::OutputTreeNode>("AddressOfCallbacks", (boost::uint32_t) tls->AddressOfCallbacks, io::OutputTreeNode::HEX));
+		tls_node->append(boost::make_shared<io::OutputTreeNode>("StartAddressOfRawData", (boost::uint32_t) tls->StartAddressOfRawData, io::OutputTreeNode::HEX));
+		tls_node->append(boost::make_shared<io::OutputTreeNode>("EndAddressOfRawData", (boost::uint32_t) tls->EndAddressOfRawData, io::OutputTreeNode::HEX));
+		tls_node->append(boost::make_shared<io::OutputTreeNode>("AddressOfIndex", (boost::uint32_t) tls->AddressOfIndex, io::OutputTreeNode::HEX));
+		tls_node->append(boost::make_shared<io::OutputTreeNode>("AddressOfCallbacks", (boost::uint32_t) tls->AddressOfCallbacks, io::OutputTreeNode::HEX));
 	}
 
 	tls_node->append(boost::make_shared<io::OutputTreeNode>("SizeOfZeroFill", tls->SizeOfZeroFill, io::OutputTreeNode::HEX));
@@ -431,10 +445,10 @@ void dump_tls(const mana::PE& pe, io::OutputFormatter& formatter)
 	tls_node->append(boost::make_shared<io::OutputTreeNode>("Characteristics", *nt::translate_to_flag(tls->Characteristics, nt::SECTION_CHARACTERISTICS)));
 
 	std::vector<std::string> callbacks;
-	for (auto it = tls->Callbacks.begin() ; it != tls->Callbacks.end() ; ++it)
+	for (const auto& it : tls->Callbacks)
 	{
 		std::stringstream ss;
-		ss << std::hex << "0x" << std::uppercase << std::setfill('0') << std::setw(8 + is_64*8) << *it;
+		ss << std::hex << "0x" << std::uppercase << std::setfill('0') << std::setw(8 + is_64*8) << it;
 		callbacks.push_back(ss.str());
 	}
 	tls_node->append(boost::make_shared<io::OutputTreeNode>("Callbacks", callbacks));
@@ -507,8 +521,7 @@ void dump_config(const mana::PE& pe, io::OutputFormatter& formatter)
 
 	// Only show CFG fields if the binary was compiled with that option.
 	auto characteristics = *nt::translate_to_flags(opt->DllCharacteristics, nt::DLL_CHARACTERISTICS);
-	if (std::find(characteristics.begin(), characteristics.end(), "IMAGE_DLLCHARACTERISTICS_GUARD_CF") !=
-		characteristics.end())
+	if (std::find(characteristics.begin(), characteristics.end(), "IMAGE_DLLCHARACTERISTICS_GUARD_CF") != characteristics.end())
 	{
 		config_node->append(boost::make_shared<io::OutputTreeNode>("GuardCFCheckFunctionPointer", config->GuardCFCheckFunctionPointer, io::OutputTreeNode::HEX));
 		config_node->append(boost::make_shared<io::OutputTreeNode>("GuardCFDispatchFunctionPointer", config->GuardCFDispatchFunctionPointer, io::OutputTreeNode::HEX));
@@ -623,10 +636,10 @@ void dump_summary(const mana::PE& pe, io::OutputFormatter& formatter)
 	if (vi != nullptr)
 	{
 		for (auto it = vi->StringTable.begin() ; it != vi->StringTable.end() ; ++it)
-        {
-            if ((*it)->first != "" || (*it)->second != "") {
-                summary->append(boost::make_shared<io::OutputTreeNode>((*it)->first, (*it)->second));
-            }
+		{
+			if ((*it)->first != "" || (*it)->second != "") {
+				summary->append(boost::make_shared<io::OutputTreeNode>((*it)->first, (*it)->second));
+			}
 		}
 	}
 
@@ -688,85 +701,85 @@ void dump_hashes(const mana::PE& pe, io::OutputFormatter& formatter)
 
 yara::const_matches detect_filetype(mana::pResource r)
 {
-    static yara::pYara y = yara::Yara::create();
-    if (y->load_rules("yara_rules/magic.yara"))
-    {
-        shared_bytes bytes = r->get_raw_data();
-        if (bytes != nullptr) {
-            return y->scan_bytes(*bytes);
-        }
-        else {
-            return yara::matches();
-        }
-    }
-    else {
-        return yara::matches();
-    }
+	static yara::pYara y = yara::Yara::create();
+	if (y->load_rules("yara_rules/magic.yara"))
+	{
+		shared_bytes bytes = r->get_raw_data();
+		if (bytes != nullptr) {
+			return y->scan_bytes(*bytes);
+		}
+		else {
+			return yara::matches();
+		}
+	}
+	else {
+		return yara::matches();
+	}
 }
 
 // ----------------------------------------------------------------------------
 
 bool extract_resources(const mana::PE& pe, const std::string& destination_folder)
 {
-    if (!bfs::exists(destination_folder) && !bfs::create_directory(destination_folder))
-    {
-        PRINT_ERROR << "Could not create directory " << destination_folder << "." << DEBUG_INFO << std::endl;
-        return false;
-    }
+	if (!bfs::exists(destination_folder) && !bfs::create_directory(destination_folder))
+	{
+		PRINT_ERROR << "Could not create directory " << destination_folder << "." << DEBUG_INFO << std::endl;
+		return false;
+	}
 
-    bool res = true;
-    auto base = bfs::basename(*pe.get_path());
-    auto resources = pe.get_resources();
-    if (resources == nullptr) {
-        return true;
-    }
+	bool res = true;
+	auto base = bfs::basename(*pe.get_path());
+	auto resources = pe.get_resources();
+	if (resources == nullptr) {
+		return true;
+	}
 
-    for (auto it = resources->begin() ; it != resources->end() ; ++it)
-    {
-        bfs::path destination_file;
-        std::stringstream ss;
-        if (*(*it)->get_type() == "RT_GROUP_ICON" || *(*it)->get_type() == "RT_GROUP_CURSOR")
-        {
-            ss << base << "_" << *(*it)->get_name() << "_" << *(*it)->get_type() << ".ico";
-            res &= (*it)->icon_extract(bfs::path(destination_folder) / bfs::path(ss.str()), *pe.get_resources());
-        }
-        else if (*(*it)->get_type() == "RT_MANIFEST")
-        {
-            ss << base << "_" << *(*it)->get_name() << "_RT_MANIFEST.xml";
-            res &= (*it)->extract(bfs::path(destination_folder) / bfs::path(ss.str()));
-        }
-        else if (*(*it)->get_type() == "RT_BITMAP")
-        {
-            ss << base << "_" << *(*it)->get_name() << "_RT_BITMAP.bmp";
-            res &= (*it)->extract(bfs::path(destination_folder) / bfs::path(ss.str()));
-        }
-        else if (*(*it)->get_type() == "RT_ICON" || *(*it)->get_type() == "RT_CURSOR" || *(*it)->get_type() == "RT_VERSION") {
-            // Ignore the following resource types: we don't want to extract them.
-            continue;
-        }
-        else if (*(*it)->get_type() == "RT_STRING")
-        {
-            // Append all the strings to the same file.
-            destination_file = bfs::path(destination_folder) / bfs::path(base + "_RT_STRINGs.txt");
-            res &= (*it)->extract(destination_file.string());
-        }
-        else // General case
-        {
-            ss << base << "_" << *(*it)->get_name();
+	for (const auto& it : *resources)
+	{
+		bfs::path destination_file;
+		std::stringstream ss;
+		if (*it->get_type() == "RT_GROUP_ICON" || *it->get_type() == "RT_GROUP_CURSOR")
+		{
+			ss << base << "_" << *it->get_name() << "_" << *it->get_type() << ".ico";
+			res &= it->icon_extract(bfs::path(destination_folder) / bfs::path(ss.str()), *pe.get_resources());
+		}
+		else if (*it->get_type() == "RT_MANIFEST")
+		{
+			ss << base << "_" << *it->get_name() << "_RT_MANIFEST.xml";
+			res &= it->extract(bfs::path(destination_folder) / bfs::path(ss.str()));
+		}
+		else if (*it->get_type() == "RT_BITMAP")
+		{
+			ss << base << "_" << *it->get_name() << "_RT_BITMAP.bmp";
+			res &= it->extract(bfs::path(destination_folder) / bfs::path(ss.str()));
+		}
+		else if (*it->get_type() == "RT_ICON" || *it->get_type() == "RT_CURSOR" || *it->get_type() == "RT_VERSION") {
+			// Ignore the following resource types: we don't want to extract them.
+			continue;
+		}
+		else if (*it->get_type() == "RT_STRING")
+		{
+			// Append all the strings to the same file.
+			destination_file = bfs::path(destination_folder) / bfs::path(base + "_RT_STRINGs.txt");
+			res &= it->extract(destination_file.string());
+		}
+		else // General case
+		{
+			ss << base << "_" << *it->get_name();
 
-            // Try to guess the file extension
-            auto m = detect_filetype(*it);
-            if (m && m->size() > 0) {
-                ss << "_" << *(*it)->get_type() << m->at(0)->operator[]("extension");
-            }
-            else {
-                ss << "_" << *(*it)->get_type() << ".raw";
-            }
+			// Try to guess the file extension
+			auto m = detect_filetype(it);
+			if (m && m->size() > 0) {
+				ss << "_" << *it->get_type() << m->at(0)->operator[]("extension");
+			}
+			else {
+				ss << "_" << *it->get_type() << ".raw";
+			}
 
-            res &= (*it)->extract(bfs::path(destination_folder) / bfs::path(ss.str()));
-        }
-    }
-    return res;
+			res &= it->extract(bfs::path(destination_folder) / bfs::path(ss.str()));
+		}
+	}
+	return res;
 }
 
 // ----------------------------------------------------------------------------
@@ -776,7 +789,7 @@ bool extract_authenticode_certificates(const mana::PE& pe,
 									   const std::string& filename)
 {
 	auto certs = pe.get_certificates();
-	if (certs->size() == 0) { // The PE is unsigned, nothing to extract.
+	if (certs->empty()) { // The PE is unsigned, nothing to extract.
 		return true;
 	}
 	
@@ -800,15 +813,15 @@ bool extract_authenticode_certificates(const mana::PE& pe,
 		return false;
 	}
 	
-	for (auto it = certs->begin() ; it != certs->end() ; ++it)
+	for (const auto& it : *certs)
 	{
-		if ((*it)->CertificateType != WIN_CERT_TYPE_PKCS_SIGNED_DATA)
+		if (it->CertificateType != WIN_CERT_TYPE_PKCS_SIGNED_DATA)
 		{
 			PRINT_WARNING << "Enountered a non-PKCS7 certificate. The extraction will not proceed." << std::endl;
 			break;
 		}
 		fwrite(pkcs7_header.c_str(), pkcs7_header.length(), 1, f);
-		auto cert_str = *utils::b64encode((*it)->Certificate);
+		auto cert_str = *utils::b64encode(it->Certificate);
 		fwrite(cert_str.c_str(), cert_str.length(), 1, f);
 		fwrite(pkcs7_footer.c_str(), pkcs7_footer.length(), 1, f);
 	}

@@ -128,15 +128,15 @@ shared_bytes PE::get_overlay_bytes(size_t size) const
     // If the binary is signed, look after the authenticode signature.
     if (_ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].VirtualAddress) 
     {
-        max_offset = _ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].VirtualAddress + 
+        max_offset = static_cast<uint64_t>(_ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].VirtualAddress) + 
             _ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].Size;
     }
     else // Otherwise, look after the last section.
     {
         for (const auto& it : *sections)
         {
-            if (it->get_pointer_to_raw_data() + it->get_size_of_raw_data() > max_offset) {
-                max_offset = it->get_pointer_to_raw_data() + it->get_size_of_raw_data();
+            if (static_cast<uint64_t>(it->get_pointer_to_raw_data()) + it->get_size_of_raw_data() > max_offset) {
+                max_offset = static_cast<uint64_t>(it->get_pointer_to_raw_data()) + it->get_size_of_raw_data();
             }
         }
     }
