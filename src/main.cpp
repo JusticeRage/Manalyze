@@ -1,18 +1,18 @@
 /*
-    This file is part of Manalyze.
+	This file is part of Manalyze.
 
-    Manalyze is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+	Manalyze is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
 
-    Manalyze is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+	Manalyze is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
+	You should have received a copy of the GNU General Public License
+	along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <iostream>
@@ -423,7 +423,7 @@ std::set<std::string> get_input_files(po::variables_map& vm)
 			if (!bfs::is_directory(it))
 			{
 				#if defined BOOST_WINDOWS_API
-					std::string path = bfs::absolute(*it).string();
+					std::string path = bfs::absolute(it).string();
 					std::replace(path.begin(), path.end(), '\\', '/');
 					targets.insert(path);
 				#else
@@ -455,7 +455,7 @@ std::set<std::string> get_input_files(po::variables_map& vm)
 		{
 			if (!bfs::is_directory(it)) {
 				#if defined BOOST_WINDOWS_API
-					std::string path = bfs::absolute(*it).string();
+					std::string path = bfs::absolute(it).string();
 					std::replace(path.begin(), path.end(), '\\', '/');
 					targets.insert(path);
 				#else
@@ -555,6 +555,8 @@ int main(int argc, char** argv)
 		}
 	#endif
 
+	// Initialize Yara and load plugins.
+	yara::Yara::initialize();
 	plugin::PluginManager::get_instance().load_all(working_dir.string());
 
 	// Load the configuration
@@ -608,6 +610,9 @@ int main(int argc, char** argv)
 		// Explicitly unload the plugins
 		plugin::PluginManager::get_instance().unload_all();
 	}
+
+	// Cleanup
+	yara::Yara::finalize();
 
 	return 0;
 }
