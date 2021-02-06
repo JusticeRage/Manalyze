@@ -16,7 +16,6 @@
 */
 
 #include <iostream>
-#include <iterator>
 #include <string>
 #include <vector>
 #include <algorithm>
@@ -68,11 +67,11 @@ void print_help(po::options_description& desc, const std::string& argv_0)
 	// Plugin description
 	std::vector<plugin::pIPlugin> plugins = plugin::PluginManager::get_instance().get_plugins();
 
-	if (plugins.size() > 0)
+	if (!plugins.empty())
 	{
 		std::cout << "Available plugins:" << std::endl;
-		for (auto it = plugins.begin() ; it != plugins.end() ; ++it) {
-			std::cout << "  - " << *(*it)->get_id() << ": " << *(*it)->get_description() << std::endl;
+		for (const auto& it : plugins) {
+			std::cout << "  - " << *it->get_id() << ": " << *it->get_description() << std::endl;
 		}
 		std::cout << "  - all: Run all the available plugins." << std::endl;
 	}
@@ -80,7 +79,7 @@ void print_help(po::options_description& desc, const std::string& argv_0)
 
 	std::string filename = bfs::basename(argv_0);
 	std::string extension = bfs::extension(argv_0);
-	if (extension != "") {
+	if (!extension.empty()) {
 		filename += extension;
 	}
 
@@ -109,9 +108,9 @@ std::vector<std::string> tokenize_args(const std::vector<std::string>& args)
 	// Categories may be comma-separated, so we have to separate them.
 	std::vector<std::string> tokenized_args;
 	boost::char_separator<char> sep(",");
-	for (auto it = args.begin() ; it != args.end() ; ++it)
+	for (const auto& it : args)
 	{
-		boost::tokenizer<boost::char_separator<char> > tokens(*it, sep);
+		boost::tokenizer<boost::char_separator<char> > tokens(it, sep);
 		for (auto tok_iter = tokens.begin() ; tok_iter != tokens.end() ; ++tok_iter) {
 			tokenized_args.push_back(*tok_iter);
 		}
@@ -147,14 +146,14 @@ bool validate_args(po::variables_map& vm, po::options_description& desc, char** 
 		std::vector<std::string> selected_categories = tokenize_args(vm["dump"].as<std::vector<std::string> >());
 		const std::vector<std::string> categories = boost::assign::list_of("all")("summary")("dos")("pe")("opt")("sections")
 			("imports")("exports")("resources")("version")("debug")("tls")("config")("delay")("rich");
-		for (auto it = selected_categories.begin() ; it != selected_categories.end() ; ++it)
+		for (const auto& it : selected_categories)
 		{
-			std::vector<std::string>::const_iterator found = std::find(categories.begin(), categories.end(), *it);
+			auto found = std::find(categories.begin(), categories.end(), it);
 			if (found == categories.end())
 			{
 				print_help(desc, argv[0]);
 				std::cout << std::endl;
-				PRINT_ERROR << "category " << *it << " does not exist!" << std::endl;
+				PRINT_ERROR << "category " << it << " does not exist!" << std::endl;
 				return false;
 			}
 		}
@@ -165,18 +164,18 @@ bool validate_args(po::variables_map& vm, po::options_description& desc, char** 
 	{
 		std::vector<std::string> selected_plugins = tokenize_args(vm["plugins"].as<std::vector<std::string> >());
 		std::vector<plugin::pIPlugin> plugins = plugin::PluginManager::get_instance().get_plugins();
-		for (auto it = selected_plugins.begin() ; it != selected_plugins.end() ; ++it)
+		for (const auto& it : selected_plugins)
 		{
-			if (*it == "all") {
+			if (it == "all") {
 				continue;
 			}
 
-			auto found = std::find_if(plugins.begin(), plugins.end(), boost::bind(&plugin::name_matches, *it, boost::placeholders::_1));
+			auto found = std::find_if(plugins.begin(), plugins.end(), boost::bind(&plugin::name_matches, it, boost::placeholders::_1));
 			if (found == plugins.end())
 			{
 				print_help(desc, argv[0]);
 				std::cout << std::endl;
-				PRINT_ERROR << "plugin " << *it << " does not exist!" << std::endl;
+				PRINT_ERROR << "plugin " << it << " does not exist!" << std::endl;
 				return false;
 			}
 		}
@@ -184,11 +183,11 @@ bool validate_args(po::variables_map& vm, po::options_description& desc, char** 
 
 	// Verify that all the input files exist.
 	std::vector<std::string> input_files = vm["pe"].as<std::vector<std::string> >();
-	for (auto it = input_files.begin() ; it != input_files.end() ; ++it)
+	for (const auto& it : input_files)
 	{
-		if (!bfs::exists(*it))
+		if (!bfs::exists(it))
 		{
-			PRINT_ERROR << *it << " not found!" << std::endl;
+			PRINT_ERROR << it << " not found!" << std::endl;
 			return false;
 		}
 	}
@@ -373,11 +372,12 @@ void handle_plugins_option(io::OutputFormatter& formatter,
 
 		std::promise<plugin::pResult> res_promise;
 		std::shared_future<plugin::pResult> future(res_promise.get_future());
-		boost::shared_ptr<std::thread> t(boost::make_shared<std::thread>(std::thread([](const plugin::pIPlugin& p, std::promise<plugin::pResult>& r, const mana::PE* pe) {
+
+		boost::shared_ptr<std::thread> t(boost::make_shared<std::thread>(std::thread([](const plugin::pIPlugin& p, std::promise<plugin::pResult> r, const mana::PE* pe) {
 			r.set_value(p->analyze(*pe));
 		}, it, std::move(res_promise), &pe)));
 
-		jobs.push_back(plugin_job(t, future, it));
+		jobs.emplace_back(t, future, it);
 	}
 
 	for (auto j : jobs)
@@ -418,22 +418,22 @@ std::set<std::string> get_input_files(po::variables_map& vm)
 	if (vm.count("recursive"))
 	{
 		std::vector<std::string> input = vm["pe"].as<std::vector<std::string> >();
-		for (auto it = input.begin() ; it != input.end() ; ++it)
+		for (const auto& it : input)
 		{
-			if (!bfs::is_directory(*it))
+			if (!bfs::is_directory(it))
 			{
 				#if defined BOOST_WINDOWS_API
 					std::string path = bfs::absolute(*it).string();
 					std::replace(path.begin(), path.end(), '\\', '/');
 					targets.insert(path);
 				#else
-					targets.insert(bfs::absolute(*it).string());
+					targets.insert(bfs::absolute(it).string());
 				#endif
 			}
 			else
 			{
 				bfs::directory_iterator end;
-				for (bfs::directory_iterator dit(*it) ; dit != end ; ++dit)
+				for (bfs::directory_iterator dit(it) ; dit != end ; ++dit)
 				{
 					if (!bfs::is_directory(*dit)) { // Ignore subdirectories
 					#if defined BOOST_WINDOWS_API
@@ -451,19 +451,19 @@ std::set<std::string> get_input_files(po::variables_map& vm)
 	else
 	{
 		auto vect = vm["pe"].as<std::vector<std::string> >();
-		for (auto it = vect.begin() ; it != vect.end() ; ++it)
+		for (const auto& it : vect)
 		{
-			if (!bfs::is_directory(*it)) {
+			if (!bfs::is_directory(it)) {
 				#if defined BOOST_WINDOWS_API
 					std::string path = bfs::absolute(*it).string();
 					std::replace(path.begin(), path.end(), '\\', '/');
 					targets.insert(path);
 				#else
-					targets.insert(bfs::absolute(*it).string());
+					targets.insert(bfs::absolute(it).string());
 				#endif
 			}
 			else {
-				PRINT_WARNING << *it << " is a directory. Skipping (use the -r option for recursive analyses)." << std::endl;
+				PRINT_WARNING << it << " is a directory. Skipping (use the -r option for recursive analyses)." << std::endl;
 			}
 		}
 	}
@@ -478,8 +478,8 @@ std::set<std::string> get_input_files(po::variables_map& vm)
 void perform_analysis(const std::string& path,
 					  po::variables_map& vm,
 					  const std::string& extraction_directory,
-					  const std::vector<std::string> selected_categories,
-					  const std::vector<std::string> selected_plugins,
+					  const std::vector<std::string>& selected_categories,
+					  const std::vector<std::string>& selected_plugins,
 					  const config& conf,
 					  boost::shared_ptr<io::OutputFormatter> formatter)
 {
@@ -497,11 +497,11 @@ void perform_analysis(const std::string& path,
 			y.load_rules("yara_rules/magic.yara"))
 		{
 			yara::const_matches m = y.scan_file(*pe.get_path());
-			if (m && m->size() > 0)
+			if (m && !m->empty())
 			{
 				std::cerr << "Detected file type(s):\t" << std::endl;
-				for (auto it = m->begin() ; it != m->end() ; ++it) {
-					std::cerr << (*it)->operator[]("description") << std::endl;
+				for (const auto& it : *m) {
+					std::cerr << (it)->operator[]("description") << std::endl;
 				}
 			}
 		}
@@ -593,9 +593,9 @@ int main(int argc, char** argv)
 
 	// Do the actual analysis on all the input files
 	unsigned int count = 0;
-	for (auto it = targets.begin() ; it != targets.end() ; ++it)
+	for (const auto& it : targets)
 	{
-		perform_analysis(*it, vm, extraction_directory, selected_categories, selected_plugins, conf, formatter);
+		perform_analysis(it, vm, extraction_directory, selected_categories, selected_plugins, conf, formatter);
 		if (++count % 1000 == 0) {
 			formatter->format(std::cout, false); // Flush the formatter from time to time, to avoid eating up all the RAM when analyzing gigs of files.
 		}
