@@ -20,6 +20,8 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <future>
+#include <utility>
 
 #include <boost/program_options.hpp>
 #include <boost/tokenizer.hpp>
@@ -355,22 +357,36 @@ void handle_plugins_option(io::OutputFormatter& formatter,
 	std::vector<plugin::pIPlugin> plugins = plugin::PluginManager::get_instance().get_plugins();
 	io::pNode plugins_node(new io::OutputTreeNode("Plugins", io::OutputTreeNode::LIST));
 
-	for (auto it = plugins.begin() ; it != plugins.end() ; ++it)
+	typedef std::tuple<boost::shared_ptr<std::thread>, std::shared_future<plugin::pResult>, plugin::pIPlugin> plugin_job;
+	std::vector<plugin_job> jobs;
+	for (const auto& it : plugins)
 	{
 		// Verify that the plugin was selected
-		if (!all_plugins && std::find(selected.begin(), selected.end(), *(*it)->get_id()) == selected.end()) {
+		if (!all_plugins && std::find(selected.begin(), selected.end(), *it->get_id()) == selected.end()) {
 			continue;
 		}
 
 		// Forward relevant configuration elements to the plugin.
-		if (conf.count(*(*it)->get_id())) {
-			(*it)->set_config(conf.at(*(*it)->get_id()));
+		if (conf.count(*it->get_id())) {
+			it->set_config(conf.at(*it->get_id()));
 		}
 
-		plugin::pResult res = (*it)->analyze(pe);
+		std::promise<plugin::pResult> res_promise;
+		std::shared_future<plugin::pResult> future(res_promise.get_future());
+		boost::shared_ptr<std::thread> t(boost::make_shared<std::thread>(std::thread([](const plugin::pIPlugin& p, std::promise<plugin::pResult>& r, const mana::PE* pe) {
+			r.set_value(p->analyze(*pe));
+		}, it, std::move(res_promise), &pe)));
+
+		jobs.push_back(plugin_job(t, future, it));
+	}
+
+	for (auto j : jobs)
+	{
+		std::get<0>(j)->join();
+		auto res = std::get<1>(j).get();
 		if (!res)
 		{
-			PRINT_WARNING << "Plugin " << *(*it)->get_id() << " returned a NULL result!" << std::endl;
+			PRINT_WARNING << "Plugin " << *std::get<2>(j)->get_id() << " returned a NULL result!" << std::endl;
 			continue;
 		}
 

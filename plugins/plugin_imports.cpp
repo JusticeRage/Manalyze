@@ -22,7 +22,6 @@
 #include "plugin_framework/auto_register.h"
 
 #include "manacommons/color.h"
-#include <yara/atoms.h>
 
 namespace plugin {
 
