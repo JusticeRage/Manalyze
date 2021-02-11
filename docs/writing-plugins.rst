@@ -17,7 +17,7 @@ Which one should you choose? Here are some guidelines to help you decide:
 - If you intend to distribute your plugin, you should write an external plugin. It makes more sense to share a ``.so`` or ``.dll`` file than a whole new Manalyze binary with added code. 
 - If your plugin is relatively small and isn't meant to be shared, it is okay to write an internal plugin. Conversely, complex plugins which pull third-party libraries should be compiled in their own module.
 
-In any case, aside from small discreapancies in the way each type of plugin is built, the code you will write will be mostly identical.
+In any case, aside from small discrepancies in the way each type of plugin is built, the code you will write will be mostly identical.
 
 A sample plugin
 ===============

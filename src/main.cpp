@@ -499,9 +499,9 @@ void perform_analysis(const std::string& path,
 			yara::const_matches m = y.scan_file(*pe.get_path());
 			if (m && !m->empty())
 			{
-				std::cerr << "Detected file type(s):\t" << std::endl;
+				std::cerr << "Detected file type(s):" << std::endl;
 				for (const auto& it : *m) {
-					std::cerr << (it)->operator[]("description") << std::endl;
+					std::cerr << "\t" << (it)->operator[]("description") << std::endl;
 				}
 			}
 		}
