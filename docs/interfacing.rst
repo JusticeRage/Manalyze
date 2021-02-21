@@ -2,46 +2,139 @@
 Interfacing with Manalyze
 *************************
 
-Endpoints
-=========
+Native Manalyze integration
+===========================
 
-If you're working on a tool that could benefit from integrating with Manalyze, there are a few ways you can obtain results from the tool.
-The most straightforward one is to parse the output directly::
+If you're working on a tool that could benefit from integrating with Manalyze, there are a few ways you can obtain results from the program.
+The most straightforward one is to parse the output of Manalyze directly::
 
-    manalyze [sample] --dump=... --plugins=... --output=json
+	manalyze [sample] --dump=... --plugins=... --output=json
+
+Manalyzer.org API
+=================
 
 If you are not willing or able to use Manalyze on your local machine, the web portal can
-provide the same results. You will, however, need to contact the project's maintainer
-to obtain an API key.
+provide the same results. The website's API can currently be used with no restrictions or rate-limiting.
+
+Python API
+----------
+
+Jobs can be sent to Manalyzer.org using a `simple Python library <https://gist.github.com/JusticeRage/f6fd2d003c13d85c4f864fd7f327382d>`_. The creation of a pip package is currently under development. Assuming you saved the library under :code:`manalyzer.py`, the following code can be used to analyze PE files:
 
 .. code-block:: python
 
-    import requests
-    
-    # Submit a file
-    f = {'file': open("sample.exe", "rb")}
-    data = {'api_key': "[Your API key]"}
-    r = requests.post("https://manalyzer.org/api/submit", files=f, data=data)
-    print r.text
-    
-    # Get a report for an existing file (no API key required)
-    r = requests.get("https://manalyzer.org/json/1804821148ae7c305d0e5d3463bcbd67")
-    print r.text
+	import manalyzer
+	
+	report = manalyzer.submit_sample("C:\\path\\to\\file.exe")
+	print(report)
+	
+Existing reports can be queries just as easily:
+
+.. code-block:: python
+
+	import manalyzer
+	
+	report = manalyzer.get_report("3c0d740347b0362331c882c2dee96dbf")
+	print(report)
+	
+For a reference of what JSON reports may contain, please refer to the :ref:`JSON structure` section.
+
+Under the hood
+--------------
+
+When a sample is submitted through the web portal, it goes into a job queue and waits until workers are available
+to be processed. API submissions follow the same logic, where a task is first created, and then polled until results 
+are ready. File uploads take place through POST requests to :code:`https://manalyzer.org/upload`. The following Python
+snippet can be used if needed:
+
+.. code-block:: python
+
+	import requests
+	
+	f = {'file': open(path, "rb")}
+	r = requests.post("https://manalyzer.org/upload", files=f)
+
+These results are returned as JSON objects with the following structure::
+
+	{
+		"status": "...",
+		"data": { ... }
+	}
+	
+The :code:`status` field represents the status of the task. It can be either :code:`queued` (Manalyzer.org is waiting
+for a worker to become available), :code:`started` (the analysis is ongoing), :code:`finished` (results are available)
+or :code:`failed` (the job could not complete). Please note that this status only provides information about the task
+itself. A :code:`finished` status does not imply that the submitted file was parsed successfully, only that it was
+analyzed. Possible errors include problems during the file transfer, unavailable service, etc. In that case, you might
+get a result which looks like this::
+
+	{
+		"status": "failed",
+		"data": {
+			"error_message": "An error occurred during the file transfer."
+		}
+	}
+	
+When the analysis is queued, started or finished, it receives a unique identifier which can be used to query its
+status from :code:`https://manalyzer.org/task/<task id>`. The API will provide information about the job::
+
+	{
+		'status': 'started',
+		'data': {
+			'task_id': 'XXX',
+			'task_result': None
+		}
+	}
+
+Finally, when the task is complete (i.e. the status becomes :code:`finished`), you can inspect the contents of the
+:code:`task_result` field to get information about the results of the analysis::
+
+	{
+		'status': 'finished',
+		'data': {
+			'task_id': 'XXX', 
+			'task_result': {
+				'manalyze_status': 'success'
+			}
+		}
+	}
+
+The :code:`manalyze_status` field indicates whether the submitted file could be analyzed successfully or not (which,
+again, is not the same thing as the job being finished). This status can be either :code:`success` or :code:`failed`.
+In the latter case, :code:`task_result` may also contain an `error_message` field that provides more information 
+about what happened::
+
+	{
+		'status': 'finished',
+		'data': 
+		{
+			'task_id': 'YYY', 
+			'task_result': {
+				'error_message': '[!] Error: DOS Header is invalid (wrong magic).\n ...',
+				'manalyze_status': 'failed'
+			}
+		}
+	}
+	
+If everything went well, the JSON report for the uploaded file will be available at
+:code:`https://manalyzer.org/json/<task_id>`
+
+.. _JSON structure:
 
 JSON structure
 ==============
 
 In both cases, you'll obtain a JSON document which represents the report produced by Manalyze. Their high-level structure is as follows::
 
-    user@machine:~/samples$ manalyze -ojson file1 /tmp/file2
-    {
-        "/home/user/samples/file1": {
-            // Report for file1
-        }
-        "/tmp/file2": {
-            // Report for file2
-        }
-    }
+	user@machine:~/samples$ manalyze -ojson file1 /tmp/file2
+	{
+		"/home/user/samples/file1": {
+			// Report for file1
+		}
+		"/tmp/file2": {
+			// Report for file2
+		}
+	}
 
 At the root of the document, you'll find an entry for each file analyzed. If the 
 analysis could not complete successfully, no object will be added to the document root.
@@ -57,58 +150,58 @@ what that part of the document may look like::
 
 	{
 		"ab35c68e263bb4dca6c11e16cd7fb9d8": {
-		    "Summary": {
-		        "Compilation Date": "2017-Nov-16 22:05:22", 
-		        "Detected languages": [
-		            "English - United States"
-		        ], 
-		        "CompanyName": "Sysinternals - www.sysinternals.com"
-		        // ...
-		    }, 
-		    "DOS Header": {
-		        "e_magic": "MZ", 
-		        "e_cblp": 144
-		        // ...
-		    }, 
-		    "Sections": {
-		        ".text": {
-		            "MD5": "c151016c0929a571e7a3882e3c292524", 
-		            "NumberOfRelocations": 0, 
-		            "Characteristics": [
-		                "IMAGE_SCN_CNT_CODE", 
-		                "IMAGE_SCN_MEM_EXECUTE", 
-		                "IMAGE_SCN_MEM_READ"
-		            ], 
-		            "Entropy": 6.60464
-		            // ...
-		    }, 
-		    "Imports": {
-		        "WINTRUST.dll": [
-		            "CryptCATEnumerateMember", 
-		            "CryptCATEnumerateCatAttr"
-		            // ...
-		        ], 
-		        "VERSION.dll": [
-		            "GetFileVersionInfoSizeW", 
-		            "VerQueryValueW", 
-		            "GetFileVersionInfoW"
-		        ]
-		        // ...
-		    }, 
-		    "Resources": {
-		        "1": {
-		            "Type": "RT_VERSION", 
-		            "Language": "English - United States", 
-		            "SHA1": "48cf205c2a63018aa56267f95490b0da0156aa6d"
-		            // ...
-		        }
-		        // ...
-		    }, 
-		    "Hashes": {
-		        "MD5": "ab35c68e263bb4dca6c11e16cd7fb9d8"
-		        // ...
-		    }
-		    // ...
+			"Summary": {
+				"Compilation Date": "2017-Nov-16 22:05:22", 
+				"Detected languages": [
+					"English - United States"
+				], 
+				"CompanyName": "Sysinternals - www.sysinternals.com"
+				// ...
+			}, 
+			"DOS Header": {
+				"e_magic": "MZ", 
+				"e_cblp": 144
+				// ...
+			}, 
+			"Sections": {
+				".text": {
+					"MD5": "c151016c0929a571e7a3882e3c292524", 
+					"NumberOfRelocations": 0, 
+					"Characteristics": [
+						"IMAGE_SCN_CNT_CODE", 
+						"IMAGE_SCN_MEM_EXECUTE", 
+						"IMAGE_SCN_MEM_READ"
+					], 
+					"Entropy": 6.60464
+					// ...
+			}, 
+			"Imports": {
+				"WINTRUST.dll": [
+					"CryptCATEnumerateMember", 
+					"CryptCATEnumerateCatAttr"
+					// ...
+				], 
+				"VERSION.dll": [
+					"GetFileVersionInfoSizeW", 
+					"VerQueryValueW", 
+					"GetFileVersionInfoW"
+				]
+				// ...
+			}, 
+			"Resources": {
+				"1": {
+					"Type": "RT_VERSION", 
+					"Language": "English - United States", 
+					"SHA1": "48cf205c2a63018aa56267f95490b0da0156aa6d"
+					// ...
+				}
+				// ...
+			}, 
+			"Hashes": {
+				"MD5": "ab35c68e263bb4dca6c11e16cd7fb9d8"
+				// ...
+			}
+			// ...
 	}
 
 This document has been trimmed down a for readability purposes, but links to complete reports are provided below. Here is the list of possible keys you can encounter:
@@ -143,13 +236,13 @@ The reports also contain a whole section dedicated to the output of any plugin c
 	"plugin name": {
 		"level": 3, 
 		"plugin_output": {
-		    "key 1": [
-		        "value 1", 
-		        "value 2"
-		        // ...
-		    ],
-		    "key 2": "value 3"
-		    // ...
+			"key 1": [
+				"value 1", 
+				"value 2"
+				// ...
+			],
+			"key 2": "value 3"
+			// ...
 		}, 
 		"summary": "A single string"
 	}
@@ -169,92 +262,92 @@ Here is a sample plugin output for :code:`WannaCry`::
 
 	"Plugins": {
 		"compilers": {
-		    "level": 1, 
-		    "plugin_output": {
-		        "info_0": "Microsoft Visual C++ 6.0 - 8.0", 
-		        "info_1": "Microsoft Visual C++", 
-		        "info_2": "Microsoft Visual C++ v6.0", 
-		        "info_3": "Microsoft Visual C++ v5.0/v6.0 (MFC)"
-		    }, 
-		    "summary": "Matching compiler(s):"
+			"level": 1, 
+			"plugin_output": {
+				"info_0": "Microsoft Visual C++ 6.0 - 8.0", 
+				"info_1": "Microsoft Visual C++", 
+				"info_2": "Microsoft Visual C++ v6.0", 
+				"info_3": "Microsoft Visual C++ v5.0/v6.0 (MFC)"
+			}, 
+			"summary": "Matching compiler(s):"
 		}, 
 		"strings": {
-		    "level": 2, 
-		    "plugin_output": {
-		        "Miscellaneous malware strings": [
-		            "cmd.exe"
-		        ]
-		    }, 
-		    "summary": "Strings found in the binary may indicate undesirable behavior:"
+			"level": 2, 
+			"plugin_output": {
+				"Miscellaneous malware strings": [
+					"cmd.exe"
+				]
+			}, 
+			"summary": "Strings found in the binary may indicate undesirable behavior:"
 		}, 
 		"findcrypt": {
-		    "level": 1, 
-		    "plugin_output": {
-		        "info_0": "Uses constants related to CRC32", 
-		        "info_1": "Uses constants related to AES", 
-		        "info_2": "Microsoft's Cryptography API"
-		    }, 
-		    "summary": "Cryptographic algorithms detected in the binary:"
+			"level": 1, 
+			"plugin_output": {
+				"info_0": "Uses constants related to CRC32", 
+				"info_1": "Uses constants related to AES", 
+				"info_2": "Microsoft's Cryptography API"
+			}, 
+			"summary": "Cryptographic algorithms detected in the binary:"
 		}, 
 		"btcaddress": {
-		    "level": 3, 
-		    "plugin_output": {
-		        "Contains a valid Bitcoin address": [
-		            "115p7UMMngoj1pMvkpHijcRdfJNXj6LrLn", 
-		            "12t9YDPgwueZ9NyMgw519p7AA8isjr6SMw", 
-		            "13AM4VW2dhxYgXeQepoHkHSQuy6NgaEb94"
-		        ]
-		    }, 
-		    "summary": "This program may be a ransomware."
+			"level": 3, 
+			"plugin_output": {
+				"Contains a valid Bitcoin address": [
+					"115p7UMMngoj1pMvkpHijcRdfJNXj6LrLn", 
+					"12t9YDPgwueZ9NyMgw519p7AA8isjr6SMw", 
+					"13AM4VW2dhxYgXeQepoHkHSQuy6NgaEb94"
+				]
+			}, 
+			"summary": "This program may be a ransomware."
 		}, 
 		"imports": {
-		    "level": 2, 
-		    "plugin_output": {
-		        "Possibly launches other programs": [
-		            "CreateProcessA"
-		        ], 
-		        "Uses Microsoft's cryptographic API": [
-		            "CryptReleaseContext"
-		        ],
-		        "Interacts with services": [
-		            "CreateServiceA", 
-		            "OpenServiceA", 
-		            "OpenSCManagerA"
-		        ]
-		        // ...
-		    }, 
-		    "summary": "The PE contains functions most legitimate programs don't use."
+			"level": 2, 
+			"plugin_output": {
+				"Possibly launches other programs": [
+					"CreateProcessA"
+				], 
+				"Uses Microsoft's cryptographic API": [
+					"CryptReleaseContext"
+				],
+				"Interacts with services": [
+					"CreateServiceA", 
+					"OpenServiceA", 
+					"OpenSCManagerA"
+				]
+				// ...
+			}, 
+			"summary": "The PE contains functions most legitimate programs don't use."
 		}, 
 		"resources": {
-		    "level": 2, 
-		    "plugin_output": {
-		        "info_0": "Resources amount for 98.1255% of the executable."
-		    }, 
-		    "summary": "The PE is possibly a dropper."
+			"level": 2, 
+			"plugin_output": {
+				"info_0": "Resources amount for 98.1255% of the executable."
+			}, 
+			"summary": "The PE is possibly a dropper."
 		}, 
 		"mitigation": {
-		    "level": 1, 
-		    "plugin_output": {
-		        "Stack Canary": "disabled", 
-		        "SafeSEH": "disabled", 
-		        "ASLR": "disabled", 
-		        "DEP": "disabled"
-		    }, 
-		    "summary": "The following exploit mitigation techniques have been detected"
+			"level": 1, 
+			"plugin_output": {
+				"Stack Canary": "disabled", 
+				"SafeSEH": "disabled", 
+				"ASLR": "disabled", 
+				"DEP": "disabled"
+			}, 
+			"summary": "The following exploit mitigation techniques have been detected"
 		}, 
 		"virustotal": {
-		    "level": 3, 
-		    "plugin_output": {
-		        "Bkav": "W32.WanaCryptBTTc.Worm", 
-		        "MicroWorld-eScan": "Trojan.Ransom.WannaCryptor.A", 
-		        "nProtect": "Ransom/W32.WannaCry.Zen", 
-		        "Paloalto": "generic.ml", 
-		        "ClamAV": "Win.Trojan.Agent-6312832-0", 
-		        "Kaspersky": "Trojan-Ransom.Win32.Wanna.zbu", 
-		        "BitDefender": "Trojan.Ransom.WannaCryptor.A",
-		        // ...
-		    }, 
-		    "summary": "VirusTotal score: 58/62 (Scanned on 2017-07-08 14:55:28)"
+			"level": 3, 
+			"plugin_output": {
+				"Bkav": "W32.WanaCryptBTTc.Worm", 
+				"MicroWorld-eScan": "Trojan.Ransom.WannaCryptor.A", 
+				"nProtect": "Ransom/W32.WannaCry.Zen", 
+				"Paloalto": "generic.ml", 
+				"ClamAV": "Win.Trojan.Agent-6312832-0", 
+				"Kaspersky": "Trojan-Ransom.Win32.Wanna.zbu", 
+				"BitDefender": "Trojan.Ransom.WannaCryptor.A",
+				// ...
+			}, 
+			"summary": "VirusTotal score: 58/62 (Scanned on 2017-07-08 14:55:28)"
 		}
 	}
 
@@ -265,12 +358,12 @@ Additional JSON samples:
 
 If you need additional JSON documents to test your Manalyze integration, head to `Manalyzer <https://manalyzer.org>`_ and find a report that interests you. Just change the URL from::
 
-    https://manalyzer.org/report/[md5]
+	https://manalyzer.org/report/[md5]
 
 ...to...
 
 .. code::
 
-    https://manalyzer.org/json/[md5]
+	https://manalyzer.org/json/[md5]
 
 ...and you'll be presented with the source JSON document.

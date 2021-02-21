@@ -47,7 +47,7 @@ All code contributions should make every effort to match Manalyze's coding style
     * Protect header files against multiple inclusions with ``#pragma once``.
     * Inclusion of system headers should precede inclusion of user-defined headers. Boost headers are considered system headers.
     * Put function implementations in .cpp files.
-    * Function declarations must be documented following the `Doxygen <https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html>`_ convention. 
+    * Function declarations must be documented following the `Doxygen <https://www.doxygen.nl/manual/docblocks.html>`_ convention. 
     * Please thoroughly explain non-intuitive code fragments with inline comments.
 * Formatting
     * Do not put multiple statements on a single line (i.e. ``int a = 1; initialize(a);`` is not accepted.).
