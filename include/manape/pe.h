@@ -27,7 +27,7 @@
 #include <set>
 #include <exception>
 
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/scoped_array.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/optional.hpp>
@@ -37,6 +37,7 @@
 
 #include "manape/nt_values.h"			// Windows-related #defines flags are declared in this file.
 #include "manape/pe_structs.h"			// All typedefs and structs are over there
+#include "manape/ordinals.h"			// Translation between known ordinals and corresponding function names
 #include "manape/utils.h"
 #include "manape/resources.h"			// Definition of the Resource class
 #include "manape/section.h"				// Definition of the Section class

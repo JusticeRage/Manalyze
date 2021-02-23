@@ -20,7 +20,7 @@
 #include <vector>
 #include <iostream>
 #include <boost/shared_ptr.hpp>
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/optional.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/system/api_config.hpp>

@@ -274,36 +274,28 @@ const_shared_strings PE::get_imported_functions(const std::string& dll) const
 		return destination;
 	}
 
-	pImportedLibrary library = pImportedLibrary();
-
 	// We don't want to use PE::_find_imported_dlls: no regexp matching is necessary, since we only look for a simple exact name here.
-	for (auto it = _imports.begin() ; it != _imports.end() ; ++it)
-	{
-		pString name = (*it)->get_name();
-		if (name != nullptr && *name == dll)
-		{
-			library = (*it);
-			break;
-		}
+	auto found = std::find_if(_imports.begin(), _imports.end(), [dll](const pImportedLibrary& l)->bool {
+		return l->get_name() && *l->get_name() == dll;
+	});
+	if (found == _imports.end() || !*found) {
+		return destination;
 	}
+	auto library = *found;
 
-	if (library != nullptr)
+	auto functions = library->get_imports();
+	if (functions == nullptr) {
+		return destination;
+	}
+	for (const auto& it : *functions)
 	{
-		auto functions = library->get_imports();
-		if (functions == nullptr) {
-			return destination;
+		if (it->Name != "") {
+			destination->push_back(it->Name);
 		}
-		for (auto it = functions->begin() ; it != functions->end() ; ++it)
+		else
 		{
-			if ((*it)->Name != "") {
-				destination->push_back((*it)->Name);
-			}
-			else
-			{
-				std::stringstream ss;
-				ss << "#" << ((*it)->AddressOfData & 0x7FFF);
-				destination->push_back(ss.str());
-			}
+			boost::uint16_t ordinal = it->AddressOfData & 0x7FFF;
+			destination->push_back(*nt::translate_ordinal(ordinal, dll));
 		}
 	}
 
@@ -350,6 +342,9 @@ const_shared_strings PE::find_imports(const std::string& function_name_regexp,
 	}
 
 	auto matching_dlls = find_imported_dlls(dll_name_regexp);
+	if (!matching_dlls || matching_dlls->empty()) {
+		return destination;
+	}
 
 	boost::regex e;
 	if (case_sensitivity) {
@@ -360,24 +355,21 @@ const_shared_strings PE::find_imports(const std::string& function_name_regexp,
 	}
 
 	// Iterate on matching DLLs
-	for (auto it = matching_dlls->begin() ; it != matching_dlls->end() ; ++it)
+	for (const auto& it : *matching_dlls)
 	{
-		auto imported_functions = (*it)->get_imports();
+		auto imported_functions = it->get_imports();
 		if (imported_functions == nullptr) {
 			continue;
 		}
 		// Iterate on functions imported by each of these DLLs
-		for (auto it2 = imported_functions->begin() ; it2 != imported_functions->end() ; ++it2)
+		for (const auto& it2 : *imported_functions)
 		{
 			std::string name;
-			if ((*it2)->Name == "") 
-			{
-				std::stringstream ss;
-				ss << "#" << ((*it2)->AddressOfData & 0x7FFF);
-				name = ss.str();
+			if (it2->Name == "") {
+				name = *nt::translate_ordinal(it2->AddressOfData & 0x7FFF, *it->get_name());
 			}
 			else {
-				name = (*it2)->Name;
+				name = it2->Name;
 			}
 			// Functions may be imported multiple times, don't add the same one twice.
 			if (boost::regex_match(name, e) && std::find(destination->begin(), destination->end(), name) == destination->end()) {

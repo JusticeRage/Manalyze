@@ -29,9 +29,12 @@ std::string hash_imports(const mana::PE& pe)
 			//
 			// Therefore, I propose a new imphash convention: if the function is imported by name, use the name.
 			// Otherwise, use the ordinal number (i.e. dll_name.123).
+			// 
+			// 2021 UPDATE: I am now, extremely reluctantly, adopting PEFile's absurd convention for compatibility
+			// with VirusTotal.
 
 			if ((*it2).find("#") == 0 && (*it2).length() > 1) { // Import by ordinal
-				function_name = std::string((*it2).begin() + 1, (*it2).end());
+				function_name = "ord" + std::string((*it2).begin() + 1, (*it2).end());
 			}
 			else {
 				function_name = *it2;

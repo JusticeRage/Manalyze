@@ -186,7 +186,7 @@ bool check_dlls(const mana::PE& pe,
 				pResult res)
 {
 	mana::const_shared_strings found_imports = pe.find_imports(".*", dll_regex);
-	if (!found_imports->empty())
+	if (found_imports && !found_imports->empty())
 	{
 		res->raise_level(level);
 		io::pNode info = boost::make_shared<io::OutputTreeNode>(description,
