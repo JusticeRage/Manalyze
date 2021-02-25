@@ -640,19 +640,19 @@ FILE* Resource::_reach_data() const
 
 // ----------------------------------------------------------------------------
 
-std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, const std::vector<pResource>& resources)
+mana::shared_bytes reconstruct_icon(pgroup_icon_directory directory, const std::vector<pResource>& resources)
 {
 	std::vector<boost::uint8_t> res;
 
 	if (directory == nullptr) {
-		return res;
+		return shared_bytes();
 	}
 
 	// Sanity check.
 	if (directory->Count > resources.size())
 	{
 		PRINT_ERROR << "The number of ICON_DIRECTORY_ENTRIES is bigger than the number of resources in the file." << DEBUG_INFO << std::endl;
-		return std::vector<boost::uint8_t>();
+		return shared_bytes();
 	}
 
 	boost::uint32_t header_size = 3 * sizeof(boost::uint16_t) + directory->Count * sizeof(group_icon_directory_entry);
@@ -662,7 +662,7 @@ std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, co
 	catch (const std::bad_alloc)
 	{
 		PRINT_ERROR << "Could not allocate enough memory to reconstruct an icon. This PE may have been manually modified." << DEBUG_INFO << std::endl;
-		return std::vector<boost::uint8_t>();
+		return shared_bytes();
 	}
 	memcpy(&res[0], directory.get(), 3 * sizeof(boost::uint16_t));
 
@@ -684,7 +684,7 @@ std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, co
 		if (icon == nullptr)
 		{
 			PRINT_ERROR << "Could not locate RT_ICON with ID " << directory->Entries[i]->Id << "!" << DEBUG_INFO << std::endl;
-			return std::vector<boost::uint8_t>();
+			return shared_bytes();
 		}
 
 		shared_bytes icon_bytes = icon->get_raw_data();
@@ -712,7 +712,7 @@ std::vector<boost::uint8_t> reconstruct_icon(pgroup_icon_directory directory, co
 		}
 	}
 
-	return res;
+	return boost::make_shared<std::vector<boost::uint8_t> >(res);
 }
 
 // ----------------------------------------------------------------------------
@@ -827,13 +827,13 @@ bool Resource::icon_extract(const boost::filesystem::path& destination,
         return extract(destination);
     }
     auto data = reconstruct_icon(interpret_as<pgroup_icon_directory>(), resources);
-	if (data.empty())
+	if (!data || data->empty())
 	{
 		PRINT_WARNING << "Resource " << _id << " is empty!" << DEBUG_INFO << std::endl;
 		return true;
 	}
 
-    return write_data_to_file(destination, data);
+    return write_data_to_file(destination, *data);
 }
 
 } // !namespace mana
