@@ -19,7 +19,7 @@
 import argparse
 import re
 import sys
-from string import maketrans, hexdigits
+from string import hexdigits
 
 # Two groups of number separated by a comma, i.e. 200,400
 range_offset_pattern = re.compile("(\d+),(\d+)")
@@ -83,7 +83,7 @@ class YaraRule:
         self._signatures = []
         self._logical_expression = logical_expression
         # Sanitize the rule name: no whitespace and must not start with a number
-        self._rulename = malware_name.translate(maketrans(" \t", "__"))
+        self._rulename = malware_name.translate(str.maketrans(" \t", "__"))
         self._rulename = self._rulename.replace(".", "_dot_")     # Necessary, to avoid conflicts. Just replacing by
         self._rulename = self._rulename.replace("-", "_dash_")    # underscores just doesn't cut it when signatures
         self._rulename = self._rulename.replace(":", "_column_")  # exist for Dialer-317 and Dialer.317
@@ -178,7 +178,7 @@ class YaraRule:
 
             # Now we have the base relative to which the offset is.
             if base_yara_offset is None:
-                print "Unhandled extended condition: %s" % offset
+                print("Unhandled extended condition: %s" % offset)
                 return
 
             # Simple case: just an offset
@@ -243,7 +243,7 @@ class YaraRule:
                     # If they haven't been detected while looking ahead, it means that
                     # they arrive after a full expression (i.e. (0&1)>X,Y), which can't
                     # be translated to a Yara rule as far as I know.
-                    print "Unable to translate a logical signature for %s. Skipping..." % self._meta_signature
+                    print("Unable to translate a logical signature for %s. Skipping..." % self._meta_signature)
                     return ""
                 else:
                     try:
@@ -251,7 +251,7 @@ class YaraRule:
                         # Check for a negation or a count
                         if i + 2 < len(tokens) and (tokens[i+1] == "=" or tokens[i+1] == ">" or tokens[i+1] == "<"):
                             if i + 3 < len(tokens) and tokens[i+2] == ",":
-                                print "Unable to translate a logical signature for %s. Skipping..." % self._meta_signature
+                                print("Unable to translate a logical signature for %s. Skipping..." % self._meta_signature)
                                 return ""
                             if tokens[i+1] == "=" and tokens[i+2] == "0":  # Negation
                                 conditions += "not %s" % self._conditions[index]
@@ -274,7 +274,7 @@ class YaraRule:
                         else:
                             conditions += self._conditions[index]  # The token is the number of the rule
                     except ValueError:
-                        print "%s token not implemented!" % t
+                        print("%s token not implemented!" % t)
                         sys.exit(1)
                 i += 1
 
@@ -303,14 +303,14 @@ def parse_ndb(input, output, is_daily=False):
                 try:
                     rule = YaraRule(malware_name, [[signature, offset]], is_daily=is_daily)
                 except MalformedRuleError:
-                    print "Rule %s seems to be malformed. Skipping..." % malware_name
+                    print("Rule %s seems to be malformed. Skipping..." % malware_name)
                     continue
 
                 if not rule.get_meta_signature() in RULES:
                     RULES.add(rule.get_meta_signature())
-                    g.write(rule.__str__())
+                    g.write(rule.__str__().encode())
                 else:
-                    print "Rule %s already exists!" % rule.get_meta_signature()
+                    print("Rule %s already exists!" % rule.get_meta_signature())
 
 
 def parse_ldb(input, output, is_daily=False):
@@ -350,14 +350,14 @@ def parse_ldb(input, output, is_daily=False):
                     rule = YaraRule(malware_name, signatures, logical_expression=logical_expression, is_daily=is_daily)
                     translated_rule = rule.__str__()
                 except MalformedRuleError:
-                    print "Rule %s seems to be malformed. Skipping..." % malware_name
+                    print("Rule %s seems to be malformed. Skipping..." % malware_name)
                     continue
 
                 if not rule.get_meta_signature() in RULES and translated_rule:
                     RULES.add(rule.get_meta_signature())
-                    g.write(translated_rule)
+                    g.write(translated_rule.encode())
                 elif translated_rule:
-                    print "Rule %s already exists!" % rule.get_meta_signature()
+                    print("Rule %s already exists!" % rule.get_meta_signature())
 
 
 def main():

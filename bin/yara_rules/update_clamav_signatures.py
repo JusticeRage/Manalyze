@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
     This file is part of Manalyze.
@@ -22,47 +22,53 @@ import os
 import shutil
 import tarfile
 import zlib
-import urllib2
+import uuid
 import argparse
 from parse_clamav import parse_ndb, parse_ldb
 
+try:
+    import requests
+except ModuleNotFoundError as e:
+    print('Please install the requests module to use thie script.')
+    print("$> pip3 install requests")
+    sys.exit(1)
 
-URL_MAIN = "http://database.clamav.net/main.cvd"
-URL_DAILY = "http://database.clamav.net/daily.cvd"
+URL_MAIN = "https://database.clamav.net/main.cvd"
+URL_DAILY = "https://database.clamav.net/daily.cvd"
 
 
 def download_file(url):
     """
     Downloads a file.
-    Source: https://stackoverflow.com/questions/22676/how-do-i-download-a-file-over-http-using-python
     """
     file_name = url.split('/')[-1]
-    try:
-        request = urllib2.Request(url)
-        request.add_header("User-Agent", "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:35.0) Gecko/20100101 Firefox/38.0")
-        u = urllib2.urlopen(url)
-    except urllib2.HTTPError as e:
-        print "Could not download %s." % url, e
+    r = requests.get(url, stream=True, headers={
+        'User-Agent': f'CVDUPDATE/0.3.3 ({str(uuid.uuid4())})'
+    })
+    if r.status_code == 429:
+        print(f"The remote server indicates that this IP is rate-limited. Please try again in 12 hours.")
+        sys.exit(0)
+    elif r.status_code != 200:
+        print(f"Could not download {url} (Status: {r.status_code}).")
         sys.exit(1)
-    outfile = open(file_name, 'wb')
-    meta = u.info()
-    file_size = int(meta.getheaders("Content-Length")[0])
-    print "Downloading: %s Bytes: %s" % (file_name, file_size)
+    with open(file_name, 'wb') as outfile:
+        file_size = r.headers.get('Content-Length')
+        if file_size is None:
+            outfile.write(r.content)
+            return
+        
+        downloaded = 0
+        chunk_size = 8192
+        file_size = int(file_size)
+        print("Downloading: %s Bytes: %s" % (file_name, file_size))
+        for d in r.iter_content(chunk_size):
+            downloaded += len(d)
+            outfile.write(d)
+            status = "\r%10d  [%3.2f%%]" % (downloaded, downloaded * 100. / file_size)
+            status += chr(8) * (len(status) + 1)
+            print(status, end="")
 
-    file_size_dl = 0
-    block_sz = 8192
-    while True:
-        buffer = u.read(block_sz)
-        if not buffer:
-            break
 
-        file_size_dl += len(buffer)
-        outfile.write(buffer)
-        status = r"%10d  [%3.2f%%]" % (file_size_dl, file_size_dl * 100. / file_size)
-        status += chr(8) * (len(status) + 1)
-        print status,
-
-    outfile.close()
 
 
 def zlib_decompress(path, outpath):
@@ -70,7 +76,7 @@ def zlib_decompress(path, outpath):
     input = open(path, "rb")
     output = open(outpath, "wb")
     if not input or not output:
-        print "[!] Error decompressing signatures."
+        print("[!] Error decompressing signatures.")
         sys.exit(-1)
 
     while True:
@@ -95,13 +101,13 @@ def update_signatures(url, download):
     # Extract signatures
     f = open(file_name, "rb")
     if not f or len(f.read(512)) != 512:  # Skip the CVD header
-        print "[!] Error reading main.cvd!"
+        print("[!] Error reading main.cvd!")
         sys.exit(-1)
 
     g = open("%s.tar.gz" % file_basename, "wb")
     if not g:
         f.close()
-        print "[!] Error writing to %s.tar.gz!" % file_basename
+        print("[!] Error writing to %s.tar.gz!" % file_basename)
         sys.exit(-1)
 
     # Create a copy of the virus definitions without the ClamAV header (it becomes a valid TGZ file)
@@ -122,10 +128,10 @@ def update_signatures(url, download):
     zlib_decompress("%s.tar.gz" % file_basename, "%s.tar" % file_basename)
     tar = tarfile.open("%s.tar" % file_basename)
     tar.extract("%s.ndb" % file_basename)
-    os.chmod("%s.ndb" % file_basename, 0644)
+    os.chmod("%s.ndb" % file_basename, 0o644)
     if "%s.ldb" % file_basename in tar.getnames():
         tar.extract("%s.ldb" % file_basename)
-        os.chmod("%s.ldb" % file_basename, 0644)
+        os.chmod("%s.ldb" % file_basename, 0o644)
     tar.close()
     parse_ndb("%s.ndb" % file_basename, "clamav.yara", file_basename != "main")
     if os.path.exists("%s.ldb" % file_basename):
@@ -156,7 +162,7 @@ if args.main:
     if os.path.exists("clamav.main.yara"):
         os.remove("clamav.main.yara")
     with open("clamav.yara", "wb") as f:
-        f.write("import \"manape\"\n\n")  # Do not forget to import our module.
+        f.write(b'import "manape"\n\n')  # Do not forget to import our module.
     update_signatures(URL_MAIN, args.skipdownload)
     shutil.copy("clamav.yara", "clamav.main.yara")  # Keep a copy to which we can append future daily signature files.
 else:
@@ -169,7 +175,7 @@ try:
     os.remove("clamav.yarac")
 except OSError:
     pass
-os.chmod("clamav.yara", 0644)
+os.chmod("clamav.yara", 0o644)
 
 # TODO: Support .hdb & .mdb (hashes of known malwares / sections) - http://resources.infosecinstitute.com/open-source-antivirus-clamav/
 # TODO: Support .ldb (logical signatures)? Seems hard :(
