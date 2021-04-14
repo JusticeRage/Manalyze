@@ -588,7 +588,7 @@ DECLSPEC pversion_info Resource::interpret_as()
 			res->StringTable.push_back(p);
 		}
 
-		if (current_structure->Length < bytes_remaining)
+		if (current_structure->Length > 0 && current_structure->Length < bytes_remaining)
 		{
 			bytes_remaining -= current_structure->Length;
 			unsigned int next_structure_offset = current_offset + current_structure->Length;

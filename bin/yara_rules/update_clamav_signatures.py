@@ -29,7 +29,7 @@ from parse_clamav import parse_ndb, parse_ldb
 try:
     import requests
 except ModuleNotFoundError as e:
-    print('Please install the requests module to use thie script.')
+    print('Please install the requests module to use this script.')
     print("$> pip3 install requests")
     sys.exit(1)
 

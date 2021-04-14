@@ -701,7 +701,7 @@ void dump_hashes(const mana::PE& pe, io::OutputFormatter& formatter)
 
 yara::const_matches detect_filetype(mana::pResource r)
 {
-	static yara::pYara y = yara::Yara::create();
+	yara::pYara y = yara::Yara::create();
 	if (y->load_rules("yara_rules/magic.yara"))
 	{
 		shared_bytes bytes = r->get_raw_data();

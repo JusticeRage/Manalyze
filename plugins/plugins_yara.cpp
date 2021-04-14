@@ -1,18 +1,18 @@
 /*
-    This file is part of Manalyze.
+	This file is part of Manalyze.
 
-    Manalyze is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+	Manalyze is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
 
-    Manalyze is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+	Manalyze is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
+	You should have received a copy of the GNU General Public License
+	along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "yara/yara_wrapper.h"
@@ -35,9 +35,9 @@ namespace plugin
 // Provide a destructor for the structure sent to Yara.
 void delete_manape_module_data(manape_data* data)
 {
-    if (data != nullptr) {
-        free(data->sections);
-    }
+	if (data != nullptr) {
+		free(data->sections);
+	}
 	delete data;
 }
 
@@ -196,43 +196,43 @@ private:
 	 */
 	static boost::shared_ptr<manape_data> _create_manape_module_data(const mana::PE& pe)
 	{
-        boost::shared_ptr<manape_data> res(new manape_data, delete_manape_module_data);
+		boost::shared_ptr<manape_data> res(new manape_data, delete_manape_module_data);
 		memset(res.get(), 0, sizeof(manape_data));
-        auto ioh = pe.get_image_optional_header();
-        auto sections = pe.get_sections();
+		auto ioh = pe.get_image_optional_header();
+		auto sections = pe.get_sections();
 
-        if (ioh) {
-            res->entrypoint = ioh->AddressOfEntryPoint;
-        }
+		if (ioh) {
+			res->entrypoint = ioh->AddressOfEntryPoint;
+		}
 
-        if (sections == nullptr)
-        {
-            res->number_of_sections = 0;
-            res->sections = nullptr;
-        }
-        else
-        {
-            res->number_of_sections = sections->size();
-            res->sections = static_cast<manape_file_portion*>(malloc(res->number_of_sections * sizeof(manape_file_portion)));
-            if (res->sections != nullptr)
-            {
-                for (boost::uint32_t i = 0 ; i < res->number_of_sections ; ++i)
-                {
-                    res->sections[i].start = sections->at(i)->get_pointer_to_raw_data();
-                    res->sections[i].size = sections->at(i)->get_size_of_raw_data();
+		if (sections == nullptr)
+		{
+			res->number_of_sections = 0;
+			res->sections = nullptr;
+		}
+		else
+		{
+			res->number_of_sections = sections->size();
+			res->sections = static_cast<manape_file_portion*>(malloc(res->number_of_sections * sizeof(manape_file_portion)));
+			if (res->sections != nullptr)
+			{
+				for (boost::uint32_t i = 0 ; i < res->number_of_sections ; ++i)
+				{
+					res->sections[i].start = sections->at(i)->get_pointer_to_raw_data();
+					res->sections[i].size = sections->at(i)->get_size_of_raw_data();
 					res->sections[i].end = res->sections[i].start + res->sections[i].size;
-                }
-            }
-            else
-            {
-                PRINT_WARNING << "Not enough memory to allocate data for the MANAPE module!"
-                << DEBUG_INFO << std::endl;
-                res->number_of_sections = 0;
-            }
-        }
+				}
+			}
+			else
+			{
+				PRINT_WARNING << "Not enough memory to allocate data for the MANAPE module!"
+				<< DEBUG_INFO << std::endl;
+				res->number_of_sections = 0;
+			}
+		}
 
-        // Add VERSION_INFO and MANIFEST location for some ClamAV signatures and rules
-        const auto resources = pe.get_resources();
+		// Add VERSION_INFO and MANIFEST location for some ClamAV signatures and rules
+		const auto resources = pe.get_resources();
 		if (resources != nullptr)
 		{
 			for (auto& it : *resources)
@@ -260,7 +260,7 @@ private:
 			res->authenticode.end = res->authenticode.start + res->authenticode.size;
 		}
 
-        return res;
+		return res;
 	}
 
 };
