@@ -317,6 +317,8 @@ def parse_ldb(input, output, is_daily=False):
     with open(input) as f:
         with open(output, 'ab') as g:
             for line in f:
+                if line.lstrip().startswith('#'):
+                    continue
                 data = line.rstrip("\n").split(";")
                 malware_name = data[0]
                 target_block = dict()
