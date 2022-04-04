@@ -525,3 +525,17 @@ rule DH
     condition:
         any of them
 }
+
+rule MersenneTwister
+{
+    meta:
+        description = "Uses known Mersenne Twister constants"
+        author = "Ivan Kwiatkowski (@JusticeRage)"
+	strings:
+		$init = 	{ 65 89 07 6C }
+		$xor_mask = { DF B0 08 99 }
+		$tampering_b = { 80 56 2C 9D }
+		$tampering_c = { 00 00 C6 EF } 
+	condition:
+		2 of them
+}

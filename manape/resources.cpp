@@ -45,7 +45,9 @@ bool PE::_read_image_resource_directory(image_resource_directory& dir, unsigned 
 	dir.Entries.clear();
 	if (size != fread(&dir, 1, size, _file_handle.get()))
 	{
+		CAPPED_LOGGING
 		PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DIRECTORY." << DEBUG_INFO_INSIDEPE << std::endl;
+		CAPPED_LOGGING_END
 		return false;
 	}
 
@@ -54,11 +56,16 @@ bool PE::_read_image_resource_directory(image_resource_directory& dir, unsigned 
 	// unusually high, assume that the file is corrupted.
 	if (dir.NumberOfIdEntries + dir.NumberOfNamedEntries > 0x100 && dir.Characteristics != 0)
 	{
+		CAPPED_LOGGING
 		PRINT_ERROR << "The PE's resource section is invalid or has been manually modified. Resources will not be parsed." << DEBUG_INFO_INSIDEPE << std::endl;
+		CAPPED_LOGGING_END
 		return false;
 	}
-	else if (dir.Characteristics != 0) {
+	else if (dir.Characteristics != 0) 
+	{
+		CAPPED_LOGGING
 		PRINT_WARNING << "An IMAGE_RESOURCE_DIRECTORY's characteristics should always be 0. The PE may have been manually edited." << DEBUG_INFO_INSIDEPE << std::endl;
+		CAPPED_LOGGING_END
 	}
 
 	for (auto i = 0 ; i < dir.NumberOfIdEntries + dir.NumberOfNamedEntries ; ++i)
@@ -88,7 +95,9 @@ bool PE::_read_image_resource_directory(image_resource_directory& dir, unsigned 
 		// Immediately reject obvious bogus entries.
 		if ((entry->OffsetToData & 0x7FFFFFFF) > _file_size)
 		{
+			CAPPED_LOGGING
 			PRINT_WARNING << "Ignored an invalid IMAGE_RESOURCE_DIRECTORY_ENTRY." << DEBUG_INFO_INSIDEPE << std::endl;
+			CAPPED_LOGGING_END
 			continue;
 		}
 
@@ -151,9 +160,9 @@ bool PE::_parse_resources()
 
 				if (entry.Size > _file_size)
 				{
-					// TODO: Logging feature which stops spamming stderr after a message has been shown 10 times?
-					// The warning below is commented out as it tends to be displayed way too many times for offending binaries.
-					// PRINT_WARNING << "Ignored an invalid IMAGE_RESOURCE_DATA_ENTRY" << DEBUG_INFO_INSIDEPE << std::endl;
+					CAPPED_LOGGING
+					PRINT_WARNING << "Ignored an invalid IMAGE_RESOURCE_DATA_ENTRY" << DEBUG_INFO_INSIDEPE << std::endl;
+					CAPPED_LOGGING_END
 					continue;
 				}
 
@@ -190,14 +199,16 @@ bool PE::_parse_resources()
 				offset = rva_to_offset(entry.OffsetToData);
 				if (!offset)
 				{
-					PRINT_WARNING << "Could not locate the section containing resource " << DEBUG_INFO_INSIDEPE;
+					CAPPED_LOGGING
+					PRINT_WARNING << "Could not locate the section containing resource ";
 					if (id) {
-						std::cerr << id;
+						std::cerr << id << DEBUG_INFO_INSIDEPE;
 					}
 					else {
-						std::cerr << r_name;
+						std::cerr << r_name << DEBUG_INFO_INSIDEPE;
 					}
 					std::cerr << ". Trying to use the RVA as an offset..." << DEBUG_INFO_INSIDEPE << std::endl;
+					CAPPED_LOGGING_END
 					offset = entry.OffsetToData;
 				}
 				pResource res;
@@ -218,8 +229,13 @@ bool PE::_parse_resources()
 				{
 					if (*it4 != nullptr && (*it4)->get_offset() == offset && (*it4)->get_size() == entry.Size)
 					{
-						PRINT_WARNING << "The PE contains duplicate resources. It was almost certainly crafted manually." 
-									  << DEBUG_INFO_INSIDEPE << std::endl;
+						// Only print this error message once to avoid flooding stderr.
+						static bool warned_once = false;
+						if (!warned_once) {
+							PRINT_WARNING << "The PE contains duplicate resources. It was almost certainly crafted manually."
+										  << DEBUG_INFO_INSIDEPE << std::endl;
+							warned_once = true;
+						}
 						is_malformed = true;
 						break;
 					}

@@ -71,6 +71,18 @@ DECLSPEC_MANACOMMONS std::ostream& print_colored_text(const std::string& text,
 #define PRINT_ERROR utils::print_colored_text("!", utils::RED, std::cerr, "[", "] Error: ")
 #define PRINT_WARNING utils::print_colored_text("*", utils::YELLOW, std::cerr, "[", "] Warning: ")
 
+
+#define LOG_CAP 100
+
+/**
+ *	@brief	Checks whether warnings should still be printed.
+ */
+DECLSPEC_MANACOMMONS bool is_log_cap_reached();
+
+// Macros to add around very verbose warnings to avoid flooding stderr.
+#define CAPPED_LOGGING if (!utils::is_log_cap_reached()) {
+#define CAPPED_LOGGING_END }
+
 // TODO: Add these macros to all errors and warnings.
 #ifdef _DEBUG
 	#define DEBUG_INFO " (" << __FILE__ << ":" << std::dec << __LINE__ << ")"

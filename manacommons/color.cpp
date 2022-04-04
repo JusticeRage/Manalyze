@@ -108,4 +108,16 @@ std::ostream& print_colored_text(const std::string& text,
 	return sink << suffix;
 }
 
+bool is_log_cap_reached()
+{
+	static unsigned int log_count = 0;
+	if (++log_count < LOG_CAP) {
+		return false;
+	}
+	else if (log_count == LOG_CAP) {
+		PRINT_ERROR << "Logging cap reached. Further verbose warnings will be ignored." << std::endl;
+	}
+	return true;
+}
+
 }
