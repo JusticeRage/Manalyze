@@ -591,7 +591,16 @@ const std::map<int, std::string> COMP_ID_TYPE =
                                 (0x102, "Linker")
                                 (0x103, "ASM objects")
                                 (0x104, "C objects")
-                                (0x105, "C++ objects");
+                                (0x105, "C++ objects")
+                                (0x106, "C objects (CVTCIL)")
+                                (0x107, "C++ objects (CVTCIL)")
+                                (0x108, "C objects (LTCG)")  // Link time code generation
+                                (0x109, "C++ objects (LTCG)")
+                                (0x10A, "MSIL objects (LTCG)")
+                                (0x10B, "C objects (POGO I)") // Profile Guided Optimizations, instrumentation
+                                (0x10C, "C++ objects (POGO I)")
+                                (0x10D, "C objects (POGO O)") // Profile Guided Optimizations, optimization
+                                (0x10E, "C++ objects (POGO O)");
 
 // ----------------------------------------------------------------------------
 
@@ -624,6 +633,8 @@ const flag_dict COMP_ID_PRODID =
                                 ("VS2013 UPD3 build 30723",                    0x7803)
                                 ("VS2013 UPD4 build 31101",                    0x797d)
                                 ("VS2013 UPD5 build 40629",                    0x9eb5)
+                                ("VS2015 v14.0 RC compiler 22823",             0x5927)
+                                ("VS2015 v14.0 compiler 23107",                0x5A43)
                                 ("VS2015 build 23026",                         0x59f2)
                                 ("VS2015 UPD1 build 23506",                    0x5bd2)
                                 ("VS2015 UPD2 build 23918",                    0x5d6e)
@@ -631,12 +642,16 @@ const flag_dict COMP_ID_PRODID =
                                 ("VS2015 UPD3 build 24210",                    0x5e92)
                                 ("VS2015 UPD3 build 24213",                    0x5e95)
                                 ("VS2015 UPD3.1 build 24215",                  0x5e97)
+                                ("VS2015 v14.0.? compiler 24610",              0x6022)
+                                ("VS2015 v14.0.? compiler 25305",              0x62D9)
+                                ("VS2015 v14.0.1 compiler 24720",              0x6090)
                                 ("VS2015/2017 runtime 25008",                  0x61b0)
                                 ("VS2017 v15.0 compiler 25017",                0x61b9)
                                 ("VS2017 v15.2 compiler 25019",                0x61bb)
                                 ("VS2017 v15.?.? build 25203",                 0x6273)
                                 ("VS2015/2017 runtime 25325",                  0x62ed)
                                 ("VS2017 v15.3.* compiler 25506",              0x63a2)
+                                ("VS2017 v15.3.* compiler 25508",              0x63a4)
                                 ("VS2017 v15.4.* compiler 25547",              0x63cb)
                                 ("VS2015/2017 runtime 25711",                  0x646f)
                                 ("VS2015/2017 runtime 25810",                  0x64d2)
@@ -721,11 +736,11 @@ const flag_dict COMP_ID_PRODID =
                                 ("VS2019 Update 11 (16.11.9) compiler 30139",  0x75BB)
                                 ("VS2019 Update 11 (16.11.10) compiler 30140", 0x75BC)
                                 ("VS2019 Update 11 (16.11.11) compiler 30141", 0x75BD)
-                                ("VS 2015/2017/2019/2022 runtime 30704",       0x77F0)
+                                ("VS 2015-2022 runtime 30704",                 0x77F0)
                                 ("VS2022 (17.0.0-1) compiler 30705",           0x77F1)
                                 ("VS2022 (17.0.2-4) compiler 30706",           0x77F2)
                                 ("VS2022 (17.0.5) compiler 30709",             0x77F5)
-                                ("VS 2015/2017/2019/2022 runtime 30818",       0x7862)
+                                ("VS 2015-2022 runtime 30818",                 0x7862)
                                 ("VS2022 Update 1 (17.1.0-1) compiler 31104",  0x7980)
                                 ("VS2022 Update 1 (17.1.2-3) compiler 31105",  0x7981)
     ;
