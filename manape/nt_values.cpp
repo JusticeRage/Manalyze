@@ -736,6 +736,9 @@ const flag_dict COMP_ID_PRODID =
                                 ("VS2019 Update 11 (16.11.9) compiler 30139",  0x75BB)
                                 ("VS2019 Update 11 (16.11.10) compiler 30140", 0x75BC)
                                 ("VS2019 Update 11 (16.11.11) compiler 30141", 0x75BD)
+                                ("VS2019 Update 11 (16.11.12) compiler 30142", 0x75BE)
+                                ("VS2019 Update 11 (16.11.13) compiler 30143", 0x75BF)
+                                ("VS2019 Update 11 (16.11.14) compiler 30145", 0x75C1)
                                 ("VS 2015-2022 runtime 30704",                 0x77F0)
                                 ("VS2022 (17.0.0-1) compiler 30705",           0x77F1)
                                 ("VS2022 (17.0.2-4) compiler 30706",           0x77F2)
@@ -743,6 +746,10 @@ const flag_dict COMP_ID_PRODID =
                                 ("VS 2015-2022 runtime 30818",                 0x7862)
                                 ("VS2022 Update 1 (17.1.0-1) compiler 31104",  0x7980)
                                 ("VS2022 Update 1 (17.1.2-3) compiler 31105",  0x7981)
+                                ("VS2022 Update 1 (17.1.4-5) compiler 31106",  0x7982)
+                                ("VS2022 Update 1 (17.1.6) compiler 31107",    0x7983)
+                                ("VS2022 Update 2 (17.2.0-1) compiler 31328",  0x7A60)
+                                ("VS2022 Update 2 (17.2.2-3) compiler 31329",  0x7A61)
     ;
 
 // ----------------------------------------------------------------------------
