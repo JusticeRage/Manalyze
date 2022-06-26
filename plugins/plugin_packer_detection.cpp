@@ -55,7 +55,11 @@ const std::vector<std::string> common_names = boost::assign::list_of(".text")
                                                                     ("CODE")
                                                                     (".crt")
                                                                     (".CRT")
-                                                                    ("INIT");
+                                                                    ("INIT")
+                                                                    (".oprc")
+                                                                    (".detourc")
+                                                                    (".detourd")
+                                                                    (".didat");
 
 // Also check for known packer section names (i.e. UPX0, etc.)
 // This list was updated with information from
