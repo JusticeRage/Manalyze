@@ -23,10 +23,10 @@ rule CompanyNames
     strings:
 		// Not checking for Microsoft, because many MS binaries are verified through the 
 		// security catalog and do not embed a digital signature.
-		$adobe = "adobe" nocase wide ascii
+		$adobe = "adobe" nocase wide ascii fullword
         $google = "google" nocase wide ascii
 		$firefox = "firefox" nocase wide ascii
-        $intel = "intel" nocase wide ascii
+        $intel = "intel" nocase wide ascii fullword
         $amd = "advanced micro devices" nocase wide ascii
         $amd2 = "amd" nocase wide ascii fullword
         $oracle = "oracle" nocase wide ascii
