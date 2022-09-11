@@ -132,6 +132,7 @@ Examples:
 - [DFN-CERT](https://www.dfn-cert.de/)
 - [The Hive](https://blog.thehive-project.org/tag/manalyze/)
 - [Yomi](https://yomi.yoroi.company)
+- [Threat.Zone](https://threat.zone)
 
 Contact me or open a pull request if you would like to be added to this list!
 
