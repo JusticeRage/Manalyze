@@ -63,7 +63,7 @@ def process_sample(s, result, args):
     try:
         matcher = re.compile(r"The binary may have been compiled on a machine in the (UTC[+-][0-9]{1,2}) timezone")
         for output in s["Plugins"]["resources"]["plugin_output"]:
-            m = matcher.match(s["Plugins"]["resources"]["plugin_output"][output])
+            m = matcher.match(output)
             if m:
                 result.possible_timezones.add(m.group(1))
                 break
