@@ -738,7 +738,9 @@ const flag_dict COMP_ID_PRODID =
                                 ("VS2019 Update 11 (16.11.11) compiler 30141", 0x75BD)
                                 ("VS2019 Update 11 (16.11.12) compiler 30142", 0x75BE)
                                 ("VS2019 Update 11 (16.11.13) compiler 30143", 0x75BF)
-                                ("VS2019 Update 11 (16.11.14) compiler 30145", 0x75C1)
+                                ("VS2019 Update 11 (16.11.14-15) compiler 30145", 0x75C1)
+                                ("VS2019 Update 11 (16.11.16-17) compiler 30146", 0x75C2)
+                                ("VS2019 Update 11 (16.11.19) compiler 30147", 0x75C3)
                                 ("VS 2015-2022 runtime 30704",                 0x77F0)
                                 ("VS2022 (17.0.0-1) compiler 30705",           0x77F1)
                                 ("VS2022 (17.0.2-4) compiler 30706",           0x77F2)
@@ -755,11 +757,15 @@ const flag_dict COMP_ID_PRODID =
                                 ("VS2022 Update 3 (17.3.0-3) compiler 31629",  0x7B8D)
                                 ("VS2022 Update 3 (17.3.4-6) compiler 31630",  0x7B8E)
                                 ("VS 2015-2022 runtime 31931",                 0x7CBB)
-                                // For some reason, this one came after 31931, chronologically
+                                // For some reason, 31823 came after 31931, chronologically
                                 ("VS 2015-2022 runtime 31823",                 0x7C4F)
-                                ("VS2022 Update 3 (17.4.0-1) compiler 31933",  0x7CBD)
-                                ("VS2022 Update 3 (17.4.2) compiler 31935",    0x7CBF)
-                                ("VS2022 Update 3 (17.4.3-4) compiler 31937",  0x7CC1)
+                                ("VS2022 Update 4 (17.4.0-1) compiler 31933",  0x7CBD)
+                                ("VS2022 Update 4 (17.4.2) compiler 31935",    0x7CBF)
+                                ("VS2022 Update 4 (17.4.3-4) compiler 31937",  0x7CC1)
+                                ("VS2022 Update 4 (17.4.5) compiler 31942",    0x7CC6)
+                                ("VS2022 Update 5 (17.5.0-2) compiler 32215",  0x7DD7)
+                                ("VS2022 Update 5 (17.5.3) compiler 32216",    0x7DD8)
+                                ("VS2022 Update 5 (17.5.4) compiler 32217",    0x7DD9)
     ;
 
 // ----------------------------------------------------------------------------
