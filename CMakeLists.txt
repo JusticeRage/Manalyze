@@ -111,7 +111,7 @@ else()
             if (NOT IS_BSD) # No need to link against dl on BSD.
                 target_link_libraries(manalyze dl)
             endif()
-            set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+            set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
             set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath='$ORIGIN'")
 
             # Compile the *nix authenticode plugin if OpenSSL was found.
