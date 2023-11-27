@@ -773,6 +773,9 @@ const flag_dict COMP_ID_PRODID =
                                 ("VS2022 Update 6 (17.6.4) compiler 32537",    0x7F19)
                                 ("VS 2015-2022 runtime 32533",                 0x7F15)
                                 ("VS2022 Update 7 (17.7.0-3) compiler 32822",  0x8036)
+                                ("VS2022 Update 7 (17.7.4) compiler 32825",    0x8039)
+                                ("VS 2015-2022 runtime 33030",                 0x8106)
+                                ("VS2022 Update 8 (17.8.0-1) compiler 33130",  0x816A)
     ;
 
 // ----------------------------------------------------------------------------
