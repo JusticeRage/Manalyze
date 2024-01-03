@@ -107,7 +107,8 @@ const std::map<std::string, std::string> KNOWN_PACKER_SECTIONS =
                                ("\\.winapi", "This PE was modified with API Override")
                                ("_winzip_", "This PE is a WinZip self-extractor")
                                ("\\.WWPACK", "This PE is packed with WWPACK")
-                               ("\\.y(P|0da)", "This PE is packed with Y0da");
+                               ("\\.y(P|0da)", "This PE is packed with Y0da")
+                               ("\\.managed", "This PE is an AOT-compiled .NET program");
 
 class PackerDetectionPlugin : public IPlugin
 {
