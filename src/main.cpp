@@ -42,6 +42,7 @@
 
 #include "manape/pe.h"
 #include "manacommons/color.h"
+#include "manacommons/paths.h"
 #include "output_formatter.h"
 #include "dump.h"
 
@@ -77,8 +78,9 @@ void print_help(po::options_description& desc, const std::string& argv_0)
 	}
 	std::cout << std::endl;
 
-	std::string filename = bfs::basename(argv_0);
-	std::string extension = bfs::extension(argv_0);
+	bfs::path argv_path(argv_0);
+	std::string filename = argv_path.stem().string();
+	std::string extension = argv_path.extension().string();
 	if (!extension.empty()) {
 		filename += extension;
 	}
@@ -494,7 +496,7 @@ void perform_analysis(const std::string& path,
 		// Maybe they made a mistake and specified a wrong file?
 		if (bfs::exists(path) &&
 			!bfs::is_directory(path) &&
-			y.load_rules("yara_rules/magic.yara"))
+			y.load_rules(mana::paths::resolve_data_path("yara_rules/magic.yara")))
 		{
 			yara::const_matches m = y.scan_file(*pe.get_path());
 			if (m && !m->empty())
@@ -540,27 +542,16 @@ int main(int argc, char** argv)
 	std::string extraction_directory;
 	std::vector<std::string> selected_plugins, selected_categories;
 
-	// Load the dynamic plugins.
-	bfs::path working_dir(argv[0]);
-	working_dir = working_dir.parent_path();
-	if (working_dir.empty()) {	// cmd.exe does not provide the full path to the executable.
-		working_dir = ".";		// Running ./manalyze.exe results in working_dir being empty,
-	}							// which makes this additional check necessary.
-
-	// Linux: look for the configuration file in /etc/manalyze if
-	// nothing is found in the current folder.
-	#ifdef BOOST_POSIX_API
-		if (!bfs::exists(working_dir / "manalyze.conf")) {
-			working_dir = "/etc/manalyze";
-		}
-	#endif
+	mana::paths::initialize(argv[0]);
+	const bfs::path config_dir(mana::paths::config_dir());
+	const bfs::path plugin_dir(mana::paths::plugin_dir());
 
 	// Initialize Yara and load plugins.
 	yara::Yara::initialize();
-	plugin::PluginManager::get_instance().load_all(working_dir.string());
+	plugin::PluginManager::get_instance().load_all(plugin_dir.string());
 
 	// Load the configuration
-	config conf = parse_config((working_dir / "manalyze.conf").string());
+	config conf = parse_config((config_dir / "manalyze.conf").string());
 
 	if (!parse_args(vm, argc, argv)) {
 		return -1;
@@ -590,8 +581,8 @@ int main(int argc, char** argv)
 		formatter->set_header("* Manalyze " MANALYZE_VERSION " *");
 	}
 
-	// Set the working directory to Manalyze's folder.
-	chdir(working_dir.string().c_str());
+	// Set the working directory to Manalyze's configuration folder.
+	chdir(config_dir.string().c_str());
 
 	// Do the actual analysis on all the input files
 	unsigned int count = 0;

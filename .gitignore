@@ -44,6 +44,7 @@ CMakeCache.txt
 *.cmake
 Makefile
 *.cbp
+install_manifest.txt
 
 # Linux compilation artifacts
 

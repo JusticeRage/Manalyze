@@ -17,6 +17,7 @@
 
 #include "plugin_framework/plugin_interface.h"
 #include "yara/yara_wrapper.h"
+#include "manacommons/paths.h"
 
 namespace plugin {
 
@@ -49,7 +50,7 @@ void check_version_info(const mana::PE& pe, pResult res)
 	}
 
 	yara::Yara y;
-	if (!y.load_rules("yara_rules/company_names.yara"))
+	if (!y.load_rules(mana::paths::resolve_data_path("yara_rules/company_names.yara")))
 	{
 		std::cerr << "Could not load company_names.yara!" << std::endl;
 		return;

@@ -16,6 +16,7 @@
 */
 #include <iomanip>
 #include "dump.h"
+#include "manacommons/paths.h"
 
 namespace mana {
 
@@ -702,7 +703,7 @@ void dump_hashes(const mana::PE& pe, io::OutputFormatter& formatter)
 yara::const_matches detect_filetype(mana::pResource r)
 {
 	yara::pYara y = yara::Yara::create();
-	if (y->load_rules("yara_rules/magic.yara"))
+	if (y->load_rules(mana::paths::resolve_data_path("yara_rules/magic.yara")))
 	{
 		shared_bytes bytes = r->get_raw_data();
 		if (bytes != nullptr) {
@@ -728,7 +729,8 @@ bool extract_resources(const mana::PE& pe, const std::string& destination_folder
 	}
 
 	bool res = true;
-	auto base = bfs::basename(*pe.get_path());
+	bfs::path pe_path = *pe.get_path();
+	auto base = pe_path.stem().string();
 	auto resources = pe.get_resources();
 	if (resources == nullptr) {
 		return true;
@@ -797,9 +799,10 @@ bool extract_authenticode_certificates(const mana::PE& pe,
 	std::string pkcs7_footer = "\n-----END PKCS7-----\n";
 	
 	// Generate the output file name if needed.
+	bfs::path pe_path = *pe.get_path();
 	bfs::path out_path;
 	if (filename == "") {
-		out_path = bfs::path(destination_folder) / bfs::path(bfs::basename(*pe.get_path()) + ".p7b");
+		out_path = bfs::path(destination_folder) / bfs::path(pe_path.stem().string() + ".p7b");
 	}
 	else {
 		out_path = bfs::path(destination_folder) / bfs::path(filename);

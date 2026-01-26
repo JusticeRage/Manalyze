@@ -27,6 +27,7 @@
 
 #include "plugin_framework/plugin_interface.h"
 #include "plugin_framework/auto_register.h"
+#include "manacommons/paths.h"
 
 namespace plugin
 {
@@ -177,9 +178,10 @@ protected:
 
 	virtual bool _load_rules()
 	{
-		if (!_engine.load_rules(_rule_file))
+		const std::string rule_path = mana::paths::resolve_data_path(_rule_file);
+		if (!_engine.load_rules(rule_path))
 		{
-			PRINT_ERROR << "Could not load " << _rule_file << "!" << std::endl;
+			PRINT_ERROR << "Could not load " << rule_path << "!" << std::endl;
 			return false;
 		}
 		return true;
@@ -293,10 +295,13 @@ private:
 	 */
 	bool _load_rules() override
 	{
-		if (!_engine.load_rules(_rule_file))
+		const std::string rule_path = mana::paths::resolve_data_path(_rule_file);
+		if (!_engine.load_rules(rule_path))
 		{
 			PRINT_ERROR << "ClamAV rules haven't been generated yet!" << std::endl;
-			PRINT_ERROR << "Please run yara_rules/update_clamav_signatures.py to create them, "
+			PRINT_ERROR << "Please run "
+			            << mana::paths::resolve_data_path("yara_rules/update_clamav_signatures.py")
+			            << " to create them, "
 				"and refer to the documentation for additional information." << std::endl;
 			return false;
 		}

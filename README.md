@@ -75,9 +75,18 @@ Place the two folders in the `external` folder as `external/yara` and `external/
 A Docker image for Manalyze is provided by the community. Run `docker pull evanowe/manalyze` and get additional information [here](https://hub.docker.com/r/evanowe/manalyze).
 
 ## Generating ClamAV rules
-Since ClamAV signatures are voluminous and updated regularly, it didn't make a lot of sense to distribute them from GitHub or with the binary. When you try using the ClamAV plugin for the first time, you will likely encounter the following error message: `[!] Error: Could not load yara_rules/clamav.yara`. In order to generate them, simply run the `update_clamav_signatures.py` Python script located in `bin/yara_rules`.
+Since ClamAV signatures are voluminous and updated regularly, it didn't make a lot of sense to distribute them from GitHub or with the binary. When you try using the ClamAV plugin for the first time, you will likely encounter the following error message: `[!] Error: Could not load yara_rules/clamav.yara`. In order to generate them, run the `update_clamav_signatures.py` Python script located in `bin/yara_rules` (source tree) or `${CMAKE_INSTALL_DATADIR}/manalyze/yara_rules` (installed, commonly `/usr/share/manalyze/yara_rules` or `/usr/local/share/manalyze/yara_rules`).
 
-Run the script whenever you want to refresh the signatures.
+Run the script whenever you want to refresh the signatures. Compiled Yara caches are stored in `$XDG_CACHE_HOME/manalyze/yara_rules` or `~/.cache/manalyze/yara_rules`, and can be overridden with `MANALYZE_CACHE_DIR`.
+
+## Paths and overrides
+Default install locations (honoring `CMAKE_INSTALL_PREFIX`) are:
+- config: `${CMAKE_INSTALL_SYSCONFDIR}/manalyze/manalyze.conf` (often `/etc/manalyze/manalyze.conf` or `/usr/local/etc/manalyze/manalyze.conf`)
+- rules: `${CMAKE_INSTALL_DATADIR}/manalyze/yara_rules` (often `/usr/share/manalyze/yara_rules` or `/usr/local/share/manalyze/yara_rules`)
+- plugins: `${CMAKE_INSTALL_LIBDIR}/manalyze/plugins`
+
+You can override these with environment variables:
+`MANALYZE_CONFIG_DIR`, `MANALYZE_DATA_DIR`, `MANALYZE_PLUGIN_DIR`, `MANALYZE_CACHE_DIR`.
 
 ## Usage
 

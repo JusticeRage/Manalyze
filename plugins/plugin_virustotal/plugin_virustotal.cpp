@@ -31,6 +31,7 @@
 #include "plugin_framework/auto_register.h"
 
 #include "manacommons/color.h"
+#include "manacommons/paths.h"
 #include "hash-library/hashes.h"
 #include "plugins/plugin_virustotal/json_spirit/json_spirit.h"
 
@@ -84,7 +85,9 @@ public:
 		}
 		else if (_config->at("api_key") == "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 		{
-			PRINT_WARNING << "Please edit the configuration file with your VirusTotal API key." << std::endl;
+			PRINT_WARNING << "Please edit the configuration file ("
+			              << mana::paths::resolve_config_path("manalyze.conf")
+			              << ") with your VirusTotal API key." << std::endl;
 			return res;
 		}
 

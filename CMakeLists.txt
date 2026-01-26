@@ -1,6 +1,34 @@
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required (VERSION 3.12)
 
-project (manalyze)
+project (manalyze LANGUAGES C CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+include(GNUInstallDirs)
+
+set(MANALYZE_INSTALL_CONFIG_SUBDIR "${CMAKE_INSTALL_SYSCONFDIR}/manalyze")
+set(MANALYZE_INSTALL_DATA_SUBDIR "${CMAKE_INSTALL_DATADIR}/manalyze")
+set(MANALYZE_INSTALL_PLUGIN_SUBDIR "${CMAKE_INSTALL_LIBDIR}/manalyze/plugins")
+
+if (IS_ABSOLUTE "${MANALYZE_INSTALL_CONFIG_SUBDIR}")
+    set(MANALYZE_INSTALL_CONFIG_DIR "${MANALYZE_INSTALL_CONFIG_SUBDIR}")
+else()
+    set(MANALYZE_INSTALL_CONFIG_DIR "${CMAKE_INSTALL_PREFIX}/${MANALYZE_INSTALL_CONFIG_SUBDIR}")
+endif()
+
+if (IS_ABSOLUTE "${MANALYZE_INSTALL_DATA_SUBDIR}")
+    set(MANALYZE_INSTALL_DATA_DIR "${MANALYZE_INSTALL_DATA_SUBDIR}")
+else()
+    set(MANALYZE_INSTALL_DATA_DIR "${CMAKE_INSTALL_PREFIX}/${MANALYZE_INSTALL_DATA_SUBDIR}")
+endif()
+
+if (IS_ABSOLUTE "${MANALYZE_INSTALL_PLUGIN_SUBDIR}")
+    set(MANALYZE_INSTALL_PLUGIN_DIR "${MANALYZE_INSTALL_PLUGIN_SUBDIR}")
+else()
+    set(MANALYZE_INSTALL_PLUGIN_DIR "${CMAKE_INSTALL_PREFIX}/${MANALYZE_INSTALL_PLUGIN_SUBDIR}")
+endif()
 
 option(GitHub "Allow checking out third-party projects from GitHub" ON)
 option(Tests "Generate unit tests" OFF)
@@ -18,10 +46,30 @@ endif()
 if (GitHub MATCHES [Oo][Nn])
     find_package(Git REQUIRED)
 endif()
-if (NOT Tests MATCHES [Oo][Nn])
-    find_package(Boost REQUIRED COMPONENTS regex system filesystem program_options)
-else()
-    find_package(Boost REQUIRED COMPONENTS regex system filesystem program_options unit_test_framework)
+set(MANALYZE_BOOST_COMPONENTS regex system filesystem program_options)
+if (Tests MATCHES [Oo][Nn])
+    list(APPEND MANALYZE_BOOST_COMPONENTS unit_test_framework)
+endif()
+if (POLICY CMP0167)
+    cmake_policy(PUSH)
+    cmake_policy(SET CMP0167 NEW)
+    find_package(Boost CONFIG QUIET COMPONENTS ${MANALYZE_BOOST_COMPONENTS})
+    cmake_policy(POP)
+endif()
+if (NOT Boost_FOUND)
+    if (POLICY CMP0167)
+        cmake_policy(PUSH)
+        cmake_policy(SET CMP0167 OLD)
+    endif()
+    find_package(Boost REQUIRED COMPONENTS ${MANALYZE_BOOST_COMPONENTS})
+    if (POLICY CMP0167)
+        cmake_policy(POP)
+    endif()
+endif()
+
+set(MANALYZE_BOOST_LIBS Boost::regex Boost::system Boost::filesystem Boost::program_options)
+if (Tests MATCHES [Oo][Nn])
+    list(APPEND MANALYZE_BOOST_LIBS Boost::unit_test_framework)
 endif()
 
 find_package(OpenSSL)
@@ -71,7 +119,16 @@ endif()
 add_definitions(-DWITH_MANACOMMONS) # Use functions from manacommons.
 add_library(manape SHARED manape/pe.cpp manape/nt_values.cpp manape/utils.cpp manape/imports.cpp manape/resources.cpp manape/section.cpp manape/imported_library.cpp manape/ordinals.cpp)
 
-add_library(manacommons SHARED manacommons/color.cpp manacommons/output_tree_node.cpp manacommons/escape.cpp manacommons/base64.cpp manacommons/plugin_framework/result.cpp)
+add_library(manacommons SHARED manacommons/color.cpp manacommons/output_tree_node.cpp manacommons/escape.cpp manacommons/base64.cpp manacommons/plugin_framework/result.cpp manacommons/paths.cpp)
+target_compile_definitions(manacommons PRIVATE
+    MANALYZE_INSTALL_CONFIG_DIR="${MANALYZE_INSTALL_CONFIG_DIR}"
+    MANALYZE_INSTALL_DATA_DIR="${MANALYZE_INSTALL_DATA_DIR}"
+    MANALYZE_INSTALL_PLUGIN_DIR="${MANALYZE_INSTALL_PLUGIN_DIR}"
+    MANALYZE_INSTALL_CONFIG_SUBDIR="${MANALYZE_INSTALL_CONFIG_SUBDIR}"
+    MANALYZE_INSTALL_DATA_SUBDIR="${MANALYZE_INSTALL_DATA_SUBDIR}"
+    MANALYZE_INSTALL_PLUGIN_SUBDIR="${MANALYZE_INSTALL_PLUGIN_SUBDIR}"
+)
+target_link_libraries(manacommons ${MANALYZE_BOOST_LIBS})
 
 add_executable(manalyze src/main.cpp src/config_parser.cpp src/output_formatter.cpp src/dump.cpp src/import_hash.cpp
                src/plugin_framework/dynamic_library.cpp src/plugin_framework/plugin_manager.cpp # Plugin system
@@ -95,12 +152,12 @@ if (WIN32)
             # Windows only plugins:
             add_library(plugin_authenticode SHARED plugins/plugin_authenticode/plugin_authenticode.cpp
                                                    plugins/plugin_authenticode/commons.cpp)
-            target_link_libraries(plugin_authenticode manape hash-library manacommons yara ${Boost_LIBRARIES})
+            target_link_libraries(plugin_authenticode manape hash-library manacommons yara ${MANALYZE_BOOST_LIBS})
 else()
             string (REGEX MATCH "BSD" IS_BSD ${CMAKE_SYSTEM_NAME}) # Detect if we are compiling on a BSD system.
 
             if (CMAKE_BUILD_TYPE MATCHES "[Dd][Ee][Bb][Uu][Gg]")
-                add_definitions("/D_DEBUG")
+                add_compile_definitions(_DEBUG)
                 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
                 if (Tests MATCHES [Oo][Nn]) # Add coverage option if unit tests were requested.
                     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
@@ -111,7 +168,6 @@ else()
             if (NOT IS_BSD) # No need to link against dl on BSD.
                 target_link_libraries(manalyze dl)
             endif()
-            set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
             set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath='$ORIGIN'")
 
             # Compile the *nix authenticode plugin if OpenSSL was found.
@@ -128,7 +184,7 @@ endif()
 add_library(plugin_virustotal SHARED plugins/plugin_virustotal/plugin_virustotal.cpp
                                      plugins/plugin_virustotal/json_spirit/json_spirit_reader.cpp
                                      plugins/plugin_virustotal/json_spirit/json_spirit_value.cpp)
-target_link_libraries(plugin_virustotal manape hash-library manacommons ${Boost_LIBRARIES})
+target_link_libraries(plugin_virustotal manape hash-library manacommons ${MANALYZE_BOOST_LIBS})
 if (OPENSSL_FOUND)
     target_link_libraries(plugin_virustotal ${OPENSSL_LIBRARIES})
 endif()
@@ -143,7 +199,7 @@ if (Tests MATCHES [Oo][Nn])
     add_subdirectory(test)
 endif()
 
-target_link_libraries(manape manacommons ${Boost_LIBRARIES})
+target_link_libraries(manape manacommons ${MANALYZE_BOOST_LIBS})
 
 target_link_libraries(
                         manalyze
@@ -151,7 +207,7 @@ target_link_libraries(
                         manape
                         yara
                         hash-library
-                        ${Boost_LIBRARIES}
+                        ${MANALYZE_BOOST_LIBS}
                      )
 
 # make install command for linux machines:
@@ -159,23 +215,31 @@ if ("${CMAKE_SYSTEM}" MATCHES "Linux")
 
     # Copy binaries
     install(TARGETS manalyze manacommons manape
-            RUNTIME DESTINATION /usr/local/bin
-            LIBRARY DESTINATION /usr/local/lib
-            ARCHIVE DESTINATION /usr/local/lib/static)
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
     # Copy the yara_rules folder to /etc/manalyze.
     install(DIRECTORY bin/yara_rules 
-            DESTINATION /etc/manalyze)
+            DESTINATION ${MANALYZE_INSTALL_DATA_SUBDIR})
 
-    # Copy the plugins to /etc/manalyze.
-    install(DIRECTORY bin/
-            DESTINATION /etc/manalyze
-            FILES_MATCHING PATTERN "libplugin_*.so")
+    # Copy the plugins to the standard libdir location.
+    install(TARGETS plugin_virustotal
+            LIBRARY DESTINATION ${MANALYZE_INSTALL_PLUGIN_SUBDIR})
+    if (TARGET plugin_authenticode)
+        install(TARGETS plugin_authenticode
+                LIBRARY DESTINATION ${MANALYZE_INSTALL_PLUGIN_SUBDIR})
+    endif()
 
     # Copy the configuration file template.
     install(FILES bin/manalyze.conf
-            DESTINATION /etc/manalyze)
+            DESTINATION ${MANALYZE_INSTALL_CONFIG_SUBDIR})
+endif()
 
-    # Run ldconfig.
-    install(CODE "execute_process(COMMAND ldconfig)")
+# Uninstall target using install_manifest.txt
+if (NOT TARGET uninstall)
+    add_custom_target(uninstall
+        COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/uninstall.cmake
+        COMMENT "Removing installed files listed in install_manifest.txt"
+    )
 endif()

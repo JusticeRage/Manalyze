@@ -2,7 +2,7 @@
 Initial configuration
 *********************
 
-You have just downloaded Manalyze, and while it runs on your system, there are just a few more steps to follow before you can use it fully. Some of the plugins bundled with the program need to be configured manually. In most cases, all you have to do is look at ``bin/manalyze.conf`` and see if there are any values which need editing.
+You have just downloaded Manalyze, and while it runs on your system, there are just a few more steps to follow before you can use it fully. Some of the plugins bundled with the program need to be configured manually. When running from the source tree, look at ``bin/manalyze.conf``; when installed, the configuration file lives under ``${CMAKE_INSTALL_SYSCONFDIR}/manalyze/manalyze.conf`` (commonly ``/etc/manalyze/manalyze.conf`` or ``/usr/local/etc/manalyze/manalyze.conf``).
 
 VirusTotal plugin
 =================
@@ -13,7 +13,7 @@ When you use this plugin for the first time, you're likely to encounter the foll
 	
 In order to submit hashes to VirusTotal, it is necessary to `register <https://www.virustotal.com/en/>`_ on their website and retrieve an API key. If you really can't be bothered, many of these can be found on `GitHub <https://github.com/search?q=%22https%3A%2F%2Fwww.virustotal.com%2Fvtapi%2Fv2%22&type=Code&utf8=%E2%9C%93>`_.
 
-VirusTotal offers two types of API access: public and private. Right now, Manalyze doesn't support any of the "private" features, but if you're lucky enough to have a such a key, at least you won't be bound by the request rate limit. After you have obtained an API key, edit ``bin/manalyze.conf`` and add the following line::
+VirusTotal offers two types of API access: public and private. Right now, Manalyze doesn't support any of the "private" features, but if you're lucky enough to have a such a key, at least you won't be bound by the request rate limit. After you have obtained an API key, edit ``manalyze.conf`` and add the following line::
 
     virustotal.api_key = [your key here]
 	
@@ -40,3 +40,5 @@ Additional considerations
 ClamAV signatures are divided into two files, the "main" and the "daily" signatures. The former isn't updated very often, as opposed to the latter. For this reason, the python script will not download the "main" signatures if they have already been retreived: only the daily rules will be regenerated. To perform a full upgrade, call the script with the following parameter::
 
     python yara_rules/update_clamav_signatures.py --main
+
+The rules folder is located under ``${CMAKE_INSTALL_DATADIR}/manalyze/yara_rules`` when installed (commonly ``/usr/share/manalyze/yara_rules`` or ``/usr/local/share/manalyze/yara_rules``). Compiled Yara caches are stored in ``$XDG_CACHE_HOME/manalyze/yara_rules`` or ``~/.cache/manalyze/yara_rules`` by default, and can be overridden with ``MANALYZE_CACHE_DIR``. You can also override locations with ``MANALYZE_CONFIG_DIR``, ``MANALYZE_DATA_DIR``, and ``MANALYZE_PLUGIN_DIR``.

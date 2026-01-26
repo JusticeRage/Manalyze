@@ -19,6 +19,7 @@
 #include <set>
 
 #include "yara/yara_wrapper.h"
+#include "manacommons/paths.h"
 
 // TODO: Remove when Yara doesn't mask get_object anymore
 #undef get_object
@@ -134,7 +135,7 @@ public:
 		pResult res = create_result();
 		yara::Yara y;
 
-		if (!y.load_rules("yara_rules/magic.yara")) {
+		if (!y.load_rules(mana::paths::resolve_data_path("yara_rules/magic.yara"))) {
 			return res;
 		}
 

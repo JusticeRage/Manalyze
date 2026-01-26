@@ -33,7 +33,7 @@ void PluginManager::load(const std::string& path)
 	if (!c || !d)
 	{
 		// Display an error message if the library is likely to be a malformed plugin.
-		std::string libname = boost::filesystem::basename(path);
+		std::string libname = boost::filesystem::path(path).stem().string();
 		if (libname.find("libplugin_") == 0 || libname.find("plugin_") == 0) {
 			PRINT_ERROR << "Could not resolve " << path << "'s creator or destroyer function!" << std::endl;
 		}

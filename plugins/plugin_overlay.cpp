@@ -19,6 +19,7 @@
 #include <set>
 
 #include "yara/yara_wrapper.h"
+#include "manacommons/paths.h"
 
 // TODO: Remove when Yara doesn't mask get_object anymore
 #undef get_object
@@ -58,7 +59,7 @@ public:
 
         // Try to detect the file type of the overlay data.
         yara::Yara y;
-		if (!y.load_rules("yara_rules/magic.yara")) {
+		if (!y.load_rules(mana::paths::resolve_data_path("yara_rules/magic.yara"))) {
 			return res;
 		}
         yara::const_matches matches = y.scan_bytes(*overlay_bytes);

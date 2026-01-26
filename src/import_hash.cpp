@@ -10,7 +10,7 @@ std::string hash_imports(const mana::PE& pe)
 	for (auto it = dlls->begin() ; it != dlls->end() ; ++it)
 	{
 		// Lowercase DLL and function names for import hashes
-		std::string dll_name(bfs::basename(*it));
+		std::string dll_name = bfs::path(*it).stem().string();
 		std::transform(dll_name.begin(), dll_name.end(), dll_name.begin(), ::tolower);
 
 		auto functions = pe.get_imported_functions(*it);
