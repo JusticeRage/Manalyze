@@ -1673,3 +1673,23 @@ rule CVE_2020_0601
         $oid in (manape.authenticode.start..manape.authenticode.end)
 }
 
+rule AntiLLM
+{
+    meta:
+        description = "Contains strings related to LLMs."
+        author = "Ivan Kwiatkowski (@JusticeRage)"
+    strings:
+        /* Known vendor / refusal triggers */
+        $anthropic_magic = "ANTHROPIC_MAGIC_STRING_TRIGGER_REFUSAL_1FAEFB6177B4672DEE07F9D" wide ascii
+        $openai_policy   = "OpenAI policy" nocase wide ascii
+        $openai_refusal  = /I cannot (comply|assist) with that request/ nocase wide ascii
+        $as_ai_model     = "As an AI language model" nocase wide ascii
+
+        /* Role / instruction override patterns */
+        $ignore_prev     = /(ignore|disregard|forget)( all)? (previous|prior) instructions/ nocase wide ascii
+        $override_system = /(new|override) system prompt/ nocase wide ascii
+        $role_system       = "<system>" nocase wide ascii
+        $role_assistant    = "<assistant>" nocase wide ascii
+    condition:
+        any of them
+}
