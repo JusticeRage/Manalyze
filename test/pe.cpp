@@ -228,6 +228,36 @@ BOOST_AUTO_TEST_CASE(parse_sections)
 
 // ----------------------------------------------------------------------------
 
+BOOST_AUTO_TEST_CASE(offset_to_rva)
+{
+	mana::PE pe("testfiles/manatest.exe");
+	BOOST_CHECK_EQUAL(pe.offset_to_rva(0x400), 0x1000);
+	BOOST_CHECK_EQUAL(pe.offset_to_rva(0x1600), 0x3000);
+	BOOST_CHECK_EQUAL(pe.offset_to_rva(0x2600), 0x4000);
+	BOOST_CHECK_EQUAL(pe.offset_to_rva(0x2800), 0x5000);
+	BOOST_CHECK_EQUAL(pe.offset_to_rva(0x2a00), 0x6000);
+	BOOST_CHECK_EQUAL(pe.offset_to_rva(0x2c00), 0x7000);
+}
+
+// ----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(read_data_by_rva_and_offset)
+{
+	mana::PE pe("testfiles/manatest.exe");
+	auto bytes = pe.get_bytes_at_offset(0, 2);
+	BOOST_ASSERT(bytes);
+	BOOST_CHECK_EQUAL(bytes->size(), 2);
+	BOOST_CHECK_EQUAL(bytes->at(0), 'M');
+	BOOST_CHECK_EQUAL(bytes->at(1), 'Z');
+
+	auto data = pe.get_data(0x4E, 0x27);
+	BOOST_ASSERT(data);
+	std::string s(data->begin(), data->end());
+	BOOST_CHECK_EQUAL(s, "This program cannot be run in DOS mode.");
+}
+
+// ----------------------------------------------------------------------------
+
 /**
  *	@brief	Helper function which checks that a section contains the expected data.
  */

@@ -28,6 +28,7 @@
 #include "manape/utils.h"
 #include "manape/color.h"
 #include "manape/escape.h"
+#include "manape/io_types.h"
 
 #if defined BOOST_WINDOWS_API
 	#ifdef MANAPE_EXPORT
@@ -43,7 +44,6 @@ namespace mana {
 
 typedef boost::shared_ptr<std::string> pString;
 typedef boost::shared_ptr<const std::vector<boost::uint8_t> > shared_bytes;
-typedef boost::shared_ptr<FILE> pFile;
 
 class Section
 {
@@ -60,7 +60,8 @@ public:
 	DECLSPEC Section(const image_section_header& header,
 					 pFile handle,
 					 boost::uint64_t file_size,
-					 const std::vector<pString>& coff_string_table = std::vector<pString>());
+					 const std::vector<pString>& coff_string_table = std::vector<pString>(),
+					 pMutex io_mutex = pMutex());
 
 	DECLSPEC virtual ~Section() {}
 
@@ -105,6 +106,7 @@ private:
 	pFile			_file_handle;
 	// Size of the file. This is used to reject sections with a wrong size.
 	boost::uint64_t	_file_size;
+	pMutex			_io_mutex;
 };
 
 typedef boost::shared_ptr<Section> pSection;

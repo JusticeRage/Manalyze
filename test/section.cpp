@@ -146,5 +146,20 @@ BOOST_AUTO_TEST_CASE(find_section)
 }
 
 // ----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(get_section_by_address)
+{
+	mana::PE pe("testfiles/manatest.exe");
+	auto s = pe.get_section_by_rva(0x1000);
+	BOOST_CHECK(s && s->get_name() && *s->get_name() == ".text");
+	s = pe.get_section_by_offset(0x400);
+	BOOST_CHECK(s && s->get_name() && *s->get_name() == ".text");
+	s = pe.get_section_by_rva(0);
+	BOOST_CHECK(s == nullptr);
+	s = pe.get_section_by_offset(0xFFFFFFFF);
+	BOOST_CHECK(s == nullptr);
+}
+
+// ----------------------------------------------------------------------------
 BOOST_AUTO_TEST_SUITE_END()
 // ----------------------------------------------------------------------------

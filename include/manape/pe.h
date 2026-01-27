@@ -23,6 +23,7 @@
 #include <sstream>
 #include <algorithm>
 #include <string>
+#include <mutex>
 #include <vector>
 #include <set>
 #include <exception>
@@ -38,6 +39,7 @@
 #include "manape/nt_values.h"			// Windows-related #defines flags are declared in this file.
 #include "manape/pe_structs.h"			// All typedefs and structs are over there
 #include "manape/ordinals.h"			// Translation between known ordinals and corresponding function names
+#include "manape/io_types.h"
 #include "manape/utils.h"
 #include "manape/resources.h"			// Definition of the Resource class
 #include "manape/section.h"				// Definition of the Section class
@@ -73,15 +75,18 @@ typedef boost::shared_ptr<const std::vector<pwin_certificate> > shared_certifica
 typedef boost::shared_ptr<const std::vector<pImportedLibrary> > shared_imports;
 typedef boost::shared_ptr<const rich_header> shared_rich_header;
 typedef boost::shared_ptr<std::string> pString;
-typedef boost::shared_ptr<FILE> pFile;
 
 class PE
 {
 
 public:
 	DECLSPEC PE(const std::string& path);
+	DECLSPEC PE(const std::string& display_path, pFile file_handle);
 	DECLSPEC virtual ~PE() {}
 	DECLSPEC static boost::shared_ptr<PE> create(const std::string& path);
+	DECLSPEC static boost::shared_ptr<PE> create_from_bytes(const boost::uint8_t* data,
+															size_t size,
+															const std::string& name_hint = "<memory>");
 
 	DECLSPEC boost::uint64_t get_filesize() const;
 
@@ -159,6 +164,13 @@ public:
 	*	@return	The corresponding offset in the file, or 0 if the RVA could not be translated.
 	*/
 	DECLSPEC unsigned int rva_to_offset(boost::uint64_t rva) const;
+	DECLSPEC unsigned int offset_to_rva(boost::uint64_t offset) const;
+
+	DECLSPEC pSection get_section_by_rva(boost::uint64_t rva) const;
+	DECLSPEC pSection get_section_by_offset(boost::uint64_t offset) const;
+
+	DECLSPEC shared_bytes get_data(boost::uint64_t rva, size_t size) const;
+	DECLSPEC shared_bytes get_bytes_at_offset(boost::uint64_t offset, size_t size) const;
 
 	DECLSPEC boost::optional<dos_header> get_dos_header() const {
 		return _h_dos;
@@ -269,6 +281,9 @@ public:
 	void operator delete(void* p);
 
 private:
+	void _initialize();
+	bool _locked_read_at(boost::uint64_t offset, void* dst, size_t size) const;
+	shared_bytes _locked_read_vec(boost::uint64_t offset, size_t size) const;
 	/**
 	 *	@brief	The new operator, re-implemented only so it could be made private.
 	 *
@@ -450,9 +465,12 @@ private:
 	bool _read_image_resource_directory(image_resource_directory& dir, unsigned int offset = 0) const;
 
 	std::string							_path;
+	std::string							_resource_path;
     bool								_initialized;
 	boost::uint64_t						_file_size;
+	boost::shared_ptr<std::vector<boost::uint8_t> > _backing_store;
 	pFile								_file_handle;
+	boost::shared_ptr<std::mutex>		_io_mutex;
 
 	/*
 	    -----------------------------------
