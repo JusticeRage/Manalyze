@@ -253,7 +253,7 @@ bool PE::_parse_resources()
 													   entry.Size,
 													   name.TimeDateStamp,
 													   offset,
-													   _path);
+													   _resource_path);
 				}
 				else { // No name: call the constructor with the resource ID instead.
 					res = boost::make_shared<Resource>(r_type,
@@ -263,7 +263,7 @@ bool PE::_parse_resources()
 													   entry.Size,
 													   name.TimeDateStamp,
 													   offset,
-													   _path);
+													   _resource_path);
 				}
 
 				_resource_table.push_back(res);

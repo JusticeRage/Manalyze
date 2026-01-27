@@ -15,12 +15,22 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#if defined(__GLIBC__) && !defined(_GNU_SOURCE)
+#define _GNU_SOURCE
+#endif
+
 #include "manape/pe.h"
+
+#if defined(BOOST_WINDOWS_API)
+#include <windows.h>
+#include <io.h>
+#include <fcntl.h>
+#endif
 
 namespace mana {
 
 PE::PE(const std::string& path)
-	: _path(path), _initialized(false)
+	: _path(path), _resource_path(path), _initialized(false)
 {
 	FILE* f = fopen(_path.c_str(), "rb");
 	if (f == nullptr)
@@ -35,6 +45,27 @@ PE::PE(const std::string& path)
 	_file_size = ftell(_file_handle.get());
 	fseek(_file_handle.get(), 0, SEEK_SET);
 
+	_initialize();
+}
+
+PE::PE(const std::string& display_path, pFile file_handle)
+	: _path(display_path), _resource_path(display_path), _initialized(false), _file_handle(file_handle)
+{
+	if (_file_handle == nullptr)
+	{
+		PRINT_ERROR << "Could not open " << _path << "." << std::endl;
+		return;
+	}
+
+	fseek(_file_handle.get(), 0, SEEK_END);
+	_file_size = ftell(_file_handle.get());
+	fseek(_file_handle.get(), 0, SEEK_SET);
+
+	_initialize();
+}
+
+void PE::_initialize()
+{
 	if (!_parse_dos_header()) {
 		return;
 	}
@@ -62,6 +93,86 @@ PE::PE(const std::string& path)
 
 boost::shared_ptr<PE> PE::create(const std::string& path) {
 	return boost::make_shared<PE>(path);
+}
+
+// ----------------------------------------------------------------------------
+
+boost::shared_ptr<PE> PE::create_from_bytes(const boost::uint8_t* data,
+											size_t size,
+											const std::string& name_hint)
+{
+	if (data == nullptr || size == 0) {
+		return boost::make_shared<PE>(name_hint, pFile());
+	}
+
+#if defined(BOOST_WINDOWS_API)
+	char temp_path[MAX_PATH + 1] = {0};
+	char temp_file[MAX_PATH + 1] = {0};
+	if (GetTempPathA(MAX_PATH, temp_path) == 0) {
+		return boost::make_shared<PE>(name_hint, pFile());
+	}
+	if (GetTempFileNameA(temp_path, "mna", 0, temp_file) == 0) {
+		return boost::make_shared<PE>(name_hint, pFile());
+	}
+
+	HANDLE hfile = CreateFileA(temp_file, GENERIC_READ | GENERIC_WRITE,
+	                           FILE_SHARE_READ, nullptr, CREATE_ALWAYS,
+	                           FILE_ATTRIBUTE_TEMPORARY | FILE_FLAG_DELETE_ON_CLOSE,
+	                           nullptr);
+	if (hfile == INVALID_HANDLE_VALUE) {
+		return boost::make_shared<PE>(name_hint, pFile());
+	}
+
+	DWORD written = 0;
+	BOOL ok = WriteFile(hfile, data, static_cast<DWORD>(size), &written, nullptr);
+	if (!ok || written != size) {
+		CloseHandle(hfile);
+		return boost::make_shared<PE>(name_hint, pFile());
+	}
+	SetFilePointer(hfile, 0, nullptr, FILE_BEGIN);
+
+	int fd = _open_osfhandle(reinterpret_cast<intptr_t>(hfile), _O_RDONLY | _O_BINARY);
+	if (fd == -1) {
+		CloseHandle(hfile);
+		return boost::make_shared<PE>(name_hint, pFile());
+	}
+
+	FILE* f = _fdopen(fd, "rb");
+	if (f == nullptr) {
+		_close(fd);
+		return boost::make_shared<PE>(name_hint, pFile());
+	}
+	pFile handle(f, fclose);
+	auto pe = boost::make_shared<PE>(name_hint, handle);
+	pe->_resource_path = temp_file;
+	return pe;
+#else
+#if defined(__GLIBC__)
+	auto buffer = boost::make_shared<std::vector<boost::uint8_t> >(size);
+	memcpy(buffer->data(), data, size);
+	FILE* f = fmemopen(buffer->data(), size, "rb");
+	if (f == nullptr) {
+		return boost::make_shared<PE>(name_hint, pFile());
+	}
+	pFile handle(f, fclose);
+	auto pe = boost::make_shared<PE>(name_hint, handle);
+	pe->_backing_store = buffer;
+	return pe;
+#else
+	// Fallback to a temporary file on other POSIX platforms.
+	FILE* f = tmpfile();
+	if (f == nullptr) {
+		return boost::make_shared<PE>(name_hint, pFile());
+	}
+	if (size != fwrite(data, 1, size, f)) {
+		fclose(f);
+		return boost::make_shared<PE>(name_hint, pFile());
+	}
+	fseek(f, 0, SEEK_SET);
+	pFile handle(f, fclose);
+	return boost::make_shared<PE>(name_hint, handle);
+#endif
+#endif
 }
 
 // ----------------------------------------------------------------------------
@@ -512,6 +623,11 @@ unsigned int PE::rva_to_offset(boost::uint64_t rva) const
 		return 0;
 	}
 
+	// RVAs inside headers map directly to file offsets.
+	if (rva < _ioh->SizeOfHeaders) {
+		return static_cast<unsigned int>(rva & 0xFFFFFFFF);
+	}
+
 	// Special case: PE with no sections
 	if (_sections.empty()) {
 		return rva & 0xFFFFFFFF; // If the file is bigger than 4GB, this assumption may not be true.
@@ -559,6 +675,110 @@ unsigned int PE::rva_to_offset(boost::uint64_t rva) const
 	// Assume that the offset in the file can be stored inside an unsigned integer.
 	// PEs whose size is bigger than 4 Go may not be parsed properly.
 	return (rva - section->get_virtual_address() + section->get_pointer_to_raw_data()) & 0xFFFFFFFF;
+}
+
+// ----------------------------------------------------------------------------
+
+unsigned int PE::offset_to_rva(boost::uint64_t offset) const
+{
+	if (!_ioh) {
+		PRINT_ERROR << "Tried to convert an offset into a RVA, but ImageOptionalHeader was not parsed!"
+					<< DEBUG_INFO_INSIDEPE << std::endl;
+		return 0;
+	}
+
+	if (offset < _ioh->SizeOfHeaders) {
+		return static_cast<unsigned int>(offset & 0xFFFFFFFF);
+	}
+
+	if (_sections.empty()) {
+		return static_cast<unsigned int>(offset & 0xFFFFFFFF);
+	}
+
+	for (const auto& section : _sections)
+	{
+		boost::uint32_t raw_ptr = section->get_pointer_to_raw_data();
+		boost::uint32_t raw_size = section->get_size_of_raw_data();
+		boost::uint32_t aligned_ptr = raw_ptr;
+
+		if (raw_ptr % _ioh->FileAlignment != 0) {
+			aligned_ptr = (raw_ptr / _ioh->FileAlignment) * _ioh->FileAlignment;
+		}
+
+		if (offset >= aligned_ptr && offset < static_cast<boost::uint64_t>(aligned_ptr) + raw_size)
+		{
+			return static_cast<unsigned int>(
+				(offset - aligned_ptr + section->get_virtual_address()) & 0xFFFFFFFF);
+		}
+	}
+
+	return 0;
+}
+
+// ----------------------------------------------------------------------------
+
+pSection PE::get_section_by_rva(boost::uint64_t rva) const
+{
+	return find_section(static_cast<unsigned int>(rva), _sections);
+}
+
+// ----------------------------------------------------------------------------
+
+pSection PE::get_section_by_offset(boost::uint64_t offset) const
+{
+	for (const auto& section : _sections)
+	{
+		boost::uint32_t raw_ptr = section->get_pointer_to_raw_data();
+		boost::uint32_t raw_size = section->get_size_of_raw_data();
+		boost::uint32_t aligned_ptr = raw_ptr;
+
+		if (_ioh && raw_ptr % _ioh->FileAlignment != 0) {
+			aligned_ptr = (raw_ptr / _ioh->FileAlignment) * _ioh->FileAlignment;
+		}
+
+		if (offset >= aligned_ptr && offset < static_cast<boost::uint64_t>(aligned_ptr) + raw_size) {
+			return section;
+		}
+	}
+
+	return pSection();
+}
+
+// ----------------------------------------------------------------------------
+
+shared_bytes PE::get_bytes_at_offset(boost::uint64_t offset, size_t size) const
+{
+	if (_file_handle == nullptr || size == 0) {
+		return nullptr;
+	}
+	if (offset >= _file_size) {
+		return nullptr;
+	}
+
+	if (size > _file_size - offset) {
+		size = static_cast<size_t>(_file_size - offset);
+	}
+
+	long saved = ftell(_file_handle.get());
+	if (fseek(_file_handle.get(), static_cast<long>(offset), SEEK_SET)) {
+		return nullptr;
+	}
+
+	auto res = boost::make_shared<std::vector<boost::uint8_t> >(size);
+	fread(&(*res)[0], 1, size, _file_handle.get());
+	fseek(_file_handle.get(), saved, SEEK_SET);
+	return res;
+}
+
+// ----------------------------------------------------------------------------
+
+shared_bytes PE::get_data(boost::uint64_t rva, size_t size) const
+{
+	unsigned int offset = rva_to_offset(rva);
+	if (offset == 0 && rva != 0) {
+		return nullptr;
+	}
+	return get_bytes_at_offset(offset, size);
 }
 
 // ----------------------------------------------------------------------------

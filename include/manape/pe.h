@@ -80,8 +80,12 @@ class PE
 
 public:
 	DECLSPEC PE(const std::string& path);
+	DECLSPEC PE(const std::string& display_path, pFile file_handle);
 	DECLSPEC virtual ~PE() {}
 	DECLSPEC static boost::shared_ptr<PE> create(const std::string& path);
+	DECLSPEC static boost::shared_ptr<PE> create_from_bytes(const boost::uint8_t* data,
+															size_t size,
+															const std::string& name_hint = "<memory>");
 
 	DECLSPEC boost::uint64_t get_filesize() const;
 
@@ -159,6 +163,13 @@ public:
 	*	@return	The corresponding offset in the file, or 0 if the RVA could not be translated.
 	*/
 	DECLSPEC unsigned int rva_to_offset(boost::uint64_t rva) const;
+	DECLSPEC unsigned int offset_to_rva(boost::uint64_t offset) const;
+
+	DECLSPEC pSection get_section_by_rva(boost::uint64_t rva) const;
+	DECLSPEC pSection get_section_by_offset(boost::uint64_t offset) const;
+
+	DECLSPEC shared_bytes get_data(boost::uint64_t rva, size_t size) const;
+	DECLSPEC shared_bytes get_bytes_at_offset(boost::uint64_t offset, size_t size) const;
 
 	DECLSPEC boost::optional<dos_header> get_dos_header() const {
 		return _h_dos;
@@ -269,6 +280,7 @@ public:
 	void operator delete(void* p);
 
 private:
+	void _initialize();
 	/**
 	 *	@brief	The new operator, re-implemented only so it could be made private.
 	 *
@@ -450,9 +462,11 @@ private:
 	bool _read_image_resource_directory(image_resource_directory& dir, unsigned int offset = 0) const;
 
 	std::string							_path;
+	std::string							_resource_path;
     bool								_initialized;
 	boost::uint64_t						_file_size;
 	pFile								_file_handle;
+	boost::shared_ptr<std::vector<boost::uint8_t> > _backing_store;
 
 	/*
 	    -----------------------------------
