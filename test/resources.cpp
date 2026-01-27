@@ -15,6 +15,9 @@ You should have received a copy of the GNU General Public License
 along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <atomic>
+#include <fstream>
+#include <thread>
 #include <vector>
 #include <boost/assign.hpp>
 
@@ -54,6 +57,153 @@ BOOST_AUTO_TEST_CASE(parse_resources)
 		"  </trustInfo>\r\n"
 		"</assembly>\r\n";
 	BOOST_CHECK(rt_manifest == expected);
+}
+
+// ----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(parse_resources_from_bytes)
+{
+	std::ifstream input("testfiles/manatest.exe", std::ios::binary);
+	BOOST_ASSERT(input);
+	std::vector<boost::uint8_t> bytes{
+		std::istreambuf_iterator<char>(input),
+		std::istreambuf_iterator<char>()};
+	BOOST_ASSERT(!bytes.empty());
+
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "manatest.exe");
+	BOOST_ASSERT(pe);
+	auto resources = pe->get_resources();
+	BOOST_ASSERT(resources);
+	BOOST_ASSERT(resources->size() == 1);
+	auto r = resources->at(0);
+	BOOST_ASSERT(r);
+	BOOST_CHECK(*r->get_type() == "RT_MANIFEST");
+	BOOST_CHECK(r->get_id() == 1);
+	BOOST_CHECK(*r->get_name() == "1");
+	BOOST_CHECK(r->get_size() == 381);
+	BOOST_CHECK(r->get_codepage() == 0);
+	BOOST_CHECK(r->get_offset() == 0x2a60);
+	BOOST_CHECK(*r->get_language() == "English - United States");
+	auto res = r->get_raw_data();
+	std::string rt_manifest(res->begin(), res->end());
+	std::string expected = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?>\r\n"
+	"<assembly xmlns='urn:schemas-microsoft-com:asm.v1' manifestVersion='1.0'>\r\n"
+	"  <trustInfo xmlns=\"urn:schemas-microsoft-com:asm.v3\">\r\n"
+	"    <security>\r\n"
+	"      <requestedPrivileges>\r\n"
+	"        <requestedExecutionLevel level='asInvoker' uiAccess='false' />\r\n"
+	"      </requestedPrivileges>\r\n"
+	"    </security>\r\n"
+	"  </trustInfo>\r\n"
+	"</assembly>\r\n";
+	BOOST_CHECK(rt_manifest == expected);
+}
+
+// ----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(concurrent_resource_and_section_reads)
+{
+	std::ifstream input("testfiles/manatest.exe", std::ios::binary);
+	BOOST_ASSERT(input);
+	std::vector<boost::uint8_t> bytes{
+		std::istreambuf_iterator<char>(input),
+		std::istreambuf_iterator<char>()};
+	BOOST_ASSERT(!bytes.empty());
+
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "manatest.exe");
+	BOOST_ASSERT(pe);
+
+	auto sections = pe->get_sections();
+	auto resources = pe->get_resources();
+	BOOST_ASSERT(sections && !sections->empty());
+	BOOST_ASSERT(resources && !resources->empty());
+	auto section = sections->at(0);
+	auto resource = resources->at(0);
+	BOOST_ASSERT(section);
+	BOOST_ASSERT(resource);
+
+	auto base_file = pe->get_bytes_at_offset(0, 2);
+	auto base_section = section->get_raw_data();
+	auto base_resource = resource->get_raw_data();
+	BOOST_ASSERT(base_file && base_file->size() == 2);
+	BOOST_ASSERT(base_section && !base_section->empty());
+	BOOST_ASSERT(base_resource && !base_resource->empty());
+
+	auto sample_matches = [](const std::vector<boost::uint8_t>& data,
+							 const std::vector<boost::uint8_t>& base) -> bool {
+		if (data.size() != base.size() || data.empty()) {
+			return false;
+		}
+		const size_t size = data.size();
+		const size_t mid = size / 2;
+		const size_t idxs[] = {
+			0,
+			size > 1 ? 1u : 0u,
+			mid,
+			size > 2 ? size - 2 : 0u,
+			size - 1,
+		};
+		for (size_t idx : idxs) {
+			if (idx >= size || data[idx] != base[idx]) {
+				return false;
+			}
+		}
+		return true;
+	};
+
+	std::atomic<bool> ok(true);
+	auto worker = [&]() {
+		for (int i = 0; i < 200 && ok.load(); ++i) {
+			auto file_bytes = pe->get_bytes_at_offset(0, 2);
+			if (!file_bytes || file_bytes->size() != base_file->size() ||
+				file_bytes->at(0) != base_file->at(0) || file_bytes->at(1) != base_file->at(1)) {
+				ok.store(false);
+				return;
+			}
+
+			auto sec_bytes = section->get_raw_data();
+			if (!sec_bytes || !sample_matches(*sec_bytes, *base_section)) {
+				ok.store(false);
+				return;
+			}
+
+			auto res_bytes = resource->get_raw_data();
+			if (!res_bytes || !sample_matches(*res_bytes, *base_resource)) {
+				ok.store(false);
+				return;
+			}
+		}
+	};
+
+	std::vector<std::thread> threads;
+	for (int i = 0; i < 8; ++i) {
+		threads.emplace_back(worker);
+	}
+	for (auto& t : threads) {
+		t.join();
+	}
+
+	BOOST_CHECK(ok.load());
+}
+
+// ----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(resource_unknown_filesize)
+{
+	mana::pResource r = boost::make_shared<mana::Resource>(
+		"RT_MANIFEST",
+		"1",
+		"English - United States",
+		0,
+		16,
+		0,
+		4,
+		"unknown",
+		mana::pFile(),
+		0);
+	auto bytes = r->get_raw_data();
+	BOOST_ASSERT(bytes);
+	BOOST_CHECK(bytes->empty());
 }
 
 // ----------------------------------------------------------------------------

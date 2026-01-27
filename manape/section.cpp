@@ -17,13 +17,24 @@
 
 #include "manape/section.h"
 
+#include <limits>
+
 namespace mana
 {
+
+namespace {
+	// Fallback mutex only serializes access within this translation unit.
+	std::mutex& io_mutex_or_fallback(const pMutex& mutex) {
+		static std::mutex fallback_mutex;
+		return mutex ? *mutex : fallback_mutex;
+	}
+}
 
 Section::Section(const image_section_header& header,
 				 pFile handle,
 				 boost::uint64_t file_size,
-				 const std::vector<pString>& coff_string_table)
+				 const std::vector<pString>& coff_string_table,
+				 pMutex io_mutex)
 	  : _virtual_size(header.VirtualSize),
 		_virtual_address(header.VirtualAddress),
 		_size_of_raw_data(header.SizeOfRawData),
@@ -34,7 +45,8 @@ Section::Section(const image_section_header& header,
 		_number_of_line_numbers(header.NumberOfLineNumbers),
 		_characteristics(header.Characteristics),
 		_file_handle(std::move(handle)),
-		_file_size(file_size)
+		_file_size(file_size),
+		_io_mutex(std::move(io_mutex))
 {
 	_name = std::string((char*) header.Name, 8);
 	boost::trim_right_if(_name, [](char c) { return c == '\x00'; }); // Trim the string for \0 characters.
@@ -77,12 +89,30 @@ shared_bytes Section::get_raw_data() const
 	if (_file_handle == nullptr) {
 		return res;
 	}
-	if (_pointer_to_raw_data + _size_of_raw_data > _file_size)
+	const boost::uint64_t pointer = _pointer_to_raw_data;
+	const boost::uint64_t size = _size_of_raw_data;
+	if (pointer > static_cast<boost::uint64_t>(std::numeric_limits<long>::max())) {
+		return res;
+	}
+	if (size > static_cast<boost::uint64_t>(std::numeric_limits<long>::max())) {
+		return res;
+	}
+	if (pointer > std::numeric_limits<boost::uint64_t>::max() - size) {
+		return res;
+	}
+	if (pointer + size > _file_size)
 	{
 		PRINT_WARNING << "Section " << _name << " is larger than the executable!" << DEBUG_INFO << std::endl;
 		return res;
 	}
+	std::unique_lock<std::mutex> lock(io_mutex_or_fallback(_io_mutex));
+
+	long saved = ftell(_file_handle.get());
+	if (saved == -1) {
+		return res;
+	}
 	if (fseek(_file_handle.get(), _pointer_to_raw_data, SEEK_SET)) {
+		fseek(_file_handle.get(), saved, SEEK_SET);
 		return res;
 	}
 
@@ -103,6 +133,10 @@ shared_bytes Section::get_raw_data() const
 		res->resize(0);
 	}
 
+	if (fseek(_file_handle.get(), saved, SEEK_SET)) {
+		PRINT_WARNING << "Could not restore file cursor after reading section " << _name << "." << std::endl;
+		res->resize(0);
+	}
 	return res;
 }
 

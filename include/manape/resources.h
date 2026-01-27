@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include <cstdio>
 #include <string>
 #include <utility>
 #include <vector>
@@ -28,12 +29,9 @@
 #include <boost/filesystem.hpp>
 #include <boost/system/api_config.hpp>
 
-#ifdef BOOST_POSIX_API
-# include <sys/stat.h>
-#endif
-
 #include "manape/utils.h"
 #include "manape/pe_structs.h"
+#include "manape/io_types.h"
 
 namespace mana
 {
@@ -51,16 +49,22 @@ public:
 			 boost::uint32_t		size,
 			 boost::uint32_t		timestamp,
 			 boost::uint32_t		offset_in_file,
-			 std::string path_to_pe)
+			 std::string path_to_pe,
+			 pFile                  pe_file,
+			 boost::uint64_t        file_size,
+			 pMutex                 io_mutex = pMutex())
 		: _type(std::move(type)),
 		  _name(std::move(name)),
+		  _id(0),
 		  _language(std::move(language)),
 		  _codepage(codepage),
 		  _size(size),
 		  _timestamp(timestamp),
 		  _offset_in_file(offset_in_file),
 		  _path_to_pe(std::move(path_to_pe)),
-		  _id(0)
+		  _pe_file(std::move(pe_file)),
+		  _file_size(file_size),
+		  _io_mutex(std::move(io_mutex))
 	{}
 
 	Resource(std::string type,
@@ -70,16 +74,22 @@ public:
 			 boost::uint32_t			size,
 			 boost::uint32_t			timestamp,
 			 boost::uint32_t			offset_in_file,
-			 std::string path_to_pe)
+			 std::string path_to_pe,
+			 pFile                  pe_file,
+			 boost::uint64_t        file_size,
+			 pMutex                 io_mutex = pMutex())
 		: _type(std::move(type)),
 		  _name(),
+		  _id(id),
 		  _language(std::move(language)),
 		  _codepage(codepage),
-		  _offset_in_file(offset_in_file),
 		  _size(size),
 		  _timestamp(timestamp),
+		  _offset_in_file(offset_in_file),
 		  _path_to_pe(std::move(path_to_pe)),
-		  _id(id)
+		  _pe_file(std::move(pe_file)),
+		  _file_size(file_size),
+		  _io_mutex(std::move(io_mutex))
 	{}
 
 	virtual ~Resource() = default;
@@ -173,13 +183,16 @@ private:
 	// These fields do not describe the PE structure.
 	unsigned int	_offset_in_file;
 	std::string		_path_to_pe;
+	pFile			_pe_file;
+	boost::uint64_t	_file_size;
+	pMutex			_io_mutex;
 
 	/**
-	 *	@brief	Opens the PE file and sets the cursor to the resource bytes.
+	 *	@brief	Seeks the PE file handle to the resource bytes.
 	 *
-	 *	@return	A file object with its cursor correctly set, or NULL if there was an error.
+	 *	@return	True if the handle is ready for reading, false otherwise.
 	 */
-	FILE* _reach_data() const;
+	bool _reach_data(FILE*& f, long& saved_offset) const;
 };
 typedef boost::shared_ptr<Resource> pResource;
 

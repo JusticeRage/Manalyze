@@ -26,11 +26,15 @@
 #include <io.h>
 #include <fcntl.h>
 #endif
+#include <limits>
 
 namespace mana {
 
 PE::PE(const std::string& path)
-	: _path(path), _resource_path(path), _initialized(false)
+	: _path(path),
+	  _resource_path(path),
+	  _initialized(false),
+	  _io_mutex(boost::make_shared<std::mutex>())
 {
 	FILE* f = fopen(_path.c_str(), "rb");
 	if (f == nullptr)
@@ -41,15 +45,28 @@ PE::PE(const std::string& path)
 	_file_handle = boost::shared_ptr<FILE>(f, fclose);
 
 	// Get the file size
-	fseek(_file_handle.get(), 0, SEEK_END);
-	_file_size = ftell(_file_handle.get());
-	fseek(_file_handle.get(), 0, SEEK_SET);
+	bool size_ok = true;
+	if (fseek(_file_handle.get(), 0, SEEK_END)) {
+		size_ok = false;
+	}
+	long end_pos = size_ok ? ftell(_file_handle.get()) : -1;
+	if (end_pos < 0) {
+		size_ok = false;
+	}
+	_file_size = size_ok ? static_cast<boost::uint64_t>(end_pos) : 0;
+	if (fseek(_file_handle.get(), 0, SEEK_SET)) {
+		size_ok = false;
+	}
 
 	_initialize();
 }
 
 PE::PE(const std::string& display_path, pFile file_handle)
-	: _path(display_path), _resource_path(display_path), _initialized(false), _file_handle(file_handle)
+	: _path(display_path),
+	  _resource_path(display_path),
+	  _initialized(false),
+	  _file_handle(file_handle),
+	  _io_mutex(boost::make_shared<std::mutex>())
 {
 	if (_file_handle == nullptr)
 	{
@@ -57,9 +74,18 @@ PE::PE(const std::string& display_path, pFile file_handle)
 		return;
 	}
 
-	fseek(_file_handle.get(), 0, SEEK_END);
-	_file_size = ftell(_file_handle.get());
-	fseek(_file_handle.get(), 0, SEEK_SET);
+	bool size_ok = true;
+	if (fseek(_file_handle.get(), 0, SEEK_END)) {
+		size_ok = false;
+	}
+	long end_pos = size_ok ? ftell(_file_handle.get()) : -1;
+	if (end_pos < 0) {
+		size_ok = false;
+	}
+	_file_size = size_ok ? static_cast<boost::uint64_t>(end_pos) : 0;
+	if (fseek(_file_handle.get(), 0, SEEK_SET)) {
+		size_ok = false;
+	}
 
 	_initialize();
 }
@@ -86,6 +112,66 @@ void PE::_initialize()
 	_initialized = true;
 	_parse_coff_symbols();
 	_parse_directories();
+}
+
+// ----------------------------------------------------------------------------
+
+bool PE::_locked_read_at(boost::uint64_t offset, void* dst, size_t size) const
+{
+	if (_file_handle == nullptr || _io_mutex == nullptr) {
+		return false;
+	}
+	// FILE* fseek uses long offsets; reject offsets that cannot be represented.
+	if (offset > static_cast<boost::uint64_t>(std::numeric_limits<long>::max())) {
+		return false;
+	}
+	if (size == 0) {
+		return true;
+	}
+
+	std::lock_guard<std::mutex> guard(*_io_mutex);
+	long saved = ftell(_file_handle.get());
+	if (saved == -1) {
+		return false;
+	}
+	bool ok = true;
+	if (fseek(_file_handle.get(), static_cast<long>(offset), SEEK_SET)) {
+		ok = false;
+	}
+
+	size_t read_bytes = 0;
+	if (ok) {
+		read_bytes = fread(dst, 1, size, _file_handle.get());
+		if (read_bytes != size) {
+			ok = false;
+		}
+	}
+
+	if (fseek(_file_handle.get(), saved, SEEK_SET)) {
+		ok = false;
+	}
+	return ok;
+}
+
+// ----------------------------------------------------------------------------
+
+shared_bytes PE::_locked_read_vec(boost::uint64_t offset, size_t size) const
+{
+	if (_file_handle == nullptr || _io_mutex == nullptr) {
+		return nullptr;
+	}
+	if (offset > static_cast<boost::uint64_t>(std::numeric_limits<long>::max())) {
+		return nullptr;
+	}
+
+	auto res = boost::make_shared<std::vector<boost::uint8_t> >(size);
+	if (size == 0) {
+		return res;
+	}
+	if (!_locked_read_at(offset, &(*res)[0], size)) {
+		return nullptr;
+	}
+	return res;
 }
 
 
@@ -123,11 +209,18 @@ boost::shared_ptr<PE> PE::create_from_bytes(const boost::uint8_t* data,
 		return boost::make_shared<PE>(name_hint, pFile());
 	}
 
-	DWORD written = 0;
-	BOOL ok = WriteFile(hfile, data, static_cast<DWORD>(size), &written, nullptr);
-	if (!ok || written != size) {
-		CloseHandle(hfile);
-		return boost::make_shared<PE>(name_hint, pFile());
+	size_t remaining = size;
+	const boost::uint8_t* cursor = data;
+	while (remaining > 0) {
+		DWORD chunk = (remaining > MAXDWORD) ? MAXDWORD : static_cast<DWORD>(remaining);
+		DWORD written = 0;
+		BOOL ok = WriteFile(hfile, cursor, chunk, &written, nullptr);
+		if (!ok || written != chunk) {
+			CloseHandle(hfile);
+			return boost::make_shared<PE>(name_hint, pFile());
+		}
+		remaining -= written;
+		cursor += written;
 	}
 	SetFilePointer(hfile, 0, nullptr, FILE_BEGIN);
 
@@ -211,13 +304,10 @@ shared_bytes PE::get_raw_bytes(size_t size) const
 	if(_file_handle == nullptr) {
 		return nullptr;
 	}
-	fseek(_file_handle.get(), 0, SEEK_SET);
 	if (size > _file_size) {
 		size = static_cast<size_t>(_file_size);
 	}
-	auto res = boost::make_shared<std::vector<boost::uint8_t> >(size);
-	fread(&(*res)[0], 1, size , _file_handle.get());
-	return res;
+	return _locked_read_vec(0, size);
 }
 
 // ----------------------------------------------------------------------------
@@ -256,14 +346,10 @@ shared_bytes PE::get_overlay_bytes(size_t size) const
     if (max_offset >= get_filesize()) {
         return nullptr;
     }
-
-    fseek(_file_handle.get(), max_offset, SEEK_SET);
     if (size > _file_size - max_offset) {
         size = static_cast<size_t>(_file_size - max_offset);
     }
-    auto res = boost::make_shared<std::vector<boost::uint8_t> >(size);
-    fread(&(*res)[0], 1, size, _file_handle.get());
-    return res;
+    return _locked_read_vec(max_offset, size);
 }
 
 // ----------------------------------------------------------------------------
@@ -531,7 +617,7 @@ bool PE::_parse_section_table()
 			PRINT_ERROR << "Could not read section " << i << "." << DEBUG_INFO_INSIDEPE << std::endl;
 			return false;
 		}
-		_sections.push_back(boost::make_shared<Section>(sec, _file_handle, _file_size, _coff_string_table));
+		_sections.push_back(boost::make_shared<Section>(sec, _file_handle, _file_size, _coff_string_table, _io_mutex));
 	}
 
 	return true;
@@ -758,16 +844,7 @@ shared_bytes PE::get_bytes_at_offset(boost::uint64_t offset, size_t size) const
 	if (size > _file_size - offset) {
 		size = static_cast<size_t>(_file_size - offset);
 	}
-
-	long saved = ftell(_file_handle.get());
-	if (fseek(_file_handle.get(), static_cast<long>(offset), SEEK_SET)) {
-		return nullptr;
-	}
-
-	auto res = boost::make_shared<std::vector<boost::uint8_t> >(size);
-	fread(&(*res)[0], 1, size, _file_handle.get());
-	fseek(_file_handle.get(), saved, SEEK_SET);
-	return res;
+	return _locked_read_vec(offset, size);
 }
 
 // ----------------------------------------------------------------------------

@@ -22,8 +22,19 @@
 
 #include "manape/resources.h"
 
+#include <limits>
+
 namespace mana
 {
+
+namespace {
+	// Fallback mutex only serializes access within this translation unit.
+	std::mutex& io_mutex_or_fallback(const pMutex& mutex) {
+		static std::mutex fallback_mutex;
+		return mutex ? *mutex : fallback_mutex;
+	}
+
+}
 
 bool PE::_read_image_resource_directory(image_resource_directory& dir, unsigned int offset) const
 {
@@ -253,7 +264,10 @@ bool PE::_parse_resources()
 													   entry.Size,
 													   name.TimeDateStamp,
 													   offset,
-													   _resource_path);
+													   _resource_path,
+													   _file_handle,
+													   _file_size,
+													   _io_mutex);
 				}
 				else { // No name: call the constructor with the resource ID instead.
 					res = boost::make_shared<Resource>(r_type,
@@ -263,7 +277,10 @@ bool PE::_parse_resources()
 													   entry.Size,
 													   name.TimeDateStamp,
 													   offset,
-													   _resource_path);
+													   _resource_path,
+													   _file_handle,
+													   _file_size,
+													   _io_mutex);
 				}
 
 				_resource_table.push_back(res);
@@ -280,24 +297,30 @@ shared_bytes Resource::get_raw_data() const
 {
 	auto res = boost::make_shared<std::vector<boost::uint8_t> >();
 
-	FILE* f = _reach_data();
-	size_t read_bytes;
-	if (f == nullptr) {
-		goto END;
+	// When file size is unknown (_file_size == 0), resource materialization is disabled.
+	if (_file_size == 0)
+	{
+		PRINT_ERROR << "Cannot load resource " << *get_name()
+					<< " because the PE file size is unknown."
+					<< DEBUG_INFO << std::endl;
+		return res;
 	}
 
-	// Linux doesn't throw std::bad_alloc, instead it has OOM Killer shutdown the process.
-	// This workaround prevents Manalyze from crashing by bounding how much memory can be requested.
-	#ifdef BOOST_POSIX_API
-		struct stat st;
-		stat(_path_to_pe.c_str(), &st);
-		if (_size > st.st_size)
-		{
-			PRINT_ERROR << "Resource " << *get_name() << " is bigger than the PE. Not trying to load it in memory."
-						<< DEBUG_INFO << std::endl;
-			return res;
-		}
-	#endif
+	FILE* f = nullptr;
+	long saved_offset = -1;
+	size_t read_bytes;
+	std::unique_lock<std::mutex> lock(io_mutex_or_fallback(_io_mutex));
+	if (!_reach_data(f, saved_offset)) {
+		return res;
+	}
+
+	if (_file_size > 0 &&
+		static_cast<boost::uint64_t>(_offset_in_file) + static_cast<boost::uint64_t>(_size) > _file_size)
+	{
+		PRINT_ERROR << "Resource " << *get_name() << " is bigger than the PE. Not trying to load it in memory."
+					<< DEBUG_INFO << std::endl;
+		goto END;
+	}
 
 	try {
 		res->resize(_size);
@@ -314,8 +337,10 @@ shared_bytes Resource::get_raw_data() const
 	}
 
 	END:
-	if (f != nullptr) {
-		fclose(f);
+	if (f != nullptr && saved_offset != -1) {
+		if (fseek(f, saved_offset, SEEK_SET)) {
+			res->resize(0);
+		}
 	}
 	return res;
 }
@@ -360,9 +385,17 @@ DECLSPEC const_shared_strings Resource::interpret_as()
 		PRINT_WARNING << "Resources of type " << _type << " cannot be interpreted as vectors of strings." << DEBUG_INFO << std::endl;
 		return res;
 	}
+	if (_file_size == 0) {
+		PRINT_ERROR << "Cannot load resource " << *get_name()
+					<< " because the PE file size is unknown."
+					<< DEBUG_INFO << std::endl;
+		return res;
+	}
 
-	FILE* f = _reach_data();
-	if (f == nullptr) {
+	FILE* f = nullptr;
+	long saved_offset = -1;
+	std::unique_lock<std::mutex> lock(io_mutex_or_fallback(_io_mutex));
+	if (!_reach_data(f, saved_offset)) {
 		goto END;
 	}
 
@@ -374,8 +407,10 @@ DECLSPEC const_shared_strings Resource::interpret_as()
 	}
 
 	END:
-	if (f != nullptr) {
-		fclose(f);
+	if (f != nullptr && saved_offset != -1) {
+		if (fseek(f, saved_offset, SEEK_SET)) {
+			res->clear();
+		}
 	}
 	return res;
 }
@@ -426,8 +461,16 @@ DECLSPEC pgroup_icon_directory Resource::interpret_as()
 	if (_type != "RT_GROUP_ICON" && _type != "RT_GROUP_CURSOR") {
 		return pgroup_icon_directory();
 	}
-	FILE* f = _reach_data();
-	if (f == nullptr) {
+	if (_file_size == 0) {
+		PRINT_ERROR << "Cannot load resource " << *get_name()
+					<< " because the PE file size is unknown."
+					<< DEBUG_INFO << std::endl;
+		return pgroup_icon_directory();
+	}
+	FILE* f = nullptr;
+	long saved_offset = -1;
+	std::unique_lock<std::mutex> lock(io_mutex_or_fallback(_io_mutex));
+	if (!_reach_data(f, saved_offset)) {
 		return pgroup_icon_directory();
 	}
 
@@ -477,7 +520,11 @@ DECLSPEC pgroup_icon_directory Resource::interpret_as()
 	}
 
 	END:
-	fclose(f);
+	if (f != nullptr && saved_offset != -1) {
+		if (fseek(f, saved_offset, SEEK_SET)) {
+			res.reset();
+		}
+	}
 	return res;
 }
 
@@ -489,9 +536,17 @@ DECLSPEC pversion_info Resource::interpret_as()
 	if (_type != "RT_VERSION") {
 		return pversion_info();
 	}
+	if (_file_size == 0) {
+		PRINT_ERROR << "Cannot load resource " << *get_name()
+					<< " because the PE file size is unknown."
+					<< DEBUG_INFO << std::endl;
+		return pversion_info();
+	}
 
-	FILE* f = _reach_data();
-	if (f == nullptr) {
+	FILE* f = nullptr;
+	long saved_offset = -1;
+	std::unique_lock<std::mutex> lock(io_mutex_or_fallback(_io_mutex));
+	if (!_reach_data(f, saved_offset)) {
 		return pversion_info();
 	}
 
@@ -624,7 +679,11 @@ DECLSPEC pversion_info Resource::interpret_as()
 	*/
 
 	END:
-	fclose(f);
+	if (f != nullptr && saved_offset != -1) {
+		if (fseek(f, saved_offset, SEEK_SET)) {
+			res.reset();
+		}
+	}
 	return res;
 }
 
@@ -637,21 +696,30 @@ DECLSPEC shared_bytes Resource::interpret_as() {
 
 // ----------------------------------------------------------------------------
 
-FILE* Resource::_reach_data() const
+bool Resource::_reach_data(FILE*& f, long& saved_offset) const
 {
-	FILE* f = fopen(_path_to_pe.c_str(), "rb");
-	if (f == nullptr) { // File has moved, or is already in use.
-		return nullptr;
+	if (!_pe_file) {
+		return false;
+	}
+	if (static_cast<boost::uint64_t>(_offset_in_file) >
+		static_cast<boost::uint64_t>(std::numeric_limits<long>::max())) {
+		return false;
+	}
+
+	f = _pe_file.get();
+	saved_offset = ftell(f);
+	if (saved_offset == -1) {
+		return false;
 	}
 
 	if (!_offset_in_file || fseek(f, _offset_in_file, SEEK_SET))
 	{
 		// Offset is invalid
-		fclose(f);
-		return nullptr;
+		fseek(f, saved_offset, SEEK_SET);
+		return false;
 	}
 
-	return f;
+	return true;
 }
 
 // ----------------------------------------------------------------------------
