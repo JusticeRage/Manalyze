@@ -15,9 +15,7 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <boost/system/api_config.hpp>
-
-#if defined BOOST_WINDOWS_API && !defined _WIN32_WINNT
+#if defined _WIN32 && !defined _WIN32_WINNT
 	#define _WIN32_WINNT 0x0501
 #endif
 
@@ -67,11 +65,11 @@ public:
 	int get_api_version() const override { return 1; }
 
 	pString get_id() const override {
-		return boost::make_shared<std::string>("virustotal");
+		return std::make_shared<std::string>("virustotal");
 	}
 
 	pString get_description() const override {
-		return boost::make_shared<std::string>("Checks existing AV results on VirusTotal.");
+		return std::make_shared<std::string>("Checks existing AV results on VirusTotal.");
 	}
 
 	pResult analyze(const mana::PE& pe) override

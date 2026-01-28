@@ -19,8 +19,7 @@
 #include <algorithm>
 #include <map>
 #include <string>
-#include <boost/assign/list_of.hpp>
-#include <boost/regex.hpp>
+#include <regex>
 
 #include "plugin_framework/plugin_interface.h"
 #include "plugin_framework/auto_register.h"
@@ -30,85 +29,88 @@
 namespace plugin {
 
 // Check the section names against a list of known names.
-const std::vector<std::string> common_names = boost::assign::list_of(".text")
-                                                                    (".textbss")
-                                                                    (".data")
-                                                                    (".DATA")
-                                                                    ("DATA")
-                                                                    ("_RDATA")
-                                                                    (".eh_fram")
-                                                                    (".rdata")
-                                                                    (".rsrc")
-                                                                    (".idata")
-                                                                    (".edata")
-                                                                    (".pdata")
-                                                                    (".rodata")
-                                                                    (".reloc")
-                                                                    (".bss")
-                                                                    (".BSS")
-                                                                    ("BSS")
-                                                                    (".tls")
-                                                                    (".sxdata") // Apparently related to SafeSEH.
-                                                                    (".gfids")
-                                                                    (".00cfg")
-                                                                    (".code")
-                                                                    ("CODE")
-                                                                    (".crt")
-                                                                    (".CRT")
-                                                                    ("INIT")
-                                                                    (".oprc")
-                                                                    (".detourc")
-                                                                    (".detourd")
-                                                                    (".didat");
+const std::vector<std::string> common_names = {
+	".text",
+	".textbss",
+	".data",
+	".DATA",
+	"DATA",
+	"_RDATA",
+	".eh_fram",
+	".rdata",
+	".rsrc",
+	".idata",
+	".edata",
+	".pdata",
+	".rodata",
+	".reloc",
+	".bss",
+	".BSS",
+	"BSS",
+	".tls",
+	".sxdata", // Apparently related to SafeSEH.
+	".gfids",
+	".00cfg",
+	".code",
+	"CODE",
+	".crt",
+	".CRT",
+	"INIT",
+	".oprc",
+	".detourc",
+	".detourd",
+	".didat"
+};
 
 // Also check for known packer section names (i.e. UPX0, etc.)
 // This list was updated with information from
 // http://www.hexacorn.com/blog/2016/12/15/pe-section-names-re-visited/
-const std::map<std::string, std::string> KNOWN_PACKER_SECTIONS =
-    boost::assign::map_list_of ("\\.ndata",     "The PE is an NSIS installer")
-                               ("\\.?(upx|UPX)[0-9!]", "The PE is packed with UPX")
-                               ("\\.(mpress|MPRESS)[0-9]", "The PE is packed with mpress")
-                               ("\\.[Aa][Ss][Pp]ack", "The PE is packed with Aspack")
-                               ("\\.adata", "The PE is packed with Aspack or Armadillo")
-                               ("\\.boom", "The PE is packed with Boomerang List Builder")
-                               ("\\.ccg", "The PE is packed with CCG")
-                               ("\\.charmve|\\.pinclie", "The program is instrumented with PIN")
-                               ("BitArts", "The PE is packed with Crunch 2.0")
-                               ("DAStub", "The PE is packed with Dragon Armor")
-                               ("\\.enigma(1|2)", "The PE is packed with Enigma Protector")
-                               ("!EPack", "The PE is packed with Epack")
-                               ("\\.gentee", "The PE is a gentee installer")
-                               ("kkrunchy", "The PE is packed with kkrunchy")
-                               ("\\.mackt", "The PE was fixed by ImpREC")
-                               ("\\.MaskPE", "The PE is packed with MaskPE")
-                               ("MEW", "The PE is packed with MEW")
-                               ("\\.neolite?", "The PE is packed with Neolite")
-                               ("\\.?nsp[012]", "The PE is packed with NsPack")
-                               ("\\.RLPack", "The PE is packed with RLPack")
-                               ("(pe|PE)([Bb]undle|[cC][12]([TM]O)?|Compact2)", "The PE is packed with PEBundle")
-                               ("PELOCKnt", "This PE is packed with PELock")
-                               ("\\.perplex", "This PE is packed with Perplex")
-                               ("PESHiELD", "This PE is packed with PEShield")
-                               ("\\.petite", "This PE is packed with Petite")
-                               ("ProCrypt", "This PE is packed with ProCrypt")
-                               ("\\.rmnet", "This PE is packed with Ramnit")
-                               ("\\.RPCrypt|RCryptor", "This PE is packed with RPCrypt")
-                               ("\\.seau", "This PE is packed with SeauSFX")
-                               ("\\.shrink[123]", "This PE is packed with Shrinker")
-                               ("\\.spack", "This PE is packed with Simple Pack (by bagie)")
-                               ("\\.svkp", "This PE is packed with SVKP")
-                               ("\\.taz", "The PE is packed with PESpin")
-                               ("(\\.?Themida)|(WinLicen)", "This PE is packed with Themida")
-                               ("\\.tsu(arch|stub)", "This PE is packed with TSULoader")
-                               ("PEPACK!!", "This PE is packed with PEPack")
-                               ("\\.(Upack|ByDwing)", "This PE is packed with Upack")
-                               ("\\.vmp[012]", "This PE is packed with VMProtect")
-                               ("VProtect", "This PE is packed with VProtect")
-                               ("\\.winapi", "This PE was modified with API Override")
-                               ("_winzip_", "This PE is a WinZip self-extractor")
-                               ("\\.WWPACK", "This PE is packed with WWPACK")
-                               ("\\.y(P|0da)", "This PE is packed with Y0da")
-                               ("\\.managed", "This PE is an AOT-compiled .NET program");
+const std::map<std::string, std::string> KNOWN_PACKER_SECTIONS = {
+	{"\\.ndata", "The PE is an NSIS installer"},
+	{"\\.?(upx|UPX)[0-9!]", "The PE is packed with UPX"},
+	{"\\.(mpress|MPRESS)[0-9]", "The PE is packed with mpress"},
+	{"\\.[Aa][Ss][Pp]ack", "The PE is packed with Aspack"},
+	{"\\.adata", "The PE is packed with Aspack or Armadillo"},
+	{"\\.boom", "The PE is packed with Boomerang List Builder"},
+	{"\\.ccg", "The PE is packed with CCG"},
+	{"\\.charmve|\\.pinclie", "The program is instrumented with PIN"},
+	{"BitArts", "The PE is packed with Crunch 2.0"},
+	{"DAStub", "The PE is packed with Dragon Armor"},
+	{"\\.enigma(1|2)", "The PE is packed with Enigma Protector"},
+	{"!EPack", "The PE is packed with Epack"},
+	{"\\.gentee", "The PE is a gentee installer"},
+	{"kkrunchy", "The PE is packed with kkrunchy"},
+	{"\\.mackt", "The PE was fixed by ImpREC"},
+	{"\\.MaskPE", "The PE is packed with MaskPE"},
+	{"MEW", "The PE is packed with MEW"},
+	{"\\.neolite?", "The PE is packed with Neolite"},
+	{"\\.?nsp[012]", "The PE is packed with NsPack"},
+	{"\\.RLPack", "The PE is packed with RLPack"},
+	{"(pe|PE)([Bb]undle|[cC][12]([TM]O)?|Compact2)", "The PE is packed with PEBundle"},
+	{"PELOCKnt", "This PE is packed with PELock"},
+	{"\\.perplex", "This PE is packed with Perplex"},
+	{"PESHiELD", "This PE is packed with PEShield"},
+	{"\\.petite", "This PE is packed with Petite"},
+	{"ProCrypt", "This PE is packed with ProCrypt"},
+	{"\\.rmnet", "This PE is packed with Ramnit"},
+	{"\\.RPCrypt|RCryptor", "This PE is packed with RPCrypt"},
+	{"\\.seau", "This PE is packed with SeauSFX"},
+	{"\\.shrink[123]", "This PE is packed with Shrinker"},
+	{"\\.spack", "This PE is packed with Simple Pack (by bagie)"},
+	{"\\.svkp", "This PE is packed with SVKP"},
+	{"\\.taz", "The PE is packed with PESpin"},
+	{"(\\.?Themida)|(WinLicen)", "This PE is packed with Themida"},
+	{"\\.tsu(arch|stub)", "This PE is packed with TSULoader"},
+	{"PEPACK!!", "This PE is packed with PEPack"},
+	{"\\.(Upack|ByDwing)", "This PE is packed with Upack"},
+	{"\\.vmp[012]", "This PE is packed with VMProtect"},
+	{"VProtect", "This PE is packed with VProtect"},
+	{"\\.winapi", "This PE was modified with API Override"},
+	{"_winzip_", "This PE is a WinZip self-extractor"},
+	{"\\.WWPACK", "This PE is packed with WWPACK"},
+	{"\\.y(P|0da)", "This PE is packed with Y0da"},
+	{"\\.managed", "This PE is an AOT-compiled .NET program"}
+};
 
 class PackerDetectionPlugin : public IPlugin
 {
@@ -116,11 +118,11 @@ public:
     int get_api_version() const override { return 1; }
 
     pString get_id() const override {
-        return boost::make_shared<std::string>("packer");
+        return std::make_shared<std::string>("packer");
     }
 
     pString get_description() const override {
-        return boost::make_shared<std::string>("Tries to structurally detect packer presence.");
+        return std::make_shared<std::string>("Tries to structurally detect packer presence.");
     }
 
     void rich_header_tests(const mana::PE& pe, pResult res) const
@@ -131,7 +133,7 @@ public:
         }
 
         // Validate the checksum in the RICH header
-        boost::uint32_t checksum = rich->file_offset;
+        std::uint32_t checksum = rich->file_offset;
         auto bytes = pe.get_raw_bytes(rich->file_offset);
         // Checksum of the DOS header
         for (unsigned int i = 0; i < rich->file_offset; ++i)
@@ -192,8 +194,8 @@ public:
                 // Check section name against known packer section names and set the summary accordingly.
                 for (auto it2 = KNOWN_PACKER_SECTIONS.begin() ; it2 != KNOWN_PACKER_SECTIONS.end() ; ++it2)
                 {
-                    boost::regex e(it2->first, boost::regex::icase);
-                    if (boost::regex_match(*(*it)->get_name(), e)) {
+                    std::regex e(it2->first, std::regex::icase);
+                    if (std::regex_match(*(*it)->get_name(), e)) {
                         res->set_summary(it2->second);
                     }
                 }
@@ -273,7 +275,7 @@ public:
 
         // Look for resources bigger than the file itself
         auto resources = pe.get_resources();
-        boost::uint64_t sum = 0;
+        std::uint64_t sum = 0;
         for (auto r = resources->begin() ; r != resources->end() ; ++r) {
             sum += (*r)->get_size();
         }

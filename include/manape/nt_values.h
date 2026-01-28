@@ -21,23 +21,21 @@
 #include <map>
 #include <vector>
 #include <sstream>
-#include <boost/assign.hpp>
-#include <boost/system/api_config.hpp>
-#include <boost/make_shared.hpp>
+#include <memory>
 
-#if defined BOOST_WINDOWS_API && !defined DECLSPEC
+#if defined _WIN32 && !defined DECLSPEC
 	#ifdef MANAPE_EXPORT
 		#define DECLSPEC    __declspec(dllexport)
 	#else
 		#define DECLSPEC    __declspec(dllimport)
 	#endif
-#elif !defined BOOST_WINDOWS_API && !defined DECLSPEC
+#elif !defined _WIN32 && !defined DECLSPEC
 	#define DECLSPEC
 #endif
 
-typedef boost::shared_ptr<std::vector<std::string> > shared_strings;
-typedef boost::shared_ptr<const std::vector<std::string> > const_shared_strings;
-typedef boost::shared_ptr<std::string> pString;
+typedef std::shared_ptr<std::vector<std::string> > shared_strings;
+typedef std::shared_ptr<const std::vector<std::string> > const_shared_strings;
+typedef std::shared_ptr<std::string> pString;
 
 // Directory Entries - copied from WinNT.h
 // There is no need for a map for this one: we won't have to translate the values back to their names.

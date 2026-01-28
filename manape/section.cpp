@@ -28,11 +28,17 @@ namespace {
 		static std::mutex fallback_mutex;
 		return mutex ? *mutex : fallback_mutex;
 	}
+
+	void trim_right_null(std::string& s) {
+		while (!s.empty() && s.back() == '\x00') {
+			s.pop_back();
+		}
+	}
 }
 
 Section::Section(const image_section_header& header,
 				 pFile handle,
-				 boost::uint64_t file_size,
+				 std::uint64_t file_size,
 				 const std::vector<pString>& coff_string_table,
 				 pMutex io_mutex)
 	  : _virtual_size(header.VirtualSize),
@@ -49,7 +55,7 @@ Section::Section(const image_section_header& header,
 		_io_mutex(std::move(io_mutex))
 {
 	_name = std::string((char*) header.Name, 8);
-	boost::trim_right_if(_name, [](char c) { return c == '\x00'; }); // Trim the string for \0 characters.
+	trim_right_null(_name); // Trim the string for \0 characters.
 
 	pString escaped = io::escape(_name);
 	if (escaped != nullptr)	{
@@ -80,7 +86,7 @@ Section::Section(const image_section_header& header,
 
 shared_bytes Section::get_raw_data() const
 {
-	auto res = boost::make_shared<std::vector<boost::uint8_t> >();
+	auto res = std::make_shared<std::vector<std::uint8_t> >();
 	if (_size_of_raw_data == 0)
 	{
 		PRINT_WARNING << "Section " << _name << " has a size of 0!" << DEBUG_INFO << std::endl;
@@ -89,15 +95,15 @@ shared_bytes Section::get_raw_data() const
 	if (_file_handle == nullptr) {
 		return res;
 	}
-	const boost::uint64_t pointer = _pointer_to_raw_data;
-	const boost::uint64_t size = _size_of_raw_data;
-	if (pointer > static_cast<boost::uint64_t>(std::numeric_limits<long>::max())) {
+	const std::uint64_t pointer = _pointer_to_raw_data;
+	const std::uint64_t size = _size_of_raw_data;
+	if (pointer > static_cast<std::uint64_t>(std::numeric_limits<long>::max())) {
 		return res;
 	}
-	if (size > static_cast<boost::uint64_t>(std::numeric_limits<long>::max())) {
+	if (size > static_cast<std::uint64_t>(std::numeric_limits<long>::max())) {
 		return res;
 	}
-	if (pointer > std::numeric_limits<boost::uint64_t>::max() - size) {
+	if (pointer > std::numeric_limits<std::uint64_t>::max() - size) {
 		return res;
 	}
 	if (pointer + size > _file_size)
@@ -142,7 +148,7 @@ shared_bytes Section::get_raw_data() const
 
 // ----------------------------------------------------------------------------
 
-bool is_address_in_section(boost::uint64_t rva, mana::pSection section, bool check_raw_size)
+bool is_address_in_section(std::uint64_t rva, mana::pSection section, bool check_raw_size)
 {
 	if (!check_raw_size) {
 		return section->get_virtual_address() <= rva && rva < section->get_virtual_address() + section->get_virtual_size();

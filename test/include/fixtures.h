@@ -18,15 +18,15 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 #include <fstream>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <boost/test/unit_test.hpp>
-#include <boost/shared_ptr.hpp>
+#include <memory>
+#include <system_error>
 
 namespace unit	= boost::unit_test::framework;
-namespace fs	= boost::filesystem;
-namespace bs	= boost::system;
+namespace fs	= std::filesystem;
 
-typedef boost::shared_ptr<std::string> pString;
+typedef std::shared_ptr<std::string> pString;
 
 // ----------------------------------------------------------------------------
 
@@ -51,7 +51,7 @@ private:
  * @param	const fs::path & ph The path of the file to create.
  * @param	const std::string & contents The contents of the file.
  *
- * Function taken from boost::filesystem's unit tests
+ * Function taken from std::filesystem's unit tests
  */
 void create_file(const fs::path & ph, const std::string & contents = std::string());
 

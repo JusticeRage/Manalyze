@@ -15,12 +15,12 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 #include "hash-library/hashes.h"
 #include "manape/pe.h"
 
-namespace bfs = boost::filesystem;
+namespace bfs = std::filesystem;
 
 namespace hash {
 

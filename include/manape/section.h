@@ -18,10 +18,8 @@
 #pragma once
 
 #include <stdio.h>
-#include <boost/make_shared.hpp>
-#include <boost/cstdint.hpp>
-#include <boost/system/api_config.hpp>
-#include <boost/algorithm/string.hpp>
+#include <memory>
+#include <cstdint>
 #include <vector>
 
 #include "manape/pe_structs.h"
@@ -30,7 +28,7 @@
 #include "manape/escape.h"
 #include "manape/io_types.h"
 
-#if defined BOOST_WINDOWS_API
+#if defined _WIN32
 	#ifdef MANAPE_EXPORT
 		#define DECLSPEC    __declspec(dllexport)
 	#else
@@ -42,8 +40,8 @@
 
 namespace mana {
 
-typedef boost::shared_ptr<std::string> pString;
-typedef boost::shared_ptr<const std::vector<boost::uint8_t> > shared_bytes;
+typedef std::shared_ptr<std::string> pString;
+typedef std::shared_ptr<const std::vector<std::uint8_t> > shared_bytes;
 
 class Section
 {
@@ -59,7 +57,7 @@ public:
 	 */
 	DECLSPEC Section(const image_section_header& header,
 					 pFile handle,
-					 boost::uint64_t file_size,
+					 std::uint64_t file_size,
 					 const std::vector<pString>& coff_string_table = std::vector<pString>(),
 					 pMutex io_mutex = pMutex());
 
@@ -76,40 +74,40 @@ public:
 	 */
 	DECLSPEC shared_bytes get_raw_data() const;
 
-	DECLSPEC pString		 get_name()						const { return boost::make_shared<std::string>(_name); }
-	DECLSPEC boost::uint32_t get_virtual_size()				const { return _virtual_size; }
-	DECLSPEC boost::uint32_t get_virtual_address()			const { return _virtual_address; }
-	DECLSPEC boost::uint32_t get_size_of_raw_data()			const { return _size_of_raw_data; }
-	DECLSPEC boost::uint32_t get_pointer_to_raw_data()		const { return _pointer_to_raw_data; }
-	DECLSPEC boost::uint32_t get_pointer_to_relocations()	const { return _pointer_to_relocations; }
-	DECLSPEC boost::uint32_t get_pointer_to_line_numbers()	const { return _pointer_to_line_numbers; }
-	DECLSPEC boost::uint32_t get_number_of_relocations()	const { return _number_of_relocations; }
-	DECLSPEC boost::uint32_t get_number_of_line_numbers()	const { return _number_of_line_numbers; }
-	DECLSPEC boost::uint32_t get_characteristics()			const { return _characteristics; }
+	DECLSPEC pString		 get_name()						const { return std::make_shared<std::string>(_name); }
+	DECLSPEC std::uint32_t get_virtual_size()				const { return _virtual_size; }
+	DECLSPEC std::uint32_t get_virtual_address()			const { return _virtual_address; }
+	DECLSPEC std::uint32_t get_size_of_raw_data()			const { return _size_of_raw_data; }
+	DECLSPEC std::uint32_t get_pointer_to_raw_data()		const { return _pointer_to_raw_data; }
+	DECLSPEC std::uint32_t get_pointer_to_relocations()	const { return _pointer_to_relocations; }
+	DECLSPEC std::uint32_t get_pointer_to_line_numbers()	const { return _pointer_to_line_numbers; }
+	DECLSPEC std::uint32_t get_number_of_relocations()	const { return _number_of_relocations; }
+	DECLSPEC std::uint32_t get_number_of_line_numbers()	const { return _number_of_line_numbers; }
+	DECLSPEC std::uint32_t get_characteristics()			const { return _characteristics; }
 	DECLSPEC double			 get_entropy()					const { return utils::shannon_entropy(*get_raw_data()); }
 
 private:
 
 	// Fields that match the PE structure
 	std::string		_name;
-	boost::uint32_t _virtual_size;
-	boost::uint32_t _virtual_address;
-	boost::uint32_t _size_of_raw_data;
-	boost::uint32_t _pointer_to_raw_data;
-	boost::uint32_t _pointer_to_relocations;
-	boost::uint32_t _pointer_to_line_numbers;
-	boost::uint16_t _number_of_relocations;
-	boost::uint16_t _number_of_line_numbers;
-	boost::uint32_t _characteristics;
+	std::uint32_t _virtual_size;
+	std::uint32_t _virtual_address;
+	std::uint32_t _size_of_raw_data;
+	std::uint32_t _pointer_to_raw_data;
+	std::uint32_t _pointer_to_relocations;
+	std::uint32_t _pointer_to_line_numbers;
+	std::uint16_t _number_of_relocations;
+	std::uint16_t _number_of_line_numbers;
+	std::uint32_t _characteristics;
 
 	// Handle to the file on the filesystem.
 	pFile			_file_handle;
 	// Size of the file. This is used to reject sections with a wrong size.
-	boost::uint64_t	_file_size;
+	std::uint64_t	_file_size;
 	pMutex			_io_mutex;
 };
 
-typedef boost::shared_ptr<Section> pSection;
+typedef std::shared_ptr<Section> pSection;
 
 /**
  *	@brief	Checks whether the address belongs to a section.
@@ -120,7 +118,7 @@ typedef boost::shared_ptr<Section> pSection;
  *
  *	@return	Whether the RVA is between the bounds of the section.
  */
-bool DECLSPEC is_address_in_section(boost::uint64_t rva, mana::pSection section, bool check_raw_size = false);
+bool DECLSPEC is_address_in_section(std::uint64_t rva, mana::pSection section, bool check_raw_size = false);
 
 /**
  *	@brief	Finds the section containing a given RVA.

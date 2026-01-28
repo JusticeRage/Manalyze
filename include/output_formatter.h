@@ -25,10 +25,9 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include <set>
 #include <algorithm>
 
-#include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/cstdint.hpp>
-#include <boost/algorithm/string/trim.hpp>
+#include <optional>
+#include <memory>
+#include <cstdint>
 
 #include "manacommons/output_tree_node.h"
 #include "manacommons/escape.h" // String escaping functions
@@ -111,7 +110,7 @@ public:
 	*	@param	const std::string& name The name of the node to locate.
 	*	@param	const std::string file_path The file whose analysis should be searched.
 	*
-	*	@return	A boost::optional which may contain the located node, if it was found.
+	*	@return	A std::optional which may contain the located node, if it was found.
 	*/
 	pNode find_node(const std::string& name, const std::string& file_path)
 	{
@@ -139,7 +138,7 @@ public:
 protected:
 	std::string _header;
 	std::string _footer;
-	boost::shared_ptr<OutputTreeNode> _root; // The analysis data is contained in this field
+	std::shared_ptr<OutputTreeNode> _root; // The analysis data is contained in this field
 };
 
 // ----------------------------------------------------------------------------
@@ -221,11 +220,11 @@ private:
 /**
 *	@brief	Converts a uint64 into a version number structured like X.X.X.X.
 *
-*	@param	boost::uint32_t msbytes The most significant bytes of the version number.
-*	@param	boost::uint32_t lsbytes The least significant bytes of the version number.
+*	@param	std::uint32_t msbytes The most significant bytes of the version number.
+*	@param	std::uint32_t lsbytes The least significant bytes of the version number.
 *
 *	@return	A string containing the "translated" version number.
 */
-std::string uint64_to_version_number(boost::uint32_t msbytes, boost::uint32_t lsbytes);
+std::string uint64_to_version_number(std::uint32_t msbytes, std::uint32_t lsbytes);
 
 } // !namespace io

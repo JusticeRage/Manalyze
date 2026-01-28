@@ -34,15 +34,15 @@
  */
 void check_section(mana::pSection section,
 				   const std::string&  name, 
-				   boost::uint32_t virtual_size,
-				   boost::uint32_t virtual_address,
-   				   boost::uint32_t size_raw_data,
-	   			   boost::uint32_t pointer_raw_data,
-				   boost::uint32_t pointer_reloc,
-				   boost::uint32_t pointer_line,
-				   boost::uint16_t number_reloc,
-				   boost::uint16_t number_line,
-				   boost::uint32_t characteristics)
+				   std::uint32_t virtual_size,
+				   std::uint32_t virtual_address,
+   				   std::uint32_t size_raw_data,
+	   			   std::uint32_t pointer_raw_data,
+				   std::uint32_t pointer_reloc,
+				   std::uint32_t pointer_line,
+				   std::uint16_t number_reloc,
+				   std::uint16_t number_line,
+				   std::uint32_t characteristics)
 {
 	BOOST_CHECK(*section->get_name() == name);
 	BOOST_CHECK(section->get_virtual_size() == virtual_size);
@@ -102,7 +102,7 @@ BOOST_AUTO_TEST_CASE(parse_dos_header)
 {
 	mana::PE pe("testfiles/manatest.exe");
 
-	boost::optional<mana::dos_header> pdos = pe.get_dos_header();
+	std::optional<mana::dos_header> pdos = pe.get_dos_header();
 	BOOST_ASSERT(pdos);
 	mana::dos_header dos = *pdos;
 	BOOST_CHECK(dos.e_magic[0] == 'M' && dos.e_magic[1] == 'Z');
@@ -263,9 +263,9 @@ BOOST_AUTO_TEST_CASE(read_data_by_rva_and_offset)
  */
 void check_debug_directory_entry(mana::debug_directory_entry d,
 								 const std::string& type,
-								 boost::uint32_t size,
-								 boost::uint32_t address_raw_data,
-								 boost::uint32_t pointer_raw_data)
+								 std::uint32_t size,
+								 std::uint32_t address_raw_data,
+								 std::uint32_t pointer_raw_data)
 {
 	BOOST_CHECK(*nt::translate_to_flag(d.Type, nt::DEBUG_TYPES) == type);
 	BOOST_CHECK(d.SizeofData == size);

@@ -21,41 +21,32 @@
 #include <sstream>
 #include <vector>
 
-#include <boost/cstdint.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/make_shared.hpp>
-#include <boost/archive/iterators/base64_from_binary.hpp>
-#include <boost/archive/iterators/insert_linebreaks.hpp>
-#include <boost/archive/iterators/transform_width.hpp>
-#include <boost/archive/iterators/ostream_iterator.hpp>
-#include <boost/system/api_config.hpp>
-
-#if defined BOOST_WINDOWS_API && !defined DECLSPEC_MANACOMMONS
+#include <cstdint>
+#include <memory>
+#if defined _WIN32 && !defined DECLSPEC_MANACOMMONS
 	#ifdef MANACOMMONS_EXPORT
 		#define DECLSPEC_MANACOMMONS    __declspec(dllexport)
 	#else
 		#define DECLSPEC_MANACOMMONS    __declspec(dllimport)
 	#endif
-#elif !defined BOOST_WINDOWS_API && !defined DECLSPEC_MANACOMMONS
+#elif !defined _WIN32 && !defined DECLSPEC_MANACOMMONS
 	#define DECLSPEC_MANACOMMONS
 #endif
 
 namespace utils {
-   
-namespace biter = boost::archive::iterators;
-typedef boost::shared_ptr<std::string> pString;
+typedef std::shared_ptr<std::string> pString;
     
 // ----------------------------------------------------------------------------
 
 /**
  *	@brief	Converts the input data into a Base64 encoded string.
  *
- *	Taken from the boost examples and slightly adaped to handle padding.
+ *	Simple Base64 encoder.
  *
- *	@param	const std::vector<boost::uint8_t>& bytes A vector of bytes to encode.
+ *	@param	const std::vector<std::uint8_t>& bytes A vector of bytes to encode.
  *
  *	@return	A string containing the Base64 representation of the input.
  */
-DECLSPEC_MANACOMMONS pString b64encode(const std::vector<boost::uint8_t>& bytes);
+DECLSPEC_MANACOMMONS pString b64encode(const std::vector<std::uint8_t>& bytes);
     
 } // !namespace 

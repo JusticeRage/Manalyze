@@ -17,9 +17,28 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "output_formatter.h"
 
+#include <algorithm>
+#include <cctype>
+
 namespace io {
 
 // ----------------------------------------------------------------------------
+
+namespace {
+
+void trim_inplace(std::string& s)
+{
+	auto not_space = [](unsigned char c) { return !std::isspace(c); };
+	auto begin = std::find_if(s.begin(), s.end(), not_space);
+	if (begin == s.end()) {
+		s.clear();
+		return;
+	}
+	auto rbegin = std::find_if(s.rbegin(), s.rend(), not_space);
+	s.assign(begin, rbegin.base());
+}
+
+} // namespace
 
 /**
  * @brief	Repeats a string multiple times.
@@ -316,7 +335,7 @@ void JsonFormatter::_dump_node(std::ostream& sink, pNode node, int level, bool a
 			for (auto it = strs->begin() ; it != strs->end() ; ++it)
 			{
 				std::string str = *it;
-				boost::trim(str); // Delete unnecessary whitespace
+				trim_inplace(str); // Delete unnecessary whitespace
 				pString escaped = io::escape<JsonFormatter>(str);
 				if (escaped != nullptr) {
 					sink << repeat("    ", level + 1) << "\"" << *escaped << "\"";
@@ -351,7 +370,7 @@ void JsonFormatter::_dump_node(std::ostream& sink, pNode node, int level, bool a
 		case OutputTreeNode::STRING:
 		{
 			data = *node->to_string();
-			boost::trim(data); // Delete unnecessary whitespace
+			trim_inplace(data); // Delete unnecessary whitespace
 			pString escaped = io::escape<JsonFormatter>(data);
 			if (escaped != nullptr) {
 				data = *escaped;
@@ -376,7 +395,7 @@ void JsonFormatter::_dump_node(std::ostream& sink, pNode node, int level, bool a
 			else {
 				data = "";
 			}
-			boost::trim(data); // Delete unnecessary whitespace
+			trim_inplace(data); // Delete unnecessary whitespace
 			if (print_name) {
 				sink << repeat("    ", level) << "\"" << *node_name << "\": " << data;
 			}
@@ -394,7 +413,7 @@ void JsonFormatter::_dump_node(std::ostream& sink, pNode node, int level, bool a
 
 // ----------------------------------------------------------------------------
 
-std::string uint64_to_version_number(boost::uint32_t msbytes, boost::uint32_t lsbytes)
+std::string uint64_to_version_number(std::uint32_t msbytes, std::uint32_t lsbytes)
 {
 	std::stringstream ss;
 	ss << ((msbytes >> 16) & 0xFFFF) << "." << (msbytes & 0xFFFF) << ".";

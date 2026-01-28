@@ -19,7 +19,6 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include <fstream>
 #include <thread>
 #include <vector>
-#include <boost/assign.hpp>
 
 #include "fixtures.h"
 #include "manape/pe.h"
@@ -65,7 +64,7 @@ BOOST_AUTO_TEST_CASE(parse_resources_from_bytes)
 {
 	std::ifstream input("testfiles/manatest.exe", std::ios::binary);
 	BOOST_ASSERT(input);
-	std::vector<boost::uint8_t> bytes{
+	std::vector<std::uint8_t> bytes{
 		std::istreambuf_iterator<char>(input),
 		std::istreambuf_iterator<char>()};
 	BOOST_ASSERT(!bytes.empty());
@@ -105,7 +104,7 @@ BOOST_AUTO_TEST_CASE(concurrent_resource_and_section_reads)
 {
 	std::ifstream input("testfiles/manatest.exe", std::ios::binary);
 	BOOST_ASSERT(input);
-	std::vector<boost::uint8_t> bytes{
+	std::vector<std::uint8_t> bytes{
 		std::istreambuf_iterator<char>(input),
 		std::istreambuf_iterator<char>()};
 	BOOST_ASSERT(!bytes.empty());
@@ -129,8 +128,8 @@ BOOST_AUTO_TEST_CASE(concurrent_resource_and_section_reads)
 	BOOST_ASSERT(base_section && !base_section->empty());
 	BOOST_ASSERT(base_resource && !base_resource->empty());
 
-	auto sample_matches = [](const std::vector<boost::uint8_t>& data,
-							 const std::vector<boost::uint8_t>& base) -> bool {
+	auto sample_matches = [](const std::vector<std::uint8_t>& data,
+							 const std::vector<std::uint8_t>& base) -> bool {
 		if (data.size() != base.size() || data.empty()) {
 			return false;
 		}
@@ -190,7 +189,7 @@ BOOST_AUTO_TEST_CASE(concurrent_resource_and_section_reads)
 
 BOOST_AUTO_TEST_CASE(resource_unknown_filesize)
 {
-	mana::pResource r = boost::make_shared<mana::Resource>(
+	mana::pResource r = std::make_shared<mana::Resource>(
 		"RT_MANIFEST",
 		"1",
 		"English - United States",
@@ -261,10 +260,10 @@ BOOST_AUTO_TEST_CASE(extract_manifest)
  *			given values.
  */
 void check_resource(mana::pResource r,
-					boost::uint32_t id,
+					std::uint32_t id,
 					const std::string& type,
 					const std::string& language,
-					boost::uint32_t size,
+					std::uint32_t size,
 					double entropy)
 {
 	BOOST_ASSERT(r);
@@ -320,7 +319,7 @@ BOOST_AUTO_TEST_CASE(interpret_stringtable)
 
 	// Unicode representation of "无法对 %1 进行写操作，因为它是只读文件或已经被其他人打开。"
 	std::string utf8_string = string_table->at(9);
-	boost::uint8_t bytes[] = 
+	std::uint8_t bytes[] = 
 					  { 0xE6, 0x97, 0xA0, 0xE6, 0xB3, 0x95, 0xE5, 0xAF, 0xB9, 0x20, 0x25, 0x31, 0x20, 
 						0xE8, 0xBF, 0x9B, 0xE8, 0xA1, 0x8C, 0xE5, 0x86, 0x99, 0xE6, 0x93, 0x8D, 0xE4, 
 						0xBD, 0x9C, 0xEF, 0xBC, 0x8C, 0xE5, 0x9B, 0xA0, 0xE4, 0xB8, 0xBA, 0xE5, 0xAE, 
@@ -328,8 +327,8 @@ BOOST_AUTO_TEST_CASE(interpret_stringtable)
 						0xE4, 0xBB, 0xB6, 0xE6, 0x88, 0x96, 0xE5, 0xB7, 0xB2, 0xE7, 0xBB, 0x8F, 0xE8, 
 						0xA2, 0xAB, 0xE5, 0x85, 0xB6, 0xE4, 0xBB, 0x96, 0xE4, 0xBA, 0xBA, 0xE6, 0x89, 
 						0x93, 0xE5, 0xBC, 0x80, 0xE3, 0x80, 0x82 };
-	std::vector<boost::uint8_t> expected(bytes, bytes + sizeof(bytes));
-	std::vector<boost::uint8_t> found(utf8_string.begin(), utf8_string.end());
+	std::vector<std::uint8_t> expected(bytes, bytes + sizeof(bytes));
+	std::vector<std::uint8_t> found(utf8_string.begin(), utf8_string.end());
 	BOOST_CHECK(expected == found);
 
 	for (int i = 10 ; i < 16 ; ++i) {
@@ -340,7 +339,7 @@ BOOST_AUTO_TEST_CASE(interpret_stringtable)
 // ----------------------------------------------------------------------------
 
 template<class T>
-void check_pair(boost::shared_ptr<std::pair<T, T> > pair, const T& first, const T& second )
+void check_pair(std::shared_ptr<std::pair<T, T> > pair, const T& first, const T& second )
 {
 	BOOST_CHECK_EQUAL(pair->first, first);
 	BOOST_CHECK_EQUAL(pair->second, second);
@@ -360,7 +359,7 @@ BOOST_AUTO_TEST_CASE(interpret_versioninfo)
 	BOOST_CHECK_EQUAL(vi->Value->FileFlags, 0);
 	BOOST_CHECK_EQUAL(*nt::translate_to_flag(vi->Value->FileType, nt::FIXEDFILEINFO_FILETYPE), "VFT_APP");
 	std::vector<std::string> fileos_expected =
-		boost::assign::list_of("VOS_DOS_WINDOWS32")("VOS_NT")("VOS_NT_WINDOWS32")("VOS_WINCE")("VOS__WINDOWS32");
+		{"VOS_DOS_WINDOWS32", "VOS_NT", "VOS_NT_WINDOWS32", "VOS_WINCE", "VOS__WINDOWS32"};
 	auto fileos = *nt::translate_to_flags(vi->Value->FileOs, nt::FIXEDFILEINFO_FILEOS);
 	BOOST_ASSERT(fileos.size() == fileos_expected.size());
 	BOOST_CHECK_EQUAL_COLLECTIONS(fileos.begin(), fileos.end(), fileos_expected.begin(), fileos_expected.end());

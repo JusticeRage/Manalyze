@@ -24,7 +24,6 @@
 #include <Softpub.h>
 #include <mscat.h>
 #include <WinTrust.h>
-#include <boost/format.hpp>
 
 #include "manape/utils.h"
 #include "manacommons/utf8/utf8.h"

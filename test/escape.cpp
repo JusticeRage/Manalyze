@@ -18,7 +18,7 @@
 #include <boost/test/unit_test.hpp>
 #include "manacommons/escape.h"
 
-typedef boost::shared_ptr<std::string> pString;
+typedef std::shared_ptr<std::string> pString;
 
 // ----------------------------------------------------------------------------
 

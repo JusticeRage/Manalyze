@@ -15,7 +15,7 @@
     along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <boost/test/unit_test.hpp>
 
 #include "hash-library/hashes.h"
@@ -26,7 +26,7 @@
 BOOST_AUTO_TEST_CASE(hash_phrase)
 {
 	std::string input("The quick brown fox jumps over the lazy dog");
-	std::vector<boost::uint8_t> bytes(input.begin(), input.end());
+	std::vector<std::uint8_t> bytes(input.begin(), input.end());
 	hash::const_shared_strings hashes = hash::hash_bytes(hash::ALL_DIGESTS, bytes);
 
 	BOOST_CHECK_EQUAL("9e107d9d372bb6826bd81d3542a419d6", hashes->at(ALL_DIGESTS_MD5));
@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE(hash_phrase)
 
 BOOST_AUTO_TEST_CASE(null_hash)
 {
-	std::vector<boost::uint8_t> bytes(0);
+	std::vector<std::uint8_t> bytes(0);
 	hash::const_shared_strings hashes = hash::hash_bytes(hash::ALL_DIGESTS, bytes);
 
 	BOOST_CHECK_EQUAL("d41d8cd98f00b204e9800998ecf8427e", hashes->at(ALL_DIGESTS_MD5));
@@ -55,7 +55,7 @@ BOOST_AUTO_TEST_CASE(null_hash)
 BOOST_AUTO_TEST_CASE(SHA512TEST)
 {
     std::string input("lalalalalalalalalalalalalalalala");
-    std::vector<boost::uint8_t> bytes(input.begin(), input.end());
+    std::vector<std::uint8_t> bytes(input.begin(), input.end());
     hash::const_shared_strings hashes = hash::hash_bytes(hash::ALL_DIGESTS, bytes);
 
     BOOST_CHECK_EQUAL("93161156c77aa89f9666b77fa0be19274df3220fb6f5463279de5dd405386258039e33274d8395cbca60060afe16dc02cdc2a354b77981ad97192deb270a84fe", hashes->at(ALL_DIGESTS_SHA512));
@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE(hash_missing_file)
 
 BOOST_AUTO_TEST_CASE(ssdeep_hash_buffer)
 {
-	std::vector<boost::uint8_t> buffer(65536);
+	std::vector<std::uint8_t> buffer(65536);
 	memset(&buffer[0], 0x41, 65536);
 	pString s = ssdeep::hash_buffer(buffer);
 	BOOST_ASSERT(s);
@@ -119,7 +119,7 @@ BOOST_FIXTURE_TEST_CASE(ssdeep_hash_file, SetWorkingDirectory)
 	// Verify that we obtain the same value by reading the file into a buffer and hashing it.
 	FILE* f = fopen("testfiles/manatest.exe", "rb");
 	BOOST_ASSERT(f != nullptr);
-	std::vector<boost::uint8_t> bytes(static_cast<unsigned int>(fs::file_size("testfiles/manatest.exe")));
+	std::vector<std::uint8_t> bytes(static_cast<unsigned int>(fs::file_size("testfiles/manatest.exe")));
 	size_t copied = fread(&bytes[0], 1, bytes.size(), f);
 	if (copied != bytes.size())
 	{
@@ -138,7 +138,7 @@ BOOST_AUTO_TEST_CASE(ssdeep_hash_empty_input)
 {
 	pString s = ssdeep::hash_file("I_DON'T_EXIST.txt");
 	BOOST_CHECK(!s);
-	s = ssdeep::hash_buffer(std::vector<boost::uint8_t>());
+	s = ssdeep::hash_buffer(std::vector<std::uint8_t>());
 	BOOST_CHECK(!s);
 }
 

@@ -17,6 +17,8 @@
 
 #include "plugins/plugin_authenticode/plugin_authenticode.h"
 
+#include <iomanip>
+
 namespace plugin {
 
 /**
@@ -28,11 +30,11 @@ public:
 	int get_api_version() const override { return 1; }
 
 	pString get_id() const override {
-		return boost::make_shared<std::string>("authenticode");
+		return std::make_shared<std::string>("authenticode");
 	}
 
 	pString get_description() const override {
-		return boost::make_shared<std::string>("Checks if the digital signature of the PE is valid.");
+		return std::make_shared<std::string>("Checks if the digital signature of the PE is valid.");
 	}
 
 	pResult analyze(const mana::PE& pe) override
@@ -518,7 +520,7 @@ void make_information(const std::string& type, const std::wstring& data, pResult
 	std::string out;
 	try
 	{
-		std::vector<boost::uint8_t> utf8result;
+		std::vector<std::uint8_t> utf8result;
 		utf8::utf16to8(data.begin(), data.end(), std::back_inserter(utf8result));
 		out = std::string(utf8result.begin(), utf8result.end());
 	}
@@ -566,8 +568,9 @@ void check_catalog_signature(const mana::PE& pe, pResult res)
 	}
 
 	// The hash is used as a reference in the catalog. Convert it to a string.
+	ss << std::uppercase << std::hex << std::setfill(L'0');
 	for (unsigned int i = 0; i < size; i++)	{
-		ss << boost::wformat(L"%02X") % hash_buffer[i];
+		ss << std::setw(2) << static_cast<unsigned int>(hash_buffer[i]);
 	}
 	member_tag.assign(ss.str());
 

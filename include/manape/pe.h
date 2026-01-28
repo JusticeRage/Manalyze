@@ -28,14 +28,9 @@
 #include <set>
 #include <exception>
 
-#include <boost/bind/bind.hpp>
-#include <boost/scoped_array.hpp>
-#include <boost/make_shared.hpp>
-#include <boost/optional.hpp>
-#include <boost/cstdint.hpp>
-#include <boost/regex.hpp>
-#include <boost/system/api_config.hpp>
-
+#include <memory>
+#include <optional>
+#include <cstdint>
 #include "manape/nt_values.h"			// Windows-related #defines flags are declared in this file.
 #include "manape/pe_structs.h"			// All typedefs and structs are over there
 #include "manape/ordinals.h"			// Translation between known ordinals and corresponding function names
@@ -46,35 +41,35 @@
 #include "manape/imported_library.h"	// Definition of the ImportedLibrary class
 #include "manape/color.h"				// Colored output if available
 
-#if defined BOOST_WINDOWS_API && !defined DECLSPEC
+#if defined _WIN32 && !defined DECLSPEC
 	#ifdef MANAPE_EXPORT
 		#define DECLSPEC    __declspec(dllexport)
 	#else
 		#define DECLSPEC    __declspec(dllimport)
 	#endif
-#elif !defined BOOST_WINDOWS_API && !defined DECLSPEC
+#elif !defined _WIN32 && !defined DECLSPEC
 	#define DECLSPEC
 #endif
 
 namespace mana {
 
-typedef boost::shared_ptr<Section> pSection;
-typedef boost::shared_ptr<std::vector<std::string> > shared_strings;
-typedef boost::shared_ptr<const std::vector<std::string> > const_shared_strings;
-typedef boost::shared_ptr<const std::vector<std::wstring> > const_shared_wstrings;
-typedef boost::shared_ptr<std::vector<pSection> > shared_sections;
-typedef boost::shared_ptr<std::vector<pResource> > shared_resources;
-typedef boost::shared_ptr<const std::vector<boost::uint8_t> > shared_bytes;
-typedef boost::shared_ptr<const std::vector<pexported_function> > shared_exports;
-typedef boost::shared_ptr<const std::vector<pdebug_directory_entry> > shared_debug_info;
-typedef boost::shared_ptr<const std::vector<pimage_base_relocation> > shared_relocations;
-typedef boost::shared_ptr<const image_tls_directory> shared_tls;
-typedef boost::shared_ptr<const image_load_config_directory> shared_config;
-typedef boost::shared_ptr<const delay_load_directory_table> shared_dldt;
-typedef boost::shared_ptr<const std::vector<pwin_certificate> > shared_certificates;
-typedef boost::shared_ptr<const std::vector<pImportedLibrary> > shared_imports;
-typedef boost::shared_ptr<const rich_header> shared_rich_header;
-typedef boost::shared_ptr<std::string> pString;
+typedef std::shared_ptr<Section> pSection;
+typedef std::shared_ptr<std::vector<std::string> > shared_strings;
+typedef std::shared_ptr<const std::vector<std::string> > const_shared_strings;
+typedef std::shared_ptr<const std::vector<std::wstring> > const_shared_wstrings;
+typedef std::shared_ptr<std::vector<pSection> > shared_sections;
+typedef std::shared_ptr<std::vector<pResource> > shared_resources;
+typedef std::shared_ptr<const std::vector<std::uint8_t> > shared_bytes;
+typedef std::shared_ptr<const std::vector<pexported_function> > shared_exports;
+typedef std::shared_ptr<const std::vector<pdebug_directory_entry> > shared_debug_info;
+typedef std::shared_ptr<const std::vector<pimage_base_relocation> > shared_relocations;
+typedef std::shared_ptr<const image_tls_directory> shared_tls;
+typedef std::shared_ptr<const image_load_config_directory> shared_config;
+typedef std::shared_ptr<const delay_load_directory_table> shared_dldt;
+typedef std::shared_ptr<const std::vector<pwin_certificate> > shared_certificates;
+typedef std::shared_ptr<const std::vector<pImportedLibrary> > shared_imports;
+typedef std::shared_ptr<const rich_header> shared_rich_header;
+typedef std::shared_ptr<std::string> pString;
 
 class PE
 {
@@ -83,15 +78,15 @@ public:
 	DECLSPEC PE(const std::string& path);
 	DECLSPEC PE(const std::string& display_path, pFile file_handle);
 	DECLSPEC virtual ~PE() {}
-	DECLSPEC static boost::shared_ptr<PE> create(const std::string& path);
-	DECLSPEC static boost::shared_ptr<PE> create_from_bytes(const boost::uint8_t* data,
+	DECLSPEC static std::shared_ptr<PE> create(const std::string& path);
+	DECLSPEC static std::shared_ptr<PE> create_from_bytes(const std::uint8_t* data,
 															size_t size,
 															const std::string& name_hint = "<memory>");
 
-	DECLSPEC boost::uint64_t get_filesize() const;
+	DECLSPEC std::uint64_t get_filesize() const;
 
     DECLSPEC pString get_path() const {
-		return boost::make_shared<std::string>(_path);
+		return std::make_shared<std::string>(_path);
 	}
 
 	/**
@@ -100,7 +95,7 @@ public:
 	 *	@return	A shared object containing the section information.
 	 */
 	DECLSPEC shared_sections get_sections() const {
-		return boost::make_shared<std::vector<pSection> >(_sections);
+		return std::make_shared<std::vector<pSection> >(_sections);
 	}
 
 
@@ -159,74 +154,74 @@ public:
 	/**
 	*	@brief	Translates a Relative Virtual Address into an offset in the file.
 	*
-	*	@param	boost::uint32_t rva The RVA to translate
+	*	@param	std::uint32_t rva The RVA to translate
 	*
 	*	@return	The corresponding offset in the file, or 0 if the RVA could not be translated.
 	*/
-	DECLSPEC unsigned int rva_to_offset(boost::uint64_t rva) const;
-	DECLSPEC unsigned int offset_to_rva(boost::uint64_t offset) const;
+	DECLSPEC unsigned int rva_to_offset(std::uint64_t rva) const;
+	DECLSPEC unsigned int offset_to_rva(std::uint64_t offset) const;
 
-	DECLSPEC pSection get_section_by_rva(boost::uint64_t rva) const;
-	DECLSPEC pSection get_section_by_offset(boost::uint64_t offset) const;
+	DECLSPEC pSection get_section_by_rva(std::uint64_t rva) const;
+	DECLSPEC pSection get_section_by_offset(std::uint64_t offset) const;
 
-	DECLSPEC shared_bytes get_data(boost::uint64_t rva, size_t size) const;
-	DECLSPEC shared_bytes get_bytes_at_offset(boost::uint64_t offset, size_t size) const;
+	DECLSPEC shared_bytes get_data(std::uint64_t rva, size_t size) const;
+	DECLSPEC shared_bytes get_bytes_at_offset(std::uint64_t offset, size_t size) const;
 
-	DECLSPEC boost::optional<dos_header> get_dos_header() const {
+	DECLSPEC std::optional<dos_header> get_dos_header() const {
 		return _h_dos;
 	}
 
-	DECLSPEC boost::optional<pe_header> get_pe_header() const {
+	DECLSPEC std::optional<pe_header> get_pe_header() const {
 		return _h_pe;
 	}
 
-	DECLSPEC boost::optional<image_optional_header> get_image_optional_header() const {
+	DECLSPEC std::optional<image_optional_header> get_image_optional_header() const {
 		return _ioh;
 	}
 
 	DECLSPEC shared_resources get_resources() const {
-		return _initialized? boost::make_shared<std::vector<pResource> >(_resource_table) : shared_resources();
+		return _initialized? std::make_shared<std::vector<pResource> >(_resource_table) : shared_resources();
 	}
 
 	DECLSPEC shared_exports get_exports() const {
-		return _initialized? boost::make_shared<std::vector<pexported_function> >(_exports) : shared_exports();
+		return _initialized? std::make_shared<std::vector<pexported_function> >(_exports) : shared_exports();
 	}
 
 	DECLSPEC shared_debug_info get_debug_info() const {
-		return _initialized? boost::make_shared<std::vector<pdebug_directory_entry> >(_debug_entries) :
+		return _initialized? std::make_shared<std::vector<pdebug_directory_entry> >(_debug_entries) :
 			shared_debug_info();
 	}
 
 	DECLSPEC shared_relocations get_relocations() const {
-		return _initialized ? boost::make_shared<std::vector<pimage_base_relocation> >(_relocations) :
+		return _initialized ? std::make_shared<std::vector<pimage_base_relocation> >(_relocations) :
 			shared_relocations();
 	}
 
 	DECLSPEC shared_tls get_tls() const {
-		return (_initialized && _tls) ? boost::make_shared<image_tls_directory>(*_tls) : shared_tls();
+		return (_initialized && _tls) ? std::make_shared<image_tls_directory>(*_tls) : shared_tls();
 	}
 
 	DECLSPEC shared_config get_config() const {
-		return (_initialized && _config) ? boost::make_shared<image_load_config_directory>(*_config) : shared_config();
+		return (_initialized && _config) ? std::make_shared<image_load_config_directory>(*_config) : shared_config();
 	}
 
 	DECLSPEC shared_dldt get_delay_load_table() const {
 		return (_initialized && _delay_load_directory_table) ?
-			boost::make_shared<delay_load_directory_table>(*_delay_load_directory_table) : shared_dldt();
+			std::make_shared<delay_load_directory_table>(*_delay_load_directory_table) : shared_dldt();
 	}
 
 	DECLSPEC shared_certificates get_certificates() const {
-		return _initialized ? boost::make_shared<shared_certificates::element_type>(_certificates) :
-			boost::make_shared<shared_certificates::element_type>();
+		return _initialized ? std::make_shared<shared_certificates::element_type>(_certificates) :
+			std::make_shared<shared_certificates::element_type>();
 	}
 
 	DECLSPEC shared_rich_header get_rich_header() const	{
 		return (_initialized && _rich_header) ?
-			boost::make_shared<rich_header>(*_rich_header) : shared_rich_header();
+			std::make_shared<rich_header>(*_rich_header) : shared_rich_header();
 	}
 
 	DECLSPEC shared_imports get_imports() const	{
-		return (_initialized) ? boost::make_shared<std::vector<pImportedLibrary> >(_imports) : shared_imports();
+		return (_initialized) ? std::make_shared<std::vector<pImportedLibrary> >(_imports) : shared_imports();
 	}
 
 	enum PE_ARCHITECTURE { x86, x64 };
@@ -252,7 +247,7 @@ public:
 	 *
 	 *	/!\ Warning: the whole file will be loaded in memory!
 	 *
-	 *	@param	boost::uint64_t size If specified, only the [size] first bytes of the file
+	 *	@param	std::uint64_t size If specified, only the [size] first bytes of the file
 	 *			will be provided. By default, the whole file is read.
 	 *
 	 *	@return	A vector containing the bytes of the file.
@@ -266,7 +261,7 @@ public:
 	 *  through this function.
 	 *	/!\ Warning: the whole file will be loaded in memory!
 	 *
-	 *	@param	boost::uint64_t size If specified, only the [size] first bytes of the file
+	 *	@param	std::uint64_t size If specified, only the [size] first bytes of the file
 	 *			will be provided. By default, the whole file is read.
 	 *
 	 *	@return	A vector containing the bytes of the overlay.
@@ -282,8 +277,8 @@ public:
 
 private:
 	void _initialize();
-	bool _locked_read_at(boost::uint64_t offset, void* dst, size_t size) const;
-	shared_bytes _locked_read_vec(boost::uint64_t offset, size_t size) const;
+	bool _locked_read_at(std::uint64_t offset, void* dst, size_t size) const;
+	shared_bytes _locked_read_vec(std::uint64_t offset, size_t size) const;
 	/**
 	 *	@brief	The new operator, re-implemented only so it could be made private.
 	 *
@@ -435,11 +430,11 @@ private:
 	/**
 	 *	@brief	Translates a Virtual Address (*not relative to the image base*) into an offset in the file.
 	 *
-	 *	@param	boost::uint32_t rva The VA to translate
+	 *	@param	std::uint32_t rva The VA to translate
 	 *
 	 *	@return	The corresponding offset in the file, or 0 if the VA could not be translated.
 	 */
-	unsigned int _va_to_offset(boost::uint64_t va) const;
+	unsigned int _va_to_offset(std::uint64_t va) const;
 
 	/**
 	 *	@brief	Moves the file cursor to the target directory.
@@ -467,10 +462,10 @@ private:
 	std::string							_path;
 	std::string							_resource_path;
     bool								_initialized;
-	boost::uint64_t						_file_size;
-	boost::shared_ptr<std::vector<boost::uint8_t> > _backing_store;
+	std::uint64_t						_file_size;
+	std::shared_ptr<std::vector<std::uint8_t> > _backing_store;
 	pFile								_file_handle;
-	boost::shared_ptr<std::mutex>		_io_mutex;
+	std::shared_ptr<std::mutex>		_io_mutex;
 
 	/*
 	    -----------------------------------
@@ -478,23 +473,23 @@ private:
 	    -----------------------------------
 	    Those fields that are extremely close to the PE format and offer little abstraction.
 	*/
-	boost::optional<dos_header>						_h_dos;
-	boost::optional<pe_header>						_h_pe;
-	boost::optional<image_optional_header>			_ioh;
+	std::optional<dos_header>						_h_dos;
+	std::optional<pe_header>						_h_pe;
+	std::optional<image_optional_header>			_ioh;
 	std::vector<pcoff_symbol>						_coff_symbols;		// This debug information is parsed (crudely) but
 	std::vector<pString>							_coff_string_table;	// not displayed, because that's IDA's job.
 	std::vector<pSection>							_sections;
 	std::vector<pImportedLibrary>					_imports;
-	boost::optional<image_export_directory>			_ied;
+	std::optional<image_export_directory>			_ied;
 	std::vector<pexported_function>					_exports;
 	std::vector<pResource>							_resource_table;
 	std::vector<pdebug_directory_entry>				_debug_entries;
 	std::vector<pimage_base_relocation>				_relocations;		// Not displayed either, because of how big it is.
-	boost::optional<image_tls_directory>			_tls;
-	boost::optional<image_load_config_directory>	_config;
-	boost::optional<delay_load_directory_table>		_delay_load_directory_table;
+	std::optional<image_tls_directory>			_tls;
+	std::optional<image_load_config_directory>	_config;
+	std::optional<delay_load_directory_table>		_delay_load_directory_table;
 	std::vector<pwin_certificate>					_certificates;
-	boost::optional<rich_header>					_rich_header;
+	std::optional<rich_header>					_rich_header;
 };
 
 

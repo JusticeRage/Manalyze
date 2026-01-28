@@ -21,12 +21,10 @@
 #include <sstream>
 #include <iostream>
 
-#include <boost/make_shared.hpp>
-#include <boost/system/api_config.hpp>
-
+#include <memory>
 #include "manacommons/color.h"
 
-#ifdef BOOST_WINDOWS_API
+#ifdef _WIN32
 	#include <Windows.h>
 #else
 	#include <dlfcn.h>
@@ -50,7 +48,7 @@ public:
 	 *	@return	A pointer to a SharedLibrary representing the loaded file. May be NULL
 	 *			if for some reason, the library could not be loaded.
 	 */
-	static boost::shared_ptr<SharedLibrary> load(const std::string& path);
+	static std::shared_ptr<SharedLibrary> load(const std::string& path);
 
 	~SharedLibrary();
 
@@ -77,6 +75,6 @@ private:
 	void* _handle;
 };
 
-typedef boost::shared_ptr<SharedLibrary> pSharedLibrary;
+typedef std::shared_ptr<SharedLibrary> pSharedLibrary;
 
 } //!namespace plugin

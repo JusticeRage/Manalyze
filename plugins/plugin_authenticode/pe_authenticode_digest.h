@@ -19,7 +19,7 @@
 
 #include <stdio.h>
 #include <algorithm>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include "hash-library/hashes.h"
 #include "manape/pe.h"

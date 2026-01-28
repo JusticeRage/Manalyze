@@ -17,6 +17,8 @@
 
 #include <sstream>
 #include <set>
+#include <chrono>
+#include <cstdlib>
 
 #include "yara/yara_wrapper.h"
 #include "manacommons/paths.h"
@@ -35,13 +37,13 @@ public:
 	int get_api_version() const override { return 1; }
 
 	pString get_id() const override {
-		return boost::make_shared<std::string>("resources");
+		return std::make_shared<std::string>("resources");
 	}
 
     // ----------------------------------------------------------------------------
 
 	pString get_description() const override {
-		return boost::make_shared<std::string>("Analyzes the program's resources.");
+		return std::make_shared<std::string>("Analyzes the program's resources.");
 	}
 
     // ----------------------------------------------------------------------------
@@ -57,7 +59,7 @@ public:
     void check_resource_timestamps(const mana::PE& pe, pResult res)
 	{
         const auto r = pe.get_resources();
-        const auto pe_timestamp = boost::posix_time::from_time_t(pe.get_pe_header()->TimeDateStamp);
+        const auto pe_timestamp = std::chrono::system_clock::from_time_t(pe.get_pe_header()->TimeDateStamp);
         auto timestamps = std::set<std::string>();
         auto timezones = std::set<int>();
         for (const auto& it : *r)
@@ -69,7 +71,8 @@ public:
             utils::pptime res_timestamp;
             // Some compilers seem to use posix times as timestamps. Determine which situation we are in.
             if (utils::is_actually_posix(it->get_timestamp(), pe.get_pe_header()->TimeDateStamp)) {
-                res_timestamp = boost::make_shared<btime::ptime>(boost::posix_time::from_time_t(it->get_timestamp()));
+                res_timestamp = std::make_shared<std::chrono::system_clock::time_point>(
+                    std::chrono::system_clock::from_time_t(it->get_timestamp()));
             }
             else {
                 res_timestamp = utils::dosdate_to_btime(it->get_timestamp());
@@ -79,10 +82,10 @@ public:
             }
 
             // Create a set of timestamps which differ from the one reported in the PE header.
-            auto delta = *res_timestamp - pe_timestamp;
+            const auto delta = *res_timestamp - pe_timestamp;
             // There might be a slight delta between the PE timestamp and the one found in the resources.
             // Assume nobody will tamper them to fake the compilation date by less than 12 hours.
-            if (delta > btime::hours(12) || delta < btime::hours(-12)) {
+            if (delta > std::chrono::hours(12) || delta < -std::chrono::hours(12)) {
                 timestamps.insert(*utils::dosdate_to_string(it->get_timestamp()));
             }
 
@@ -90,10 +93,13 @@ public:
             // Could it be that something in the build chain uses local timestamps?
             // Report it if we have a delta of exactly 1-12h.
 
-            auto hours = delta.hours();
+            const auto delta_seconds = std::chrono::duration_cast<std::chrono::seconds>(delta).count();
+            auto hours = static_cast<long long>(delta_seconds / 3600);
+            auto minutes = static_cast<long long>((delta_seconds % 3600) / 60);
+            auto seconds = static_cast<long long>(delta_seconds % 60);
             // There can be a delta of 1 second between the two timestamps, possibly due to delays during the compilation.
             // Account for it by rounding up to the next hour if needed.
-            if (abs(delta.minutes()) == 59 && abs(delta.seconds()) > 50) 
+            if (std::abs(minutes) == 59 && std::abs(seconds) > 50) 
             {
                 if (hours < 0) {
                     hours -= 1;
@@ -103,14 +109,14 @@ public:
                 }
             }
 
-            if (hours != 0 && abs(hours) <= 12 &&
-                timezones.find(hours) == timezones.end())
+            if (hours != 0 && std::abs(hours) <= 12 &&
+                timezones.find(static_cast<int>(hours)) == timezones.end())
             {
-                if (abs(delta.minutes()) == 59 || abs(delta.minutes()) <= 1) {
+                if (std::abs(minutes) == 59 || std::abs(minutes) <= 1) {
                     std::stringstream ss;
                     ss << "The binary may have been compiled on a machine in the UTC" << std::showpos << hours << " timezone.";
                     res->add_information(ss.str());
-                    timezones.insert(hours);
+                    timezones.insert(static_cast<int>(hours));
                 }
             }
         }
@@ -118,7 +124,7 @@ public:
         {
             res->raise_level(SUSPICIOUS);
             res->set_summary("The PE header may have been manually modified.");
-            auto info = boost::make_shared<io::OutputTreeNode>("The resource timestamps differ from the PE header",
+            auto info = std::make_shared<io::OutputTreeNode>("The resource timestamps differ from the PE header",
                 io::OutputTreeNode::STRINGS,
                 io::OutputTreeNode::NEW_LINE);
             for (const auto& timestamp : timestamps) {

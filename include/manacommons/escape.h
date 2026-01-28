@@ -21,8 +21,8 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include <boost/static_assert.hpp>
 #include <boost/spirit/include/karma.hpp>
 #include <boost/type_traits/is_base_of.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/make_shared.hpp>
+#include <memory>
+#include <memory>
 
 #include "manacommons/color.h"
 
@@ -35,7 +35,7 @@ namespace io
 
 namespace karma = boost::spirit::karma;
 typedef std::back_insert_iterator<std::string> sink_type;
-typedef boost::shared_ptr<std::string> pString;
+typedef std::shared_ptr<std::string> pString;
 
 /**
 *	@brief	This grammar is used to escape strings printed to the console.
@@ -125,7 +125,7 @@ pString _do_escape(const std::string& s)
 		return nullptr;
 	}
 	else {
-		return boost::make_shared<std::string>(generated);
+		return std::make_shared<std::string>(generated);
 	}
 }
 

@@ -33,7 +33,7 @@ pSharedLibrary SharedLibrary::load(const std::string& name)
 
 	void * handle = nullptr;
 
-	#ifdef BOOST_WINDOWS_API
+	#ifdef _WIN32
 		handle = ::LoadLibraryA(name.c_str());
 		if (handle == nullptr)
 		{
@@ -56,7 +56,7 @@ void SharedLibrary::unload()
 	if (_handle == nullptr) {
 		return;
 	}
-	#ifdef BOOST_WINDOWS_API
+	#ifdef _WIN32
 		::FreeLibrary((HMODULE) _handle);
 	#else
 		::dlclose(_handle);
@@ -69,7 +69,7 @@ void* SharedLibrary::resolve_symbol(const std::string& symbol) const
 	if (!_handle)
 		return nullptr;
 
-	#ifdef BOOST_WINDOWS_API
+	#ifdef _WIN32
 		return ::GetProcAddress((HMODULE) _handle, symbol.c_str());
 	#else
 		return ::dlsym(_handle, symbol.c_str());

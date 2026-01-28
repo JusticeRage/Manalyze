@@ -162,11 +162,11 @@ class OpenSSLAuthenticodePlugin : public IPlugin
     int get_api_version() const override { return 1; }
 
     pString get_id() const override {
-        return boost::make_shared<std::string>("authenticode");
+        return std::make_shared<std::string>("authenticode");
     }
 
     pString get_description() const override {
-        return boost::make_shared<std::string>("Checks if the digital signature of the PE is valid.");
+        return std::make_shared<std::string>("Checks if the digital signature of the PE is valid.");
     }
 
     pResult analyze(const mana::PE& pe) override

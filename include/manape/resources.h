@@ -23,12 +23,9 @@
 #include <vector>
 #include <sstream>
 
-#include <boost/cstdint.hpp>
-#include <boost/make_shared.hpp>
-#include <boost/shared_array.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/system/api_config.hpp>
-
+#include <cstdint>
+#include <memory>
+#include <filesystem>
 #include "manape/utils.h"
 #include "manape/pe_structs.h"
 #include "manape/io_types.h"
@@ -36,8 +33,8 @@
 namespace mana
 {
 
-typedef boost::shared_ptr<std::string> pString;
-typedef boost::shared_ptr<const std::vector<boost::uint8_t> > shared_bytes;
+typedef std::shared_ptr<std::string> pString;
+typedef std::shared_ptr<const std::vector<std::uint8_t> > shared_bytes;
 
 class Resource
 {
@@ -45,13 +42,13 @@ public:
 	Resource(std::string            type,
 			 std::string            name,
 			 std::string            language,
-			 boost::uint32_t		codepage,
-			 boost::uint32_t		size,
-			 boost::uint32_t		timestamp,
-			 boost::uint32_t		offset_in_file,
+			 std::uint32_t		codepage,
+			 std::uint32_t		size,
+			 std::uint32_t		timestamp,
+			 std::uint32_t		offset_in_file,
 			 std::string path_to_pe,
 			 pFile                  pe_file,
-			 boost::uint64_t        file_size,
+			 std::uint64_t        file_size,
 			 pMutex                 io_mutex = pMutex())
 		: _type(std::move(type)),
 		  _name(std::move(name)),
@@ -68,15 +65,15 @@ public:
 	{}
 
 	Resource(std::string type,
-			 boost::uint32_t			id,
+			 std::uint32_t			id,
 			 std::string                language,
-			 boost::uint32_t			codepage,
-			 boost::uint32_t			size,
-			 boost::uint32_t			timestamp,
-			 boost::uint32_t			offset_in_file,
+			 std::uint32_t			codepage,
+			 std::uint32_t			size,
+			 std::uint32_t			timestamp,
+			 std::uint32_t			offset_in_file,
 			 std::string path_to_pe,
 			 pFile                  pe_file,
-			 boost::uint64_t        file_size,
+			 std::uint64_t        file_size,
 			 pMutex                 io_mutex = pMutex())
 		: _type(std::move(type)),
 		  _name(),
@@ -94,13 +91,13 @@ public:
 
 	virtual ~Resource() = default;
 
-	DECLSPEC pString			get_type()		const { return boost::make_shared<std::string>(_type); }
-	DECLSPEC pString			get_language()	const { return boost::make_shared<std::string>(_language); }
-	DECLSPEC boost::uint32_t	get_codepage()	const { return _codepage; }
-	DECLSPEC boost::uint32_t	get_size()		const { return _size; }
-	DECLSPEC boost::uint32_t	get_id()		const { return _id; }
-	DECLSPEC boost::uint32_t	get_offset()	const { return _offset_in_file; }
-	DECLSPEC boost::uint32_t	get_timestamp() const { return _timestamp; }
+	DECLSPEC pString			get_type()		const { return std::make_shared<std::string>(_type); }
+	DECLSPEC pString			get_language()	const { return std::make_shared<std::string>(_language); }
+	DECLSPEC std::uint32_t	get_codepage()	const { return _codepage; }
+	DECLSPEC std::uint32_t	get_size()		const { return _size; }
+	DECLSPEC std::uint32_t	get_id()		const { return _id; }
+	DECLSPEC std::uint32_t	get_offset()	const { return _offset_in_file; }
+	DECLSPEC std::uint32_t	get_timestamp() const { return _timestamp; }
 
 	DECLSPEC double				get_entropy()	const {
 		return utils::shannon_entropy(*get_raw_data());
@@ -109,13 +106,13 @@ public:
 	DECLSPEC pString			get_name()		const
 	{
 		if (!_name.empty()) {
-			return boost::make_shared<std::string>(_name);
+			return std::make_shared<std::string>(_name);
 		}
 		else
 		{
 			std::stringstream ss;
 			ss << _id;
-			return boost::make_shared<std::string>(ss.str());
+			return std::make_shared<std::string>(ss.str());
 		}
 	}
 
@@ -149,10 +146,10 @@ public:
     /**
      * @brief   Extracts the resource to the specified path.
      *
-     * @param   const boost::filesystem::path& destination The place where the resource should
+     * @param   const std::filesystem::path& destination The place where the resource should
      *                                                     be written (i.e. "/tmp/image.bmp").
      */
-	DECLSPEC bool extract(const boost::filesystem::path& destination);
+	DECLSPEC bool extract(const std::filesystem::path& destination);
 
     /**
      * @brief   Extraction function dedicated to icons.
@@ -160,31 +157,31 @@ public:
      * Icon data may be spread over multiple resources. For this reason, it is necessary to have
      * access to all the resources of the PE files to reconstruct it properly.
      *
-     * @param   const boost::filesystem::path& destination The place where the resource should
+     * @param   const std::filesystem::path& destination The place where the resource should
      *                                                     be written (i.e. "/tmp/icon.ico").
      */
-    DECLSPEC bool icon_extract(const boost::filesystem::path& destination,
-                      const std::vector<boost::shared_ptr<Resource> >& resources);
+    DECLSPEC bool icon_extract(const std::filesystem::path& destination,
+                      const std::vector<std::shared_ptr<Resource> >& resources);
 
 private:
 	std::string		_type;
 
 	// Resources can either have an identifier or a name.
 	std::string		_name;
-	boost::uint32_t	_id;
+	std::uint32_t	_id;
 
 	std::string		_language;
-	boost::uint32_t	_codepage;
-	boost::uint32_t	_size;
+	std::uint32_t	_codepage;
+	std::uint32_t	_size;
 
 	// Keep the timestamp provided in the resource directory
-	boost::uint32_t _timestamp;
+	std::uint32_t _timestamp;
 
 	// These fields do not describe the PE structure.
 	unsigned int	_offset_in_file;
 	std::string		_path_to_pe;
 	pFile			_pe_file;
-	boost::uint64_t	_file_size;
+	std::uint64_t	_file_size;
 	pMutex			_io_mutex;
 
 	/**
@@ -194,7 +191,7 @@ private:
 	 */
 	bool _reach_data(FILE*& f, long& saved_offset) const;
 };
-typedef boost::shared_ptr<Resource> pResource;
+typedef std::shared_ptr<Resource> pResource;
 
 /**
  *	@brief	Recreates a .ico from resources.

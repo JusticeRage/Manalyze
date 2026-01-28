@@ -17,6 +17,10 @@
 
 #include "manape/utils.h"
 
+#include <chrono>
+#include <ctime>
+#include <iomanip>
+
 namespace utils {
 
 std::string read_ascii_string(FILE* f, unsigned int max_bytes)
@@ -63,7 +67,7 @@ std::string read_unicode_string(FILE* f, unsigned int max_bytes)
 
 	try
 	{
-		std::vector<boost::uint8_t> utf8result;
+		std::vector<std::uint8_t> utf8result;
 		utf8::utf16to8(s.begin(), s.end(), std::back_inserter(utf8result));
 		return std::string(utf8result.begin(), utf8result.end());
 	}
@@ -80,7 +84,7 @@ std::wstring read_prefixed_unicode_wstring(FILE* f)
 {
 	std::wstring s = std::wstring();
 	wchar_t c = 0;
-	boost::uint16_t size;
+	std::uint16_t size;
 	if (2 != fread(&size, 1, 2, f)) {
 		return L"";
 	}
@@ -103,7 +107,7 @@ std::string read_prefixed_unicode_string(FILE* f)
 
 	try
 	{
-		std::vector<boost::uint8_t> utf8result;
+		std::vector<std::uint8_t> utf8result;
 		utf8::utf16to8(s.begin(), s.end(), std::back_inserter(utf8result));
 		return std::string(utf8result.begin(), utf8result.end());
 	}
@@ -135,7 +139,7 @@ bool read_string_at_offset(FILE* f, unsigned int offset, std::string& out, bool 
 
 // ----------------------------------------------------------------------------
 
-double DECLSPEC shannon_entropy(const std::vector<boost::uint8_t>& bytes)
+double DECLSPEC shannon_entropy(const std::vector<std::uint8_t>& bytes)
 {
 	int frequency[256] = { 0 };
 	for (const auto& it : bytes)	{
@@ -158,49 +162,97 @@ double DECLSPEC shannon_entropy(const std::vector<boost::uint8_t>& bytes)
 
 // ----------------------------------------------------------------------------
 
-pString timestamp_to_string(boost::uint64_t epoch_timestamp)
+namespace {
+
+std::tm to_utc_tm(std::time_t t)
 {
-	static std::locale loc(std::cout.getloc(), new btime::time_facet("%Y-%b-%d %H:%M:%S%F %z"));
-	std::stringstream ss;
-	ss.imbue(loc);
-	ss << btime::from_time_t(epoch_timestamp);
-	return boost::make_shared<std::string>(ss.str());
+	std::tm tm{};
+#ifdef _WIN32
+	gmtime_s(&tm, &t);
+#else
+	gmtime_r(&t, &tm);
+#endif
+	return tm;
+}
+
+std::string format_utc_time(std::time_t t)
+{
+	std::tm tm = to_utc_tm(t);
+	std::ostringstream ss;
+	ss << std::put_time(&tm, "%Y-%b-%d %H:%M:%S");
+	return ss.str();
+}
+
+std::time_t timegm_utc(std::tm* tm)
+{
+#ifdef _WIN32
+	return _mkgmtime(tm);
+#else
+	return timegm(tm);
+#endif
+}
+
+} // namespace
+
+pString timestamp_to_string(std::uint64_t epoch_timestamp)
+{
+	const std::time_t t = static_cast<std::time_t>(epoch_timestamp);
+	return std::make_shared<std::string>(format_utc_time(t));
 }
 
 // ----------------------------------------------------------------------------
 
-pptime dosdate_to_btime(boost::uint32_t dosdate)
+pptime dosdate_to_btime(std::uint32_t dosdate)
 {
     if (dosdate == 0) {
-        return boost::make_shared<btime::ptime>(btime::ptime(boost::gregorian::date(1980, 1, 1)));
+        std::tm tm{};
+        tm.tm_year = 1980 - 1900;
+        tm.tm_mon = 0;
+        tm.tm_mday = 1;
+        tm.tm_hour = 0;
+        tm.tm_min = 0;
+        tm.tm_sec = 0;
+        tm.tm_isdst = 0;
+        const std::time_t t = timegm_utc(&tm);
+        return std::make_shared<std::chrono::system_clock::time_point>(std::chrono::system_clock::from_time_t(t));
     }
 
-    boost::uint16_t date = dosdate >> 16;
-    boost::uint16_t time = dosdate & 0xFFFF;
-    boost::uint16_t year = ((date & 0xFE00) >> 9) + 1980;
-    boost::uint16_t month = (date & 0x1E0) >> 5;
-    boost::uint16_t day = date & 0x1F;
-    boost::uint16_t hour = (time & 0xF800) >> 11;
-    boost::uint16_t minute = (time & 0x7E0) >> 5;
-    boost::uint16_t second = (time & 0x1F) << 1;
+    std::uint16_t date = dosdate >> 16;
+    std::uint16_t time = dosdate & 0xFFFF;
+    std::uint16_t year = ((date & 0xFE00) >> 9) + 1980;
+    std::uint16_t month = (date & 0x1E0) >> 5;
+    std::uint16_t day = date & 0x1F;
+    std::uint16_t hour = (time & 0xF800) >> 11;
+    std::uint16_t minute = (time & 0x7E0) >> 5;
+    std::uint16_t second = (time & 0x1F) << 1;
     if (second == 60) {
         second = 59;
     }
 
-    try {
-        return boost::make_shared<btime::ptime>(btime::ptime(boost::gregorian::date(year, month, day), btime::hours(hour) + btime::minutes(minute) + btime::seconds(second)));
-    }
-    catch (std::exception&)
-    {
+    const bool invalid_date = month == 0 || month > 12 || day == 0 || day > 31;
+    const bool invalid_time = hour > 23 || minute > 59 || second > 59;
+    if (invalid_date || invalid_time) {
         PRINT_WARNING << "Tried to convert an invalid DosDate: " << dosdate << ". Falling back to posix timestamp." << DEBUG_INFO << std::endl;
         // Some samples seem to be using a standard epoch timestamp (i.e. be7dc7c927caa47740c369daf35fc5e5). Try falling back to that.
-        return boost::make_shared<btime::ptime>(btime::from_time_t(dosdate));
+        const std::time_t t = static_cast<std::time_t>(dosdate);
+        return std::make_shared<std::chrono::system_clock::time_point>(std::chrono::system_clock::from_time_t(t));
     }
+
+    std::tm tm{};
+    tm.tm_year = static_cast<int>(year) - 1900;
+    tm.tm_mon = static_cast<int>(month) - 1;
+    tm.tm_mday = static_cast<int>(day);
+    tm.tm_hour = static_cast<int>(hour);
+    tm.tm_min = static_cast<int>(minute);
+    tm.tm_sec = static_cast<int>(second);
+    tm.tm_isdst = 0;
+    const std::time_t t = timegm_utc(&tm);
+    return std::make_shared<std::chrono::system_clock::time_point>(std::chrono::system_clock::from_time_t(t));
 }
 
 // ----------------------------------------------------------------------------
 
-bool is_actually_posix(boost::uint32_t dosdate, boost::uint32_t pe_timestamp, float threshold)
+bool is_actually_posix(std::uint32_t dosdate, std::uint32_t pe_timestamp, float threshold)
 {
     if (dosdate == 0) {
         return false;
@@ -218,20 +270,14 @@ bool is_actually_posix(boost::uint32_t dosdate, boost::uint32_t pe_timestamp, fl
 
 // ----------------------------------------------------------------------------
 
-pString dosdate_to_string(boost::uint32_t dosdate)
+pString dosdate_to_string(std::uint32_t dosdate)
 {
-    static std::locale loc(std::cout.getloc(), new btime::time_facet("%Y-%b-%d %H:%M:%S%F %z"));
-    std::stringstream ss;
-    ss.imbue(loc);
     const auto time = dosdate_to_btime(dosdate);
-    if (time) {
-        ss << *time;
+    if (!time) {
+        return std::make_shared<std::string>(format_utc_time(0) + " (ERROR)");
     }
-    else {
-        ss << boost::posix_time::from_time_t(0) << " (ERROR)";
-    }
-    
-	return boost::make_shared<std::string>(ss.str());
+    const std::time_t t = std::chrono::system_clock::to_time_t(*time);
+    return std::make_shared<std::string>(format_utc_time(t));
 }
 
 // ----------------------------------------------------------------------------

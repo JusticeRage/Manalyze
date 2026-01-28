@@ -19,7 +19,8 @@
 
 #include <string>
 #include <vector>
-#include <boost/shared_ptr.hpp>
+#include <memory>
+#include <cstdint>
 
 #include <openssl/pkcs7.h>
 #include <openssl/x509.h>
@@ -29,9 +30,9 @@
 #include "plugins/plugin_authenticode/asn1.h"
 #include "plugins/plugin_authenticode/pe_authenticode_digest.h"
 
-typedef std::vector<boost::uint8_t> bytes;
-typedef boost::shared_ptr<PKCS7>  pPKCS7;
-typedef boost::shared_ptr<BIO>    pBIO;
+typedef std::vector<std::uint8_t> bytes;
+typedef std::shared_ptr<PKCS7>  pPKCS7;
+typedef std::shared_ptr<BIO>    pBIO;
 
 namespace plugin {
 

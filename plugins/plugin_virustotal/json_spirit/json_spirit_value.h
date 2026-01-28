@@ -17,8 +17,8 @@
 #include <sstream>
 #include <stdexcept>
 #include <boost/config.hpp> 
-#include <boost/cstdint.hpp> 
-#include <boost/shared_ptr.hpp> 
+#include <cstdint> 
+#include <memory> 
 #include <boost/variant.hpp> 
 
 // comment out the value types you don't need to reduce build times and intermediate file sizes
@@ -54,8 +54,8 @@ namespace json_spirit
         Value_impl( const Array&       value );
         Value_impl( bool               value );
         Value_impl( int                value );
-        Value_impl( boost::int64_t     value );
-        Value_impl( boost::uint64_t    value );
+        Value_impl( std::int64_t     value );
+        Value_impl( std::uint64_t    value );
         Value_impl( double             value );
 
         template< class Iter >
@@ -80,8 +80,8 @@ namespace json_spirit
         const Array&       get_array()  const;
         bool               get_bool()   const;
         int                get_int()    const;
-        boost::int64_t     get_int64()  const;
-        boost::uint64_t    get_uint64() const;
+        std::int64_t     get_int64()  const;
+        std::uint64_t    get_uint64() const;
         double             get_real()   const;
 
         Object& get_obj();
@@ -97,7 +97,7 @@ namespace json_spirit
         void check_type( const Value_type vtype ) const;
 
         typedef boost::variant< boost::recursive_wrapper< Object >, boost::recursive_wrapper< Array >, 
-                                String_type, bool, boost::int64_t, double, Null, boost::uint64_t > Variant;
+                                String_type, bool, std::int64_t, double, Null, std::uint64_t > Variant;
 
         Variant v_;
 
@@ -113,7 +113,7 @@ namespace json_spirit
              
               Variant operator()( int i ) const 
               {
-                  return static_cast< boost::int64_t >( i );
+                  return static_cast< std::int64_t >( i );
               }
            
               template<class T>
@@ -294,18 +294,18 @@ namespace json_spirit
 
     template< class Config >
     Value_impl< Config >::Value_impl( int value )
-    :   v_( static_cast< boost::int64_t >( value ) )
+    :   v_( static_cast< std::int64_t >( value ) )
     {
     }
 
     template< class Config >
-    Value_impl< Config >::Value_impl( boost::int64_t value )
+    Value_impl< Config >::Value_impl( std::int64_t value )
     :   v_( value )
     {
     }
 
     template< class Config >
-    Value_impl< Config >::Value_impl( boost::uint64_t value )
+    Value_impl< Config >::Value_impl( std::uint64_t value )
     :   v_( value )
     {
     }
@@ -433,29 +433,29 @@ namespace json_spirit
     }
     
     template< class Config >
-    boost::int64_t Value_impl< Config >::get_int64() const
+    std::int64_t Value_impl< Config >::get_int64() const
     {
         check_type( int_type );
 
         if( is_uint64() )
         {
-            return static_cast< boost::int64_t >( get_uint64() );
+            return static_cast< std::int64_t >( get_uint64() );
         }
 
-        return boost::get< boost::int64_t >( v_ );
+        return boost::get< std::int64_t >( v_ );
     }
     
     template< class Config >
-    boost::uint64_t Value_impl< Config >::get_uint64() const
+    std::uint64_t Value_impl< Config >::get_uint64() const
     {
         check_type( int_type );
 
         if( !is_uint64() )
         {
-            return static_cast< boost::uint64_t >( get_int64() );
+            return static_cast< std::uint64_t >( get_int64() );
         }
 
-        return boost::get< boost::uint64_t >( v_ );
+        return boost::get< std::uint64_t >( v_ );
     }
 
     template< class Config >
@@ -534,13 +534,13 @@ namespace json_spirit
         }
        
         template< class Value > 
-        boost::int64_t get_value( const Value& value, Type_to_type< boost::int64_t > )
+        std::int64_t get_value( const Value& value, Type_to_type< std::int64_t > )
         {
             return value.get_int64();
         }
        
         template< class Value > 
-        boost::uint64_t get_value( const Value& value, Type_to_type< boost::uint64_t > )
+        std::uint64_t get_value( const Value& value, Type_to_type< std::uint64_t > )
         {
             return value.get_uint64();
         }

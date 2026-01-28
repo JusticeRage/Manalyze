@@ -15,6 +15,7 @@
 
 //#define BOOST_SPIRIT_THREADSAFE  // uncomment for multithreaded use, requires linking to boost.thread
 
+#include <cstdint>
 #include <boost/function.hpp>
 #include <boost/version.hpp>
 
@@ -36,8 +37,8 @@
 
 namespace json_spirit
 {
-    const spirit_namespace::int_parser < boost::int64_t >  int64_p  = spirit_namespace::int_parser < boost::int64_t  >();
-    const spirit_namespace::uint_parser< boost::uint64_t > uint64_p = spirit_namespace::uint_parser< boost::uint64_t >();
+    const spirit_namespace::int_parser < std::int64_t >  int64_p  = spirit_namespace::int_parser < std::int64_t  >();
+    const spirit_namespace::uint_parser< std::uint64_t > uint64_p = spirit_namespace::uint_parser< std::uint64_t >();
 
     template< class Iter_type >
     bool is_eq( Iter_type first, Iter_type last, const char* c_str )
@@ -273,12 +274,12 @@ namespace json_spirit
             add_to_current( Value_type() );
         }
 
-        void new_int( boost::int64_t i )
+        void new_int( std::int64_t i )
         {
             add_to_current( i );
         }
 
-        void new_uint64( boost::uint64_t ui )
+        void new_uint64( std::uint64_t ui )
         {
             add_to_current( ui );
         }
@@ -428,8 +429,8 @@ namespace json_spirit
                 typedef boost::function< void( Char_type )            > Char_action;
                 typedef boost::function< void( Iter_type, Iter_type ) > Str_action;
                 typedef boost::function< void( double )               > Real_action;
-                typedef boost::function< void( boost::int64_t )       > Int_action;
-                typedef boost::function< void( boost::uint64_t )      > Uint64_action;
+                typedef boost::function< void( std::int64_t )       > Int_action;
+                typedef boost::function< void( std::uint64_t )      > Uint64_action;
 
                 Char_action   begin_obj  ( std::bind( &Semantic_actions_t::begin_obj,   &self.actions_, std::placeholders::_1 ) );
                 Char_action   end_obj    (std::bind( &Semantic_actions_t::end_obj,     &self.actions_, std::placeholders::_1 ) );

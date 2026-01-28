@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE(check_address_inside_section)
 	h.VirtualAddress = 100;
 	h.SizeOfRawData = 40;
 	h.VirtualSize = 50;
-	mana::pSection s = boost::make_shared<mana::Section>(h, nullptr, 200);
+	mana::pSection s = std::make_shared<mana::Section>(h, nullptr, 200);
 
 	// Check with VirtualSize
 	BOOST_CHECK(mana::is_address_in_section(-1, s) == false);
@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(check_address_inside_section)
 	// Section with a null size
 	h.VirtualSize = 0;
 	h.SizeOfRawData = 0;
-	s = boost::make_shared<mana::Section>(h, nullptr, 200);
+	s = std::make_shared<mana::Section>(h, nullptr, 200);
 	BOOST_CHECK(mana::is_address_in_section(100, s) == false);
 	BOOST_CHECK(mana::is_address_in_section(100, s, true) == false);
 }
