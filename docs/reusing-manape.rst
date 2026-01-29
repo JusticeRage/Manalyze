@@ -41,7 +41,7 @@ For this to compile, you'll have to grab ManaPE's code and put it inside your pr
 
 You don't have to follow the same folder structure, it's only given as an example. Then, assuming you copied the previous code in ``main.cpp``, the only thing left to do is to compile everything::
 
-	~/code/project$ g++ main.cpp manape/*.cpp -lboost_system -lboost_regex -Iinclude -std=c++11
+	~/code/project$ g++ main.cpp manape/*.cpp -Iinclude -std=c++11
 	~/code/project$ ./a.out 
 	File parsed successfully: file.exe
 	.text

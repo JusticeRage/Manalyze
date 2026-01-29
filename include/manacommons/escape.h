@@ -64,8 +64,7 @@ struct escaped_string_raw
  *
  *	Paths contained in debug information insert unescaped backslashes which cause
  *	the resulting JSON to be invalid.
- *	Non-printable characters are not escaped in this grammar, because we expect
- *	UTF-8 strings.
+ *	Control characters are escaped to keep JSON output valid.
  *
  *	WARNING: Single quotes are NOT escaped.
  */
@@ -90,6 +89,8 @@ struct escaped_string_json
 	karma::rule<OutputIterator, std::string()> esc_str;
 	karma::symbols<char, char const*> esc_char;
 };
+
+// ----------------------------------------------------------------------------
 
 // ----------------------------------------------------------------------------
 
@@ -128,6 +129,43 @@ pString _do_escape(const std::string& s)
 		return std::make_shared<std::string>(generated);
 	}
 }
+
+// Specialization: JSON escaping needs to handle control characters to keep output valid.
+template<>
+inline pString _do_escape<escaped_string_json<sink_type>>(const std::string& s)
+{
+	std::string generated;
+	generated.reserve(s.size());
+	static const char hex_digits[] = "0123456789ABCDEF";
+
+	for (unsigned char c : s)
+	{
+		switch (c)
+		{
+			case '\"': generated += "\\\""; break;
+			case '\\': generated += "\\\\"; break;
+			case '\b': generated += "\\b"; break;
+			case '\f': generated += "\\f"; break;
+			case '\n': generated += "\\n"; break;
+			case '\r': generated += "\\r"; break;
+			case '\t': generated += "\\t"; break;
+			default:
+				if (c < 0x20)
+				{
+					generated += "\\u00";
+					generated += hex_digits[(c >> 4) & 0x0F];
+					generated += hex_digits[c & 0x0F];
+				}
+				else {
+					generated.push_back(static_cast<char>(c));
+				}
+		}
+	}
+
+	return std::make_shared<std::string>(generated);
+}
+
+
 
 // ----------------------------------------------------------------------------
 

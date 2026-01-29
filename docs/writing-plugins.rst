@@ -90,11 +90,11 @@ If you try to build the plugin right now, you'll see that the compiler is very a
         int get_api_version() const override { return 1; }
 
         pString get_id() const override {
-            return boost::make_shared<std::string>("helloworld");
+            return std::make_shared<std::string>("helloworld");
         }
 
         pString get_description() const override {
-            return boost::make_shared<std::string>("A sample plugin.");
+            return std::make_shared<std::string>("A sample plugin.");
         }
 
         pResult analyze(const mana::PE& pe) override
@@ -272,25 +272,25 @@ The return value is a pointer to an instance of the following structure, which m
 
     typedef struct dos_header_t
     {
-        boost::uint8_t  e_magic[2];
-        boost::uint16_t e_cblp;
-        boost::uint16_t e_cp;
-        boost::uint16_t e_crlc;
-        boost::uint16_t e_cparhdr;
-        boost::uint16_t e_minalloc;
-        boost::uint16_t e_maxalloc;
-        boost::uint16_t e_ss;
-        boost::uint16_t e_sp;
-        boost::uint16_t e_csum;
-        boost::uint16_t e_ip;
-        boost::uint16_t e_cs;
-        boost::uint16_t e_lfarlc;
-        boost::uint16_t e_ovno;
-        boost::uint16_t e_res[4];
-        boost::uint16_t e_oemid;
-        boost::uint16_t e_oeminfo;
-        boost::uint16_t e_res2[10];
-        boost::uint32_t e_lfanew;
+        std::uint8_t  e_magic[2];
+        std::uint16_t e_cblp;
+        std::uint16_t e_cp;
+        std::uint16_t e_crlc;
+        std::uint16_t e_cparhdr;
+        std::uint16_t e_minalloc;
+        std::uint16_t e_maxalloc;
+        std::uint16_t e_ss;
+        std::uint16_t e_sp;
+        std::uint16_t e_csum;
+        std::uint16_t e_ip;
+        std::uint16_t e_cs;
+        std::uint16_t e_lfarlc;
+        std::uint16_t e_ovno;
+        std::uint16_t e_res[4];
+        std::uint16_t e_oemid;
+        std::uint16_t e_oeminfo;
+        std::uint16_t e_res2[10];
+        std::uint32_t e_lfanew;
     } dos_header;
 
 PE Header
@@ -307,14 +307,14 @@ The return value is a pointer to an instance of the following structure, which m
 
     typedef struct pe_header_t
     {
-        boost::uint8_t  Signature[4];
-        boost::uint16_t Machine;
-        boost::uint16_t NumberofSections;
-        boost::uint32_t TimeDateStamp;
-        boost::uint32_t PointerToSymbolTable;
-        boost::uint32_t NumberOfSymbols;
-        boost::uint16_t SizeOfOptionalHeader;
-        boost::uint16_t Characteristics;
+        std::uint8_t  Signature[4];
+        std::uint16_t Machine;
+        std::uint16_t NumberofSections;
+        std::uint32_t TimeDateStamp;
+        std::uint32_t PointerToSymbolTable;
+        std::uint32_t NumberOfSymbols;
+        std::uint16_t SizeOfOptionalHeader;
+        std::uint16_t Characteristics;
     } pe_header;
 
 Optional Header
@@ -331,36 +331,36 @@ The return value is a pointer to an instance of the following structure, which m
 
     typedef struct image_optional_header_t
     {
-        boost::uint16_t Magic;
-        boost::uint8_t  MajorLinkerVersion;
-        boost::uint8_t  MinorLinkerVersion;
-        boost::uint32_t SizeOfCode;
-        boost::uint32_t SizeOfInitializedData;
-        boost::uint32_t SizeOfUninitializedData;
-        boost::uint32_t AddressOfEntryPoint;
-        boost::uint32_t BaseOfCode;
-        boost::uint32_t BaseOfData;
-        boost::uint64_t ImageBase;
-        boost::uint32_t SectionAlignment;
-        boost::uint32_t FileAlignment;
-        boost::uint16_t MajorOperatingSystemVersion;
-        boost::uint16_t MinorOperatingSystemVersion;
-        boost::uint16_t MajorImageVersion;
-        boost::uint16_t MinorImageVersion;
-        boost::uint16_t MajorSubsystemVersion;
-        boost::uint16_t MinorSubsystemVersion;
-        boost::uint32_t Win32VersionValue;
-        boost::uint32_t SizeOfImage;
-        boost::uint32_t SizeOfHeaders;
-        boost::uint32_t Checksum;
-        boost::uint16_t Subsystem;
-        boost::uint16_t DllCharacteristics;
-        boost::uint64_t SizeofStackReserve;
-        boost::uint64_t SizeofStackCommit;
-        boost::uint64_t SizeofHeapReserve;
-        boost::uint64_t SizeofHeapCommit;
-        boost::uint32_t LoaderFlags;
-        boost::uint32_t NumberOfRvaAndSizes;
+        std::uint16_t Magic;
+        std::uint8_t  MajorLinkerVersion;
+        std::uint8_t  MinorLinkerVersion;
+        std::uint32_t SizeOfCode;
+        std::uint32_t SizeOfInitializedData;
+        std::uint32_t SizeOfUninitializedData;
+        std::uint32_t AddressOfEntryPoint;
+        std::uint32_t BaseOfCode;
+        std::uint32_t BaseOfData;
+        std::uint64_t ImageBase;
+        std::uint32_t SectionAlignment;
+        std::uint32_t FileAlignment;
+        std::uint16_t MajorOperatingSystemVersion;
+        std::uint16_t MinorOperatingSystemVersion;
+        std::uint16_t MajorImageVersion;
+        std::uint16_t MinorImageVersion;
+        std::uint16_t MajorSubsystemVersion;
+        std::uint16_t MinorSubsystemVersion;
+        std::uint32_t Win32VersionValue;
+        std::uint32_t SizeOfImage;
+        std::uint32_t SizeOfHeaders;
+        std::uint32_t Checksum;
+        std::uint16_t Subsystem;
+        std::uint16_t DllCharacteristics;
+        std::uint64_t SizeofStackReserve;
+        std::uint64_t SizeofStackCommit;
+        std::uint64_t SizeofHeapReserve;
+        std::uint64_t SizeofHeapCommit;
+        std::uint32_t LoaderFlags;
+        std::uint32_t NumberOfRvaAndSizes;
         image_data_directory directories[0x10];
     } image_optional_header;
 
@@ -432,8 +432,8 @@ The function returns a shared vector containing pointers to instances of the fol
 
     typedef struct exported_function_t
     {
-        boost::uint32_t Ordinal;
-        boost::uint32_t Address;
+        std::uint32_t Ordinal;
+        std::uint32_t Address;
         std::string        Name;
         std::string        ForwardName;
     } exported_function;
@@ -470,14 +470,14 @@ The function returns a shared vector containing pointers to instances of the fol
 
     typedef struct debug_directory_entry_t
     {
-        boost::uint32_t    Characteristics;
-        boost::uint32_t    TimeDateStamp;
-        boost::uint16_t    MajorVersion;
-        boost::uint16_t    MinorVersion;
-        boost::uint32_t    Type;
-        boost::uint32_t    SizeofData;
-        boost::uint32_t    AddressOfRawData;
-        boost::uint32_t    PointerToRawData;
+        std::uint32_t    Characteristics;
+        std::uint32_t    TimeDateStamp;
+        std::uint16_t    MajorVersion;
+        std::uint16_t    MinorVersion;
+        std::uint32_t    Type;
+        std::uint32_t    SizeofData;
+        std::uint32_t    AddressOfRawData;
+        std::uint32_t    PointerToRawData;
         std::string        Filename;
     } debug_directory_entry;
 	
@@ -498,13 +498,13 @@ The object returned by this function is a pointer to an instance of the followin
 
 	typedef struct image_tls_directory_t
 	{
-		boost::uint64_t					StartAddressOfRawData;
-		boost::uint64_t					EndAddressOfRawData;
-		boost::uint64_t					AddressOfIndex;
-		boost::uint64_t					AddressOfCallbacks;
-		boost::uint32_t					SizeOfZeroFill;
-		boost::uint32_t					Characteristics;
-		std::vector<boost::uint64_t>			Callbacks; // Non-standard!
+		std::uint64_t					StartAddressOfRawData;
+		std::uint64_t					EndAddressOfRawData;
+		std::uint64_t					AddressOfIndex;
+		std::uint64_t					AddressOfCallbacks;
+		std::uint32_t					SizeOfZeroFill;
+		std::uint32_t					Characteristics;
+		std::vector<std::uint64_t>			Callbacks; // Non-standard!
 	} image_tls_directory;
 	
 It closely resembles the original IMAGE_TLS_DIRECTORY structure, but with a list of all the callback addresses already parsed and stored in the ``Callbacks`` vector for your convinience.
@@ -523,26 +523,26 @@ The structure returned by this function mirrors the one defined in the `MSDN <ht
 
 	typedef struct image_load_config_directory_t
 	{
-		boost::uint32_t	Size;
-		boost::uint32_t	TimeDateStamp;
-		boost::uint16_t	MajorVersion;
-		boost::uint16_t	MinorVersion;
-		boost::uint32_t GlobalFlagsClear;
-		boost::uint32_t GlobalFlagsSet;
-		boost::uint32_t CriticalSectionDefaultTimeout;
-		boost::uint64_t DeCommitFreeBlockThreshold;
-		boost::uint64_t DeCommitTotalFreeThreshold;
-		boost::uint64_t LockPrefixTable;
-		boost::uint64_t MaximumAllocationSize;
-		boost::uint64_t VirtualMemoryThreshold;
-		boost::uint64_t ProcessAffinityMask;
-		boost::uint32_t ProcessHeapFlags;
-		boost::uint16_t CSDVersion;
-		boost::uint16_t Reserved1;
-		boost::uint64_t EditList;
-		boost::uint64_t SecurityCookie;
-		boost::uint64_t SEHandlerTable;
-		boost::uint64_t SEHandlerCount;
+		std::uint32_t	Size;
+		std::uint32_t	TimeDateStamp;
+		std::uint16_t	MajorVersion;
+		std::uint16_t	MinorVersion;
+		std::uint32_t GlobalFlagsClear;
+		std::uint32_t GlobalFlagsSet;
+		std::uint32_t CriticalSectionDefaultTimeout;
+		std::uint64_t DeCommitFreeBlockThreshold;
+		std::uint64_t DeCommitTotalFreeThreshold;
+		std::uint64_t LockPrefixTable;
+		std::uint64_t MaximumAllocationSize;
+		std::uint64_t VirtualMemoryThreshold;
+		std::uint64_t ProcessAffinityMask;
+		std::uint32_t ProcessHeapFlags;
+		std::uint16_t CSDVersion;
+		std::uint16_t Reserved1;
+		std::uint64_t EditList;
+		std::uint64_t SecurityCookie;
+		std::uint64_t SEHandlerTable;
+		std::uint64_t SEHandlerCount;
 	} image_load_config_directory;
 	
 Delay Load Table
@@ -560,14 +560,14 @@ The function returns a pointer to the following structure::
 
 	typedef struct delay_load_directory_table_t
 	{
-		boost::uint32_t Attributes;
-		boost::uint32_t Name;
-		boost::uint32_t ModuleHandle;
-		boost::uint32_t DelayImportAddressTable;
-		boost::uint32_t DelayImportNameTable;
-		boost::uint32_t BoundDelayImportTable;
-		boost::uint32_t UnloadDelayImportTable;
-		boost::uint32_t TimeStamp;
+		std::uint32_t Attributes;
+		std::uint32_t Name;
+		std::uint32_t ModuleHandle;
+		std::uint32_t DelayImportAddressTable;
+		std::uint32_t DelayImportNameTable;
+		std::uint32_t BoundDelayImportTable;
+		std::uint32_t UnloadDelayImportTable;
+		std::uint32_t TimeStamp;
 		std::string		NameStr; // Non-standard!
 	} delay_load_directory_table;
 
@@ -590,10 +590,10 @@ As there is no official documentation for this structure, it is defined like thi
 
 	typedef struct rich_header_t
 	{
-		boost::uint32_t xor_key;
-		boost::uint32_t file_offset;
+		std::uint32_t xor_key;
+		std::uint32_t file_offset;
 		// Structure : id, product_id, count
-		std::vector<std::tuple<boost::uint16_t, boost::uint16_t, boost::uint32_t> > values;
+		std::vector<std::tuple<std::uint16_t, std::uint16_t, std::uint32_t> > values;
 	} rich_header;
 
 The `file_offset` field is the absolute position in bytes of the structure in the file (usually ``0x80``). For more information regarding the origin of this structure and what information is contained in it, you can consult `this article <http://www.ntcore.com/files/richsign.htm>`_.
@@ -605,7 +605,7 @@ Miscellaneous
 
 ``pe.get_architecture()`` returns either ``PE::x86`` or ``PE::x64`` depending on the program's target architecture.
 
-``pe.rva_to_offset(boost::uint64_t rva)`` translates a relative virtual address into a file offset.
+``pe.rva_to_offset(std::uint64_t rva)`` translates a relative virtual address into a file offset.
 
 ``pe.get_raw_bytes(size_t size)`` returns the ``size`` first raw bytes of the file. If ``size`` is omitted, every byte from the file is returned::
 
@@ -627,12 +627,14 @@ Miscellaneous
 
 The first argument is of course the value to translate, while the second is a map describing all the flags. Dictionaries relevant to PE structures can be found in ``manape/nt_values.cpp`` in the ``nt`` namespace. You can also define your own like this::
 
-    import "manape/pe.h"
+    #include "manape/pe.h"
 
-    const nt::flag_dict MY_DICT = boost::assign::map_list_of("Value 1", 0x0)
-                                                            ("Value 2", 0x1)
-                                                            // ...
-                                                            ("Value F", 0xF);
+    const nt::flag_dict MY_DICT = {
+        {"Value 1", 0x0},
+        {"Value 2", 0x1},
+        // ...
+        {"Value F", 0xF},
+    };
 
 Results are returned as a shared string or a shared vector of strings respectively.
 
@@ -660,7 +662,7 @@ The first argument is a RVA which is contained in the section to locate, while d
 
 Conversely, you can check whether an address belongs to a specific section with the following function::
 
-    bool is_address_in_section(boost::uint64_t rva, mana::pSection section, bool check_raw_size = false);
+    bool is_address_in_section(std::uint64_t rva, mana::pSection section, bool check_raw_size = false);
 
 The last argument can be used to perform the check by taking the raw size of the section into account instead of the virtual size, which may be useful for some malformed PEs.
 

@@ -45,28 +45,14 @@
 #include "manacommons/paths.h"
 #include "output_formatter.h"
 #include "dump.h"
-
-#define MANALYZE_VERSION "0.9"
+#include "cli.h"
+#include "manalyze_version.h"
 
 #if defined WITH_OPENSSL
 # include <openssl/opensslv.h>  // Used to display OpenSSL's version
 #endif
 
 namespace bfs = std::filesystem;
-
-struct Options
-{
-	bool version = false;
-	bool recursive = false;
-	bool hashes = false;
-	bool output_set = false;
-	bool extract_set = false;
-	std::string output;
-	std::string extract;
-	std::vector<std::string> dump;
-	std::vector<std::string> plugins;
-	std::vector<std::string> pe;
-};
 
 /**
  *	@brief	Prints the help message of the program.
@@ -232,72 +218,6 @@ bool validate_args(const Options& opts, const CLI::App& app, char** argv)
  *
  *	@return	Whether the arguments are valid.
  */
-bool parse_args(Options& opts, int argc, char**argv)
-{
-	CLI::App app("Usage");
-	app.allow_extras(false);
-	app.set_help_flag("-h,--help", "Displays this message.");
-	app.add_flag("-v,--version", opts.version, "Prints the program's version.");
-	app.add_option("pe", opts.pe, "The PE to analyze. Multiple files may be specified.")
-		->expected(-1)
-		->type_name("FILE");
-	app.add_flag("-r,--recursive", opts.recursive, "Scan all files in a directory (subdirectories will be ignored).");
-	auto* output_opt = app.add_option("-o,--output", opts.output, "The output format. May be 'raw' (default) or 'json'.");
-	auto* dump_opt = app.add_option("-d,--dump", opts.dump,
-		"Dump PE information. Available choices are any combination of: "
-		"all, summary, dos (dos header), pe (pe header), opt (pe optional header), sections, "
-		"imports, exports, resources, version, debug, tls, config (image load configuration), "
-		"delay (delay-load table), rich");
-	dump_opt->delimiter(',');
-	app.add_flag("--hashes", opts.hashes, "Calculate various hashes of the file (may slow down the analysis!)");
-	auto* extract_opt = app.add_option("-x,--extract", opts.extract, "Extract the PE resources and authenticode certificates "
-		"to the target directory.");
-	auto* plugins_opt = app.add_option("-p,--plugins", opts.plugins,
-		"Analyze the binary with additional plugins. (may slow down the analysis!)");
-	plugins_opt->delimiter(',');
-
-	try
-	{
-		app.parse(argc, argv);
-	}
-	catch (const CLI::CallForHelp& e)
-	{
-		(void)e;
-		print_help(app, argv[0]);
-		exit(0);
-	}
-	catch (const CLI::ParseError& e)
-	{
-		PRINT_ERROR << "Could not parse the command line (" << e.what() << ")." << std::endl << std::endl;
-		return false;
-	}
-
-	opts.output_set = output_opt->count() > 0;
-	opts.extract_set = extract_opt->count() > 0;
-
-	if (opts.version)
-	{
-		std::stringstream ss;
-		ss << "Manalyze " MANALYZE_VERSION " (Ivan Kwiatkowski, GPLv3 License) compiled with:" << std::endl;
-		ss << "* Yara " << YR_MAJOR_VERSION << "." << YR_MINOR_VERSION << "." << YR_MICRO_VERSION << ". (Victor M. Alvarez, Apache 2.0 License)" << std::endl;
-		ss << "* hash-library " << HASH_LIBRARY_VERSION << " (Stephan Brumme, ZLib License)." << std::endl;
-		#if defined WITH_OPENSSL
-			ss << "* " << OPENSSL_VERSION_TEXT << " (OpenSSL Project, OpenSSL License)" << std::endl;
-		#endif
-		std::cout << ss.str();
-		exit(0);
-	}
-	else if (opts.pe.empty())
-	{
-		print_help(app, argv[0]);
-		exit(0);
-	}
-
-	return validate_args(opts, app, argv);
-}
-
-// ----------------------------------------------------------------------------
-
 /**
  *	@brief	Dumps select information from a PE.
  *
@@ -566,7 +486,7 @@ int main(int argc, char** argv)
 	// Load the configuration
 	config conf = parse_config((config_dir / "manalyze.conf").string());
 
-	if (!parse_args(opts, argc, argv)) {
+	if (!parse_args(opts, argc, argv, print_help, validate_args)) {
 		return -1;
 	}
 

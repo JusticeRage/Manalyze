@@ -74,6 +74,7 @@ Contents:
    
    user
    developer
+   python-bindings
    interfacing
 
 
@@ -83,4 +84,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-

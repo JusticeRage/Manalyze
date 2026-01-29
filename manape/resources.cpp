@@ -782,14 +782,16 @@ mana::shared_bytes reconstruct_icon(pgroup_icon_directory directory, const std::
 			   sizeof(std::uint32_t));
 		// Append the icon bytes at the end of the data
 		if (directory->Type == 1) { // General case for icons
+			auto new_size = static_cast<std::uint32_t>(icon_bytes->size());
+			memcpy(&res[3 * sizeof(std::uint16_t) + i * sizeof(group_icon_directory_entry) + 8], &new_size, sizeof(std::uint32_t));
 			res.insert(res.end(), icon_bytes->begin(), icon_bytes->end());
 		}
-		else if (icon_bytes->size() > 4 && directory->Entries[i]->BytesInRes > 4) // Cursors have a "hotspot" structure that we have to discard to create a valid ico.
+		else if (icon_bytes->size() >= 4) // Cursors have a "hotspot" structure that we have to discard to create a valid ico.
         {
 			res.insert(res.end(), icon_bytes->begin() + 2 * sizeof(std::uint16_t), icon_bytes->end());
             // Remove 4 from the size to account for this suppression
-            int new_size = directory->Entries[i]->BytesInRes - 4;
-            memcpy(&res[3 * sizeof(std::uint16_t) + i * sizeof(group_icon_directory_entry) + 8], &new_size, 4);
+            auto new_size = static_cast<std::uint32_t>(icon_bytes->size() - 4);
+            memcpy(&res[3 * sizeof(std::uint16_t) + i * sizeof(group_icon_directory_entry) + 8], &new_size, sizeof(std::uint32_t));
 		}
 		else { // Invalid cursor.
 			res.clear();

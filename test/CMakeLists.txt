@@ -3,8 +3,8 @@ project (manalyze-tests LANGUAGES CXX)
 include_directories(${PROJECT_SOURCE_DIR}/include)
 find_package(Threads REQUIRED)
 
-add_executable(manalyze-tests fixtures.cpp hash-library.cpp pe.cpp imports.cpp resources.cpp section.cpp escape.cpp encoding.cpp base64.cpp utils.cpp
-                              ../src/import_hash.cpp)
+add_executable(manalyze-tests fixtures.cpp hash-library.cpp pe.cpp imports.cpp resources.cpp section.cpp escape.cpp encoding.cpp base64.cpp utils.cpp cli.cpp
+                              ../src/import_hash.cpp ../src/cli.cpp)
 
 target_link_libraries(
 						manalyze-tests
@@ -12,7 +12,7 @@ target_link_libraries(
 						manape
 						yara
 						hash-library
-						${MANALYZE_BOOST_LIBS}
+						${MANALYZE_BOOST_TEST_LIBS}
                         Threads::Threads
                      )
 

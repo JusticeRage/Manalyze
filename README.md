@@ -1,4 +1,4 @@
-﻿# Manalyze [![Build Status](https://travis-ci.com/JusticeRage/Manalyze.svg?branch=master)](https://travis-ci.org/JusticeRage/Manalyze) [![Coverage Status](https://coveralls.io/repos/github/JusticeRage/Manalyze/badge.svg?branch=master)](https://coveralls.io/github/JusticeRage/Manalyze?branch=master) [![Documentation](https://readthedocs.org/projects/manalyze/badge/?version=latest)](https://docs.manalyzer.org/en/latest/)
+﻿# Manalyze [![Documentation](https://readthedocs.org/projects/manalyze/badge/?version=latest)](https://docs.manalyzer.org/en/latest/)
 
 ## Introduction
 Manalyze is a static analysis tool for PE files that you can use to conduct primary assessment on an executable (or set of executables). It collects weak signals that could indicate malicious behavior and displays information that can help a subsequent manual analysis.
@@ -30,21 +30,22 @@ There are few things I hate more than checking out an open-source project and sp
 
 ### On Linux and BSD (tested on Debian Bullseye and FreeBSD 10.2)
 ```
-$> [sudo or as root] apt-get install libboost-system-dev libssl-dev build-essential cmake git
-$> [alternatively, also sudo or as root] pkg install boost-libs-1.55.0_8 libressl cmake git
+$> [sudo or as root] apt-get install libboost-dev libboost-system-dev libssl-dev build-essential cmake git
+$> [alternatively, also sudo or as root] pkg install boost libressl cmake git
 $> git clone https://github.com/JusticeRage/Manalyze.git && cd Manalyze
 $> cmake .
 $> make -j5
 $> cd bin && ./manalyze --version
 ```
+Note: the VirusTotal plugin is optional and requires the Boost.System library.
 
 Finally, if you want to access Manalyze from every directory on your machine, install it using `$> make install` from the root folder of the project.
 
 ### On Windows
-- Get Boost from [boost.org](http://boost.org) and install [CMake](http://www.cmake.org/download/).
-- Build the Boost.System library
+- Get Boost from [boost.org](http://boost.org) (headers) and install [CMake](http://www.cmake.org/download/).
+- If you want the VirusTotal plugin, build the Boost.System library:
   - `cd boost_1_XX_0 && ./bootstrap.bat && ./b2.exe --build-type=complete --with-system`
-  - Add an environment variable `BOOST_ROOT` which contains the path to your `boost_1_XX_0` folder.
+- Add an environment variable `BOOST_ROOT` which contains the path to your `boost_1_XX_0` folder.
 - Download and install [Git](https://git-scm.com/download/win)
 - `git clone https://github.com/JusticeRage/Manalyze.git && cd Manalyze && cmake .`
 - A Visual Studio project `manalyze.sln` should have appeared in the `Manalyze` folder!
