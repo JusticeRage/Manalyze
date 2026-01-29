@@ -1,7 +1,9 @@
 cmake_minimum_required (VERSION 3.12)
 project (manalyze-tests LANGUAGES CXX)
 include_directories(${PROJECT_SOURCE_DIR}/include)
-find_package(Threads REQUIRED)
+if (NOT APPLE)
+	find_package(Threads)
+endif()
 
 add_executable(manalyze-tests fixtures.cpp hash-library.cpp pe.cpp imports.cpp resources.cpp section.cpp escape.cpp encoding.cpp base64.cpp utils.cpp cli.cpp
                               ../src/import_hash.cpp ../src/cli.cpp)
@@ -13,8 +15,11 @@ target_link_libraries(
 						yara
 						hash-library
 						${MANALYZE_BOOST_TEST_LIBS}
-                        Threads::Threads
                      )
+
+if (Threads_FOUND)
+	target_link_libraries(manalyze-tests Threads::Threads)
+endif()
 
 if (WIN32)
             set (CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -MTd")
