@@ -43,7 +43,9 @@ jobs:
             BOOST_ROOT="$(brew --prefix boost)"
             BOOST_CMAKE_DIR="$(ls -d "${BOOST_ROOT}"/lib/cmake/Boost-* | head -n 1)"
             CMAKE_PREFIX_PATH="${OPENSSL_ROOT_DIR};${BOOST_ROOT}"
-            cmake . -DTests=ON -DCMAKE_BUILD_TYPE=Release -DOPENSSL_ROOT_DIR="${OPENSSL_ROOT_DIR}" -DBoost_DIR="${BOOST_CMAKE_DIR}" -DBOOST_ROOT="${BOOST_ROOT}" -DCMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH}"
+            BOOST_INCLUDE_DIR="${BOOST_ROOT}/include"
+            BOOST_LIBRARY_DIR="${BOOST_ROOT}/lib"
+            cmake . -DTests=ON -DCMAKE_BUILD_TYPE=Release -DOPENSSL_ROOT_DIR="${OPENSSL_ROOT_DIR}" -DBoost_DIR="${BOOST_CMAKE_DIR}" -DBOOST_ROOT="${BOOST_ROOT}" -DBoost_NO_BOOST_CMAKE=ON -DBoost_USE_STATIC_LIBS=OFF -DBoost_USE_MULTITHREADED=ON -DBoost_INCLUDE_DIR="${BOOST_INCLUDE_DIR}" -DBoost_LIBRARY_DIRS="${BOOST_LIBRARY_DIR}" -DCMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH}"
           else
             cmake . -DTests=ON -DCMAKE_BUILD_TYPE=Release
           fi

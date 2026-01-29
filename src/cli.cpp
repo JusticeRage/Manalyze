@@ -35,6 +35,61 @@
 
 namespace {
 
+std::vector<std::string> reorder_args_for_cli11(int argc, char** argv)
+{
+    std::vector<std::string> options;
+    std::vector<std::string> positionals;
+    options.reserve(static_cast<size_t>(argc));
+    positionals.reserve(static_cast<size_t>(argc));
+
+    auto is_long_with_value = [](const std::string& name) {
+        return name == "--output" || name == "--dump" || name == "--extract" || name == "--plugins";
+    };
+
+    bool end_of_options = false;
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i];
+        if (end_of_options) {
+            positionals.push_back(std::move(arg));
+            continue;
+        }
+
+        if (arg == "--") {
+            end_of_options = true;
+            continue;
+        }
+
+        if (arg.rfind("--", 0) == 0) {
+            const auto eq_pos = arg.find('=');
+            const std::string name = (eq_pos == std::string::npos) ? arg : arg.substr(0, eq_pos);
+            options.push_back(arg);
+            if (eq_pos == std::string::npos && is_long_with_value(name) && (i + 1) < argc) {
+                options.push_back(argv[++i]);
+            }
+            continue;
+        }
+
+        if (arg.size() >= 2 && arg[0] == '-' && arg[1] != '-') {
+            const char opt = arg[1];
+            const bool needs_value = (opt == 'o' || opt == 'd' || opt == 'x' || opt == 'p');
+            options.push_back(arg);
+            if (needs_value && arg.size() == 2 && (i + 1) < argc) {
+                options.push_back(argv[++i]);
+            }
+            continue;
+        }
+
+        positionals.push_back(std::move(arg));
+    }
+
+    std::vector<std::string> reordered;
+    reordered.reserve(static_cast<size_t>(argc));
+    reordered.push_back(argv[0]);
+    reordered.insert(reordered.end(), options.begin(), options.end());
+    reordered.insert(reordered.end(), positionals.begin(), positionals.end());
+    return reordered;
+}
+
 std::vector<std::string> split_comma_values(const std::vector<std::string>& values)
 {
     std::vector<std::string> out;
@@ -94,7 +149,13 @@ bool parse_args(Options& opts, int argc, char**argv, const HelpPrinter& help_pri
 
     try
     {
-        app.parse(argc, argv);
+        const std::vector<std::string> reordered = reorder_args_for_cli11(argc, argv);
+        std::vector<char*> reordered_argv;
+        reordered_argv.reserve(reordered.size());
+        for (const auto& arg : reordered) {
+            reordered_argv.push_back(const_cast<char*>(arg.c_str()));
+        }
+        app.parse(static_cast<int>(reordered_argv.size()), reordered_argv.data());
     }
     catch (const CLI::CallForHelp& e)
     {

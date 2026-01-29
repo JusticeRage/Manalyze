@@ -18,11 +18,8 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 #include <string>
-#include <boost/static_assert.hpp>
-#include <boost/spirit/include/karma.hpp>
-#include <boost/type_traits/is_base_of.hpp>
 #include <memory>
-#include <memory>
+#include <type_traits>
 
 #include "manacommons/color.h"
 
@@ -33,7 +30,6 @@ namespace io
 // Grammars used to escape stings
 // ----------------------------------------------------------------------------
 
-namespace karma = boost::spirit::karma;
 typedef std::back_insert_iterator<std::string> sink_type;
 typedef std::shared_ptr<std::string> pString;
 
@@ -44,18 +40,7 @@ typedef std::shared_ptr<std::string> pString;
 *	notation.
 */
 template <typename OutputIterator>
-struct escaped_string_raw
-	: karma::grammar<OutputIterator, std::string()>
-{
-	escaped_string_raw()
-		: escaped_string_raw::base_type(esc_str)
-	{
-		esc_str = *(boost::spirit::karma::iso8859_1::print | "\\x" << karma::right_align(2, 0)[karma::hex]);
-	}
-
-	karma::rule<OutputIterator, std::string()> esc_str;
-	karma::symbols<char, char const*> esc_char;
-};
+struct escaped_string_raw {};
 
 // ----------------------------------------------------------------------------
 
@@ -70,25 +55,7 @@ struct escaped_string_raw
  */
 // Source: http://svn.boost.org/svn/boost/trunk/libs/spirit/example/karma/escaped_string.cpp
 template <typename OutputIterator>
-struct escaped_string_json
-	: karma::grammar<OutputIterator, std::string()>
-{
-	escaped_string_json()
-		: escaped_string_json::base_type(esc_str)
-	{
-		// We allow "'" because it will be used in messages (i.e. [... don't ...]).
-		// We don't care if those are not escaped because they will be printed between double quotes
-		// in JSON strings.
-		esc_char.add('\a', "\\a")('\b', "\\b")('\f', "\\f")('\n', "\\n")
-			('\r', "\\r")('\t', "\\t")('\v', "\\v")('\\', "\\\\")
-			('\"', "\\\"");
-
-		esc_str = *(esc_char | boost::spirit::karma::char_);
-	}
-
-	karma::rule<OutputIterator, std::string()> esc_str;
-	karma::symbols<char, char const*> esc_char;
-};
+struct escaped_string_json {};
 
 // ----------------------------------------------------------------------------
 
@@ -111,58 +78,76 @@ class OutputFormatter;
  *	@return	A pointer to the escaped string, or a null pointer if an error occurred.
  */
 template<typename Grammar>
-pString _do_escape(const std::string& s)
+struct escape_impl;
+
+template<typename OutputIterator>
+struct escape_impl<escaped_string_raw<OutputIterator>>
 {
-	BOOST_STATIC_ASSERT(boost::is_base_of<karma::grammar<sink_type, std::string()>, Grammar>::value);
-	typedef std::back_insert_iterator<std::string> sink_type;
-
-	std::string generated;
-	sink_type sink(generated);
-
-	Grammar g;
-	if (!karma::generate(sink, g, s))
+	static pString run(const std::string& s)
 	{
-		PRINT_WARNING << "Could not escape \"" << s << "!" << std::endl;
-		return nullptr;
-	}
-	else {
+		std::string generated;
+		generated.reserve(s.size());
+		static const char hex_digits[] = "0123456789abcdef";
+
+		for (unsigned char c : s)
+		{
+			if (c >= 0x20 && c <= 0x7e)
+			{
+				generated.push_back(static_cast<char>(c));
+			}
+			else
+			{
+				generated += "\\x";
+				generated += hex_digits[(c >> 4) & 0x0F];
+				generated += hex_digits[c & 0x0F];
+			}
+		}
+
 		return std::make_shared<std::string>(generated);
 	}
-}
+};
 
-// Specialization: JSON escaping needs to handle control characters to keep output valid.
-template<>
-inline pString _do_escape<escaped_string_json<sink_type>>(const std::string& s)
+template<typename OutputIterator>
+struct escape_impl<escaped_string_json<OutputIterator>>
 {
-	std::string generated;
-	generated.reserve(s.size());
-	static const char hex_digits[] = "0123456789ABCDEF";
-
-	for (unsigned char c : s)
+	static pString run(const std::string& s)
 	{
-		switch (c)
-		{
-			case '\"': generated += "\\\""; break;
-			case '\\': generated += "\\\\"; break;
-			case '\b': generated += "\\b"; break;
-			case '\f': generated += "\\f"; break;
-			case '\n': generated += "\\n"; break;
-			case '\r': generated += "\\r"; break;
-			case '\t': generated += "\\t"; break;
-			default:
-				if (c < 0x20)
-				{
-					generated += "\\u00";
-					generated += hex_digits[(c >> 4) & 0x0F];
-					generated += hex_digits[c & 0x0F];
-				}
-				else {
-					generated.push_back(static_cast<char>(c));
-				}
-		}
-	}
+		std::string generated;
+		generated.reserve(s.size());
+		static const char hex_digits[] = "0123456789ABCDEF";
 
-	return std::make_shared<std::string>(generated);
+		for (unsigned char c : s)
+		{
+			switch (c)
+			{
+				case '\"': generated += "\\\""; break;
+				case '\\': generated += "\\\\"; break;
+				case '\b': generated += "\\b"; break;
+				case '\f': generated += "\\f"; break;
+				case '\n': generated += "\\n"; break;
+				case '\r': generated += "\\r"; break;
+				case '\t': generated += "\\t"; break;
+				default:
+					if (c < 0x20)
+					{
+						generated += "\\u00";
+						generated += hex_digits[(c >> 4) & 0x0F];
+						generated += hex_digits[c & 0x0F];
+					}
+					else {
+						generated.push_back(static_cast<char>(c));
+					}
+			}
+		}
+
+		return std::make_shared<std::string>(generated);
+	}
+};
+
+template<typename Grammar>
+pString _do_escape(const std::string& s)
+{
+	return escape_impl<Grammar>::run(s);
 }
 
 
@@ -183,7 +168,7 @@ inline pString _do_escape<escaped_string_json<sink_type>>(const std::string& s)
 template<typename T>
 pString escape(const std::string& s)
 {
-	BOOST_STATIC_ASSERT(boost::is_base_of<OutputFormatter, T>::value);
+	static_assert(std::is_base_of<OutputFormatter, T>::value, "Invalid formatter type.");
 	return _do_escape<typename T::escape_grammar>(s);
 }
 

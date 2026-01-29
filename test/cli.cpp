@@ -110,4 +110,28 @@ BOOST_AUTO_TEST_CASE(cli_parsing_examples)
         BOOST_CHECK_EQUAL(opts.dump.size(), 1U);
         BOOST_CHECK_EQUAL(opts.dump[0], "all");
     }
+
+    {
+        Options opts;
+        auto args = build_args({"-p", "virustotal", input, "-d", "all"});
+        BOOST_CHECK(parse_ok(args, opts));
+        BOOST_CHECK_EQUAL(opts.plugins.size(), 1U);
+        BOOST_CHECK_EQUAL(opts.plugins[0], "virustotal");
+        BOOST_CHECK_EQUAL(opts.dump.size(), 1U);
+        BOOST_CHECK_EQUAL(opts.dump[0], "all");
+        BOOST_CHECK_EQUAL(opts.pe.size(), 1U);
+        BOOST_CHECK_EQUAL(opts.pe[0], input);
+    }
+
+    {
+        Options opts;
+        auto args = build_args({"-pvirustotal", input, "-dall"});
+        BOOST_CHECK(parse_ok(args, opts));
+        BOOST_CHECK_EQUAL(opts.plugins.size(), 1U);
+        BOOST_CHECK_EQUAL(opts.plugins[0], "virustotal");
+        BOOST_CHECK_EQUAL(opts.dump.size(), 1U);
+        BOOST_CHECK_EQUAL(opts.dump[0], "all");
+        BOOST_CHECK_EQUAL(opts.pe.size(), 1U);
+        BOOST_CHECK_EQUAL(opts.pe[0], input);
+    }
 }

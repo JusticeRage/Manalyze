@@ -27,6 +27,7 @@
 #include <vector>
 #include <set>
 #include <exception>
+#include <climits>
 
 #include <memory>
 #include <optional>

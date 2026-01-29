@@ -23,9 +23,6 @@
 # include "manacommons/escape.h"
 #else
 # include <string>
-# include <boost/static_assert.hpp>
-# include <boost/spirit/include/karma.hpp>
-# include <boost/type_traits/is_base_of.hpp>
 # include <memory>
 
 
@@ -36,62 +33,30 @@
 // but are not interested in pulling the rest of Manalyze's code.
 namespace io {
 
-namespace karma = boost::spirit::karma;
-typedef std::back_insert_iterator<std::string> sink_type;
 typedef std::shared_ptr<std::string> pString;
-
-/**
-*	@brief	This grammar is used to escape strings printed to the console.
-*
-*	Printable characters are returned as-is, while the others are displayed using the C
-*	notation.
-*/
-template <typename OutputIterator>
-struct escaped_string_raw
-        : karma::grammar<OutputIterator, std::string()>
-{
-    escaped_string_raw()
-            : escaped_string_raw::base_type(esc_str)
-    {
-        esc_str = *(boost::spirit::karma::iso8859_1::print | "\\x" << karma::right_align(2, 0)[karma::hex]);
-    }
-
-    karma::rule<OutputIterator, std::string()> esc_str;
-    karma::symbols<char, char const*> esc_char;
-};
-
-/**
- *	@brief	Performs the actual string escaping based on the grammar given as
-*			template parameter.
-*
-*	@param	const std::string& s The string to escape.
-*
-*	@return	A pointer to the escaped string, or a null pointer if an error occurred.
- */
-template<typename Grammar>
-pString _do_escape(const std::string& s)
-{
-    BOOST_STATIC_ASSERT(boost::is_base_of<karma::grammar<sink_type, std::string()>, Grammar>::value);
-    typedef std::back_insert_iterator<std::string> sink_type;
-
-    std::string generated;
-    sink_type sink(generated);
-
-    Grammar g;
-    if (!karma::generate(sink, g, s))
-    {
-        PRINT_WARNING << "Could not escape \"" << s << "!" << std::endl;
-        return nullptr;
-    }
-    else {
-        return std::make_shared<std::string>(generated);
-    }
-}
 
 // ----------------------------------------------------------------------------
 
 inline pString escape(const std::string& s) {
-    return _do_escape<escaped_string_raw<sink_type> >(s);
+	std::string generated;
+	generated.reserve(s.size());
+	static const char hex_digits[] = "0123456789abcdef";
+
+	for (unsigned char c : s)
+	{
+		if (c >= 0x20 && c <= 0x7e)
+		{
+			generated.push_back(static_cast<char>(c));
+		}
+		else
+		{
+			generated += "\\x";
+			generated += hex_digits[(c >> 4) & 0x0F];
+			generated += hex_digits[c & 0x0F];
+		}
+	}
+
+	return std::make_shared<std::string>(generated);
 }
 
 } // !namespace io
