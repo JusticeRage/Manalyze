@@ -92,6 +92,8 @@ BOOST_AUTO_TEST_CASE(test_string_escape_json)
 	check_string_escaping_json("\b", "\\b");
 	check_string_escaping_json("\f", "\\f");
 	check_string_escaping_json("\t", "\\t");
+	check_string_escaping_json(std::string("\x7f", 1), "\u007F");
+	check_string_escaping_json(std::string("\xe9", 1), "\u00E9");
 	check_string_escaping_json("\v", "\\u000B");
 	check_string_escaping_json("\r\n", "\\r\\n");
 }

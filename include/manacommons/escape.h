@@ -128,7 +128,7 @@ struct escape_impl<escaped_string_json<OutputIterator>>
 				case '\r': generated += "\\r"; break;
 				case '\t': generated += "\\t"; break;
 				default:
-					if (c < 0x20)
+					if (c < 0x20 || c >= 0x7f)
 					{
 						generated += "\\u00";
 						generated += hex_digits[(c >> 4) & 0x0F];
