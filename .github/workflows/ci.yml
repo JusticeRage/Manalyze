@@ -40,7 +40,9 @@ jobs:
         run: |
           if [ "${{ runner.os }}" = "macOS" ]; then
             OPENSSL_ROOT_DIR="$(brew --prefix openssl@3)"
-            cmake . -DTests=ON -DCMAKE_BUILD_TYPE=Release -DOPENSSL_ROOT_DIR="${OPENSSL_ROOT_DIR}"
+            BOOST_ROOT="$(brew --prefix boost)"
+            CMAKE_PREFIX_PATH="${OPENSSL_ROOT_DIR};${BOOST_ROOT}"
+            cmake . -DTests=ON -DCMAKE_BUILD_TYPE=Release -DOPENSSL_ROOT_DIR="${OPENSSL_ROOT_DIR}" -DCMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH}"
           else
             cmake . -DTests=ON -DCMAKE_BUILD_TYPE=Release
           fi
@@ -49,8 +51,8 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          $toolchain = "C:\\vcpkg\\scripts\\buildsystems\\vcpkg.cmake"
-          cmake . -DTests=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$toolchain
+          $toolchain = "C:/vcpkg/scripts/buildsystems/vcpkg.cmake"
+          cmake . -DTests=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="$toolchain"
 
       - name: Build (Linux/macOS)
         if: runner.os != 'Windows'
