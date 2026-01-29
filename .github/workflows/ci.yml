@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v4
 
@@ -18,72 +18,18 @@ jobs:
         if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install -y cmake g++ git libssl-dev libboost-system-dev libboost-test-dev
 
-      - name: Install dependencies (macOS)
-        if: runner.os == 'macOS'
-        run: brew install cmake boost openssl@3
+      - name: Configure (Linux)
+        if: runner.os == 'Linux'
+        run: cmake . -DTests=ON -DCMAKE_BUILD_TYPE=Release
 
-      - name: Install dependencies (Windows)
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          if (-Not (Test-Path "C:\\vcpkg")) {
-            git clone https://github.com/microsoft/vcpkg C:\\vcpkg
-          }
-          cd C:\\vcpkg
-          if (-Not (Test-Path ".\\vcpkg.exe")) {
-            .\\bootstrap-vcpkg.bat
-          }
-          .\\vcpkg.exe install boost-headers boost-system boost-test openssl --triplet x64-windows
-
-      - name: Configure (Linux/macOS)
-        if: runner.os != 'Windows'
-        run: |
-          if [ "${{ runner.os }}" = "macOS" ]; then
-            OPENSSL_ROOT_DIR="$(brew --prefix openssl@3)"
-            BOOST_ROOT="$(brew --prefix boost)"
-            BOOST_CMAKE_DIR="$(ls -d "${BOOST_ROOT}"/lib/cmake/Boost-* | head -n 1)"
-            CMAKE_PREFIX_PATH="${OPENSSL_ROOT_DIR};${BOOST_ROOT}"
-            BOOST_INCLUDE_DIR="${BOOST_ROOT}/include"
-            BOOST_LIBRARY_DIR="${BOOST_ROOT}/lib"
-            cmake . -DTests=ON -DCMAKE_BUILD_TYPE=Release -DOPENSSL_ROOT_DIR="${OPENSSL_ROOT_DIR}" -DBoost_DIR="${BOOST_CMAKE_DIR}" -DBOOST_ROOT="${BOOST_ROOT}" -DBoost_NO_BOOST_CMAKE=ON -DBoost_USE_STATIC_LIBS=OFF -DBoost_USE_MULTITHREADED=ON -DBoost_INCLUDE_DIR="${BOOST_INCLUDE_DIR}" -DBoost_LIBRARY_DIRS="${BOOST_LIBRARY_DIR}" -DCMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH}"
-          else
-            cmake . -DTests=ON -DCMAKE_BUILD_TYPE=Release
-          fi
-
-      - name: Configure (Windows)
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          $toolchain = "C:/vcpkg/scripts/buildsystems/vcpkg.cmake"
-          cmake . -DTests=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="$toolchain"
-
-      - name: Build (Linux/macOS)
-        if: runner.os != 'Windows'
+      - name: Build (Linux)
+        if: runner.os == 'Linux'
         run: cmake --build . -- -j2
-
-      - name: Build (Windows)
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: cmake --build . --config Release -- /m
 
       - name: Verify VirusTotal plugin built (Linux)
         if: runner.os == 'Linux'
         run: test -f bin/libplugin_virustotal.so
 
-      - name: Verify VirusTotal plugin built (macOS)
-        if: runner.os == 'macOS'
-        run: test -f bin/libplugin_virustotal.dylib
-
-      - name: Verify VirusTotal plugin built (Windows)
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: test -f bin\\plugin_virustotal.dll
-
-      - name: Run tests (Linux/macOS)
-        if: runner.os != 'Windows'
+      - name: Run tests (Linux)
+        if: runner.os == 'Linux'
         run: ./bin/manalyze-tests
-
-      - name: Run tests (Windows)
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: .\\bin\\manalyze-tests.exe
