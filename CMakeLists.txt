@@ -189,7 +189,9 @@ else()
             if (NOT IS_BSD) # No need to link against dl on BSD.
                 target_link_libraries(manalyze dl)
             endif()
-            set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath='$ORIGIN'")
+            if (NOT APPLE)
+                set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath='$ORIGIN'")
+            endif()
 
             # Compile the *nix authenticode plugin if OpenSSL was found.
             if (OPENSSL_FOUND)
