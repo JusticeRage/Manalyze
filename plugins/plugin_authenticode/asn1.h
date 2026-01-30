@@ -20,8 +20,8 @@
 #include <string>
 #include <sstream>
 #include <vector>
-#include <boost/shared_ptr.hpp>
-#include <boost/cstdint.hpp>
+#include <memory>
+#include <cstdint>
 
 #include <openssl/pkcs7.h>
 #include <openssl/x509.h>
@@ -30,9 +30,9 @@
 
 #include "manacommons/color.h"
 
-typedef std::vector<boost::uint8_t> bytes;
-typedef boost::shared_ptr<PKCS7>    pPKCS7;
-typedef boost::shared_ptr<BIO>      pBIO;
+typedef std::vector<std::uint8_t> bytes;
+typedef std::shared_ptr<PKCS7>    pPKCS7;
+typedef std::shared_ptr<BIO>      pBIO;
 
 // A simple struct describing the authenticode digest.
 // The first member is the algorithm used (OID), and the second member is the digest.

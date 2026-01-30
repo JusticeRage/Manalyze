@@ -35,11 +35,11 @@ public:
 	int get_api_version() const override { return 1; }
 
 	pString get_id() const override {
-		return boost::make_shared<std::string>("overlay");
+		return std::make_shared<std::string>("overlay");
 	}
 
 	pString get_description() const override {
-		return boost::make_shared<std::string>("Analyzes data outside of the PE's boundaries.");
+		return std::make_shared<std::string>("Analyzes data outside of the PE's boundaries.");
 	}
 
 	pResult analyze(const mana::PE& pe) override

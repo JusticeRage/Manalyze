@@ -32,6 +32,7 @@ endif()
 
 option(GitHub "Allow checking out third-party projects from GitHub" ON)
 option(Tests "Generate unit tests" OFF)
+option(MANALYZE_BUILD_VIRUSTOTAL "Build VirusTotal plugin (requires Boost::system)" ON)
 
 if (WIN32)
     set(Boost_USE_STATIC_LIBS ON)
@@ -46,30 +47,50 @@ endif()
 if (GitHub MATCHES [Oo][Nn])
     find_package(Git REQUIRED)
 endif()
-set(MANALYZE_BOOST_COMPONENTS regex system filesystem program_options)
+set(MANALYZE_BOOST_REQUIRED_COMPONENTS "")
+if (MANALYZE_BUILD_VIRUSTOTAL)
+    list(APPEND MANALYZE_BOOST_REQUIRED_COMPONENTS system)
+endif()
 if (Tests MATCHES [Oo][Nn])
-    list(APPEND MANALYZE_BOOST_COMPONENTS unit_test_framework)
+    list(APPEND MANALYZE_BOOST_REQUIRED_COMPONENTS unit_test_framework)
 endif()
-if (POLICY CMP0167)
-    cmake_policy(PUSH)
-    cmake_policy(SET CMP0167 NEW)
-    find_package(Boost CONFIG QUIET COMPONENTS ${MANALYZE_BOOST_COMPONENTS})
-    cmake_policy(POP)
-endif()
-if (NOT Boost_FOUND)
+if (MANALYZE_BOOST_REQUIRED_COMPONENTS)
     if (POLICY CMP0167)
         cmake_policy(PUSH)
-        cmake_policy(SET CMP0167 OLD)
-    endif()
-    find_package(Boost REQUIRED COMPONENTS ${MANALYZE_BOOST_COMPONENTS})
-    if (POLICY CMP0167)
+        cmake_policy(SET CMP0167 NEW)
+        find_package(Boost CONFIG QUIET COMPONENTS ${MANALYZE_BOOST_REQUIRED_COMPONENTS})
         cmake_policy(POP)
     endif()
+    if (NOT Boost_FOUND)
+        if (POLICY CMP0167)
+            cmake_policy(PUSH)
+            cmake_policy(SET CMP0167 OLD)
+        endif()
+        find_package(Boost QUIET COMPONENTS ${MANALYZE_BOOST_REQUIRED_COMPONENTS})
+        if (POLICY CMP0167)
+            cmake_policy(POP)
+        endif()
+    endif()
+else()
+    find_package(Boost QUIET)
 endif()
 
-set(MANALYZE_BOOST_LIBS Boost::regex Boost::system Boost::filesystem Boost::program_options)
+set(MANALYZE_BOOST_TEST_LIBS "")
 if (Tests MATCHES [Oo][Nn])
-    list(APPEND MANALYZE_BOOST_LIBS Boost::unit_test_framework)
+    if (NOT Boost_UNIT_TEST_FRAMEWORK_FOUND)
+        message(FATAL_ERROR "Boost unit_test_framework is required to build tests.")
+    endif()
+    list(APPEND MANALYZE_BOOST_TEST_LIBS Boost::unit_test_framework)
+endif()
+
+set(MANALYZE_BOOST_VT_LIBS "")
+if (MANALYZE_BUILD_VIRUSTOTAL)
+    if (NOT Boost_SYSTEM_FOUND)
+        message(WARNING "Boost::system not found; VirusTotal plugin will not be built.")
+        set(MANALYZE_BUILD_VIRUSTOTAL OFF)
+    else()
+        list(APPEND MANALYZE_BOOST_VT_LIBS Boost::system)
+    endif()
 endif()
 
 find_package(OpenSSL)
@@ -128,9 +149,9 @@ target_compile_definitions(manacommons PRIVATE
     MANALYZE_INSTALL_DATA_SUBDIR="${MANALYZE_INSTALL_DATA_SUBDIR}"
     MANALYZE_INSTALL_PLUGIN_SUBDIR="${MANALYZE_INSTALL_PLUGIN_SUBDIR}"
 )
-target_link_libraries(manacommons ${MANALYZE_BOOST_LIBS})
+target_link_libraries(manacommons)
 
-add_executable(manalyze src/main.cpp src/config_parser.cpp src/output_formatter.cpp src/dump.cpp src/import_hash.cpp
+add_executable(manalyze src/main.cpp src/cli.cpp src/config_parser.cpp src/output_formatter.cpp src/dump.cpp src/import_hash.cpp
                src/plugin_framework/dynamic_library.cpp src/plugin_framework/plugin_manager.cpp # Plugin system
                plugins/plugins_yara.cpp plugins/plugin_packer_detection.cpp plugins/plugin_imports.cpp plugins/plugin_resources.cpp plugins/plugin_mitigation.cpp plugins/plugin_overlay.cpp) # Bundled plugins
 
@@ -152,7 +173,7 @@ if (WIN32)
             # Windows only plugins:
             add_library(plugin_authenticode SHARED plugins/plugin_authenticode/plugin_authenticode.cpp
                                                    plugins/plugin_authenticode/commons.cpp)
-            target_link_libraries(plugin_authenticode manape hash-library manacommons yara ${MANALYZE_BOOST_LIBS})
+            target_link_libraries(plugin_authenticode manape hash-library manacommons yara)
 else()
             string (REGEX MATCH "BSD" IS_BSD ${CMAKE_SYSTEM_NAME}) # Detect if we are compiling on a BSD system.
 
@@ -168,7 +189,9 @@ else()
             if (NOT IS_BSD) # No need to link against dl on BSD.
                 target_link_libraries(manalyze dl)
             endif()
-            set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath='$ORIGIN'")
+            if (NOT APPLE)
+                set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath='$ORIGIN'")
+            endif()
 
             # Compile the *nix authenticode plugin if OpenSSL was found.
             if (OPENSSL_FOUND)
@@ -181,12 +204,14 @@ else()
 endif()
 
 # VirusTotal plugin
-add_library(plugin_virustotal SHARED plugins/plugin_virustotal/plugin_virustotal.cpp
-                                     plugins/plugin_virustotal/json_spirit/json_spirit_reader.cpp
-                                     plugins/plugin_virustotal/json_spirit/json_spirit_value.cpp)
-target_link_libraries(plugin_virustotal manape hash-library manacommons ${MANALYZE_BOOST_LIBS})
-if (OPENSSL_FOUND)
-    target_link_libraries(plugin_virustotal ${OPENSSL_LIBRARIES})
+if (MANALYZE_BUILD_VIRUSTOTAL)
+    add_library(plugin_virustotal SHARED plugins/plugin_virustotal/plugin_virustotal.cpp
+                                         plugins/plugin_virustotal/json_spirit/json_spirit_reader.cpp
+                                         plugins/plugin_virustotal/json_spirit/json_spirit_value.cpp)
+    target_link_libraries(plugin_virustotal manape hash-library manacommons ${MANALYZE_BOOST_VT_LIBS})
+    if (OPENSSL_FOUND)
+        target_link_libraries(plugin_virustotal ${OPENSSL_LIBRARIES})
+    endif()
 endif()
 
 # yara dependency
@@ -199,7 +224,7 @@ if (Tests MATCHES [Oo][Nn])
     add_subdirectory(test)
 endif()
 
-target_link_libraries(manape manacommons ${MANALYZE_BOOST_LIBS})
+target_link_libraries(manape manacommons)
 
 target_link_libraries(
                         manalyze
@@ -207,7 +232,6 @@ target_link_libraries(
                         manape
                         yara
                         hash-library
-                        ${MANALYZE_BOOST_LIBS}
                      )
 
 # make install command for linux machines:
@@ -224,8 +248,10 @@ if ("${CMAKE_SYSTEM}" MATCHES "Linux")
             DESTINATION ${MANALYZE_INSTALL_DATA_SUBDIR})
 
     # Copy the plugins to the standard libdir location.
-    install(TARGETS plugin_virustotal
-            LIBRARY DESTINATION ${MANALYZE_INSTALL_PLUGIN_SUBDIR})
+    if (TARGET plugin_virustotal)
+        install(TARGETS plugin_virustotal
+                LIBRARY DESTINATION ${MANALYZE_INSTALL_PLUGIN_SUBDIR})
+    endif()
     if (TARGET plugin_authenticode)
         install(TARGETS plugin_authenticode
                 LIBRARY DESTINATION ${MANALYZE_INSTALL_PLUGIN_SUBDIR})

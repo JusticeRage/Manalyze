@@ -19,7 +19,7 @@
 #include <vector>
 
 #include <boost/test/unit_test.hpp>
-#include <boost/cstdint.hpp>
+#include <cstdint>
 
 #include "manacommons/base64.h"
 
@@ -27,7 +27,7 @@
 
 void test_b64encode(const std::string& input, const std::string& expected)
 {
-    std::vector<boost::uint8_t> bytes(input.begin(), input.end());
+    std::vector<std::uint8_t> bytes(input.begin(), input.end());
     auto res = utils::b64encode(bytes);
     BOOST_ASSERT(res != nullptr);
     BOOST_CHECK_EQUAL(*res, expected);

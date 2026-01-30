@@ -52,7 +52,7 @@ bool PE::_read_image_resource_directory(image_resource_directory& dir, unsigned 
 		}
 	}
 
-	unsigned int size = 2*sizeof(boost::uint32_t) + 4*sizeof(boost::uint16_t);
+	unsigned int size = 2*sizeof(std::uint32_t) + 4*sizeof(std::uint16_t);
 	dir.Entries.clear();
 	if (size != fread(&dir, 1, size, _file_handle.get()))
 	{
@@ -81,8 +81,8 @@ bool PE::_read_image_resource_directory(image_resource_directory& dir, unsigned 
 
 	for (auto i = 0 ; i < dir.NumberOfIdEntries + dir.NumberOfNamedEntries ; ++i)
 	{
-		auto entry = boost::make_shared<image_resource_directory_entry>();
-		size = 2*sizeof(boost::uint32_t);
+		auto entry = std::make_shared<image_resource_directory_entry>();
+		size = 2*sizeof(std::uint32_t);
 		memset(entry.get(), 0, size);
 		if (size != fread(entry.get(), 1, size, _file_handle.get()))
 		{
@@ -257,7 +257,7 @@ bool PE::_parse_resources()
 
 				if (r_name != "")
 				{
-					res = boost::make_shared<Resource>(r_type,
+					res = std::make_shared<Resource>(r_type,
 													   r_name,
 													   r_language,
 													   entry.Codepage,
@@ -270,7 +270,7 @@ bool PE::_parse_resources()
 													   _io_mutex);
 				}
 				else { // No name: call the constructor with the resource ID instead.
-					res = boost::make_shared<Resource>(r_type,
+					res = std::make_shared<Resource>(r_type,
 													   id,
 													   r_language,
 													   entry.Codepage,
@@ -295,7 +295,7 @@ bool PE::_parse_resources()
 
 shared_bytes Resource::get_raw_data() const
 {
-	auto res = boost::make_shared<std::vector<boost::uint8_t> >();
+	auto res = std::make_shared<std::vector<std::uint8_t> >();
 
 	// When file size is unknown (_file_size == 0), resource materialization is disabled.
 	if (_file_size == 0)
@@ -315,7 +315,7 @@ shared_bytes Resource::get_raw_data() const
 	}
 
 	if (_file_size > 0 &&
-		static_cast<boost::uint64_t>(_offset_in_file) + static_cast<boost::uint64_t>(_size) > _file_size)
+		static_cast<std::uint64_t>(_offset_in_file) + static_cast<std::uint64_t>(_size) > _file_size)
 	{
 		PRINT_ERROR << "Resource " << *get_name() << " is bigger than the PE. Not trying to load it in memory."
 					<< DEBUG_INFO << std::endl;
@@ -349,8 +349,8 @@ shared_bytes Resource::get_raw_data() const
 
 bool parse_version_info_header(vs_version_info_header& header, FILE* f)
 {
-	memset(&header, 0, 3 * sizeof(boost::uint16_t));
-	if (3*sizeof(boost::uint16_t) != fread(&header, 1, 3*sizeof(boost::uint16_t), f))
+	memset(&header, 0, 3 * sizeof(std::uint16_t));
+	if (3*sizeof(std::uint16_t) != fread(&header, 1, 3*sizeof(std::uint16_t), f))
 	{
 		PRINT_ERROR << "Could not read a VS_VERSION_INFO header!" << DEBUG_INFO << std::endl;
 		return false;
@@ -368,10 +368,10 @@ DECLSPEC pString Resource::interpret_as()
 	if (_type != "RT_MANIFEST")
 	{
 		PRINT_WARNING << "Resources of type " << _type << "cannot be interpreted as std::strings." << DEBUG_INFO << std::endl;
-		return boost::make_shared<std::string>();
+		return std::make_shared<std::string>();
 	}
 	shared_bytes manifest_bytes = get_raw_data();
-	return boost::make_shared<std::string>(manifest_bytes->begin(), manifest_bytes->end());
+	return std::make_shared<std::string>(manifest_bytes->begin(), manifest_bytes->end());
 }
 
 // ----------------------------------------------------------------------------
@@ -379,7 +379,7 @@ DECLSPEC pString Resource::interpret_as()
 template<>
 DECLSPEC const_shared_strings Resource::interpret_as()
 {
-	auto res = boost::make_shared<std::vector<std::string> >();
+	auto res = std::make_shared<std::vector<std::string> >();
 	if (_type != "RT_STRING")
 	{
 		PRINT_WARNING << "Resources of type " << _type << " cannot be interpreted as vectors of strings." << DEBUG_INFO << std::endl;
@@ -403,7 +403,7 @@ DECLSPEC const_shared_strings Resource::interpret_as()
 	for (int i = 0; i < 16; ++i)
 	{
 		res->push_back(utils::read_prefixed_unicode_string(f));
-		std::vector<boost::uint8_t> utf8result;
+		std::vector<std::uint8_t> utf8result;
 	}
 
 	END:
@@ -424,7 +424,7 @@ DECLSPEC pbitmap Resource::interpret_as()
 		return pbitmap();
 	}
 
-	auto res = boost::make_shared<bitmap>();
+	auto res = std::make_shared<bitmap>();
 	unsigned int header_size = 14;
 	res->Magic[0] = 'B';
 	res->Magic[1] = 'M';
@@ -437,12 +437,12 @@ DECLSPEC pbitmap Resource::interpret_as()
 	if (res->data.size() < 36) { // Not enough bytes to make a valid BMP
 		return pbitmap();
 	}
-	boost::uint32_t dib_header_size = 0;
-	boost::uint32_t colors_used = 0;
-	boost::uint16_t bit_count;
-	memcpy(&dib_header_size, &(res->data[0]), sizeof(boost::uint32_t)); // DIB header size is located at offset 0.
-	memcpy(&bit_count, &(res->data[14]), sizeof(boost::uint16_t));
-	memcpy(&colors_used, &(res->data[32]), sizeof(boost::uint32_t));
+	std::uint32_t dib_header_size = 0;
+	std::uint32_t colors_used = 0;
+	std::uint16_t bit_count;
+	memcpy(&dib_header_size, &(res->data[0]), sizeof(std::uint32_t)); // DIB header size is located at offset 0.
+	memcpy(&bit_count, &(res->data[14]), sizeof(std::uint16_t));
+	memcpy(&colors_used, &(res->data[32]), sizeof(std::uint32_t));
 
 
 	if (colors_used == 0 && bit_count != 32 && bit_count != 24)	{
@@ -474,8 +474,8 @@ DECLSPEC pgroup_icon_directory Resource::interpret_as()
 		return pgroup_icon_directory();
 	}
 
-	auto res = boost::make_shared<group_icon_directory>();
-	unsigned int size = sizeof(boost::uint16_t) * 3;
+	auto res = std::make_shared<group_icon_directory>();
+	unsigned int size = sizeof(std::uint16_t) * 3;
 	if (size != fread(res.get(), 1, size, f))
 	{
 		res.reset();
@@ -484,7 +484,7 @@ DECLSPEC pgroup_icon_directory Resource::interpret_as()
 
 	for (unsigned int i = 0; i < res->Count; ++i)
 	{
-		auto entry = boost::make_shared<group_icon_directory_entry>();
+		auto entry = std::make_shared<group_icon_directory_entry>();
 
 		memset(entry.get(), 0, sizeof(group_icon_directory_entry));
 
@@ -500,15 +500,15 @@ DECLSPEC pgroup_icon_directory Resource::interpret_as()
 		}
 		else // Cursors have a different structure. Adapt it to a .ico.
 		{
-			fread(&(entry->Width), 1, sizeof(boost::uint8_t), f);
+			fread(&(entry->Width), 1, sizeof(std::uint8_t), f);
 			fseek(f, 1, SEEK_CUR);
-			fread(&(entry->Height), 1, sizeof(boost::uint8_t), f);
+			fread(&(entry->Height), 1, sizeof(std::uint8_t), f);
             entry->Height /= 2; // For some reason, twice the actual height is stored here.
 			fseek(f, 1, SEEK_CUR);
-			fread(&(entry->Planes), 1, sizeof(boost::uint16_t), f);
-			fread(&(entry->BitCount), 1, sizeof(boost::uint16_t), f);
-			fread(&(entry->BytesInRes), 1, sizeof(boost::uint32_t), f);
-			fread(&(entry->Id), 1, sizeof(boost::uint16_t), f);
+			fread(&(entry->Planes), 1, sizeof(std::uint16_t), f);
+			fread(&(entry->BitCount), 1, sizeof(std::uint16_t), f);
+			fread(&(entry->BytesInRes), 1, sizeof(std::uint32_t), f);
+			fread(&(entry->Id), 1, sizeof(std::uint16_t), f);
 			if (ferror(f) || feof(f))
 			{
 				res.reset();
@@ -550,7 +550,7 @@ DECLSPEC pversion_info Resource::interpret_as()
 		return pversion_info();
 	}
 
-	auto res = boost::make_shared<version_info>();
+	auto res = std::make_shared<version_info>();
 	unsigned int bytes_read; // Is calculated by calling ftell before and after reading a structure, and keeping the difference.
 	unsigned int bytes_remaining;
 	unsigned int language;
@@ -558,13 +558,13 @@ DECLSPEC pversion_info Resource::interpret_as()
 
 	// We are going to read a lot of structures which look like a version info header.
 	// They will all be read into this variable, one at a time.
-	auto current_structure = boost::make_shared<vs_version_info_header>();
+	auto current_structure = std::make_shared<vs_version_info_header>();
 	if (!parse_version_info_header(res->Header, f))
 	{
 		res.reset();
 		goto END;
 	}
-	res->Value = boost::make_shared<fixed_file_info>();
+	res->Value = std::make_shared<fixed_file_info>();
 	memset(res->Value.get(), 0, sizeof(fixed_file_info));
 
 	// 0xFEEF04BD is a magic located at the beginning of the VS_FIXED_FILE_INFO structure.
@@ -655,7 +655,7 @@ DECLSPEC pversion_info Resource::interpret_as()
 				value = utils::read_unicode_string(f);
 			}
 			// Add the key/value to our internal representation
-			auto p = boost::make_shared<string_pair>(current_structure->Key, value);
+			auto p = std::make_shared<string_pair>(current_structure->Key, value);
 			res->StringTable.push_back(p);
 		}
 
@@ -701,8 +701,8 @@ bool Resource::_reach_data(FILE*& f, long& saved_offset) const
 	if (!_pe_file) {
 		return false;
 	}
-	if (static_cast<boost::uint64_t>(_offset_in_file) >
-		static_cast<boost::uint64_t>(std::numeric_limits<long>::max())) {
+	if (static_cast<std::uint64_t>(_offset_in_file) >
+		static_cast<std::uint64_t>(std::numeric_limits<long>::max())) {
 		return false;
 	}
 
@@ -726,7 +726,7 @@ bool Resource::_reach_data(FILE*& f, long& saved_offset) const
 
 mana::shared_bytes reconstruct_icon(pgroup_icon_directory directory, const std::vector<pResource>& resources)
 {
-	std::vector<boost::uint8_t> res;
+	std::vector<std::uint8_t> res;
 
 	if (directory == nullptr) {
 		return shared_bytes();
@@ -739,7 +739,7 @@ mana::shared_bytes reconstruct_icon(pgroup_icon_directory directory, const std::
 		return shared_bytes();
 	}
 
-	boost::uint32_t header_size = 3 * sizeof(boost::uint16_t) + directory->Count * sizeof(group_icon_directory_entry);
+	std::uint32_t header_size = 3 * sizeof(std::uint16_t) + directory->Count * sizeof(group_icon_directory_entry);
 	try {
 		res.resize(header_size);
 	}
@@ -748,7 +748,7 @@ mana::shared_bytes reconstruct_icon(pgroup_icon_directory directory, const std::
 		PRINT_ERROR << "Could not allocate enough memory to reconstruct an icon. This PE may have been manually modified." << DEBUG_INFO << std::endl;
 		return shared_bytes();
 	}
-	memcpy(&res[0], directory.get(), 3 * sizeof(boost::uint16_t));
+	memcpy(&res[0], directory.get(), 3 * sizeof(std::uint16_t));
 
 	for (int i = 0; i < directory->Count; ++i)
 	{
@@ -772,31 +772,33 @@ mana::shared_bytes reconstruct_icon(pgroup_icon_directory directory, const std::
 		}
 
 		shared_bytes icon_bytes = icon->get_raw_data();
-		memcpy(&res[3 * sizeof(boost::uint16_t) + i * sizeof(group_icon_directory_entry)],
+		memcpy(&res[3 * sizeof(std::uint16_t) + i * sizeof(group_icon_directory_entry)],
 			   directory->Entries[i].get(),
-			   sizeof(group_icon_directory_entry) - sizeof(boost::uint32_t)); // Don't copy the last field.
+			   sizeof(group_icon_directory_entry) - sizeof(std::uint32_t)); // Don't copy the last field.
 		// Fix the icon_directory_entry with the offset in the file instead of a RT_ICON id
 		size_t size_fix = res.size();
-		memcpy(&res[3 * sizeof(boost::uint16_t) + (i+1) * sizeof(group_icon_directory_entry) - sizeof(boost::uint32_t)],
+		memcpy(&res[3 * sizeof(std::uint16_t) + (i+1) * sizeof(group_icon_directory_entry) - sizeof(std::uint32_t)],
 			   &size_fix,
-			   sizeof(boost::uint32_t));
+			   sizeof(std::uint32_t));
 		// Append the icon bytes at the end of the data
 		if (directory->Type == 1) { // General case for icons
+			auto new_size = static_cast<std::uint32_t>(icon_bytes->size());
+			memcpy(&res[3 * sizeof(std::uint16_t) + i * sizeof(group_icon_directory_entry) + 8], &new_size, sizeof(std::uint32_t));
 			res.insert(res.end(), icon_bytes->begin(), icon_bytes->end());
 		}
-		else if (icon_bytes->size() > 4 && directory->Entries[i]->BytesInRes > 4) // Cursors have a "hotspot" structure that we have to discard to create a valid ico.
+		else if (icon_bytes->size() >= 4) // Cursors have a "hotspot" structure that we have to discard to create a valid ico.
         {
-			res.insert(res.end(), icon_bytes->begin() + 2 * sizeof(boost::uint16_t), icon_bytes->end());
+			res.insert(res.end(), icon_bytes->begin() + 2 * sizeof(std::uint16_t), icon_bytes->end());
             // Remove 4 from the size to account for this suppression
-            int new_size = directory->Entries[i]->BytesInRes - 4;
-            memcpy(&res[3 * sizeof(boost::uint16_t) + i * sizeof(group_icon_directory_entry) + 8], &new_size, 4);
+            auto new_size = static_cast<std::uint32_t>(icon_bytes->size() - 4);
+            memcpy(&res[3 * sizeof(std::uint16_t) + i * sizeof(group_icon_directory_entry) + 8], &new_size, sizeof(std::uint32_t));
 		}
 		else { // Invalid cursor.
 			res.clear();
 		}
 	}
 
-	return boost::make_shared<std::vector<boost::uint8_t> >(res);
+	return std::make_shared<std::vector<std::uint8_t> >(res);
 }
 
 // ----------------------------------------------------------------------------
@@ -805,12 +807,12 @@ mana::shared_bytes reconstruct_icon(pgroup_icon_directory directory, const std::
  * @brief   Function which writes bytes to a given file. Created to prevent code
  * duplication between extract and icon_extract.
  *
- * @param   const boost::filesystem::path& destination The path to the file to write.
- * @param   std::vector<boost::uint8_t> data The data to write.
+ * @param   const std::filesystem::path& destination The path to the file to write.
+ * @param   std::vector<std::uint8_t> data The data to write.
  *
  * @return  Whether the file creation succeeded.
  */
-bool write_data_to_file(const boost::filesystem::path& destination, std::vector<boost::uint8_t> data)
+bool write_data_to_file(const std::filesystem::path& destination, std::vector<std::uint8_t> data)
 {
 	if (data.size() == 0) {
 		return true;
@@ -835,7 +837,7 @@ bool write_data_to_file(const boost::filesystem::path& destination, std::vector<
 
 // ----------------------------------------------------------------------------
 
-bool Resource::extract(const boost::filesystem::path& destination)
+bool Resource::extract(const std::filesystem::path& destination)
 {
     shared_bytes data;
 	if (_type == "RT_GROUP_ICON" || _type == "RT_GROUP_CURSOR")
@@ -845,7 +847,7 @@ bool Resource::extract(const boost::filesystem::path& destination)
 	}
     else if (_type == "RT_BITMAP")
     {
-        unsigned int header_size = 2 * sizeof(boost::uint8_t) + 2 * sizeof(boost::uint16_t) + 2 * sizeof(boost::uint32_t);
+        unsigned int header_size = 2 * sizeof(std::uint8_t) + 2 * sizeof(std::uint16_t) + 2 * sizeof(std::uint32_t);
         auto bmp = interpret_as<pbitmap>();
         if (bmp == nullptr)
         {
@@ -854,7 +856,7 @@ bool Resource::extract(const boost::filesystem::path& destination)
         }
 
         // Copy the BMP header
-        boost::shared_ptr<std::vector<boost::uint8_t> > bmp_bytes(new std::vector<boost::uint8_t>(header_size));
+        std::shared_ptr<std::vector<std::uint8_t> > bmp_bytes(new std::vector<std::uint8_t>(header_size));
         memcpy(&bmp_bytes->at(0), bmp.get(), header_size);
         // Copy the image bytes.
         bmp_bytes->insert(bmp_bytes->end(), bmp->data.begin(), bmp->data.end());
@@ -902,7 +904,7 @@ bool Resource::extract(const boost::filesystem::path& destination)
 
 // ----------------------------------------------------------------------------
 
-bool Resource::icon_extract(const boost::filesystem::path& destination,
+bool Resource::icon_extract(const std::filesystem::path& destination,
                             const std::vector<pResource>& resources)
 {
     if (_type != "RT_GROUP_ICON" && _type != "RT_GROUP_CURSOR")

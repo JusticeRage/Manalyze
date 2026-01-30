@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y cmake g++ git libssl-dev libboost-system-dev libboost-test-dev
+
+      - name: Configure (Linux)
+        if: runner.os == 'Linux'
+        run: cmake . -DTests=ON -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build (Linux)
+        if: runner.os == 'Linux'
+        run: cmake --build . -- -j2
+
+      - name: Verify VirusTotal plugin built (Linux)
+        if: runner.os == 'Linux'
+        run: test -f bin/libplugin_virustotal.so
+
+      - name: Run tests (Linux)
+        if: runner.os == 'Linux'
+        run: ./bin/manalyze-tests

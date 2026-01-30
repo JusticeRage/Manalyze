@@ -16,7 +16,7 @@
 */
 
 #include <set>
-#include <boost/algorithm/string/predicate.hpp>
+#include <string_view>
 
 #include "plugin_framework/plugin_interface.h"
 #include "plugin_framework/auto_register.h"
@@ -24,6 +24,22 @@
 #include "manacommons/color.h"
 
 namespace plugin {
+
+namespace {
+
+bool starts_with(std::string_view value, std::string_view prefix)
+{
+	return value.size() >= prefix.size() &&
+		   value.compare(0, prefix.size(), prefix) == 0;
+}
+
+bool ends_with(std::string_view value, std::string_view suffix)
+{
+	return value.size() >= suffix.size() &&
+		   value.compare(value.size() - suffix.size(), suffix.size(), suffix) == 0;
+}
+
+} // namespace
 
 enum REQUIREMENT { AT_LEAST_ONE = 1, AT_LEAST_TWO = 2, AT_LEAST_THREE = 3 };
 
@@ -109,13 +125,13 @@ size_t count_functions(const std::vector<std::string>& v)
 			continue;
 		}
 		std::string tmp(s);
-		if (boost::algorithm::ends_with(tmp, "A") || boost::algorithm::ends_with(tmp, "W")) {
+		if (ends_with(tmp, "A") || ends_with(tmp, "W")) {
 			tmp.pop_back();
 		}
-		if (tmp.size() > 2 && boost::algorithm::ends_with(tmp, "Ex")) {
+		if (tmp.size() > 2 && ends_with(tmp, "Ex")) {
 			tmp = tmp.substr(0, tmp.size() - 2);
 		}
-        if (tmp.size() > 2 && (boost::algorithm::starts_with(tmp, "Nt") || boost::algorithm::starts_with(tmp, "Zw"))) {
+        if (tmp.size() > 2 && (starts_with(tmp, "Nt") || starts_with(tmp, "Zw"))) {
             tmp = tmp.substr(2, tmp.size());
         }
 		string_set.insert(tmp);
@@ -152,7 +168,7 @@ bool check_functions(const mana::PE& pe,
 	if (found_imports && count_functions(*found_imports) >= static_cast<unsigned int>(req))  // Safe cast: these are positive enum indexes
 	{
 		res->raise_level(level);
-		io::pNode info = boost::make_shared<io::OutputTreeNode>(description,
+		io::pNode info = std::make_shared<io::OutputTreeNode>(description,
 																io::OutputTreeNode::STRINGS,
 																io::OutputTreeNode::NEW_LINE);
 
@@ -189,7 +205,7 @@ bool check_dlls(const mana::PE& pe,
 	if (found_imports && !found_imports->empty())
 	{
 		res->raise_level(level);
-		io::pNode info = boost::make_shared<io::OutputTreeNode>(description,
+		io::pNode info = std::make_shared<io::OutputTreeNode>(description,
 																io::OutputTreeNode::STRINGS,
 																io::OutputTreeNode::NEW_LINE);
 		for (const auto& it : *found_imports) {
@@ -209,11 +225,11 @@ public:
 	int get_api_version() const override { return 1; }
 
 	pString get_id() const override {
-		return boost::make_shared<std::string>("imports");
+		return std::make_shared<std::string>("imports");
 	}
 
 	pString get_description() const override {
-		return boost::make_shared<std::string>("Looks for suspicious imports.");
+		return std::make_shared<std::string>("Looks for suspicious imports.");
 	}
 
 	pResult analyze(const mana::PE& pe) override

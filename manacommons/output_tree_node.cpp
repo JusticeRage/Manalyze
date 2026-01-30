@@ -84,10 +84,10 @@ OutputTreeNode::OutputTreeNode(const std::string& name,
 	switch (type)
 	{
 	case LIST:
-		_list_data = boost::make_shared<boost::optional<nodes> >(nodes());
+		_list_data = std::make_shared<std::optional<nodes> >(nodes());
 		break;
 	case STRINGS:
-		_strings_data = boost::make_shared<boost::optional<strings> >(strings());
+		_strings_data = std::make_shared<std::optional<strings> >(strings());
 		break;
 	default:
 		PRINT_WARNING << "[OutputTreeNode] Please use specialized constructors for types other than LIST or STRINGS!"
@@ -101,7 +101,7 @@ OutputTreeNode::OutputTreeNode(const std::string& name,
 pString OutputTreeNode::to_string() const
 {
 	if (_type == STRING) {
-		return boost::make_shared<std::string>(**_string_data);
+		return std::make_shared<std::string>(**_string_data);
 	}
 
 	std::stringstream ss;
@@ -154,7 +154,7 @@ pString OutputTreeNode::to_string() const
 	default:
 		PRINT_WARNING << "[OutputTreeNode] No _to_string() implementation for " << _type << "!" << std::endl;
 	}
-	return boost::make_shared<std::string>(ss.str());
+	return std::make_shared<std::string>(ss.str());
 }
 
 // ----------------------------------------------------------------------------
@@ -206,7 +206,7 @@ void OutputTreeNode::append(pNode node)
 	}
 
 	if (!_list_data || !*_list_data) {
-		_list_data = boost::make_shared<boost::optional<nodes> >(nodes());
+		_list_data = std::make_shared<std::optional<nodes> >(nodes());
 	}
 
 	// The JSON formatter cannot handle identical names in a list. Rename duplicates if necessary.
@@ -244,7 +244,7 @@ pNodes OutputTreeNode::get_children() const
 		return pNodes();
 	}
 
-	return boost::make_shared<nodes>(**_list_data);
+	return std::make_shared<nodes>(**_list_data);
 }
 
 // ----------------------------------------------------------------------------
@@ -299,7 +299,7 @@ void OutputTreeNode::update_value(const std::string& s)
 		return;
 	}
 
-	*_string_data = boost::optional<std::string>(s);
+	*_string_data = std::optional<std::string>(s);
 }
 
 // ----------------------------------------------------------------------------
@@ -317,7 +317,7 @@ void OutputTreeNode::update_value(plugin::LEVEL level)
 		return;
 	}
 
-	*_level_data = boost::optional<plugin::LEVEL>(level);
+	*_level_data = std::optional<plugin::LEVEL>(level);
 }
 
 // ----------------------------------------------------------------------------
@@ -349,7 +349,7 @@ void OutputTreeNode::append(const std::string& s)
 	}
 
 	if (!_strings_data || !*_strings_data) {
-		_strings_data = boost::make_shared<boost::optional<strings> >(strings());
+		_strings_data = std::make_shared<std::optional<strings> >(strings());
 	}
 	(*_strings_data)->push_back(s);
 }
@@ -365,7 +365,7 @@ void OutputTreeNode::append(const strings& strs)
 	}
 
 	if (!_strings_data || !*_strings_data) {
-		_strings_data = boost::make_shared<boost::optional<strings> >(strings(strs));
+		_strings_data = std::make_shared<std::optional<strings> >(strings(strs));
 	}
 	else {
 		(*_strings_data)->insert((*_strings_data)->end(), strs.begin(), strs.end());

@@ -19,35 +19,44 @@
 
 namespace utils {
 
-pString b64encode(const std::vector<boost::uint8_t>& bytes)
+pString b64encode(const std::vector<std::uint8_t>& bytes)
 {	
 	if (bytes.size() == 0) {
-		return boost::make_shared<std::string>("");
+		return std::make_shared<std::string>("");
 	}
 
-	unsigned int padding = bytes.size() % 3;
-	
-	// Insert line breaks every 64 characters
-	typedef	biter::insert_linebreaks<
-		// Convert binary values to base64 characters
-		biter::base64_from_binary<
-			// Retrieve 6 bit integers from a sequence of 8 bit bytes
-			biter::transform_width<const boost::uint8_t*, 6, 8> 
-		> 
-		,64
-	> 
-	base64_encode; // compose all the above operations in to a new iterator
+	static const char kAlphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+	std::string out;
+	out.reserve(((bytes.size() + 2) / 3) * 4);
+	int line_len = 0;
 
-	std::stringstream ss;
-	std::copy(base64_encode(&bytes[0]), 
-			  base64_encode(&bytes[0] + bytes.size()), 
-			  std::ostream_iterator<char>(ss));
+	auto append_char = [&](char c) {
+		if (line_len == 64) {
+			out.push_back('\n');
+			line_len = 0;
+		}
+		out.push_back(c);
+		++line_len;
+	};
 
-	if (padding != 0) {
-		ss << std::string(3 - padding, '=');
+	for (size_t i = 0; i < bytes.size(); i += 3)
+	{
+		const size_t remaining = bytes.size() - i;
+		std::uint32_t triple = static_cast<std::uint32_t>(bytes[i]) << 16;
+		if (remaining > 1) {
+			triple |= static_cast<std::uint32_t>(bytes[i + 1]) << 8;
+		}
+		if (remaining > 2) {
+			triple |= static_cast<std::uint32_t>(bytes[i + 2]);
+		}
+
+		append_char(kAlphabet[(triple >> 18) & 0x3F]);
+		append_char(kAlphabet[(triple >> 12) & 0x3F]);
+		append_char(remaining > 1 ? kAlphabet[(triple >> 6) & 0x3F] : '=');
+		append_char(remaining > 2 ? kAlphabet[triple & 0x3F] : '=');
 	}
-			  
-	return boost::make_shared<std::string>(ss.str());
+
+	return std::make_shared<std::string>(out);
 }
 
 } // !namespace utils

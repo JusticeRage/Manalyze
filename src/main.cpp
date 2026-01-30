@@ -20,15 +20,15 @@
 #include <vector>
 #include <algorithm>
 #include <future>
+#include <set>
+#include <sstream>
 #include <utility>
 
-#include <boost/program_options.hpp>
-#include <boost/tokenizer.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/system/api_config.hpp>
-#include <boost/assign/list_of.hpp>
+#include <filesystem>
 
-#ifdef BOOST_WINDOWS_API
+#include "CLI11.hpp"
+
+#ifdef _WIN32
 # include <direct.h>
 # define chdir _chdir
 #else
@@ -45,25 +45,49 @@
 #include "manacommons/paths.h"
 #include "output_formatter.h"
 #include "dump.h"
-
-#define MANALYZE_VERSION "0.9"
+#include "cli.h"
+#include "manalyze_version.h"
 
 #if defined WITH_OPENSSL
 # include <openssl/opensslv.h>  // Used to display OpenSSL's version
 #endif
 
-namespace po = boost::program_options;
-namespace bfs = boost::filesystem;
+namespace bfs = std::filesystem;
 
 /**
  *	@brief	Prints the help message of the program.
  *
- *	@param	po::options_description& desc The boost::program_options argument descriptor.
+ *	@param	CLI::App& app The CLI11 application descriptor.
  *	@param	const std::string& argv_0 argv[0], the program name.
  */
-void print_help(po::options_description& desc, const std::string& argv_0)
+void print_help(const CLI::App& app, const std::string& argv_0)
 {
-	std::cout << desc << std::endl; // Standard usage
+	std::string help = app.help();
+	std::istringstream help_stream(help);
+	std::ostringstream help_out;
+	std::string line;
+	bool first_line = true;
+	bool skipped_blank = false;
+	while (std::getline(help_stream, line))
+	{
+		if (first_line)
+		{
+			if (line.rfind("Usage", 0) == 0) {
+				line = "Usage:";
+			}
+			first_line = false;
+		}
+		else if (!skipped_blank && line.empty())
+		{
+			skipped_blank = true;
+			continue;
+		}
+		help_out << line;
+		if (!help_stream.eof()) {
+			help_out << '\n';
+		}
+	}
+	std::cout << help_out.str() << std::endl; // Standard usage
 
 	// Plugin description
 	std::vector<plugin::pIPlugin> plugins = plugin::PluginManager::get_instance().get_plugins();
@@ -95,34 +119,6 @@ void print_help(po::options_description& desc, const std::string& argv_0)
 // ----------------------------------------------------------------------------
 
 /**
- *	@brief	Tokenizes arguments received on the command line.
- *
- *	Complex options may be specified multiple times (-dimports -dexports). When the
- *	long argument format is used (--dump=imports,exports), some additional processing
- *	has to take place to break them down.
- *
- *	@param	const std::vector<std::string>& args A vector containing the raw program_options arguments.
- *
- *	@return	A vector containing all the arguments.
- */
-std::vector<std::string> tokenize_args(const std::vector<std::string>& args)
-{
-	// Categories may be comma-separated, so we have to separate them.
-	std::vector<std::string> tokenized_args;
-	boost::char_separator<char> sep(",");
-	for (const auto& it : args)
-	{
-		boost::tokenizer<boost::char_separator<char> > tokens(it, sep);
-		for (auto tok_iter = tokens.begin() ; tok_iter != tokens.end() ; ++tok_iter) {
-			tokenized_args.push_back(*tok_iter);
-		}
-	}
-	return tokenized_args;
-}
-
-// ----------------------------------------------------------------------------
-
-/**
  *	@brief	Checks whether the given arguments are valid.
  *
  *	This consists in verifying that:
@@ -133,27 +129,26 @@ std::vector<std::string> tokenize_args(const std::vector<std::string>& args)
  *
  *	If an error is detected, the help message is displayed.
  *
- *	@param	po::variables_map& vm The parsed arguments.
- *	@param	po::options_description& desc The description of the arguments (only so it can be
+ *	@param	Options& opts The parsed arguments.
+ *	@param	CLI::App& app The description of the arguments (only so it can be
  *			passed to print_help if needed).
  *	@param	char** argv The raw arguments (only so it can be passed to print_help if needed).
  *
  *	@return	True if the arguments are all valid, false otherwise.
  */
-bool validate_args(po::variables_map& vm, po::options_description& desc, char** argv)
+bool validate_args(const Options& opts, const CLI::App& app, char** argv)
 {
 	// Verify that the requested categories exist
-	if (vm.count("dump"))
+	if (!opts.dump.empty())
 	{
-		std::vector<std::string> selected_categories = tokenize_args(vm["dump"].as<std::vector<std::string> >());
-		const std::vector<std::string> categories = boost::assign::list_of("all")("summary")("dos")("pe")("opt")("sections")
-			("imports")("exports")("resources")("version")("debug")("tls")("config")("delay")("rich");
+		const auto& selected_categories = opts.dump;
+		const std::vector<std::string> categories = {"all", "summary", "dos", "pe", "opt", "sections", "imports", "exports", "resources", "version", "debug", "tls", "config", "delay", "rich"};
 		for (const auto& it : selected_categories)
 		{
 			auto found = std::find(categories.begin(), categories.end(), it);
 			if (found == categories.end())
 			{
-				print_help(desc, argv[0]);
+				print_help(app, argv[0]);
 				std::cout << std::endl;
 				PRINT_ERROR << "category " << it << " does not exist!" << std::endl;
 				return false;
@@ -162,9 +157,9 @@ bool validate_args(po::variables_map& vm, po::options_description& desc, char** 
 	}
 
 	// Verify that the requested plugins exist
-	if (vm.count("plugins"))
+	if (!opts.plugins.empty())
 	{
-		std::vector<std::string> selected_plugins = tokenize_args(vm["plugins"].as<std::vector<std::string> >());
+		const auto& selected_plugins = opts.plugins;
 		std::vector<plugin::pIPlugin> plugins = plugin::PluginManager::get_instance().get_plugins();
 		for (const auto& it : selected_plugins)
 		{
@@ -172,10 +167,12 @@ bool validate_args(po::variables_map& vm, po::options_description& desc, char** 
 				continue;
 			}
 
-			auto found = std::find_if(plugins.begin(), plugins.end(), boost::bind(&plugin::name_matches, it, boost::placeholders::_1));
+			auto found = std::find_if(plugins.begin(), plugins.end(), [&](const plugin::pIPlugin& plugin) {
+				return plugin::name_matches(it, plugin);
+			});
 			if (found == plugins.end())
 			{
-				print_help(desc, argv[0]);
+				print_help(app, argv[0]);
 				std::cout << std::endl;
 				PRINT_ERROR << "plugin " << it << " does not exist!" << std::endl;
 				return false;
@@ -184,8 +181,7 @@ bool validate_args(po::variables_map& vm, po::options_description& desc, char** 
 	}
 
 	// Verify that all the input files exist.
-	std::vector<std::string> input_files = vm["pe"].as<std::vector<std::string> >();
-	for (const auto& it : input_files)
+	for (const auto& it : opts.pe)
 	{
 		if (!bfs::exists(it))
 		{
@@ -195,15 +191,15 @@ bool validate_args(po::variables_map& vm, po::options_description& desc, char** 
 	}
 
 	// Verify that the requested output formatter exists
-	if (vm.count("output"))
+	if (opts.output_set)
 	{
-		auto formatters = boost::assign::list_of("raw")("json");
-		auto found = std::find(formatters.begin(), formatters.end(), vm["output"].as<std::string>());
+		const std::vector<std::string> formatters = {"raw", "json"};
+		auto found = std::find(formatters.begin(), formatters.end(), opts.output);
 		if (found == formatters.end())
 		{
-			print_help(desc, argv[0]);
+			print_help(app, argv[0]);
 			std::cout << std::endl;
-			PRINT_ERROR << "output formatter " << vm["output"].as<std::string>() << " does not exist!" << std::endl;
+			PRINT_ERROR << "output formatter " << opts.output << " does not exist!" << std::endl;
 			return false;
 		}
 	}
@@ -216,72 +212,12 @@ bool validate_args(po::variables_map& vm, po::options_description& desc, char** 
 /**
  *	@brief	Parses and validates the command line options of the application.
  *
- *	@param	po::variables_map& vm The destination for parsed arguments
+ *	@param	Options& opts The destination for parsed arguments
  *	@param	int argc The number of arguments
  *	@param	char**argv The raw arguments
  *
  *	@return	Whether the arguments are valid.
  */
-bool parse_args(po::variables_map& vm, int argc, char**argv)
-{
-	po::options_description desc("Usage");
-	desc.add_options()
-		("help,h", "Displays this message.")
-		("version,v", "Prints the program's version.")
-		("pe", po::value<std::vector<std::string> >(), "The PE to analyze. Also accepted as a positional argument. "
-			"Multiple files may be specified.")
-		("recursive,r", "Scan all files in a directory (subdirectories will be ignored).")
-		("output,o", po::value<std::string>(), "The output format. May be 'raw' (default) or 'json'.")
-		("dump,d", po::value<std::vector<std::string> >(),
-			"Dump PE information. Available choices are any combination of: "
-			"all, summary, dos (dos header), pe (pe header), opt (pe optional header), sections, "
-			"imports, exports, resources, version, debug, tls, config (image load configuration), "
-			"delay (delay-load table), rich")
-		("hashes", "Calculate various hashes of the file (may slow down the analysis!)")
-		("extract,x", po::value<std::string>(), "Extract the PE resources and authenticode certificates "
-			"to the target directory.")
-		("plugins,p", po::value<std::vector<std::string> >(),
-			"Analyze the binary with additional plugins. (may slow down the analysis!)");
-
-
-	po::positional_options_description p;
-	p.add("pe", -1);
-
-	try
-	{
-		po::store(po::command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
-		po::notify(vm);
-	}
-	catch(po::error& e)
-	{
-		PRINT_ERROR << "Could not parse the command line (" << e.what() << ")." << std::endl << std::endl;
-		return false;
-	}
-
-	if (vm.count("version"))
-	{
-		std::stringstream ss;
-		ss << "Manalyze " MANALYZE_VERSION " (Ivan Kwiatkowski, GPLv3 License) compiled with:" << std::endl;
-		ss << "* Boost " BOOST_LIB_VERSION " (Boost.org, Boost Software License)" << std::endl;
-		ss << "* Yara " << YR_MAJOR_VERSION << "." << YR_MINOR_VERSION << "." << YR_MICRO_VERSION << ". (Victor M. Alvarez, Apache 2.0 License)" << std::endl;
-		ss << "* hash-library " << HASH_LIBRARY_VERSION << " (Stephan Brumme, ZLib License)." << std::endl;
-		#if defined WITH_OPENSSL
-			ss << "* " << OPENSSL_VERSION_TEXT << " (OpenSSL Project, OpenSSL License)" << std::endl;
-		#endif
-		std::cout << ss.str();
-		exit(0);
-	}
-	else if (vm.count("help") || !vm.count("pe"))
-	{
-		print_help(desc, argv[0]);
-		exit(0);
-	}
-
-	return validate_args(vm, desc, argv);
-}
-
-// ----------------------------------------------------------------------------
-
 /**
  *	@brief	Dumps select information from a PE.
  *
@@ -358,7 +294,7 @@ void handle_plugins_option(io::OutputFormatter& formatter,
 	std::vector<plugin::pIPlugin> plugins = plugin::PluginManager::get_instance().get_plugins();
 	io::pNode plugins_node(new io::OutputTreeNode("Plugins", io::OutputTreeNode::LIST));
 
-	typedef std::tuple<boost::shared_ptr<std::thread>, std::shared_future<plugin::pResult>, plugin::pIPlugin> plugin_job;
+	typedef std::tuple<std::shared_ptr<std::thread>, std::shared_future<plugin::pResult>, plugin::pIPlugin> plugin_job;
 	std::vector<plugin_job> jobs;
 	for (const auto& it : plugins)
 	{
@@ -375,7 +311,7 @@ void handle_plugins_option(io::OutputFormatter& formatter,
 		std::promise<plugin::pResult> res_promise;
 		std::shared_future<plugin::pResult> future(res_promise.get_future());
 
-		boost::shared_ptr<std::thread> t(boost::make_shared<std::thread>(std::thread([](const plugin::pIPlugin& p, std::promise<plugin::pResult> r, const mana::PE* pe) {
+		std::shared_ptr<std::thread> t(std::make_shared<std::thread>(std::thread([](const plugin::pIPlugin& p, std::promise<plugin::pResult> r, const mana::PE* pe) {
 			r.set_value(p->analyze(*pe));
 		}, it, std::move(res_promise), &pe)));
 
@@ -410,21 +346,20 @@ void handle_plugins_option(io::OutputFormatter& formatter,
  *	When the recursive option is specified, this function returns all the files in
  *	the requested directory (or directories).
  *
- *	@param	po::variables_map& vm The (parsed) arguments of the application.
+ *	@param	Options& opts The (parsed) arguments of the application.
  *
  *	@return	A set (to weed out duplicates) containing all the files to analyze.
  */
-std::set<std::string> get_input_files(po::variables_map& vm)
+std::set<std::string> get_input_files(const Options& opts)
 {
 	std::set<std::string> targets;
-	if (vm.count("recursive"))
+	if (opts.recursive)
 	{
-		std::vector<std::string> input = vm["pe"].as<std::vector<std::string> >();
-		for (const auto& it : input)
+		for (const auto& it : opts.pe)
 		{
 			if (!bfs::is_directory(it))
 			{
-				#if defined BOOST_WINDOWS_API
+				#if defined _WIN32
 					std::string path = bfs::absolute(it).string();
 					std::replace(path.begin(), path.end(), '\\', '/');
 					targets.insert(path);
@@ -434,14 +369,14 @@ std::set<std::string> get_input_files(po::variables_map& vm)
 			}
 			else
 			{
-				bfs::directory_iterator end;
-				for (bfs::directory_iterator dit(it) ; dit != end ; ++dit)
-				{
-					if (!bfs::is_directory(*dit)) { // Ignore subdirectories
-					#if defined BOOST_WINDOWS_API
-						std::string path = bfs::absolute(dit->path()).string();
-						std::replace(path.begin(), path.end(), '\\', '/');
-						targets.insert(path);
+					bfs::directory_iterator end;
+					for (bfs::directory_iterator dit(it) ; dit != end ; ++dit)
+					{
+						if (!bfs::is_directory(*dit)) { // Ignore subdirectories
+						#if defined _WIN32
+							std::string path = bfs::absolute(dit->path()).string();
+							std::replace(path.begin(), path.end(), '\\', '/');
+							targets.insert(path);
 					#else
 						targets.insert(bfs::absolute(dit->path()).string());
 					#endif
@@ -452,11 +387,10 @@ std::set<std::string> get_input_files(po::variables_map& vm)
 	}
 	else
 	{
-		auto vect = vm["pe"].as<std::vector<std::string> >();
-		for (const auto& it : vect)
+		for (const auto& it : opts.pe)
 		{
 			if (!bfs::is_directory(it)) {
-				#if defined BOOST_WINDOWS_API
+				#if defined _WIN32
 					std::string path = bfs::absolute(it).string();
 					std::replace(path.begin(), path.end(), '\\', '/');
 					targets.insert(path);
@@ -478,12 +412,12 @@ std::set<std::string> get_input_files(po::variables_map& vm)
  *	@brief	Does the actual analysis
  */
 void perform_analysis(const std::string& path,
-					  po::variables_map& vm,
+					  const Options& opts,
 					  const std::string& extraction_directory,
 					  const std::vector<std::string>& selected_categories,
 					  const std::vector<std::string>& selected_plugins,
 					  const config& conf,
-					  boost::shared_ptr<io::OutputFormatter> formatter)
+					  std::shared_ptr<io::OutputFormatter> formatter)
 {
 	mana::PE pe(path);
 
@@ -511,25 +445,24 @@ void perform_analysis(const std::string& path,
 		return;
 	}
 
-	if (vm.count("dump")) {
-		handle_dump_option(*formatter, selected_categories, vm.count("hashes") != 0, pe);
+	if (!selected_categories.empty()) {
+		handle_dump_option(*formatter, selected_categories, opts.hashes, pe);
 	}
 	else { // No specific info requested. Display the summary of the PE.
 		dump_summary(pe, *formatter);
 	}
 
-
-	if (vm.count("extract")) // Extract resources if requested 
+	if (opts.extract_set) // Extract resources if requested 
 	{
 		mana::extract_resources(pe, extraction_directory);
 		mana::extract_authenticode_certificates(pe, extraction_directory);
 	}
 
-	if (vm.count("hashes")) {
+	if (opts.hashes) {
 		dump_hashes(pe, *formatter);
 	}
 
-	if (vm.count("plugins")) {
+	if (!selected_plugins.empty()) {
 		handle_plugins_option(*formatter, selected_plugins, conf, pe);
 	}
 }
@@ -538,7 +471,7 @@ void perform_analysis(const std::string& path,
 
 int main(int argc, char** argv)
 {
-	po::variables_map vm;
+	Options opts;
 	std::string extraction_directory;
 	std::vector<std::string> selected_plugins, selected_categories;
 
@@ -553,26 +486,26 @@ int main(int argc, char** argv)
 	// Load the configuration
 	config conf = parse_config((config_dir / "manalyze.conf").string());
 
-	if (!parse_args(vm, argc, argv)) {
+	if (!parse_args(opts, argc, argv, print_help, validate_args)) {
 		return -1;
 	}
 
 	// Get all the paths now and make them absolute before changing the working directory
-	std::set<std::string> targets = get_input_files(vm);
-	if (vm.count("extract")) {
-		extraction_directory = bfs::absolute(vm["extract"].as<std::string>()).string();
+	std::set<std::string> targets = get_input_files(opts);
+	if (opts.extract_set) {
+		extraction_directory = bfs::absolute(opts.extract).string();
 	}
 	// Break complex arguments into a list once and for all.
-	if (vm.count("plugins")) {
-		selected_plugins = tokenize_args(vm["plugins"].as<std::vector<std::string> >());
+	if (!opts.plugins.empty()) {
+		selected_plugins = opts.plugins;
 	}
-	if (vm.count("dump")) {
-		selected_categories = tokenize_args(vm["dump"].as<std::vector<std::string> >());
+	if (!opts.dump.empty()) {
+		selected_categories = opts.dump;
 	}
 
 	// Instantiate the requested OutputFormatter
-	boost::shared_ptr<io::OutputFormatter> formatter;
-	if (vm.count("output") && vm["output"].as<std::string>() == "json") {
+	std::shared_ptr<io::OutputFormatter> formatter;
+	if (opts.output_set && opts.output == "json") {
 		formatter.reset(new io::JsonFormatter());
 	}
 	else // Default: use the human-readable output.
@@ -588,7 +521,7 @@ int main(int argc, char** argv)
 	unsigned int count = 0;
 	for (const auto& it : targets)
 	{
-		perform_analysis(it, vm, extraction_directory, selected_categories, selected_plugins, conf, formatter);
+		perform_analysis(it, opts, extraction_directory, selected_categories, selected_plugins, conf, formatter);
 		if (++count % 1000 == 0) {
 			formatter->format(std::cout, false); // Flush the formatter from time to time, to avoid eating up all the RAM when analyzing gigs of files.
 		}
@@ -596,7 +529,7 @@ int main(int argc, char** argv)
 
 	formatter->format(std::cout);
 
-	if (vm.count("plugins"))
+	if (!selected_plugins.empty())
 	{
 		// Explicitly unload the plugins
 		plugin::PluginManager::get_instance().unload_all();

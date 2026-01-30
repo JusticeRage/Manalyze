@@ -17,6 +17,9 @@
 
 #include "config_parser.h"
 
+#include <algorithm>
+#include <cctype>
+
 config parse_config(const std::string& config_file)
 {
 	std::ifstream input(config_file.c_str());
@@ -28,32 +31,55 @@ config parse_config(const std::string& config_file)
 		return conf;
 	}
 
+	auto ltrim = [](std::string& s) {
+		s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char c) { return !std::isspace(c); }));
+	};
+	auto rtrim = [](std::string& s) {
+		s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char c) { return !std::isspace(c); }).base(), s.end());
+	};
+	auto trim = [&](std::string& s) {
+		ltrim(s);
+		rtrim(s);
+	};
+
 	std::string line;
 	while (std::getline(input, line))
 	{
 		std::string plugin_name, plugin_attribute, attribute_value;
 
-		if (line.empty() ||
-			qi::parse(line.begin(),
-					  line.end(),
-					  (qi::char_('#') >> +qi::char_) | +boost::spirit::ascii::space)) // Line starting with '#' or made of spaces
-		{
+		trim(line);
+		if (line.empty() || line[0] == '#') {
 			continue;
 		}
-		else if (
-			qi::phrase_parse(
-				line.begin(),
-				line.end(),
-				(+~qi::char_('.') >> '.' >> +~qi::char_('=') >> '=' >> +qi::char_),
-				boost::spirit::ascii::space,
-				plugin_name, plugin_attribute, attribute_value))
-		{
-			conf[plugin_name][plugin_attribute] = attribute_value;
-		}
-		else
-		{
+
+		auto eq_pos = line.find('=');
+		if (eq_pos == std::string::npos) {
 			PRINT_WARNING << "Could not parse \"" << line << "\" in " << config_file << "." << std::endl;
+			continue;
 		}
+
+		std::string left = line.substr(0, eq_pos);
+		std::string right = line.substr(eq_pos + 1);
+		trim(left);
+		trim(right);
+
+		auto dot_pos = left.find('.');
+		if (dot_pos == std::string::npos) {
+			PRINT_WARNING << "Could not parse \"" << line << "\" in " << config_file << "." << std::endl;
+			continue;
+		}
+
+		plugin_name = left.substr(0, dot_pos);
+		plugin_attribute = left.substr(dot_pos + 1);
+		trim(plugin_name);
+		trim(plugin_attribute);
+
+		if (plugin_name.empty() || plugin_attribute.empty() || right.empty()) {
+			PRINT_WARNING << "Could not parse \"" << line << "\" in " << config_file << "." << std::endl;
+			continue;
+		}
+
+		conf[plugin_name][plugin_attribute] = right;
 	}
 	input.close();
 	return conf;

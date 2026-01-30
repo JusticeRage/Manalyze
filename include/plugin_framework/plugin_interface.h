@@ -19,13 +19,11 @@
 
 #include <string>
 #include <map>
-#include <boost/make_shared.hpp>
-#include <boost/system/api_config.hpp>
-
+#include <memory>
 #include "manape/pe.h"
 #include "plugin_framework/result.h"
 
-#ifdef BOOST_WINDOWS_API
+#ifdef _WIN32
 #	define PLUGIN_API __declspec(dllexport)
 #else
 #	define PLUGIN_API __attribute__((visibility("default")))
@@ -34,7 +32,7 @@
 namespace plugin {
 
 typedef std::map<std::string, std::string> string_map;
-typedef boost::shared_ptr<const std::map<std::string, std::string> > shared_string_map;
+typedef std::shared_ptr<const std::map<std::string, std::string> > shared_string_map;
 
 class IPlugin
 {
@@ -67,7 +65,7 @@ public:
 	 *	@return	The ID of the plugin, as a shared pointer since it may
 	 *			cross shared object boundaries.
 	 */
-	virtual boost::shared_ptr<std::string> get_id() const = 0;
+	virtual std::shared_ptr<std::string> get_id() const = 0;
 
 	/**
 	 *	@brief	Returns the description of the plugin.
@@ -75,10 +73,10 @@ public:
 	 *	@return	The description of the plugin, as a shared pointer since it may
 	 *			cross shared object boundaries.
 	 */
-	virtual boost::shared_ptr<std::string> get_description() const = 0;
+	virtual std::shared_ptr<std::string> get_description() const = 0;
 
 	void set_config(const string_map& config) {
-		_config = boost::make_shared<string_map>(config);
+		_config = std::make_shared<string_map>(config);
 	}
 
 	/**
@@ -98,6 +96,6 @@ protected:
 	shared_string_map _config;
 };
 
-typedef boost::shared_ptr<IPlugin> pIPlugin;
+typedef std::shared_ptr<IPlugin> pIPlugin;
 
 } // !namespace plugin

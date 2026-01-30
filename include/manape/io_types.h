@@ -20,11 +20,11 @@
 #include <cstdio>
 #include <mutex>
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace mana {
 
-typedef boost::shared_ptr<FILE> pFile;
-typedef boost::shared_ptr<std::mutex> pMutex;
+typedef std::shared_ptr<FILE> pFile;
+typedef std::shared_ptr<std::mutex> pMutex;
 
 } // namespace mana

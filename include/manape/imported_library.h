@@ -19,26 +19,26 @@
 
 #include <vector>
 #include <string>
-#include <boost/shared_ptr.hpp>
-#include <boost/make_shared.hpp>
+#include <memory>
+#include <memory>
 
 #include "manape/pe_structs.h"
 
-#if defined BOOST_WINDOWS_API && !defined DECLSPEC
+#if defined _WIN32 && !defined DECLSPEC
 	#ifdef MANAPE_EXPORT
 		#define DECLSPEC    __declspec(dllexport)
 	#else
 		#define DECLSPEC    __declspec(dllimport)
 	#endif
-#elif !defined BOOST_WINDOWS_API && !defined DECLSPEC
+#elif !defined _WIN32 && !defined DECLSPEC
 	#define DECLSPEC
 #endif
 
 namespace mana 
 {
 
-typedef boost::shared_ptr<std::string> pString;
-typedef boost::shared_ptr<std::vector<pimport_lookup_table> > pImports;
+typedef std::shared_ptr<std::string> pString;
+typedef std::shared_ptr<std::vector<pimport_lookup_table> > pImports;
 
 /**
  *	@brief	This class represents a dynamic library (DLL) imported by the PE.
@@ -64,7 +64,7 @@ public:
 	ImportedLibrary(const std::string& library_name);
 
 	DECLSPEC LOAD_TYPE get_type()	const { return _load_type; }
-	DECLSPEC pString   get_name()	const { return boost::make_shared<std::string>(_library_name); }
+	DECLSPEC pString   get_name()	const { return std::make_shared<std::string>(_library_name); }
 	DECLSPEC pImports  get_imports() const { return _imported_functions; }
 
 	/**
@@ -88,6 +88,6 @@ private:
 	pImports							_imported_functions;
 };
 
-typedef boost::shared_ptr<ImportedLibrary> pImportedLibrary;
+typedef std::shared_ptr<ImportedLibrary> pImportedLibrary;
 	
 } // !namespace mana

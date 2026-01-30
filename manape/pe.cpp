@@ -21,7 +21,7 @@
 
 #include "manape/pe.h"
 
-#if defined(BOOST_WINDOWS_API)
+#if defined(_WIN32)
 #include <windows.h>
 #include <io.h>
 #include <fcntl.h>
@@ -34,7 +34,7 @@ PE::PE(const std::string& path)
 	: _path(path),
 	  _resource_path(path),
 	  _initialized(false),
-	  _io_mutex(boost::make_shared<std::mutex>())
+	  _io_mutex(std::make_shared<std::mutex>())
 {
 	FILE* f = fopen(_path.c_str(), "rb");
 	if (f == nullptr)
@@ -42,7 +42,7 @@ PE::PE(const std::string& path)
 		PRINT_ERROR << "Could not open " << _path << "." << std::endl;
 		return;
 	}
-	_file_handle = boost::shared_ptr<FILE>(f, fclose);
+	_file_handle = std::shared_ptr<FILE>(f, fclose);
 
 	// Get the file size
 	bool size_ok = true;
@@ -53,7 +53,7 @@ PE::PE(const std::string& path)
 	if (end_pos < 0) {
 		size_ok = false;
 	}
-	_file_size = size_ok ? static_cast<boost::uint64_t>(end_pos) : 0;
+	_file_size = size_ok ? static_cast<std::uint64_t>(end_pos) : 0;
 	if (fseek(_file_handle.get(), 0, SEEK_SET)) {
 		size_ok = false;
 	}
@@ -66,7 +66,7 @@ PE::PE(const std::string& display_path, pFile file_handle)
 	  _resource_path(display_path),
 	  _initialized(false),
 	  _file_handle(file_handle),
-	  _io_mutex(boost::make_shared<std::mutex>())
+	  _io_mutex(std::make_shared<std::mutex>())
 {
 	if (_file_handle == nullptr)
 	{
@@ -82,7 +82,7 @@ PE::PE(const std::string& display_path, pFile file_handle)
 	if (end_pos < 0) {
 		size_ok = false;
 	}
-	_file_size = size_ok ? static_cast<boost::uint64_t>(end_pos) : 0;
+	_file_size = size_ok ? static_cast<std::uint64_t>(end_pos) : 0;
 	if (fseek(_file_handle.get(), 0, SEEK_SET)) {
 		size_ok = false;
 	}
@@ -116,13 +116,13 @@ void PE::_initialize()
 
 // ----------------------------------------------------------------------------
 
-bool PE::_locked_read_at(boost::uint64_t offset, void* dst, size_t size) const
+bool PE::_locked_read_at(std::uint64_t offset, void* dst, size_t size) const
 {
 	if (_file_handle == nullptr || _io_mutex == nullptr) {
 		return false;
 	}
 	// FILE* fseek uses long offsets; reject offsets that cannot be represented.
-	if (offset > static_cast<boost::uint64_t>(std::numeric_limits<long>::max())) {
+	if (offset > static_cast<std::uint64_t>(std::numeric_limits<long>::max())) {
 		return false;
 	}
 	if (size == 0) {
@@ -155,16 +155,16 @@ bool PE::_locked_read_at(boost::uint64_t offset, void* dst, size_t size) const
 
 // ----------------------------------------------------------------------------
 
-shared_bytes PE::_locked_read_vec(boost::uint64_t offset, size_t size) const
+shared_bytes PE::_locked_read_vec(std::uint64_t offset, size_t size) const
 {
 	if (_file_handle == nullptr || _io_mutex == nullptr) {
 		return nullptr;
 	}
-	if (offset > static_cast<boost::uint64_t>(std::numeric_limits<long>::max())) {
+	if (offset > static_cast<std::uint64_t>(std::numeric_limits<long>::max())) {
 		return nullptr;
 	}
 
-	auto res = boost::make_shared<std::vector<boost::uint8_t> >(size);
+	auto res = std::make_shared<std::vector<std::uint8_t> >(size);
 	if (size == 0) {
 		return res;
 	}
@@ -177,28 +177,28 @@ shared_bytes PE::_locked_read_vec(boost::uint64_t offset, size_t size) const
 
 // ----------------------------------------------------------------------------
 
-boost::shared_ptr<PE> PE::create(const std::string& path) {
-	return boost::make_shared<PE>(path);
+std::shared_ptr<PE> PE::create(const std::string& path) {
+	return std::make_shared<PE>(path);
 }
 
 // ----------------------------------------------------------------------------
 
-boost::shared_ptr<PE> PE::create_from_bytes(const boost::uint8_t* data,
+std::shared_ptr<PE> PE::create_from_bytes(const std::uint8_t* data,
 											size_t size,
 											const std::string& name_hint)
 {
 	if (data == nullptr || size == 0) {
-		return boost::make_shared<PE>(name_hint, pFile());
+		return std::make_shared<PE>(name_hint, pFile());
 	}
 
-#if defined(BOOST_WINDOWS_API)
+#if defined(_WIN32)
 	char temp_path[MAX_PATH + 1] = {0};
 	char temp_file[MAX_PATH + 1] = {0};
 	if (GetTempPathA(MAX_PATH, temp_path) == 0) {
-		return boost::make_shared<PE>(name_hint, pFile());
+		return std::make_shared<PE>(name_hint, pFile());
 	}
 	if (GetTempFileNameA(temp_path, "mna", 0, temp_file) == 0) {
-		return boost::make_shared<PE>(name_hint, pFile());
+		return std::make_shared<PE>(name_hint, pFile());
 	}
 
 	HANDLE hfile = CreateFileA(temp_file, GENERIC_READ | GENERIC_WRITE,
@@ -206,18 +206,18 @@ boost::shared_ptr<PE> PE::create_from_bytes(const boost::uint8_t* data,
 	                           FILE_ATTRIBUTE_TEMPORARY | FILE_FLAG_DELETE_ON_CLOSE,
 	                           nullptr);
 	if (hfile == INVALID_HANDLE_VALUE) {
-		return boost::make_shared<PE>(name_hint, pFile());
+		return std::make_shared<PE>(name_hint, pFile());
 	}
 
 	size_t remaining = size;
-	const boost::uint8_t* cursor = data;
+	const std::uint8_t* cursor = data;
 	while (remaining > 0) {
 		DWORD chunk = (remaining > MAXDWORD) ? MAXDWORD : static_cast<DWORD>(remaining);
 		DWORD written = 0;
 		BOOL ok = WriteFile(hfile, cursor, chunk, &written, nullptr);
 		if (!ok || written != chunk) {
 			CloseHandle(hfile);
-			return boost::make_shared<PE>(name_hint, pFile());
+			return std::make_shared<PE>(name_hint, pFile());
 		}
 		remaining -= written;
 		cursor += written;
@@ -227,43 +227,43 @@ boost::shared_ptr<PE> PE::create_from_bytes(const boost::uint8_t* data,
 	int fd = _open_osfhandle(reinterpret_cast<intptr_t>(hfile), _O_RDONLY | _O_BINARY);
 	if (fd == -1) {
 		CloseHandle(hfile);
-		return boost::make_shared<PE>(name_hint, pFile());
+		return std::make_shared<PE>(name_hint, pFile());
 	}
 
 	FILE* f = _fdopen(fd, "rb");
 	if (f == nullptr) {
 		_close(fd);
-		return boost::make_shared<PE>(name_hint, pFile());
+		return std::make_shared<PE>(name_hint, pFile());
 	}
 	pFile handle(f, fclose);
-	auto pe = boost::make_shared<PE>(name_hint, handle);
+	auto pe = std::make_shared<PE>(name_hint, handle);
 	pe->_resource_path = temp_file;
 	return pe;
 #else
 #if defined(__GLIBC__)
-	auto buffer = boost::make_shared<std::vector<boost::uint8_t> >(size);
+	auto buffer = std::make_shared<std::vector<std::uint8_t> >(size);
 	memcpy(buffer->data(), data, size);
 	FILE* f = fmemopen(buffer->data(), size, "rb");
 	if (f == nullptr) {
-		return boost::make_shared<PE>(name_hint, pFile());
+		return std::make_shared<PE>(name_hint, pFile());
 	}
 	pFile handle(f, fclose);
-	auto pe = boost::make_shared<PE>(name_hint, handle);
+	auto pe = std::make_shared<PE>(name_hint, handle);
 	pe->_backing_store = buffer;
 	return pe;
 #else
 	// Fallback to a temporary file on other POSIX platforms.
 	FILE* f = tmpfile();
 	if (f == nullptr) {
-		return boost::make_shared<PE>(name_hint, pFile());
+		return std::make_shared<PE>(name_hint, pFile());
 	}
 	if (size != fwrite(data, 1, size, f)) {
 		fclose(f);
-		return boost::make_shared<PE>(name_hint, pFile());
+		return std::make_shared<PE>(name_hint, pFile());
 	}
 	fseek(f, 0, SEEK_SET);
 	pFile handle(f, fclose);
-	return boost::make_shared<PE>(name_hint, handle);
+	return std::make_shared<PE>(name_hint, handle);
 #endif
 #endif
 }
@@ -287,7 +287,7 @@ void PE::operator delete(void* p) {
 
 // ----------------------------------------------------------------------------
 
-boost::uint64_t PE::get_filesize() const {
+std::uint64_t PE::get_filesize() const {
 	return _file_size;
 }
 
@@ -324,7 +324,7 @@ shared_bytes PE::get_overlay_bytes(size_t size) const
     }
 
     // Find where the overlay data would be located.
-    boost::uint64_t max_offset = 0;
+    std::uint64_t max_offset = 0;
 
     // If the binary is signed, look after the authenticode signature.
     if (_ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].VirtualAddress) 
@@ -378,7 +378,7 @@ bool PE::_parse_dos_header()
 		PRINT_ERROR << "DOS Header is invalid (wrong magic)." << DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
 	}
-	_h_dos.reset(dos);
+	_h_dos = dos;
 	return true;
 }
 
@@ -409,7 +409,7 @@ bool PE::_parse_pe_header()
 		PRINT_ERROR << "PE Header is invalid." << DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
 	}
-	_h_pe.reset(peh);
+	_h_pe = peh;
 	return true;
 }
 
@@ -434,7 +434,7 @@ bool PE::_parse_coff_symbols()
 
 	for (unsigned int i = 0 ; i < _h_pe->NumberOfSymbols ; ++i)
 	{
-		pcoff_symbol sym = boost::make_shared<coff_symbol>();
+		pcoff_symbol sym = std::make_shared<coff_symbol>();
 		memset(sym.get(), 0, sizeof(coff_symbol));
 
 		if (18 != fread(sym.get(), 1, 18, _file_handle.get())) // Each symbol has a fixed size of 18 bytes.
@@ -466,7 +466,7 @@ bool PE::_parse_coff_symbols()
 
 	while (count < st_size)
 	{
-		pString s = boost::make_shared<std::string>(utils::read_ascii_string(_file_handle.get()));
+		pString s = std::make_shared<std::string>(utils::read_ascii_string(_file_handle.get()));
 		_coff_string_table.push_back(s);
 		count += s->size() + 1; // Count the null terminator as well.
 	}
@@ -579,7 +579,7 @@ bool PE::_parse_image_optional_header()
 		PRINT_WARNING << "NumberOfRvaAndSizes > 0x10. This PE may have manually been crafted." << DEBUG_INFO_INSIDEPE << std::endl;
 	}
 
-	for (unsigned int i = 0 ; i < std::min(ioh.NumberOfRvaAndSizes, static_cast<boost::uint32_t>(0x10)) ; ++i)
+	for (unsigned int i = 0 ; i < std::min(ioh.NumberOfRvaAndSizes, static_cast<std::uint32_t>(0x10)) ; ++i)
 	{
 		if (8 != fread(&ioh.directories[i], 1, 8, _file_handle.get()))
 		{
@@ -588,7 +588,7 @@ bool PE::_parse_image_optional_header()
 		}
 	}
 
-	_ioh.reset(ioh);
+	_ioh = ioh;
 	return true;
 }
 
@@ -617,7 +617,7 @@ bool PE::_parse_section_table()
 			PRINT_ERROR << "Could not read section " << i << "." << DEBUG_INFO_INSIDEPE << std::endl;
 			return false;
 		}
-		_sections.push_back(boost::make_shared<Section>(sec, _file_handle, _file_size, _coff_string_table, _io_mutex));
+		_sections.push_back(std::make_shared<Section>(sec, _file_handle, _file_size, _coff_string_table, _io_mutex));
 	}
 
 	return true;
@@ -634,12 +634,12 @@ bool PE::_parse_debug()
 		return true;
 	}
 
-	unsigned int size = 6 * sizeof(boost::uint32_t) + 2 * sizeof(boost::uint16_t);
+	unsigned int size = 6 * sizeof(std::uint32_t) + 2 * sizeof(std::uint16_t);
 	unsigned int number_of_entries = _ioh->directories[IMAGE_DIRECTORY_ENTRY_DEBUG].Size / size;
 
 	for (unsigned int i = 0 ; i < number_of_entries ; ++i)
 	{
-		auto debug = boost::make_shared<debug_directory_entry>();
+		auto debug = std::make_shared<debug_directory_entry>();
 		memset(debug.get(), 0, size);
 		if (size != fread(debug.get(), 1, size, _file_handle.get()))
 		{
@@ -651,7 +651,7 @@ bool PE::_parse_debug()
 		if (debug->Type == nt::DEBUG_TYPES.at("IMAGE_DEBUG_TYPE_CODEVIEW"))
 		{
 			pdb_info pdb;
-			unsigned int pdb_size = 2 * sizeof(boost::uint32_t) + 16 * sizeof(boost::uint8_t);
+			unsigned int pdb_size = 2 * sizeof(std::uint32_t) + 16 * sizeof(std::uint8_t);
 			memset(&pdb, 0, pdb_size);
 
 			unsigned int saved_offset = ftell(_file_handle.get());
@@ -671,7 +671,7 @@ bool PE::_parse_debug()
 		else if (debug->Type == nt::DEBUG_TYPES.at("IMAGE_DEBUG_TYPE_MISC"))
 		{
 			image_debug_misc misc;
-			unsigned int misc_size = 2 * sizeof(boost::uint32_t) + 4 * sizeof(boost::uint8_t);
+			unsigned int misc_size = 2 * sizeof(std::uint32_t) + 4 * sizeof(std::uint8_t);
 			memset(&misc, 1, misc_size);
 			unsigned int saved_offset = ftell(_file_handle.get());
 			fseek(_file_handle.get(), debug->PointerToRawData, SEEK_SET);
@@ -700,7 +700,7 @@ bool PE::_parse_debug()
 
 // ----------------------------------------------------------------------------
 
-unsigned int PE::rva_to_offset(boost::uint64_t rva) const
+unsigned int PE::rva_to_offset(std::uint64_t rva) const
 {
 	if (!_ioh) // Image Optional Header was not parsed.
 	{
@@ -765,7 +765,7 @@ unsigned int PE::rva_to_offset(boost::uint64_t rva) const
 
 // ----------------------------------------------------------------------------
 
-unsigned int PE::offset_to_rva(boost::uint64_t offset) const
+unsigned int PE::offset_to_rva(std::uint64_t offset) const
 {
 	if (!_ioh) {
 		PRINT_ERROR << "Tried to convert an offset into a RVA, but ImageOptionalHeader was not parsed!"
@@ -783,15 +783,15 @@ unsigned int PE::offset_to_rva(boost::uint64_t offset) const
 
 	for (const auto& section : _sections)
 	{
-		boost::uint32_t raw_ptr = section->get_pointer_to_raw_data();
-		boost::uint32_t raw_size = section->get_size_of_raw_data();
-		boost::uint32_t aligned_ptr = raw_ptr;
+		std::uint32_t raw_ptr = section->get_pointer_to_raw_data();
+		std::uint32_t raw_size = section->get_size_of_raw_data();
+		std::uint32_t aligned_ptr = raw_ptr;
 
 		if (raw_ptr % _ioh->FileAlignment != 0) {
 			aligned_ptr = (raw_ptr / _ioh->FileAlignment) * _ioh->FileAlignment;
 		}
 
-		if (offset >= aligned_ptr && offset < static_cast<boost::uint64_t>(aligned_ptr) + raw_size)
+		if (offset >= aligned_ptr && offset < static_cast<std::uint64_t>(aligned_ptr) + raw_size)
 		{
 			return static_cast<unsigned int>(
 				(offset - aligned_ptr + section->get_virtual_address()) & 0xFFFFFFFF);
@@ -803,26 +803,26 @@ unsigned int PE::offset_to_rva(boost::uint64_t offset) const
 
 // ----------------------------------------------------------------------------
 
-pSection PE::get_section_by_rva(boost::uint64_t rva) const
+pSection PE::get_section_by_rva(std::uint64_t rva) const
 {
 	return find_section(static_cast<unsigned int>(rva), _sections);
 }
 
 // ----------------------------------------------------------------------------
 
-pSection PE::get_section_by_offset(boost::uint64_t offset) const
+pSection PE::get_section_by_offset(std::uint64_t offset) const
 {
 	for (const auto& section : _sections)
 	{
-		boost::uint32_t raw_ptr = section->get_pointer_to_raw_data();
-		boost::uint32_t raw_size = section->get_size_of_raw_data();
-		boost::uint32_t aligned_ptr = raw_ptr;
+		std::uint32_t raw_ptr = section->get_pointer_to_raw_data();
+		std::uint32_t raw_size = section->get_size_of_raw_data();
+		std::uint32_t aligned_ptr = raw_ptr;
 
 		if (_ioh && raw_ptr % _ioh->FileAlignment != 0) {
 			aligned_ptr = (raw_ptr / _ioh->FileAlignment) * _ioh->FileAlignment;
 		}
 
-		if (offset >= aligned_ptr && offset < static_cast<boost::uint64_t>(aligned_ptr) + raw_size) {
+		if (offset >= aligned_ptr && offset < static_cast<std::uint64_t>(aligned_ptr) + raw_size) {
 			return section;
 		}
 	}
@@ -832,7 +832,7 @@ pSection PE::get_section_by_offset(boost::uint64_t offset) const
 
 // ----------------------------------------------------------------------------
 
-shared_bytes PE::get_bytes_at_offset(boost::uint64_t offset, size_t size) const
+shared_bytes PE::get_bytes_at_offset(std::uint64_t offset, size_t size) const
 {
 	if (_file_handle == nullptr || size == 0) {
 		return nullptr;
@@ -849,7 +849,7 @@ shared_bytes PE::get_bytes_at_offset(boost::uint64_t offset, size_t size) const
 
 // ----------------------------------------------------------------------------
 
-shared_bytes PE::get_data(boost::uint64_t rva, size_t size) const
+shared_bytes PE::get_data(std::uint64_t rva, size_t size) const
 {
 	unsigned int offset = rva_to_offset(rva);
 	if (offset == 0 && rva != 0) {
@@ -860,7 +860,7 @@ shared_bytes PE::get_data(boost::uint64_t rva, size_t size) const
 
 // ----------------------------------------------------------------------------
 
-unsigned int PE::_va_to_offset(boost::uint64_t va) const
+unsigned int PE::_va_to_offset(std::uint64_t va) const
 {
 	if (!_ioh) // Image Optional Header was not parsed.
 	{
@@ -954,7 +954,7 @@ bool PE::_parse_exports()
 	image_export_directory ied;
 
 	// Don't overwrite the std::string at the end of the structure.
-	unsigned int ied_size = 9*sizeof(boost::uint32_t) + 2*sizeof(boost::uint16_t);
+	unsigned int ied_size = 9*sizeof(std::uint32_t) + 2*sizeof(std::uint16_t);
 	memset(&ied, 0, ied_size);
 
 	if (ied_size != fread(&ied, 1, ied_size, _file_handle.get()))
@@ -963,7 +963,7 @@ bool PE::_parse_exports()
 		return false;
 	}
 
-    _ied.reset(ied);
+    _ied = ied;
 
 	if (_ied->Characteristics != 0) {
 		PRINT_WARNING << "IMAGE_EXPORT_DIRECTORY field Characteristics is reserved and should be 0!"
@@ -992,7 +992,7 @@ bool PE::_parse_exports()
 
 	for (unsigned int i = 0 ; i < _ied->NumberOfFunctions ; ++i)
 	{
-		pexported_function ex = boost::make_shared<exported_function>();
+		pexported_function ex = std::make_shared<exported_function>();
 		if (4 != fread(&(ex->Address), 1, 4, _file_handle.get()))
 		{
 			PRINT_ERROR << "Could not read an exported function's address."
@@ -1021,13 +1021,13 @@ bool PE::_parse_exports()
     }
 
 	// Associate possible exported names with the RVAs we just obtained. First, read the name and ordinal table.
-	boost::scoped_array<boost::uint32_t> names;
-	boost::scoped_array<boost::uint16_t> ords;
+	std::vector<std::uint32_t> names;
+	std::vector<std::uint16_t> ords;
 	try
 	{
 		// ied.NumberOfNames is an untrusted value. Allocate in a try-catch block to prevent crashes. See issue #1.
-		names.reset(new boost::uint32_t[_ied->NumberOfNames]);
-		ords.reset(new boost::uint16_t[_ied->NumberOfNames]);
+		names.resize(_ied->NumberOfNames);
+		ords.resize(_ied->NumberOfNames);
 	}
 	catch (const std::bad_alloc&)
 	{
@@ -1042,7 +1042,7 @@ bool PE::_parse_exports()
 		return true;
 	}
 
-	if (_ied->NumberOfNames * sizeof(boost::uint32_t) != fread(names.get(), 1, _ied->NumberOfNames * sizeof(boost::uint32_t), _file_handle.get()))
+	if (_ied->NumberOfNames * sizeof(std::uint32_t) != fread(names.data(), 1, _ied->NumberOfNames * sizeof(std::uint32_t), _file_handle.get()))
 	{
 		PRINT_ERROR << "Could not read an exported function's name address." << DEBUG_INFO_INSIDEPE << std::endl;
 		return true;
@@ -1054,7 +1054,7 @@ bool PE::_parse_exports()
 		PRINT_ERROR << "Could not reach exported functions NameOrdinals table." << DEBUG_INFO_INSIDEPE << std::endl;
 		return true;
 	}
-	if (_ied->NumberOfNames * sizeof(boost::uint16_t) != fread(ords.get(), 1, _ied->NumberOfNames * sizeof(boost::uint16_t), _file_handle.get()))
+	if (_ied->NumberOfNames * sizeof(std::uint16_t) != fread(ords.data(), 1, _ied->NumberOfNames * sizeof(std::uint16_t), _file_handle.get()))
 	{
 		PRINT_ERROR << "Could not read an exported function's name ordinal." << DEBUG_INFO_INSIDEPE << std::endl;
 		return true;
@@ -1086,10 +1086,10 @@ bool PE::_parse_relocations()
 	}
 
 	unsigned int remaining_size = _ioh->directories[IMAGE_DIRECTORY_ENTRY_BASERELOC].Size;
-	unsigned int header_size =  2*sizeof(boost::uint32_t);
+	unsigned int header_size =  2*sizeof(std::uint32_t);
 	while (remaining_size > 0)
 	{
-		pimage_base_relocation reloc = boost::make_shared<image_base_relocation>();
+		pimage_base_relocation reloc = std::make_shared<image_base_relocation>();
 		memset(reloc.get(), 0, header_size);
 		if (header_size != fread(reloc.get(), 1, header_size, _file_handle.get()) || reloc->BlockSize > remaining_size)
 		{
@@ -1104,10 +1104,10 @@ bool PE::_parse_relocations()
 		}
 
 		// The remaining fields are an array of shorts. The number is deduced from the block size.
-		for (unsigned int i = 0 ; i < (reloc->BlockSize - header_size) / sizeof(boost::uint16_t) ; ++i)
+		for (unsigned int i = 0 ; i < (reloc->BlockSize - header_size) / sizeof(std::uint16_t) ; ++i)
 		{
-			boost::uint16_t type_or_offset = 0;
-			if (sizeof(boost::uint16_t) != fread(&type_or_offset, 1, sizeof(boost::uint16_t), _file_handle.get()))
+			std::uint16_t type_or_offset = 0;
+			if (sizeof(std::uint16_t) != fread(&type_or_offset, 1, sizeof(std::uint16_t), _file_handle.get()))
 			{
 				PRINT_ERROR << "Could not read an IMAGE_BASE_RELOCATION's TypeOrOffset!"
 							<< DEBUG_INFO_INSIDEPE << std::endl;
@@ -1135,7 +1135,7 @@ bool PE::_parse_tls()
 	}
 
 	image_tls_directory tls;
-	unsigned int size = 4*sizeof(boost::uint64_t) + 2*sizeof(boost::uint32_t);
+	unsigned int size = 4*sizeof(std::uint64_t) + 2*sizeof(std::uint32_t);
 	memset(&tls, 0, size);
 
 	if (get_architecture() == x64) {
@@ -1143,11 +1143,11 @@ bool PE::_parse_tls()
 	}
 	else
 	{
-		fread(&tls.StartAddressOfRawData, 1, sizeof(boost::uint32_t), _file_handle.get());
-		fread(&tls.EndAddressOfRawData, 1, sizeof(boost::uint32_t), _file_handle.get());
-		fread(&tls.AddressOfIndex, 1, sizeof(boost::uint32_t), _file_handle.get());
-		fread(&tls.AddressOfCallbacks, 1, sizeof(boost::uint32_t), _file_handle.get());
-		fread(&tls.SizeOfZeroFill, 1, 2 * sizeof(boost::uint32_t), _file_handle.get());
+		fread(&tls.StartAddressOfRawData, 1, sizeof(std::uint32_t), _file_handle.get());
+		fread(&tls.EndAddressOfRawData, 1, sizeof(std::uint32_t), _file_handle.get());
+		fread(&tls.AddressOfIndex, 1, sizeof(std::uint32_t), _file_handle.get());
+		fread(&tls.AddressOfCallbacks, 1, sizeof(std::uint32_t), _file_handle.get());
+		fread(&tls.SizeOfZeroFill, 1, 2 * sizeof(std::uint32_t), _file_handle.get());
 	}
 
 	if (feof(_file_handle.get()) || ferror(_file_handle.get()))
@@ -1164,8 +1164,8 @@ bool PE::_parse_tls()
 		return true; // Non-fatal
 	}
 
-	boost::uint64_t callback_address = 0;
-	unsigned int callback_size = _ioh->Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32+") ? sizeof(boost::uint64_t) : sizeof(boost::uint32_t);
+	std::uint64_t callback_address = 0;
+	unsigned int callback_size = _ioh->Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32+") ? sizeof(std::uint64_t) : sizeof(std::uint32_t);
 	while (true) // break on null callback
 	{
 		if (callback_size != fread(&callback_address, 1, callback_size, _file_handle.get()) || !callback_address) { // Exit condition.
@@ -1174,7 +1174,7 @@ bool PE::_parse_tls()
 		tls.Callbacks.push_back(callback_address);
 	}
 
-	_tls.reset(tls);
+	_tls = tls;
 	return true;
 }
 
@@ -1293,7 +1293,7 @@ bool PE::_parse_config()
 	read_config_field(config, _file_handle.get(), &config.GuardLongJumpTargetTable, field_size, read_bytes) ||
 	read_config_field(config, _file_handle.get(), &config.GuardLongJumpTargetCount, field_size, read_bytes);
 
-	_config.reset(config);
+	_config = config;
 	return true;
 }
 
@@ -1312,10 +1312,10 @@ bool PE::_parse_certificates()
 	}
 
 	unsigned int remaining_bytes = _ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].Size;
-	unsigned int header_size = sizeof(boost::uint32_t) + 2*sizeof(boost::uint16_t);
+	unsigned int header_size = sizeof(std::uint32_t) + 2*sizeof(std::uint16_t);
 	while (remaining_bytes > header_size)
 	{
-		pwin_certificate cert = boost::make_shared<win_certificate>();
+		pwin_certificate cert = std::make_shared<win_certificate>();
 		memset(cert.get(), 0, header_size);
 		if (header_size != fread(cert.get(), 1, header_size, _file_handle.get()))
 		{
@@ -1415,26 +1415,26 @@ bool PE::_parse_rich_header()
 			PRINT_WARNING << "Error while reading the RICH header!" << DEBUG_INFO_INSIDEPE << std::endl;
 			return true;
 		}
-		boost::uint64_t data;
+		std::uint64_t data;
 		if (1 != fread(&data, 8, 1, _file_handle.get())) 
 		{
 			PRINT_WARNING << "Error while reading the RICH header!" << DEBUG_INFO_INSIDEPE << std::endl;
 			return true;
 		}
-		boost::uint32_t count = (data >> 32) ^ h.xor_key;
-		boost::uint32_t id_value = (data & 0xFFFFFFFF) ^ h.xor_key;
+		std::uint32_t count = (data >> 32) ^ h.xor_key;
+		std::uint32_t id_value = (data & 0xFFFFFFFF) ^ h.xor_key;
 
 		// Stop if we reach the start marker, "DanS".
 		if (id_value == 0x536E6144) {
 			break;
 		}
-		auto t = std::make_tuple(static_cast<boost::uint16_t>((id_value >> 16) & 0xFFFF), static_cast<boost::uint16_t>(id_value & 0xFFFF), count);
+		auto t = std::make_tuple(static_cast<std::uint16_t>((id_value >> 16) & 0xFFFF), static_cast<std::uint16_t>(id_value & 0xFFFF), count);
 		h.values.insert(h.values.begin(), t);
 	};
 
 	// Keep a trace of where this header starts, as it is not easy to locate and is useful to calculate the checksum.
 	h.file_offset = ftell(_file_handle.get()) - 8;
-	_rich_header.reset(h);
+	_rich_header = h;
 	return true;
 }
 

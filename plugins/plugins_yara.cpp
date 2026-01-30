@@ -67,14 +67,14 @@ bool exclude_microsoft_data(const mana::PE& pe, yara::Match::pSingleMatch m)
 		auto ioh = pe.get_image_optional_header();
 		if (ioh && 
 			ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].VirtualAddress < offset &&
-			offset < static_cast<boost::uint64_t>(ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].VirtualAddress) + ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].Size) {
+			offset < static_cast<std::uint64_t>(ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].VirtualAddress) + ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].Size) {
 			return false;
 		}
 
 		for (auto& it : *resources)
 		{
 			// Exclude matches located inside the RT_MANIFEST
-			if (*it->get_type() == "RT_MANIFEST" && it->get_offset() < offset && offset < static_cast<boost::uint64_t>(it->get_offset()) + it->get_size()) {
+			if (*it->get_type() == "RT_MANIFEST" && it->get_offset() < offset && offset < static_cast<std::uint64_t>(it->get_offset()) + it->get_size()) {
 				return false;
 			}
 		}
@@ -150,7 +150,7 @@ public:
 						found_unique.insert(it2->get_str());
 					}
 
-					io::pNode output = boost::make_shared<io::OutputTreeNode>(it->operator[](meta_field_name),
+					io::pNode output = std::make_shared<io::OutputTreeNode>(it->operator[](meta_field_name),
 					io::OutputTreeNode::STRINGS, io::OutputTreeNode::NEW_LINE);
 
 					for (const auto& it2 : found_unique) {
@@ -196,9 +196,9 @@ private:
 	 *	The manape_data object contains address information (entry point, sections, ...). Passing them to Yara prevents
 	 *	me from using their built in PE parser (since manalyze has already done all the work).
 	 */
-	static boost::shared_ptr<manape_data> _create_manape_module_data(const mana::PE& pe)
+	static std::shared_ptr<manape_data> _create_manape_module_data(const mana::PE& pe)
 	{
-		boost::shared_ptr<manape_data> res(new manape_data, delete_manape_module_data);
+		std::shared_ptr<manape_data> res(new manape_data, delete_manape_module_data);
 		memset(res.get(), 0, sizeof(manape_data));
 		auto ioh = pe.get_image_optional_header();
 		auto sections = pe.get_sections();
@@ -218,7 +218,7 @@ private:
 			res->sections = static_cast<manape_file_portion*>(malloc(res->number_of_sections * sizeof(manape_file_portion)));
 			if (res->sections != nullptr)
 			{
-				for (boost::uint32_t i = 0 ; i < res->number_of_sections ; ++i)
+				for (std::uint32_t i = 0 ; i < res->number_of_sections ; ++i)
 				{
 					res->sections[i].start = sections->at(i)->get_pointer_to_raw_data();
 					res->sections[i].size = sections->at(i)->get_size_of_raw_data();
@@ -279,11 +279,11 @@ public:
 	}
 
 	pString get_id() const override {
-		return boost::make_shared<std::string>("clamav");
+		return std::make_shared<std::string>("clamav");
 	}
 
 	pString  get_description() const override {
-		return boost::make_shared<std::string>("Scans the binary with ClamAV virus definitions.");
+		return std::make_shared<std::string>("Scans the binary with ClamAV virus definitions.");
 	}
 
 private:
@@ -321,11 +321,11 @@ public:
 	}
 
 	pString get_id() const override {
-		return boost::make_shared<std::string>("compilers");
+		return std::make_shared<std::string>("compilers");
 	}
 
-	boost::shared_ptr<std::string> get_description() const override {
-		return boost::make_shared<std::string>("Tries to determine which compiler generated the binary.");
+	std::shared_ptr<std::string> get_description() const override {
+		return std::make_shared<std::string>("Tries to determine which compiler generated the binary.");
 	}
 };
 
@@ -338,12 +338,12 @@ public:
 		return scan(pe, "PEiD Signature:", SUSPICIOUS, "packer_name");
 	}
 
-	boost::shared_ptr<std::string> get_id() const override {
-		return boost::make_shared<std::string>("peid");
+	std::shared_ptr<std::string> get_id() const override {
+		return std::make_shared<std::string>("peid");
 	}
 
-	boost::shared_ptr<std::string> get_description() const override {
-		return boost::make_shared<std::string>("Returns the PEiD signature of the binary.");
+	std::shared_ptr<std::string> get_description() const override {
+		return std::make_shared<std::string>("Returns the PEiD signature of the binary.");
 	}
 };
 
@@ -376,12 +376,12 @@ public:
 		return res;
 	}
 
-	boost::shared_ptr<std::string> get_id() const override {
-		return boost::make_shared<std::string>("strings");
+	std::shared_ptr<std::string> get_id() const override {
+		return std::make_shared<std::string>("strings");
 	}
 
-	boost::shared_ptr<std::string> get_description() const override {
-		return boost::make_shared<std::string>("Looks for suspicious strings (anti-VM, process names...).");
+	std::shared_ptr<std::string> get_description() const override {
+		return std::make_shared<std::string>("Looks for suspicious strings (anti-VM, process names...).");
 	}
 };
 
@@ -418,12 +418,12 @@ public:
 		return res;
 	}
 
-	boost::shared_ptr<std::string> get_id() const override {
-		return boost::make_shared<std::string>("findcrypt");
+	std::shared_ptr<std::string> get_id() const override {
+		return std::make_shared<std::string>("findcrypt");
 	}
 
-	boost::shared_ptr<std::string> get_description() const override {
-		return boost::make_shared<std::string>("Detects embedded cryptographic constants.");
+	std::shared_ptr<std::string> get_description() const override {
+		return std::make_shared<std::string>("Detects embedded cryptographic constants.");
 	}
 };
 
@@ -456,12 +456,12 @@ public:
 		return btc;
 	}
 
-	boost::shared_ptr<std::string> get_id() const override {
-		return boost::make_shared<std::string>("cryptoaddress");
+	std::shared_ptr<std::string> get_id() const override {
+		return std::make_shared<std::string>("cryptoaddress");
 	}
 
-	boost::shared_ptr<std::string> get_description() const override {
-		return boost::make_shared<std::string>("Looks for valid BTC / XMR addresses in the binary.");
+	std::shared_ptr<std::string> get_description() const override {
+		return std::make_shared<std::string>("Looks for valid BTC / XMR addresses in the binary.");
 	}
 };
 

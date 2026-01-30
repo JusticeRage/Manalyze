@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include "plugin_interface.h"
 
 namespace plugin {
@@ -40,7 +42,7 @@ public:
 	 */
 	virtual pIPlugin instantiate_plugin() = 0;
 };
-typedef boost::shared_ptr<Plugin> pPlugin;
+typedef std::shared_ptr<Plugin> pPlugin;
 
 /**
  *	@brief	This class represent a plugin which was loaded from a shared library.

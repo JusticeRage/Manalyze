@@ -19,19 +19,16 @@
 
 #include <vector>
 #include <iostream>
-#include <boost/shared_ptr.hpp>
-#include <boost/bind/bind.hpp>
-#include <boost/optional.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/system/api_config.hpp>
-
+#include <memory>
+#include <optional>
+#include <filesystem>
 #include "plugin_framework/dynamic_library.h"
 #include "plugin_framework/plugin_interface.h"
 #include "plugin_framework/plugin.h"
 
 #include "manacommons/color.h"
 
-namespace bfs = boost::filesystem;
+namespace bfs = std::filesystem;
 
 namespace plugin {
 
@@ -67,9 +64,9 @@ public:
 
 private:
 	pPlugin _plugin;
-	boost::optional<pSharedLibrary>	_shared_library;
+	std::optional<pSharedLibrary>	_shared_library;
 };
-typedef boost::shared_ptr<RegisterEntry> pRegisterEntry;
+typedef std::shared_ptr<RegisterEntry> pRegisterEntry;
 
 /**
  *	@brief	This class takes care of the management of the plugins.

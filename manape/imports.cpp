@@ -17,6 +17,8 @@
 
 #include "manape/pe.h"
 
+#include <regex>
+
 namespace mana {
 
 // ----------------------------------------------------------------------------
@@ -27,7 +29,7 @@ bool PE::_parse_hint_name_table(pimport_lookup_table import) const
 
 	// Read the HINT/NAME TABLE if applicable. Check the most significant byte of AddressOfData to
 	// see if the import is by name or ordinal. For PE32+, AddressOfData is a uint64.
-	boost::uint64_t mask = (size_to_read == 8 ? 0x8000000000000000 : 0x80000000);
+	std::uint64_t mask = (size_to_read == 8 ? 0x8000000000000000 : 0x80000000);
 	if (!(import->AddressOfData & mask))
 	{
 		// Import by name. Read the HINT/NAME table. For both PE32 and PE32+, its RVA is stored
@@ -70,7 +72,7 @@ bool PE::_parse_import_lookup_table(unsigned int offset, pImportedLibrary librar
     auto imports = library->get_imports();
 	while (true) // We stop at the first NULL IMPORT_LOOKUP_TABLE
 	{
-		pimport_lookup_table import = boost::make_shared<import_lookup_table>();
+		pimport_lookup_table import = std::make_shared<import_lookup_table>();
 		import->AddressOfData = 0;
 		import->Hint = 0;
 
@@ -134,7 +136,7 @@ bool PE::_parse_imports()
 	while (true) // We stop at the first NULL IMAGE_IMPORT_DESCRIPTOR.
 	{
 		pimage_import_descriptor iid(new image_import_descriptor);
-		memset(iid.get(), 0, 5*sizeof(boost::uint32_t)); // Don't overwrite the last member (a string)
+		memset(iid.get(), 0, 5*sizeof(std::uint32_t)); // Don't overwrite the last member (a string)
 
 		if (20 != fread(iid.get(), 1, 20, _file_handle.get()))
 		{
@@ -215,8 +217,8 @@ bool PE::_parse_delayed_imports()
     }
 
     delay_load_directory_table dldt;
-	memset(&dldt, 0, 8*sizeof(boost::uint32_t));
-    if (1 != fread(&dldt, 8*sizeof(boost::uint32_t), 1, _file_handle.get()))
+	memset(&dldt, 0, 8*sizeof(std::uint32_t));
+    if (1 != fread(&dldt, 8*sizeof(std::uint32_t), 1, _file_handle.get()))
     {
         PRINT_WARNING << "Could not read the Delay-Load Directory Table!" << std::endl;
         return true;
@@ -235,7 +237,7 @@ bool PE::_parse_delayed_imports()
 	pImportedLibrary library(new ImportedLibrary(name));
 
 	dldt.NameStr = name;
-	_delay_load_directory_table.reset(dldt);
+        _delay_load_directory_table = dldt;
 
 	// Read the imports
 	offset = rva_to_offset(dldt.DelayImportNameTable);
@@ -250,7 +252,7 @@ bool PE::_parse_delayed_imports()
 
 const_shared_strings PE::get_imported_dlls() const
 {
-	auto destination = boost::make_shared<std::vector<std::string> >();
+	auto destination = std::make_shared<std::vector<std::string> >();
 	if (!_initialized) {
 		return destination;
 	}
@@ -269,7 +271,7 @@ const_shared_strings PE::get_imported_dlls() const
 
 const_shared_strings PE::get_imported_functions(const std::string& dll) const
 {
-	auto destination = boost::make_shared<std::vector<std::string> >();
+	auto destination = std::make_shared<std::vector<std::string> >();
 	if (!_initialized) {
 		return destination;
 	}
@@ -294,7 +296,7 @@ const_shared_strings PE::get_imported_functions(const std::string& dll) const
 		}
 		else
 		{
-			boost::uint16_t ordinal = it->AddressOfData & 0x7FFF;
+			std::uint16_t ordinal = it->AddressOfData & 0x7FFF;
 			destination->push_back(*nt::translate_ordinal(ordinal, dll));
 		}
 	}
@@ -309,25 +311,25 @@ shared_imports PE::find_imported_dlls(const std::string& name_regexp,
 {
 	std::vector<pImportedLibrary> destination;
 	if (!_initialized) {
-		return boost::make_shared<const std::vector<pImportedLibrary> >(destination);
+		return std::make_shared<const std::vector<pImportedLibrary> >(destination);
 	}
 
-	boost::regex e;
+	std::regex e;
 	if (case_sensitivity) {
-		e = boost::regex(name_regexp);
+		e = std::regex(name_regexp);
 	}
 	else {
-		e = boost::regex(name_regexp, boost::regex::icase);
+		e = std::regex(name_regexp, std::regex::icase);
 	}
 
 	for (auto it = _imports.begin() ; it != _imports.end() ; ++it)
 	{
 		pString name = (*it)->get_name();
-		if (name != nullptr && boost::regex_match(*name, e)) {
+		if (name != nullptr && std::regex_match(*name, e)) {
 			destination.push_back(*it);
 		}
 	}
-	return boost::make_shared<const std::vector<pImportedLibrary> >(destination);
+	return std::make_shared<const std::vector<pImportedLibrary> >(destination);
 }
 
 // ----------------------------------------------------------------------------
@@ -336,7 +338,7 @@ const_shared_strings PE::find_imports(const std::string& function_name_regexp,
 									  const std::string& dll_name_regexp,
 									  bool  case_sensitivity) const
 {
-	auto destination = boost::make_shared<std::vector<std::string> >();
+	auto destination = std::make_shared<std::vector<std::string> >();
 	if (!_initialized) {
 		return destination;
 	}
@@ -346,12 +348,12 @@ const_shared_strings PE::find_imports(const std::string& function_name_regexp,
 		return destination;
 	}
 
-	boost::regex e;
+	std::regex e;
 	if (case_sensitivity) {
-		e = boost::regex(function_name_regexp);
+		e = std::regex(function_name_regexp);
 	}
 	else {
-		e = boost::regex(function_name_regexp, boost::regex::icase);
+		e = std::regex(function_name_regexp, std::regex::icase);
 	}
 
 	// Iterate on matching DLLs
@@ -372,7 +374,7 @@ const_shared_strings PE::find_imports(const std::string& function_name_regexp,
 				name = it2->Name;
 			}
 			// Functions may be imported multiple times, don't add the same one twice.
-			if (boost::regex_match(name, e) && std::find(destination->begin(), destination->end(), name) == destination->end()) {
+			if (std::regex_match(name, e) && std::find(destination->begin(), destination->end(), name) == destination->end()) {
 				destination->push_back(name);
 			}
 		}

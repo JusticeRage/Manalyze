@@ -80,8 +80,5 @@ docs/html
 # Malwares and documentation
 resources/*
 
-# Third-party libraries
-external/
-
 # Signing script
 bin/sign_all.bat

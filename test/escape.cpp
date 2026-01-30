@@ -18,7 +18,7 @@
 #include <boost/test/unit_test.hpp>
 #include "manacommons/escape.h"
 
-typedef boost::shared_ptr<std::string> pString;
+typedef std::shared_ptr<std::string> pString;
 
 // ----------------------------------------------------------------------------
 
@@ -44,9 +44,11 @@ BOOST_AUTO_TEST_CASE(test_string_escape)
 	check_string_escaping("\"", "\"");
 	check_string_escaping("\\", "\\");
 	check_string_escaping("\\\\", "\\\\");
-	check_string_escaping("é", "\\xe9");
+	check_string_escaping(std::string("\xE9", 1), "\\xe9");
 	check_string_escaping("\x1", "\\x01");
 	check_string_escaping("\x01", "\\x01");
+	check_string_escaping("\x80", "\\x80");
+	check_string_escaping("\xff", "\\xff");
 	check_string_escaping("\r\n", "\\x0d\\x0a");
 }
 
@@ -86,6 +88,12 @@ BOOST_AUTO_TEST_CASE(test_string_escape_json)
 	check_string_escaping_json("\"", "\\\"");
 	check_string_escaping_json("\\", "\\\\");
 	check_string_escaping_json("\\\\", "\\\\\\\\");
-	check_string_escaping_json("\x01", "\x01");
+	check_string_escaping_json("\x01", "\\u0001");
+	check_string_escaping_json("\b", "\\b");
+	check_string_escaping_json("\f", "\\f");
+	check_string_escaping_json("\t", "\\t");
+	check_string_escaping_json(std::string("\x7f", 1), "\\u007F");
+	check_string_escaping_json(std::string("\xE9", 1), "\\u00E9");
+	check_string_escaping_json("\v", "\\u000B");
 	check_string_escaping_json("\r\n", "\\r\\n");
 }

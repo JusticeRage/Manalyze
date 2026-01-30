@@ -15,12 +15,23 @@
 	along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <iomanip>
+#include <string_view>
 #include "dump.h"
 #include "manacommons/paths.h"
 
 namespace mana {
 
 // ----------------------------------------------------------------------------
+
+namespace {
+
+bool starts_with(std::string_view value, std::string_view prefix)
+{
+	return value.size() >= prefix.size() &&
+		   value.compare(0, prefix.size(), prefix) == 0;
+}
+
+} // namespace
 
 void dump_dos_header(const mana::PE& pe, io::OutputFormatter& formatter)
 {
@@ -32,22 +43,22 @@ void dump_dos_header(const mana::PE& pe, io::OutputFormatter& formatter)
 	magic << header.e_magic[0] << header.e_magic[1];
 
 	io::pNode dos_header(new io::OutputTreeNode("DOS Header", io::OutputTreeNode::LIST));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_magic", magic.str()));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_cblp", header.e_cblp, io::OutputTreeNode::HEX));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_cp", header.e_cp, io::OutputTreeNode::HEX));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_crlc", header.e_crlc, io::OutputTreeNode::HEX));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_cparhdr", header.e_cparhdr, io::OutputTreeNode::HEX));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_minalloc", header.e_minalloc, io::OutputTreeNode::HEX));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_maxalloc", header.e_maxalloc, io::OutputTreeNode::HEX));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_ss", header.e_ss, io::OutputTreeNode::HEX));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_sp", header.e_sp, io::OutputTreeNode::HEX));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_csum", header.e_csum, io::OutputTreeNode::HEX));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_ip", header.e_ip, io::OutputTreeNode::HEX));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_cs", header.e_cs, io::OutputTreeNode::HEX));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_ovno", header.e_ovno, io::OutputTreeNode::HEX));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_oemid", header.e_oemid, io::OutputTreeNode::HEX));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_oeminfo", header.e_oeminfo, io::OutputTreeNode::HEX));
-	dos_header->append(boost::make_shared<io::OutputTreeNode>("e_lfanew", header.e_lfanew, io::OutputTreeNode::HEX));
+	dos_header->append(std::make_shared<io::OutputTreeNode>("e_magic", magic.str()));
+	dos_header->append(std::make_shared<io::OutputTreeNode>("e_cblp", header.e_cblp, io::OutputTreeNode::HEX));
+	dos_header->append(std::make_shared<io::OutputTreeNode>("e_cp", header.e_cp, io::OutputTreeNode::HEX));
+	dos_header->append(std::make_shared<io::OutputTreeNode>("e_crlc", header.e_crlc, io::OutputTreeNode::HEX));
+	dos_header->append(std::make_shared<io::OutputTreeNode>("e_cparhdr", header.e_cparhdr, io::OutputTreeNode::HEX));
+	dos_header->append(std::make_shared<io::OutputTreeNode>("e_minalloc", header.e_minalloc, io::OutputTreeNode::HEX));
+	dos_header->append(std::make_shared<io::OutputTreeNode>("e_maxalloc", header.e_maxalloc, io::OutputTreeNode::HEX));
+	dos_header->append(std::make_shared<io::OutputTreeNode>("e_ss", header.e_ss, io::OutputTreeNode::HEX));
+	dos_header->append(std::make_shared<io::OutputTreeNode>("e_sp", header.e_sp, io::OutputTreeNode::HEX));
+	dos_header->append(std::make_shared<io::OutputTreeNode>("e_csum", header.e_csum, io::OutputTreeNode::HEX));
+	dos_header->append(std::make_shared<io::OutputTreeNode>("e_ip", header.e_ip, io::OutputTreeNode::HEX));
+	dos_header->append(std::make_shared<io::OutputTreeNode>("e_cs", header.e_cs, io::OutputTreeNode::HEX));
+	dos_header->append(std::make_shared<io::OutputTreeNode>("e_ovno", header.e_ovno, io::OutputTreeNode::HEX));
+	dos_header->append(std::make_shared<io::OutputTreeNode>("e_oemid", header.e_oemid, io::OutputTreeNode::HEX));
+	dos_header->append(std::make_shared<io::OutputTreeNode>("e_oeminfo", header.e_oeminfo, io::OutputTreeNode::HEX));
+	dos_header->append(std::make_shared<io::OutputTreeNode>("e_lfanew", header.e_lfanew, io::OutputTreeNode::HEX));
 
 	formatter.add_data(dos_header, *pe.get_path());
 }
@@ -63,14 +74,14 @@ void dump_pe_header(const mana::PE& pe, io::OutputFormatter& formatter)
 	io::pNode pe_header(new io::OutputTreeNode("PE Header", io::OutputTreeNode::LIST));
 	std::stringstream ss;
 	ss << header.Signature[0] << header.Signature[1];
-	pe_header->append(boost::make_shared<io::OutputTreeNode>("Signature", ss.str()));
-	pe_header->append(boost::make_shared<io::OutputTreeNode>("Machine", *nt::translate_to_flag(header.Machine, nt::MACHINE_TYPES)));
-	pe_header->append(boost::make_shared<io::OutputTreeNode>("NumberofSections", header.NumberofSections));
-	pe_header->append(boost::make_shared<io::OutputTreeNode>("TimeDateStamp", *utils::timestamp_to_string(header.TimeDateStamp)));
-	pe_header->append(boost::make_shared<io::OutputTreeNode>("PointerToSymbolTable", header.PointerToSymbolTable, io::OutputTreeNode::HEX));
-	pe_header->append(boost::make_shared<io::OutputTreeNode>("NumberOfSymbols", header.NumberOfSymbols));
-	pe_header->append(boost::make_shared<io::OutputTreeNode>("SizeOfOptionalHeader", header.SizeOfOptionalHeader, io::OutputTreeNode::HEX));
-	pe_header->append(boost::make_shared<io::OutputTreeNode>("Characteristics", *nt::translate_to_flags(header.Characteristics, nt::PE_CHARACTERISTICS)));
+	pe_header->append(std::make_shared<io::OutputTreeNode>("Signature", ss.str()));
+	pe_header->append(std::make_shared<io::OutputTreeNode>("Machine", *nt::translate_to_flag(header.Machine, nt::MACHINE_TYPES)));
+	pe_header->append(std::make_shared<io::OutputTreeNode>("NumberofSections", header.NumberofSections));
+	pe_header->append(std::make_shared<io::OutputTreeNode>("TimeDateStamp", *utils::timestamp_to_string(header.TimeDateStamp)));
+	pe_header->append(std::make_shared<io::OutputTreeNode>("PointerToSymbolTable", header.PointerToSymbolTable, io::OutputTreeNode::HEX));
+	pe_header->append(std::make_shared<io::OutputTreeNode>("NumberOfSymbols", header.NumberOfSymbols));
+	pe_header->append(std::make_shared<io::OutputTreeNode>("SizeOfOptionalHeader", header.SizeOfOptionalHeader, io::OutputTreeNode::HEX));
+	pe_header->append(std::make_shared<io::OutputTreeNode>("Characteristics", *nt::translate_to_flags(header.Characteristics, nt::PE_CHARACTERISTICS)));
 
 	formatter.add_data(pe_header, *pe.get_path());
 }
@@ -88,13 +99,13 @@ void dump_image_optional_header(const mana::PE& pe, io::OutputFormatter& formatt
 	mana::image_optional_header ioh = *pe.get_image_optional_header();
 	io::pNode ioh_header(new io::OutputTreeNode("Image Optional Header", io::OutputTreeNode::LIST));
 
-	ioh_header->append(boost::make_shared<io::OutputTreeNode>("Magic", *nt::translate_to_flag(ioh.Magic, nt::IMAGE_OPTIONAL_HEADER_MAGIC)));
+	ioh_header->append(std::make_shared<io::OutputTreeNode>("Magic", *nt::translate_to_flag(ioh.Magic, nt::IMAGE_OPTIONAL_HEADER_MAGIC)));
 	std::stringstream ss;
 	ss << static_cast<int>(ioh.MajorLinkerVersion) << "." << static_cast<int>(ioh.MinorImageVersion);
-	ioh_header->append(boost::make_shared<io::OutputTreeNode>("LinkerVersion", ss.str()));
-	ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeOfCode", ioh.SizeOfCode, io::OutputTreeNode::HEX));
-	ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeOfInitializedData", ioh.SizeOfInitializedData, io::OutputTreeNode::HEX));
-	ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeOfUninitializedData", ioh.SizeOfUninitializedData, io::OutputTreeNode::HEX));
+	ioh_header->append(std::make_shared<io::OutputTreeNode>("LinkerVersion", ss.str()));
+	ioh_header->append(std::make_shared<io::OutputTreeNode>("SizeOfCode", ioh.SizeOfCode, io::OutputTreeNode::HEX));
+	ioh_header->append(std::make_shared<io::OutputTreeNode>("SizeOfInitializedData", ioh.SizeOfInitializedData, io::OutputTreeNode::HEX));
+	ioh_header->append(std::make_shared<io::OutputTreeNode>("SizeOfUninitializedData", ioh.SizeOfUninitializedData, io::OutputTreeNode::HEX));
 
 
 	mana::pSection sec = mana::find_section(ioh.AddressOfEntryPoint, *pe.get_sections());
@@ -105,61 +116,61 @@ void dump_image_optional_header(const mana::PE& pe, io::OutputFormatter& formatt
 	else {
 		ss << std::hex << "0x" << std::uppercase << std::setfill('0') << std::setw(8 + is_64*8) << ioh.AddressOfEntryPoint << " (Section: ?)";
 	}
-	ioh_header->append(boost::make_shared<io::OutputTreeNode>("AddressOfEntryPoint", ss.str()));
-	ioh_header->append(boost::make_shared<io::OutputTreeNode>("BaseOfCode", ioh.BaseOfCode, io::OutputTreeNode::HEX));
+	ioh_header->append(std::make_shared<io::OutputTreeNode>("AddressOfEntryPoint", ss.str()));
+	ioh_header->append(std::make_shared<io::OutputTreeNode>("BaseOfCode", ioh.BaseOfCode, io::OutputTreeNode::HEX));
 
 	// Field absent from PE32+ headers.
 	if (!is_64) {
-		ioh_header->append(boost::make_shared<io::OutputTreeNode>("BaseOfData", ioh.BaseOfData, io::OutputTreeNode::HEX));
+		ioh_header->append(std::make_shared<io::OutputTreeNode>("BaseOfData", ioh.BaseOfData, io::OutputTreeNode::HEX));
 	}
 
 	if (is_64) {
-		ioh_header->append(boost::make_shared<io::OutputTreeNode>("ImageBase", ioh.ImageBase, io::OutputTreeNode::HEX));
+		ioh_header->append(std::make_shared<io::OutputTreeNode>("ImageBase", ioh.ImageBase, io::OutputTreeNode::HEX));
 	}
 	else {
-		ioh_header->append(boost::make_shared<io::OutputTreeNode>("ImageBase", static_cast<boost::uint32_t>(ioh.ImageBase), io::OutputTreeNode::HEX));
+		ioh_header->append(std::make_shared<io::OutputTreeNode>("ImageBase", static_cast<std::uint32_t>(ioh.ImageBase), io::OutputTreeNode::HEX));
 	}
 
-	ioh_header->append(boost::make_shared<io::OutputTreeNode>("SectionAlignment", ioh.SectionAlignment, io::OutputTreeNode::HEX));
-	ioh_header->append(boost::make_shared<io::OutputTreeNode>("FileAlignment", ioh.FileAlignment, io::OutputTreeNode::HEX));
+	ioh_header->append(std::make_shared<io::OutputTreeNode>("SectionAlignment", ioh.SectionAlignment, io::OutputTreeNode::HEX));
+	ioh_header->append(std::make_shared<io::OutputTreeNode>("FileAlignment", ioh.FileAlignment, io::OutputTreeNode::HEX));
 
 	ss.str(std::string());
 	ss << static_cast<int>(ioh.MajorOperatingSystemVersion) << "." << static_cast<int>(ioh.MinorOperatingSystemVersion);
-	ioh_header->append(boost::make_shared<io::OutputTreeNode>("OperatingSystemVersion", ss.str()));
+	ioh_header->append(std::make_shared<io::OutputTreeNode>("OperatingSystemVersion", ss.str()));
 	ss.str(std::string());
 	ss << static_cast<int>(ioh.MajorImageVersion) << "." << static_cast<int>(ioh.MinorImageVersion);
-	ioh_header->append(boost::make_shared<io::OutputTreeNode>("ImageVersion", ss.str()));
+	ioh_header->append(std::make_shared<io::OutputTreeNode>("ImageVersion", ss.str()));
 	ss.str(std::string());
 	ss << static_cast<int>(ioh.MajorSubsystemVersion) << "." << static_cast<int>(ioh.MinorSubsystemVersion);
-	ioh_header->append(boost::make_shared<io::OutputTreeNode>("SubsystemVersion", ss.str()));
+	ioh_header->append(std::make_shared<io::OutputTreeNode>("SubsystemVersion", ss.str()));
 
-	ioh_header->append(boost::make_shared<io::OutputTreeNode>("Win32VersionValue", ioh.Win32VersionValue));
-	ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeOfImage", ioh.SizeOfImage, io::OutputTreeNode::HEX));
-	ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeOfHeaders", ioh.SizeOfHeaders, io::OutputTreeNode::HEX));
-	ioh_header->append(boost::make_shared<io::OutputTreeNode>("Checksum", ioh.Checksum, io::OutputTreeNode::HEX));
-	ioh_header->append(boost::make_shared<io::OutputTreeNode>("Subsystem", *nt::translate_to_flag(ioh.Subsystem, nt::SUBSYSTEMS)));
+	ioh_header->append(std::make_shared<io::OutputTreeNode>("Win32VersionValue", ioh.Win32VersionValue));
+	ioh_header->append(std::make_shared<io::OutputTreeNode>("SizeOfImage", ioh.SizeOfImage, io::OutputTreeNode::HEX));
+	ioh_header->append(std::make_shared<io::OutputTreeNode>("SizeOfHeaders", ioh.SizeOfHeaders, io::OutputTreeNode::HEX));
+	ioh_header->append(std::make_shared<io::OutputTreeNode>("Checksum", ioh.Checksum, io::OutputTreeNode::HEX));
+	ioh_header->append(std::make_shared<io::OutputTreeNode>("Subsystem", *nt::translate_to_flag(ioh.Subsystem, nt::SUBSYSTEMS)));
 
 	if (ioh.DllCharacteristics) {
-			ioh_header->append(boost::make_shared<io::OutputTreeNode>("DllCharacteristics", *nt::translate_to_flags(ioh.DllCharacteristics, nt::DLL_CHARACTERISTICS)));
+			ioh_header->append(std::make_shared<io::OutputTreeNode>("DllCharacteristics", *nt::translate_to_flags(ioh.DllCharacteristics, nt::DLL_CHARACTERISTICS)));
 	}
 
 	if (is_64)
 	{
-		ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeofStackReserve", ioh.SizeofStackReserve, io::OutputTreeNode::HEX));
-		ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeofStackCommit", ioh.SizeofStackCommit, io::OutputTreeNode::HEX));
-		ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeofHeapReserve", ioh.SizeofHeapReserve, io::OutputTreeNode::HEX));
-		ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeofHeapCommit", ioh.SizeofHeapCommit, io::OutputTreeNode::HEX));
+		ioh_header->append(std::make_shared<io::OutputTreeNode>("SizeofStackReserve", ioh.SizeofStackReserve, io::OutputTreeNode::HEX));
+		ioh_header->append(std::make_shared<io::OutputTreeNode>("SizeofStackCommit", ioh.SizeofStackCommit, io::OutputTreeNode::HEX));
+		ioh_header->append(std::make_shared<io::OutputTreeNode>("SizeofHeapReserve", ioh.SizeofHeapReserve, io::OutputTreeNode::HEX));
+		ioh_header->append(std::make_shared<io::OutputTreeNode>("SizeofHeapCommit", ioh.SizeofHeapCommit, io::OutputTreeNode::HEX));
 	}
 	else
 	{
-		ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeofStackReserve", (boost::uint32_t) ioh.SizeofStackReserve, io::OutputTreeNode::HEX));
-		ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeofStackCommit", (boost::uint32_t) ioh.SizeofStackCommit, io::OutputTreeNode::HEX));
-		ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeofHeapReserve", (boost::uint32_t) ioh.SizeofHeapReserve, io::OutputTreeNode::HEX));
-		ioh_header->append(boost::make_shared<io::OutputTreeNode>("SizeofHeapCommit", (boost::uint32_t) ioh.SizeofHeapCommit, io::OutputTreeNode::HEX));
+		ioh_header->append(std::make_shared<io::OutputTreeNode>("SizeofStackReserve", (std::uint32_t) ioh.SizeofStackReserve, io::OutputTreeNode::HEX));
+		ioh_header->append(std::make_shared<io::OutputTreeNode>("SizeofStackCommit", (std::uint32_t) ioh.SizeofStackCommit, io::OutputTreeNode::HEX));
+		ioh_header->append(std::make_shared<io::OutputTreeNode>("SizeofHeapReserve", (std::uint32_t) ioh.SizeofHeapReserve, io::OutputTreeNode::HEX));
+		ioh_header->append(std::make_shared<io::OutputTreeNode>("SizeofHeapCommit", (std::uint32_t) ioh.SizeofHeapCommit, io::OutputTreeNode::HEX));
 	}
 
-	ioh_header->append(boost::make_shared<io::OutputTreeNode>("LoaderFlags", ioh.LoaderFlags, io::OutputTreeNode::HEX));
-	ioh_header->append(boost::make_shared<io::OutputTreeNode>("NumberOfRvaAndSizes", ioh.NumberOfRvaAndSizes));
+	ioh_header->append(std::make_shared<io::OutputTreeNode>("LoaderFlags", ioh.LoaderFlags, io::OutputTreeNode::HEX));
+	ioh_header->append(std::make_shared<io::OutputTreeNode>("NumberOfRvaAndSizes", ioh.NumberOfRvaAndSizes));
 
 	formatter.add_data(ioh_header, *pe.get_path());
 }
@@ -175,9 +186,9 @@ void dump_section_table(const mana::PE& pe, io::OutputFormatter& formatter, bool
 
 	io::pNode section_list(new io::OutputTreeNode("Sections", io::OutputTreeNode::LIST));
 
-	for (const auto& it : *sections | boost::adaptors::indexed(1))
+	for (std::size_t index = 0; index < sections->size(); ++index)
 	{
-		auto section = it.value();
+		auto section = sections->at(index);
 		io::pNode section_node;
 		if (section->get_name() && !section->get_name()->empty()) {
 			section_node.reset(new io::OutputTreeNode(*section->get_name(), io::OutputTreeNode::LIST));
@@ -185,28 +196,28 @@ void dump_section_table(const mana::PE& pe, io::OutputFormatter& formatter, bool
 		else 
 		{
 			std::stringstream ss;
-			ss << "Section_" << it.index();
+			ss << "Section_" << (index + 1);
 			section_node.reset(new io::OutputTreeNode(ss.str(), io::OutputTreeNode::LIST));
 		}
 		if (compute_hashes)
 		{
 			const_shared_strings hashes = hash::hash_bytes(hash::ALL_DIGESTS, *section->get_raw_data());
-			section_node->append(boost::make_shared<io::OutputTreeNode>("MD5", hashes->at(ALL_DIGESTS_MD5)));
-			section_node->append(boost::make_shared<io::OutputTreeNode>("SHA1", hashes->at(ALL_DIGESTS_SHA1)));
-			section_node->append(boost::make_shared<io::OutputTreeNode>("SHA256", hashes->at(ALL_DIGESTS_SHA256)));
-			section_node->append(boost::make_shared<io::OutputTreeNode>("SHA3", hashes->at(ALL_DIGESTS_SHA3)));
+			section_node->append(std::make_shared<io::OutputTreeNode>("MD5", hashes->at(ALL_DIGESTS_MD5)));
+			section_node->append(std::make_shared<io::OutputTreeNode>("SHA1", hashes->at(ALL_DIGESTS_SHA1)));
+			section_node->append(std::make_shared<io::OutputTreeNode>("SHA256", hashes->at(ALL_DIGESTS_SHA256)));
+			section_node->append(std::make_shared<io::OutputTreeNode>("SHA3", hashes->at(ALL_DIGESTS_SHA3)));
 		}
-		section_node->append(boost::make_shared<io::OutputTreeNode>("VirtualSize", section->get_virtual_size(), io::OutputTreeNode::HEX));
-		section_node->append(boost::make_shared<io::OutputTreeNode>("VirtualAddress", section->get_virtual_address(), io::OutputTreeNode::HEX));
-		section_node->append(boost::make_shared<io::OutputTreeNode>("SizeOfRawData", section->get_size_of_raw_data(), io::OutputTreeNode::HEX));
-		section_node->append(boost::make_shared<io::OutputTreeNode>("PointerToRawData", section->get_pointer_to_raw_data(), io::OutputTreeNode::HEX));
-		section_node->append(boost::make_shared<io::OutputTreeNode>("PointerToRelocations", section->get_pointer_to_relocations(), io::OutputTreeNode::HEX));
-		section_node->append(boost::make_shared<io::OutputTreeNode>("PointerToLineNumbers", section->get_pointer_to_line_numbers(), io::OutputTreeNode::HEX));
-		section_node->append(boost::make_shared<io::OutputTreeNode>("NumberOfLineNumbers", section->get_number_of_line_numbers()));
-		section_node->append(boost::make_shared<io::OutputTreeNode>("NumberOfRelocations", section->get_number_of_relocations()));
-		section_node->append(boost::make_shared<io::OutputTreeNode>("Characteristics", *nt::translate_to_flags(section->get_characteristics(), nt::SECTION_CHARACTERISTICS)));
+		section_node->append(std::make_shared<io::OutputTreeNode>("VirtualSize", section->get_virtual_size(), io::OutputTreeNode::HEX));
+		section_node->append(std::make_shared<io::OutputTreeNode>("VirtualAddress", section->get_virtual_address(), io::OutputTreeNode::HEX));
+		section_node->append(std::make_shared<io::OutputTreeNode>("SizeOfRawData", section->get_size_of_raw_data(), io::OutputTreeNode::HEX));
+		section_node->append(std::make_shared<io::OutputTreeNode>("PointerToRawData", section->get_pointer_to_raw_data(), io::OutputTreeNode::HEX));
+		section_node->append(std::make_shared<io::OutputTreeNode>("PointerToRelocations", section->get_pointer_to_relocations(), io::OutputTreeNode::HEX));
+		section_node->append(std::make_shared<io::OutputTreeNode>("PointerToLineNumbers", section->get_pointer_to_line_numbers(), io::OutputTreeNode::HEX));
+		section_node->append(std::make_shared<io::OutputTreeNode>("NumberOfLineNumbers", section->get_number_of_line_numbers()));
+		section_node->append(std::make_shared<io::OutputTreeNode>("NumberOfRelocations", section->get_number_of_relocations()));
+		section_node->append(std::make_shared<io::OutputTreeNode>("Characteristics", *nt::translate_to_flags(section->get_characteristics(), nt::SECTION_CHARACTERISTICS)));
 		if (section->get_size_of_raw_data()) {
-			section_node->append(boost::make_shared<io::OutputTreeNode>("Entropy", section->get_entropy()));
+			section_node->append(std::make_shared<io::OutputTreeNode>("Entropy", section->get_entropy()));
 		}
 
 		section_list->append(section_node);
@@ -249,7 +260,7 @@ void dump_exports(const mana::PE& pe, io::OutputFormatter& formatter)
 	}
 
 	io::pNode exports_list(new io::OutputTreeNode("Exports", io::OutputTreeNode::LIST));
-	boost::uint32_t ignored_exports = 0;
+	std::uint32_t ignored_exports = 0;
 	for (const auto& it : *exports)
 	{
 		// Make sure that the export points to a real RVA. This ensures that bogus tables
@@ -265,10 +276,10 @@ void dump_exports(const mana::PE& pe, io::OutputFormatter& formatter)
 			name = "(Unnamed function)";
 		}
 		io::pNode ex(new io::OutputTreeNode(it->Name, io::OutputTreeNode::LIST));
-		ex->append(boost::make_shared<io::OutputTreeNode>("Ordinal", it->Ordinal));
-		ex->append(boost::make_shared<io::OutputTreeNode>("Address", it->Address, io::OutputTreeNode::HEX));
+		ex->append(std::make_shared<io::OutputTreeNode>("Ordinal", it->Ordinal));
+		ex->append(std::make_shared<io::OutputTreeNode>("Address", it->Address, io::OutputTreeNode::HEX));
 		if (it->ForwardName != "") {
-			ex->append(boost::make_shared<io::OutputTreeNode>("ForwardName", it->ForwardName));
+			ex->append(std::make_shared<io::OutputTreeNode>("ForwardName", it->ForwardName));
 		}
 		exports_list->append(ex);
 	}
@@ -292,34 +303,34 @@ void dump_resources(const mana::PE& pe, io::OutputFormatter& formatter, bool com
 	for (const auto& it : *resources)
 	{
 		io::pNode res(new io::OutputTreeNode(*it->get_name(), io::OutputTreeNode::LIST));
-		res->append(boost::make_shared<io::OutputTreeNode>("Type", *it->get_type()));
-		res->append(boost::make_shared<io::OutputTreeNode>("Language", *it->get_language()));
-		res->append(boost::make_shared<io::OutputTreeNode>("Codepage", *nt::translate_to_flag(it->get_codepage(), nt::CODEPAGES)));
-		res->append(boost::make_shared<io::OutputTreeNode>("Size", it->get_size(), io::OutputTreeNode::DEC));
+		res->append(std::make_shared<io::OutputTreeNode>("Type", *it->get_type()));
+		res->append(std::make_shared<io::OutputTreeNode>("Language", *it->get_language()));
+		res->append(std::make_shared<io::OutputTreeNode>("Codepage", *nt::translate_to_flag(it->get_codepage(), nt::CODEPAGES)));
+		res->append(std::make_shared<io::OutputTreeNode>("Size", it->get_size(), io::OutputTreeNode::DEC));
 		if (utils::is_actually_posix(it->get_timestamp(), pe.get_pe_header()->TimeDateStamp)) {
-			res->append(boost::make_shared<io::OutputTreeNode>("TimeDateStamp", *utils::timestamp_to_string(it->get_timestamp())));
+			res->append(std::make_shared<io::OutputTreeNode>("TimeDateStamp", *utils::timestamp_to_string(it->get_timestamp())));
 		}
 		else {
-			res->append(boost::make_shared<io::OutputTreeNode>("TimeDateStamp", *utils::dosdate_to_string(it->get_timestamp())));
+			res->append(std::make_shared<io::OutputTreeNode>("TimeDateStamp", *utils::dosdate_to_string(it->get_timestamp())));
 		}
 		
-		res->append(boost::make_shared<io::OutputTreeNode>("Entropy", it->get_entropy()));
+		res->append(std::make_shared<io::OutputTreeNode>("Entropy", it->get_entropy()));
 
 		yara::const_matches m = detect_filetype(it);
 		if (m && !m->empty())
 		{
 			for (auto it2 = m->begin() ; it2 != m->end() ; ++it2) {
-				res->append(boost::make_shared<io::OutputTreeNode>("Detected Filetype", (*it2)->operator[]("description")));
+				res->append(std::make_shared<io::OutputTreeNode>("Detected Filetype", (*it2)->operator[]("description")));
 			}
 		}
 
 		if (compute_hashes)
 		{
 			const_shared_strings hashes = hash::hash_bytes(hash::ALL_DIGESTS, *it->get_raw_data());
-			res->append(boost::make_shared<io::OutputTreeNode>("MD5", hashes->at(ALL_DIGESTS_MD5)));
-			res->append(boost::make_shared<io::OutputTreeNode>("SHA1", hashes->at(ALL_DIGESTS_SHA1)));
-			res->append(boost::make_shared<io::OutputTreeNode>("SHA256", hashes->at(ALL_DIGESTS_SHA256)));
-			res->append(boost::make_shared<io::OutputTreeNode>("SHA3", hashes->at(ALL_DIGESTS_SHA3)));
+			res->append(std::make_shared<io::OutputTreeNode>("MD5", hashes->at(ALL_DIGESTS_MD5)));
+			res->append(std::make_shared<io::OutputTreeNode>("SHA1", hashes->at(ALL_DIGESTS_SHA1)));
+			res->append(std::make_shared<io::OutputTreeNode>("SHA256", hashes->at(ALL_DIGESTS_SHA256)));
+			res->append(std::make_shared<io::OutputTreeNode>("SHA3", hashes->at(ALL_DIGESTS_SHA3)));
 		}
 
 		resource_list->append(res);
@@ -354,28 +365,28 @@ void dump_version_info(const mana::PE& pe, io::OutputFormatter& formatter)
 				version_info_node = existing_node;
 			}
 			else {
-				version_info_node = boost::make_shared<io::OutputTreeNode>("Version Info", io::OutputTreeNode::LIST);
+				version_info_node = std::make_shared<io::OutputTreeNode>("Version Info", io::OutputTreeNode::LIST);
 			}
 
-			version_info_node->append(boost::make_shared<io::OutputTreeNode>("Resource LangID", *it->get_language()));
-			io::pNode key_values = boost::make_shared<io::OutputTreeNode>(vi->Header.Key, io::OutputTreeNode::LIST);
-			key_values->append(boost::make_shared<io::OutputTreeNode>("Signature", vi->Value->Signature, io::OutputTreeNode::HEX));
-			key_values->append(boost::make_shared<io::OutputTreeNode>("StructVersion", vi->Value->StructVersion, io::OutputTreeNode::HEX));
-			key_values->append(boost::make_shared<io::OutputTreeNode>("FileVersion", io::uint64_to_version_number(vi->Value->FileVersionMS, vi->Value->FileVersionLS)));
-			key_values->append(boost::make_shared<io::OutputTreeNode>("ProductVersion", io::uint64_to_version_number(vi->Value->ProductVersionMS, vi->Value->ProductVersionLS)));
-			key_values->append(boost::make_shared<io::OutputTreeNode>("FileFlags", *nt::translate_to_flags(vi->Value->FileFlags & vi->Value->FileFlagsMask, nt::FIXEDFILEINFO_FILEFLAGS)));
-			key_values->append(boost::make_shared<io::OutputTreeNode>("FileOs", *nt::translate_to_flags(vi->Value->FileOs, nt::FIXEDFILEINFO_FILEOS)));
-			key_values->append(boost::make_shared<io::OutputTreeNode>("FileType", *nt::translate_to_flag(vi->Value->FileType, nt::FIXEDFILEINFO_FILETYPE)));
+			version_info_node->append(std::make_shared<io::OutputTreeNode>("Resource LangID", *it->get_language()));
+			io::pNode key_values = std::make_shared<io::OutputTreeNode>(vi->Header.Key, io::OutputTreeNode::LIST);
+			key_values->append(std::make_shared<io::OutputTreeNode>("Signature", vi->Value->Signature, io::OutputTreeNode::HEX));
+			key_values->append(std::make_shared<io::OutputTreeNode>("StructVersion", vi->Value->StructVersion, io::OutputTreeNode::HEX));
+			key_values->append(std::make_shared<io::OutputTreeNode>("FileVersion", io::uint64_to_version_number(vi->Value->FileVersionMS, vi->Value->FileVersionLS)));
+			key_values->append(std::make_shared<io::OutputTreeNode>("ProductVersion", io::uint64_to_version_number(vi->Value->ProductVersionMS, vi->Value->ProductVersionLS)));
+			key_values->append(std::make_shared<io::OutputTreeNode>("FileFlags", *nt::translate_to_flags(vi->Value->FileFlags & vi->Value->FileFlagsMask, nt::FIXEDFILEINFO_FILEFLAGS)));
+			key_values->append(std::make_shared<io::OutputTreeNode>("FileOs", *nt::translate_to_flags(vi->Value->FileOs, nt::FIXEDFILEINFO_FILEOS)));
+			key_values->append(std::make_shared<io::OutputTreeNode>("FileType", *nt::translate_to_flag(vi->Value->FileType, nt::FIXEDFILEINFO_FILETYPE)));
 			if (vi->Value->FileType == nt::FIXEDFILEINFO_FILETYPE.at("VFT_DRV")) {
-				key_values->append(boost::make_shared<io::OutputTreeNode>("FileSubtype", *nt::translate_to_flag(vi->Value->FileSubtype, nt::FIXEDFILEINFO_FILESUBTYPE_DRV)));
+				key_values->append(std::make_shared<io::OutputTreeNode>("FileSubtype", *nt::translate_to_flag(vi->Value->FileSubtype, nt::FIXEDFILEINFO_FILESUBTYPE_DRV)));
 			}
 			else if (vi->Value->FileType == nt::FIXEDFILEINFO_FILETYPE.at("VFT_FONT")) {
-				key_values->append(boost::make_shared<io::OutputTreeNode>("FileSubtype", *nt::translate_to_flag(vi->Value->FileSubtype, nt::FIXEDFILEINFO_FILESUBTYPE_FONT)));
+				key_values->append(std::make_shared<io::OutputTreeNode>("FileSubtype", *nt::translate_to_flag(vi->Value->FileSubtype, nt::FIXEDFILEINFO_FILESUBTYPE_FONT)));
 			}
 
-			key_values->append(boost::make_shared<io::OutputTreeNode>("Language", vi->Language));
+			key_values->append(std::make_shared<io::OutputTreeNode>("Language", vi->Language));
 			for (auto it2 = vi->StringTable.begin() ; it2 != vi->StringTable.end() ; ++it2) {
-				key_values->append(boost::make_shared<io::OutputTreeNode>((*it2)->first, (*it2)->second));
+				key_values->append(std::make_shared<io::OutputTreeNode>((*it2)->first, (*it2)->second));
 			}
 
 			version_info_node->append(key_values);
@@ -396,16 +407,16 @@ void dump_debug_info(const mana::PE& pe, io::OutputFormatter& formatter)
 	for (const auto& it : *di)
 	{
 		io::pNode debug_info_node(new io::OutputTreeNode(*nt::translate_to_flag(it->Type, nt::DEBUG_TYPES), io::OutputTreeNode::LIST));
-		debug_info_node->append(boost::make_shared<io::OutputTreeNode>("Characteristics", it->Characteristics));
-		debug_info_node->append(boost::make_shared<io::OutputTreeNode>("TimeDateStamp", *utils::timestamp_to_string(it->TimeDateStamp)));
+		debug_info_node->append(std::make_shared<io::OutputTreeNode>("Characteristics", it->Characteristics));
+		debug_info_node->append(std::make_shared<io::OutputTreeNode>("TimeDateStamp", *utils::timestamp_to_string(it->TimeDateStamp)));
 		std::stringstream ss;
 		ss << it->MajorVersion << "." << it->MinorVersion;
-		debug_info_node->append(boost::make_shared<io::OutputTreeNode>("Version", ss.str()));
-		debug_info_node->append(boost::make_shared<io::OutputTreeNode>("SizeofData", it->SizeofData));
-		debug_info_node->append(boost::make_shared<io::OutputTreeNode>("AddressOfRawData", it->AddressOfRawData, io::OutputTreeNode::HEX));
-		debug_info_node->append(boost::make_shared<io::OutputTreeNode>("PointerToRawData", it->PointerToRawData, io::OutputTreeNode::HEX));
+		debug_info_node->append(std::make_shared<io::OutputTreeNode>("Version", ss.str()));
+		debug_info_node->append(std::make_shared<io::OutputTreeNode>("SizeofData", it->SizeofData));
+		debug_info_node->append(std::make_shared<io::OutputTreeNode>("AddressOfRawData", it->AddressOfRawData, io::OutputTreeNode::HEX));
+		debug_info_node->append(std::make_shared<io::OutputTreeNode>("PointerToRawData", it->PointerToRawData, io::OutputTreeNode::HEX));
 		if (it->Filename != "") {
-			debug_info_node->append(boost::make_shared<io::OutputTreeNode>("Referenced File", it->Filename));
+			debug_info_node->append(std::make_shared<io::OutputTreeNode>("Referenced File", it->Filename));
 		}
 		debug_info_list->append(debug_info_node);
 	}
@@ -428,22 +439,22 @@ void dump_tls(const mana::PE& pe, io::OutputFormatter& formatter)
 
 	if (is_64)
 	{
-		tls_node->append(boost::make_shared<io::OutputTreeNode>("StartAddressOfRawData", (boost::uint64_t) tls->StartAddressOfRawData, io::OutputTreeNode::HEX));
-		tls_node->append(boost::make_shared<io::OutputTreeNode>("EndAddressOfRawData", (boost::uint64_t) tls->EndAddressOfRawData, io::OutputTreeNode::HEX));
-		tls_node->append(boost::make_shared<io::OutputTreeNode>("AddressOfIndex", (boost::uint64_t) tls->AddressOfIndex, io::OutputTreeNode::HEX));
-		tls_node->append(boost::make_shared<io::OutputTreeNode>("AddressOfCallbacks", (boost::uint64_t) tls->AddressOfCallbacks, io::OutputTreeNode::HEX));
+		tls_node->append(std::make_shared<io::OutputTreeNode>("StartAddressOfRawData", (std::uint64_t) tls->StartAddressOfRawData, io::OutputTreeNode::HEX));
+		tls_node->append(std::make_shared<io::OutputTreeNode>("EndAddressOfRawData", (std::uint64_t) tls->EndAddressOfRawData, io::OutputTreeNode::HEX));
+		tls_node->append(std::make_shared<io::OutputTreeNode>("AddressOfIndex", (std::uint64_t) tls->AddressOfIndex, io::OutputTreeNode::HEX));
+		tls_node->append(std::make_shared<io::OutputTreeNode>("AddressOfCallbacks", (std::uint64_t) tls->AddressOfCallbacks, io::OutputTreeNode::HEX));
 	}
 	else
 	{
-		tls_node->append(boost::make_shared<io::OutputTreeNode>("StartAddressOfRawData", (boost::uint32_t) tls->StartAddressOfRawData, io::OutputTreeNode::HEX));
-		tls_node->append(boost::make_shared<io::OutputTreeNode>("EndAddressOfRawData", (boost::uint32_t) tls->EndAddressOfRawData, io::OutputTreeNode::HEX));
-		tls_node->append(boost::make_shared<io::OutputTreeNode>("AddressOfIndex", (boost::uint32_t) tls->AddressOfIndex, io::OutputTreeNode::HEX));
-		tls_node->append(boost::make_shared<io::OutputTreeNode>("AddressOfCallbacks", (boost::uint32_t) tls->AddressOfCallbacks, io::OutputTreeNode::HEX));
+		tls_node->append(std::make_shared<io::OutputTreeNode>("StartAddressOfRawData", (std::uint32_t) tls->StartAddressOfRawData, io::OutputTreeNode::HEX));
+		tls_node->append(std::make_shared<io::OutputTreeNode>("EndAddressOfRawData", (std::uint32_t) tls->EndAddressOfRawData, io::OutputTreeNode::HEX));
+		tls_node->append(std::make_shared<io::OutputTreeNode>("AddressOfIndex", (std::uint32_t) tls->AddressOfIndex, io::OutputTreeNode::HEX));
+		tls_node->append(std::make_shared<io::OutputTreeNode>("AddressOfCallbacks", (std::uint32_t) tls->AddressOfCallbacks, io::OutputTreeNode::HEX));
 	}
 
-	tls_node->append(boost::make_shared<io::OutputTreeNode>("SizeOfZeroFill", tls->SizeOfZeroFill, io::OutputTreeNode::HEX));
+	tls_node->append(std::make_shared<io::OutputTreeNode>("SizeOfZeroFill", tls->SizeOfZeroFill, io::OutputTreeNode::HEX));
 	// According to the 9.3 revision of the PE specification, Characteristics is no longer reserved but one of IMAGE_SCN_ALIGN_*.
-	tls_node->append(boost::make_shared<io::OutputTreeNode>("Characteristics", *nt::translate_to_flag(tls->Characteristics, nt::SECTION_CHARACTERISTICS)));
+	tls_node->append(std::make_shared<io::OutputTreeNode>("Characteristics", *nt::translate_to_flag(tls->Characteristics, nt::SECTION_CHARACTERISTICS)));
 
 	std::vector<std::string> callbacks;
 	for (const auto& it : tls->Callbacks)
@@ -452,7 +463,7 @@ void dump_tls(const mana::PE& pe, io::OutputFormatter& formatter)
 		ss << std::hex << "0x" << std::uppercase << std::setfill('0') << std::setw(8 + is_64*8) << it;
 		callbacks.push_back(ss.str());
 	}
-	tls_node->append(boost::make_shared<io::OutputTreeNode>("Callbacks", callbacks));
+	tls_node->append(std::make_shared<io::OutputTreeNode>("Callbacks", callbacks));
 	formatter.add_data(tls_node, *pe.get_path());
 }
 
@@ -469,76 +480,76 @@ void dump_config(const mana::PE& pe, io::OutputFormatter& formatter)
 	const bool is_64 = pe.get_architecture() != PE::x86;
 
 	io::pNode config_node(new io::OutputTreeNode("Load Configuration", io::OutputTreeNode::LIST));
-	config_node->append(boost::make_shared<io::OutputTreeNode>("Size", config->Size));
-	config_node->append(boost::make_shared<io::OutputTreeNode>("TimeDateStamp", *utils::timestamp_to_string(config->TimeDateStamp)));
+	config_node->append(std::make_shared<io::OutputTreeNode>("Size", config->Size));
+	config_node->append(std::make_shared<io::OutputTreeNode>("TimeDateStamp", *utils::timestamp_to_string(config->TimeDateStamp)));
 	std::stringstream ss;
 	ss << config->MajorVersion << "." << config->MinorVersion;
-	config_node->append(boost::make_shared<io::OutputTreeNode>("Version", ss.str()));
-	config_node->append(boost::make_shared<io::OutputTreeNode>("GlobalFlagsClear", *nt::translate_to_flags(config->GlobalFlagsClear, nt::GLOBAL_FLAGS)));
-	config_node->append(boost::make_shared<io::OutputTreeNode>("GlobalFlagsSet", *nt::translate_to_flags(config->GlobalFlagsSet, nt::GLOBAL_FLAGS)));
-	config_node->append(boost::make_shared<io::OutputTreeNode>("CriticalSectionDefaultTimeout", config->CriticalSectionDefaultTimeout));
+	config_node->append(std::make_shared<io::OutputTreeNode>("Version", ss.str()));
+	config_node->append(std::make_shared<io::OutputTreeNode>("GlobalFlagsClear", *nt::translate_to_flags(config->GlobalFlagsClear, nt::GLOBAL_FLAGS)));
+	config_node->append(std::make_shared<io::OutputTreeNode>("GlobalFlagsSet", *nt::translate_to_flags(config->GlobalFlagsSet, nt::GLOBAL_FLAGS)));
+	config_node->append(std::make_shared<io::OutputTreeNode>("CriticalSectionDefaultTimeout", config->CriticalSectionDefaultTimeout));
 
 	if (is_64)
 	{
-		config_node->append(boost::make_shared<io::OutputTreeNode>("DeCommitFreeBlockThreshold", static_cast<boost::uint64_t>(config->DeCommitFreeBlockThreshold), io::OutputTreeNode::HEX));
-		config_node->append(boost::make_shared<io::OutputTreeNode>("DeCommitTotalFreeThreshold", static_cast<boost::uint64_t>(config->DeCommitTotalFreeThreshold), io::OutputTreeNode::HEX));
-		config_node->append(boost::make_shared<io::OutputTreeNode>("LockPrefixTable", static_cast<boost::uint64_t>(config->LockPrefixTable), io::OutputTreeNode::HEX));
-		config_node->append(boost::make_shared<io::OutputTreeNode>("MaximumAllocationSize", static_cast<boost::uint64_t>(config->MaximumAllocationSize), io::OutputTreeNode::HEX));
-		config_node->append(boost::make_shared<io::OutputTreeNode>("VirtualMemoryThreshold", static_cast<boost::uint64_t>(config->VirtualMemoryThreshold), io::OutputTreeNode::HEX));
-		config_node->append(boost::make_shared<io::OutputTreeNode>("ProcessAffinityMask", static_cast<boost::uint64_t>(config->ProcessAffinityMask), io::OutputTreeNode::HEX));
+		config_node->append(std::make_shared<io::OutputTreeNode>("DeCommitFreeBlockThreshold", static_cast<std::uint64_t>(config->DeCommitFreeBlockThreshold), io::OutputTreeNode::HEX));
+		config_node->append(std::make_shared<io::OutputTreeNode>("DeCommitTotalFreeThreshold", static_cast<std::uint64_t>(config->DeCommitTotalFreeThreshold), io::OutputTreeNode::HEX));
+		config_node->append(std::make_shared<io::OutputTreeNode>("LockPrefixTable", static_cast<std::uint64_t>(config->LockPrefixTable), io::OutputTreeNode::HEX));
+		config_node->append(std::make_shared<io::OutputTreeNode>("MaximumAllocationSize", static_cast<std::uint64_t>(config->MaximumAllocationSize), io::OutputTreeNode::HEX));
+		config_node->append(std::make_shared<io::OutputTreeNode>("VirtualMemoryThreshold", static_cast<std::uint64_t>(config->VirtualMemoryThreshold), io::OutputTreeNode::HEX));
+		config_node->append(std::make_shared<io::OutputTreeNode>("ProcessAffinityMask", static_cast<std::uint64_t>(config->ProcessAffinityMask), io::OutputTreeNode::HEX));
 	}
 	else
 	{
-		config_node->append(boost::make_shared<io::OutputTreeNode>("DeCommitFreeBlockThreshold", static_cast<boost::uint32_t>(config->DeCommitFreeBlockThreshold), io::OutputTreeNode::HEX));
-		config_node->append(boost::make_shared<io::OutputTreeNode>("DeCommitTotalFreeThreshold", static_cast<boost::uint32_t>(config->DeCommitTotalFreeThreshold), io::OutputTreeNode::HEX));
-		config_node->append(boost::make_shared<io::OutputTreeNode>("LockPrefixTable", static_cast<boost::uint32_t>(config->LockPrefixTable), io::OutputTreeNode::HEX));
-		config_node->append(boost::make_shared<io::OutputTreeNode>("MaximumAllocationSize", static_cast<boost::uint32_t>(config->MaximumAllocationSize), io::OutputTreeNode::HEX));
-		config_node->append(boost::make_shared<io::OutputTreeNode>("VirtualMemoryThreshold", static_cast<boost::uint32_t>(config->VirtualMemoryThreshold), io::OutputTreeNode::HEX));
-		config_node->append(boost::make_shared<io::OutputTreeNode>("ProcessAffinityMask", static_cast<boost::uint32_t>(config->ProcessAffinityMask), io::OutputTreeNode::HEX));
+		config_node->append(std::make_shared<io::OutputTreeNode>("DeCommitFreeBlockThreshold", static_cast<std::uint32_t>(config->DeCommitFreeBlockThreshold), io::OutputTreeNode::HEX));
+		config_node->append(std::make_shared<io::OutputTreeNode>("DeCommitTotalFreeThreshold", static_cast<std::uint32_t>(config->DeCommitTotalFreeThreshold), io::OutputTreeNode::HEX));
+		config_node->append(std::make_shared<io::OutputTreeNode>("LockPrefixTable", static_cast<std::uint32_t>(config->LockPrefixTable), io::OutputTreeNode::HEX));
+		config_node->append(std::make_shared<io::OutputTreeNode>("MaximumAllocationSize", static_cast<std::uint32_t>(config->MaximumAllocationSize), io::OutputTreeNode::HEX));
+		config_node->append(std::make_shared<io::OutputTreeNode>("VirtualMemoryThreshold", static_cast<std::uint32_t>(config->VirtualMemoryThreshold), io::OutputTreeNode::HEX));
+		config_node->append(std::make_shared<io::OutputTreeNode>("ProcessAffinityMask", static_cast<std::uint32_t>(config->ProcessAffinityMask), io::OutputTreeNode::HEX));
 
 	}
 
-	config_node->append(boost::make_shared<io::OutputTreeNode>("ProcessHeapFlags", *nt::translate_to_flags(config->GlobalFlagsClear, nt::HEAP_FLAGS)));
-	config_node->append(boost::make_shared<io::OutputTreeNode>("CSDVersion", config->CSDVersion));
-	config_node->append(boost::make_shared<io::OutputTreeNode>("Reserved1", config->Reserved1, io::OutputTreeNode::HEX));
+	config_node->append(std::make_shared<io::OutputTreeNode>("ProcessHeapFlags", *nt::translate_to_flags(config->GlobalFlagsClear, nt::HEAP_FLAGS)));
+	config_node->append(std::make_shared<io::OutputTreeNode>("CSDVersion", config->CSDVersion));
+	config_node->append(std::make_shared<io::OutputTreeNode>("Reserved1", config->Reserved1, io::OutputTreeNode::HEX));
 
 	if (is_64)
 	{
-		config_node->append(boost::make_shared<io::OutputTreeNode>("EditList", static_cast<boost::uint64_t>(config->EditList), io::OutputTreeNode::HEX));
-		config_node->append(boost::make_shared<io::OutputTreeNode>("SecurityCookie", static_cast<boost::uint64_t>(config->SecurityCookie), io::OutputTreeNode::HEX));
+		config_node->append(std::make_shared<io::OutputTreeNode>("EditList", static_cast<std::uint64_t>(config->EditList), io::OutputTreeNode::HEX));
+		config_node->append(std::make_shared<io::OutputTreeNode>("SecurityCookie", static_cast<std::uint64_t>(config->SecurityCookie), io::OutputTreeNode::HEX));
 	}
 	else
 	{
-		config_node->append(boost::make_shared<io::OutputTreeNode>("EditList", static_cast<boost::uint32_t>(config->EditList), io::OutputTreeNode::HEX));
-		config_node->append(boost::make_shared<io::OutputTreeNode>("SecurityCookie", static_cast<boost::uint32_t>(config->SecurityCookie), io::OutputTreeNode::HEX));
+		config_node->append(std::make_shared<io::OutputTreeNode>("EditList", static_cast<std::uint32_t>(config->EditList), io::OutputTreeNode::HEX));
+		config_node->append(std::make_shared<io::OutputTreeNode>("SecurityCookie", static_cast<std::uint32_t>(config->SecurityCookie), io::OutputTreeNode::HEX));
 	}
 
 	// The SE Handler fields are only available on x86 and should be 0 on x64.
 	if (!is_64)
 	{
-		config_node->append(boost::make_shared<io::OutputTreeNode>("SEHandlerTable", static_cast<boost::uint32_t>(config->SEHandlerTable), io::OutputTreeNode::HEX));
-		config_node->append(boost::make_shared<io::OutputTreeNode>("SEHandlerCount", static_cast<boost::uint32_t>(config->SEHandlerCount)));
+		config_node->append(std::make_shared<io::OutputTreeNode>("SEHandlerTable", static_cast<std::uint32_t>(config->SEHandlerTable), io::OutputTreeNode::HEX));
+		config_node->append(std::make_shared<io::OutputTreeNode>("SEHandlerCount", static_cast<std::uint32_t>(config->SEHandlerCount)));
 	}
 
 	// Only show CFG fields if the binary was compiled with that option.
 	auto characteristics = *nt::translate_to_flags(opt->DllCharacteristics, nt::DLL_CHARACTERISTICS);
 	if (std::find(characteristics.begin(), characteristics.end(), "IMAGE_DLLCHARACTERISTICS_GUARD_CF") != characteristics.end())
 	{
-		config_node->append(boost::make_shared<io::OutputTreeNode>("GuardCFCheckFunctionPointer", config->GuardCFCheckFunctionPointer, io::OutputTreeNode::HEX));
-		config_node->append(boost::make_shared<io::OutputTreeNode>("GuardCFDispatchFunctionPointer", config->GuardCFDispatchFunctionPointer, io::OutputTreeNode::HEX));
-		config_node->append(boost::make_shared<io::OutputTreeNode>("GuardCFFunctionTable", config->GuardCFFunctionTable, io::OutputTreeNode::HEX));
-		config_node->append(boost::make_shared<io::OutputTreeNode>("GuardCFFunctionCount", config->GuardCFFunctionCount, io::OutputTreeNode::HEX));
-		config_node->append(boost::make_shared<io::OutputTreeNode>("GuardFlags", *nt::translate_to_flags(config->GuardFlags, nt::GUARD_FLAGS)));
+		config_node->append(std::make_shared<io::OutputTreeNode>("GuardCFCheckFunctionPointer", config->GuardCFCheckFunctionPointer, io::OutputTreeNode::HEX));
+		config_node->append(std::make_shared<io::OutputTreeNode>("GuardCFDispatchFunctionPointer", config->GuardCFDispatchFunctionPointer, io::OutputTreeNode::HEX));
+		config_node->append(std::make_shared<io::OutputTreeNode>("GuardCFFunctionTable", config->GuardCFFunctionTable, io::OutputTreeNode::HEX));
+		config_node->append(std::make_shared<io::OutputTreeNode>("GuardCFFunctionCount", config->GuardCFFunctionCount, io::OutputTreeNode::HEX));
+		config_node->append(std::make_shared<io::OutputTreeNode>("GuardFlags", *nt::translate_to_flags(config->GuardFlags, nt::GUARD_FLAGS)));
 
-		config_node->append(boost::make_shared<io::OutputTreeNode>("CodeIntegrity.Flags", config->CodeIntegrity.Flags, io::OutputTreeNode::HEX));
-		config_node->append(boost::make_shared<io::OutputTreeNode>("CodeIntegrity.Catalog", config->CodeIntegrity.Catalog, io::OutputTreeNode::HEX));
-		config_node->append(boost::make_shared<io::OutputTreeNode>("CodeIntegrity.CatalogOffset", config->CodeIntegrity.CatalogOffset, io::OutputTreeNode::HEX));
-		config_node->append(boost::make_shared<io::OutputTreeNode>("CodeIntegrity.Reserved", config->CodeIntegrity.Reserved, io::OutputTreeNode::HEX));
+		config_node->append(std::make_shared<io::OutputTreeNode>("CodeIntegrity.Flags", config->CodeIntegrity.Flags, io::OutputTreeNode::HEX));
+		config_node->append(std::make_shared<io::OutputTreeNode>("CodeIntegrity.Catalog", config->CodeIntegrity.Catalog, io::OutputTreeNode::HEX));
+		config_node->append(std::make_shared<io::OutputTreeNode>("CodeIntegrity.CatalogOffset", config->CodeIntegrity.CatalogOffset, io::OutputTreeNode::HEX));
+		config_node->append(std::make_shared<io::OutputTreeNode>("CodeIntegrity.Reserved", config->CodeIntegrity.Reserved, io::OutputTreeNode::HEX));
 
-		config_node->append(boost::make_shared<io::OutputTreeNode>("GuardAddressTakenIatEntryTable", config->GuardAddressTakenIatEntryTable, io::OutputTreeNode::HEX));
-		config_node->append(boost::make_shared<io::OutputTreeNode>("GuardAddressTakenIatEntryCount", config->GuardAddressTakenIatEntryCount));
-		config_node->append(boost::make_shared<io::OutputTreeNode>("GuardLongJumpTargetTable", config->GuardLongJumpTargetTable, io::OutputTreeNode::HEX));
-		config_node->append(boost::make_shared<io::OutputTreeNode>("GuardLongJumpTargetCount", config->GuardLongJumpTargetCount));
+		config_node->append(std::make_shared<io::OutputTreeNode>("GuardAddressTakenIatEntryTable", config->GuardAddressTakenIatEntryTable, io::OutputTreeNode::HEX));
+		config_node->append(std::make_shared<io::OutputTreeNode>("GuardAddressTakenIatEntryCount", config->GuardAddressTakenIatEntryCount));
+		config_node->append(std::make_shared<io::OutputTreeNode>("GuardLongJumpTargetTable", config->GuardLongJumpTargetTable, io::OutputTreeNode::HEX));
+		config_node->append(std::make_shared<io::OutputTreeNode>("GuardLongJumpTargetCount", config->GuardLongJumpTargetCount));
 	}
 
 	formatter.add_data(config_node, *pe.get_path());
@@ -554,14 +565,14 @@ void dump_dldt(const mana::PE& pe, io::OutputFormatter& formatter)
 	}
 
 	io::pNode dldt_node(new io::OutputTreeNode("Delayed Imports", io::OutputTreeNode::LIST));
-	dldt_node->append(boost::make_shared<io::OutputTreeNode>("Attributes", dldt->Attributes, io::OutputTreeNode::HEX));
-	dldt_node->append(boost::make_shared<io::OutputTreeNode>("Name", dldt->NameStr));
-	dldt_node->append(boost::make_shared<io::OutputTreeNode>("ModuleHandle", dldt->ModuleHandle, io::OutputTreeNode::HEX));
-	dldt_node->append(boost::make_shared<io::OutputTreeNode>("DelayImportAddressTable", dldt->DelayImportAddressTable, io::OutputTreeNode::HEX));
-	dldt_node->append(boost::make_shared<io::OutputTreeNode>("DelayImportNameTable", dldt->DelayImportNameTable, io::OutputTreeNode::HEX));
-	dldt_node->append(boost::make_shared<io::OutputTreeNode>("BoundDelayImportTable", dldt->BoundDelayImportTable, io::OutputTreeNode::HEX));
-	dldt_node->append(boost::make_shared<io::OutputTreeNode>("UnloadDelayImportTable", dldt->UnloadDelayImportTable, io::OutputTreeNode::HEX));
-	dldt_node->append(boost::make_shared<io::OutputTreeNode>("TimeStamp", *utils::timestamp_to_string(dldt->TimeStamp), io::OutputTreeNode::HEX));
+	dldt_node->append(std::make_shared<io::OutputTreeNode>("Attributes", dldt->Attributes, io::OutputTreeNode::HEX));
+	dldt_node->append(std::make_shared<io::OutputTreeNode>("Name", dldt->NameStr));
+	dldt_node->append(std::make_shared<io::OutputTreeNode>("ModuleHandle", dldt->ModuleHandle, io::OutputTreeNode::HEX));
+	dldt_node->append(std::make_shared<io::OutputTreeNode>("DelayImportAddressTable", dldt->DelayImportAddressTable, io::OutputTreeNode::HEX));
+	dldt_node->append(std::make_shared<io::OutputTreeNode>("DelayImportNameTable", dldt->DelayImportNameTable, io::OutputTreeNode::HEX));
+	dldt_node->append(std::make_shared<io::OutputTreeNode>("BoundDelayImportTable", dldt->BoundDelayImportTable, io::OutputTreeNode::HEX));
+	dldt_node->append(std::make_shared<io::OutputTreeNode>("UnloadDelayImportTable", dldt->UnloadDelayImportTable, io::OutputTreeNode::HEX));
+	dldt_node->append(std::make_shared<io::OutputTreeNode>("TimeStamp", *utils::timestamp_to_string(dldt->TimeStamp), io::OutputTreeNode::HEX));
 
 	formatter.add_data(dldt_node, *pe.get_path());
 }
@@ -588,12 +599,12 @@ void dump_summary(const mana::PE& pe, io::OutputFormatter& formatter)
 			if (vi == nullptr) {
 				continue;
 			}
-			if (!boost::starts_with(vi->Language, "UNKNOWN")) { // In debug builds, "UNKNOWN (0x1234ABCD)" is returned.
+			if (!starts_with(vi->Language, "UNKNOWN")) { // In debug builds, "UNKNOWN (0x1234ABCD)" is returned.
 				languages.insert(vi->Language); // Some language info is also present in the VERSION_INFO resource.
 			}
 		}
 
-		if (!boost::starts_with(*(*it)->get_language(), "UNKNOWN")) {
+		if (!starts_with(*(*it)->get_language(), "UNKNOWN")) {
 			languages.insert(*(*it)->get_language());
 		}
 	}
@@ -614,24 +625,24 @@ void dump_summary(const mana::PE& pe, io::OutputFormatter& formatter)
 		debug_files.insert("Embedded COFF debugging symbols");
 	}
 
-	summary->append(boost::make_shared<io::OutputTreeNode>("Architecture", *nt::translate_to_flag(h.Machine, nt::MACHINE_TYPES)));
+	summary->append(std::make_shared<io::OutputTreeNode>("Architecture", *nt::translate_to_flag(h.Machine, nt::MACHINE_TYPES)));
 	mana::image_optional_header ioh = *pe.get_image_optional_header();
-	summary->append(boost::make_shared<io::OutputTreeNode>("Subsystem", *nt::translate_to_flag(ioh.Subsystem, nt::SUBSYSTEMS)));
-	summary->append(boost::make_shared<io::OutputTreeNode>("Compilation Date", *utils::timestamp_to_string(h.TimeDateStamp)));
+	summary->append(std::make_shared<io::OutputTreeNode>("Subsystem", *nt::translate_to_flag(ioh.Subsystem, nt::SUBSYSTEMS)));
+	summary->append(std::make_shared<io::OutputTreeNode>("Compilation Date", *utils::timestamp_to_string(h.TimeDateStamp)));
 
 	if (languages.size() > 0) {
-		summary->append(boost::make_shared<io::OutputTreeNode>("Detected languages", languages));
+		summary->append(std::make_shared<io::OutputTreeNode>("Detected languages", languages));
 	}
 
 	if (pe.get_tls() && pe.get_tls()->Callbacks.size() > 0)
 	{
 		std::stringstream ss;
 		ss << pe.get_tls()->Callbacks.size() << " callback(s) detected.";
-		summary->append(boost::make_shared<io::OutputTreeNode>("TLS Callbacks", ss.str()));
+		summary->append(std::make_shared<io::OutputTreeNode>("TLS Callbacks", ss.str()));
 	}
 
 	if (debug_files.size() > 0)	{
-		summary->append(boost::make_shared<io::OutputTreeNode>("Debug artifacts", debug_files));
+		summary->append(std::make_shared<io::OutputTreeNode>("Debug artifacts", debug_files));
 	}
 
 	if (vi != nullptr)
@@ -639,7 +650,7 @@ void dump_summary(const mana::PE& pe, io::OutputFormatter& formatter)
 		for (auto it = vi->StringTable.begin() ; it != vi->StringTable.end() ; ++it)
 		{
 			if ((*it)->first != "" || (*it)->second != "") {
-				summary->append(boost::make_shared<io::OutputTreeNode>((*it)->first, (*it)->second));
+				summary->append(std::make_shared<io::OutputTreeNode>((*it)->first, (*it)->second));
 			}
 		}
 	}
@@ -657,7 +668,7 @@ void dump_rich_header(const mana::PE& pe, io::OutputFormatter& formatter)
 	}
 
 	io::pNode rich_node(new io::OutputTreeNode("RICH Header", io::OutputTreeNode::LIST));
-	rich_node->append(boost::make_shared<io::OutputTreeNode>("XOR Key", rich->xor_key, io::OutputTreeNode::HEX));
+	rich_node->append(std::make_shared<io::OutputTreeNode>("XOR Key", rich->xor_key, io::OutputTreeNode::HEX));
 	for (auto it = rich->values.begin() ; it != rich->values.end() ; ++it)
 	{
 		std::stringstream ss;
@@ -678,7 +689,7 @@ void dump_rich_header(const mana::PE& pe, io::OutputFormatter& formatter)
 				ss << " (" << std::get<1>(*it) << ")";
 			}
 		}
-		rich_node->append(boost::make_shared<io::OutputTreeNode>(ss.str(), std::get<2>(*it)));
+		rich_node->append(std::make_shared<io::OutputTreeNode>(ss.str(), std::get<2>(*it)));
 	}
 	formatter.add_data(rich_node, *pe.get_path());
 }
@@ -689,12 +700,12 @@ void dump_hashes(const mana::PE& pe, io::OutputFormatter& formatter)
 {
 	const_shared_strings hashes = hash::hash_file(hash::ALL_DIGESTS, *pe.get_path());
 	io::pNode hashes_node(new io::OutputTreeNode("Hashes", io::OutputTreeNode::LIST));
-	hashes_node->append(boost::make_shared<io::OutputTreeNode>("MD5", hashes->at(ALL_DIGESTS_MD5)));
-	hashes_node->append(boost::make_shared<io::OutputTreeNode>("SHA1", hashes->at(ALL_DIGESTS_SHA1)));
-	hashes_node->append(boost::make_shared<io::OutputTreeNode>("SHA256", hashes->at(ALL_DIGESTS_SHA256)));
-	hashes_node->append(boost::make_shared<io::OutputTreeNode>("SHA3", hashes->at(ALL_DIGESTS_SHA3)));
-	hashes_node->append(boost::make_shared<io::OutputTreeNode>("SSDeep", *ssdeep::hash_file(*pe.get_path())));
-	hashes_node->append(boost::make_shared<io::OutputTreeNode>("Imports Hash", hash::hash_imports(pe)));
+	hashes_node->append(std::make_shared<io::OutputTreeNode>("MD5", hashes->at(ALL_DIGESTS_MD5)));
+	hashes_node->append(std::make_shared<io::OutputTreeNode>("SHA1", hashes->at(ALL_DIGESTS_SHA1)));
+	hashes_node->append(std::make_shared<io::OutputTreeNode>("SHA256", hashes->at(ALL_DIGESTS_SHA256)));
+	hashes_node->append(std::make_shared<io::OutputTreeNode>("SHA3", hashes->at(ALL_DIGESTS_SHA3)));
+	hashes_node->append(std::make_shared<io::OutputTreeNode>("SSDeep", *ssdeep::hash_file(*pe.get_path())));
+	hashes_node->append(std::make_shared<io::OutputTreeNode>("Imports Hash", hash::hash_imports(pe)));
 	formatter.add_data(hashes_node, *pe.get_path());
 }
 

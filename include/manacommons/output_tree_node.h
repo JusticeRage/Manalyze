@@ -21,20 +21,20 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include <string>
 #include <set>
 #include <sstream>
-#include <boost/make_shared.hpp>
-#include <boost/cstdint.hpp>
-#include <boost/optional.hpp>
+#include <memory>
+#include <cstdint>
+#include <optional>
 
 #include "color.h"
 #include "plugin_framework/threat_level.h"
 
-#if defined BOOST_WINDOWS_API && !defined DECLSPEC_MANACOMMONS
+#if defined _WIN32 && !defined DECLSPEC_MANACOMMONS
 #ifdef MANALYZE_EXPORT
 #define DECLSPEC_MANACOMMONS    __declspec(dllexport)
 	#else
 #define DECLSPEC_MANACOMMONS    __declspec(dllimport)
 	#endif
-#elif !defined BOOST_WINDOWS_API && !defined DECLSPEC_MANACOMMONS
+#elif !defined _WIN32 && !defined DECLSPEC_MANACOMMONS
 	#define DECLSPEC_MANACOMMONS
 #endif
 
@@ -44,7 +44,7 @@ namespace io
 typedef std::vector<std::string> strings;
 typedef std::shared_ptr<strings> shared_strings;
 typedef std::set<std::string> string_set;
-typedef boost::shared_ptr<std::string> pString;
+typedef std::shared_ptr<std::string> pString;
 
 /**
 *	@brief	A tree representing the data to output.
@@ -52,18 +52,18 @@ typedef boost::shared_ptr<std::string> pString;
 class OutputTreeNode
 {
 public:
-	typedef boost::shared_ptr<OutputTreeNode> pNode;
+	typedef std::shared_ptr<OutputTreeNode> pNode;
 	typedef std::vector<pNode> nodes;
-	typedef boost::shared_ptr<nodes> pNodes;
-	typedef boost::shared_ptr<boost::optional<boost::uint32_t> > shared_opt_uint32;
-	typedef boost::shared_ptr<boost::optional<boost::uint16_t> > shared_opt_uint16;
-	typedef boost::shared_ptr<boost::optional<boost::uint64_t> > shared_opt_uint64;
-	typedef boost::shared_ptr<boost::optional<float> > shared_opt_float;
-	typedef boost::shared_ptr<boost::optional<double> > shared_opt_double;
-	typedef boost::shared_ptr<boost::optional<std::string> > shared_opt_string;
-	typedef boost::shared_ptr<boost::optional<nodes> > shared_opt_nodes;
-	typedef boost::shared_ptr<boost::optional<strings> > shared_opt_strings;
-	typedef boost::shared_ptr<boost::optional<plugin::LEVEL> > shared_opt_level;
+	typedef std::shared_ptr<nodes> pNodes;
+	typedef std::shared_ptr<std::optional<std::uint32_t> > shared_opt_uint32;
+	typedef std::shared_ptr<std::optional<std::uint16_t> > shared_opt_uint16;
+	typedef std::shared_ptr<std::optional<std::uint64_t> > shared_opt_uint64;
+	typedef std::shared_ptr<std::optional<float> > shared_opt_float;
+	typedef std::shared_ptr<std::optional<double> > shared_opt_double;
+	typedef std::shared_ptr<std::optional<std::string> > shared_opt_string;
+	typedef std::shared_ptr<std::optional<nodes> > shared_opt_nodes;
+	typedef std::shared_ptr<std::optional<strings> > shared_opt_strings;
+	typedef std::shared_ptr<std::optional<plugin::LEVEL> > shared_opt_level;
 
 	enum node_type { LIST, UINT32, UINT16, UINT64, FLOAT, DOUBLE, STRING, STRINGS, THREAT_LEVEL };
 
@@ -83,46 +83,46 @@ public:
 
 	// ----------------------------------------------------------------------------
 
-	DECLSPEC_MANACOMMONS OutputTreeNode(const std::string& name, boost::uint32_t i, display_modifier mod = DEC)
-		: _name(new std::string(name)), _type(UINT32), _uint32_data(new boost::optional<boost::uint32_t>(i)), _modifier(mod)
+	DECLSPEC_MANACOMMONS OutputTreeNode(const std::string& name, std::uint32_t i, display_modifier mod = DEC)
+		: _name(new std::string(name)), _type(UINT32), _uint32_data(new std::optional<std::uint32_t>(i)), _modifier(mod)
 	{}
 
-	DECLSPEC_MANACOMMONS OutputTreeNode(const std::string& name, boost::uint16_t s, display_modifier mod = DEC)
-		: _name(new std::string(name)), _type(UINT16), _uint16_data(new boost::optional<boost::uint16_t>(s)), _modifier(mod)
+	DECLSPEC_MANACOMMONS OutputTreeNode(const std::string& name, std::uint16_t s, display_modifier mod = DEC)
+		: _name(new std::string(name)), _type(UINT16), _uint16_data(new std::optional<std::uint16_t>(s)), _modifier(mod)
 	{}
 
-	DECLSPEC_MANACOMMONS OutputTreeNode(const std::string& name, boost::uint64_t l, display_modifier mod = DEC)
-		: _name(new std::string(name)), _type(UINT64), _uint64_data(new boost::optional<boost::uint64_t>(l)), _modifier(mod)
+	DECLSPEC_MANACOMMONS OutputTreeNode(const std::string& name, std::uint64_t l, display_modifier mod = DEC)
+		: _name(new std::string(name)), _type(UINT64), _uint64_data(new std::optional<std::uint64_t>(l)), _modifier(mod)
 	{}
 
 	DECLSPEC_MANACOMMONS OutputTreeNode(const std::string& name, float f, display_modifier mod = NONE)
-		: _name(new std::string(name)), _type(FLOAT), _float_data(new boost::optional<float>(f)), _modifier(mod)
+		: _name(new std::string(name)), _type(FLOAT), _float_data(new std::optional<float>(f)), _modifier(mod)
 	{}
 
 	DECLSPEC_MANACOMMONS OutputTreeNode(const std::string& name, double d, display_modifier mod = NONE)
-		: _name(new std::string(name)), _type(DOUBLE), _double_data(new boost::optional<double>(d)), _modifier(mod)
+		: _name(new std::string(name)), _type(DOUBLE), _double_data(new std::optional<double>(d)), _modifier(mod)
 	{}
 
 	DECLSPEC_MANACOMMONS OutputTreeNode(const std::string& name, const std::string& s, display_modifier mod = NONE)
-		: _name(new std::string(name)), _type(STRING), _string_data(new boost::optional<std::string>(s)), _modifier(mod)
+		: _name(new std::string(name)), _type(STRING), _string_data(new std::optional<std::string>(s)), _modifier(mod)
 	{}
 
 	DECLSPEC_MANACOMMONS OutputTreeNode(const std::string& name, const nodes& n, display_modifier mod = NONE)
-		: _name(new std::string(name)), _type(LIST), _list_data(new boost::optional<nodes>(n)), _modifier(mod)
+		: _name(new std::string(name)), _type(LIST), _list_data(new std::optional<nodes>(n)), _modifier(mod)
 	{}
 
 	DECLSPEC_MANACOMMONS OutputTreeNode(const std::string& name, const strings& strs, display_modifier mod = NONE)
-		: _name(new std::string(name)), _type(STRINGS), _strings_data(new boost::optional<strings>(strs)), _modifier(mod)
+		: _name(new std::string(name)), _type(STRINGS), _strings_data(new std::optional<strings>(strs)), _modifier(mod)
 	{}
 
 	DECLSPEC_MANACOMMONS OutputTreeNode(const std::string& name, const string_set& strs, display_modifier mod = AFTER_NAME)
 		: _name(new std::string(name)), _type(STRINGS), _modifier(mod)
 	{
-		_strings_data = boost::make_shared<boost::optional<strings> >(strings(strs.begin(), strs.end()));
+		_strings_data = std::make_shared<std::optional<strings> >(strings(strs.begin(), strs.end()));
 	}
 
 	DECLSPEC_MANACOMMONS OutputTreeNode(const std::string& name, plugin::LEVEL level, display_modifier mod = NONE)
-		: _name(new std::string(name)), _type(THREAT_LEVEL), _level_data(new boost::optional<plugin::LEVEL>(level)), _modifier(mod)
+		: _name(new std::string(name)), _type(THREAT_LEVEL), _level_data(new std::optional<plugin::LEVEL>(level)), _modifier(mod)
 	{}
 
 	// ----------------------------------------------------------------------------
@@ -290,9 +290,9 @@ private:
 
 };
 
-typedef boost::shared_ptr<OutputTreeNode> pNode;
+typedef std::shared_ptr<OutputTreeNode> pNode;
 typedef std::vector<pNode> nodes;
-typedef boost::shared_ptr<nodes> pNodes;
+typedef std::shared_ptr<nodes> pNodes;
 
 /**
 *	@brief	For LIST nodes, returns the size of the biggest child's name.

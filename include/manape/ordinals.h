@@ -21,20 +21,16 @@
 #include <sstream>
 #include <string>
 
-#include <boost/algorithm/string.hpp>
-#include <boost/assign.hpp>
-#include <boost/cstdint.hpp>
-#include <boost/make_shared.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/system/api_config.hpp>
-
-#if defined BOOST_WINDOWS_API && !defined DECLSPEC
+#include <cstdint>
+#include <memory>
+#include <memory>
+#if defined _WIN32 && !defined DECLSPEC
 	#ifdef MANAPE_EXPORT
 		#define DECLSPEC    __declspec(dllexport)
 	#else
 		#define DECLSPEC    __declspec(dllimport)
 	#endif
-#elif !defined BOOST_WINDOWS_API && !defined DECLSPEC
+#elif !defined _WIN32 && !defined DECLSPEC
 	#define DECLSPEC
 #endif
 
@@ -51,7 +47,7 @@ namespace nt {
  * Replace:     ([A-Za-z0-9_\-]+):\r\n\s+Ordinal:\s*(\d+) 
  * With:        \($2,\t\t"$1"\)
  */
-extern const DECLSPEC std::map<std::string, std::map<boost::uint16_t, std::string> > ORDINAL_MAP;
+extern const DECLSPEC std::map<std::string, std::map<std::uint16_t, std::string> > ORDINAL_MAP;
 
 /**
  *  @brief  Translates an ordinal into a function name, if possible.
@@ -62,6 +58,6 @@ extern const DECLSPEC std::map<std::string, std::map<boost::uint16_t, std::strin
  *  @return The name of the function corresponding to the ordinal, or a string containing "#[ordinal]"
  *          if it could not be translated.
  */
-extern DECLSPEC boost::shared_ptr<std::string> translate_ordinal(boost::uint16_t ordinal, const std::string& dll);
+extern DECLSPEC std::shared_ptr<std::string> translate_ordinal(std::uint16_t ordinal, const std::string& dll);
 
 } // !namespace nt

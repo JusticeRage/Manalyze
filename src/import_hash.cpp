@@ -51,7 +51,7 @@ std::string hash_imports(const mana::PE& pe)
 	}
 
 	std::string data = ss.str();
-	std::vector<boost::uint8_t> bytes(data.begin(), data.end());
+	std::vector<std::uint8_t> bytes(data.begin(), data.end());
 	auto h = hash::hash_bytes(*hash::ALL_DIGESTS[ALL_DIGESTS_MD5], bytes);
     if (h != nullptr) {
         return *h;

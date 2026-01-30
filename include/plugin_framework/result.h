@@ -20,8 +20,8 @@
 #include <vector>
 #include <string>
 #include <sstream>
-#include <boost/make_shared.hpp>
-#include <boost/optional.hpp>
+#include <memory>
+#include <optional>
 
 #include "threat_level.h" // Contains the LEVEL enum.
 #include "manacommons/output_tree_node.h"
@@ -30,7 +30,7 @@ namespace plugin
 {
 
 
-typedef boost::shared_ptr<std::string> pString;
+typedef std::shared_ptr<std::string> pString;
 
 /**
  *	@brief	Represents the result of a PE analysis, as returned by plugins.
@@ -70,7 +70,7 @@ public:
 	void add_information(T t)
 	{
 		io::pNode output = get_information();
-		output->append(boost::make_shared<io::OutputTreeNode>(_create_node_name(), t, io::OutputTreeNode::HIDE_NAME));
+		output->append(std::make_shared<io::OutputTreeNode>(_create_node_name(), t, io::OutputTreeNode::HIDE_NAME));
 	}
 
 	/**
@@ -87,7 +87,7 @@ public:
 	void add_information(const std::string& name, T t)
 	{
 		io::pNode output = get_information();
-		output->append(boost::make_shared<io::OutputTreeNode>(name, t));
+		output->append(std::make_shared<io::OutputTreeNode>(name, t));
 	}
 
 	io::pNode get_output() const { return _data; }
@@ -125,7 +125,7 @@ private:
 
 	io::pNode _data;
 };
-typedef boost::shared_ptr<Result> pResult;
+typedef std::shared_ptr<Result> pResult;
 
 /**
 *	@brief	Template specialization for io::pNodes.

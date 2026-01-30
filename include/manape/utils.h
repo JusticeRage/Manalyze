@@ -26,18 +26,17 @@
 #include <math.h>
 #include <vector>
 
-#include <boost/cstdint.hpp>
-#include <boost/shared_array.hpp>
-#include <boost/make_shared.hpp>
-#include <boost/system/api_config.hpp>
-#include <boost/date_time.hpp>
+#include <cstdint>
+#include <memory>
+#include <chrono>
+#include <ctime>
 
 #include <manacommons/utf8/utf8.h> // Used to convert windows UTF-16 strings into UTF-8
 
 #include "manape/color.h"
 
 // Some miscellaneous functions are exported
-#if defined BOOST_WINDOWS_API
+#if defined _WIN32
 	#ifdef MANAPE_EXPORT
 		#define DECLSPEC    __declspec(dllexport)
 	#else
@@ -47,13 +46,11 @@
 	#define DECLSPEC
 #endif
 
-namespace btime = boost::posix_time;
-
 namespace utils
 {
 
-typedef boost::shared_ptr<std::string> pString;
-typedef boost::shared_ptr<btime::ptime> pptime;
+typedef std::shared_ptr<std::string> pString;
+using pptime = std::shared_ptr<std::chrono::system_clock::time_point>;
 
 // Disable the "unary minus operator applied to unsigned type" warning.
 #pragma warning(push)
@@ -66,7 +63,7 @@ typedef boost::shared_ptr<btime::ptime> pptime;
  *	
  *	@return x ROL n
  */
-inline boost::uint32_t rol32(boost::uint32_t x, boost::uint32_t n)
+inline std::uint32_t rol32(std::uint32_t x, std::uint32_t n)
 {
 	n = n % 32;
 	return (x << n) | (x >> (-n & 31));
@@ -150,11 +147,11 @@ bool read_string_at_offset(FILE* f, unsigned int offset, std::string& out, bool 
  *
  *	See http://en.wikipedia.org/wiki/Entropy_(information_theory)
  *
- *	@param	const std::vector<boost::uint8_t>& bytes The byte stream to work on.
+ *	@param	const std::vector<std::uint8_t>& bytes The byte stream to work on.
  *
  *	@return	The entropy of the byte stream.
  */
-double DECLSPEC shannon_entropy(const std::vector<boost::uint8_t>& bytes);
+double DECLSPEC shannon_entropy(const std::vector<std::uint8_t>& bytes);
 
 // ----------------------------------------------------------------------------
 
@@ -165,18 +162,18 @@ double DECLSPEC shannon_entropy(const std::vector<boost::uint8_t>& bytes);
  *
  *	@return	A human readable string representing the given timestamp.
  */
-pString DECLSPEC timestamp_to_string(boost::uint64_t epoch_timestamp);
+pString DECLSPEC timestamp_to_string(std::uint64_t epoch_timestamp);
 
 // ----------------------------------------------------------------------------
 
 /**
- *	@brief	Converts a DosDate timestamp into a boost::time object.
+ *	@brief	Converts a DosDate timestamp into a time_point object.
  *
  *	@param	uint32_t dosdate The timestamp to convert.
  *
  *	@return	A shared boost ptime object representing the given timestamp.
  */
-pptime DECLSPEC dosdate_to_btime(boost::uint32_t dosdate);
+pptime DECLSPEC dosdate_to_btime(std::uint32_t dosdate);
 
 // ----------------------------------------------------------------------------
 
@@ -187,7 +184,7 @@ pptime DECLSPEC dosdate_to_btime(boost::uint32_t dosdate);
  *
  *	@return	A human readable string representing the given timestamp.
  */
-pString DECLSPEC dosdate_to_string(boost::uint32_t dosdate);
+pString DECLSPEC dosdate_to_string(std::uint32_t dosdate);
 
 // ----------------------------------------------------------------------------
 /**
@@ -200,5 +197,5 @@ pString DECLSPEC dosdate_to_string(boost::uint32_t dosdate);
  *  @param  threshold How close the two timestamps should be to determine that
  *          the dosdate is actually a posix timestamp (default is 0.1%).
  */
-bool DECLSPEC is_actually_posix(boost::uint32_t dosdate, boost::uint32_t pe_timestamp, float threshold = 0.001);
+bool DECLSPEC is_actually_posix(std::uint32_t dosdate, std::uint32_t pe_timestamp, float threshold = 0.001);
 }

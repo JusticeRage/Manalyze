@@ -25,11 +25,11 @@ class ExploitMitigationsPlugin : public IPlugin
     int get_api_version() const override { return 1; }
 
     pString get_id() const override {
-        return boost::make_shared<std::string>("mitigation");
+        return std::make_shared<std::string>("mitigation");
     }
 
     pString get_description() const override {
-        return boost::make_shared<std::string>("Displays the enabled exploit mitigation techniques (DEP, ASLR, etc.).");
+        return std::make_shared<std::string>("Displays the enabled exploit mitigation techniques (DEP, ASLR, etc.).");
     }
 
     pResult analyze(const mana::PE& pe) override

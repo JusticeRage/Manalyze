@@ -21,9 +21,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
-#include <boost/range/adaptor/indexed.hpp>
-#include <boost/algorithm/string/predicate.hpp>
-#include <boost/make_shared.hpp>
+#include <memory>
 
 #include "output_formatter.h"
 #include "manape/pe.h"

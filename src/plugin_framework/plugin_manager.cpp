@@ -33,7 +33,7 @@ void PluginManager::load(const std::string& path)
 	if (!c || !d)
 	{
 		// Display an error message if the library is likely to be a malformed plugin.
-		std::string libname = boost::filesystem::path(path).stem().string();
+		std::string libname = std::filesystem::path(path).stem().string();
 		if (libname.find("libplugin_") == 0 || libname.find("plugin_") == 0) {
 			PRINT_ERROR << "Could not resolve " << path << "'s creator or destroyer function!" << std::endl;
 		}
@@ -70,14 +70,12 @@ void PluginManager::load(const std::string& path)
 
 void PluginManager::load_all(const std::string& path)
 {
-	#ifdef BOOST_WINDOWS_API
+	#ifdef _WIN32
 		std::string ext(".dll");
-	#elif defined BOOST_POSIX_API
-	# if defined __APPLE__
+	#elif defined(__APPLE__)
 		std::string ext(".dylib");
-	# else
+	#else
 		std::string ext(".so");
-	# endif
 	#endif
 
 	if (!bfs::exists(path)) {

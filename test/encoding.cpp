@@ -19,7 +19,7 @@
 #include <vector>
 
 #include <boost/test/unit_test.hpp>
-#include <boost/cstdint.hpp>
+#include <cstdint>
 
 #include "manacommons/utf8/utf8.h"
 
@@ -27,7 +27,7 @@
 
 void check_conversion(std::wstring input, const std::string& expected)
 {
-	std::vector<boost::uint8_t> utf8result;
+	std::vector<std::uint8_t> utf8result;
 	utf8::utf16to8(input.begin(), input.end(), std::back_inserter(utf8result));
 	std::string result(utf8result.begin(), utf8result.end());
 	BOOST_CHECK_EQUAL(result, expected);

@@ -20,7 +20,7 @@
 namespace utils
 {
 
-#ifdef BOOST_WINDOWS_API
+#ifdef _WIN32
 
 void set_color(Color c)
 {

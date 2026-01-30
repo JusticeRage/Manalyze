@@ -19,21 +19,20 @@
 
 #include <iostream>
 #include <string>
-#include <boost/system/api_config.hpp>
-#ifdef BOOST_WINDOWS_API
+#ifdef _WIN32
 	#include "windows.h"
 #else
 	#include <unistd.h>
 	#include <stdio.h>
 #endif
 
-#if defined BOOST_WINDOWS_API && !defined DECLSPEC_MANACOMMONS
+#if defined _WIN32 && !defined DECLSPEC_MANACOMMONS
 	#ifdef MANACOMMONS_EXPORT
 		#define DECLSPEC_MANACOMMONS    __declspec(dllexport)
 	#else
 		#define DECLSPEC_MANACOMMONS    __declspec(dllimport)
 	#endif
-#elif !defined BOOST_WINDOWS_API && !defined DECLSPEC_MANACOMMONS
+#elif !defined _WIN32 && !defined DECLSPEC_MANACOMMONS
 	#define DECLSPEC_MANACOMMONS
 #endif
 

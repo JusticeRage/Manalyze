@@ -17,18 +17,16 @@
 
 #include "manacommons/paths.h"
 
-#include <boost/filesystem.hpp>
-#include <boost/system/api_config.hpp>
-
+#include <filesystem>
 #include <cstdlib>
 #include <sstream>
 
-#ifdef BOOST_POSIX_API
+#if !defined(_WIN32)
 # include <unistd.h>
 # include <limits.h>
 #endif
 
-#ifdef BOOST_WINDOWS_API
+#if defined(_WIN32)
 # include <windows.h>
 #endif
 
@@ -59,7 +57,7 @@
 namespace mana {
 namespace paths {
 
-namespace bfs = boost::filesystem;
+namespace bfs = std::filesystem;
 
 namespace {
 
@@ -87,7 +85,7 @@ std::string get_env_path_candidate(const std::string& argv0)
 		return std::string();
 	}
 
-#ifdef BOOST_WINDOWS_API
+#if defined(_WIN32)
 	const char separator = ';';
 #else
 	const char separator = ':';
@@ -119,7 +117,7 @@ bool is_file(const bfs::path& path)
 
 std::string plugin_extension()
 {
-#ifdef BOOST_WINDOWS_API
+#if defined(_WIN32)
 	return ".dll";
 #elif defined(__APPLE__)
 	return ".dylib";
@@ -182,14 +180,14 @@ bool dir_has_plugins(const bfs::path& dir)
 
 std::string get_executable_dir(const std::string& argv0)
 {
-#if defined(BOOST_POSIX_API) && !defined(__APPLE__)
+#if !defined(_WIN32) && !defined(__APPLE__)
 	char buffer[PATH_MAX];
 	const ssize_t len = ::readlink("/proc/self/exe", buffer, sizeof(buffer) - 1);
 	if (len > 0) {
 		buffer[len] = '\0';
 		return bfs::path(buffer).parent_path().string();
 	}
-#elif defined(BOOST_WINDOWS_API)
+#elif defined(_WIN32)
 	char buffer[MAX_PATH] = {0};
 	const DWORD len = ::GetModuleFileNameA(nullptr, buffer, MAX_PATH);
 	if (len > 0 && len < MAX_PATH) {
@@ -304,7 +302,7 @@ std::string select_cache_dir(const bfs::path& exe_dir)
 		return env_dir;
 	}
 
-#ifdef BOOST_POSIX_API
+#if !defined(_WIN32)
 	const std::string xdg_cache = get_env_string("XDG_CACHE_HOME");
 	if (!xdg_cache.empty()) {
 		return (bfs::path(xdg_cache) / "manalyze").string();
@@ -316,7 +314,7 @@ std::string select_cache_dir(const bfs::path& exe_dir)
 	}
 #endif
 
-#ifdef BOOST_WINDOWS_API
+#if defined(_WIN32)
 	const std::string local_app_data = get_env_string("LOCALAPPDATA");
 	if (!local_app_data.empty()) {
 		return (bfs::path(local_app_data) / "Manalyze").string();

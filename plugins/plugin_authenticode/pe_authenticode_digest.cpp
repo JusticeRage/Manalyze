@@ -17,6 +17,8 @@
 
 #include "pe_authenticode_digest.h"
 
+#include <vector>
+
 namespace plugin {
 
 std::string get_authenticode_hash(const mana::PE& pe, const std::string& digest_oid)
@@ -45,9 +47,9 @@ std::string get_authenticode_hash(const mana::PE& pe, const std::string& digest_
     // information.
     FILE* f = fopen(pe.get_path()->c_str(), "rb");
     auto size = dosh->e_lfanew + sizeof(mana::pe_header) + 0x40; // Offset of the Checksum.
-    boost::scoped_array<boost::uint8_t> buffer(new boost::uint8_t[size]);
-    fread(&buffer.operator[](0), 1, size, f);
-    h->add(&buffer.operator[](0), size);
+    std::vector<std::uint8_t> buffer(size);
+    fread(buffer.data(), 1, size, f);
+    h->add(buffer.data(), size);
     // Hash everything up to the Checksum then skip it.
     fseek(f, 4, SEEK_CUR);
     // Now reach the SECURITY directory information. For x64 binaries, it's 0x10 bytes further.
@@ -55,9 +57,9 @@ std::string get_authenticode_hash(const mana::PE& pe, const std::string& digest_
     if (pe.get_architecture() == mana::PE::x64) {
         size += 0x10;
     }
-    buffer.reset(new boost::uint8_t[size]);
-    fread(&buffer.operator[](0), 1, size, f);
-    h->add(&buffer.operator[](0), size);
+    buffer.resize(size);
+    fread(buffer.data(), 1, size, f);
+    h->add(buffer.data(), size);
     // Again, hash everything up to here then skip the ignored field.
     fseek(f, 8, SEEK_CUR);
 
@@ -73,12 +75,12 @@ std::string get_authenticode_hash(const mana::PE& pe, const std::string& digest_
     while (remaining)
     {
         size_t chunk_size = std::min(remaining, static_cast<size_t>(4096));
-        buffer.reset(new boost::uint8_t[chunk_size]);
-        auto read_bytes = fread(&buffer.operator[](0), 1, chunk_size, f);
+        buffer.resize(chunk_size);
+        auto read_bytes = fread(buffer.data(), 1, chunk_size, f);
         if (read_bytes == 0) { // Read error or EOF. Try hashing what we have, but things are bleak.
             break;
         }
-        h->add(&buffer.operator[](0), read_bytes);
+        h->add(buffer.data(), read_bytes);
         remaining -= read_bytes;
     }
     fclose(f);
