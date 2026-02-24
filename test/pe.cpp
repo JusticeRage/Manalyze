@@ -25,7 +25,21 @@
 #include <boost/test/unit_test.hpp>
 
 #include "fixtures.h"
+#include "manacommons/color.h"
 #include "manape/pe.h"
+
+namespace {
+
+struct SilenceLogsFixture
+{
+	SilenceLogsFixture() {
+		utils::set_log_level(utils::LogLevel::OFF);
+	}
+};
+
+} // namespace
+
+BOOST_GLOBAL_FIXTURE(SilenceLogsFixture);
 
 // ----------------------------------------------------------------------------
 

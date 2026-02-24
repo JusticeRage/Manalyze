@@ -17,8 +17,43 @@
 
 #include "manacommons/color.h"
 
+#include <algorithm>
+#include <atomic>
+#include <cctype>
+
 namespace utils
 {
+
+namespace {
+
+class NullBuffer : public std::streambuf
+{
+public:
+	int overflow(int c) override { return c; }
+};
+
+std::ostream& null_stream()
+{
+	static NullBuffer buffer;
+	static std::ostream sink(&buffer);
+	return sink;
+}
+
+std::atomic<LogLevel>& global_log_level()
+{
+	static std::atomic<LogLevel> level(LogLevel::WARNING);
+	return level;
+}
+
+std::string lowercase(std::string value)
+{
+	std::transform(value.begin(), value.end(), value.begin(), [](unsigned char c) {
+		return static_cast<char>(std::tolower(c));
+	});
+	return value;
+}
+
+} // namespace
 
 #ifdef _WIN32
 
@@ -108,8 +143,98 @@ std::ostream& print_colored_text(const std::string& text,
 	return sink << suffix;
 }
 
+void set_log_level(LogLevel level)
+{
+	global_log_level().store(level, std::memory_order_relaxed);
+}
+
+LogLevel get_log_level()
+{
+	return global_log_level().load(std::memory_order_relaxed);
+}
+
+bool should_log(LogLevel level)
+{
+	return static_cast<int>(get_log_level()) >= static_cast<int>(level);
+}
+
+bool parse_log_level(const std::string& value, LogLevel& level)
+{
+	const std::string normalized = lowercase(value);
+	if (normalized == "off") {
+		level = LogLevel::OFF;
+		return true;
+	}
+	if (normalized == "error") {
+		level = LogLevel::ERROR;
+		return true;
+	}
+	if (normalized == "warning") {
+		level = LogLevel::WARNING;
+		return true;
+	}
+	if (normalized == "info") {
+		level = LogLevel::INFO;
+		return true;
+	}
+	if (normalized == "debug") {
+		level = LogLevel::DEBUG;
+		return true;
+	}
+	return false;
+}
+
+bool set_log_level_from_string(const std::string& value)
+{
+	LogLevel level;
+	if (!parse_log_level(value, level)) {
+		return false;
+	}
+	set_log_level(level);
+	return true;
+}
+
+const char* log_level_to_string(LogLevel level)
+{
+	switch (level)
+	{
+	case LogLevel::OFF:
+		return "off";
+	case LogLevel::ERROR:
+		return "error";
+	case LogLevel::WARNING:
+		return "warning";
+	case LogLevel::INFO:
+		return "info";
+	case LogLevel::DEBUG:
+		return "debug";
+	default:
+		return "warning";
+	}
+}
+
+std::ostream& error_stream()
+{
+	if (!should_log(LogLevel::ERROR)) {
+		return null_stream();
+	}
+	return print_colored_text("!", RED, std::cerr, "[", "] Error: ");
+}
+
+std::ostream& warning_stream()
+{
+	if (!should_log(LogLevel::WARNING)) {
+		return null_stream();
+	}
+	return print_colored_text("*", YELLOW, std::cerr, "[", "] Warning: ");
+}
+
 bool is_log_cap_reached()
 {
+	if (!should_log(LogLevel::WARNING)) {
+		return true;
+	}
+
 	static unsigned int log_count = 0;
 	if (++log_count < LOG_CAP) {
 		return false;

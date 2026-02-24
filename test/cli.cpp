@@ -54,6 +54,20 @@ bool parse_ok(const std::vector<std::string>& args, Options& opts)
     return parse_args(opts, static_cast<int>(argv.size()), argv.data(), no_help, no_validate);
 }
 
+bool parse_with_help_count(const std::vector<std::string>& args, Options& opts, int& help_count)
+{
+    auto counting_help = [&help_count](const CLI::App&, const std::string&) { ++help_count; };
+    auto no_validate = [](const Options&, const CLI::App&, char**) { return true; };
+
+    std::vector<char*> argv;
+    argv.reserve(args.size());
+    for (const auto& s : args) {
+        argv.push_back(const_cast<char*>(s.c_str()));
+    }
+
+    return parse_args(opts, static_cast<int>(argv.size()), argv.data(), counting_help, no_validate);
+}
+
 } // namespace
 
 BOOST_AUTO_TEST_CASE(cli_parsing_examples)
@@ -133,5 +147,44 @@ BOOST_AUTO_TEST_CASE(cli_parsing_examples)
         BOOST_CHECK_EQUAL(opts.dump[0], "all");
         BOOST_CHECK_EQUAL(opts.pe.size(), 1U);
         BOOST_CHECK_EQUAL(opts.pe[0], input);
+    }
+
+    {
+        Options opts;
+        auto args = build_args({"--quiet", input});
+        BOOST_CHECK(parse_ok(args, opts));
+        BOOST_CHECK(opts.quiet);
+        BOOST_CHECK(opts.log_level_set);
+        BOOST_CHECK_EQUAL(opts.log_level, "error");
+    }
+
+    {
+        Options opts;
+        auto args = build_args({"--log-level", "off", input});
+        BOOST_CHECK(parse_ok(args, opts));
+        BOOST_CHECK(opts.log_level_set);
+        BOOST_CHECK_EQUAL(opts.log_level, "off");
+    }
+
+    {
+        Options opts;
+        auto args = build_args({"--log-level=debug", input});
+        BOOST_CHECK(parse_ok(args, opts));
+        BOOST_CHECK(opts.log_level_set);
+        BOOST_CHECK_EQUAL(opts.log_level, "debug");
+    }
+
+    {
+        Options opts;
+        auto args = build_args({"--log-level", "invalid", input});
+        BOOST_CHECK(!parse_ok(args, opts));
+    }
+
+    {
+        Options opts;
+        int help_count = 0;
+        auto args = build_args({});
+        BOOST_CHECK(!parse_with_help_count(args, opts, help_count));
+        BOOST_CHECK_EQUAL(help_count, 1);
     }
 }

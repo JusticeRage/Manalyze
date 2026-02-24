@@ -43,7 +43,7 @@ std::vector<std::string> reorder_args_for_cli11(int argc, char** argv)
     positionals.reserve(static_cast<size_t>(argc));
 
     auto is_long_with_value = [](const std::string& name) {
-        return name == "--output" || name == "--dump" || name == "--extract" || name == "--plugins";
+        return name == "--output" || name == "--dump" || name == "--extract" || name == "--plugins" || name == "--log-level";
     };
 
     bool end_of_options = false;
@@ -131,6 +131,7 @@ bool parse_args(Options& opts, int argc, char**argv, const HelpPrinter& help_pri
         ->required()
         ->type_name("FILE");
     app.add_flag("-r,--recursive", opts.recursive, "Scan all files in a directory (subdirectories will be ignored).");
+    app.add_flag("-q,--quiet", opts.quiet, "Only display errors.");
     auto* output_opt = app.add_option("-o,--output", opts.output, "The output format. May be 'raw' (default) or 'json'.");
     auto* dump_opt = app.add_option("-d,--dump", opts.dump,
         "Dump PE information. Available choices are any combination of: "
@@ -146,6 +147,18 @@ bool parse_args(Options& opts, int argc, char**argv, const HelpPrinter& help_pri
         "Analyze the binary with additional plugins. (may slow down the analysis!)");
     plugins_opt->expected(1);
     plugins_opt->multi_option_policy(CLI::MultiOptionPolicy::TakeAll);
+    auto* log_level_opt = app.add_option("--log-level", opts.log_level,
+        "Set log verbosity. Accepted values: off, error, warning, info, debug.");
+
+    if (argc <= 1)
+    {
+        if (help_printer) {
+            help_printer(app, argv[0]);
+        } else {
+            print_help_default(app, argv[0]);
+        }
+        return false;
+    }
 
     try
     {
@@ -175,8 +188,22 @@ bool parse_args(Options& opts, int argc, char**argv, const HelpPrinter& help_pri
 
     opts.output_set = output_opt->count() > 0;
     opts.extract_set = extract_opt->count() > 0;
+    opts.log_level_set = log_level_opt->count() > 0;
     opts.dump = split_comma_values(opts.dump);
     opts.plugins = split_comma_values(opts.plugins);
+
+    if (opts.quiet && !opts.log_level_set) {
+        opts.log_level = "error";
+        opts.log_level_set = true;
+    }
+    if (opts.log_level_set) {
+        utils::LogLevel level = utils::LogLevel::WARNING;
+        if (!utils::parse_log_level(opts.log_level, level)) {
+            PRINT_ERROR << "Invalid log level \"" << opts.log_level
+                        << "\". Expected one of: off, error, warning, info, debug." << std::endl;
+            return false;
+        }
+    }
 
     if (opts.version)
     {

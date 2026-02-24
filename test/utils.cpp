@@ -16,6 +16,10 @@
 */
 
 #include <boost/test/unit_test.hpp>
+
+#include <sstream>
+
+#include "manacommons/color.h"
 #include "manape/utils.h"
 
 BOOST_AUTO_TEST_CASE(test_dosdate_to_string)
@@ -50,4 +54,42 @@ BOOST_AUTO_TEST_CASE(test_is_actually_posix)
     BOOST_CHECK(utils::is_actually_posix(0x530b3da3, 0x530b3da0));
     BOOST_CHECK(utils::is_actually_posix(0x530b3d90, 0x530b3da0));
     BOOST_CHECK(!utils::is_actually_posix(0x40b349e2, 0x4fb6e609));
+}
+
+BOOST_AUTO_TEST_CASE(test_log_level_parsing)
+{
+    utils::LogLevel level = utils::LogLevel::WARNING;
+
+    BOOST_CHECK(utils::parse_log_level("off", level));
+    BOOST_CHECK(level == utils::LogLevel::OFF);
+    BOOST_CHECK(utils::parse_log_level("ERROR", level));
+    BOOST_CHECK(level == utils::LogLevel::ERROR);
+    BOOST_CHECK(utils::parse_log_level("warning", level));
+    BOOST_CHECK(level == utils::LogLevel::WARNING);
+    BOOST_CHECK(utils::parse_log_level("info", level));
+    BOOST_CHECK(level == utils::LogLevel::INFO);
+    BOOST_CHECK(utils::parse_log_level("debug", level));
+    BOOST_CHECK(level == utils::LogLevel::DEBUG);
+    BOOST_CHECK(!utils::parse_log_level("nope", level));
+}
+
+BOOST_AUTO_TEST_CASE(test_log_level_stream_filtering)
+{
+    const auto previous = utils::get_log_level();
+    std::ostringstream captured;
+    std::streambuf* original = std::cerr.rdbuf(captured.rdbuf());
+
+    utils::set_log_level(utils::LogLevel::OFF);
+    PRINT_WARNING << "hidden warning" << std::endl;
+    PRINT_ERROR << "hidden error" << std::endl;
+    BOOST_CHECK(captured.str().empty());
+
+    captured.str("");
+    captured.clear();
+    utils::set_log_level(utils::LogLevel::WARNING);
+    PRINT_WARNING << "visible warning" << std::endl;
+    BOOST_CHECK_NE(captured.str().find("visible warning"), std::string::npos);
+
+    std::cerr.rdbuf(original);
+    utils::set_log_level(previous);
 }

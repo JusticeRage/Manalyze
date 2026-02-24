@@ -13,10 +13,13 @@ struct Options
     bool version = false;
     bool recursive = false;
     bool hashes = false;
+    bool quiet = false;
     bool output_set = false;
     bool extract_set = false;
+    bool log_level_set = false;
     std::string output;
     std::string extract;
+    std::string log_level;
     std::vector<std::string> dump;
     std::vector<std::string> plugins;
     std::vector<std::string> pe;

@@ -40,6 +40,7 @@ namespace utils
 {
 
 enum Color { RED, GREEN, YELLOW, RESET };
+enum class LogLevel { OFF = 0, ERROR = 1, WARNING = 2, INFO = 3, DEBUG = 4 };
 
 /**
  *	@brief	Set the font in the terminal to the specified color.
@@ -67,8 +68,48 @@ DECLSPEC_MANACOMMONS std::ostream& print_colored_text(const std::string& text,
 													  const std::string& prefix = "",
 													  const std::string& suffix = "");
 
-#define PRINT_ERROR utils::print_colored_text("!", utils::RED, std::cerr, "[", "] Error: ")
-#define PRINT_WARNING utils::print_colored_text("*", utils::YELLOW, std::cerr, "[", "] Warning: ")
+/**
+ *	@brief	Set the global logging level.
+ */
+DECLSPEC_MANACOMMONS void set_log_level(LogLevel level);
+
+/**
+ *	@brief	Retrieve the global logging level.
+ */
+DECLSPEC_MANACOMMONS LogLevel get_log_level();
+
+/**
+ *	@brief	Returns whether a message with the given level should be emitted.
+ */
+DECLSPEC_MANACOMMONS bool should_log(LogLevel level);
+
+/**
+ *	@brief	Parse a logging level from text.
+ *
+ *	Accepted values are: off, error, warning, info, debug.
+ */
+DECLSPEC_MANACOMMONS bool parse_log_level(const std::string& value, LogLevel& level);
+
+/**
+ *	@brief	Set log level from text.
+ *
+ *	@return	Whether parsing succeeded.
+ */
+DECLSPEC_MANACOMMONS bool set_log_level_from_string(const std::string& value);
+
+/**
+ *	@brief	Convert log level to text.
+ */
+DECLSPEC_MANACOMMONS const char* log_level_to_string(LogLevel level);
+
+/**
+ *	@brief	Streams used by logging macros.
+ */
+DECLSPEC_MANACOMMONS std::ostream& error_stream();
+DECLSPEC_MANACOMMONS std::ostream& warning_stream();
+
+#define PRINT_ERROR utils::error_stream()
+#define PRINT_WARNING utils::warning_stream()
 
 
 #define LOG_CAP 100

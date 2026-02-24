@@ -23,6 +23,7 @@
 #include <set>
 #include <sstream>
 #include <utility>
+#include <optional>
 
 #include <filesystem>
 
@@ -53,6 +54,44 @@
 #endif
 
 namespace bfs = std::filesystem;
+
+namespace {
+
+void apply_early_log_level_from_argv(int argc, char** argv)
+{
+	std::optional<utils::LogLevel> selected;
+	for (int i = 1; i < argc; ++i)
+	{
+		const std::string arg = argv[i];
+		if (arg == "-q" || arg == "--quiet")
+		{
+			selected = utils::LogLevel::ERROR;
+			continue;
+		}
+
+		std::string value;
+		if (arg.rfind("--log-level=", 0) == 0) {
+			value = arg.substr(std::string("--log-level=").size());
+		}
+		else if (arg == "--log-level" && i + 1 < argc) {
+			value = argv[++i];
+		}
+
+		if (!value.empty())
+		{
+			utils::LogLevel level = utils::LogLevel::WARNING;
+			if (utils::parse_log_level(value, level)) {
+				selected = level;
+			}
+		}
+	}
+
+	if (selected) {
+		utils::set_log_level(*selected);
+	}
+}
+
+} // namespace
 
 /**
  *	@brief	Prints the help message of the program.
@@ -476,6 +515,7 @@ int main(int argc, char** argv)
 	std::vector<std::string> selected_plugins, selected_categories;
 
 	mana::paths::initialize(argv[0]);
+	apply_early_log_level_from_argv(argc, argv);
 	const bfs::path config_dir(mana::paths::config_dir());
 	const bfs::path plugin_dir(mana::paths::plugin_dir());
 
@@ -483,12 +523,15 @@ int main(int argc, char** argv)
 	yara::Yara::initialize();
 	plugin::PluginManager::get_instance().load_all(plugin_dir.string());
 
-	// Load the configuration
-	config conf = parse_config((config_dir / "manalyze.conf").string());
-
 	if (!parse_args(opts, argc, argv, print_help, validate_args)) {
 		return -1;
 	}
+	if (opts.log_level_set) {
+		utils::set_log_level_from_string(opts.log_level);
+	}
+
+	// Load the configuration
+	config conf = parse_config((config_dir / "manalyze.conf").string());
 
 	// Get all the paths now and make them absolute before changing the working directory
 	std::set<std::string> targets = get_input_files(opts);
