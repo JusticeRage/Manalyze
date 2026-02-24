@@ -298,7 +298,7 @@ void JsonFormatter::format(std::ostream& sink, bool end_stream)
 
 	pNodes n = _root->get_children();
 	for (nodes::const_iterator it = n->begin() ; it != n->end() ; ++it) { // File level
-		_dump_node(sink, *it, 1, it != n->end() - 1);  // Append a comma for all elements but the last.
+		_dump_node(sink, *it, 1, (it != n->end() - 1) || !end_stream);  // Append a comma for all elements but the last.
 	}
 
 	if (end_stream) {
