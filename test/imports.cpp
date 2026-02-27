@@ -127,9 +127,17 @@ BOOST_AUTO_TEST_CASE(find_imports_case_insensitivity)
 	BOOST_CHECK_EQUAL(pfunctions->at(0), "WriteProcessMemory");
 
 	// Try again with case sensitivity on.
-	pfunctions = pe.find_imports("WRITEPROCESSMEMORY", ".*", true);
+	pfunctions = pe.find_imports("WRITEPROCESSMEMORY", std::nullopt, true);
 	BOOST_ASSERT(pfunctions);
 	BOOST_ASSERT(pfunctions->size() == 0);
+}
+
+// ----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(count_imported_functions)
+{
+	mana::PE pe("testfiles/manatest.exe");
+	BOOST_CHECK_EQUAL(pe.count_imported_functions(), 56);
 }
 
 // ----------------------------------------------------------------------------

@@ -18,6 +18,7 @@
 #include "manape/pe.h"
 
 #include <regex>
+#include <set>
 
 namespace mana {
 
@@ -306,6 +307,36 @@ const_shared_strings PE::get_imported_functions(const std::string& dll) const
 
 // ----------------------------------------------------------------------------
 
+size_t PE::count_imported_functions() const
+{
+	if (!_initialized) {
+		return 0;
+	}
+
+	std::set<std::string> unique_imports;
+	for (const auto& library : _imports)
+	{
+		auto imports = library->get_imports();
+		if (imports == nullptr) {
+			continue;
+		}
+		for (const auto& imported_symbol : *imports)
+		{
+			std::string name;
+			if (imported_symbol->Name == "") {
+				name = *nt::translate_ordinal(imported_symbol->AddressOfData & 0x7FFF, *library->get_name());
+			}
+			else {
+				name = imported_symbol->Name;
+			}
+			unique_imports.insert(name);
+		}
+	}
+	return unique_imports.size();
+}
+
+// ----------------------------------------------------------------------------
+
 shared_imports PE::find_imported_dlls(const std::string& name_regexp,
 									  bool  case_sensitivity) const
 {
@@ -335,16 +366,11 @@ shared_imports PE::find_imported_dlls(const std::string& name_regexp,
 // ----------------------------------------------------------------------------
 
 const_shared_strings PE::find_imports(const std::string& function_name_regexp,
-									  const std::string& dll_name_regexp,
+									  const std::optional<std::string>& dll_name_regexp,
 									  bool  case_sensitivity) const
 {
 	auto destination = std::make_shared<std::vector<std::string> >();
 	if (!_initialized) {
-		return destination;
-	}
-
-	auto matching_dlls = find_imported_dlls(dll_name_regexp);
-	if (!matching_dlls || matching_dlls->empty()) {
 		return destination;
 	}
 
@@ -356,19 +382,19 @@ const_shared_strings PE::find_imports(const std::string& function_name_regexp,
 		e = std::regex(function_name_regexp, std::regex::icase);
 	}
 
-	// Iterate on matching DLLs
-	for (const auto& it : *matching_dlls)
+	auto add_matching_imports = [&](const pImportedLibrary& library)
 	{
-		auto imported_functions = it->get_imports();
+		auto imported_functions = library->get_imports();
 		if (imported_functions == nullptr) {
-			continue;
+			return;
 		}
+
 		// Iterate on functions imported by each of these DLLs
 		for (const auto& it2 : *imported_functions)
 		{
 			std::string name;
 			if (it2->Name == "") {
-				name = *nt::translate_ordinal(it2->AddressOfData & 0x7FFF, *it->get_name());
+				name = *nt::translate_ordinal(it2->AddressOfData & 0x7FFF, *library->get_name());
 			}
 			else {
 				name = it2->Name;
@@ -378,7 +404,28 @@ const_shared_strings PE::find_imports(const std::string& function_name_regexp,
 				destination->push_back(name);
 			}
 		}
+	};
+
+	if (dll_name_regexp.has_value())
+	{
+		auto matching_dlls = find_imported_dlls(*dll_name_regexp, case_sensitivity);
+		if (!matching_dlls || matching_dlls->empty()) {
+			return destination;
+		}
+
+		// Iterate on matching DLLs only.
+		for (const auto& it : *matching_dlls) {
+			add_matching_imports(it);
+		}
 	}
+	else
+	{
+		// No DLL filter: iterate on all imported DLLs.
+		for (const auto& it : _imports) {
+			add_matching_imports(it);
+		}
+	}
+
 	return destination;
 }
 

@@ -402,7 +402,7 @@ In Manalyze, looking up imports is a two-step process. You usually query the lis
 
 You can also use the ``find_imports`` and ``find_imported_dlls`` function if you're looking for something specific. For instance::
 
-	auto dlls = pe.find_imports("WS2_32.dll", false);
+	auto dlls = pe.find_imported_dlls("WS2_32.dll", false);
 	
 ...will return all shared libraries imported by the PE matching the regular expression given as the first argument. The second argument controls whether the regular expression is case sensitive and defaults to false when omitted.
 	

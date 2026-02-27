@@ -120,6 +120,15 @@ public:
 	DECLSPEC const_shared_strings get_imported_functions(const std::string& dll) const;
 
 	/**
+	 *	@brief	Returns the number of unique imported function names across all imported DLLs.
+	 *
+	 *	@return	The number of unique imported functions.
+	 *
+	 *	Implementation is located in imports.cpp.
+	 */
+	DECLSPEC size_t count_imported_functions() const;
+
+	/**
 	*	@brief	Finds imported DLLs whose names match a particular regular expression.
 	*
 	*	@param	const std::string& name_regexp The regular expression used to match DLL names.
@@ -136,20 +145,20 @@ public:
 	 *	@brief	Finds imported functions matching regular expressions.
 	 *
 	 *	@param	const std::string& function_name_regexp		The regular expression selecting function names.
-	 *	@param	const std::string& dll_name_regexp			The regular expression selecting imported dlls into which the
-	 *														functions should be searched.
+	 *	@param	const std::optional<std::string>& dll_name_regexp
+	 *														Optional regular expression selecting imported DLLs into which
+	 *														the functions should be searched. std::nullopt means all DLLs.
 	 *	@param	bool case_sensitivity						Whethter the regular expression should be case sensitive (default is false).
 	 *
 	 *	@return	A shared vector containing the matching function names.
 	 *
-	 *	The default value for dll_name_regexp implies that all DLLs should be searched.
 	 *	Note that functions will only be returned if they match the WHOLE input sequence.
 	 *	/!\ Warning: Functions imported by ordinal can NOT be found using this function!
 	 *
 	 *	Implementation is located in imports.cpp.
 	 */
 	DECLSPEC const_shared_strings find_imports(const std::string& function_name_regexp,
-											   const std::string& dll_name_regexp = ".*",
+											   const std::optional<std::string>& dll_name_regexp = std::nullopt,
 											   bool  case_sensitivity = false) const;
 
 	/**

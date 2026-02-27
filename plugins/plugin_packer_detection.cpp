@@ -166,10 +166,10 @@ public:
             // Look for the "Total imports" @comp.id.
             if (std::get<0>(*it) == 1)
             {
-                auto imports = pe.find_imports(".*");
+                auto imports = pe.count_imported_functions();
                 // For some reason, the number of imports present here seems to be wrong in a lot of goodware.
                 // It seems however that that number is never smaller than the actual number of imports.
-                if (std::get<2>(*it) < imports->size())
+                if (std::get<2>(*it) < imports)
                 {
                     if (res->get_summary() == nullptr) {
                         res->set_summary("The PE is packed or was manually edited.");
@@ -232,10 +232,10 @@ public:
         }
 
         // A low number of imports indicates that the binary is packed.
-        mana::const_shared_strings imports = pe.find_imports(".*"); // Get all imports
+        auto imports = pe.count_imported_functions();
 
         // A single import could indicate that the file is a .NET executable; don't warn about that.
-        if (imports->size() == 1)
+        if (imports == 1)
         {
             auto mscoree = pe.find_imported_dlls("mscoree.dll");
             if (!mscoree->empty())
@@ -265,10 +265,10 @@ public:
             }
         }
 
-        if (imports->size() < min_imports)
+        if (imports < min_imports)
         {
             std::stringstream ss;
-            ss << "The PE only has " << imports->size() << " import(s).";
+            ss << "The PE only has " << imports << " import(s).";
             res->add_information(ss.str());
             res->raise_level(SUSPICIOUS);
         }
