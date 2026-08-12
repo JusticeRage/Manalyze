@@ -1305,15 +1305,23 @@ bool PE::_parse_certificates()
 		return false;
 	}
 
-	if (!_ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].VirtualAddress ||		// In this case, "VirtualAddress" is actually a file offset.
-		fseek(_file_handle.get(), _ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].VirtualAddress, SEEK_SET))
+	const auto& directory = _ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY];
+	const std::uint64_t directory_offset = directory.VirtualAddress;
+	std::uint64_t remaining_bytes = directory.Size;
+	constexpr std::uint64_t header_size = sizeof(std::uint32_t) + 2 * sizeof(std::uint16_t);
+
+	if (directory_offset == 0) {
+		return true;
+	}
+	if (directory_offset > _file_size || remaining_bytes > _file_size - directory_offset ||
+		directory_offset > static_cast<std::uint64_t>(std::numeric_limits<long>::max()) ||
+		fseek(_file_handle.get(), static_cast<long>(directory_offset), SEEK_SET))
 	{
-		return true;	// Unsigned binary
+		PRINT_WARNING << "The PE's certificate directory is outside the file." << DEBUG_INFO_INSIDEPE << std::endl;
+		return true;
 	}
 
-	unsigned int remaining_bytes = _ioh->directories[IMAGE_DIRECTORY_ENTRY_SECURITY].Size;
-	unsigned int header_size = sizeof(std::uint32_t) + 2*sizeof(std::uint16_t);
-	while (remaining_bytes > header_size)
+	while (remaining_bytes >= header_size)
 	{
 		pwin_certificate cert = std::make_shared<win_certificate>();
 		memset(cert.get(), 0, header_size);
@@ -1341,8 +1349,21 @@ bool PE::_parse_certificates()
 			// Get the certificate data anyway.
 		}
 
+		const std::uint64_t certificate_start = directory.Size - remaining_bytes;
+		const std::uint64_t file_offset = directory_offset + certificate_start;
+		const std::uint64_t padding = (8 - (cert->Length % 8)) % 8;
+		const std::uint64_t consumed = static_cast<std::uint64_t>(cert->Length) + padding;
+		if (cert->Length < header_size || consumed > remaining_bytes ||
+			consumed > _file_size - file_offset)
+		{
+			PRINT_WARNING << "The WIN_CERTIFICATE and its alignment padding exceed the available certificate data."
+						  << DEBUG_INFO_INSIDEPE << std::endl;
+			return true;
+		}
+
+		const size_t payload_size = static_cast<size_t>(cert->Length - header_size);
 		try {
-			cert->Certificate.resize(cert->Length);
+			cert->Certificate.resize(payload_size);
 		}
 		catch (const std::exception& e)
 		{
@@ -1351,23 +1372,18 @@ bool PE::_parse_certificates()
 			return false;
 		}
 
-		if (cert->Length < remaining_bytes ||
-			cert->Length - header_size != fread(&(cert->Certificate[0]), 1, cert->Length - header_size, _file_handle.get()))
+		if (payload_size != 0 &&
+			payload_size != fread(cert->Certificate.data(), 1, payload_size, _file_handle.get()))
 		{
 			PRINT_ERROR << "Could not read a WIN_CERTIFICATE's data."
 						<< DEBUG_INFO_INSIDEPE << std::endl;
 			return false;
 		}
-		remaining_bytes -= cert->Length;
-		_certificates.push_back(cert);
-
-		// The certificates start on 8-byte aligned addresses
-		unsigned int padding = cert->Length % 8;
-		if (padding && remaining_bytes)
-		{
-			fseek(_file_handle.get(), padding, SEEK_CUR);
-			remaining_bytes -= padding;
+		if (padding != 0 && fseek(_file_handle.get(), static_cast<long>(padding), SEEK_CUR)) {
+			return true;
 		}
+		remaining_bytes -= consumed;
+		_certificates.push_back(cert);
 	}
 
 	return true;

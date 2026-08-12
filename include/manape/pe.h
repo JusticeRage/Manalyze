@@ -459,15 +459,25 @@ private:
 	 *	@brief	Reads an image_resource_directory at the current position in a file.
 	 *
 	 *	@param	image_resource_directory& dir The structure to fill.
+	 *	@param	size_t& remaining_entries The remaining resource-tree entry budget.
 	 *	@param	unsigned int offset The offset at which to jump before reading the directory.
 	 *			The offset is relative to the beginning of the resource "section" (NOT a RVA).
 	 *			If it is 0, the function reads from the cursor's current location.
 	 *
 	 *	Implementation is located in resources.cpp
 	 *
-	 *	@return	Whether a structure was successfully read.
+	 *	@return	The result of reading the directory.
 	 */
-	bool _read_image_resource_directory(image_resource_directory& dir, unsigned int offset = 0) const;
+	enum class resource_directory_result
+	{
+		success,
+		read_error,
+		limit_exceeded,
+	};
+
+	resource_directory_result _read_image_resource_directory(image_resource_directory& dir,
+													  size_t& remaining_entries,
+													  unsigned int offset = 0) const;
 
 	std::string							_path;
 	std::string							_resource_path;

@@ -9,6 +9,12 @@ add_executable(manalyze-tests fixtures.cpp hash-library.cpp pe.cpp imports.cpp r
                                ../src/import_hash.cpp ../src/cli.cpp ../src/config_parser.cpp ../src/output_formatter.cpp)
 add_dependencies(manalyze-tests manalyze)
 
+if (OPENSSL_FOUND AND NOT WIN32)
+	target_sources(manalyze-tests PRIVATE plugin_authenticode.cpp)
+	add_dependencies(manalyze-tests plugin_authenticode)
+	target_link_libraries(manalyze-tests plugin_authenticode)
+endif()
+
 target_link_libraries(
 						manalyze-tests
 						manacommons

@@ -17,11 +17,13 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
+#include <cstdint>
 #include <fstream>
 #include <filesystem>
 #include <boost/test/unit_test.hpp>
 #include <memory>
 #include <system_error>
+#include <vector>
 
 namespace unit	= boost::unit_test::framework;
 namespace fs	= std::filesystem;
@@ -54,6 +56,10 @@ private:
  * Function taken from std::filesystem's unit tests
  */
 void create_file(const fs::path & ph, const std::string & contents = std::string());
+
+std::vector<std::uint8_t> read_binary_file(const fs::path& path);
+void write_u16(std::vector<std::uint8_t>& bytes, size_t offset, std::uint16_t value);
+void write_u32(std::vector<std::uint8_t>& bytes, size_t offset, std::uint32_t value);
 
 // ----------------------------------------------------------------------------
 

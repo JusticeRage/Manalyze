@@ -17,6 +17,8 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "fixtures.h"
 
+#include <stdexcept>
+
 SetWorkingDirectory::SetWorkingDirectory()
 {
 	// Save the current working directory
@@ -44,6 +46,38 @@ void create_file(const fs::path & ph, const std::string & contents)
 			ph, std::error_code(errno, std::system_category()));
 	if (!contents.empty()) {
 		f << contents;
+	}
+}
+
+// ----------------------------------------------------------------------------
+
+std::vector<std::uint8_t> read_binary_file(const fs::path& path)
+{
+	std::ifstream input(path, std::ios::binary);
+	if (!input) {
+		throw fs::filesystem_error("Could not read binary fixture", path,
+			std::error_code(errno, std::system_category()));
+	}
+	return std::vector<std::uint8_t>(std::istreambuf_iterator<char>(input),
+		std::istreambuf_iterator<char>());
+}
+
+void write_u16(std::vector<std::uint8_t>& bytes, size_t offset, std::uint16_t value)
+{
+	if (offset > bytes.size() || bytes.size() - offset < sizeof(value)) {
+		throw std::out_of_range("16-bit fixture patch exceeds input");
+	}
+	bytes[offset] = static_cast<std::uint8_t>(value);
+	bytes[offset + 1] = static_cast<std::uint8_t>(value >> 8);
+}
+
+void write_u32(std::vector<std::uint8_t>& bytes, size_t offset, std::uint32_t value)
+{
+	if (offset > bytes.size() || bytes.size() - offset < sizeof(value)) {
+		throw std::out_of_range("32-bit fixture patch exceeds input");
+	}
+	for (size_t i = 0; i < sizeof(value); ++i) {
+		bytes[offset + i] = static_cast<std::uint8_t>(value >> (8 * i));
 	}
 }
 

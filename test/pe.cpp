@@ -37,6 +37,27 @@ struct SilenceLogsFixture
 	}
 };
 
+std::vector<std::uint8_t> make_certificate_pe(std::uint32_t directory_size,
+	std::uint32_t certificate_length, const std::vector<std::uint8_t>& payload,
+	const std::vector<std::uint8_t>& padding = {})
+{
+	auto bytes = read_binary_file("testfiles/manatest.exe");
+	constexpr size_t optional_header = 0x108;
+	constexpr size_t security_directory = optional_header + 96 + IMAGE_DIRECTORY_ENTRY_SECURITY * 8;
+	constexpr std::uint32_t certificate_offset = 0x2e00;
+	write_u32(bytes, security_directory, certificate_offset);
+	write_u32(bytes, security_directory + 4, directory_size);
+	write_u32(bytes, certificate_offset, certificate_length);
+	write_u16(bytes, certificate_offset + 4, 0x0200);
+	write_u16(bytes, certificate_offset + 6, WIN_CERT_TYPE_PKCS_SIGNED_DATA);
+	if (certificate_offset + 8 + payload.size() + padding.size() > bytes.size()) {
+		throw std::out_of_range("generated certificate exceeds fixture");
+	}
+	std::copy(payload.begin(), payload.end(), bytes.begin() + certificate_offset + 8);
+	std::copy(padding.begin(), padding.end(), bytes.begin() + certificate_offset + 8 + payload.size());
+	return bytes;
+}
+
 } // namespace
 
 BOOST_GLOBAL_FIXTURE(SilenceLogsFixture);
@@ -86,6 +107,65 @@ BOOST_AUTO_TEST_CASE(parse_testfile)
 	BOOST_ASSERT(pe2.is_valid());
 	BOOST_ASSERT(pe2.get_path());
 	BOOST_CHECK_EQUAL(*pe2.get_path(), "testfiles/manatest2.exe");
+}
+
+// ----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(reject_oversized_certificate_before_allocation)
+{
+	auto bytes = make_certificate_pe(8, 0xffffffffu, {});
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "oversized-certificate.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(pe->get_certificates()->empty());
+}
+
+BOOST_AUTO_TEST_CASE(reject_certificate_smaller_than_header)
+{
+	auto bytes = make_certificate_pe(8, 7, {});
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "short-certificate.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(pe->get_certificates()->empty());
+}
+
+BOOST_AUTO_TEST_CASE(reject_certificate_beyond_declared_directory)
+{
+	auto bytes = make_certificate_pe(12, 16, {1, 2, 3, 4, 5, 6, 7, 8});
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "certificate-directory-overrun.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(pe->get_certificates()->empty());
+}
+
+BOOST_AUTO_TEST_CASE(parse_bounded_certificate_payload)
+{
+	auto bytes = make_certificate_pe(16, 12, {1, 2, 3, 4}, {0, 0, 0, 0});
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "bounded-certificate.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	auto certificates = pe->get_certificates();
+	BOOST_REQUIRE_EQUAL(certificates->size(), 1);
+	BOOST_CHECK_EQUAL(certificates->at(0)->Length, 12);
+	const std::vector<std::uint8_t> expected{1, 2, 3, 4};
+	BOOST_CHECK_EQUAL_COLLECTIONS(certificates->at(0)->Certificate.begin(),
+		certificates->at(0)->Certificate.end(), expected.begin(), expected.end());
+}
+
+BOOST_AUTO_TEST_CASE(reject_certificate_with_padding_outside_directory)
+{
+	auto bytes = make_certificate_pe(9, 9, {0x5a});
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "invalid-asymmetric-padding.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(pe->get_certificates()->empty());
+}
+
+BOOST_AUTO_TEST_CASE(parse_certificate_with_seven_padding_bytes)
+{
+	auto bytes = make_certificate_pe(16, 9, {0x5a}, {1, 2, 3, 4, 5, 6, 7});
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "valid-asymmetric-padding.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	auto certificates = pe->get_certificates();
+	BOOST_REQUIRE_EQUAL(certificates->size(), 1);
+	const std::vector<std::uint8_t> expected{0x5a};
+	BOOST_CHECK_EQUAL_COLLECTIONS(certificates->at(0)->Certificate.begin(),
+		certificates->at(0)->Certificate.end(), expected.begin(), expected.end());
 }
 
 // ----------------------------------------------------------------------------

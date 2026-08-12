@@ -28,6 +28,9 @@ namespace mana
 {
 
 namespace {
+	constexpr size_t MAX_RESOURCE_DIRECTORY_ENTRIES = 0x100;
+	constexpr size_t MAX_RESOURCE_ENTRIES = 10000;
+
 	// Fallback mutex only serializes access within this translation unit.
 	std::mutex& io_mutex_or_fallback(const pMutex& mutex) {
 		static std::mutex fallback_mutex;
@@ -36,10 +39,11 @@ namespace {
 
 }
 
-bool PE::_read_image_resource_directory(image_resource_directory& dir, unsigned int offset) const
+PE::resource_directory_result PE::_read_image_resource_directory(image_resource_directory& dir,
+	size_t& remaining_entries, unsigned int offset) const
 {
 	if (!_ioh || _file_handle == nullptr) {
-		return false;
+		return resource_directory_result::read_error;
 	}
 
 	if (offset)
@@ -48,7 +52,7 @@ bool PE::_read_image_resource_directory(image_resource_directory& dir, unsigned 
 		if (!offset || fseek(_file_handle.get(), offset, SEEK_SET))
 		{
 			PRINT_ERROR << "Could not reach an IMAGE_RESOURCE_DIRECTORY." << DEBUG_INFO_INSIDEPE << std::endl;
-			return false;
+			return resource_directory_result::read_error;
 		}
 	}
 
@@ -59,27 +63,29 @@ bool PE::_read_image_resource_directory(image_resource_directory& dir, unsigned 
 		CAPPED_LOGGING
 		PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DIRECTORY." << DEBUG_INFO_INSIDEPE << std::endl;
 		CAPPED_LOGGING_END
-		return false;
+		return resource_directory_result::read_error;
 	}
 
-	// Do not parse corrupted tables as it will take an extremely long time.
-	// If Characteristics is not 0 (which it should always be according to the specification) and the number of entries is
-	// unusually high, assume that the file is corrupted.
-	if (dir.NumberOfIdEntries + dir.NumberOfNamedEntries > 0x100 && dir.Characteristics != 0)
+	const size_t entry_count = static_cast<size_t>(dir.NumberOfIdEntries) +
+		static_cast<size_t>(dir.NumberOfNamedEntries);
+	if (entry_count > MAX_RESOURCE_DIRECTORY_ENTRIES || entry_count > remaining_entries)
 	{
 		CAPPED_LOGGING
-		PRINT_ERROR << "The PE's resource section is invalid or has been manually modified. Resources will not be parsed." << DEBUG_INFO_INSIDEPE << std::endl;
+		PRINT_ERROR << "The PE's resource section exceeds the parsing limits. Resources will not be parsed."
+					<< DEBUG_INFO_INSIDEPE << std::endl;
 		CAPPED_LOGGING_END
-		return false;
+		return resource_directory_result::limit_exceeded;
 	}
-	else if (dir.Characteristics != 0) 
+	remaining_entries -= entry_count;
+
+	if (dir.Characteristics != 0)
 	{
 		CAPPED_LOGGING
 		PRINT_WARNING << "An IMAGE_RESOURCE_DIRECTORY's characteristics should always be 0. The PE may have been manually edited." << DEBUG_INFO_INSIDEPE << std::endl;
 		CAPPED_LOGGING_END
 	}
 
-	for (auto i = 0 ; i < dir.NumberOfIdEntries + dir.NumberOfNamedEntries ; ++i)
+	for (size_t i = 0; i < entry_count; ++i)
 	{
 		auto entry = std::make_shared<image_resource_directory_entry>();
 		size = 2*sizeof(std::uint32_t);
@@ -87,7 +93,7 @@ bool PE::_read_image_resource_directory(image_resource_directory& dir, unsigned 
 		if (size != fread(entry.get(), 1, size, _file_handle.get()))
 		{
 			PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DIRECTORY_ENTRY." << DEBUG_INFO_INSIDEPE << std::endl;
-			return false;
+			return resource_directory_result::read_error;
 		}
 
 		// For named entries, NameOrId is a RVA to a string: retrieve it and NameOrId has high bit set to 1.
@@ -99,7 +105,7 @@ bool PE::_read_image_resource_directory(image_resource_directory& dir, unsigned 
 			if (!name_offset || !utils::read_string_at_offset(_file_handle.get(), name_offset, entry->NameStr, true))
 			{
 				PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DIRECTORY_ENTRY's name." << DEBUG_INFO_INSIDEPE << std::endl;
-				return false;
+				return resource_directory_result::read_error;
 			}
 		}
 
@@ -115,13 +121,20 @@ bool PE::_read_image_resource_directory(image_resource_directory& dir, unsigned 
 		dir.Entries.push_back(entry);
 	}
 
-	return true;
+	return resource_directory_result::success;
 }
 
 // ----------------------------------------------------------------------------
 
 bool PE::_parse_resources()
 {
+	const size_t original_resource_count = _resource_table.size();
+	size_t remaining_entries = MAX_RESOURCE_ENTRIES;
+	auto abort_resource_parse = [&]() {
+		_resource_table.resize(original_resource_count);
+		return false;
+	};
+
 	if (!_ioh || _file_handle == nullptr) {
 		return false;
 	}
@@ -130,7 +143,11 @@ bool PE::_parse_resources()
 	}
 
 	image_resource_directory root;
-	if (!_read_image_resource_directory(root)) {
+	const auto root_result = _read_image_resource_directory(root, remaining_entries);
+	if (root_result == resource_directory_result::limit_exceeded) {
+		return abort_resource_parse();
+	}
+	if (root_result == resource_directory_result::read_error) {
 		return false;
 	}
 
@@ -138,7 +155,12 @@ bool PE::_parse_resources()
 	for (std::vector<pimage_resource_directory_entry>::iterator it = root.Entries.begin() ; it != root.Entries.end() ; ++it)
 	{
 		image_resource_directory type;
-		if (! _read_image_resource_directory(type, (*it)->OffsetToData & 0x7FFFFFFF)) {
+		const auto type_result = _read_image_resource_directory(
+			type, remaining_entries, (*it)->OffsetToData & 0x7FFFFFFF);
+		if (type_result == resource_directory_result::limit_exceeded) {
+			return abort_resource_parse();
+		}
+		if (type_result == resource_directory_result::read_error) {
 			continue;
 		}
 
@@ -146,7 +168,12 @@ bool PE::_parse_resources()
 		for (std::vector<pimage_resource_directory_entry>::iterator it2 = type.Entries.begin() ; it2 != type.Entries.end() ; ++it2)
 		{
 			image_resource_directory name;
-			if (!_read_image_resource_directory(name, (*it2)->OffsetToData & 0x7FFFFFFF)) {
+			const auto name_result = _read_image_resource_directory(
+				name, remaining_entries, (*it2)->OffsetToData & 0x7FFFFFFF);
+			if (name_result == resource_directory_result::limit_exceeded) {
+				return abort_resource_parse();
+			}
+			if (name_result == resource_directory_result::read_error) {
 				continue;
 			}
 
@@ -425,7 +452,7 @@ DECLSPEC pbitmap Resource::interpret_as()
 	}
 
 	auto res = std::make_shared<bitmap>();
-	unsigned int header_size = 14;
+	const size_t header_size = sizeof(bitmap_header);
 	res->Magic[0] = 'B';
 	res->Magic[1] = 'M';
 	res->Reserved1 = 0;
@@ -444,12 +471,19 @@ DECLSPEC pbitmap Resource::interpret_as()
 	memcpy(&bit_count, &(res->data[14]), sizeof(std::uint16_t));
 	memcpy(&colors_used, &(res->data[32]), sizeof(std::uint32_t));
 
-
-	if (colors_used == 0 && bit_count != 32 && bit_count != 24)	{
-		colors_used = 1 << bit_count;
+	if (!((bit_count >= 1 && bit_count <= 8) || bit_count == 24 || bit_count == 32)) {
+		return pbitmap();
+	}
+	if (colors_used == 0 && bit_count <= 8) {
+		colors_used = std::uint32_t{1} << bit_count;
 	}
 
-	res->OffsetToData = header_size + dib_header_size + 4*colors_used;
+	const std::uint64_t pixel_offset = static_cast<std::uint64_t>(header_size) +
+		static_cast<std::uint64_t>(dib_header_size) + 4ull * colors_used;
+	if (pixel_offset > std::numeric_limits<std::uint32_t>::max()) {
+		return pbitmap();
+	}
+	res->OffsetToData = static_cast<std::uint32_t>(pixel_offset);
 	return res;
 }
 
@@ -794,7 +828,7 @@ mana::shared_bytes reconstruct_icon(pgroup_icon_directory directory, const std::
             memcpy(&res[3 * sizeof(std::uint16_t) + i * sizeof(group_icon_directory_entry) + 8], &new_size, sizeof(std::uint32_t));
 		}
 		else { // Invalid cursor.
-			res.clear();
+			return shared_bytes();
 		}
 	}
 
@@ -847,7 +881,7 @@ bool Resource::extract(const std::filesystem::path& destination)
 	}
     else if (_type == "RT_BITMAP")
     {
-        unsigned int header_size = 2 * sizeof(std::uint8_t) + 2 * sizeof(std::uint16_t) + 2 * sizeof(std::uint32_t);
+		const size_t header_size = sizeof(bitmap_header);
         auto bmp = interpret_as<pbitmap>();
         if (bmp == nullptr)
         {
@@ -855,10 +889,9 @@ bool Resource::extract(const std::filesystem::path& destination)
             return false;
         }
 
-        // Copy the BMP header
-        std::shared_ptr<std::vector<std::uint8_t> > bmp_bytes(new std::vector<std::uint8_t>(header_size));
-        memcpy(&bmp_bytes->at(0), bmp.get(), header_size);
-        // Copy the image bytes.
+		auto bmp_bytes = std::make_shared<std::vector<std::uint8_t> >(header_size);
+		const bitmap_header& header = *bmp;
+		memcpy(bmp_bytes->data(), &header, header_size);
         bmp_bytes->insert(bmp_bytes->end(), bmp->data.begin(), bmp->data.end());
         data = bmp_bytes;
     }

@@ -262,16 +262,22 @@ typedef std::shared_ptr<group_icon_directory> pgroup_icon_directory;
 // Not a standard structure. Bitmaps stored as resources don't have a header.
 // This represents the reconstructed header, followed by the resource data.
 #pragma pack (push, 1)
-typedef struct bitmap_t
+typedef struct bitmap_header_t
 {
 	std::uint8_t	Magic[2];
 	std::uint32_t Size;
 	std::uint16_t Reserved1;
 	std::uint16_t Reserved2;
 	std::uint32_t OffsetToData;
+} bitmap_header;
+#pragma pack (pop)
+
+static_assert(sizeof(bitmap_header) == 14, "A BMP file header must be 14 bytes");
+
+typedef struct bitmap_t : bitmap_header
+{
 	std::vector<std::uint8_t> data;
 } bitmap;
-#pragma pack (pop)
 typedef std::shared_ptr<bitmap_t> pbitmap;
 
 // ----------------------------------------------------------------------------

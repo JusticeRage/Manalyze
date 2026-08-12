@@ -17,6 +17,8 @@
 
 #include "plugins/plugin_authenticode/plugin_authenticode_openssl.h"
 
+#include <limits>
+
 namespace plugin
 {
 
@@ -187,9 +189,17 @@ class OpenSSLAuthenticodePlugin : public IPlugin
             if (it->CertificateType != WIN_CERT_TYPE_PKCS_SIGNED_DATA) {
                 continue;
             }
-            
+
+            const auto certificate_size = it->Certificate.size();
+            if (certificate_size == 0 ||
+                certificate_size > static_cast<size_t>(std::numeric_limits<int>::max())) {
+                PRINT_WARNING << "[plugin_authenticode] Ignoring a PKCS7 certificate with an invalid size."
+                    << std::endl;
+                continue;
+            }
+
             // Copy the certificate bytes into an OpenSSL BIO.
-            pBIO bio(BIO_new_mem_buf(&it->Certificate[0], it->Certificate.size()), BIO_free);
+            pBIO bio(BIO_new_mem_buf(it->Certificate.data(), static_cast<int>(certificate_size)), BIO_free);
             if (bio == nullptr) 
             {
                 PRINT_WARNING << "[plugin_authenticode] Could not initialize a BIO." << std::endl;

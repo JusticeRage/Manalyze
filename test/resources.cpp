@@ -16,8 +16,13 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <atomic>
+#include <cstddef>
+#include <cstdio>
+#include <cstring>
 #include <fstream>
+#include <limits>
 #include <thread>
+#include <type_traits>
 #include <vector>
 
 #include "fixtures.h"
@@ -25,9 +30,131 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include "manape/resources.h"
 #include "hash-library/hashes.h"
 
+namespace {
+
+std::vector<std::uint8_t> make_repeated_resource_tree(std::uint16_t root_count,
+	std::uint16_t type_count, std::uint16_t name_count)
+{
+	auto bytes = read_binary_file("testfiles/manatest2.exe");
+	constexpr size_t resource_raw = 0x2000;
+	constexpr std::uint32_t resource_rva = 0x5000;
+	const size_t root_entries = resource_raw + 16;
+	const size_t type_dir = root_entries + 8 * root_count;
+	const size_t type_entries = type_dir + 16;
+	const size_t name_dir = type_entries + 8 * type_count;
+	const size_t name_entries = name_dir + 16;
+	const size_t leaf = name_entries + 8 * name_count;
+	const size_t payload = leaf + 16;
+	if (payload >= bytes.size()) {
+		throw std::out_of_range("generated resource tree exceeds fixture");
+	}
+
+	std::fill(bytes.begin() + resource_raw, bytes.end(), 0);
+	write_u16(bytes, resource_raw + 14, root_count);
+	for (size_t i = 0; i < root_count; ++i) {
+		write_u32(bytes, root_entries + 8 * i, 10);
+		write_u32(bytes, root_entries + 8 * i + 4,
+			0x80000000u | static_cast<std::uint32_t>(type_dir - resource_raw));
+	}
+	write_u16(bytes, type_dir + 14, type_count);
+	for (size_t i = 0; i < type_count; ++i) {
+		write_u32(bytes, type_entries + 8 * i, 1);
+		write_u32(bytes, type_entries + 8 * i + 4,
+			0x80000000u | static_cast<std::uint32_t>(name_dir - resource_raw));
+	}
+	write_u16(bytes, name_dir + 14, name_count);
+	for (size_t i = 0; i < name_count; ++i) {
+		write_u32(bytes, name_entries + 8 * i, 0x409);
+		write_u32(bytes, name_entries + 8 * i + 4,
+			static_cast<std::uint32_t>(leaf - resource_raw));
+	}
+	write_u32(bytes, leaf, resource_rva + static_cast<std::uint32_t>(payload - resource_raw));
+	write_u32(bytes, leaf + 4, 1);
+	bytes[payload] = 0x41;
+	return bytes;
+}
+
+mana::pResource make_bitmap_resource(std::uint16_t bit_count, std::uint32_t colors_used)
+{
+	FILE* raw = tmpfile();
+	BOOST_REQUIRE(raw != nullptr);
+	mana::pFile file(raw, fclose);
+	std::vector<std::uint8_t> dib(40, 0);
+	write_u32(dib, 0, 40);
+	write_u16(dib, 14, bit_count);
+	write_u32(dib, 32, colors_used);
+	BOOST_REQUIRE_EQUAL(fputc(0, raw), 0);
+	BOOST_REQUIRE_EQUAL(fwrite(dib.data(), 1, dib.size(), raw), dib.size());
+	return std::make_shared<mana::Resource>("RT_BITMAP", 1, "", 0,
+		static_cast<std::uint32_t>(dib.size()), 0, 1, "bitmap", file, dib.size() + 1);
+}
+
+} // namespace
+
 // ----------------------------------------------------------------------------
 BOOST_FIXTURE_TEST_SUITE(resources, SetWorkingDirectory)
 // ----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(bitmap_layout_is_aligned)
+{
+	BOOST_CHECK_EQUAL(sizeof(mana::bitmap_header), 14);
+	BOOST_CHECK(std::is_trivially_copyable<mana::bitmap_header>::value);
+	BOOST_CHECK_GE(alignof(mana::bitmap), alignof(std::vector<std::uint8_t>));
+	mana::bitmap value{};
+	const auto data_address = reinterpret_cast<std::uintptr_t>(&value.data);
+	BOOST_CHECK_EQUAL(data_address % alignof(std::vector<std::uint8_t>), 0);
+}
+
+BOOST_AUTO_TEST_CASE(bitmap_palette_depths)
+{
+	for (std::uint16_t depth = 1; depth <= 8; ++depth) {
+		auto indexed = make_bitmap_resource(depth, 0)->interpret_as<mana::pbitmap>();
+		BOOST_REQUIRE(indexed);
+		const std::uint32_t indexed_offset = indexed->OffsetToData;
+		BOOST_CHECK_EQUAL(indexed_offset, 14 + 40 + 4 * (std::uint32_t{1} << depth));
+	}
+
+	for (std::uint16_t depth : {24, 32}) {
+		auto bitmap = make_bitmap_resource(depth, 0)->interpret_as<mana::pbitmap>();
+		BOOST_REQUIRE(bitmap);
+		const std::uint32_t direct_color_offset = bitmap->OffsetToData;
+		BOOST_CHECK_EQUAL(direct_color_offset, 14 + 40);
+	}
+}
+
+BOOST_AUTO_TEST_CASE(reject_unsupported_bitmap_depths)
+{
+	for (std::uint16_t depth : {0, 9, 33, 40, 65535}) {
+		BOOST_CHECK(!make_bitmap_resource(depth, 0)->interpret_as<mana::pbitmap>());
+		BOOST_CHECK(!make_bitmap_resource(depth, 1)->interpret_as<mana::pbitmap>());
+	}
+}
+
+BOOST_AUTO_TEST_CASE(reject_overflowing_bitmap_palette_offset)
+{
+	BOOST_CHECK(!make_bitmap_resource(8, std::numeric_limits<std::uint32_t>::max())
+		->interpret_as<mana::pbitmap>());
+}
+
+BOOST_AUTO_TEST_CASE(reject_resource_directory_over_entry_limit)
+{
+	auto bytes = make_repeated_resource_tree(257, 1, 1);
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "resource-entry-limit.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	auto resources = pe->get_resources();
+	BOOST_REQUIRE(resources);
+	BOOST_CHECK(resources->empty());
+}
+
+BOOST_AUTO_TEST_CASE(reject_resource_tree_over_total_budget)
+{
+	auto bytes = make_repeated_resource_tree(40, 256, 1);
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "resource-budget.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	auto resources = pe->get_resources();
+	BOOST_REQUIRE(resources);
+	BOOST_CHECK(resources->empty());
+}
 
 BOOST_AUTO_TEST_CASE(parse_resources)
 {
@@ -397,6 +524,33 @@ BOOST_AUTO_TEST_CASE(interpret_icon)
 	BOOST_ASSERT(h);
 	BOOST_CHECK_EQUAL(*h, "ef6952d242906001e0d3269e5df0d8e22f3c56d1");
 	
+}
+
+BOOST_AUTO_TEST_CASE(reject_short_cursor_during_reconstruction)
+{
+	FILE* raw = tmpfile();
+	BOOST_REQUIRE(raw != nullptr);
+	mana::pFile file(raw, fclose);
+	const std::uint8_t cursor_bytes[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+	BOOST_REQUIRE_EQUAL(fwrite(cursor_bytes, 1, sizeof(cursor_bytes), raw), sizeof(cursor_bytes));
+
+	auto first = std::make_shared<mana::Resource>("RT_CURSOR", 1, "", 0, 3, 0, 1,
+		"cursor", file, sizeof(cursor_bytes));
+	auto second = std::make_shared<mana::Resource>("RT_CURSOR", 2, "", 0, 8, 0, 4,
+		"cursor", file, sizeof(cursor_bytes));
+	auto directory = std::make_shared<mana::group_icon_directory>();
+	directory->Reserved = 0;
+	directory->Type = 2;
+	directory->Count = 2;
+	for (std::uint32_t id : {1u, 2u}) {
+		auto entry = std::make_shared<mana::group_icon_directory_entry>();
+		std::memset(entry.get(), 0, sizeof(*entry));
+		entry->Id = id;
+		directory->Entries.push_back(entry);
+	}
+
+	auto result = mana::reconstruct_icon(directory, {first, second});
+	BOOST_CHECK(!result);
 }
 
 // ----------------------------------------------------------------------------
