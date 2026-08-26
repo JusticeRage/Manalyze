@@ -147,6 +147,16 @@ std::vector<std::uint8_t> make_optional_extent_pe(std::uint16_t declared_size)
 	return bytes;
 }
 
+std::vector<std::uint8_t> make_coff_string_pe(std::uint32_t table_size)
+{
+	auto bytes = read_binary_file("testfiles/manatest.exe");
+	write_u32(bytes, 0x00fc, 0x3f00);
+	write_u32(bytes, 0x0100, 1);
+	std::fill(bytes.begin() + 0x3f00, bytes.begin() + 0x3f12, 0);
+	write_u32(bytes, 0x3f12, table_size);
+	return bytes;
+}
+
 } // namespace
 
 BOOST_GLOBAL_FIXTURE(SilenceLogsFixture);
@@ -196,6 +206,60 @@ BOOST_AUTO_TEST_CASE(parse_testfile)
 	BOOST_ASSERT(pe2.is_valid());
 	BOOST_ASSERT(pe2.get_path());
 	BOOST_CHECK_EQUAL(*pe2.get_path(), "testfiles/manatest2.exe");
+}
+
+BOOST_AUTO_TEST_CASE(reject_coff_string_table_size_below_header)
+{
+	auto bytes = make_coff_string_pe(3);
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "short-coff-table.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK_NE(errors.str().find("COFF String Table"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(reject_unterminated_final_coff_string)
+{
+	auto bytes = make_coff_string_pe(6);
+	bytes[0x3f16] = 'A';
+	bytes[0x3f17] = 'B';
+	bytes[0x3f18] = 0;
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "unterminated-coff.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK_NE(errors.str().find("COFF String Table"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(parse_coff_string_at_exact_boundary)
+{
+	auto bytes = make_coff_string_pe(6);
+	bytes[0x3f16] = 'A';
+	bytes[0x3f17] = 0;
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "bounded-coff.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK_EQUAL(errors.str().find("COFF String Table"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(reject_coff_string_table_beyond_eof)
+{
+	auto bytes = make_coff_string_pe(0xd7);
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "oversized-coff-table.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK_NE(errors.str().find("COFF String Table"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(parse_multiple_bounded_coff_strings)
+{
+	auto bytes = make_coff_string_pe(8);
+	bytes[0x3f16] = 'A';
+	bytes[0x3f17] = 0;
+	bytes[0x3f18] = 'B';
+	bytes[0x3f19] = 0;
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "multiple-coff-strings.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK_EQUAL(errors.str().find("COFF String Table"), std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(reject_undersized_pe32_optional_header)

@@ -501,21 +501,49 @@ bool PE::_parse_coff_symbols()
 	}
 
 	// Read the COFF string table
-	size_t st_size = 0;
-	size_t count = 0;
-	fread(&st_size, 4, 1, _file_handle.get());
-	if (st_size > get_filesize() - ftell(_file_handle.get())) // Weak error check, but I couldn't find a better one in the PE spec.
-	{
-		PRINT_WARNING << "COFF String Table's reported size is bigger than the remaining bytes!"
-					  << DEBUG_INFO_INSIDEPE << std::endl;
+	std::uint32_t table_size = 0;
+	if (fread(&table_size, sizeof(table_size), 1, _file_handle.get()) != 1) {
+		PRINT_ERROR << "Could not read the COFF String Table size."
+			<< DEBUG_INFO_INSIDEPE << std::endl;
+		return false;
+	}
+	if (table_size < sizeof(table_size)) {
+		PRINT_ERROR << "COFF String Table size is smaller than its header."
+			<< DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
 	}
 
-	while (count < st_size)
+	const long payload_position = ftell(_file_handle.get());
+	const std::uint64_t payload_size = table_size - sizeof(table_size);
+	if (payload_position < 0 || static_cast<std::uint64_t>(payload_position) > _file_size ||
+		payload_size > _file_size - static_cast<std::uint64_t>(payload_position))
 	{
-		pString s = std::make_shared<std::string>(utils::read_ascii_string(_file_handle.get()));
-		_coff_string_table.push_back(s);
-		count += s->size() + 1; // Count the null terminator as well.
+		PRINT_ERROR << "COFF String Table extends beyond the end of the file."
+			<< DEBUG_INFO_INSIDEPE << std::endl;
+		return false;
+	}
+
+	std::uint64_t remaining = payload_size;
+	while (remaining != 0)
+	{
+		const long string_position = ftell(_file_handle.get());
+		std::string value;
+		if (string_position < 0 || !read_bounded_ascii_string(_file_handle.get(), remaining, value)) {
+			PRINT_ERROR << "COFF String Table contains an unterminated string."
+				<< DEBUG_INFO_INSIDEPE << std::endl;
+			return false;
+		}
+
+		const long next_position = ftell(_file_handle.get());
+		if (next_position <= string_position ||
+			static_cast<std::uint64_t>(next_position - string_position) > remaining)
+		{
+			PRINT_ERROR << "Could not determine the consumed COFF String Table bytes."
+				<< DEBUG_INFO_INSIDEPE << std::endl;
+			return false;
+		}
+		remaining -= static_cast<std::uint64_t>(next_position - string_position);
+		_coff_string_table.push_back(std::make_shared<std::string>(std::move(value)));
 	}
 
 	return true;
