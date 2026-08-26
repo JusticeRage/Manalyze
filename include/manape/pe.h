@@ -450,6 +450,8 @@ private:
 	 *	@brief	Moves the file cursor to the target directory.
 	 *
 	 *	@param	int directory	The directory to reach, i.e. IMAGE_DIRECTORY_ENTRY_EXPORT.
+	 *	@param	std::uint64_t minimum_size	The fixed root size required at the directory RVA.
+	 *	@param	const char* structure_name	The root structure name used in error messages.
 	 *
 	 *	@return	Whether the directory was successfully reached.
 	 */

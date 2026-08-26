@@ -228,6 +228,17 @@ BOOST_AUTO_TEST_CASE(reject_export_directory_smaller_than_fixed_header)
 	BOOST_CHECK(pe->get_exports()->empty());
 }
 
+BOOST_AUTO_TEST_CASE(reject_zero_rva_export_directory_with_named_error)
+{
+	auto bytes = read_binary_file("testfiles/manatest2.exe");
+	write_u32(bytes, 0x188, 0);
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "zero-rva-export.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(pe->get_exports()->empty());
+	BOOST_CHECK_NE(errors.str().find("IMAGE_EXPORT_DIRECTORY"), std::string::npos);
+}
+
 BOOST_AUTO_TEST_CASE(reject_debug_directory_smaller_than_entry)
 {
 	auto bytes = read_binary_file("testfiles/manatest.exe");

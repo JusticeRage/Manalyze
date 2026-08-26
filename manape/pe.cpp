@@ -920,6 +920,7 @@ bool PE::_reach_directory(int directory, std::uint64_t minimum_size,
 	if (_file_handle == nullptr) {
 		return false;
 	}
+	const char* name = structure_name ? structure_name : "directory";
 
 	if (directory < 0 || directory >= 0x10) // There can be no more than 16 directories.
 	{
@@ -946,12 +947,11 @@ bool PE::_reach_directory(int directory, std::uint64_t minimum_size,
 	}
 	else if (entry.VirtualAddress == 0)
 	{
-		PRINT_ERROR << "directory " << directory << " has a RVA of 0 but a non-null size."
+		PRINT_ERROR << "Invalid " << name << " RVA: 0 with a non-null size."
 					<< DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
 	}
 
-	const char* name = structure_name ? structure_name : "directory";
 	if (entry.Size < minimum_size) {
 		PRINT_ERROR << "Invalid " << name << " size."
 			<< DEBUG_INFO_INSIDEPE << std::endl;
