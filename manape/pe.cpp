@@ -28,6 +28,7 @@
 #endif
 #include <iterator>
 #include <limits>
+#include <stdexcept>
 
 namespace mana {
 
@@ -1128,11 +1129,19 @@ bool PE::_parse_exports()
 						<< DEBUG_INFO_INSIDEPE << std::endl;
 			return true;
 		}
-		ex->Ordinal = _ied->Base + i;
+		const std::uint64_t ordinal = static_cast<std::uint64_t>(_ied->Base) + i;
+		if (ordinal > std::numeric_limits<std::uint32_t>::max())
+		{
+			PRINT_ERROR << "Export ordinal cannot be represented."
+						<< DEBUG_INFO_INSIDEPE << std::endl;
+			break;
+		}
+		ex->Ordinal = static_cast<std::uint32_t>(ordinal);
 
 		// If the address is located in the export directory, then it is a forwarded export.
 		image_data_directory export_dir = _ioh->directories[IMAGE_DIRECTORY_ENTRY_EXPORT];
-		if (ex->Address > export_dir.VirtualAddress && ex->Address < export_dir.VirtualAddress + export_dir.Size)
+		const std::uint64_t export_end = static_cast<std::uint64_t>(export_dir.VirtualAddress) + export_dir.Size;
+		if (ex->Address > export_dir.VirtualAddress && ex->Address < export_end)
 		{
 			offset = rva_to_offset(ex->Address);
 			if (!offset || !utils::read_string_at_offset(_file_handle.get(), offset, ex->ForwardName))
@@ -1150,6 +1159,22 @@ bool PE::_parse_exports()
     }
 
 	// Associate possible exported names with the RVAs we just obtained. First, read the name and ordinal table.
+	const std::uint64_t names_offset = rva_to_offset(_ied->AddressOfNames);
+	const std::uint64_t ords_offset = rva_to_offset(_ied->AddressOfNameOrdinals);
+	const std::uint64_t count = _ied->NumberOfNames;
+	if (!names_offset || names_offset > _file_size ||
+		count > (_file_size - names_offset) / sizeof(std::uint32_t)) {
+		PRINT_ERROR << "Invalid export name-pointer table extent."
+					<< DEBUG_INFO_INSIDEPE << std::endl;
+		return true;
+	}
+	if (!ords_offset || ords_offset > _file_size ||
+		count > (_file_size - ords_offset) / sizeof(std::uint16_t)) {
+		PRINT_ERROR << "Invalid export ordinal table extent."
+					<< DEBUG_INFO_INSIDEPE << std::endl;
+		return true;
+	}
+
 	std::vector<std::uint32_t> names;
 	std::vector<std::uint16_t> ords;
 	try
@@ -1164,8 +1189,13 @@ bool PE::_parse_exports()
 					<< DEBUG_INFO_INSIDEPE << std::endl;
 		return true;
 	}
-	offset = rva_to_offset(_ied->AddressOfNames);
-	if (!offset || fseek(_file_handle.get(), offset, SEEK_SET))
+	catch (const std::length_error&)
+	{
+		PRINT_ERROR << "Could not allocate an array big enough to hold exported name RVAs. This PE may have been manually crafted."
+					<< DEBUG_INFO_INSIDEPE << std::endl;
+		return true;
+	}
+	if (fseek(_file_handle.get(), static_cast<long>(names_offset), SEEK_SET))
 	{
 		PRINT_ERROR << "Could not reach exported function's name table." << DEBUG_INFO_INSIDEPE << std::endl;
 		return true;
@@ -1177,8 +1207,7 @@ bool PE::_parse_exports()
 		return true;
 	}
 
-	offset = rva_to_offset(_ied->AddressOfNameOrdinals);
-	if (!offset || fseek(_file_handle.get(), offset, SEEK_SET))
+	if (fseek(_file_handle.get(), static_cast<long>(ords_offset), SEEK_SET))
 	{
 		PRINT_ERROR << "Could not reach exported functions NameOrdinals table." << DEBUG_INFO_INSIDEPE << std::endl;
 		return true;

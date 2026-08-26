@@ -284,6 +284,97 @@ BOOST_AUTO_TEST_CASE(parse_export_tables_outside_directory_root)
 	BOOST_CHECK_EQUAL(pe->get_exports()->front()->Name, "exported");
 }
 
+BOOST_AUTO_TEST_CASE(reject_export_name_count_before_allocation)
+{
+	auto bytes = read_binary_file("testfiles/manatest2.exe");
+	write_u32(bytes, 0x1518, 0xffffffff);
+	write_u32(bytes, 0x1520, 0x151fc);
+	write_u32(bytes, 0x1524, 0x151fe);
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "huge-export-count.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_REQUIRE_EQUAL(pe->get_exports()->size(), 1);
+	BOOST_CHECK_EQUAL(pe->get_exports()->front()->Address, 0x1000);
+	BOOST_CHECK_NE(errors.str().find("export name-pointer table extent"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(omit_export_with_unrepresentable_ordinal)
+{
+	auto bytes = read_binary_file("testfiles/manatest2.exe");
+	write_u32(bytes, 0x1510, 0xffffffff);
+	write_u32(bytes, 0x1514, 2);
+	write_u32(bytes, 0x1518, 0);
+	write_u32(bytes, 0x1528, 0x1000);
+	write_u32(bytes, 0x152c, 0x1010);
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "wrapped-ordinal.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_REQUIRE_EQUAL(pe->get_exports()->size(), 1);
+	BOOST_CHECK_EQUAL(pe->get_exports()->front()->Ordinal, 0xffffffff);
+}
+
+BOOST_AUTO_TEST_CASE(reject_export_name_count_beyond_name_table_extent)
+{
+	auto bytes = read_binary_file("testfiles/manatest2.exe");
+	write_u32(bytes, 0x1518, 2);
+	write_u32(bytes, 0x1520, 0x151fc);
+	write_u32(bytes, 0x1524, 0x151fa);
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "short-export-names.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_REQUIRE_EQUAL(pe->get_exports()->size(), 1);
+	BOOST_CHECK(pe->get_exports()->front()->Name.empty());
+	BOOST_CHECK_NE(errors.str().find("export name-pointer table extent"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(reject_export_name_count_beyond_ordinal_table_extent)
+{
+	auto bytes = read_binary_file("testfiles/manatest2.exe");
+	write_u32(bytes, 0x1518, 2);
+	write_u32(bytes, 0x1520, 0x151f8);
+	write_u32(bytes, 0x1524, 0x151fe);
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "short-export-ordinals.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_REQUIRE_EQUAL(pe->get_exports()->size(), 1);
+	BOOST_CHECK(pe->get_exports()->front()->Name.empty());
+	BOOST_CHECK_NE(errors.str().find("export ordinal table extent"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(parse_export_tables_at_physical_boundary)
+{
+	auto bytes = read_binary_file("testfiles/manatest2.exe");
+	write_u32(bytes, 0x1518, 1);
+	write_u32(bytes, 0x1520, 0x151fc);
+	write_u32(bytes, 0x1524, 0x151fa);
+	write_u32(bytes, 0x11bfc, 0x253f);
+	write_u16(bytes, 0x11bfa, 0);
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "boundary-export-tables.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_REQUIRE_EQUAL(pe->get_exports()->size(), 1);
+	BOOST_CHECK_EQUAL(pe->get_exports()->front()->Name, "exported");
+}
+
+BOOST_AUTO_TEST_CASE(parse_forwarded_export_with_widened_directory_end)
+{
+	auto bytes = read_binary_file("testfiles/manatest2.exe");
+	std::copy(bytes.begin() + 0x1500, bytes.begin() + 0x1528,
+		bytes.begin() + 0x1d00);
+	write_u32(bytes, 0x0260, 0x2000);
+	write_u32(bytes, 0x0264, 0xfffff000);
+	write_u32(bytes, 0x0268, 0x2000);
+	write_u32(bytes, 0x0188, 0xfffff100);
+	write_u32(bytes, 0x018c, 0x2000);
+	write_u32(bytes, 0x1528, 0xfffffff8);
+	const std::string forwarder = "KERNEL32.Sleep";
+	std::copy(forwarder.begin(), forwarder.end(), bytes.begin() + 0x2bf8);
+	bytes[0x2bf8 + forwarder.size()] = 0;
+
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "overflowing-export-range.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_REQUIRE_EQUAL(pe->get_exports()->size(), 1);
+	BOOST_CHECK_EQUAL(pe->get_exports()->front()->ForwardName, forwarder);
+}
+
 // ----------------------------------------------------------------------------
 
 BOOST_AUTO_TEST_CASE(reject_oversized_certificate_before_allocation)
