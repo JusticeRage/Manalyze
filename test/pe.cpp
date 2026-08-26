@@ -108,6 +108,20 @@ std::vector<std::uint8_t> make_debug_misc_pe(std::uint32_t length, bool unicode,
 	return bytes;
 }
 
+void write_codeview_entry(std::vector<std::uint8_t>& bytes, size_t entry,
+	size_t payload, std::uint32_t signature, const std::string& filename)
+{
+	write_u32(bytes, entry + 12, nt::DEBUG_TYPES.at("IMAGE_DEBUG_TYPE_CODEVIEW"));
+	const std::uint32_t fixed_size = signature == 0x3031424e ? 16 : 24;
+	write_u32(bytes, entry + 16, fixed_size + filename.size() + 1);
+	write_u32(bytes, entry + 20, 0);
+	write_u32(bytes, entry + 24, static_cast<std::uint32_t>(payload));
+	write_u32(bytes, payload, signature);
+	std::fill(bytes.begin() + payload + 4, bytes.begin() + payload + fixed_size, 0);
+	std::copy(filename.begin(), filename.end(), bytes.begin() + payload + fixed_size);
+	bytes[payload + fixed_size + filename.size()] = 0;
+}
+
 std::vector<std::uint8_t> make_relocation_pe(std::uint32_t directory_size, std::uint32_t block_size)
 {
 	auto bytes = read_binary_file("testfiles/manatest.exe");
@@ -472,6 +486,88 @@ BOOST_AUTO_TEST_CASE(parse_bounded_debug_misc)
 			BOOST_CHECK_EQUAL(debug_info->front()->Filename, unicode ? "L" : "LE");
 		}
 	}
+}
+
+BOOST_AUTO_TEST_CASE(reject_codeview_filename_without_in_range_terminator)
+{
+	auto bytes = read_binary_file("testfiles/manatest.exe");
+	write_u32(bytes, 0x19c, 28);
+	write_u32(bytes, 0x17b0, 25);
+	bytes[0x1898] = 'X';
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "unterminated-codeview.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(pe->get_debug_info()->empty());
+}
+
+BOOST_AUTO_TEST_CASE(reject_codeview_size_below_rsds_header)
+{
+	auto bytes = read_binary_file("testfiles/manatest.exe");
+	write_u32(bytes, 0x19c, 28);
+	write_u32(bytes, 0x17b0, 24);
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "short-codeview.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(pe->get_debug_info()->empty());
+}
+
+BOOST_AUTO_TEST_CASE(reject_codeview_payload_beyond_eof)
+{
+	auto bytes = read_binary_file("testfiles/manatest.exe");
+	const size_t payload = bytes.size() - 24;
+	write_u32(bytes, 0x19c, 28);
+	write_u32(bytes, 0x17b0, 25);
+	write_u32(bytes, 0x17b8, static_cast<std::uint32_t>(payload));
+	write_u32(bytes, payload, 0x53445352);
+	std::fill(bytes.begin() + payload + 4, bytes.end(), 0);
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "eof-codeview.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(pe->get_debug_info()->empty());
+}
+
+BOOST_AUTO_TEST_CASE(parse_codeview_filename_at_exact_boundary)
+{
+	auto bytes = read_binary_file("testfiles/manatest.exe");
+	write_u32(bytes, 0x19c, 28);
+	write_u32(bytes, 0x17b0, 26);
+	bytes[0x1898] = 'X';
+	bytes[0x1899] = 0;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "exact-codeview.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_REQUIRE_EQUAL(pe->get_debug_info()->size(), 1);
+	BOOST_CHECK_EQUAL(pe->get_debug_info()->front()->Filename, "X");
+}
+
+BOOST_AUTO_TEST_CASE(parse_bounded_nb10_codeview)
+{
+	auto bytes = read_binary_file("testfiles/manatest.exe");
+	write_u32(bytes, 0x19c, 28);
+	write_codeview_entry(bytes, 0x17a0, 0x2600, 0x3031424e, "ok");
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "nb10.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_REQUIRE_EQUAL(pe->get_debug_info()->size(), 1);
+	BOOST_CHECK_EQUAL(pe->get_debug_info()->front()->Filename, "ok");
+}
+
+BOOST_AUTO_TEST_CASE(recover_after_malformed_codeview_entry)
+{
+	auto bytes = read_binary_file("testfiles/manatest.exe");
+	write_u32(bytes, 0x19c, 56);
+	write_u32(bytes, 0x17b0, 24);
+	write_codeview_entry(bytes, 0x17bc, 0x2600, 0x53445352, "ok");
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "recover-debug.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_REQUIRE_EQUAL(pe->get_debug_info()->size(), 1);
+	BOOST_CHECK_EQUAL(pe->get_debug_info()->front()->Filename, "ok");
+}
+
+BOOST_AUTO_TEST_CASE(recover_after_invalid_debug_misc_entry)
+{
+	auto bytes = make_debug_misc_pe(12, false);
+	write_u32(bytes, 0x19c, 56);
+	write_codeview_entry(bytes, 0x17bc, 0x2600, 0x53445352, "ok");
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "recover-misc.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_REQUIRE_EQUAL(pe->get_debug_info()->size(), 1);
+	BOOST_CHECK_EQUAL(pe->get_debug_info()->front()->Filename, "ok");
 }
 
 // ----------------------------------------------------------------------------

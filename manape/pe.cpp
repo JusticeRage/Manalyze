@@ -30,6 +30,22 @@
 
 namespace mana {
 
+namespace {
+
+bool read_bounded_ascii_string(FILE* file, std::uint64_t remaining, std::string& output)
+{
+	output.clear();
+	while (remaining-- != 0) {
+		char value = 0;
+		if (fread(&value, 1, 1, file) != 1) return false;
+		if (value == '\0') return true;
+		output.push_back(value);
+	}
+	return false;
+}
+
+} // namespace
+
 PE::PE(const std::string& path)
 	: _path(path),
 	  _resource_path(path),
@@ -673,27 +689,57 @@ bool PE::_parse_debug()
 			PRINT_ERROR << "Could not read the DEBUG_DIRECTORY_ENTRY" << DEBUG_INFO_INSIDEPE << std::endl;
 			return false;
 		}
+		const long next_entry = ftell(_file_handle.get());
+		if (next_entry < 0) {
+			return false;
+		}
 
 		// VC++ Debug information
 		if (debug->Type == nt::DEBUG_TYPES.at("IMAGE_DEBUG_TYPE_CODEVIEW"))
 		{
-			pdb_info pdb;
-			unsigned int pdb_size = 2 * sizeof(std::uint32_t) + 16 * sizeof(std::uint8_t);
-			memset(&pdb, 0, pdb_size);
-
-			unsigned int saved_offset = ftell(_file_handle.get());
-			fseek(_file_handle.get(), debug->PointerToRawData, SEEK_SET);
-			if (pdb_size != fread(&pdb, 1, pdb_size, _file_handle.get()) ||
-				(pdb.Signature != 0x53445352 && pdb.Signature != 0x3031424E)) // Signature: "RSDS" or "NB10"
+			const std::uint64_t data_offset = debug->PointerToRawData;
+			if (debug->SizeofData < sizeof(std::uint32_t) || data_offset > _file_size ||
+				debug->SizeofData > _file_size - data_offset ||
+				fseek(_file_handle.get(), debug->PointerToRawData, SEEK_SET))
 			{
-				PRINT_ERROR << "Could not read PDB file information of invalid magic number."
-							<< DEBUG_INFO_INSIDEPE << std::endl;
-				return false;
+				PRINT_ERROR << "Invalid CodeView debug entry."
+					<< DEBUG_INFO_INSIDEPE << std::endl;
+				if (fseek(_file_handle.get(), next_entry, SEEK_SET)) return false;
+				continue;
 			}
-			pdb.PdbFileName = utils::read_ascii_string(_file_handle.get());	// Not optimal, but it'll help if I decide to
-																			// further parse these debug sub-structures.
-			debug->Filename = pdb.PdbFileName;
-			fseek(_file_handle.get(), saved_offset, SEEK_SET);
+
+			std::uint32_t signature = 0;
+			if (fread(&signature, 1, sizeof(signature), _file_handle.get()) != sizeof(signature))
+			{
+				PRINT_ERROR << "Invalid CodeView debug entry."
+					<< DEBUG_INFO_INSIDEPE << std::endl;
+				if (fseek(_file_handle.get(), next_entry, SEEK_SET)) return false;
+				continue;
+			}
+
+			const std::uint32_t fixed_size = signature == 0x53445352 ? 24 :
+				signature == 0x3031424e ? 16 : 0;
+			if (fixed_size == 0 || debug->SizeofData <= fixed_size)
+			{
+				PRINT_ERROR << "Invalid CodeView debug entry."
+					<< DEBUG_INFO_INSIDEPE << std::endl;
+				if (fseek(_file_handle.get(), next_entry, SEEK_SET)) return false;
+				continue;
+			}
+
+			std::uint8_t fixed_data[20];
+			const std::uint32_t remaining_fixed_size = fixed_size - sizeof(signature);
+			std::string filename;
+			if (fread(fixed_data, 1, remaining_fixed_size, _file_handle.get()) != remaining_fixed_size ||
+				!read_bounded_ascii_string(_file_handle.get(), debug->SizeofData - fixed_size, filename))
+			{
+				PRINT_ERROR << "Invalid CodeView debug entry."
+					<< DEBUG_INFO_INSIDEPE << std::endl;
+				if (fseek(_file_handle.get(), next_entry, SEEK_SET)) return false;
+				continue;
+			}
+			debug->Filename = filename;
+			if (fseek(_file_handle.get(), next_entry, SEEK_SET)) return false;
 		}
 		else if (debug->Type == nt::DEBUG_TYPES.at("IMAGE_DEBUG_TYPE_MISC"))
 		{
@@ -704,22 +750,24 @@ bool PE::_parse_debug()
 				debug->SizeofData > _file_size - data_offset)
 			{
 				PRINT_ERROR << "Invalid IMAGE_DEBUG_MISC bounds." << DEBUG_INFO_INSIDEPE << std::endl;
-				return false;
+				if (fseek(_file_handle.get(), next_entry, SEEK_SET)) return false;
+				continue;
 			}
 			memset(&misc, 1, misc_size);
-			unsigned int saved_offset = ftell(_file_handle.get());
 			if (fseek(_file_handle.get(), debug->PointerToRawData, SEEK_SET) ||
 				misc_size != fread(&misc, 1, misc_size, _file_handle.get()))
 			{
 				PRINT_ERROR << "Could not read DBG file information" << DEBUG_INFO_INSIDEPE << std::endl;
-				return false;
+				if (fseek(_file_handle.get(), next_entry, SEEK_SET)) return false;
+				continue;
 			}
 			const unsigned int minimum_string_size = misc.Unicode == 1 ? 2 : 1;
 			if (misc.Length < misc_size + minimum_string_size || misc.Length > debug->SizeofData ||
 				(misc.Unicode == 1 && (misc.Length - misc_size) % 2 != 0))
 			{
 				PRINT_ERROR << "Invalid IMAGE_DEBUG_MISC Length." << DEBUG_INFO_INSIDEPE << std::endl;
-				return false;
+				if (fseek(_file_handle.get(), next_entry, SEEK_SET)) return false;
+				continue;
 			}
 			switch (misc.Unicode)
 			{
@@ -731,7 +779,7 @@ bool PE::_parse_debug()
 				break;
 			}
 			debug->Filename = misc.DbgFile;
-			fseek(_file_handle.get(), saved_offset, SEEK_SET);
+			if (fseek(_file_handle.get(), next_entry, SEEK_SET)) return false;
 		}
 		_debug_entries.push_back(debug);
 	}
