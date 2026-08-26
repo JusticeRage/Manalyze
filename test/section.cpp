@@ -67,6 +67,17 @@ BOOST_AUTO_TEST_CASE(check_address_inside_section)
 	BOOST_CHECK(mana::is_address_in_section(100, s, true) == false);
 }
 
+BOOST_AUTO_TEST_CASE(check_high_address_inside_section)
+{
+	mana::image_section_header header = {};
+	header.VirtualAddress = 0xfffff000;
+	header.VirtualSize = 0x2000;
+	header.SizeOfRawData = 0x2000;
+	auto section = std::make_shared<mana::Section>(header, nullptr, 0);
+	BOOST_CHECK(mana::is_address_in_section(0xfffffff8, section));
+	BOOST_CHECK(mana::is_address_in_section(0xfffffff8, section, true));
+}
+
 // ----------------------------------------------------------------------------
 
 void check_section_hash(mana::shared_bytes data, const std::string& md5)

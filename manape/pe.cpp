@@ -490,6 +490,12 @@ bool PE::_parse_image_optional_header()
 		PRINT_WARNING << "This PE has no Image Optional Header!." << DEBUG_INFO_INSIDEPE << std::endl;
 		return true;
 	}
+	const std::uint64_t declared_size = _h_pe->SizeOfOptionalHeader;
+	if (declared_size < sizeof(std::uint16_t)) {
+		PRINT_ERROR << "SizeOfOptionalHeader is too small for IMAGE_OPTIONAL_HEADER."
+			<< DEBUG_INFO_INSIDEPE << std::endl;
+		return false;
+	}
 
 	if (fseek(_file_handle.get(), _h_dos->e_lfanew + sizeof(pe_header), SEEK_SET))
 	{
@@ -498,8 +504,7 @@ bool PE::_parse_image_optional_header()
 		return false;
 	}
 
-	// Only read the first 0x18 bytes: after that, we have to fill the fields manually.
-	if (0x18 != fread(&ioh, 1, 0x18, _file_handle.get()))
+	if (sizeof(ioh.Magic) != fread(&ioh.Magic, 1, sizeof(ioh.Magic), _file_handle.get()))
 	{
 		PRINT_ERROR << "Could not read the Image Optional Header." << DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
@@ -510,7 +515,25 @@ bool PE::_parse_image_optional_header()
 		PRINT_ERROR << "Invalid Image Optional Header magic." << DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
 	}
-	else if (ioh.Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32"))
+
+	const std::uint64_t fixed_size =
+		ioh.Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32+") ? 112 : 96;
+	if (declared_size < fixed_size) {
+		PRINT_ERROR << "SizeOfOptionalHeader is too small for IMAGE_OPTIONAL_HEADER."
+			<< DEBUG_INFO_INSIDEPE << std::endl;
+		return false;
+	}
+
+	// Read the rest of the first 0x18 bytes; subsequent fields differ by architecture.
+	if (0x18 - sizeof(ioh.Magic) != fread(
+		reinterpret_cast<std::uint8_t*>(&ioh) + sizeof(ioh.Magic),
+		1, 0x18 - sizeof(ioh.Magic), _file_handle.get()))
+	{
+		PRINT_ERROR << "Could not read the Image Optional Header." << DEBUG_INFO_INSIDEPE << std::endl;
+		return false;
+	}
+
+	if (ioh.Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32"))
 	{
 		if (4 != fread(&ioh.BaseOfData, 1, 4, _file_handle.get()) || 4 != fread(&ioh.ImageBase, 1, 4, _file_handle.get()))
 		{
@@ -579,7 +602,11 @@ bool PE::_parse_image_optional_header()
 		PRINT_WARNING << "NumberOfRvaAndSizes > 0x10. This PE may have manually been crafted." << DEBUG_INFO_INSIDEPE << std::endl;
 	}
 
-	for (unsigned int i = 0 ; i < std::min(ioh.NumberOfRvaAndSizes, static_cast<std::uint32_t>(0x10)) ; ++i)
+	const std::uint64_t available_directories = (declared_size - fixed_size) / 8;
+	const std::uint32_t directory_count = std::min<std::uint32_t>(
+		std::min<std::uint32_t>(ioh.NumberOfRvaAndSizes, 0x10),
+		static_cast<std::uint32_t>(available_directories));
+	for (std::uint32_t i = 0; i < directory_count; ++i)
 	{
 		if (8 != fread(&ioh.directories[i], 1, 8, _file_handle.get()))
 		{
@@ -630,7 +657,7 @@ bool PE::_parse_debug()
 	if (!_ioh || _file_handle == nullptr) {
 		return false;
 	}
-	if (!_reach_directory(IMAGE_DIRECTORY_ENTRY_DEBUG)) { // No debug information.
+	if (!_reach_directory(IMAGE_DIRECTORY_ENTRY_DEBUG, 28, "IMAGE_DEBUG_DIRECTORY")) { // No debug information.
 		return true;
 	}
 
@@ -887,13 +914,14 @@ unsigned int PE::_va_to_offset(std::uint64_t va) const
 
 // ----------------------------------------------------------------------------
 
-bool PE::_reach_directory(int directory) const
+bool PE::_reach_directory(int directory, std::uint64_t minimum_size,
+	const char* structure_name) const
 {
 	if (_file_handle == nullptr) {
 		return false;
 	}
 
-	if (directory > 0x10) // There can be no more than 16 directories.
+	if (directory < 0 || directory >= 0x10) // There can be no more than 16 directories.
 	{
 		PRINT_WARNING << "Tried to reach directory " << directory << ", maximum is 16."
 					  << DEBUG_INFO_INSIDEPE << std::endl;
@@ -907,27 +935,34 @@ bool PE::_reach_directory(int directory) const
 		return false;
 	}
 
-	if (_ioh->directories[directory].VirtualAddress == 0 && _ioh->directories[directory].Size == 0) {
+	const auto& entry = _ioh->directories[directory];
+	if (entry.VirtualAddress == 0 && entry.Size == 0) {
 		return false; // Requested directory is empty.
 	}
-	else if (_ioh->directories[directory].Size == 0) // Weird, but continue anyway.
+	else if (entry.Size == 0) // Weird, but continue anyway.
 	{
 		PRINT_WARNING << "directory " << directory << " has a size of 0! This PE may have been manually crafted!"
 					  << DEBUG_INFO_INSIDEPE << std::endl;
 	}
-	else if (_ioh->directories[directory].VirtualAddress == 0)
+	else if (entry.VirtualAddress == 0)
 	{
 		PRINT_ERROR << "directory " << directory << " has a RVA of 0 but a non-null size."
 					<< DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
 	}
 
-	unsigned int offset = rva_to_offset(_ioh->directories[directory].VirtualAddress);
-
-	if (!offset || fseek(_file_handle.get(), offset, SEEK_SET))
-	{
-		PRINT_ERROR << "Could not reach the requested directory (offset=0x" << std::hex << offset << ")."
-					<< DEBUG_INFO_INSIDEPE << std::endl;
+	const char* name = structure_name ? structure_name : "directory";
+	if (entry.Size < minimum_size) {
+		PRINT_ERROR << "Invalid " << name << " size."
+			<< DEBUG_INFO_INSIDEPE << std::endl;
+		return false;
+	}
+	const std::uint64_t offset = rva_to_offset(entry.VirtualAddress);
+	if (!offset || offset > _file_size || minimum_size > _file_size - offset ||
+		offset > static_cast<std::uint64_t>(std::numeric_limits<long>::max()) ||
+		fseek(_file_handle.get(), static_cast<long>(offset), SEEK_SET)) {
+		PRINT_ERROR << "Invalid " << name << " bounds."
+			<< DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
 	}
 	return true;
@@ -961,7 +996,7 @@ bool PE::_parse_exports()
 	if (!_ioh || _file_handle == nullptr) {
 		return false;
 	}
-	if (!_reach_directory(IMAGE_DIRECTORY_ENTRY_EXPORT))	{
+	if (!_reach_directory(IMAGE_DIRECTORY_ENTRY_EXPORT, 40, "IMAGE_EXPORT_DIRECTORY"))	{
 		return true; // No exports
 	}
 
@@ -1155,7 +1190,9 @@ bool PE::_parse_tls()
 		return false;
 	}
 
-	if (!_reach_directory(IMAGE_DIRECTORY_ENTRY_TLS))	{ // No TLS callbacks
+	const std::uint64_t directory_size =
+		_ioh->Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32+") ? 40 : 24;
+	if (!_reach_directory(IMAGE_DIRECTORY_ENTRY_TLS, directory_size, "IMAGE_TLS_DIRECTORY"))	{ // No TLS callbacks
 		return true;
 	}
 
@@ -1243,7 +1280,7 @@ bool PE::_parse_config()
 		return false;
 	}
 
-	if (!_reach_directory(IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG)) { // No load configuration
+	if (!_reach_directory(IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG, 4, "IMAGE_LOAD_CONFIG_DIRECTORY")) { // No load configuration
 		return true;
 	}
 

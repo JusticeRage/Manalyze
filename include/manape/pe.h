@@ -453,7 +453,9 @@ private:
 	 *
 	 *	@return	Whether the directory was successfully reached.
 	 */
-	bool _reach_directory(int directory) const;
+	bool _reach_directory(int directory,
+		std::uint64_t minimum_size = 0,
+		const char* structure_name = nullptr) const;
 
 	/**
 	 *	@brief	Reads an image_resource_directory at the current position in a file.

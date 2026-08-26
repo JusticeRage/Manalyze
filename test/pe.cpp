@@ -119,6 +119,20 @@ std::vector<std::uint8_t> make_relocation_pe(std::uint32_t directory_size, std::
 	return bytes;
 }
 
+std::vector<std::uint8_t> make_optional_extent_pe(std::uint16_t declared_size)
+{
+	auto bytes = read_binary_file("testfiles/manatest.exe");
+	constexpr size_t optional_header = 0x108;
+	constexpr size_t old_section_table = 0x1e8;
+	constexpr size_t section_bytes = 6 * 40;
+	std::vector<std::uint8_t> sections(
+		bytes.begin() + old_section_table,
+		bytes.begin() + old_section_table + section_bytes);
+	std::copy(sections.begin(), sections.end(), bytes.begin() + optional_header + declared_size);
+	write_u16(bytes, 0x104, declared_size);
+	return bytes;
+}
+
 } // namespace
 
 BOOST_GLOBAL_FIXTURE(SilenceLogsFixture);
@@ -168,6 +182,81 @@ BOOST_AUTO_TEST_CASE(parse_testfile)
 	BOOST_ASSERT(pe2.is_valid());
 	BOOST_ASSERT(pe2.get_path());
 	BOOST_CHECK_EQUAL(*pe2.get_path(), "testfiles/manatest2.exe");
+}
+
+BOOST_AUTO_TEST_CASE(reject_undersized_pe32_optional_header)
+{
+	auto bytes = make_optional_extent_pe(95);
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "short-optional.exe");
+	BOOST_REQUIRE(pe);
+	BOOST_CHECK(!pe->is_valid());
+}
+
+BOOST_AUTO_TEST_CASE(reject_undersized_pe32_plus_optional_header)
+{
+	auto bytes = read_binary_file("testfiles/manatest3.exe");
+	write_u16(bytes, 0x104, 111);
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "short-optional64.exe");
+	BOOST_REQUIRE(pe);
+	BOOST_CHECK(!pe->is_valid());
+	BOOST_CHECK_NE(errors.str().find("SizeOfOptionalHeader"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(ignore_partial_data_directory_entry)
+{
+	auto bytes = make_optional_extent_pe(96 + 6 * 8 + 4);
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "partial-directory.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(pe->get_debug_info()->empty());
+}
+
+BOOST_AUTO_TEST_CASE(parse_data_directory_at_exact_optional_boundary)
+{
+	auto bytes = make_optional_extent_pe(96 + 7 * 8);
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "exact-directory.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(!pe->get_debug_info()->empty());
+}
+
+BOOST_AUTO_TEST_CASE(reject_export_directory_smaller_than_fixed_header)
+{
+	auto bytes = read_binary_file("testfiles/manatest2.exe");
+	write_u32(bytes, 0x18c, 39);
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "short-export-root.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(pe->get_exports()->empty());
+}
+
+BOOST_AUTO_TEST_CASE(reject_debug_directory_smaller_than_entry)
+{
+	auto bytes = read_binary_file("testfiles/manatest.exe");
+	write_u32(bytes, 0x19c, 27);
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "short-debug-root.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(pe->get_debug_info()->empty());
+}
+
+BOOST_AUTO_TEST_CASE(reject_truncated_debug_directory_root)
+{
+	auto bytes = read_binary_file("testfiles/manatest.exe");
+	write_u32(bytes, 0x19c, 28);
+	bytes.resize(0x17a0 + 27);
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "truncated-debug-root.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(pe->get_debug_info()->empty());
+	BOOST_CHECK_NE(errors.str().find("IMAGE_DEBUG_DIRECTORY"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(parse_export_tables_outside_directory_root)
+{
+	auto bytes = read_binary_file("testfiles/manatest2.exe");
+	write_u32(bytes, 0x18c, 40);
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "external-export-tables.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_REQUIRE_EQUAL(pe->get_exports()->size(), 1);
+	BOOST_CHECK_EQUAL(pe->get_exports()->front()->Name, "exported");
 }
 
 // ----------------------------------------------------------------------------

@@ -150,12 +150,11 @@ shared_bytes Section::get_raw_data() const
 
 bool is_address_in_section(std::uint64_t rva, mana::pSection section, bool check_raw_size)
 {
-	if (!check_raw_size) {
-		return section->get_virtual_address() <= rva && rva < section->get_virtual_address() + section->get_virtual_size();
-	}
-	else {
-		return section->get_virtual_address() <= rva && rva < section->get_virtual_address() + section->get_size_of_raw_data();
-	}
+	const std::uint64_t start = section->get_virtual_address();
+	const std::uint64_t size = check_raw_size
+		? section->get_size_of_raw_data()
+		: section->get_virtual_size();
+	return start <= rva && rva < start + size;
 }
 
 // ----------------------------------------------------------------------------
