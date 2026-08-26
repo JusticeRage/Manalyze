@@ -24,6 +24,8 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <sstream>
+
 #include "fixtures.h"
 #include "manacommons/color.h"
 #include "manape/pe.h"
@@ -35,6 +37,27 @@ struct SilenceLogsFixture
 	SilenceLogsFixture() {
 		utils::set_log_level(utils::LogLevel::OFF);
 	}
+};
+
+class ErrorCapture
+{
+public:
+	ErrorCapture()
+		: previous_level(utils::get_log_level()),
+		  previous_buffer(std::cerr.rdbuf(captured.rdbuf()))
+	{
+		utils::set_log_level(utils::LogLevel::ERROR);
+	}
+	~ErrorCapture()
+	{
+		std::cerr.rdbuf(previous_buffer);
+		utils::set_log_level(previous_level);
+	}
+	std::string str() const { return captured.str(); }
+private:
+	utils::LogLevel previous_level;
+	std::ostringstream captured;
+	std::streambuf* previous_buffer;
 };
 
 std::vector<std::uint8_t> make_certificate_pe(std::uint32_t directory_size,
@@ -55,6 +78,44 @@ std::vector<std::uint8_t> make_certificate_pe(std::uint32_t directory_size,
 	}
 	std::copy(payload.begin(), payload.end(), bytes.begin() + certificate_offset + 8);
 	std::copy(padding.begin(), padding.end(), bytes.begin() + certificate_offset + 8 + payload.size());
+	return bytes;
+}
+
+std::vector<std::uint8_t> make_debug_misc_pe(std::uint32_t length, bool unicode,
+	std::uint32_t data_size = 16, size_t misc_offset = 0x1880)
+{
+	auto bytes = read_binary_file("testfiles/manatest.exe");
+	constexpr size_t optional_header = 0x108;
+	constexpr size_t debug_directory = optional_header + 96 + IMAGE_DIRECTORY_ENTRY_DEBUG * 8;
+	constexpr size_t debug_entry = 0x17a0;
+	write_u32(bytes, debug_directory + 4, 28);
+	write_u32(bytes, debug_entry + 12, nt::DEBUG_TYPES.at("IMAGE_DEBUG_TYPE_MISC"));
+	write_u32(bytes, debug_entry + 16, data_size);
+	write_u32(bytes, debug_entry + 20, 0x3280);
+	write_u32(bytes, debug_entry + 24, static_cast<std::uint32_t>(misc_offset));
+	write_u32(bytes, misc_offset, 1);
+	write_u32(bytes, misc_offset + 4, length);
+	bytes[misc_offset + 8] = unicode ? 1 : 0;
+	bytes[misc_offset + 9] = 0;
+	bytes[misc_offset + 10] = 0;
+	bytes[misc_offset + 11] = 0;
+	if (bytes.size() - misc_offset >= 16) {
+		bytes[misc_offset + 12] = 'L';
+		bytes[misc_offset + 13] = unicode ? 0 : 'E';
+		bytes[misc_offset + 14] = 0;
+		bytes[misc_offset + 15] = 0;
+	}
+	return bytes;
+}
+
+std::vector<std::uint8_t> make_relocation_pe(std::uint32_t directory_size, std::uint32_t block_size)
+{
+	auto bytes = read_binary_file("testfiles/manatest.exe");
+	constexpr size_t optional_header = 0x108;
+	constexpr size_t relocation_directory = optional_header + 96 + IMAGE_DIRECTORY_ENTRY_BASERELOC * 8;
+	constexpr size_t relocation_block = 0x2c00;
+	write_u32(bytes, relocation_directory + 4, directory_size);
+	write_u32(bytes, relocation_block + 4, block_size);
 	return bytes;
 }
 
@@ -166,6 +227,151 @@ BOOST_AUTO_TEST_CASE(parse_certificate_with_seven_padding_bytes)
 	const std::vector<std::uint8_t> expected{0x5a};
 	BOOST_CHECK_EQUAL_COLLECTIONS(certificates->at(0)->Certificate.begin(),
 		certificates->at(0)->Certificate.end(), expected.begin(), expected.end());
+}
+
+BOOST_AUTO_TEST_CASE(reject_relocation_block_smaller_than_header)
+{
+	auto bytes = make_relocation_pe(8, 4);
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "short-relocation-block.exe");
+
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(pe->get_relocations()->empty());
+	BOOST_CHECK_NE(errors.str().find("IMAGE_BASE_RELOCATION"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(reject_relocation_directory_smaller_than_header)
+{
+	auto bytes = make_relocation_pe(4, 0);
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "short-relocation-directory.exe");
+
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(pe->get_relocations()->empty());
+	BOOST_CHECK_NE(errors.str().find("IMAGE_BASE_RELOCATION"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(reject_odd_relocation_block_size)
+{
+	auto bytes = make_relocation_pe(9, 9);
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "odd-relocation-block.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(pe->get_relocations()->empty());
+	BOOST_CHECK_NE(errors.str().find("IMAGE_BASE_RELOCATION"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(accept_zero_relocation_padding)
+{
+	auto bytes = make_relocation_pe(8, 0);
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "padded-relocations.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(pe->get_relocations()->empty());
+}
+
+BOOST_AUTO_TEST_CASE(reject_relocation_block_beyond_directory)
+{
+	auto bytes = make_relocation_pe(8, 10);
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "oversized-relocation-block.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(pe->get_relocations()->empty());
+	BOOST_CHECK_NE(errors.str().find("IMAGE_BASE_RELOCATION"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(reject_truncated_relocation_entry)
+{
+	auto bytes = make_relocation_pe(10, 10);
+	bytes.resize(0x2c09);
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "truncated-relocation-entry.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(pe->get_relocations()->empty());
+	BOOST_CHECK_NE(errors.str().find("IMAGE_BASE_RELOCATION"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(parse_header_only_relocation_block)
+{
+	auto bytes = make_relocation_pe(8, 8);
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "empty-relocation-block.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	const auto relocations = pe->get_relocations();
+	BOOST_REQUIRE_EQUAL(relocations->size(), 1);
+	BOOST_CHECK(relocations->front()->TypesOffsets.empty());
+}
+
+BOOST_AUTO_TEST_CASE(reject_debug_misc_shorter_than_header)
+{
+	for (bool unicode : {false, true}) {
+		BOOST_TEST_CONTEXT("unicode=" << unicode) {
+			auto bytes = make_debug_misc_pe(0, unicode);
+			ErrorCapture errors;
+			auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "short-debug-misc.exe");
+			BOOST_REQUIRE(pe && pe->is_valid());
+			BOOST_CHECK(pe->get_debug_info()->empty());
+			BOOST_CHECK_NE(errors.str().find("IMAGE_DEBUG_MISC"), std::string::npos);
+		}
+	}
+}
+
+BOOST_AUTO_TEST_CASE(reject_debug_misc_without_bounded_string)
+{
+	for (const auto& input : {std::make_pair(12u, false), std::make_pair(13u, true)}) {
+		BOOST_TEST_CONTEXT("length=" << input.first << ", unicode=" << input.second) {
+			auto bytes = make_debug_misc_pe(input.first, input.second);
+			ErrorCapture errors;
+			auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "unbounded-debug-misc.exe");
+			BOOST_REQUIRE(pe && pe->is_valid());
+			BOOST_CHECK(pe->get_debug_info()->empty());
+			BOOST_CHECK_NE(errors.str().find("IMAGE_DEBUG_MISC"), std::string::npos);
+		}
+	}
+}
+
+BOOST_AUTO_TEST_CASE(reject_debug_misc_with_odd_unicode_length)
+{
+	auto bytes = make_debug_misc_pe(15, true, 15);
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "odd-debug-misc.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(pe->get_debug_info()->empty());
+	BOOST_CHECK_NE(errors.str().find("IMAGE_DEBUG_MISC"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(reject_debug_misc_length_beyond_payload)
+{
+	auto bytes = make_debug_misc_pe(20, false, 16);
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "oversized-debug-misc.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(pe->get_debug_info()->empty());
+	BOOST_CHECK_NE(errors.str().find("IMAGE_DEBUG_MISC"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(reject_debug_misc_payload_beyond_file)
+{
+	auto bytes = read_binary_file("testfiles/manatest.exe");
+	const size_t misc_offset = bytes.size() - 12;
+	bytes = make_debug_misc_pe(16, false, 16, misc_offset);
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "truncated-debug-misc.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(pe->get_debug_info()->empty());
+	BOOST_CHECK_NE(errors.str().find("IMAGE_DEBUG_MISC"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(parse_bounded_debug_misc)
+{
+	for (bool unicode : {false, true}) {
+		BOOST_TEST_CONTEXT("unicode=" << unicode) {
+			auto bytes = make_debug_misc_pe(16, unicode);
+			auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "bounded-debug-misc.exe");
+			BOOST_REQUIRE(pe && pe->is_valid());
+			const auto debug_info = pe->get_debug_info();
+			BOOST_REQUIRE_EQUAL(debug_info->size(), 1);
+			BOOST_CHECK_EQUAL(debug_info->front()->Filename, unicode ? "L" : "LE");
+		}
+	}
 }
 
 // ----------------------------------------------------------------------------

@@ -671,13 +671,27 @@ bool PE::_parse_debug()
 		else if (debug->Type == nt::DEBUG_TYPES.at("IMAGE_DEBUG_TYPE_MISC"))
 		{
 			image_debug_misc misc;
-			unsigned int misc_size = 2 * sizeof(std::uint32_t) + 4 * sizeof(std::uint8_t);
+			constexpr unsigned int misc_size = 2 * sizeof(std::uint32_t) + 4 * sizeof(std::uint8_t);
+			const std::uint64_t data_offset = debug->PointerToRawData;
+			if (debug->SizeofData < misc_size || data_offset > _file_size ||
+				debug->SizeofData > _file_size - data_offset)
+			{
+				PRINT_ERROR << "Invalid IMAGE_DEBUG_MISC bounds." << DEBUG_INFO_INSIDEPE << std::endl;
+				return false;
+			}
 			memset(&misc, 1, misc_size);
 			unsigned int saved_offset = ftell(_file_handle.get());
-			fseek(_file_handle.get(), debug->PointerToRawData, SEEK_SET);
-			if (misc_size != fread(&misc, 1, misc_size, _file_handle.get()))
+			if (fseek(_file_handle.get(), debug->PointerToRawData, SEEK_SET) ||
+				misc_size != fread(&misc, 1, misc_size, _file_handle.get()))
 			{
 				PRINT_ERROR << "Could not read DBG file information" << DEBUG_INFO_INSIDEPE << std::endl;
+				return false;
+			}
+			const unsigned int minimum_string_size = misc.Unicode == 1 ? 2 : 1;
+			if (misc.Length < misc_size + minimum_string_size || misc.Length > debug->SizeofData ||
+				(misc.Unicode == 1 && (misc.Length - misc_size) % 2 != 0))
+			{
+				PRINT_ERROR << "Invalid IMAGE_DEBUG_MISC Length." << DEBUG_INFO_INSIDEPE << std::endl;
 				return false;
 			}
 			switch (misc.Unicode)
@@ -1086,9 +1100,14 @@ bool PE::_parse_relocations()
 	}
 
 	unsigned int remaining_size = _ioh->directories[IMAGE_DIRECTORY_ENTRY_BASERELOC].Size;
-	unsigned int header_size =  2*sizeof(std::uint32_t);
+	constexpr unsigned int header_size = 2 * sizeof(std::uint32_t);
 	while (remaining_size > 0)
 	{
+		if (remaining_size < header_size)
+		{
+			PRINT_ERROR << "Invalid IMAGE_BASE_RELOCATION BlockSize." << DEBUG_INFO_INSIDEPE << std::endl;
+			return false;
+		}
 		pimage_base_relocation reloc = std::make_shared<image_base_relocation>();
 		memset(reloc.get(), 0, header_size);
 		if (header_size != fread(reloc.get(), 1, header_size, _file_handle.get()) || reloc->BlockSize > remaining_size)
@@ -1101,6 +1120,12 @@ bool PE::_parse_relocations()
 		// instead of reaching EOF. I have encountered this oddity in 4d7ca8d467770f657305c16474b845fe.
 		if (reloc->BlockSize == 0) {
 			return true;
+		}
+		if (reloc->BlockSize < header_size ||
+			(reloc->BlockSize - header_size) % sizeof(std::uint16_t) != 0)
+		{
+			PRINT_ERROR << "Invalid IMAGE_BASE_RELOCATION BlockSize." << DEBUG_INFO_INSIDEPE << std::endl;
+			return false;
 		}
 
 		// The remaining fields are an array of shorts. The number is deduced from the block size.
