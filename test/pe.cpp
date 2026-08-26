@@ -81,7 +81,7 @@ std::vector<std::uint8_t> make_certificate_pe(std::uint32_t directory_size,
 	return bytes;
 }
 
-std::vector<std::uint8_t> make_debug_misc_pe(std::uint32_t length, bool unicode,
+std::vector<std::uint8_t> make_debug_misc_pe(std::uint32_t length, std::uint8_t unicode,
 	std::uint32_t data_size = 16, size_t misc_offset = 0x1880)
 {
 	auto bytes = read_binary_file("testfiles/manatest.exe");
@@ -95,7 +95,7 @@ std::vector<std::uint8_t> make_debug_misc_pe(std::uint32_t length, bool unicode,
 	write_u32(bytes, debug_entry + 24, static_cast<std::uint32_t>(misc_offset));
 	write_u32(bytes, misc_offset, 1);
 	write_u32(bytes, misc_offset + 4, length);
-	bytes[misc_offset + 8] = unicode ? 1 : 0;
+	bytes[misc_offset + 8] = unicode;
 	bytes[misc_offset + 9] = 0;
 	bytes[misc_offset + 10] = 0;
 	bytes[misc_offset + 11] = 0;
@@ -486,6 +486,63 @@ BOOST_AUTO_TEST_CASE(parse_bounded_debug_misc)
 			BOOST_CHECK_EQUAL(debug_info->front()->Filename, unicode ? "L" : "LE");
 		}
 	}
+}
+
+BOOST_AUTO_TEST_CASE(reject_unterminated_ascii_debug_misc_and_recover_sibling)
+{
+	auto bytes = make_debug_misc_pe(16, 0);
+	std::fill(bytes.begin() + 0x188c, bytes.begin() + 0x1890, 'X');
+	write_u32(bytes, 0x19c, 56);
+	write_codeview_entry(bytes, 0x17bc, 0x2600, 0x53445352, "ok");
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "unterminated-ascii-misc.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_REQUIRE_EQUAL(pe->get_debug_info()->size(), 1);
+	BOOST_CHECK_EQUAL(pe->get_debug_info()->front()->Filename, "ok");
+	BOOST_CHECK_NE(errors.str().find("IMAGE_DEBUG_MISC"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(reject_unterminated_utf16_debug_misc_and_recover_sibling)
+{
+	auto bytes = make_debug_misc_pe(16, 1);
+	bytes[0x188c] = 'X';
+	bytes[0x188d] = 0;
+	bytes[0x188e] = 'Y';
+	bytes[0x188f] = 0;
+	write_u32(bytes, 0x19c, 56);
+	write_codeview_entry(bytes, 0x17bc, 0x2600, 0x53445352, "ok");
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "unterminated-utf16-misc.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_REQUIRE_EQUAL(pe->get_debug_info()->size(), 1);
+	BOOST_CHECK_EQUAL(pe->get_debug_info()->front()->Filename, "ok");
+	BOOST_CHECK_NE(errors.str().find("IMAGE_DEBUG_MISC"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(parse_nonzero_debug_misc_unicode_boolean)
+{
+	auto bytes = make_debug_misc_pe(16, 2);
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "boolean-unicode-misc.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_REQUIRE_EQUAL(pe->get_debug_info()->size(), 1);
+	BOOST_CHECK_EQUAL(pe->get_debug_info()->front()->Filename, "L");
+}
+
+BOOST_AUTO_TEST_CASE(reject_invalid_utf16_debug_misc_and_recover_sibling)
+{
+	auto bytes = make_debug_misc_pe(16, 1);
+	bytes[0x188c] = 0;
+	bytes[0x188d] = 0xd8;
+	bytes[0x188e] = 0;
+	bytes[0x188f] = 0;
+	write_u32(bytes, 0x19c, 56);
+	write_codeview_entry(bytes, 0x17bc, 0x2600, 0x53445352, "ok");
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "invalid-utf16-misc.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_REQUIRE_EQUAL(pe->get_debug_info()->size(), 1);
+	BOOST_CHECK_EQUAL(pe->get_debug_info()->front()->Filename, "ok");
+	BOOST_CHECK_NE(errors.str().find("IMAGE_DEBUG_MISC"), std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(reject_codeview_filename_without_in_range_terminator)

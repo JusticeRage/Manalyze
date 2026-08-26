@@ -26,6 +26,7 @@
 #include <io.h>
 #include <fcntl.h>
 #endif
+#include <iterator>
 #include <limits>
 
 namespace mana {
@@ -40,6 +41,35 @@ bool read_bounded_ascii_string(FILE* file, std::uint64_t remaining, std::string&
 		if (fread(&value, 1, 1, file) != 1) return false;
 		if (value == '\0') return true;
 		output.push_back(value);
+	}
+	return false;
+}
+
+bool read_bounded_utf16_string(FILE* file, std::uint64_t remaining, std::string& output)
+{
+	output.clear();
+	if (remaining % 2 != 0) return false;
+
+	std::vector<std::uint16_t> input;
+	while (remaining != 0) {
+		std::uint8_t bytes[2] = {};
+		if (fread(bytes, 1, sizeof(bytes), file) != sizeof(bytes)) return false;
+		remaining -= sizeof(bytes);
+		const std::uint16_t value = static_cast<std::uint16_t>(bytes[0]) |
+			(static_cast<std::uint16_t>(bytes[1]) << 8);
+		if (value != 0) {
+			input.push_back(value);
+			continue;
+		}
+
+		try {
+			utf8::utf16to8(input.begin(), input.end(), std::back_inserter(output));
+			return true;
+		}
+		catch (utf8::invalid_utf16&) {
+			output.clear();
+			return false;
+		}
 	}
 	return false;
 }
@@ -757,26 +787,28 @@ bool PE::_parse_debug()
 			if (fseek(_file_handle.get(), debug->PointerToRawData, SEEK_SET) ||
 				misc_size != fread(&misc, 1, misc_size, _file_handle.get()))
 			{
-				PRINT_ERROR << "Could not read DBG file information" << DEBUG_INFO_INSIDEPE << std::endl;
+				PRINT_ERROR << "Could not read IMAGE_DEBUG_MISC information." << DEBUG_INFO_INSIDEPE << std::endl;
 				if (fseek(_file_handle.get(), next_entry, SEEK_SET)) return false;
 				continue;
 			}
-			const unsigned int minimum_string_size = misc.Unicode == 1 ? 2 : 1;
+			const bool is_unicode = misc.Unicode != 0;
+			const unsigned int minimum_string_size = is_unicode ? 2 : 1;
 			if (misc.Length < misc_size + minimum_string_size || misc.Length > debug->SizeofData ||
-				(misc.Unicode == 1 && (misc.Length - misc_size) % 2 != 0))
+				(is_unicode && (misc.Length - misc_size) % 2 != 0))
 			{
 				PRINT_ERROR << "Invalid IMAGE_DEBUG_MISC Length." << DEBUG_INFO_INSIDEPE << std::endl;
 				if (fseek(_file_handle.get(), next_entry, SEEK_SET)) return false;
 				continue;
 			}
-			switch (misc.Unicode)
+			const std::uint64_t string_size = misc.Length - misc_size;
+			const bool valid_string = is_unicode ?
+				read_bounded_utf16_string(_file_handle.get(), string_size, misc.DbgFile) :
+				read_bounded_ascii_string(_file_handle.get(), string_size, misc.DbgFile);
+			if (!valid_string)
 			{
-			case 1:
-				misc.DbgFile = utils::read_unicode_string(_file_handle.get(), misc.Length - misc_size);
-				break;
-			case 0:
-				misc.DbgFile = utils::read_ascii_string(_file_handle.get(), misc.Length - misc_size);
-				break;
+				PRINT_ERROR << "Invalid IMAGE_DEBUG_MISC string." << DEBUG_INFO_INSIDEPE << std::endl;
+				if (fseek(_file_handle.get(), next_entry, SEEK_SET)) return false;
+				continue;
 			}
 			debug->Filename = misc.DbgFile;
 			if (fseek(_file_handle.get(), next_entry, SEEK_SET)) return false;
