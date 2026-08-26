@@ -326,6 +326,48 @@ BOOST_AUTO_TEST_CASE(reject_debug_directory_smaller_than_entry)
 	BOOST_CHECK(pe->get_debug_info()->empty());
 }
 
+BOOST_AUTO_TEST_CASE(reject_tls_directory_smaller_than_pe32_root)
+{
+	auto bytes = read_binary_file("testfiles/manatest.exe");
+	write_u32(bytes, 0x1b0, 0x3210);
+	write_u32(bytes, 0x1b4, 23);
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "short-tls32-root.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(pe->get_tls() == nullptr);
+	BOOST_CHECK_NE(errors.str().find("IMAGE_TLS_DIRECTORY"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(parse_pe32_tls_at_exact_root_size)
+{
+	auto bytes = read_binary_file("testfiles/manatest.exe");
+	write_u32(bytes, 0x1b0, 0x3210);
+	write_u32(bytes, 0x1b4, 24);
+	write_u32(bytes, 0x1810, 0);
+	write_u32(bytes, 0x1814, 0);
+	write_u32(bytes, 0x1818, 0);
+	write_u32(bytes, 0x181c, 0x403228);
+	write_u32(bytes, 0x1820, 0);
+	write_u32(bytes, 0x1824, 0);
+	write_u32(bytes, 0x1828, 0);
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "exact-tls32-root.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	const auto tls = pe->get_tls();
+	BOOST_REQUIRE(tls);
+	BOOST_CHECK_EQUAL(tls->AddressOfCallbacks, 0x403228);
+}
+
+BOOST_AUTO_TEST_CASE(reject_tls_directory_smaller_than_pe32_plus_root)
+{
+	auto bytes = read_binary_file("testfiles/manatest3.exe");
+	write_u32(bytes, 0x1c4, 39);
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "short-tls64-root.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(pe->get_tls() == nullptr);
+	BOOST_CHECK_NE(errors.str().find("IMAGE_TLS_DIRECTORY"), std::string::npos);
+}
+
 BOOST_AUTO_TEST_CASE(reject_truncated_debug_directory_root)
 {
 	auto bytes = read_binary_file("testfiles/manatest.exe");
@@ -1048,8 +1090,55 @@ BOOST_AUTO_TEST_CASE(parse_config)
 	BOOST_CHECK_EQUAL(config.Reserved1, 0);
 	BOOST_CHECK_EQUAL(config.EditList, 0);
 	BOOST_CHECK_EQUAL(config.SecurityCookie, 0x404004);
-	BOOST_CHECK_EQUAL(config.SEHandlerTable, 0x403270);
-	BOOST_CHECK_EQUAL(config.SEHandlerCount, 4);
+	BOOST_CHECK_EQUAL(config.SEHandlerTable, 0);
+	BOOST_CHECK_EQUAL(config.SEHandlerCount, 0);
+}
+
+BOOST_AUTO_TEST_CASE(parse_size_only_load_config)
+{
+	auto bytes = read_binary_file("testfiles/manatest.exe");
+	write_u32(bytes, 0x1810, 4);
+	write_u32(bytes, 0x01bc, 4);
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "short-load-config.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	const auto config = pe->get_config();
+	BOOST_REQUIRE(config);
+	BOOST_CHECK_EQUAL(config->Size, 4);
+	BOOST_CHECK_EQUAL(config->SecurityCookie, 0);
+}
+
+BOOST_AUTO_TEST_CASE(limit_load_config_to_declared_directory)
+{
+	auto pe = mana::PE::create("testfiles/manatest.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	const auto config = pe->get_config();
+	BOOST_REQUIRE(config);
+	BOOST_CHECK_EQUAL(config->SecurityCookie, 0x404004);
+	BOOST_CHECK_EQUAL(config->SEHandlerTable, 0);
+	BOOST_CHECK_EQUAL(config->SEHandlerCount, 0);
+}
+
+BOOST_AUTO_TEST_CASE(parse_full_load_config_when_directory_extent_allows_it)
+{
+	auto bytes = read_binary_file("testfiles/manatest.exe");
+	write_u32(bytes, 0x01bc, 0x5c);
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "full-load-config.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	const auto config = pe->get_config();
+	BOOST_REQUIRE(config);
+	BOOST_CHECK_EQUAL(config->SEHandlerTable, 0x403270);
+	BOOST_CHECK_EQUAL(config->SEHandlerCount, 4);
+}
+
+BOOST_AUTO_TEST_CASE(reject_load_config_internal_size_below_size_field)
+{
+	auto bytes = read_binary_file("testfiles/manatest.exe");
+	write_u32(bytes, 0x1810, 3);
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "invalid-load-config.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(pe->get_config() == nullptr);
+	BOOST_CHECK_NE(errors.str().find("IMAGE_LOAD_CONFIG_DIRECTORY"), std::string::npos);
 }
 
 // ----------------------------------------------------------------------------

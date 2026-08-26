@@ -26,6 +26,7 @@
 #include <io.h>
 #include <fcntl.h>
 #endif
+#include <algorithm>
 #include <iterator>
 #include <limits>
 #include <stdexcept>
@@ -1337,19 +1338,21 @@ bool PE::_parse_tls()
 	unsigned int size = 4*sizeof(std::uint64_t) + 2*sizeof(std::uint32_t);
 	memset(&tls, 0, size);
 
+	bool read_root = false;
 	if (get_architecture() == x64) {
-		fread(&tls, 1, size, _file_handle.get());
+		read_root = fread(&tls, 1, size, _file_handle.get()) == size;
 	}
 	else
 	{
-		fread(&tls.StartAddressOfRawData, 1, sizeof(std::uint32_t), _file_handle.get());
-		fread(&tls.EndAddressOfRawData, 1, sizeof(std::uint32_t), _file_handle.get());
-		fread(&tls.AddressOfIndex, 1, sizeof(std::uint32_t), _file_handle.get());
-		fread(&tls.AddressOfCallbacks, 1, sizeof(std::uint32_t), _file_handle.get());
-		fread(&tls.SizeOfZeroFill, 1, 2 * sizeof(std::uint32_t), _file_handle.get());
+		read_root =
+			fread(&tls.StartAddressOfRawData, 1, sizeof(std::uint32_t), _file_handle.get()) == sizeof(std::uint32_t) &&
+			fread(&tls.EndAddressOfRawData, 1, sizeof(std::uint32_t), _file_handle.get()) == sizeof(std::uint32_t) &&
+			fread(&tls.AddressOfIndex, 1, sizeof(std::uint32_t), _file_handle.get()) == sizeof(std::uint32_t) &&
+			fread(&tls.AddressOfCallbacks, 1, sizeof(std::uint32_t), _file_handle.get()) == sizeof(std::uint32_t) &&
+			fread(&tls.SizeOfZeroFill, 1, 2 * sizeof(std::uint32_t), _file_handle.get()) == 2 * sizeof(std::uint32_t);
 	}
 
-	if (feof(_file_handle.get()) || ferror(_file_handle.get()))
+	if (!read_root)
 	{
 		PRINT_ERROR << "Could not read the IMAGE_TLS_DIRECTORY." << DEBUG_INFO_INSIDEPE << std::endl;
 		return true; // Non-fatal
@@ -1384,27 +1387,21 @@ bool PE::_parse_tls()
  *			the file's load configuration while checking if there are enough
  *			bytes available.
  *			
- *	@param	config		The structure that was read so far.
  *	@param	source		A pointer to the file to read from.
  *	@param	destination	Where the read value is to be put.
  *	@param	field_size	The size of the value to read.
+ *	@param	extent		The maximum number of bytes available to the structure.
  *	@param	read_bytes	The number of bytes read so far, will be incremented.
  *	
  *	@return	Whether the value should be read. If false, EOF has been reached or
  *			the structure has no more fields to read.
  */
-bool read_config_field(const			image_load_config_directory& config,
-					   FILE*			source,
-					   void*			destination,
-					   unsigned int		field_size,
-					   unsigned int&	read_bytes)
+bool read_config_field(FILE* source, void* destination,
+	std::uint64_t field_size, std::uint64_t extent,
+	std::uint64_t& read_bytes)
 {
-	if (read_bytes + field_size > config.Size) {
-		return false;
-	}
-	if (1 != fread(destination, field_size, 1, source))	{
-		return false;
-	}
+	if (read_bytes > extent || field_size > extent - read_bytes) return false;
+	if (fread(destination, 1, static_cast<size_t>(field_size), source) != field_size) return false;
 	read_bytes += field_size;
 	return true;
 }
@@ -1423,74 +1420,69 @@ bool PE::_parse_config()
 
 	image_load_config_directory config;
 	memset(&config, 0, sizeof(config));
-	if (24 != fread(&config, 1, 24, _file_handle.get()))
+	if (sizeof(config.Size) != fread(&config.Size, 1, sizeof(config.Size), _file_handle.get()))
 	{
-		PRINT_WARNING << "Error while reading the IMAGE_LOAD_CONFIG_DIRECTORY!"
-					  << DEBUG_INFO_INSIDEPE << std::endl;
+		PRINT_ERROR << "Could not read the IMAGE_LOAD_CONFIG_DIRECTORY."
+					<< DEBUG_INFO_INSIDEPE << std::endl;
 		return true; // Non fatal
 	}
-
-	// The next few fields are uint32s or uint64s depending on the architecture.
-	unsigned int field_size = (_ioh->Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32")) ? 4 : 8;
-	if (1 != fread(&config.DeCommitFreeBlockThreshold, field_size, 1, _file_handle.get()) ||
-		1 != fread(&config.DeCommitTotalFreeThreshold, field_size, 1, _file_handle.get()) ||
-		1 != fread(&config.LockPrefixTable, field_size, 1, _file_handle.get()) ||
-		1 != fread(&config.MaximumAllocationSize, field_size, 1, _file_handle.get()) ||
-		1 != fread(&config.VirtualMemoryThreshold, field_size, 1, _file_handle.get()) ||
-		1 != fread(&config.ProcessAffinityMask, field_size, 1, _file_handle.get()))
+	if (config.Size < sizeof(config.Size))
 	{
-		PRINT_WARNING << "Error while reading the IMAGE_LOAD_CONFIG_DIRECTORY!"
-			<< DEBUG_INFO_INSIDEPE << std::endl;
+		PRINT_ERROR << "Invalid IMAGE_LOAD_CONFIG_DIRECTORY size."
+					<< DEBUG_INFO_INSIDEPE << std::endl;
 		return true;
 	}
 
-	// Then a few fields have the same size on x86 and x64.
-	if (8 != fread(&config.ProcessHeapFlags, 1, 8, _file_handle.get()))
-	{
-		PRINT_WARNING << "Error while reading the IMAGE_LOAD_CONFIG_DIRECTORY!"
-			<< DEBUG_INFO_INSIDEPE << std::endl;
-		return true;
-	}
+	const auto& directory = _ioh->directories[IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG];
+	const std::uint64_t root_offset = rva_to_offset(directory.VirtualAddress);
+	const std::uint64_t effective_extent = std::min<std::uint64_t>(config.Size,
+		std::min<std::uint64_t>(directory.Size, _file_size - root_offset));
+	const std::uint64_t architecture_field_size =
+		_ioh->Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32") ? 4 : 8;
+	std::uint64_t read_bytes = sizeof(config.Size);
 
-	// The last fields have a variable size depending on the architecture again.
-	if (1 != fread(&config.EditList, field_size, 1, _file_handle.get()) ||
-		1 != fread(&config.SecurityCookie, field_size, 1, _file_handle.get()))
+	struct config_field {
+		void* destination;
+		std::uint64_t size;
+	};
+	const config_field fields[] = {
+		{&config.TimeDateStamp, 4},
+		{&config.MajorVersion, 2},
+		{&config.MinorVersion, 2},
+		{&config.GlobalFlagsClear, 4},
+		{&config.GlobalFlagsSet, 4},
+		{&config.CriticalSectionDefaultTimeout, 4},
+		{&config.DeCommitFreeBlockThreshold, architecture_field_size},
+		{&config.DeCommitTotalFreeThreshold, architecture_field_size},
+		{&config.LockPrefixTable, architecture_field_size},
+		{&config.MaximumAllocationSize, architecture_field_size},
+		{&config.VirtualMemoryThreshold, architecture_field_size},
+		{&config.ProcessAffinityMask, architecture_field_size},
+		{&config.ProcessHeapFlags, 4},
+		{&config.CSDVersion, 2},
+		{&config.Reserved1, 2},
+		{&config.EditList, architecture_field_size},
+		{&config.SecurityCookie, architecture_field_size},
+		{&config.SEHandlerTable, architecture_field_size},
+		{&config.SEHandlerCount, architecture_field_size},
+		{&config.GuardCFCheckFunctionPointer, architecture_field_size},
+		{&config.GuardCFDispatchFunctionPointer, architecture_field_size},
+		{&config.GuardCFFunctionTable, architecture_field_size},
+		{&config.GuardCFFunctionCount, architecture_field_size},
+		{&config.GuardFlags, 4},
+		{&config.CodeIntegrity, 12},
+		{&config.GuardAddressTakenIatEntryTable, architecture_field_size},
+		{&config.GuardAddressTakenIatEntryCount, architecture_field_size},
+		{&config.GuardLongJumpTargetTable, architecture_field_size},
+		{&config.GuardLongJumpTargetCount, architecture_field_size}
+	};
+	for (const auto& field : fields)
 	{
-		PRINT_WARNING << "Error while reading the IMAGE_LOAD_CONFIG_DIRECTORY!"
-			<< DEBUG_INFO_INSIDEPE << std::endl;
-		return true;
-	}
-	unsigned int read_bytes = 32 + 8 * field_size; // The number of bytes read so far
-
-	// SafeSEH information may not be present in some XP-era binaries.
-	// The MSDN page for IMAGE_LOAD_CONFIG_DIRECTORY specifies that their size must be 64
-	// (https://msdn.microsoft.com/en-us/library/windows/desktop/ms680328(v=vs.85).aspx).
-	// Those fields should be 0 in 64 bit binaries.
-	if (config.Size > read_bytes)
-	{
-		if (1 != fread(&config.SEHandlerTable, field_size, 1, _file_handle.get()) ||
-			1 != fread(&config.SEHandlerCount, field_size, 1, _file_handle.get()))
-		{
-			PRINT_WARNING << "Error while reading the IMAGE_LOAD_CONFIG_DIRECTORY!"
-				<< DEBUG_INFO_INSIDEPE << std::endl;
-			return true;
+		if (!read_config_field(_file_handle.get(), field.destination, field.size,
+			effective_extent, read_bytes)) {
+			break;
 		}
 	}
-	read_bytes += 2 * field_size;
-
-	// Read the remaining fields. The OR operator allows this code to stop whenever a read returns false, 
-	// i.e. when trying to read more bytes than are available in the structure. This construction is necessary
-	// because fields are added to the structure as Windows evolves.
-	read_config_field(config, _file_handle.get(), &config.GuardCFCheckFunctionPointer, field_size, read_bytes) ||
-	read_config_field(config, _file_handle.get(), &config.GuardCFDispatchFunctionPointer, field_size, read_bytes) ||
-	read_config_field(config, _file_handle.get(), &config.GuardCFFunctionTable, field_size, read_bytes) ||
-	read_config_field(config, _file_handle.get(), &config.GuardCFFunctionCount, field_size, read_bytes) ||
-	read_config_field(config, _file_handle.get(), &config.GuardFlags, 4, read_bytes) ||
-	read_config_field(config, _file_handle.get(), &config.CodeIntegrity, 12, read_bytes) ||
-	read_config_field(config, _file_handle.get(), &config.GuardAddressTakenIatEntryTable, field_size, read_bytes) ||
-	read_config_field(config, _file_handle.get(), &config.GuardAddressTakenIatEntryCount, field_size, read_bytes) ||
-	read_config_field(config, _file_handle.get(), &config.GuardLongJumpTargetTable, field_size, read_bytes) ||
-	read_config_field(config, _file_handle.get(), &config.GuardLongJumpTargetCount, field_size, read_bytes);
 
 	_config = config;
 	return true;
