@@ -488,6 +488,110 @@ BOOST_AUTO_TEST_CASE(production_coff_symbol_limit_is_stable)
 		mana::detail::production_pe_parser_work_limits().coff_symbol_records, 1048576);
 }
 
+BOOST_AUTO_TEST_CASE(coff_string_payload_uses_fixed_memory_without_retention)
+{
+	constexpr std::size_t payload_size = 1024 * 1024;
+	const auto bytes = make_coff_pe(1, 1, std::vector<std::uint8_t>(payload_size, 0));
+	mana::detail::PEParserWorkStats stats;
+	ErrorCapture errors;
+	auto pe = parse_with_coff_limits(bytes, 1, payload_size, stats);
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK_EQUAL(stats.coff_string_bytes_read, payload_size);
+	BOOST_CHECK_EQUAL(stats.coff_string_read_calls, 256);
+	BOOST_CHECK_EQUAL(stats.coff_max_buffer_bytes, 4096);
+	BOOST_CHECK_EQUAL(mana::detail::PEParserTestAccess::retained_coff_strings(*pe), 0);
+	BOOST_CHECK_EQUAL(errors.str().find("COFF String Table"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(coff_string_multiple_values_are_validated_without_retention)
+{
+	const auto bytes = make_coff_pe(1, 1, {'A', 0, 'B', 0});
+	mana::detail::PEParserWorkStats stats;
+	ErrorCapture errors;
+	auto pe = parse_with_coff_limits(bytes, 1, 4, stats);
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK_EQUAL(stats.coff_string_bytes_read, 4);
+	BOOST_CHECK_EQUAL(mana::detail::PEParserTestAccess::retained_coff_strings(*pe), 0);
+	BOOST_CHECK_EQUAL(errors.str().find("COFF String Table"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(coff_string_below_byte_limit_scans_complete_payload)
+{
+	const auto bytes = make_coff_pe(1, 1, {'A', 'B', 0});
+	mana::detail::PEParserWorkStats stats;
+	ErrorCapture errors;
+	auto pe = parse_with_coff_limits(bytes, 1, 4, stats);
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK_EQUAL(stats.coff_string_bytes_read, 3);
+	BOOST_CHECK_EQUAL(stats.coff_string_read_calls, 1);
+	BOOST_CHECK_EQUAL(stats.coff_max_buffer_bytes, 3);
+	BOOST_CHECK_EQUAL(mana::detail::PEParserTestAccess::retained_coff_strings(*pe), 0);
+	BOOST_CHECK_EQUAL(errors.str().find("COFF String Table"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(coff_string_exact_byte_limit_scans_complete_payload)
+{
+	const auto bytes = make_coff_pe(1, 1, {'A', 'B', 'C', 0});
+	mana::detail::PEParserWorkStats stats;
+	ErrorCapture errors;
+	auto pe = parse_with_coff_limits(bytes, 1, 4, stats);
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK_EQUAL(stats.coff_string_bytes_read, 4);
+	BOOST_CHECK_EQUAL(stats.coff_string_read_calls, 1);
+	BOOST_CHECK_EQUAL(stats.coff_max_buffer_bytes, 4);
+	BOOST_CHECK_EQUAL(mana::detail::PEParserTestAccess::retained_coff_strings(*pe), 0);
+	BOOST_CHECK_EQUAL(errors.str().find("COFF String Table"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(coff_string_over_byte_limit_stops_before_scan_and_preserves_metadata)
+{
+	const auto bytes = make_coff_pe(1, 1, {'A', 'B', 'C', 'D', 0});
+	const auto control_bytes = read_binary_file("testfiles/manatest.exe");
+	auto control = mana::PE::create_from_bytes(
+		control_bytes.data(), control_bytes.size(), "control-manatest.exe");
+	BOOST_REQUIRE(control && control->is_valid());
+	mana::detail::PEParserWorkStats stats;
+	ErrorCapture warnings(utils::LogLevel::WARNING);
+	auto pe = parse_with_coff_limits(bytes, 1, 4, stats);
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK_EQUAL(stats.coff_string_bytes_read, 0);
+	BOOST_CHECK_EQUAL(stats.coff_string_read_calls, 0);
+	BOOST_CHECK_EQUAL(stats.coff_max_buffer_bytes, 0);
+	BOOST_CHECK_EQUAL(mana::detail::PEParserTestAccess::retained_coff_strings(*pe), 0);
+	BOOST_REQUIRE(pe->get_sections());
+	BOOST_CHECK_EQUAL(pe->get_sections()->size(), control->get_sections()->size());
+	BOOST_REQUIRE_EQUAL(pe->get_debug_info()->size(), control->get_debug_info()->size());
+	BOOST_REQUIRE(!pe->get_debug_info()->empty());
+	BOOST_CHECK_EQUAL(pe->get_debug_info()->front()->Filename,
+		control->get_debug_info()->front()->Filename);
+	const std::string diagnostic = "COFF string-table byte budget exhausted";
+	const std::string output = warnings.str();
+	const std::size_t first = output.find(diagnostic);
+	BOOST_REQUIRE_NE(first, std::string::npos);
+	BOOST_CHECK_EQUAL(output.find(diagnostic, first + diagnostic.size()), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(coff_string_empty_payload_requires_no_reads)
+{
+	const auto bytes = make_coff_pe(1, 1, {});
+	mana::detail::PEParserWorkStats stats;
+	ErrorCapture errors;
+	auto pe = parse_with_coff_limits(bytes, 1, 0, stats);
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK_EQUAL(stats.coff_string_bytes_read, 0);
+	BOOST_CHECK_EQUAL(stats.coff_string_read_calls, 0);
+	BOOST_CHECK_EQUAL(stats.coff_max_buffer_bytes, 0);
+	BOOST_CHECK_EQUAL(mana::detail::PEParserTestAccess::retained_coff_strings(*pe), 0);
+	BOOST_CHECK_EQUAL(errors.str().find("COFF String Table"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(production_coff_string_byte_limit_is_stable)
+{
+	BOOST_CHECK_EQUAL(
+		mana::detail::production_pe_parser_work_limits().coff_string_table_bytes,
+		268435456);
+}
+
 BOOST_AUTO_TEST_CASE(cap_malformed_coff_symbol_diagnostics_without_stopping_scan)
 {
 	if (!is_cap_test_child()) {

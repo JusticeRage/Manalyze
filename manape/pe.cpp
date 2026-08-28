@@ -32,6 +32,7 @@
 #include <fcntl.h>
 #endif
 #include <algorithm>
+#include <array>
 #include <iterator>
 #include <limits>
 #include <stdexcept>
@@ -537,7 +538,6 @@ bool PE::_parse_pe_header()
 bool PE::_parse_coff_symbols(detail::WorkBudget& symbol_budget,
 	detail::WorkBudget& string_budget, detail::PEParserWorkStats* stats)
 {
-	(void) string_budget;
 	if (!_h_pe || _file_handle == nullptr) {
 		return false;
 	}
@@ -608,37 +608,46 @@ bool PE::_parse_coff_symbols(detail::WorkBudget& symbol_budget,
 		return false;
 	}
 
-	const long payload_position = ftell(_file_handle.get());
+	const std::uint64_t payload_offset =
+		symbol_offset + symbol_bytes + sizeof(table_size);
 	const std::uint64_t payload_size = table_size - sizeof(table_size);
-	if (payload_position < 0 || static_cast<std::uint64_t>(payload_position) > _file_size ||
-		payload_size > _file_size - static_cast<std::uint64_t>(payload_position))
+	if (payload_offset > _file_size || payload_size > _file_size - payload_offset)
 	{
 		PRINT_ERROR << "COFF String Table extends beyond the end of the file."
 			<< DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
 	}
+	if (!string_budget.charge(payload_size)) {
+		CAPPED_LOGGING_WARNING
+			PRINT_WARNING << "COFF string-table byte budget exhausted; stopping optional COFF parsing."
+				<< DEBUG_INFO_INSIDEPE << std::endl;
+		CAPPED_LOGGING_END
+		return false;
+	}
 
+	std::array<std::uint8_t, 4096> buffer{};
 	std::uint64_t remaining = payload_size;
+	bool final_byte_is_nul = payload_size == 0;
 	while (remaining != 0)
 	{
-		const long string_position = ftell(_file_handle.get());
-		std::string value;
-		if (string_position < 0 || !read_bounded_ascii_string(_file_handle.get(), remaining, value)) {
-			PRINT_ERROR << "COFF String Table contains an unterminated string."
-				<< DEBUG_INFO_INSIDEPE << std::endl;
+		const std::size_t chunk = static_cast<std::size_t>(
+			std::min<std::uint64_t>(remaining, buffer.size()));
+		if (fread(buffer.data(), 1, chunk, _file_handle.get()) != chunk) {
 			return false;
 		}
-
-		const long next_position = ftell(_file_handle.get());
-		if (next_position <= string_position ||
-			static_cast<std::uint64_t>(next_position - string_position) > remaining)
-		{
-			PRINT_ERROR << "Could not determine the consumed COFF String Table bytes."
-				<< DEBUG_INFO_INSIDEPE << std::endl;
-			return false;
+		final_byte_is_nul = buffer[chunk - 1] == 0;
+		remaining -= chunk;
+		if (stats) {
+			stats->coff_string_bytes_read += chunk;
+			++stats->coff_string_read_calls;
+			stats->coff_max_buffer_bytes = std::max<std::uint64_t>(
+				stats->coff_max_buffer_bytes, chunk);
 		}
-		remaining -= static_cast<std::uint64_t>(next_position - string_position);
-		_coff_string_table.push_back(std::make_shared<std::string>(std::move(value)));
+	}
+	if (!final_byte_is_nul) {
+		PRINT_ERROR << "COFF String Table contains an unterminated string."
+			<< DEBUG_INFO_INSIDEPE << std::endl;
+		return false;
 	}
 
 	return true;
