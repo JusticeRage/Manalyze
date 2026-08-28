@@ -113,6 +113,28 @@ mana::pResource make_bitmap_resource(std::uint16_t bit_count, std::uint32_t colo
 		static_cast<std::uint32_t>(dib.size()), 0, 1, "bitmap", file, dib.size() + 1);
 }
 
+std::vector<std::uint8_t> read_version_blob()
+{
+	auto bytes = read_binary_file("testfiles/manatest2.exe");
+	return std::vector<std::uint8_t>(bytes.begin() + 0x2350,
+		bytes.begin() + 0x2350 + 0x2d4);
+}
+
+mana::pResource make_version_resource(const std::vector<std::uint8_t>& blob,
+	std::uint32_t declared_size)
+{
+	FILE* file = tmpfile();
+	BOOST_REQUIRE(file != nullptr);
+	const std::uint8_t prefix[4] = {0, 0, 0, 0};
+	BOOST_REQUIRE_EQUAL(fwrite(prefix, 1, sizeof(prefix), file), sizeof(prefix));
+	BOOST_REQUIRE_EQUAL(fwrite(blob.data(), 1, blob.size(), file), blob.size());
+	BOOST_REQUIRE_EQUAL(fseek(file, 0, SEEK_SET), 0);
+	mana::pFile handle(file, fclose);
+	return std::make_shared<mana::Resource>("RT_VERSION", "VERSION", "", 0,
+		declared_size, 0, 4, "version-resource", handle, blob.size() + 4,
+		std::make_shared<std::mutex>());
+}
+
 } // namespace
 
 // ----------------------------------------------------------------------------
@@ -576,6 +598,53 @@ void check_pair(std::shared_ptr<std::pair<T, T> > pair, const T& first, const T&
 {
 	BOOST_CHECK_EQUAL(pair->first, first);
 	BOOST_CHECK_EQUAL(pair->second, second);
+}
+
+void check_version_strings(const mana::pversion_info& version)
+{
+	BOOST_REQUIRE(version);
+	BOOST_REQUIRE_EQUAL(version->StringTable.size(), 8);
+	check_pair<std::string>(version->StringTable[0], "CompanyName", "manalyzer.org");
+	check_pair<std::string>(version->StringTable[1], "FileDescription", "Manalyze test file.");
+	check_pair<std::string>(version->StringTable[2], "FileVersion", "1.0.0.0");
+	check_pair<std::string>(version->StringTable[3], "InternalName", "manatest2.exe");
+	check_pair<std::string>(version->StringTable[4], "LegalCopyright", "Copyright (C) 2016");
+	check_pair<std::string>(version->StringTable[5], "OriginalFilename", "manatest2.exe");
+	check_pair<std::string>(version->StringTable[6], "ProductName", "manatest2.exe");
+	check_pair<std::string>(version->StringTable[7], "ProductVersion", "1.0.0.0");
+}
+
+// ----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(parse_version_info_without_varfileinfo)
+{
+	auto blob = read_version_blob();
+	blob.resize(0x290);
+	write_u16(blob, 0, 0x290);
+	check_version_strings(make_version_resource(blob, 0x290)
+		->interpret_as<mana::pversion_info>());
+}
+
+BOOST_AUTO_TEST_CASE(parse_version_info_with_leading_varfileinfo)
+{
+	const auto original = read_version_blob();
+	std::vector<std::uint8_t> blob;
+	blob.insert(blob.end(), original.begin(), original.begin() + 0x5c);
+	blob.insert(blob.end(), original.begin() + 0x290, original.end());
+	blob.insert(blob.end(), original.begin() + 0x5c, original.begin() + 0x290);
+	check_version_strings(make_version_resource(blob, 0x2d4)
+		->interpret_as<mana::pversion_info>());
+}
+
+BOOST_AUTO_TEST_CASE(reject_version_header_without_bounded_key)
+{
+	auto blob = read_version_blob();
+	write_u16(blob, 0, 8);
+	auto resource = make_version_resource(blob, 8);
+	ErrorCapture errors;
+	BOOST_CHECK(!resource->interpret_as<mana::pversion_info>());
+	BOOST_REQUIRE_EQUAL(resource->get_raw_data()->size(), 8);
+	BOOST_CHECK_NE(errors.str().find("RT_VERSION"), std::string::npos);
 }
 
 // ----------------------------------------------------------------------------

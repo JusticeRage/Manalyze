@@ -45,6 +45,58 @@ namespace {
 			fseek(file, static_cast<long>(offset), SEEK_SET) == 0;
 	}
 
+	bool current_offset(FILE* file, std::uint64_t& output)
+	{
+		const long position = ftell(file);
+		if (position < 0) return false;
+		output = static_cast<std::uint64_t>(position);
+		return true;
+	}
+
+	bool read_utf16z_bounded(FILE* file, std::uint64_t extent_end,
+		std::string& output)
+	{
+		std::wstring value;
+		while (true) {
+			std::uint64_t position = 0;
+			if (!current_offset(file, position) || position > extent_end ||
+				extent_end - position < sizeof(std::uint16_t)) return false;
+			std::uint16_t code_unit = 0;
+			if (fread(&code_unit, 1, sizeof(code_unit), file) != sizeof(code_unit)) return false;
+			if (code_unit == 0) break;
+			value.push_back(static_cast<wchar_t>(code_unit));
+		}
+		try {
+			std::vector<std::uint8_t> utf8;
+			utf8::utf16to8(value.begin(), value.end(), std::back_inserter(utf8));
+			output.assign(utf8.begin(), utf8.end());
+			return true;
+		} catch (const utf8::invalid_utf16&) {
+			return false;
+		}
+	}
+
+	bool read_version_header_bounded(vs_version_info_header& header, FILE* file,
+		std::uint64_t extent_end)
+	{
+		constexpr std::uint64_t fixed_size = 3 * sizeof(std::uint16_t);
+		std::uint64_t position = 0;
+		memset(&header, 0, fixed_size);
+		if (!current_offset(file, position) || position > extent_end ||
+			extent_end - position < fixed_size ||
+			fread(&header, 1, fixed_size, file) != fixed_size ||
+			!read_utf16z_bounded(file, extent_end, header.Key) ||
+			!current_offset(file, position)) {
+			return false;
+		}
+
+		const std::uint64_t padding = (4 - position % 4) % 4;
+		if (position > extent_end || padding > extent_end - position) {
+			return false;
+		}
+		return seek_absolute(file, position + padding);
+	}
+
 	// Fallback mutex only serializes access within this translation unit.
 	std::mutex& io_mutex_or_fallback(const pMutex& mutex) {
 		static std::mutex fallback_mutex;
@@ -643,21 +695,30 @@ DECLSPEC pversion_info Resource::interpret_as()
 	FILE* f = nullptr;
 	long saved_offset = -1;
 	std::unique_lock<std::mutex> lock(io_mutex_or_fallback(_io_mutex));
-	if (!_reach_data(f, saved_offset)) {
-		return pversion_info();
-	}
-
 	auto res = std::make_shared<version_info>();
 	unsigned int bytes_read; // Is calculated by calling ftell before and after reading a structure, and keeping the difference.
 	unsigned int bytes_remaining;
 	unsigned int language;
 	std::stringstream ss;
+	std::uint64_t resource_end = 0;
 
 	// We are going to read a lot of structures which look like a version info header.
 	// They will all be read into this variable, one at a time.
 	auto current_structure = std::make_shared<vs_version_info_header>();
-	if (!parse_version_info_header(res->Header, f))
+	if (!_reach_data(f, saved_offset)) {
+		return pversion_info();
+	}
+	const std::uint64_t resource_start = _offset_in_file;
+	if (!fits_file_range(resource_start, _size, _file_size)) {
+		PRINT_ERROR << "Invalid RT_VERSION resource bounds." << DEBUG_INFO << std::endl;
+		res.reset();
+		goto END;
+	}
+	resource_end = resource_start + _size;
+	if (!read_version_header_bounded(res->Header, f, resource_end))
 	{
+		PRINT_ERROR << "Could not read the RT_VERSION root header within its resource bounds."
+			<< DEBUG_INFO << std::endl;
 		res.reset();
 		goto END;
 	}
