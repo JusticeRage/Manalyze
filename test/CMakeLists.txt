@@ -5,7 +5,7 @@ if (NOT APPLE)
 	find_package(Threads)
 endif()
 
-add_executable(manalyze-tests fixtures.cpp hash-library.cpp pe.cpp imports.cpp resources.cpp section.cpp escape.cpp encoding.cpp base64.cpp utils.cpp cli.cpp config_parser.cpp output_formatter.cpp windows_macro_compat.cpp
+add_executable(manalyze-tests fixtures.cpp hash-library.cpp pe.cpp imports.cpp resources.cpp section.cpp escape.cpp encoding.cpp base64.cpp utils.cpp cli.cpp config_parser.cpp output_formatter.cpp windows_macro_compat.cpp work_budget.cpp
                                ../src/import_hash.cpp ../src/cli.cpp ../src/config_parser.cpp ../src/output_formatter.cpp)
 add_dependencies(manalyze-tests manalyze)
 
