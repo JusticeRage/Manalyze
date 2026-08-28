@@ -19,6 +19,8 @@
 
 #include <limits>
 
+#include <openssl/err.h>
+
 namespace plugin
 {
 
@@ -216,7 +218,11 @@ class OpenSSLAuthenticodePlugin : public IPlugin
             AuthenticodeDigest digest;
             if (!parse_spc_asn1(p->d.sign->contents->d.other->value.asn1_string, digest))
             {
-                PRINT_WARNING << "[plugin_authenticode] Could not read the digest information." << std::endl;
+                CAPPED_LOGGING_ERROR
+                PRINT_ERROR << "[plugin_authenticode] Ignoring a certificate with malformed "
+                    "SpcIndirectDataContent." << std::endl;
+                CAPPED_LOGGING_END
+                ERR_clear_error();
                 continue;
             }
 

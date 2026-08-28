@@ -199,4 +199,32 @@ BOOST_AUTO_TEST_CASE(reject_empty_certificate_before_bio_creation)
 	BOOST_CHECK(authenticode->analyze(*pe));
 }
 
+BOOST_AUTO_TEST_CASE(malformed_certificate_does_not_hide_later_valid_certificate)
+{
+	auto bytes = read_binary_file("testfiles/manatest.exe");
+	constexpr size_t security_directory_size = 0x18c;
+	constexpr size_t certificate = 0x2e00;
+	constexpr size_t certificate_length = 0x11e8;
+	const std::vector<std::uint8_t> valid_certificate(
+		bytes.begin() + certificate,
+		bytes.begin() + certificate + certificate_length);
+	bytes.insert(bytes.end(), valid_certificate.begin(), valid_certificate.end());
+	write_u32(bytes, security_directory_size, 2 * certificate_length);
+	// Nested algorithm OID length inside the first certificate payload.
+	bytes[certificate + 8 + 91] = 0x7f;
+
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "testfiles/manatest.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_REQUIRE_EQUAL(pe->get_certificates()->size(), 2);
+	std::unique_ptr<plugin::IPlugin, void (*)(plugin::IPlugin*)> authenticode(
+		plugin::create(), plugin::destroy);
+	ErrorCapture errors;
+	auto result = authenticode->analyze(*pe);
+
+	BOOST_REQUIRE(result);
+	BOOST_CHECK_NE(errors.str().find(
+		"Ignoring a certificate with malformed SpcIndirectDataContent."), std::string::npos);
+	BOOST_CHECK_EQUAL(*result->get_summary(), "The PE is digitally signed.");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
