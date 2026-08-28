@@ -123,15 +123,19 @@ PE::resource_directory_result PE::_read_image_resource_directory(image_resource_
 		rva_to_offset(_ioh->directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress);
 	if (!root_offset ||
 		relative_offset > std::numeric_limits<std::uint64_t>::max() - root_offset) {
+		CAPPED_LOGGING_ERROR
 		PRINT_ERROR << "Invalid IMAGE_RESOURCE_DIRECTORY relative offset."
 			<< DEBUG_INFO_INSIDEPE << std::endl;
+		CAPPED_LOGGING_END
 		return resource_directory_result::read_error;
 	}
 	const std::uint64_t target = root_offset + relative_offset;
 	if (!fits_file_range(target, IMAGE_RESOURCE_DIRECTORY_SIZE, _file_size) ||
 		!seek_absolute(_file_handle.get(), target)) {
+		CAPPED_LOGGING_ERROR
 		PRINT_ERROR << "Invalid IMAGE_RESOURCE_DIRECTORY bounds."
 			<< DEBUG_INFO_INSIDEPE << std::endl;
+		CAPPED_LOGGING_END
 		return resource_directory_result::read_error;
 	}
 
@@ -171,7 +175,9 @@ PE::resource_directory_result PE::_read_image_resource_directory(image_resource_
 		memset(entry.get(), 0, size);
 		if (size != fread(entry.get(), 1, size, _file_handle.get()))
 		{
+			CAPPED_LOGGING_ERROR
 			PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DIRECTORY_ENTRY." << DEBUG_INFO_INSIDEPE << std::endl;
+			CAPPED_LOGGING_END
 			return resource_directory_result::read_error;
 		}
 
@@ -190,8 +196,10 @@ PE::resource_directory_result PE::_read_image_resource_directory(image_resource_
 			std::uint64_t name_offset = 0;
 			if (name_relative_offset > std::numeric_limits<std::uint64_t>::max() - root_offset)
 			{
+				CAPPED_LOGGING_ERROR
 				PRINT_ERROR << "Invalid IMAGE_RESOURCE_DIRECTORY_ENTRY name offset."
 					<< DEBUG_INFO_INSIDEPE << std::endl;
+				CAPPED_LOGGING_END
 				valid_name = false;
 			}
 			else {
@@ -201,8 +209,10 @@ PE::resource_directory_result PE::_read_image_resource_directory(image_resource_
 				(name_offset > std::numeric_limits<unsigned int>::max() ||
 				!fits_file_range(name_offset, sizeof(std::uint16_t), _file_size) ||
 				!seek_absolute(_file_handle.get(), name_offset))) {
+				CAPPED_LOGGING_ERROR
 				PRINT_ERROR << "Invalid IMAGE_RESOURCE_DIRECTORY_ENTRY name bounds."
 					<< DEBUG_INFO_INSIDEPE << std::endl;
+				CAPPED_LOGGING_END
 				valid_name = false;
 			}
 
@@ -213,8 +223,10 @@ PE::resource_directory_result PE::_read_image_resource_directory(image_resource_
 					2 * static_cast<std::uint64_t>(name_length), _file_size) ||
 				!utils::read_string_at_offset(_file_handle.get(),
 					static_cast<unsigned int>(name_offset), entry->NameStr, true))) {
+				CAPPED_LOGGING_ERROR
 				PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DIRECTORY_ENTRY's name."
 					<< DEBUG_INFO_INSIDEPE << std::endl;
+				CAPPED_LOGGING_END
 				valid_name = false;
 			}
 			if (!fits_file_range(saved_offset, 0, _file_size) ||
@@ -299,8 +311,10 @@ bool PE::_parse_resources()
 					static_cast<std::uint64_t>((*it3)->OffsetToData & 0x7fffffffu);
 				if (data_entry_rva > std::numeric_limits<std::uint32_t>::max())
 				{
+					CAPPED_LOGGING_ERROR
 					PRINT_ERROR << "Invalid IMAGE_RESOURCE_DATA_ENTRY relative RVA."
 						<< DEBUG_INFO_INSIDEPE << std::endl;
+					CAPPED_LOGGING_END
 					continue;
 				}
 				const std::uint64_t data_entry_offset = rva_to_offset(data_entry_rva);
@@ -308,14 +322,18 @@ bool PE::_parse_resources()
 					!fits_file_range(data_entry_offset, IMAGE_RESOURCE_DATA_ENTRY_SIZE, _file_size) ||
 					!seek_absolute(_file_handle.get(), data_entry_offset))
 				{
+					CAPPED_LOGGING_ERROR
 					PRINT_ERROR << "Invalid IMAGE_RESOURCE_DATA_ENTRY bounds."
 						<< DEBUG_INFO_INSIDEPE << std::endl;
+					CAPPED_LOGGING_END
 					continue;
 				}
 
 				if (sizeof(image_resource_data_entry) != fread(&entry, 1, sizeof(image_resource_data_entry), _file_handle.get()))
 				{
+					CAPPED_LOGGING_ERROR
 					PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DATA_ENTRY." << DEBUG_INFO_INSIDEPE << std::endl;
+					CAPPED_LOGGING_END
 					continue;
 				}
 
@@ -366,20 +384,24 @@ bool PE::_parse_resources()
 				}
 				if (payload_offset > std::numeric_limits<std::uint32_t>::max() ||
 					!fits_file_range(payload_offset, entry.Size, _file_size)) {
+					CAPPED_LOGGING_ERROR
 					PRINT_ERROR << "Invalid IMAGE_RESOURCE_DATA_ENTRY payload bounds."
 						<< DEBUG_INFO_INSIDEPE << std::endl;
+					CAPPED_LOGGING_END
 					continue;
 				}
 				const std::uint32_t offset = static_cast<std::uint32_t>(payload_offset);
 				pResource res;
 				if (entry.Size == 0)
 				{
+					CAPPED_LOGGING_WARNING
 					if (r_name != "") {
 						PRINT_WARNING << "Resource " << r_name << " has a size of 0!" << DEBUG_INFO_INSIDEPE << std::endl;
 					}
 					else {
 						PRINT_WARNING << "Resource " << id << " has a size of 0!" << DEBUG_INFO_INSIDEPE << std::endl;
 					}
+					CAPPED_LOGGING_END
 					continue;
 				}
 

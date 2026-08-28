@@ -17,6 +17,8 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <algorithm>
+#include <cstdlib>
 #include <memory>
 #include <sstream>
 #include <string>
@@ -59,10 +61,10 @@ Asn1StringPtr make_asn1_string(const std::vector<std::uint8_t>& bytes)
 class ErrorCapture
 {
 public:
-	ErrorCapture()
+	explicit ErrorCapture(utils::LogLevel level = utils::LogLevel::ERROR)
 		: previous_level(utils::get_log_level()),
 		  previous_buffer(std::cerr.rdbuf(captured.rdbuf()))
-	{ utils::set_log_level(utils::LogLevel::ERROR); }
+	{ utils::set_log_level(level); }
 
 	~ErrorCapture()
 	{
@@ -225,6 +227,104 @@ BOOST_AUTO_TEST_CASE(malformed_certificate_does_not_hide_later_valid_certificate
 	BOOST_CHECK_NE(errors.str().find(
 		"Ignoring a certificate with malformed SpcIndirectDataContent."), std::string::npos);
 	BOOST_CHECK_EQUAL(*result->get_summary(), "The PE is digitally signed.");
+}
+
+BOOST_AUTO_TEST_CASE(cap_undecodable_pkcs7_warnings_without_stopping_certificate_scan)
+{
+	const char* const test_name =
+		"authenticode_openssl/cap_undecodable_pkcs7_warnings_without_stopping_certificate_scan";
+	if (!is_cap_test_child(test_name)) {
+		BOOST_REQUIRE_EQUAL(run_cap_test_child(test_name), EXIT_SUCCESS);
+		return;
+	}
+
+	auto bytes = read_binary_file("testfiles/manatest.exe");
+	constexpr size_t security_directory_size = 0x18c;
+	constexpr size_t certificate = 0x2e00;
+	constexpr size_t certificate_length = 0x11e8;
+	const size_t malformed_certificates = LOG_CAP + 5;
+	const std::vector<std::uint8_t> valid_certificate(
+		bytes.begin() + certificate,
+		bytes.begin() + certificate + certificate_length);
+	bytes.resize(certificate);
+	for (size_t i = 0; i < malformed_certificates; ++i) {
+		const size_t record = bytes.size();
+		bytes.insert(bytes.end(), valid_certificate.begin(), valid_certificate.end());
+		std::fill(bytes.begin() + record + 8,
+			bytes.begin() + record + certificate_length, 0);
+	}
+	bytes.insert(bytes.end(), valid_certificate.begin(), valid_certificate.end());
+	write_u32(bytes, security_directory_size,
+		static_cast<std::uint32_t>((malformed_certificates + 1) * certificate_length));
+
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "testfiles/manatest.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_REQUIRE_EQUAL(pe->get_certificates()->size(), malformed_certificates + 1);
+	std::unique_ptr<plugin::IPlugin, void (*)(plugin::IPlugin*)> authenticode(
+		plugin::create(), plugin::destroy);
+	ErrorCapture errors(utils::LogLevel::WARNING);
+	auto result = authenticode->analyze(*pe);
+
+	BOOST_REQUIRE(result);
+	BOOST_CHECK_EQUAL(*result->get_summary(), "The PE is digitally signed.");
+	const std::string output = errors.str();
+	const std::string diagnostic = "Error reading the PKCS7 certificate.";
+	size_t diagnostic_count = 0;
+	for (size_t offset = 0; (offset = output.find(diagnostic, offset)) != std::string::npos;
+		offset += diagnostic.size()) {
+		++diagnostic_count;
+	}
+	BOOST_CHECK_GT(diagnostic_count, 0);
+	BOOST_CHECK_LT(diagnostic_count, malformed_certificates);
+}
+
+BOOST_AUTO_TEST_CASE(cap_malformed_asn1_diagnostics_without_stopping_certificate_scan)
+{
+	const char* const test_name =
+		"authenticode_openssl/cap_malformed_asn1_diagnostics_without_stopping_certificate_scan";
+	if (!is_cap_test_child(test_name)) {
+		BOOST_REQUIRE_EQUAL(run_cap_test_child(test_name), EXIT_SUCCESS);
+		return;
+	}
+
+	auto bytes = read_binary_file("testfiles/manatest.exe");
+	constexpr size_t security_directory_size = 0x18c;
+	constexpr size_t certificate = 0x2e00;
+	constexpr size_t certificate_length = 0x11e8;
+	const size_t malformed_certificates = LOG_CAP + 5;
+	const std::vector<std::uint8_t> valid_certificate(
+		bytes.begin() + certificate,
+		bytes.begin() + certificate + certificate_length);
+	bytes.resize(certificate);
+	for (size_t i = 0; i < malformed_certificates; ++i) {
+		const size_t record = bytes.size();
+		bytes.insert(bytes.end(), valid_certificate.begin(), valid_certificate.end());
+		// The final value byte of the nested algorithm OID requires a continuation.
+		bytes[record + 8 + 100] |= 0x80;
+	}
+	bytes.insert(bytes.end(), valid_certificate.begin(), valid_certificate.end());
+	write_u32(bytes, security_directory_size,
+		static_cast<std::uint32_t>((malformed_certificates + 1) * certificate_length));
+
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "testfiles/manatest.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_REQUIRE_EQUAL(pe->get_certificates()->size(), malformed_certificates + 1);
+	std::unique_ptr<plugin::IPlugin, void (*)(plugin::IPlugin*)> authenticode(
+		plugin::create(), plugin::destroy);
+	ErrorCapture errors(utils::LogLevel::WARNING);
+	auto result = authenticode->analyze(*pe);
+
+	BOOST_REQUIRE(result);
+	BOOST_CHECK_EQUAL(*result->get_summary(), "The PE is digitally signed.");
+	const std::string output = errors.str();
+	const std::string diagnostic = "Tried to convert a malformed OID";
+	size_t diagnostic_count = 0;
+	for (size_t offset = 0; (offset = output.find(diagnostic, offset)) != std::string::npos;
+		offset += diagnostic.size()) {
+		++diagnostic_count;
+	}
+	BOOST_CHECK_GT(diagnostic_count, 0);
+	BOOST_CHECK_LT(diagnostic_count, malformed_certificates);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

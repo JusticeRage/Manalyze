@@ -18,6 +18,7 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include <atomic>
 #include <cstddef>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <fstream>
 #include <limits>
@@ -260,6 +261,82 @@ BOOST_AUTO_TEST_CASE(keep_valid_resource_after_invalid_data_entry_offset)
 	BOOST_REQUIRE_EQUAL(resources->size(), 1);
 	BOOST_CHECK_EQUAL(*resources->front()->get_language(), "French - France");
 	BOOST_CHECK_NE(errors.str().find("IMAGE_RESOURCE_DATA_ENTRY"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(cap_invalid_resource_leaf_diagnostics_without_stopping_scan)
+{
+	const char* const test_name =
+		"resources/cap_invalid_resource_leaf_diagnostics_without_stopping_scan";
+	if (!is_cap_test_child(test_name)) {
+		BOOST_REQUIRE_EQUAL(run_cap_test_child(test_name), EXIT_SUCCESS);
+		return;
+	}
+
+	const size_t malformed_entries = LOG_CAP + 5;
+	auto bytes = make_repeated_resource_tree(1, 1,
+		static_cast<std::uint16_t>(malformed_entries + 1));
+	constexpr size_t first_language_entry = 0x2040;
+	for (size_t i = 0; i < malformed_entries; ++i) {
+		write_u32(bytes, first_language_entry + 8 * i + 4, 0x7ffffff0);
+	}
+
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(),
+		"capped-resource-leaf-errors.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	const auto resources = pe->get_resources();
+	BOOST_REQUIRE_EQUAL(resources->size(), 1);
+	const auto payload = resources->front()->get_raw_data();
+	BOOST_REQUIRE_EQUAL(payload->size(), 1);
+	BOOST_CHECK_EQUAL(payload->front(), 0x41);
+
+	const std::string output = errors.str();
+	const std::string diagnostic = "Invalid IMAGE_RESOURCE_DATA_ENTRY bounds.";
+	size_t diagnostic_count = 0;
+	for (size_t offset = 0; (offset = output.find(diagnostic, offset)) != std::string::npos;
+		offset += diagnostic.size()) {
+		++diagnostic_count;
+	}
+	BOOST_CHECK_GT(diagnostic_count, 0);
+	BOOST_CHECK_LT(diagnostic_count, malformed_entries);
+}
+
+BOOST_AUTO_TEST_CASE(cap_invalid_resource_child_directory_diagnostics_without_stopping_scan)
+{
+	const char* const test_name =
+		"resources/cap_invalid_resource_child_directory_diagnostics_without_stopping_scan";
+	if (!is_cap_test_child(test_name)) {
+		BOOST_REQUIRE_EQUAL(run_cap_test_child(test_name), EXIT_SUCCESS);
+		return;
+	}
+
+	const size_t malformed_entries = LOG_CAP + 5;
+	auto bytes = make_repeated_resource_tree(
+		static_cast<std::uint16_t>(malformed_entries + 1), 1, 1);
+	constexpr size_t first_root_entry = 0x2010;
+	for (size_t i = 0; i < malformed_entries; ++i) {
+		write_u32(bytes, first_root_entry + 8 * i + 4, 0xfffffff0u);
+	}
+
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(),
+		"capped-resource-child-directory-errors.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	const auto resources = pe->get_resources();
+	BOOST_REQUIRE_EQUAL(resources->size(), 1);
+	const auto payload = resources->front()->get_raw_data();
+	BOOST_REQUIRE_EQUAL(payload->size(), 1);
+	BOOST_CHECK_EQUAL(payload->front(), 0x41);
+
+	const std::string output = errors.str();
+	const std::string diagnostic = "Invalid IMAGE_RESOURCE_DIRECTORY bounds.";
+	size_t diagnostic_count = 0;
+	for (size_t offset = 0; (offset = output.find(diagnostic, offset)) != std::string::npos;
+		offset += diagnostic.size()) {
+		++diagnostic_count;
+	}
+	BOOST_CHECK_GT(diagnostic_count, 0);
+	BOOST_CHECK_LT(diagnostic_count, malformed_entries);
 }
 
 BOOST_AUTO_TEST_CASE(keep_valid_resource_after_malformed_named_directory_entry)

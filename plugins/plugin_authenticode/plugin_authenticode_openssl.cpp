@@ -195,8 +195,10 @@ class OpenSSLAuthenticodePlugin : public IPlugin
             const auto certificate_size = it->Certificate.size();
             if (certificate_size == 0 ||
                 certificate_size > static_cast<size_t>(std::numeric_limits<int>::max())) {
+                CAPPED_LOGGING_WARNING
                 PRINT_WARNING << "[plugin_authenticode] Ignoring a PKCS7 certificate with an invalid size."
                     << std::endl;
+                CAPPED_LOGGING_END
                 continue;
             }
 
@@ -204,14 +206,18 @@ class OpenSSLAuthenticodePlugin : public IPlugin
             pBIO bio(BIO_new_mem_buf(it->Certificate.data(), static_cast<int>(certificate_size)), BIO_free);
             if (bio == nullptr) 
             {
+                CAPPED_LOGGING_WARNING
                 PRINT_WARNING << "[plugin_authenticode] Could not initialize a BIO." << std::endl;
+                CAPPED_LOGGING_END
                 continue;
             }
             
             pPKCS7 p(d2i_PKCS7_bio(bio.get(), nullptr), PKCS7_free);
             if (p == nullptr || !check_pkcs_sanity(p))
             {
+                CAPPED_LOGGING_WARNING
                 PRINT_WARNING << "[plugin_authenticode] Error reading the PKCS7 certificate." << std::endl;
+                CAPPED_LOGGING_END
                 continue;
             }
 

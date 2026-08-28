@@ -24,9 +24,11 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <atomic>
 #include <cerrno>
 #include <cstdlib>
 #include <sstream>
+#include <thread>
 
 #if defined(_WIN32)
 #	include <windows.h>
@@ -142,21 +144,21 @@ std::string fixture_compatible_argv0()
 	return (fs::current_path().parent_path() / "bin" / original.filename()).string();
 }
 
-int run_cap_test_child()
+int run_cap_test_child_impl(const char* test_name)
 {
 	const std::string executable = current_test_executable();
 	if (executable.empty()) {
 		return EXIT_FAILURE;
 	}
 	const std::string argv0 = fixture_compatible_argv0();
-	const std::string run_test = std::string("--run_test=") + CAP_TEST_NAME;
+	const std::string run_test = std::string("--run_test=") + test_name;
 
 #if defined(_WIN32)
 	std::string command_line = "\"" + argv0 + "\" " + run_test + " --log_level=error";
 	STARTUPINFOA startup_info = {};
 	startup_info.cb = sizeof(startup_info);
 	PROCESS_INFORMATION process_info = {};
-	if (!::SetEnvironmentVariableA(CAP_TEST_CHILD, "1")) {
+	if (!::SetEnvironmentVariableA(CAP_TEST_CHILD, test_name)) {
 		return EXIT_FAILURE;
 	}
 	const BOOL created = ::CreateProcessA(executable.c_str(), command_line.data(), nullptr,
@@ -184,7 +186,7 @@ int run_cap_test_child()
 #else
 	const pid_t pid = ::fork();
 	if (pid == 0) {
-		if (::setenv(CAP_TEST_CHILD, "1", 1) != 0) {
+		if (::setenv(CAP_TEST_CHILD, test_name, 1) != 0) {
 			::_exit(EXIT_FAILURE);
 		}
 		char* const child_argv[] = {
@@ -308,6 +310,17 @@ std::vector<std::uint8_t> make_coff_string_pe(std::uint32_t table_size)
 }
 
 } // namespace
+
+int run_cap_test_child(const char* test_name)
+{
+	return run_cap_test_child_impl(test_name);
+}
+
+bool is_cap_test_child(const char* test_name)
+{
+	const char* const marker = std::getenv(CAP_TEST_CHILD);
+	return marker != nullptr && marker == std::string(test_name);
+}
 
 BOOST_GLOBAL_FIXTURE(SilenceLogsFixture);
 
@@ -1033,10 +1046,44 @@ BOOST_AUTO_TEST_CASE(capped_logging_respects_message_severity)
 	}
 }
 
+BOOST_AUTO_TEST_CASE(concurrent_capped_logging_counter)
+{
+	const char* const test_name = "resources/concurrent_capped_logging_counter";
+	if (!is_cap_test_child(test_name)) {
+		BOOST_REQUIRE_EQUAL(run_cap_test_child(test_name), EXIT_SUCCESS);
+		return;
+	}
+
+	constexpr size_t thread_count = 16;
+	constexpr size_t calls_per_thread = 4;
+	std::atomic<size_t> ready{0};
+	std::atomic<bool> start{false};
+	std::vector<std::thread> threads;
+	threads.reserve(thread_count);
+	for (size_t i = 0; i < thread_count; ++i) {
+		threads.emplace_back([&]() {
+			ready.fetch_add(1, std::memory_order_relaxed);
+			while (!start.load(std::memory_order_acquire)) {
+				std::this_thread::yield();
+			}
+			for (size_t call = 0; call < calls_per_thread; ++call) {
+				utils::is_log_cap_reached();
+			}
+		});
+	}
+	while (ready.load(std::memory_order_relaxed) != thread_count) {
+		std::this_thread::yield();
+	}
+	start.store(true, std::memory_order_release);
+	for (auto& thread : threads) {
+		thread.join();
+	}
+}
+
 BOOST_AUTO_TEST_CASE(cap_malformed_debug_diagnostics_without_stopping_scan)
 {
-	if (std::getenv(CAP_TEST_CHILD) == nullptr) {
-		BOOST_REQUIRE_EQUAL(run_cap_test_child(), EXIT_SUCCESS);
+	if (!is_cap_test_child(CAP_TEST_NAME)) {
+		BOOST_REQUIRE_EQUAL(run_cap_test_child(CAP_TEST_NAME), EXIT_SUCCESS);
 		return;
 	}
 

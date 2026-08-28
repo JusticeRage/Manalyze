@@ -40,8 +40,10 @@ bool asn1_read(const unsigned char*& cursor,
     if (!cursor || remaining == 0 ||
         remaining > static_cast<std::size_t>(std::numeric_limits<long>::max()))
     {
+        CAPPED_LOGGING_ERROR
         PRINT_ERROR << "[plugin_authenticode] Invalid " << object_name
                     << " ASN.1 input span." << std::endl;
+        CAPPED_LOGGING_END
         return false;
     }
 
@@ -56,8 +58,10 @@ bool asn1_read(const unsigned char*& cursor,
         value_length < 0 || object_class != V_ASN1_UNIVERSAL ||
         tag != expected_tag || constructed != expected_constructed)
     {
+        CAPPED_LOGGING_ERROR
         PRINT_ERROR << "[plugin_authenticode] Invalid " << object_name
                     << " ASN.1 object." << std::endl;
+        CAPPED_LOGGING_END
         return false;
     }
 
@@ -65,15 +69,19 @@ bool asn1_read(const unsigned char*& cursor,
     if (header_difference < 0 ||
         static_cast<std::size_t>(header_difference) > remaining)
     {
+        CAPPED_LOGGING_ERROR
         PRINT_ERROR << "[plugin_authenticode] Invalid " << object_name
                     << " ASN.1 header extent." << std::endl;
+        CAPPED_LOGGING_END
         return false;
     }
     const std::size_t header_size = static_cast<std::size_t>(header_difference);
     if (static_cast<std::size_t>(value_length) > remaining - header_size)
     {
+        CAPPED_LOGGING_ERROR
         PRINT_ERROR << "[plugin_authenticode] Invalid " << object_name
                     << " ASN.1 value extent." << std::endl;
+        CAPPED_LOGGING_END
         return false;
     }
 
@@ -91,8 +99,10 @@ bool no_trailing_bytes(std::size_t remaining, const char* object_name)
     {
         return true;
     }
+    CAPPED_LOGGING_ERROR
     PRINT_ERROR << "[plugin_authenticode] Invalid " << object_name
                 << " ASN.1 object: trailing bytes." << std::endl;
+    CAPPED_LOGGING_END
     return false;
 }
 
@@ -121,7 +131,9 @@ std::string OID_to_string(const bytes& in)
         {
             if (i+1 >= in.size()) // Don't read outside of the bounds.
             {
+                CAPPED_LOGGING_WARNING
                 PRINT_WARNING << "[plugin_authenticode] Tried to convert a malformed OID!" << std::endl;
+                CAPPED_LOGGING_END
                 return "";
             }
             ss << static_cast<int>((in[i]-128)*128 + in[i+1]);
@@ -137,13 +149,17 @@ bool check_pkcs_sanity(const pPKCS7& p)
 {
     if (p == nullptr)
     {
+        CAPPED_LOGGING_WARNING
         PRINT_WARNING << "[plugin_authenticode] Error reading the PKCS7 certificate." << std::endl;
+        CAPPED_LOGGING_END
         return false;
     }
 
     if (!PKCS7_type_is_signed(p.get()))
     {
+        CAPPED_LOGGING_WARNING
         PRINT_WARNING << "[plugin_authenticode] The PKCS7 structure is not signed!" << std::endl;
+        CAPPED_LOGGING_END
         return false;
     }
 
@@ -156,8 +172,10 @@ bool check_pkcs_sanity(const pPKCS7& p)
         p->d.sign->contents->d.other == nullptr ||
         p->d.sign->contents->d.other->value.asn1_string == nullptr)
     {
+        CAPPED_LOGGING_WARNING
         PRINT_WARNING << "[plugin_authenticode] Unable to access the "
                          "SpcIndirectDataContent structure." << std::endl;
+        CAPPED_LOGGING_END
         return false;
     }
 
@@ -166,8 +184,10 @@ bool check_pkcs_sanity(const pPKCS7& p)
               p->d.sign->contents->type->data + p->d.sign->contents->type->length);
     if (OID_to_string(oid) != SPC_INDIRECT_DATA)
     {
+        CAPPED_LOGGING_WARNING
         PRINT_WARNING << "[plugin_authenticode] Unable to access the "
                          "SpcIndirectDataContent structure." << std::endl;
+        CAPPED_LOGGING_END
         return false;
     }
 
@@ -181,8 +201,10 @@ bool parse_spc_asn1(const ASN1_STRING* asn1, AuthenticodeDigest& digest)
     const int encoded_length = asn1 ? ASN1_STRING_length(asn1) : 0;
     if (encoded_length <= 0)
     {
+        CAPPED_LOGGING_ERROR
         PRINT_ERROR << "[plugin_authenticode] Invalid SpcIndirectDataContent"
                        " ASN.1 input span." << std::endl;
+        CAPPED_LOGGING_END
         return false;
     }
 #if OPENSSL_VERSION_NUMBER >= 0x10100000L
@@ -192,8 +214,10 @@ bool parse_spc_asn1(const ASN1_STRING* asn1, AuthenticodeDigest& digest)
 #endif
     if (!cursor)
     {
+        CAPPED_LOGGING_ERROR
         PRINT_ERROR << "[plugin_authenticode] Invalid SpcIndirectDataContent"
                        " ASN.1 input span." << std::endl;
+        CAPPED_LOGGING_END
         return false;
     }
     std::size_t remaining = static_cast<std::size_t>(encoded_length);
@@ -226,8 +250,10 @@ bool parse_spc_asn1(const ASN1_STRING* asn1, AuthenticodeDigest& digest)
                                     attribute_oid.data + attribute_oid.size);
     if (OID_to_string(attribute_oid_bytes) != SPC_PE_IMAGE_DATAOBJ)
     {
+        CAPPED_LOGGING_ERROR
         PRINT_ERROR << "[plugin_authenticode] Invalid SpcAttributeTypeAndOptionalValue type OID."
                     << std::endl;
+        CAPPED_LOGGING_END
         return false;
     }
 
@@ -271,8 +297,10 @@ bool parse_spc_asn1(const ASN1_STRING* asn1, AuthenticodeDigest& digest)
                    "AlgorithmIdentifier parameters", parameters) ||
         parameters.size != 0)
     {
+        CAPPED_LOGGING_ERROR
         PRINT_ERROR << "[plugin_authenticode] Invalid AlgorithmIdentifier parameters."
                     << std::endl;
+        CAPPED_LOGGING_END
         return false;
     }
     if (!no_trailing_bytes(algorithm_remaining, "AlgorithmIdentifier"))
@@ -294,7 +322,9 @@ bool parse_spc_asn1(const ASN1_STRING* asn1, AuthenticodeDigest& digest)
     parsed.algorithm = OID_to_string(algorithm_oid_bytes);
     if (parsed.algorithm.empty())
     {
+        CAPPED_LOGGING_ERROR
         PRINT_ERROR << "[plugin_authenticode] Invalid algorithm OID." << std::endl;
+        CAPPED_LOGGING_END
         return false;
     }
     parsed.digest.assign(digest_value.data, digest_value.data + digest_value.size);
