@@ -111,6 +111,7 @@ bool PE::_parse_imports()
 		get_architecture() != PE::x86, limits, diagnostics);
 
 	for (const auto& parsed_library : parsed.libraries) {
+		if (!parsed_library.name_materialized) continue;
 		pImportedLibrary library;
 		if (parsed_library.delay_loaded) {
 			library = pImportedLibrary(new ImportedLibrary(parsed_library.name));

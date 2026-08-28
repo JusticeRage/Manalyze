@@ -338,7 +338,10 @@ BOOST_AUTO_TEST_CASE(import_descriptor_budget_preserves_completed_output)
 		import_limits(1), diagnostics, &metrics);
 
 	BOOST_CHECK(result.exhausted);
-	BOOST_CHECK(result.libraries.empty());
+	BOOST_REQUIRE_EQUAL(result.libraries.size(), 1);
+	BOOST_REQUIRE(result.libraries[0].descriptor.has_value());
+	BOOST_CHECK_EQUAL(result.libraries[0].descriptor->OriginalFirstThunk, 1);
+	BOOST_CHECK(!result.libraries[0].name_materialized);
 	BOOST_CHECK_EQUAL(descriptor_reads, 2);
 	BOOST_CHECK_EQUAL(metrics.string_read_calls, 0);
 	BOOST_REQUIRE_EQUAL(diagnostics.size(), 1);
@@ -570,24 +573,79 @@ BOOST_AUTO_TEST_CASE(import_name_budget_function_materialization_boundaries)
 	}
 }
 
-BOOST_AUTO_TEST_CASE(import_string_failed_decode_is_charged_and_not_retried)
+BOOST_AUTO_TEST_CASE(import_name_budget_failed_function_use_is_not_cached)
 {
-	CompactImageBuilder image(0x400);
-	image.headers(0x80).image(0, 0x4000, 1);
-	image.section({0x300, 3, 0x100, 3});
-	put_descriptor(image, 0x20, 1, 0x300, 1);
-	put_descriptor(image, 0x34, 2, 0x300, 2);
-	put_descriptor(image, 0x48, 0, 0, 0);
-	image.put_ascii(0x100, "BAD", false);
-	image.put_ascii(0x300, "DIRECT.dll");
+	auto image = make_named_import_image("A.dll", true, "Func");
 	auto limits = import_limits();
-	limits.physical_string_bytes = 3;
+	limits.physical_string_bytes = 13;
+	limits.materialized_function_name_bytes = 3;
+	std::vector<mana::detail::ParserDiagnostic> diagnostics;
+	mana::detail::ImportMetrics metrics;
+
+	const auto result = parse_standard_imports(image.view(), 0x20, 40,
+		limits, diagnostics, &metrics);
+
+	BOOST_CHECK(result.exhausted);
+	BOOST_REQUIRE_EQUAL(result.libraries.size(), 1);
+	BOOST_CHECK(result.libraries[0].functions.empty());
+	BOOST_CHECK_EQUAL(metrics.string_read_calls, 2);
+	BOOST_CHECK_EQUAL(metrics.string_bytes_read, 13);
+	BOOST_CHECK_EQUAL(metrics.string_cache_hits, 0);
+	BOOST_CHECK_EQUAL(metrics.function_name_cache_entries, 0);
+}
+
+BOOST_AUTO_TEST_CASE(import_name_budget_existing_function_cache_survives_failure)
+{
+	auto image = make_repeated_dll_image(0x1000, 0x1000);
+	image.section({0x1000, 6, 0x100, 6});
+	image.section({0x3000, 7, 0x200, 7});
+	image.put_ascii(0x100, "A.dll");
+	image.put32(0x180, 0x3000);
+	image.put32(0x188, 0x3000);
+	image.put16(0x200, 9);
+	image.put_ascii(0x202, "Func");
+	auto limits = import_limits();
+	limits.physical_string_bytes = 13;
+	limits.materialized_dll_name_bytes = 10;
+	limits.materialized_function_name_bytes = 4;
 	std::vector<mana::detail::ParserDiagnostic> diagnostics;
 	mana::detail::ImportMetrics metrics;
 
 	const auto result = parse_standard_imports(image.view(), 0x20, 60,
 		limits, diagnostics, &metrics);
 
+	BOOST_CHECK(result.exhausted);
+	BOOST_REQUIRE_EQUAL(result.libraries.size(), 2);
+	BOOST_REQUIRE_EQUAL(result.libraries[0].functions.size(), 1);
+	BOOST_CHECK(result.libraries[1].functions.empty());
+	BOOST_CHECK_EQUAL(metrics.string_read_calls, 2);
+	BOOST_CHECK_EQUAL(metrics.string_bytes_read, 13);
+	BOOST_CHECK_EQUAL(metrics.string_cache_hits, 2);
+	BOOST_CHECK_EQUAL(metrics.function_name_cache_entries, 1);
+}
+
+BOOST_AUTO_TEST_CASE(import_string_failed_decode_is_charged_and_not_retried)
+{
+	CompactImageBuilder image(0x400);
+	image.headers(0x80).image(0, 0x4000, 1);
+	image.section({0x300, 3, 0x100, 3});
+	image.section({0x2000, 32, 0x180, 32});
+	put_descriptor(image, 0x20, 1, 0x300, 1);
+	put_descriptor(image, 0x34, 0, 0, 0);
+	image.put_ascii(0x100, "BAD", false);
+	image.put32(0x184, 0x300);
+	auto limits = import_limits();
+	limits.physical_string_bytes = 3;
+	std::vector<mana::detail::ParserDiagnostic> diagnostics;
+	mana::detail::ImportMetrics metrics;
+
+	const auto result = mana::detail::parse_imports(image.view(), {0x20, 40},
+		{0x2000, 32}, false, limits,
+		[&](mana::detail::ParserDiagnostic diagnostic) {
+			diagnostics.push_back(diagnostic);
+		}, &metrics);
+
+	BOOST_CHECK(result.exhausted);
 	BOOST_CHECK(result.libraries.empty());
 	BOOST_CHECK_EQUAL(metrics.string_read_calls, 1);
 	BOOST_CHECK_EQUAL(metrics.string_bytes_read, 3);

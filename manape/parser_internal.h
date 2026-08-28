@@ -61,6 +61,7 @@ struct ImportMetrics
 	std::uint64_t thunk_slot_reads = 0;
 	std::uint64_t thunk_cache_hits = 0;
 	std::uint64_t duplicate_checks = 0;
+	std::uint64_t function_name_cache_entries = 0;
 };
 
 enum class StringSourceKind { mapped_rva, direct_file_offset };
@@ -108,6 +109,7 @@ struct ParsedImportLibrary
 	std::optional<image_import_descriptor> descriptor;
 	std::string name;
 	std::vector<import_lookup_table> functions;
+	bool name_materialized = false;
 };
 
 struct ImportParseResult

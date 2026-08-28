@@ -225,6 +225,10 @@ bool traverse_import_table(const ImageView& image, std::uint64_t table_rva,
 			if (!decoded.cache_hit) {
 				context.successful_function_names.emplace(decoded.key,
 					std::move(decoded.value));
+				if (context.metrics) {
+					context.metrics->function_name_cache_entries =
+						context.successful_function_names.size();
+				}
 			}
 		}
 
@@ -269,7 +273,7 @@ bool materialize_library_name(const ImageView& image,
 		return false;
 	}
 	result.libraries.push_back({delay_loaded, descriptor,
-		decoded.value, {}});
+		decoded.value, {}, true});
 	if (!decoded.cache_hit) {
 		context.successful_dll_strings.emplace(decoded.key,
 			std::move(decoded.value));
@@ -419,6 +423,12 @@ ImportParseResult parse_imports(const ImageView& image,
 	if (standard_can_continue && !terminated && !context.exhausted) {
 		emit_diagnostic(diagnostics,
 			ParserDiagnostic::import_descriptor_unterminated);
+	}
+	if (context.exhausted) {
+		result.libraries.reserve(descriptors.size());
+		for (const auto& descriptor : descriptors) {
+			result.libraries.push_back({false, descriptor, {}, {}, false});
+		}
 	}
 
 	bool standard_names_valid = true;
