@@ -26,6 +26,10 @@
 #include "manape/pe.h"
 #include "import_hash.h"
 
+std::vector<std::uint8_t> make_delay_import_pe(std::uint32_t attributes,
+	bool add_second_descriptor);
+std::vector<std::uint8_t> make_delay_import_standard_exhaustion_pe();
+
 namespace {
 
 class ErrorCapture
@@ -436,6 +440,48 @@ BOOST_AUTO_TEST_CASE(import_name_objects_do_not_share_mutable_state)
 	first_functions->front()->Name = "mutated";
 	BOOST_CHECK_NE(first_functions->front()->Name,
 		second_functions->front()->Name);
+}
+
+BOOST_AUTO_TEST_CASE(delay_import_attributes_remain_rva_and_second_is_ignored)
+{
+	for (const std::uint32_t attributes : {0U, 1U}) {
+		const auto bytes = make_delay_import_pe(attributes, true);
+		auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(),
+			"delay-rva-compatibility.exe");
+
+		BOOST_REQUIRE(pe && pe->is_valid());
+		const auto delay = pe->get_delay_load_table();
+		BOOST_REQUIRE(delay);
+		BOOST_CHECK_EQUAL(delay->Attributes, attributes);
+		BOOST_CHECK_EQUAL(delay->NameStr, "ADVAPI32.dll");
+		const auto imports = pe->get_imports();
+		BOOST_REQUIRE(imports);
+		BOOST_CHECK_EQUAL(std::count_if(imports->begin(), imports->end(),
+			[](const mana::pImportedLibrary& library) {
+				return library->get_type() ==
+					mana::ImportedLibrary::DELAY_LOADED;
+			}), 1);
+		check_valid_delay_import(*pe);
+	}
+}
+
+BOOST_AUTO_TEST_CASE(delay_import_suppressed_after_standard_exhaustion)
+{
+	const auto bytes = make_delay_import_standard_exhaustion_pe();
+	ErrorCapture logs;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(),
+		"standard-exhaustion-with-delay.exe");
+
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(!pe->get_delay_load_table());
+	BOOST_REQUIRE(pe->find_imported_dlls("ADVAPI32\\.dll"));
+	BOOST_CHECK(pe->find_imported_dlls("ADVAPI32\\.dll")->empty());
+	BOOST_REQUIRE(pe->get_debug_info());
+	BOOST_CHECK_EQUAL(pe->get_debug_info()->size(), 4);
+	BOOST_REQUIRE(pe->get_config());
+	BOOST_CHECK_EQUAL(pe->get_config()->Size, 0x94);
+	BOOST_CHECK_NE(logs.str().find("Import parsing work budget exhausted."),
+		std::string::npos);
 }
 
 // ----------------------------------------------------------------------------

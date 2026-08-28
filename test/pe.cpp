@@ -1504,6 +1504,10 @@ BOOST_AUTO_TEST_CASE(parse_delayed_imports)
 	BOOST_CHECK_EQUAL(lib->get_type(), mana::ImportedLibrary::DELAY_LOADED);
 	BOOST_CHECK(lib->get_image_import_descriptor() == nullptr); // No image import descriptor for delay-loaded DLLs.
 	BOOST_CHECK_EQUAL(lib->get_imports()->size(), 1);
+	BOOST_REQUIRE(!imports->empty());
+	BOOST_CHECK(imports->back() == lib);
+	BOOST_CHECK_EQUAL(imports->back()->get_imports()->front()->Name,
+		"CryptAcquireContextW");
 }
 
 // ----------------------------------------------------------------------------

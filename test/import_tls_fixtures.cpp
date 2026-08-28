@@ -134,6 +134,62 @@ std::vector<std::uint8_t> make_import_extent_pe(std::uint32_t rva,
 	return bytes;
 }
 
+std::vector<std::uint8_t> make_delay_import_pe(std::uint32_t attributes,
+	bool add_second_descriptor)
+{
+	auto bytes = read_binary_file("testfiles/manatest3.exe");
+	constexpr std::size_t delay_descriptor = 0x2670;
+	require_range(bytes.size(), delay_descriptor, 64);
+	write_u32(bytes, delay_descriptor, attributes);
+	if (add_second_descriptor) {
+		std::copy_n(bytes.begin() + delay_descriptor, 32,
+			bytes.begin() + delay_descriptor + 32);
+	}
+	return bytes;
+}
+
+std::vector<std::uint8_t> make_delay_import_standard_exhaustion_pe()
+{
+	auto bytes = make_delay_import_pe(1, false);
+	constexpr std::size_t optional_header = 0x108;
+	constexpr std::size_t section_table = 0x1f8;
+	constexpr std::size_t new_section = section_table + 8 * 40;
+	constexpr std::size_t original_descriptor = 0x26e8;
+	constexpr std::uint32_t raw_offset = 0x4000;
+	constexpr std::uint32_t section_rva = 0xb000;
+	constexpr std::uint32_t descriptor_count = 65537;
+	constexpr std::uint32_t descriptor_bytes = descriptor_count * 20;
+	constexpr std::uint32_t raw_size =
+		(descriptor_bytes + 0x1ff) & ~std::uint32_t{0x1ff};
+	constexpr std::uint32_t image_size =
+		(section_rva + descriptor_bytes + 0xfff) & ~std::uint32_t{0xfff};
+	constexpr std::size_t import_directory = optional_header + 112 +
+		IMAGE_DIRECTORY_ENTRY_IMPORT * 8;
+
+	require_range(bytes.size(), original_descriptor, 20);
+	std::vector<std::uint8_t> descriptor(
+		bytes.begin() + original_descriptor,
+		bytes.begin() + original_descriptor + 20);
+	bytes.resize(raw_offset + raw_size, 0);
+	write_u16(bytes, 0xf6, 9);
+	write_u32(bytes, optional_header + 56, image_size);
+	std::fill_n(bytes.begin() + new_section, 40, 0);
+	const char name[] = ".imps";
+	std::copy(name, name + sizeof(name) - 1, bytes.begin() + new_section);
+	write_u32(bytes, new_section + 8, descriptor_bytes);
+	write_u32(bytes, new_section + 12, section_rva);
+	write_u32(bytes, new_section + 16, raw_size);
+	write_u32(bytes, new_section + 20, raw_offset);
+	write_u32(bytes, new_section + 36, 0x40000040);
+	for (std::uint32_t i = 0; i < descriptor_count; ++i) {
+		std::copy(descriptor.begin(), descriptor.end(),
+			bytes.begin() + raw_offset + static_cast<std::size_t>(i) * 20);
+	}
+	write_u32(bytes, import_directory, section_rva);
+	write_u32(bytes, import_directory + 4, descriptor_bytes);
+	return bytes;
+}
+
 std::vector<std::uint8_t> make_tls_callbacks_pe(bool pe32_plus,
 	const std::vector<std::uint64_t>&, bool, bool)
 {

@@ -45,6 +45,73 @@ void put_descriptor(CompactImageBuilder& image, std::size_t offset,
 	image.put32(offset + 16, first_thunk);
 }
 
+void put_delay_descriptor(CompactImageBuilder& image, std::size_t offset,
+	std::uint32_t attributes, std::uint32_t name, std::uint32_t name_table)
+{
+	image.put32(offset, attributes);
+	image.put32(offset + 4, name);
+	image.put32(offset + 8, 0x11111111);
+	image.put32(offset + 12, 0x22222222);
+	image.put32(offset + 16, name_table);
+	image.put32(offset + 20, 0x33333333);
+	image.put32(offset + 24, 0x44444444);
+	image.put32(offset + 28, 0x55555555);
+}
+
+CompactImageBuilder make_standard_delay_image(std::uint32_t attributes = 1,
+	bool add_second_delay = false, bool share_sources = false)
+{
+	CompactImageBuilder image(0x500);
+	image.headers(0xc0).image(0, 0x8000, 1);
+	image.section({0x1000, 6, 0x100, 6});
+	image.section({0x2000, 8, 0x200, 8});
+	image.section({0x3000, 6, 0x300, 6});
+	if (!share_sources) {
+		image.section({0x1100, 6, 0x110, 6});
+		image.section({0x2100, 12, 0x210, 12});
+		image.section({0x3100, 6, 0x310, 6});
+		image.section({0x3200, 6, 0x320, 6});
+	}
+
+	put_descriptor(image, 0x20, 0x2000, 0x1000, 0x2000);
+	put_descriptor(image, 0x34, 0, 0, 0);
+	const std::uint32_t delay_name = share_sources ? 0x1000 : 0x1100;
+	const std::uint32_t delay_table = share_sources ? 0x2000 : 0x2100;
+	put_delay_descriptor(image, 0x60, attributes, delay_name, delay_table);
+	if (add_second_delay) {
+		put_delay_descriptor(image, 0x80, attributes, delay_name, delay_table);
+	}
+
+	image.put_ascii(0x100, "A.dll");
+	image.put32(0x200, 0x3000);
+	image.put32(0x204, 0);
+	image.put16(0x300, 1);
+	image.put_ascii(0x302, "One");
+	if (!share_sources) {
+		image.put_ascii(0x110, "B.dll");
+		image.put32(0x210, 0x3100);
+		image.put32(0x214, 0x3200);
+		image.put32(0x218, 0);
+		image.put16(0x310, 2);
+		image.put_ascii(0x312, "Two");
+		image.put16(0x320, 3);
+		image.put_ascii(0x322, "Tri");
+	}
+	return image;
+}
+
+mana::detail::ImportParseResult parse_standard_and_delay(
+	const mana::detail::ImageView& image,
+	const mana::detail::ImportLimits& limits,
+	std::vector<mana::detail::ParserDiagnostic>& diagnostics,
+	mana::detail::ImportMetrics* metrics = nullptr)
+{
+	return mana::detail::parse_imports(image, {0x20, 40}, {0x60, 64}, false,
+		limits, [&](mana::detail::ParserDiagnostic diagnostic) {
+			diagnostics.push_back(diagnostic);
+		}, metrics);
+}
+
 mana::detail::ImportParseResult parse_standard_imports(
 	const mana::detail::ImageView& image, std::uint32_t rva, std::uint32_t size,
 	const mana::detail::ImportLimits& limits,
@@ -1455,6 +1522,124 @@ BOOST_AUTO_TEST_CASE(import_function_limit_compact_boundaries)
 		BOOST_CHECK_EQUAL(metrics.duplicate_checks,
 			std::min<std::uint64_t>(limit, 2));
 	}
+}
+
+BOOST_AUTO_TEST_CASE(delay_import_reads_only_first_rva_record)
+{
+	for (const std::uint32_t attributes : {0U, 1U}) {
+		auto image = make_standard_delay_image(attributes, true);
+		std::vector<mana::detail::ParserDiagnostic> diagnostics;
+
+		const auto result = parse_standard_and_delay(image.view(),
+			{1, 3, 30, 10, 9}, diagnostics);
+
+		BOOST_REQUIRE_EQUAL(result.libraries.size(), 2);
+		BOOST_CHECK_EQUAL(result.libraries[0].name, "A.dll");
+		BOOST_CHECK_EQUAL(result.libraries[1].name, "B.dll");
+		BOOST_REQUIRE(result.delay_directory);
+		BOOST_CHECK_EQUAL(result.delay_directory->Attributes, attributes);
+		BOOST_CHECK_EQUAL(result.delay_directory->Name, 0x1100);
+		BOOST_CHECK_EQUAL(result.delay_directory->DelayImportNameTable, 0x2100);
+		BOOST_CHECK_EQUAL(result.delay_directory->NameStr, "B.dll");
+		BOOST_REQUIRE_EQUAL(result.libraries[1].functions.size(), 2);
+		BOOST_CHECK_EQUAL(result.libraries[1].functions[0].Name, "Two");
+		BOOST_CHECK_EQUAL(result.libraries[1].functions[1].Name, "Tri");
+		BOOST_CHECK(diagnostics.empty());
+	}
+}
+
+BOOST_AUTO_TEST_CASE(delay_import_uses_shared_budgets_but_not_descriptors)
+{
+	auto image = make_standard_delay_image();
+	std::vector<mana::detail::ParserDiagnostic> diagnostics;
+	const auto exact = parse_standard_and_delay(image.view(),
+		{1, 3, 30, 10, 9}, diagnostics);
+
+	BOOST_CHECK(!exact.exhausted);
+	BOOST_REQUIRE_EQUAL(exact.libraries.size(), 2);
+	BOOST_REQUIRE(exact.delay_directory);
+	BOOST_CHECK_EQUAL(exact.libraries[0].functions.size(), 1);
+	BOOST_CHECK_EQUAL(exact.libraries[1].functions.size(), 2);
+	BOOST_CHECK(diagnostics.empty());
+
+	diagnostics.clear();
+	const auto short_dll = parse_standard_and_delay(image.view(),
+		{1, 3, 30, 9, 9}, diagnostics);
+	BOOST_CHECK(short_dll.exhausted);
+	BOOST_REQUIRE_EQUAL(short_dll.libraries.size(), 1);
+	BOOST_CHECK(!short_dll.delay_directory);
+	BOOST_REQUIRE_EQUAL(diagnostics.size(), 1);
+	BOOST_CHECK(diagnostics[0] ==
+		mana::detail::ParserDiagnostic::import_budget_exhausted);
+}
+
+BOOST_AUTO_TEST_CASE(delay_import_reuses_exact_standard_name_and_thunk_rvas)
+{
+	auto image = make_standard_delay_image(1, false, true);
+	std::vector<mana::detail::ParserDiagnostic> diagnostics;
+	mana::detail::ImportMetrics metrics;
+
+	const auto result = parse_standard_and_delay(image.view(),
+		{1, 2, 12, 10, 6}, diagnostics, &metrics);
+
+	BOOST_REQUIRE_EQUAL(result.libraries.size(), 2);
+	BOOST_REQUIRE_EQUAL(result.libraries[0].functions.size(), 1);
+	BOOST_REQUIRE_EQUAL(result.libraries[1].functions.size(), 1);
+	BOOST_CHECK_EQUAL(result.libraries[0].name, "A.dll");
+	BOOST_CHECK_EQUAL(result.libraries[1].name, "A.dll");
+	BOOST_CHECK_EQUAL(result.libraries[0].functions[0].Name, "One");
+	BOOST_CHECK_EQUAL(result.libraries[1].functions[0].Name, "One");
+	BOOST_CHECK_EQUAL(metrics.string_read_calls, 2);
+	BOOST_CHECK_EQUAL(metrics.string_bytes_read, 12);
+	BOOST_CHECK_EQUAL(metrics.string_cache_hits, 2);
+	BOOST_CHECK_EQUAL(metrics.thunk_slot_reads, 2);
+	BOOST_CHECK_EQUAL(metrics.thunk_cache_hits, 1);
+	BOOST_CHECK(diagnostics.empty());
+}
+
+BOOST_AUTO_TEST_CASE(delay_import_exhaustion_preserves_library_and_functions)
+{
+	const std::vector<mana::detail::ImportLimits> limits{
+		{1, 2, 30, 10, 9},
+		{1, 3, 24, 10, 9},
+		{1, 3, 30, 10, 6},
+	};
+	for (const auto& limit : limits) {
+		auto image = make_standard_delay_image();
+		std::vector<mana::detail::ParserDiagnostic> diagnostics;
+
+		const auto result = parse_standard_and_delay(image.view(), limit,
+			diagnostics);
+
+		BOOST_CHECK(result.exhausted);
+		BOOST_REQUIRE_EQUAL(result.libraries.size(), 2);
+		BOOST_REQUIRE(result.delay_directory);
+		BOOST_CHECK_EQUAL(result.delay_directory->NameStr, "B.dll");
+		BOOST_REQUIRE_EQUAL(result.libraries[1].functions.size(), 1);
+		BOOST_CHECK_EQUAL(result.libraries[1].functions[0].Name, "Two");
+		BOOST_REQUIRE_EQUAL(diagnostics.size(), 1);
+		BOOST_CHECK(diagnostics[0] ==
+			mana::detail::ParserDiagnostic::import_budget_exhausted);
+	}
+}
+
+BOOST_AUTO_TEST_CASE(delay_import_is_suppressed_after_standard_exhaustion)
+{
+	auto image = make_standard_delay_image();
+	std::vector<mana::detail::ParserDiagnostic> diagnostics;
+
+	const auto result = parse_standard_and_delay(image.view(),
+		{0, 3, 30, 10, 9}, diagnostics);
+
+	BOOST_CHECK(result.exhausted);
+	BOOST_CHECK(!result.delay_directory);
+	BOOST_CHECK(std::none_of(result.libraries.begin(), result.libraries.end(),
+		[](const mana::detail::ParsedImportLibrary& library) {
+			return library.delay_loaded;
+		}));
+	BOOST_REQUIRE_EQUAL(diagnostics.size(), 1);
+	BOOST_CHECK(diagnostics[0] ==
+		mana::detail::ParserDiagnostic::import_budget_exhausted);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

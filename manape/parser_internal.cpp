@@ -341,6 +341,30 @@ bool materialize_library_name(const ImageView& image,
 	return true;
 }
 
+void parse_delay_import(const ImageView& image,
+	const image_data_directory& directory, bool pe32_plus,
+	ImportParseResult& result, ImportParseContext& context,
+	const DiagnosticSink& diagnostics)
+{
+	if (context.exhausted || directory.VirtualAddress == 0) return;
+
+	delay_load_directory_table delay{};
+	constexpr std::size_t record_size = 8 * sizeof(std::uint32_t);
+	if (!read_mapped_value(image, directory.VirtualAddress, &delay,
+		record_size)) {
+		return;
+	}
+	if (!materialize_library_name(image, delay.Name, false, true,
+		std::nullopt, result, context, diagnostics)) {
+		return;
+	}
+
+	delay.NameStr = result.libraries.back().name;
+	result.delay_directory = delay;
+	traverse_import_table(image, delay.DelayImportNameTable, pe32_plus,
+		result.libraries.back(), context, diagnostics);
+}
+
 } // namespace
 
 std::size_t StringCacheKeyHash::operator()(const StringCacheKey& key) const noexcept
@@ -533,18 +557,8 @@ ImportParseResult parse_imports(const ImageView& image,
 		}
 	}
 
-	if (!context.exhausted && delay_directory.VirtualAddress != 0) {
-		delay_load_directory_table delay{};
-		if (read_mapped_value(image, delay_directory.VirtualAddress, &delay,
-			8 * sizeof(std::uint32_t)) &&
-			materialize_library_name(image, delay.Name, false, true,
-				std::nullopt, result, context, diagnostics)) {
-			delay.NameStr = result.libraries.back().name;
-			result.delay_directory = delay;
-			traverse_import_table(image, delay.DelayImportNameTable, pe32_plus,
-				result.libraries.back(), context, diagnostics);
-		}
-	}
+	parse_delay_import(image, delay_directory, pe32_plus, result, context,
+		diagnostics);
 
 	result.exhausted = context.exhausted;
 	return result;
