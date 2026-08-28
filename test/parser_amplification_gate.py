@@ -22,6 +22,52 @@ BUDGET_DIAGNOSTICS = (
     "COFF symbol-record budget exhausted",
     "COFF string-table byte budget exhausted",
 )
+PUBLIC_PE_MEMBER_NAMES = {
+    "PE",
+    "~PE",
+    "count_imported_functions",
+    "create",
+    "create_from_bytes",
+    "find_imported_dlls",
+    "find_imports",
+    "get_architecture",
+    "get_bytes_at_offset",
+    "get_certificates",
+    "get_config",
+    "get_data",
+    "get_debug_info",
+    "get_delay_load_table",
+    "get_dos_header",
+    "get_exports",
+    "get_filesize",
+    "get_image_optional_header",
+    "get_imported_dlls",
+    "get_imported_functions",
+    "get_imports",
+    "get_overlay_bytes",
+    "get_path",
+    "get_pe_header",
+    "get_raw_bytes",
+    "get_relocations",
+    "get_resources",
+    "get_rich_header",
+    "get_section_by_offset",
+    "get_section_by_rva",
+    "get_sections",
+    "get_tls",
+    "is_valid",
+    "offset_to_rva",
+    "operator delete",
+    "rva_to_offset",
+}
+PE_RTTI_SYMBOLS = {
+    "typeinfo for mana::PE",
+    "typeinfo name for mana::PE",
+    "vtable for mana::PE",
+    "typeinfo for mana::rich_header_t",
+    "typeinfo name for mana::rich_header_t",
+    "vtable for mana::rich_header_t",
+}
 
 
 class GateError(Exception):
@@ -423,11 +469,11 @@ def dynamic_symbols(nm, library, label):
         fields = line.split(None, 2)
         symbol = fields[-1] if fields else ""
         pe_marker = "mana::PE::"
-        pe_member = pe_marker in symbol and not symbol.split(pe_marker, 1)[1].startswith("_")
-        type_symbol = ("typeinfo" in symbol or "vtable" in symbol) and (
-            "mana::PE" in symbol or "mana::rich_header" in symbol
-        )
-        if pe_member or type_symbol:
+        member_name = ""
+        if pe_marker in symbol:
+            member_name = symbol.split(pe_marker, 1)[1].split("(", 1)[0]
+            member_name = re.sub(r"\[abi:[^]]+\]$", "", member_name)
+        if member_name in PUBLIC_PE_MEMBER_NAMES or symbol in PE_RTTI_SYMBOLS:
             symbols.add(symbol)
     return symbols
 

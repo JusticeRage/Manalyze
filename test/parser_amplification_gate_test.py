@@ -152,11 +152,12 @@ class PrepareTests(GateTestCase):
             self.assertEqual(first_bytes, (second / "manifest.json").read_bytes())
             manifest = json.loads(first_bytes)
             self.assertEqual(set(manifest), {"ordinary", "adversarial"})
-            self.assertEqual(manifest["ordinary"], sorted(manifest["ordinary"]))
+            expected_ordinary = sorted(tracked_mz + [
+                "ordinary/generated-rich.exe",
+                "ordinary/generated-coff.exe",
+            ])
+            self.assertEqual(manifest["ordinary"], expected_ordinary)
             self.assertEqual(manifest["adversarial"], sorted(manifest["adversarial"]))
-            self.assertTrue(set(tracked_mz).issubset(manifest["ordinary"]))
-            self.assertIn("ordinary/generated-rich.exe", manifest["ordinary"])
-            self.assertIn("ordinary/generated-coff.exe", manifest["ordinary"])
             self.assertEqual(manifest["adversarial"], sorted(ADVERSARIAL_NAMES))
             self.assertNotIn(
                 "ordinary/test/testfiles/00a1aa21f20d81a28b8b4cd39109d9ec",
@@ -570,6 +571,41 @@ class AbiTests(GateTestCase):
         )
         result = self.run_abi()
         self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_private_operator_new_and_implementation_rtti_are_not_public_abi(self):
+        symbols = self.baseline_lib.with_suffix(".so.symbols").read_text()
+        decoys = [
+            "mana::PE::operator new(unsigned long)",
+            "typeinfo for std::_Sp_counted_ptr_inplace<mana::PE>",
+            "vtable for std::_Sp_counted_ptr_inplace<mana::PE>",
+        ]
+        self.baseline_lib.with_suffix(".so.symbols").write_text(
+            symbols + "\n".join(decoys) + "\n", encoding="utf-8",
+        )
+        result = self.run_abi()
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_exact_pe_and_rich_rtti_and_vtables_remain_required(self):
+        required = [
+            "typeinfo for mana::PE",
+            "typeinfo name for mana::PE",
+            "vtable for mana::PE",
+            "typeinfo for mana::rich_header_t",
+            "typeinfo name for mana::rich_header_t",
+            "vtable for mana::rich_header_t",
+        ]
+        baseline_symbols = [
+            "mana::PE::get_filesize() const",
+            *required,
+        ]
+        self.write_symbols(self.baseline_lib, baseline_symbols)
+        for missing in required:
+            with self.subTest(missing=missing):
+                self.write_symbols(
+                    self.candidate_lib,
+                    [symbol for symbol in baseline_symbols if symbol != missing],
+                )
+                self.assertNotEqual(self.run_abi().returncode, 0)
 
     def test_missing_or_failing_tools_fail(self):
         missing = self.base / "missing-tool"
