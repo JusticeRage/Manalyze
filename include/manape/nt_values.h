@@ -24,13 +24,15 @@
 #include <memory>
 
 #if defined _WIN32 && !defined DECLSPEC
-	#ifdef MANAPE_EXPORT
-		#define DECLSPEC    __declspec(dllexport)
-	#else
-		#define DECLSPEC    __declspec(dllimport)
-	#endif
+# if defined MANAPE_STATIC
+#  define DECLSPEC
+# elif defined MANAPE_EXPORT
+#  define DECLSPEC __declspec(dllexport)
+# else
+#  define DECLSPEC __declspec(dllimport)
+# endif
 #elif !defined _WIN32 && !defined DECLSPEC
-	#define DECLSPEC
+# define DECLSPEC
 #endif
 
 typedef std::shared_ptr<std::vector<std::string> > shared_strings;

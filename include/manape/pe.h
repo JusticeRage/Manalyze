@@ -43,16 +43,27 @@
 #include "manape/color.h"				// Colored output if available
 
 #if defined _WIN32 && !defined DECLSPEC
-	#ifdef MANAPE_EXPORT
-		#define DECLSPEC    __declspec(dllexport)
-	#else
-		#define DECLSPEC    __declspec(dllimport)
-	#endif
+# if defined MANAPE_STATIC
+#  define DECLSPEC
+# elif defined MANAPE_EXPORT
+#  define DECLSPEC __declspec(dllexport)
+# else
+#  define DECLSPEC __declspec(dllimport)
+# endif
 #elif !defined _WIN32 && !defined DECLSPEC
-	#define DECLSPEC
+# define DECLSPEC
 #endif
 
 namespace mana {
+
+namespace detail {
+class WorkBudget;
+struct PEParserWorkLimits;
+struct PEParserWorkStats;
+#if defined(MANALYZE_PARSER_TESTING)
+struct PEParserTestAccess;
+#endif
+} // namespace detail
 
 typedef std::shared_ptr<Section> pSection;
 typedef std::shared_ptr<std::vector<std::string> > shared_strings;
@@ -286,7 +297,13 @@ public:
 	void operator delete(void* p);
 
 private:
-	void _initialize();
+	PE(const std::string& display_path, pFile file_handle,
+		const detail::PEParserWorkLimits& limits, detail::PEParserWorkStats* stats);
+	static std::shared_ptr<PE> _create_from_bytes(
+		const std::uint8_t* data, size_t size, const std::string& name_hint,
+		const detail::PEParserWorkLimits& limits, detail::PEParserWorkStats* stats);
+	void _initialize(const detail::PEParserWorkLimits& limits,
+		detail::PEParserWorkStats* stats);
 	bool _locked_read_at(std::uint64_t offset, void* dst, size_t size) const;
 	shared_bytes _locked_read_vec(std::uint64_t offset, size_t size) const;
 	/**
@@ -333,7 +350,8 @@ private:
 	 *	@brief	Courtesy function used to parse all the PE directories (imports, exports, resources, ...).
 	 *	/!\ This relies on the information gathered in _parse_image_optional_header.
 	 */
-	bool _parse_directories();
+	bool _parse_directories(detail::WorkBudget& rich_budget,
+		detail::PEParserWorkStats* stats);
 
 	/**
 	 *	@brief	Parses a Hint/Name table.
@@ -435,7 +453,12 @@ private:
 	 *	Included in the _parse_directories call.
 	 *	/!\ This relies on the information gathered in _parse_pe_header.
 	 */
-	bool _parse_rich_header();
+	bool _parse_rich_header(detail::WorkBudget& budget,
+		detail::PEParserWorkStats* stats);
+
+#if defined(MANALYZE_PARSER_TESTING)
+	friend struct detail::PEParserTestAccess;
+#endif
 
 	/**
 	 *	@brief	Translates a Virtual Address (*not relative to the image base*) into an offset in the file.

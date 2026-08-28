@@ -36,14 +36,16 @@
 #include "manape/color.h"
 
 // Some miscellaneous functions are exported
-#if defined _WIN32
-	#ifdef MANAPE_EXPORT
-		#define DECLSPEC    __declspec(dllexport)
-	#else
-		#define DECLSPEC    __declspec(dllimport)
-	#endif
-#else
-	#define DECLSPEC
+#if defined _WIN32 && !defined DECLSPEC
+# if defined MANAPE_STATIC
+#  define DECLSPEC
+# elif defined MANAPE_EXPORT
+#  define DECLSPEC __declspec(dllexport)
+# else
+#  define DECLSPEC __declspec(dllimport)
+# endif
+#elif !defined _WIN32 && !defined DECLSPEC
+# define DECLSPEC
 #endif
 
 namespace utils

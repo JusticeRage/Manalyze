@@ -20,6 +20,11 @@
 #endif
 
 #include "manape/pe.h"
+#include "manape/pe_parser_internal.h"
+
+#if defined(MANALYZE_PARSER_TESTING)
+#include "manape/pe_test_hooks.h"
+#endif
 
 #if defined(_WIN32)
 #include <windows.h>
@@ -106,7 +111,7 @@ PE::PE(const std::string& path)
 		size_ok = false;
 	}
 
-	_initialize();
+	_initialize(detail::production_pe_parser_work_limits(), nullptr);
 }
 
 PE::PE(const std::string& display_path, pFile file_handle)
@@ -135,10 +140,35 @@ PE::PE(const std::string& display_path, pFile file_handle)
 		size_ok = false;
 	}
 
-	_initialize();
+	_initialize(detail::production_pe_parser_work_limits(), nullptr);
 }
 
-void PE::_initialize()
+PE::PE(const std::string& display_path, pFile file_handle,
+	const detail::PEParserWorkLimits& limits, detail::PEParserWorkStats* stats)
+	: _path(display_path),
+	  _resource_path(display_path),
+	  _initialized(false),
+	  _file_handle(file_handle),
+	  _io_mutex(std::make_shared<std::mutex>())
+{
+	if (_file_handle == nullptr)
+	{
+		PRINT_ERROR << "Could not open " << _path << "." << std::endl;
+		return;
+	}
+
+	bool size_ok = true;
+	if (fseek(_file_handle.get(), 0, SEEK_END)) size_ok = false;
+	long end_pos = size_ok ? ftell(_file_handle.get()) : -1;
+	if (end_pos < 0) size_ok = false;
+	_file_size = size_ok ? static_cast<std::uint64_t>(end_pos) : 0;
+	if (fseek(_file_handle.get(), 0, SEEK_SET)) size_ok = false;
+
+	_initialize(limits, stats);
+}
+
+void PE::_initialize(const detail::PEParserWorkLimits& limits,
+	detail::PEParserWorkStats* stats)
 {
 	if (!_parse_dos_header()) {
 		return;
@@ -158,8 +188,9 @@ void PE::_initialize()
 
 	// Failure is acceptable from here on.
 	_initialized = true;
+	detail::WorkBudget rich_budget(limits.rich_entries);
 	_parse_coff_symbols();
-	_parse_directories();
+	_parse_directories(rich_budget, stats);
 }
 
 // ----------------------------------------------------------------------------
@@ -235,18 +266,37 @@ std::shared_ptr<PE> PE::create_from_bytes(const std::uint8_t* data,
 											size_t size,
 											const std::string& name_hint)
 {
+	return _create_from_bytes(data, size, name_hint,
+		detail::production_pe_parser_work_limits(), nullptr);
+}
+
+std::shared_ptr<PE> PE::_create_from_bytes(const std::uint8_t* data,
+											size_t size,
+											const std::string& name_hint,
+											const detail::PEParserWorkLimits& limits,
+											detail::PEParserWorkStats* stats)
+{
+	auto construct = [&](pFile handle) {
+#if defined(MANALYZE_PARSER_TESTING)
+		if (stats != nullptr) {
+			return std::shared_ptr<PE>(new PE(name_hint, handle, limits, stats));
+		}
+#endif
+		return std::make_shared<PE>(name_hint, handle);
+	};
+
 	if (data == nullptr || size == 0) {
-		return std::make_shared<PE>(name_hint, pFile());
+		return construct(pFile());
 	}
 
 #if defined(_WIN32)
 	char temp_path[MAX_PATH + 1] = {0};
 	char temp_file[MAX_PATH + 1] = {0};
 	if (GetTempPathA(MAX_PATH, temp_path) == 0) {
-		return std::make_shared<PE>(name_hint, pFile());
+		return construct(pFile());
 	}
 	if (GetTempFileNameA(temp_path, "mna", 0, temp_file) == 0) {
-		return std::make_shared<PE>(name_hint, pFile());
+		return construct(pFile());
 	}
 
 	HANDLE hfile = CreateFileA(temp_file, GENERIC_READ | GENERIC_WRITE,
@@ -254,7 +304,7 @@ std::shared_ptr<PE> PE::create_from_bytes(const std::uint8_t* data,
 	                           FILE_ATTRIBUTE_TEMPORARY | FILE_FLAG_DELETE_ON_CLOSE,
 	                           nullptr);
 	if (hfile == INVALID_HANDLE_VALUE) {
-		return std::make_shared<PE>(name_hint, pFile());
+		return construct(pFile());
 	}
 
 	size_t remaining = size;
@@ -265,7 +315,7 @@ std::shared_ptr<PE> PE::create_from_bytes(const std::uint8_t* data,
 		BOOL ok = WriteFile(hfile, cursor, chunk, &written, nullptr);
 		if (!ok || written != chunk) {
 			CloseHandle(hfile);
-			return std::make_shared<PE>(name_hint, pFile());
+			return construct(pFile());
 		}
 		remaining -= written;
 		cursor += written;
@@ -275,16 +325,16 @@ std::shared_ptr<PE> PE::create_from_bytes(const std::uint8_t* data,
 	int fd = _open_osfhandle(reinterpret_cast<intptr_t>(hfile), _O_RDONLY | _O_BINARY);
 	if (fd == -1) {
 		CloseHandle(hfile);
-		return std::make_shared<PE>(name_hint, pFile());
+		return construct(pFile());
 	}
 
 	FILE* f = _fdopen(fd, "rb");
 	if (f == nullptr) {
 		_close(fd);
-		return std::make_shared<PE>(name_hint, pFile());
+		return construct(pFile());
 	}
 	pFile handle(f, fclose);
-	auto pe = std::make_shared<PE>(name_hint, handle);
+	auto pe = construct(handle);
 	pe->_resource_path = temp_file;
 	return pe;
 #else
@@ -293,28 +343,47 @@ std::shared_ptr<PE> PE::create_from_bytes(const std::uint8_t* data,
 	memcpy(buffer->data(), data, size);
 	FILE* f = fmemopen(buffer->data(), size, "rb");
 	if (f == nullptr) {
-		return std::make_shared<PE>(name_hint, pFile());
+		return construct(pFile());
 	}
 	pFile handle(f, fclose);
-	auto pe = std::make_shared<PE>(name_hint, handle);
+	auto pe = construct(handle);
 	pe->_backing_store = buffer;
 	return pe;
 #else
 	// Fallback to a temporary file on other POSIX platforms.
 	FILE* f = tmpfile();
 	if (f == nullptr) {
-		return std::make_shared<PE>(name_hint, pFile());
+		return construct(pFile());
 	}
 	if (size != fwrite(data, 1, size, f)) {
 		fclose(f);
-		return std::make_shared<PE>(name_hint, pFile());
+		return construct(pFile());
 	}
 	fseek(f, 0, SEEK_SET);
 	pFile handle(f, fclose);
-	return std::make_shared<PE>(name_hint, handle);
+	return construct(handle);
 #endif
 #endif
 }
+
+#if defined(MANALYZE_PARSER_TESTING)
+std::shared_ptr<PE> detail::PEParserTestAccess::create_from_bytes(
+	const std::uint8_t* data, std::size_t size, const std::string& name,
+	const PEParserWorkLimits& limits, PEParserWorkStats& stats)
+{
+	return PE::_create_from_bytes(data, size, name, limits, &stats);
+}
+
+std::size_t detail::PEParserTestAccess::retained_coff_symbols(const PE& pe)
+{
+	return pe._coff_symbols.size();
+}
+
+std::size_t detail::PEParserTestAccess::retained_coff_strings(const PE& pe)
+{
+	return pe._coff_string_table.size();
+}
+#endif
 
 // ----------------------------------------------------------------------------
 
@@ -1096,7 +1165,8 @@ bool PE::_reach_directory(int directory, std::uint64_t minimum_size,
 
 // ----------------------------------------------------------------------------
 
-bool PE::_parse_directories()
+bool PE::_parse_directories(detail::WorkBudget& rich_budget,
+	detail::PEParserWorkStats* stats)
 {
 	if (_file_handle == nullptr) {
 		return false;
@@ -1111,7 +1181,7 @@ bool PE::_parse_directories()
 	_parse_tls();
 	_parse_config();
 	_parse_certificates();
-	_parse_rich_header();
+	_parse_rich_header(rich_budget, stats);
 	return true;
 }
 
@@ -1598,66 +1668,76 @@ bool PE::_parse_certificates()
 
 // ----------------------------------------------------------------------------
 
-bool PE::_parse_rich_header()
+bool PE::_parse_rich_header(detail::WorkBudget& budget,
+	detail::PEParserWorkStats* stats)
 {
 	if (!_h_dos || _file_handle == nullptr) {
 		return false;
 	}
 
-	// Start searching for the RICH header at offset 0, but before the PE header.
-	if (fseek(_file_handle.get(), 0, SEEK_SET))	{
-		return true;
-	}
-
-	unsigned int read;
-	int bytes_left = _h_dos->e_lfanew;
-
-	do
+	const std::uint64_t scan_end = std::min(
+		_file_size, static_cast<std::uint64_t>(_h_dos->e_lfanew));
+	std::uint64_t rich_offset = 0;
+	bool found_rich = false;
+	for (std::uint64_t scan_offset = 0;
+		scan_offset <= scan_end && sizeof(std::uint32_t) <= scan_end - scan_offset;
+		scan_offset += sizeof(std::uint32_t))
 	{
-		if (1 != fread(&read, 4, 1, _file_handle.get())) {
+		std::uint32_t word = 0;
+		if (!_locked_read_at(scan_offset, &word, sizeof(word))) return true;
+		if (word == 0x68636952) {
+			rich_offset = scan_offset;
+			found_rich = true;
 			break;
 		}
-		bytes_left -= 4;  // Stay between offset 0x80 and the PE header.
-	} while (read != 0x68636952 && bytes_left > 0);
-
-	if (read != 0x68636952)	{
-		return true;  // The RICH magic was not found.
 	}
-	rich_header h;
-	if (1 != fread(&h.xor_key, 4, 1, _file_handle.get())) 
-	{
+	if (!found_rich) return true;
+	if (rich_offset > _file_size || sizeof(std::uint64_t) > _file_size - rich_offset) {
 		PRINT_WARNING << "XOR key absent after the RICH header!" << DEBUG_INFO_INSIDEPE << std::endl;
 		return true;
 	}
 
-	// Start parsing the values backwards.
-	while (true)
-	{
-		if (fseek(_file_handle.get(), -16, SEEK_CUR)) 
-		{
-			PRINT_WARNING << "Error while reading the RICH header!" << DEBUG_INFO_INSIDEPE << std::endl;
-			return true;
-		}
-		std::uint64_t data;
-		if (1 != fread(&data, 8, 1, _file_handle.get())) 
-		{
-			PRINT_WARNING << "Error while reading the RICH header!" << DEBUG_INFO_INSIDEPE << std::endl;
-			return true;
-		}
-		std::uint32_t count = (data >> 32) ^ h.xor_key;
-		std::uint32_t id_value = (data & 0xFFFFFFFF) ^ h.xor_key;
+	rich_header h;
+	if (!_locked_read_at(rich_offset + sizeof(std::uint32_t),
+		&h.xor_key, sizeof(h.xor_key))) {
+		PRINT_WARNING << "XOR key absent after the RICH header!" << DEBUG_INFO_INSIDEPE << std::endl;
+		return true;
+	}
 
-		// Stop if we reach the start marker, "DanS".
+	const std::uint64_t possible_records = rich_offset / sizeof(std::uint64_t);
+	h.values.reserve(static_cast<size_t>(std::min(possible_records, budget.remaining())));
+	std::uint64_t cursor = rich_offset;
+	bool found_dans = false;
+	while (cursor >= sizeof(std::uint64_t)) {
+		cursor -= sizeof(std::uint64_t);
+		std::uint64_t encoded = 0;
+		if (!_locked_read_at(cursor, &encoded, sizeof(encoded))) return true;
+		if (stats) ++stats->rich_records_read;
+
+		const std::uint32_t count = static_cast<std::uint32_t>(encoded >> 32) ^ h.xor_key;
+		const std::uint32_t id_value = static_cast<std::uint32_t>(encoded) ^ h.xor_key;
 		if (id_value == 0x536E6144) {
+			found_dans = true;
+			h.file_offset = static_cast<std::uint32_t>(cursor);
 			break;
 		}
-		auto t = std::make_tuple(static_cast<std::uint16_t>((id_value >> 16) & 0xFFFF), static_cast<std::uint16_t>(id_value & 0xFFFF), count);
-		h.values.insert(h.values.begin(), t);
-	};
+		if (!budget.charge(1)) {
+			CAPPED_LOGGING_WARNING
+				PRINT_WARNING << "Rich header entry budget exhausted; discarding optional Rich header."
+					<< DEBUG_INFO_INSIDEPE << std::endl;
+			CAPPED_LOGGING_END
+			return true;
+		}
+		h.values.emplace_back(
+			static_cast<std::uint16_t>(id_value >> 16),
+			static_cast<std::uint16_t>(id_value), count);
+		if (stats) ++stats->rich_entries_appended;
+	}
 
-	// Keep a trace of where this header starts, as it is not easy to locate and is useful to calculate the checksum.
-	h.file_offset = ftell(_file_handle.get()) - 8;
-	_rich_header = h;
+	if (!found_dans) return true;
+	std::reverse(h.values.begin(), h.values.end());
+	if (stats) stats->rich_reverse_passes = 1;
+	_rich_header = std::move(h);
 	return true;
 }
 

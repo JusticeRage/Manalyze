@@ -140,7 +140,16 @@ if(OPENSSL_FOUND)
 endif()
 
 add_definitions(-DWITH_MANACOMMONS) # Use functions from manacommons.
-add_library(manape SHARED manape/pe.cpp manape/nt_values.cpp manape/utils.cpp manape/imports.cpp manape/resources.cpp manape/section.cpp manape/imported_library.cpp manape/ordinals.cpp)
+set(MANAPE_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/manape/pe.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/manape/nt_values.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/manape/utils.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/manape/imports.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/manape/resources.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/manape/section.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/manape/imported_library.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/manape/ordinals.cpp)
+add_library(manape SHARED ${MANAPE_SOURCES})
 
 add_library(manacommons SHARED manacommons/color.cpp manacommons/output_tree_node.cpp manacommons/escape.cpp manacommons/base64.cpp manacommons/plugin_framework/result.cpp manacommons/paths.cpp)
 target_compile_definitions(manacommons PRIVATE

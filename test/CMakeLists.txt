@@ -9,6 +9,21 @@ add_executable(manalyze-tests fixtures.cpp hash-library.cpp pe.cpp imports.cpp r
                                ../src/import_hash.cpp ../src/cli.cpp ../src/config_parser.cpp ../src/output_formatter.cpp)
 add_dependencies(manalyze-tests manalyze)
 
+add_library(manape-parser-test-static STATIC ${MANAPE_SOURCES})
+target_compile_definitions(manape-parser-test-static
+	PUBLIC MANAPE_STATIC
+	PRIVATE MANALYZE_PARSER_TESTING)
+target_link_libraries(manape-parser-test-static PUBLIC manacommons)
+
+add_executable(manalyze-parser-tests parser_amplification.cpp fixtures.cpp)
+target_compile_definitions(manalyze-parser-tests PRIVATE
+	MANAPE_STATIC MANALYZE_PARSER_TESTING)
+target_link_libraries(manalyze-parser-tests
+	manape-parser-test-static manacommons ${MANALYZE_BOOST_TEST_LIBS})
+if (Threads_FOUND)
+	target_link_libraries(manalyze-parser-tests Threads::Threads)
+endif()
+
 if (OPENSSL_FOUND AND NOT WIN32)
 	target_sources(manalyze-tests PRIVATE plugin_authenticode.cpp)
 	add_dependencies(manalyze-tests plugin_authenticode)
