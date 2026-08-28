@@ -149,7 +149,14 @@ set(MANAPE_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/manape/section.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/manape/imported_library.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/manape/ordinals.cpp)
-add_library(manape SHARED ${MANAPE_SOURCES})
+add_library(manape-parser-internal OBJECT manape/parser_internal.cpp)
+set_target_properties(manape-parser-internal PROPERTIES
+    POSITION_INDEPENDENT_CODE ON
+    CXX_VISIBILITY_PRESET hidden
+    VISIBILITY_INLINES_HIDDEN ON)
+add_library(manape SHARED
+    $<TARGET_OBJECTS:manape-parser-internal>
+    ${MANAPE_SOURCES})
 
 add_library(manacommons SHARED manacommons/color.cpp manacommons/output_tree_node.cpp manacommons/escape.cpp manacommons/base64.cpp manacommons/plugin_framework/result.cpp manacommons/paths.cpp)
 target_compile_definitions(manacommons PRIVATE
