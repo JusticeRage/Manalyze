@@ -12,7 +12,7 @@ add_dependencies(manalyze-tests manalyze)
 if (OPENSSL_FOUND AND NOT WIN32)
 	target_sources(manalyze-tests PRIVATE plugin_authenticode.cpp)
 	add_dependencies(manalyze-tests plugin_authenticode)
-	target_link_libraries(manalyze-tests plugin_authenticode)
+	target_link_libraries(manalyze-tests plugin_authenticode OpenSSL::Crypto)
 endif()
 
 target_link_libraries(

@@ -17,6 +17,85 @@
 
 #include "plugins/plugin_authenticode/asn1.h"
 
+#include <cstddef>
+#include <limits>
+#include <utility>
+
+namespace {
+
+struct Asn1View
+{
+    const unsigned char* data = nullptr;
+    std::size_t size = 0;
+};
+
+bool asn1_read(const unsigned char*& cursor,
+               std::size_t& remaining,
+               int expected_tag,
+               bool expected_constructed,
+               const char* object_name,
+               Asn1View& value)
+{
+    value = Asn1View();
+    if (!cursor || remaining == 0 ||
+        remaining > static_cast<std::size_t>(std::numeric_limits<long>::max()))
+    {
+        return false;
+    }
+
+    const unsigned char* temporary = cursor;
+    long value_length = 0;
+    int tag = 0;
+    int object_class = 0;
+    const int result = ASN1_get_object(&temporary, &value_length, &tag,
+                                       &object_class, static_cast<long>(remaining));
+    const bool constructed = (result & V_ASN1_CONSTRUCTED) != 0;
+    if ((result & 0x80) != 0 || (result & 0x01) != 0 ||
+        value_length < 0 || object_class != V_ASN1_UNIVERSAL ||
+        tag != expected_tag || constructed != expected_constructed)
+    {
+        PRINT_ERROR << "[plugin_authenticode] Invalid " << object_name
+                    << " ASN.1 object." << std::endl;
+        return false;
+    }
+
+    const std::ptrdiff_t header_difference = temporary - cursor;
+    if (header_difference < 0 ||
+        static_cast<std::size_t>(header_difference) > remaining)
+    {
+        PRINT_ERROR << "[plugin_authenticode] Invalid " << object_name
+                    << " ASN.1 header extent." << std::endl;
+        return false;
+    }
+    const std::size_t header_size = static_cast<std::size_t>(header_difference);
+    if (static_cast<std::size_t>(value_length) > remaining - header_size)
+    {
+        PRINT_ERROR << "[plugin_authenticode] Invalid " << object_name
+                    << " ASN.1 value extent." << std::endl;
+        return false;
+    }
+
+    value.data = temporary;
+    value.size = static_cast<std::size_t>(value_length);
+    const std::size_t consumed = header_size + value.size;
+    cursor += consumed;
+    remaining -= consumed;
+    return true;
+}
+
+bool no_trailing_bytes(std::size_t remaining, const char* object_name)
+{
+    if (remaining == 0)
+    {
+        return true;
+    }
+    PRINT_ERROR << "[plugin_authenticode] Invalid " << object_name
+                << " ASN.1 object: trailing bytes." << std::endl;
+    return false;
+}
+
+} // namespace
+
 namespace plugin {
 
 std::string OID_to_string(const bytes& in)
@@ -95,89 +174,125 @@ bool check_pkcs_sanity(const pPKCS7& p)
 
 // ----------------------------------------------------------------------------
 
-long asn1_read(const unsigned char** data,
-               long max_length,
-               const std::string& expected,
-               const std::string& object_name)
+bool parse_spc_asn1(const ASN1_STRING* asn1, AuthenticodeDigest& digest)
 {
-    int tag = 0, xclass = 0;
-    long size = 0;
-
-    ASN1_get_object(data, &size, &tag, &xclass, max_length); // Return value ignored. Who knows what this function returns?
-    std::string tag_s = ASN1_tag2str(tag);
-    if (tag_s != expected)
+    const int encoded_length = asn1 ? ASN1_STRING_length(asn1) : 0;
+    if (encoded_length <= 0)
     {
-        PRINT_WARNING << "[plugin_authenticode] The " << object_name << " ASN1 string is malformed!" << std::endl;
-        PRINT_WARNING << "(Expected " << expected << ", but got " << tag_s << " instead.)" << std::endl;
-        return 0;
-    }
-    return size;
-}
-
-// ----------------------------------------------------------------------------
-
-bool parse_spc_asn1(ASN1_STRING* asn1, AuthenticodeDigest& digest)
-{
-    const unsigned char* asn1_data = asn1->data;
-    bytes buffer;
-
-    // Start at the SpcIndirectDataContent..
-    long size = asn1_read(&asn1_data, asn1->length, "SEQUENCE", "SpcIndirectDataContent");
-    if (size == 0) {
         return false;
     }
-    // Read the SpcAttributeTypeAndOptionalValue.
-    size = asn1_read(&asn1_data, asn1->length, "SEQUENCE", "SpcAttributeTypeAndOptionalValue");
-    if (size == 0) {
-        return false;
-    }
-    // Read SpcAttributeTypeAndOptionalValue->type
-    size = asn1_read(&asn1_data, asn1->length, "OBJECT", "type");
-    if (size == 0) {
-        return false;
-    }
-    // Assert that the type read has the expected OID.
-    buffer.assign(asn1_data, asn1_data + size);
-    if(OID_to_string(buffer) != SPC_PE_IMAGE_DATAOBJ)
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+    const unsigned char* cursor = ASN1_STRING_get0_data(asn1);
+#else
+    const unsigned char* cursor = ASN1_STRING_data(const_cast<ASN1_STRING*>(asn1));
+#endif
+    if (!cursor)
     {
-        PRINT_WARNING << "[plugin_authenticode] The SpcAttributeTypeAndOptionalValue has an invalid type!" << std::endl;
         return false;
     }
-    asn1_data += size; // Skip over the OID.
-    // Read SpcAttributeTypeAndOptionalValue->value (SpcPeImageData)
-    size = asn1_read(&asn1_data, asn1->length, "SEQUENCE", "SpcPeImageData");
-    if (size == 0) {
-        return false;
-    }
-    asn1_data += size; // Skip the structure.
+    std::size_t remaining = static_cast<std::size_t>(encoded_length);
 
-    // Read the DigestInfo.
-    size = asn1_read(&asn1_data, asn1->length, "SEQUENCE", "DigestInfo");
-    if (size == 0) {
+    Asn1View root;
+    if (!asn1_read(cursor, remaining, V_ASN1_SEQUENCE, true,
+                   "SpcIndirectDataContent", root))
+    {
         return false;
     }
-    // Read DigestInfo->AlgorithmIdentifier
-    size = asn1_read(&asn1_data, asn1->length, "SEQUENCE", "AlgorithmIdentifier");
-    if (size == 0) {
-        return false;
-    }
-    // Read DigestInfo->AlgorithmIdentifier->algorithm)
-    size = asn1_read(&asn1_data, asn1->length, "OBJECT", "algorithm");
-    if (size == 0) {
-        return false;
-    }
-    buffer.assign(asn1_data, asn1_data + size);
-    digest.algorithm = OID_to_string(buffer);
-    asn1_data += size;
-    // Read and skip DigestInfo->AlgorithmIdentifier->parameters
-    size = asn1_read(&asn1_data, asn1->length, "NULL", "parameters");
-    // Read the digest.
-    size = asn1_read(&asn1_data, asn1->length, "OCTET STRING", "digest");
-    if (size == 0) {
-        return false;
-    }
-    digest.digest.assign(asn1_data, asn1_data + size);
+    const unsigned char* root_cursor = root.data;
+    std::size_t root_remaining = root.size;
 
+    Asn1View attribute;
+    if (!asn1_read(root_cursor, root_remaining, V_ASN1_SEQUENCE, true,
+                   "SpcAttributeTypeAndOptionalValue", attribute))
+    {
+        return false;
+    }
+    const unsigned char* attribute_cursor = attribute.data;
+    std::size_t attribute_remaining = attribute.size;
+
+    Asn1View attribute_oid;
+    if (!asn1_read(attribute_cursor, attribute_remaining, V_ASN1_OBJECT, false,
+                   "type", attribute_oid))
+    {
+        return false;
+    }
+    const bytes attribute_oid_bytes(attribute_oid.data,
+                                    attribute_oid.data + attribute_oid.size);
+    if (OID_to_string(attribute_oid_bytes) != SPC_PE_IMAGE_DATAOBJ)
+    {
+        PRINT_ERROR << "[plugin_authenticode] Invalid SpcAttributeTypeAndOptionalValue type OID."
+                    << std::endl;
+        return false;
+    }
+
+    Asn1View pe_image_data;
+    if (!asn1_read(attribute_cursor, attribute_remaining, V_ASN1_SEQUENCE, true,
+                   "SpcPeImageData", pe_image_data) ||
+        !no_trailing_bytes(attribute_remaining, "SpcAttributeTypeAndOptionalValue"))
+    {
+        return false;
+    }
+
+    Asn1View digest_info;
+    if (!asn1_read(root_cursor, root_remaining, V_ASN1_SEQUENCE, true,
+                   "DigestInfo", digest_info))
+    {
+        return false;
+    }
+    const unsigned char* digest_cursor = digest_info.data;
+    std::size_t digest_remaining = digest_info.size;
+
+    Asn1View algorithm_identifier;
+    if (!asn1_read(digest_cursor, digest_remaining, V_ASN1_SEQUENCE, true,
+                   "AlgorithmIdentifier", algorithm_identifier))
+    {
+        return false;
+    }
+    const unsigned char* algorithm_cursor = algorithm_identifier.data;
+    std::size_t algorithm_remaining = algorithm_identifier.size;
+
+    Asn1View algorithm_oid;
+    if (!asn1_read(algorithm_cursor, algorithm_remaining, V_ASN1_OBJECT, false,
+                   "algorithm", algorithm_oid))
+    {
+        return false;
+    }
+    const bytes algorithm_oid_bytes(algorithm_oid.data,
+                                    algorithm_oid.data + algorithm_oid.size);
+
+    Asn1View parameters;
+    if (!asn1_read(algorithm_cursor, algorithm_remaining, V_ASN1_NULL, false,
+                   "AlgorithmIdentifier parameters", parameters) ||
+        parameters.size != 0)
+    {
+        PRINT_ERROR << "[plugin_authenticode] Invalid AlgorithmIdentifier parameters."
+                    << std::endl;
+        return false;
+    }
+    if (!no_trailing_bytes(algorithm_remaining, "AlgorithmIdentifier"))
+    {
+        return false;
+    }
+
+    Asn1View digest_value;
+    if (!asn1_read(digest_cursor, digest_remaining, V_ASN1_OCTET_STRING, false,
+                   "digest", digest_value) ||
+        !no_trailing_bytes(digest_remaining, "DigestInfo") ||
+        !no_trailing_bytes(root_remaining, "SpcIndirectDataContent") ||
+        !no_trailing_bytes(remaining, "SpcIndirectDataContent encoding"))
+    {
+        return false;
+    }
+
+    AuthenticodeDigest parsed;
+    parsed.algorithm = OID_to_string(algorithm_oid_bytes);
+    if (parsed.algorithm.empty())
+    {
+        PRINT_ERROR << "[plugin_authenticode] Invalid algorithm OID." << std::endl;
+        return false;
+    }
+    parsed.digest.assign(digest_value.data, digest_value.data + digest_value.size);
+    digest = std::move(parsed);
     return true;
 }
 

@@ -85,28 +85,6 @@ std::string OID_to_string(const bytes& in);
 bool check_pkcs_sanity(const pPKCS7& p);
 
 /**
- *  @brief  Helper function designed to read ASN1 objects.
- *
- *  This function is useful to read objects of an expected type. Its main use is
- *  to avoid code duplication around error messages.
- *
- *  @param  const unsigned char** data A pointer to the ASN1 string to read.
- *          It will be updated to point to the next object in the string.
- *  @param  long max_length The maximum number of bytes to read.
- *  @param  const std::string& expected The object type expected (i.e. "SEQUENCE").
- *          This argument is given as a string for code readability.
- *  @param  const std::string& structure_name The name of the object read (for error messages only).
- *
- *  @return The size of the object read. The data pointer will be updated to point to it.
- */
-long asn1_read(const unsigned char** data,
-               long max_length,
-               const std::string& expected,
-               const std::string& object_name);
-
-// ----------------------------------------------------------------------------
-
-/**
  *  @brief  This function parses an ASN1 SpcIndirectDataContent object.
  *
  *  The SpcIndirectDataContent contains the digest and algorithm of the authenticode
@@ -119,6 +97,6 @@ long asn1_read(const unsigned char** data,
  *
  *  @return Whether the ASN1 was parsed successfully.
  */
-bool parse_spc_asn1(ASN1_STRING* asn1, AuthenticodeDigest& digest);
+bool parse_spc_asn1(const ASN1_STRING* asn1, AuthenticodeDigest& digest);
 
 } // !namespace plugin
