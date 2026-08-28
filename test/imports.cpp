@@ -17,6 +17,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <algorithm>
 #include <sstream>
 
 #include "fixtures.h"
@@ -56,6 +57,48 @@ std::vector<std::uint8_t> make_standard_import_failure_with_valid_delay(
 	constexpr std::size_t first_descriptor = 0x26e8;
 	write_u32(bytes, first_descriptor + (malformed_name ? 12 : 0),
 		0xfffffff0);
+	return bytes;
+}
+
+std::vector<std::uint8_t> make_import_exhaustion_pe()
+{
+	auto bytes = read_binary_file("testfiles/manatest.exe");
+	constexpr std::size_t optional_header = 0x108;
+	constexpr std::size_t section_table = 0x1e8;
+	constexpr std::size_t new_section = section_table + 6 * 40;
+	constexpr std::size_t original_descriptor = 0x1c6c;
+	constexpr std::uint32_t raw_offset = 0x4000;
+	constexpr std::uint32_t section_rva = 0x8000;
+	constexpr std::uint32_t descriptor_count = 65537;
+	constexpr std::uint32_t descriptor_bytes = descriptor_count * 20;
+	constexpr std::uint32_t raw_size =
+		(descriptor_bytes + 0x1ff) & ~std::uint32_t{0x1ff};
+	constexpr std::uint32_t image_size =
+		(section_rva + descriptor_bytes + 0xfff) & ~std::uint32_t{0xfff};
+	constexpr std::size_t import_directory = optional_header + 96 +
+		IMAGE_DIRECTORY_ENTRY_IMPORT * 8;
+
+	std::vector<std::uint8_t> descriptor(
+		bytes.begin() + original_descriptor,
+		bytes.begin() + original_descriptor + 20);
+	write_u32(descriptor, 12, 0xfffffff0);
+	bytes.resize(raw_offset + raw_size, 0);
+	write_u16(bytes, 0xf6, 7);
+	write_u32(bytes, optional_header + 56, image_size);
+	std::fill_n(bytes.begin() + new_section, 40, 0);
+	const char name[] = ".imps";
+	std::copy(name, name + sizeof(name) - 1, bytes.begin() + new_section);
+	write_u32(bytes, new_section + 8, descriptor_bytes);
+	write_u32(bytes, new_section + 12, section_rva);
+	write_u32(bytes, new_section + 16, raw_size);
+	write_u32(bytes, new_section + 20, raw_offset);
+	write_u32(bytes, new_section + 36, 0x40000040);
+	for (std::uint32_t i = 0; i < descriptor_count; ++i) {
+		std::copy(descriptor.begin(), descriptor.end(),
+			bytes.begin() + raw_offset + static_cast<std::size_t>(i) * 20);
+	}
+	write_u32(bytes, import_directory, section_rva);
+	write_u32(bytes, import_directory + 4, descriptor_bytes);
 	return bytes;
 }
 
@@ -296,6 +339,30 @@ BOOST_AUTO_TEST_CASE(import_malformed_recovers_later_directories)
 	BOOST_CHECK_NE(logs.str().find(
 		"Import directory extent contains no complete IMAGE_IMPORT_DESCRIPTOR."),
 		std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(import_exhaustion_recovers_later_directories)
+{
+	const auto bytes = make_import_exhaustion_pe();
+	ErrorCapture logs;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(),
+		"import-exhaustion.exe");
+
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_REQUIRE(pe->get_imported_dlls());
+	BOOST_CHECK(pe->get_imported_dlls()->empty());
+	BOOST_REQUIRE(pe->get_debug_info());
+	BOOST_CHECK_EQUAL(pe->get_debug_info()->size(), 4);
+	BOOST_REQUIRE(pe->get_config());
+	BOOST_CHECK_EQUAL(pe->get_config()->Size, 0x5c);
+	const auto output = logs.str();
+	BOOST_CHECK_NE(output.find("Import parsing work budget exhausted."),
+		std::string::npos);
+	const std::string name_error = "Could not read an import's name.";
+	const auto first_name_error = output.find(name_error);
+	BOOST_REQUIRE_NE(first_name_error, std::string::npos);
+	BOOST_CHECK_EQUAL(output.find(name_error,
+		first_name_error + name_error.size()), std::string::npos);
 }
 
 // ----------------------------------------------------------------------------
