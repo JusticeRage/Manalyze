@@ -235,16 +235,13 @@ std::ostream& warning_stream()
 
 bool is_log_cap_reached()
 {
-	if (!should_log(LogLevel::WARNING)) {
-		return true;
-	}
-
-	static unsigned int log_count = 0;
-	if (++log_count < LOG_CAP) {
+	static std::atomic<unsigned int> log_count{0};
+	const unsigned int count = log_count.fetch_add(1, std::memory_order_relaxed) + 1;
+	if (count < LOG_CAP) {
 		return false;
 	}
-	else if (log_count == LOG_CAP) {
-		PRINT_ERROR << "Logging cap reached. Further verbose warnings will be ignored." << std::endl;
+	else if (count == LOG_CAP) {
+		PRINT_ERROR << "Logging cap reached. Further capped diagnostics will be ignored." << std::endl;
 	}
 	return true;
 }

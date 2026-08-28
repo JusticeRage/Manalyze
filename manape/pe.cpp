@@ -762,8 +762,10 @@ bool PE::_parse_debug()
 				debug->SizeofData > _file_size - data_offset ||
 				fseek(_file_handle.get(), debug->PointerToRawData, SEEK_SET))
 			{
-				PRINT_ERROR << "Invalid CodeView debug entry."
-					<< DEBUG_INFO_INSIDEPE << std::endl;
+				CAPPED_LOGGING_ERROR
+					PRINT_ERROR << "Invalid CodeView debug entry."
+						<< DEBUG_INFO_INSIDEPE << std::endl;
+				CAPPED_LOGGING_END
 				if (fseek(_file_handle.get(), next_entry, SEEK_SET)) return false;
 				continue;
 			}
@@ -771,8 +773,10 @@ bool PE::_parse_debug()
 			std::uint32_t signature = 0;
 			if (fread(&signature, 1, sizeof(signature), _file_handle.get()) != sizeof(signature))
 			{
-				PRINT_ERROR << "Invalid CodeView debug entry."
-					<< DEBUG_INFO_INSIDEPE << std::endl;
+				CAPPED_LOGGING_ERROR
+					PRINT_ERROR << "Invalid CodeView debug entry."
+						<< DEBUG_INFO_INSIDEPE << std::endl;
+				CAPPED_LOGGING_END
 				if (fseek(_file_handle.get(), next_entry, SEEK_SET)) return false;
 				continue;
 			}
@@ -781,8 +785,10 @@ bool PE::_parse_debug()
 				signature == 0x3031424e ? 16 : 0;
 			if (fixed_size == 0 || debug->SizeofData <= fixed_size)
 			{
-				PRINT_ERROR << "Invalid CodeView debug entry."
-					<< DEBUG_INFO_INSIDEPE << std::endl;
+				CAPPED_LOGGING_ERROR
+					PRINT_ERROR << "Invalid CodeView debug entry."
+						<< DEBUG_INFO_INSIDEPE << std::endl;
+				CAPPED_LOGGING_END
 				if (fseek(_file_handle.get(), next_entry, SEEK_SET)) return false;
 				continue;
 			}
@@ -793,8 +799,10 @@ bool PE::_parse_debug()
 			if (fread(fixed_data, 1, remaining_fixed_size, _file_handle.get()) != remaining_fixed_size ||
 				!read_bounded_ascii_string(_file_handle.get(), debug->SizeofData - fixed_size, filename))
 			{
-				PRINT_ERROR << "Invalid CodeView debug entry."
-					<< DEBUG_INFO_INSIDEPE << std::endl;
+				CAPPED_LOGGING_ERROR
+					PRINT_ERROR << "Invalid CodeView debug entry."
+						<< DEBUG_INFO_INSIDEPE << std::endl;
+				CAPPED_LOGGING_END
 				if (fseek(_file_handle.get(), next_entry, SEEK_SET)) return false;
 				continue;
 			}
@@ -809,7 +817,9 @@ bool PE::_parse_debug()
 			if (debug->SizeofData < misc_size || data_offset > _file_size ||
 				debug->SizeofData > _file_size - data_offset)
 			{
-				PRINT_ERROR << "Invalid IMAGE_DEBUG_MISC bounds." << DEBUG_INFO_INSIDEPE << std::endl;
+				CAPPED_LOGGING_ERROR
+					PRINT_ERROR << "Invalid IMAGE_DEBUG_MISC bounds." << DEBUG_INFO_INSIDEPE << std::endl;
+				CAPPED_LOGGING_END
 				if (fseek(_file_handle.get(), next_entry, SEEK_SET)) return false;
 				continue;
 			}
@@ -817,7 +827,9 @@ bool PE::_parse_debug()
 			if (fseek(_file_handle.get(), debug->PointerToRawData, SEEK_SET) ||
 				misc_size != fread(&misc, 1, misc_size, _file_handle.get()))
 			{
-				PRINT_ERROR << "Could not read IMAGE_DEBUG_MISC information." << DEBUG_INFO_INSIDEPE << std::endl;
+				CAPPED_LOGGING_ERROR
+					PRINT_ERROR << "Could not read IMAGE_DEBUG_MISC information." << DEBUG_INFO_INSIDEPE << std::endl;
+				CAPPED_LOGGING_END
 				if (fseek(_file_handle.get(), next_entry, SEEK_SET)) return false;
 				continue;
 			}
@@ -826,7 +838,9 @@ bool PE::_parse_debug()
 			if (misc.Length < misc_size + minimum_string_size || misc.Length > debug->SizeofData ||
 				(is_unicode && (misc.Length - misc_size) % 2 != 0))
 			{
-				PRINT_ERROR << "Invalid IMAGE_DEBUG_MISC Length." << DEBUG_INFO_INSIDEPE << std::endl;
+				CAPPED_LOGGING_ERROR
+					PRINT_ERROR << "Invalid IMAGE_DEBUG_MISC Length." << DEBUG_INFO_INSIDEPE << std::endl;
+				CAPPED_LOGGING_END
 				if (fseek(_file_handle.get(), next_entry, SEEK_SET)) return false;
 				continue;
 			}
@@ -836,7 +850,9 @@ bool PE::_parse_debug()
 				read_bounded_ascii_string(_file_handle.get(), string_size, misc.DbgFile);
 			if (!valid_string)
 			{
-				PRINT_ERROR << "Invalid IMAGE_DEBUG_MISC string." << DEBUG_INFO_INSIDEPE << std::endl;
+				CAPPED_LOGGING_ERROR
+					PRINT_ERROR << "Invalid IMAGE_DEBUG_MISC string." << DEBUG_INFO_INSIDEPE << std::endl;
+				CAPPED_LOGGING_END
 				if (fseek(_file_handle.get(), next_entry, SEEK_SET)) return false;
 				continue;
 			}

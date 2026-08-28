@@ -60,7 +60,7 @@ PE::resource_directory_result PE::_read_image_resource_directory(image_resource_
 	dir.Entries.clear();
 	if (size != fread(&dir, 1, size, _file_handle.get()))
 	{
-		CAPPED_LOGGING
+		CAPPED_LOGGING_ERROR
 		PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DIRECTORY." << DEBUG_INFO_INSIDEPE << std::endl;
 		CAPPED_LOGGING_END
 		return resource_directory_result::read_error;
@@ -70,7 +70,7 @@ PE::resource_directory_result PE::_read_image_resource_directory(image_resource_
 		static_cast<size_t>(dir.NumberOfNamedEntries);
 	if (entry_count > MAX_RESOURCE_DIRECTORY_ENTRIES || entry_count > remaining_entries)
 	{
-		CAPPED_LOGGING
+		CAPPED_LOGGING_ERROR
 		PRINT_ERROR << "The PE's resource section exceeds the parsing limits. Resources will not be parsed."
 					<< DEBUG_INFO_INSIDEPE << std::endl;
 		CAPPED_LOGGING_END
@@ -80,7 +80,7 @@ PE::resource_directory_result PE::_read_image_resource_directory(image_resource_
 
 	if (dir.Characteristics != 0)
 	{
-		CAPPED_LOGGING
+		CAPPED_LOGGING_WARNING
 		PRINT_WARNING << "An IMAGE_RESOURCE_DIRECTORY's characteristics should always be 0. The PE may have been manually edited." << DEBUG_INFO_INSIDEPE << std::endl;
 		CAPPED_LOGGING_END
 	}
@@ -112,7 +112,7 @@ PE::resource_directory_result PE::_read_image_resource_directory(image_resource_
 		// Immediately reject obvious bogus entries.
 		if ((entry->OffsetToData & 0x7FFFFFFF) > _file_size)
 		{
-			CAPPED_LOGGING
+			CAPPED_LOGGING_WARNING
 			PRINT_WARNING << "Ignored an invalid IMAGE_RESOURCE_DIRECTORY_ENTRY." << DEBUG_INFO_INSIDEPE << std::endl;
 			CAPPED_LOGGING_END
 			continue;
@@ -198,7 +198,7 @@ bool PE::_parse_resources()
 
 				if (entry.Size > _file_size)
 				{
-					CAPPED_LOGGING
+					CAPPED_LOGGING_WARNING
 					PRINT_WARNING << "Ignored an invalid IMAGE_RESOURCE_DATA_ENTRY" << DEBUG_INFO_INSIDEPE << std::endl;
 					CAPPED_LOGGING_END
 					continue;
@@ -237,7 +237,7 @@ bool PE::_parse_resources()
 				offset = rva_to_offset(entry.OffsetToData);
 				if (!offset)
 				{
-					CAPPED_LOGGING
+					CAPPED_LOGGING_WARNING
 					PRINT_WARNING << "Could not locate the section containing resource ";
 					if (id) {
 						std::cerr << id << DEBUG_INFO_INSIDEPE;

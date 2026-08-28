@@ -42,11 +42,11 @@ struct SilenceLogsFixture
 class ErrorCapture
 {
 public:
-	ErrorCapture()
+	explicit ErrorCapture(utils::LogLevel level = utils::LogLevel::ERROR)
 		: previous_level(utils::get_log_level()),
 		  previous_buffer(std::cerr.rdbuf(captured.rdbuf()))
 	{
-		utils::set_log_level(utils::LogLevel::ERROR);
+		utils::set_log_level(level);
 	}
 	~ErrorCapture()
 	{
@@ -265,9 +265,11 @@ BOOST_AUTO_TEST_CASE(parse_multiple_bounded_coff_strings)
 BOOST_AUTO_TEST_CASE(reject_undersized_pe32_optional_header)
 {
 	auto bytes = make_optional_extent_pe(95);
+	ErrorCapture errors;
 	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "short-optional.exe");
 	BOOST_REQUIRE(pe);
 	BOOST_CHECK(!pe->is_valid());
+	BOOST_CHECK_NE(errors.str().find("SizeOfOptionalHeader"), std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(reject_undersized_pe32_plus_optional_header)
@@ -301,9 +303,11 @@ BOOST_AUTO_TEST_CASE(reject_export_directory_smaller_than_fixed_header)
 {
 	auto bytes = read_binary_file("testfiles/manatest2.exe");
 	write_u32(bytes, 0x18c, 39);
+	ErrorCapture errors;
 	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "short-export-root.exe");
 	BOOST_REQUIRE(pe && pe->is_valid());
 	BOOST_CHECK(pe->get_exports()->empty());
+	BOOST_CHECK_NE(errors.str().find("IMAGE_EXPORT_DIRECTORY"), std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(reject_zero_rva_export_directory_with_named_error)
@@ -321,9 +325,11 @@ BOOST_AUTO_TEST_CASE(reject_debug_directory_smaller_than_entry)
 {
 	auto bytes = read_binary_file("testfiles/manatest.exe");
 	write_u32(bytes, 0x19c, 27);
+	ErrorCapture errors;
 	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "short-debug-root.exe");
 	BOOST_REQUIRE(pe && pe->is_valid());
 	BOOST_CHECK(pe->get_debug_info()->empty());
+	BOOST_CHECK_NE(errors.str().find("IMAGE_DEBUG_DIRECTORY"), std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(reject_tls_directory_smaller_than_pe32_root)
@@ -486,25 +492,34 @@ BOOST_AUTO_TEST_CASE(parse_forwarded_export_with_widened_directory_end)
 BOOST_AUTO_TEST_CASE(reject_oversized_certificate_before_allocation)
 {
 	auto bytes = make_certificate_pe(8, 0xffffffffu, {});
+	ErrorCapture errors;
+	utils::set_log_level(utils::LogLevel::WARNING);
 	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "oversized-certificate.exe");
 	BOOST_REQUIRE(pe && pe->is_valid());
 	BOOST_CHECK(pe->get_certificates()->empty());
+	BOOST_CHECK_NE(errors.str().find("WIN_CERTIFICATE"), std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(reject_certificate_smaller_than_header)
 {
 	auto bytes = make_certificate_pe(8, 7, {});
+	ErrorCapture errors;
+	utils::set_log_level(utils::LogLevel::WARNING);
 	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "short-certificate.exe");
 	BOOST_REQUIRE(pe && pe->is_valid());
 	BOOST_CHECK(pe->get_certificates()->empty());
+	BOOST_CHECK_NE(errors.str().find("WIN_CERTIFICATE"), std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(reject_certificate_beyond_declared_directory)
 {
 	auto bytes = make_certificate_pe(12, 16, {1, 2, 3, 4, 5, 6, 7, 8});
+	ErrorCapture errors;
+	utils::set_log_level(utils::LogLevel::WARNING);
 	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "certificate-directory-overrun.exe");
 	BOOST_REQUIRE(pe && pe->is_valid());
 	BOOST_CHECK(pe->get_certificates()->empty());
+	BOOST_CHECK_NE(errors.str().find("WIN_CERTIFICATE"), std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(parse_bounded_certificate_payload)
@@ -748,9 +763,11 @@ BOOST_AUTO_TEST_CASE(reject_codeview_filename_without_in_range_terminator)
 	write_u32(bytes, 0x19c, 28);
 	write_u32(bytes, 0x17b0, 25);
 	bytes[0x1898] = 'X';
+	ErrorCapture errors;
 	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "unterminated-codeview.exe");
 	BOOST_REQUIRE(pe && pe->is_valid());
 	BOOST_CHECK(pe->get_debug_info()->empty());
+	BOOST_CHECK_NE(errors.str().find("CodeView"), std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(reject_codeview_size_below_rsds_header)
@@ -758,9 +775,11 @@ BOOST_AUTO_TEST_CASE(reject_codeview_size_below_rsds_header)
 	auto bytes = read_binary_file("testfiles/manatest.exe");
 	write_u32(bytes, 0x19c, 28);
 	write_u32(bytes, 0x17b0, 24);
+	ErrorCapture errors;
 	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "short-codeview.exe");
 	BOOST_REQUIRE(pe && pe->is_valid());
 	BOOST_CHECK(pe->get_debug_info()->empty());
+	BOOST_CHECK_NE(errors.str().find("CodeView"), std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(reject_codeview_payload_beyond_eof)
@@ -772,9 +791,11 @@ BOOST_AUTO_TEST_CASE(reject_codeview_payload_beyond_eof)
 	write_u32(bytes, 0x17b8, static_cast<std::uint32_t>(payload));
 	write_u32(bytes, payload, 0x53445352);
 	std::fill(bytes.begin() + payload + 4, bytes.end(), 0);
+	ErrorCapture errors;
 	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "eof-codeview.exe");
 	BOOST_REQUIRE(pe && pe->is_valid());
 	BOOST_CHECK(pe->get_debug_info()->empty());
+	BOOST_CHECK_NE(errors.str().find("CodeView"), std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(parse_codeview_filename_at_exact_boundary)
@@ -807,10 +828,12 @@ BOOST_AUTO_TEST_CASE(recover_after_malformed_codeview_entry)
 	write_u32(bytes, 0x19c, 56);
 	write_u32(bytes, 0x17b0, 24);
 	write_codeview_entry(bytes, 0x17bc, 0x2600, 0x53445352, "ok");
+	ErrorCapture errors;
 	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "recover-debug.exe");
 	BOOST_REQUIRE(pe && pe->is_valid());
 	BOOST_REQUIRE_EQUAL(pe->get_debug_info()->size(), 1);
 	BOOST_CHECK_EQUAL(pe->get_debug_info()->front()->Filename, "ok");
+	BOOST_CHECK_NE(errors.str().find("CodeView"), std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(recover_after_invalid_debug_misc_entry)
@@ -818,10 +841,77 @@ BOOST_AUTO_TEST_CASE(recover_after_invalid_debug_misc_entry)
 	auto bytes = make_debug_misc_pe(12, false);
 	write_u32(bytes, 0x19c, 56);
 	write_codeview_entry(bytes, 0x17bc, 0x2600, 0x53445352, "ok");
+	ErrorCapture errors;
 	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "recover-misc.exe");
 	BOOST_REQUIRE(pe && pe->is_valid());
 	BOOST_REQUIRE_EQUAL(pe->get_debug_info()->size(), 1);
 	BOOST_CHECK_EQUAL(pe->get_debug_info()->front()->Filename, "ok");
+	BOOST_CHECK_NE(errors.str().find("IMAGE_DEBUG_MISC"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(capped_logging_respects_message_severity)
+{
+	{
+		ErrorCapture logs(utils::LogLevel::OFF);
+		CAPPED_LOGGING_ERROR
+			PRINT_ERROR << "hidden capped error" << std::endl;
+		CAPPED_LOGGING_END
+		BOOST_CHECK(logs.str().empty());
+	}
+
+	{
+		ErrorCapture logs(utils::LogLevel::ERROR);
+		for (size_t i = 0; i < LOG_CAP + 5; ++i) {
+			CAPPED_LOGGING_WARNING
+				PRINT_WARNING << "hidden capped warning" << std::endl;
+			CAPPED_LOGGING_END
+		}
+		CAPPED_LOGGING_ERROR
+			PRINT_ERROR << "visible capped error" << std::endl;
+		CAPPED_LOGGING_END
+
+		BOOST_CHECK_EQUAL(logs.str().find("hidden capped warning"), std::string::npos);
+		BOOST_CHECK_NE(logs.str().find("visible capped error"), std::string::npos);
+	}
+
+	{
+		ErrorCapture logs(utils::LogLevel::WARNING);
+		CAPPED_LOGGING_WARNING
+			PRINT_WARNING << "visible capped warning" << std::endl;
+		CAPPED_LOGGING_END
+		BOOST_CHECK_NE(logs.str().find("visible capped warning"), std::string::npos);
+	}
+}
+
+BOOST_AUTO_TEST_CASE(cap_malformed_debug_diagnostics_without_stopping_scan)
+{
+	auto bytes = read_binary_file("testfiles/manatest.exe");
+	const size_t malformed_entries = LOG_CAP + 5;
+	const size_t first_entry = 0x17a0;
+	const size_t valid_entry = first_entry + malformed_entries * 28;
+	write_u32(bytes, 0x19c, static_cast<std::uint32_t>((malformed_entries + 1) * 28));
+	std::fill(bytes.begin() + first_entry, bytes.begin() + valid_entry + 28, 0);
+	for (size_t i = 0; i < malformed_entries; ++i) {
+		write_u32(bytes, first_entry + i * 28 + 12,
+			nt::DEBUG_TYPES.at("IMAGE_DEBUG_TYPE_CODEVIEW"));
+	}
+	write_codeview_entry(bytes, valid_entry, 0x2600, 0x53445352, "ok");
+
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "capped-debug-errors.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_REQUIRE_EQUAL(pe->get_debug_info()->size(), 1);
+	BOOST_CHECK_EQUAL(pe->get_debug_info()->front()->Filename, "ok");
+
+	const std::string output = errors.str();
+	const std::string diagnostic = "Invalid CodeView debug entry.";
+	size_t diagnostic_count = 0;
+	for (size_t offset = 0; (offset = output.find(diagnostic, offset)) != std::string::npos;
+		offset += diagnostic.size()) {
+		++diagnostic_count;
+	}
+	BOOST_CHECK_GT(diagnostic_count, 0);
+	BOOST_CHECK_LT(diagnostic_count, malformed_entries);
 }
 
 // ----------------------------------------------------------------------------

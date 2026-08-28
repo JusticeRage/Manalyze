@@ -118,12 +118,13 @@ DECLSPEC_MANACOMMONS std::ostream& warning_stream();
 #define LOG_CAP 100
 
 /**
- *	@brief	Checks whether warnings should still be printed.
+ *	@brief	Checks and increments the capped diagnostic counter.
  */
 DECLSPEC_MANACOMMONS bool is_log_cap_reached();
 
-// Macros to add around very verbose warnings to avoid flooding stderr.
-#define CAPPED_LOGGING if (!utils::is_log_cap_reached()) {
+// Macros to add around repeated diagnostics to avoid flooding stderr.
+#define CAPPED_LOGGING_ERROR if (utils::should_log(utils::LogLevel::ERROR) && !utils::is_log_cap_reached()) {
+#define CAPPED_LOGGING_WARNING if (utils::should_log(utils::LogLevel::WARNING) && !utils::is_log_cap_reached()) {
 #define CAPPED_LOGGING_END }
 
 // TODO: Add these macros to all errors and warnings.
