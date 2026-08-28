@@ -4,6 +4,7 @@
 #include <array>
 #include <limits>
 #include <unordered_map>
+#include <unordered_set>
 
 namespace mana::detail {
 
@@ -46,7 +47,8 @@ struct ImportParseContext
 		successful_dll_strings;
 	std::unordered_map<StringCacheKey, DecodedImportName, StringCacheKeyHash>
 		successful_function_names;
-	std::unordered_map<std::uint64_t, std::vector<import_lookup_table>>
+	std::unordered_map<ThunkCacheKey, std::vector<std::uint64_t>,
+		ThunkCacheKeyHash>
 		successful_thunks;
 	ImportMetrics* metrics;
 	bool exhausted = false;
@@ -175,6 +177,64 @@ bool read_mapped_value(const ImageView& image, std::uint64_t rva,
 		image.read_at(span->file_offset, destination, size);
 }
 
+bool materialize_import(std::uint64_t raw, std::uint64_t ordinal_mask,
+	const ImageView& image, ParsedImportLibrary& library,
+	std::unordered_set<ImportIdentity, ImportIdentityHash>& identities,
+	ImportParseContext& context, const DiagnosticSink& diagnostics)
+{
+	if (library.functions.size() >= 10000) {
+		emit_diagnostic(diagnostics, ParserDiagnostic::import_malformed);
+		return false;
+	}
+	if (!context.functions.charge(1)) {
+		exhaust_imports(context, diagnostics);
+		return false;
+	}
+
+	import_lookup_table function{};
+	function.AddressOfData = raw;
+	PendingDecode<DecodedImportName> decoded{};
+	bool has_pending_name = false;
+	if ((raw & ordinal_mask) == 0) {
+		const auto status = decode_function_name(image,
+			raw & 0x7fffffffULL, context, decoded);
+		if (status == DecodeStatus::exhausted) {
+			exhaust_imports(context, diagnostics);
+			return false;
+		}
+		if (status != DecodeStatus::success) {
+			emit_diagnostic(diagnostics, ParserDiagnostic::import_malformed);
+			return false;
+		}
+		if (!context.materialized_function_name_bytes.charge(
+			decoded.value.name.size())) {
+			exhaust_imports(context, diagnostics);
+			return false;
+		}
+		function.Hint = decoded.value.hint;
+		function.Name = decoded.value.name;
+		has_pending_name = !decoded.cache_hit;
+	}
+
+	if (context.metrics) ++context.metrics->duplicate_checks;
+	const auto inserted = identities.insert({function.AddressOfData,
+		function.Hint, function.Name});
+	if (!inserted.second) {
+		emit_diagnostic(diagnostics, ParserDiagnostic::import_malformed);
+		return false;
+	}
+	if (has_pending_name) {
+		context.successful_function_names.emplace(decoded.key,
+			std::move(decoded.value));
+		if (context.metrics) {
+			context.metrics->function_name_cache_entries =
+				context.successful_function_names.size();
+		}
+	}
+	library.functions.push_back(std::move(function));
+	return true;
+}
+
 bool traverse_import_table(const ImageView& image, std::uint64_t table_rva,
 	bool pe32_plus, ParsedImportLibrary& library, ImportParseContext& context,
 	const DiagnosticSink& diagnostics)
@@ -183,66 +243,74 @@ bool traverse_import_table(const ImageView& image, std::uint64_t table_rva,
 		sizeof(std::uint32_t);
 	const std::uint64_t ordinal_mask = pe32_plus ? 0x8000000000000000ULL :
 		0x80000000ULL;
+	const auto root = resolve_mapped_span(image, table_rva);
+	if (!root || root->backing != SpanBacking::initialized) {
+		emit_diagnostic(diagnostics, ParserDiagnostic::import_malformed);
+		return false;
+	}
+
+	std::uint64_t extent = root->size;
+	if (root->size <= std::numeric_limits<std::uint64_t>::max() - table_rva) {
+		const auto next = resolve_mapped_span(image, table_rva + root->size);
+		if (next && next->region == root->region &&
+			next->backing == SpanBacking::zero_fill) {
+			extent += next->size;
+		}
+	}
+	const ThunkCacheKey key{root->file_offset, extent, slot_size};
+	std::unordered_set<ImportIdentity, ImportIdentityHash> identities;
+	const auto cached = context.successful_thunks.find(key);
+	if (cached != context.successful_thunks.end()) {
+		if (context.metrics) ++context.metrics->thunk_cache_hits;
+		for (const auto raw : cached->second) {
+			if (!materialize_import(raw, ordinal_mask, image, library,
+				identities, context, diagnostics)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	std::vector<std::uint64_t> pending;
 	std::uint64_t cursor = table_rva;
 	while (true) {
+		const auto span = resolve_mapped_span(image, cursor);
+		if (!span || span->region != root->region) {
+			emit_diagnostic(diagnostics, ParserDiagnostic::import_malformed);
+			return false;
+		}
+		if (span->backing == SpanBacking::zero_fill) {
+			context.successful_thunks.emplace(key, std::move(pending));
+			if (context.metrics) {
+				context.metrics->thunk_cache_entries =
+					context.successful_thunks.size();
+			}
+			return true;
+		}
+		if (span->size < slot_size || !image.read_at) {
+			emit_diagnostic(diagnostics, ParserDiagnostic::import_malformed);
+			return false;
+		}
+
 		std::uint64_t raw = 0;
-		if (!read_mapped_value(image, cursor, &raw, slot_size)) {
-			emit_diagnostic(diagnostics, ParserDiagnostic::import_malformed);
-			return false;
-		}
 		if (context.metrics) ++context.metrics->thunk_slot_reads;
-		if (raw == 0) return true;
-		if (library.functions.size() > 10000) {
+		if (!image.read_at(span->file_offset, &raw, slot_size)) {
 			emit_diagnostic(diagnostics, ParserDiagnostic::import_malformed);
 			return false;
 		}
-		if (!context.functions.charge(1)) {
-			exhaust_imports(context, diagnostics);
+		if (raw == 0) {
+			context.successful_thunks.emplace(key, std::move(pending));
+			if (context.metrics) {
+				context.metrics->thunk_cache_entries =
+					context.successful_thunks.size();
+			}
+			return true;
+		}
+		if (!materialize_import(raw, ordinal_mask, image, library, identities,
+			context, diagnostics)) {
 			return false;
 		}
-
-		import_lookup_table function{};
-		function.AddressOfData = raw;
-		if ((raw & ordinal_mask) == 0) {
-			PendingDecode<DecodedImportName> decoded{};
-			const auto status = decode_function_name(image,
-				raw & 0x7fffffffULL, context, decoded);
-			if (status == DecodeStatus::exhausted) {
-				exhaust_imports(context, diagnostics);
-				return false;
-			}
-			if (status != DecodeStatus::success) {
-				emit_diagnostic(diagnostics, ParserDiagnostic::import_malformed);
-				return false;
-			}
-			if (!context.materialized_function_name_bytes.charge(
-				decoded.value.name.size())) {
-				exhaust_imports(context, diagnostics);
-				return false;
-			}
-			function.Hint = decoded.value.hint;
-			function.Name = decoded.value.name;
-			if (!decoded.cache_hit) {
-				context.successful_function_names.emplace(decoded.key,
-					std::move(decoded.value));
-				if (context.metrics) {
-					context.metrics->function_name_cache_entries =
-						context.successful_function_names.size();
-				}
-			}
-		}
-
-		const auto duplicate = std::find_if(library.functions.begin(),
-			library.functions.end(), [&](const import_lookup_table& existing) {
-				return function.AddressOfData == existing.AddressOfData &&
-					function.Hint == existing.Hint &&
-					function.Name == existing.Name;
-			});
-		if (duplicate != library.functions.end()) {
-			emit_diagnostic(diagnostics, ParserDiagnostic::import_malformed);
-			return false;
-		}
-		library.functions.push_back(std::move(function));
+		pending.push_back(raw);
 		if (cursor > std::numeric_limits<std::uint64_t>::max() - slot_size) {
 			emit_diagnostic(diagnostics, ParserDiagnostic::import_malformed);
 			return false;
@@ -290,6 +358,27 @@ std::size_t StringCacheKeyHash::operator()(const StringCacheKey& key) const noex
 		(value << 6) + (value >> 2);
 	value ^= std::hash<unsigned int>{}(static_cast<unsigned int>(key.kind)) +
 		0x9e3779b9 + (value << 6) + (value >> 2);
+	return value;
+}
+
+std::size_t ThunkCacheKeyHash::operator()(const ThunkCacheKey& key) const noexcept
+{
+	std::size_t value = std::hash<std::uint64_t>{}(key.physical_offset);
+	value ^= std::hash<std::uint64_t>{}(key.extent) + 0x9e3779b9 +
+		(value << 6) + (value >> 2);
+	value ^= std::hash<std::size_t>{}(key.slot_width) + 0x9e3779b9 +
+		(value << 6) + (value >> 2);
+	return value;
+}
+
+std::size_t ImportIdentityHash::operator()(
+	const ImportIdentity& identity) const noexcept
+{
+	std::size_t value = std::hash<std::uint64_t>{}(identity.address_of_data);
+	value ^= std::hash<std::uint16_t>{}(identity.hint) + 0x9e3779b9 +
+		(value << 6) + (value >> 2);
+	value ^= std::hash<std::string>{}(identity.name) + 0x9e3779b9 +
+		(value << 6) + (value >> 2);
 	return value;
 }
 

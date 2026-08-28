@@ -28,9 +28,10 @@ void check_span(const std::optional<mana::detail::MappedSpan>& span,
 	BOOST_CHECK_EQUAL(span->region, region);
 }
 
-constexpr mana::detail::ImportLimits import_limits(std::uint64_t descriptors = 16)
+constexpr mana::detail::ImportLimits import_limits(std::uint64_t descriptors = 16,
+	std::uint64_t functions = 128)
 {
-	return {descriptors, 128, 4096, 4096, 4096};
+	return {descriptors, functions, 4096, 4096, 4096};
 }
 
 void put_descriptor(CompactImageBuilder& image, std::size_t offset,
@@ -94,6 +95,54 @@ CompactImageBuilder make_repeated_dll_image(std::uint32_t first_name,
 	image.put32(0x188, 0x80000002);
 	image.put32(0x18c, 0);
 	return image;
+}
+
+std::uint64_t ordinal_value(bool pe32_plus, std::uint16_t ordinal)
+{
+	return (pe32_plus ? 0x8000000000000000ULL : 0x80000000ULL) | ordinal;
+}
+
+CompactImageBuilder make_ordinal_thunk_image(bool pe32_plus,
+	const std::vector<std::uint64_t>& values, bool terminate,
+	std::size_t partial_tail = 0, std::size_t zero_fill_tail = 0,
+	bool repeated_descriptor = false)
+{
+	const std::size_t slot_size = pe32_plus ? 8 : 4;
+	const std::size_t initialized_size =
+		(values.size() + (terminate ? 1 : 0)) * slot_size + partial_tail;
+	CompactImageBuilder image(std::max<std::size_t>(0x400,
+		0x200 + initialized_size));
+	image.headers(0x80).image(0, 0x8000, 1);
+	image.section({0x1000, 6, 0x100, 6});
+	image.section({0x2000, initialized_size + zero_fill_tail,
+		0x200, initialized_size});
+	put_descriptor(image, 0x20, 0x2000, 0x1000, 0x2000);
+	if (repeated_descriptor) {
+		put_descriptor(image, 0x34, 0x2000, 0x1000, 0x2000);
+		put_descriptor(image, 0x48, 0, 0, 0);
+	} else {
+		put_descriptor(image, 0x34, 0, 0, 0);
+	}
+	image.put_ascii(0x100, "A.dll");
+	for (std::size_t i = 0; i < values.size(); ++i) {
+		if (pe32_plus) image.put64(0x200 + i * slot_size, values[i]);
+		else image.put32(0x200 + i * slot_size,
+			static_cast<std::uint32_t>(values[i]));
+	}
+	return image;
+}
+
+mana::detail::ImportParseResult parse_standard_imports_for_architecture(
+	const mana::detail::ImageView& image, bool pe32_plus,
+	const mana::detail::ImportLimits& limits,
+	std::vector<mana::detail::ParserDiagnostic>& diagnostics,
+	mana::detail::ImportMetrics* metrics = nullptr)
+{
+	return mana::detail::parse_imports(image, {0x20, 0x3c}, {0, 0},
+		pe32_plus, limits,
+		[&](mana::detail::ParserDiagnostic diagnostic) {
+			diagnostics.push_back(diagnostic);
+		}, metrics);
 }
 
 } // namespace
@@ -786,6 +835,414 @@ BOOST_AUTO_TEST_CASE(import_name_budget_existing_cache_survives_logical_failure)
 	BOOST_CHECK_EQUAL(metrics.string_read_calls, 1);
 	BOOST_CHECK_EQUAL(metrics.string_bytes_read, 2);
 	BOOST_CHECK_EQUAL(metrics.string_cache_hits, 1);
+}
+
+BOOST_AUTO_TEST_CASE(import_thunk_exact_initialized_boundary_accepts_terminator)
+{
+	for (const bool pe32_plus : {false, true}) {
+		BOOST_TEST_CONTEXT("slot width " << (pe32_plus ? 8 : 4)) {
+			auto image = make_ordinal_thunk_image(pe32_plus,
+				{ordinal_value(pe32_plus, 1)}, true);
+			std::vector<mana::detail::ParserDiagnostic> diagnostics;
+			mana::detail::ImportMetrics metrics;
+
+			const auto result = parse_standard_imports_for_architecture(
+				image.view(), pe32_plus, import_limits(), diagnostics, &metrics);
+
+			BOOST_REQUIRE_EQUAL(result.libraries.size(), 1);
+			BOOST_REQUIRE_EQUAL(result.libraries[0].functions.size(), 1);
+			BOOST_CHECK_EQUAL(result.libraries[0].functions[0].AddressOfData,
+				ordinal_value(pe32_plus, 1));
+			BOOST_CHECK_EQUAL(metrics.thunk_slot_reads, 2);
+			BOOST_CHECK(diagnostics.empty());
+		}
+	}
+}
+
+BOOST_AUTO_TEST_CASE(import_thunk_unterminated_complete_slot_preserves_function)
+{
+	for (const bool pe32_plus : {false, true}) {
+		auto image = make_ordinal_thunk_image(pe32_plus,
+			{ordinal_value(pe32_plus, 2)}, false);
+		std::vector<mana::detail::ParserDiagnostic> diagnostics;
+		mana::detail::ImportMetrics metrics;
+
+		const auto result = parse_standard_imports_for_architecture(image.view(),
+			pe32_plus, import_limits(), diagnostics, &metrics);
+
+		BOOST_REQUIRE_EQUAL(result.libraries.size(), 1);
+		BOOST_CHECK_EQUAL(result.libraries[0].functions.size(), 1);
+		BOOST_CHECK_EQUAL(metrics.thunk_slot_reads, 1);
+		BOOST_REQUIRE_EQUAL(diagnostics.size(), 1);
+		BOOST_CHECK(diagnostics[0] ==
+			mana::detail::ParserDiagnostic::import_malformed);
+	}
+}
+
+BOOST_AUTO_TEST_CASE(import_thunk_partial_final_slot_is_not_read)
+{
+	for (const bool pe32_plus : {false, true}) {
+		const std::size_t slot_size = pe32_plus ? 8 : 4;
+		auto image = make_ordinal_thunk_image(pe32_plus,
+			{ordinal_value(pe32_plus, 3)}, false, slot_size - 1);
+		std::size_t partial_reads = 0;
+		auto view = image.view();
+		const auto read_at = view.read_at;
+		view.read_at = [&](std::uint64_t offset, void* destination,
+			std::size_t count) {
+			if (offset == 0x200 + slot_size) ++partial_reads;
+			return read_at(offset, destination, count);
+		};
+		std::vector<mana::detail::ParserDiagnostic> diagnostics;
+
+		const auto result = parse_standard_imports_for_architecture(view,
+			pe32_plus, import_limits(), diagnostics);
+
+		BOOST_REQUIRE_EQUAL(result.libraries.size(), 1);
+		BOOST_CHECK_EQUAL(result.libraries[0].functions.size(), 1);
+		BOOST_CHECK_EQUAL(partial_reads, 0);
+		BOOST_REQUIRE_EQUAL(diagnostics.size(), 1);
+		BOOST_CHECK(diagnostics[0] ==
+			mana::detail::ParserDiagnostic::import_malformed);
+	}
+}
+
+BOOST_AUTO_TEST_CASE(import_thunk_same_region_zero_fill_is_terminator)
+{
+	for (const bool pe32_plus : {false, true}) {
+		const std::size_t slot_size = pe32_plus ? 8 : 4;
+		auto image = make_ordinal_thunk_image(pe32_plus,
+			{ordinal_value(pe32_plus, 4)}, false, 0, slot_size);
+		std::vector<mana::detail::ParserDiagnostic> diagnostics;
+		mana::detail::ImportMetrics metrics;
+
+		const auto result = parse_standard_imports_for_architecture(image.view(),
+			pe32_plus, import_limits(), diagnostics, &metrics);
+
+		BOOST_REQUIRE_EQUAL(result.libraries.size(), 1);
+		BOOST_CHECK_EQUAL(result.libraries[0].functions.size(), 1);
+		BOOST_CHECK_EQUAL(metrics.thunk_slot_reads, 1);
+		BOOST_CHECK(diagnostics.empty());
+	}
+}
+
+BOOST_AUTO_TEST_CASE(import_thunk_does_not_cross_into_another_region)
+{
+	for (const bool pe32_plus : {false, true}) {
+		const std::size_t slot_size = pe32_plus ? 8 : 4;
+		auto image = make_ordinal_thunk_image(pe32_plus,
+			{ordinal_value(pe32_plus, 5)}, false);
+		image.section({0x2000 + slot_size, slot_size,
+			0x300, slot_size});
+		std::vector<mana::detail::ParserDiagnostic> diagnostics;
+		mana::detail::ImportMetrics metrics;
+
+		const auto result = parse_standard_imports_for_architecture(image.view(),
+			pe32_plus, import_limits(), diagnostics, &metrics);
+
+		BOOST_REQUIRE_EQUAL(result.libraries.size(), 1);
+		BOOST_CHECK_EQUAL(result.libraries[0].functions.size(), 1);
+		BOOST_CHECK_EQUAL(metrics.thunk_slot_reads, 1);
+		BOOST_REQUIRE_EQUAL(diagnostics.size(), 1);
+		BOOST_CHECK(diagnostics[0] ==
+			mana::detail::ParserDiagnostic::import_malformed);
+	}
+}
+
+BOOST_AUTO_TEST_CASE(import_thunk_shared_table_is_physically_decoded_once)
+{
+	auto image = make_ordinal_thunk_image(false,
+		{ordinal_value(false, 7)}, true, 0, 0, true);
+	std::vector<mana::detail::ParserDiagnostic> diagnostics;
+	mana::detail::ImportMetrics metrics;
+
+	const auto result = parse_standard_imports_for_architecture(image.view(),
+		false, import_limits(), diagnostics, &metrics);
+
+	BOOST_REQUIRE_EQUAL(result.libraries.size(), 2);
+	BOOST_REQUIRE_EQUAL(result.libraries[0].functions.size(), 1);
+	BOOST_REQUIRE_EQUAL(result.libraries[1].functions.size(), 1);
+	BOOST_CHECK_EQUAL(metrics.thunk_slot_reads, 2);
+	BOOST_CHECK_EQUAL(metrics.thunk_cache_hits, 1);
+	BOOST_CHECK_EQUAL(metrics.thunk_cache_entries, 1);
+	BOOST_CHECK_EQUAL(metrics.duplicate_checks, 2);
+	BOOST_CHECK(diagnostics.empty());
+}
+
+BOOST_AUTO_TEST_CASE(import_thunk_cache_key_normalizes_physical_source)
+{
+	CompactImageBuilder image(0x400);
+	image.headers(0x80).image(0, 0x8000, 1);
+	image.section({0x1000, 6, 0x100, 6});
+	image.section({0x2000, 8, 0x200, 8});
+	image.section({0x3000, 8, 0x200, 8});
+	put_descriptor(image, 0x20, 0x2000, 0x1000, 0x2000);
+	put_descriptor(image, 0x34, 0x3000, 0x1000, 0x3000);
+	put_descriptor(image, 0x48, 0, 0, 0);
+	image.put_ascii(0x100, "A.dll");
+	image.put32(0x200, static_cast<std::uint32_t>(ordinal_value(false, 8)));
+	image.put32(0x204, 0);
+	std::vector<mana::detail::ParserDiagnostic> diagnostics;
+	mana::detail::ImportMetrics metrics;
+
+	const auto result = parse_standard_imports_for_architecture(image.view(),
+		false, import_limits(), diagnostics, &metrics);
+
+	BOOST_REQUIRE_EQUAL(result.libraries.size(), 2);
+	BOOST_CHECK_EQUAL(result.libraries[1].functions.size(), 1);
+	BOOST_CHECK_EQUAL(metrics.thunk_slot_reads, 2);
+	BOOST_CHECK_EQUAL(metrics.thunk_cache_hits, 1);
+}
+
+BOOST_AUTO_TEST_CASE(import_thunk_cache_key_includes_mapped_extent)
+{
+	CompactImageBuilder image(0x400);
+	image.headers(0x80).image(0, 0x8000, 1);
+	image.section({0x1000, 6, 0x100, 6});
+	image.section({0x2000, 8, 0x200, 8});
+	image.section({0x3000, 12, 0x200, 12});
+	put_descriptor(image, 0x20, 0x2000, 0x1000, 0x2000);
+	put_descriptor(image, 0x34, 0x3000, 0x1000, 0x3000);
+	put_descriptor(image, 0x48, 0, 0, 0);
+	image.put_ascii(0x100, "A.dll");
+	image.put32(0x200, static_cast<std::uint32_t>(ordinal_value(false, 9)));
+	image.put32(0x204, 0);
+	std::vector<mana::detail::ParserDiagnostic> diagnostics;
+	mana::detail::ImportMetrics metrics;
+
+	const auto result = parse_standard_imports_for_architecture(image.view(),
+		false, import_limits(), diagnostics, &metrics);
+
+	BOOST_REQUIRE_EQUAL(result.libraries.size(), 2);
+	BOOST_CHECK_EQUAL(metrics.thunk_slot_reads, 4);
+	BOOST_CHECK_EQUAL(metrics.thunk_cache_hits, 0);
+}
+
+BOOST_AUTO_TEST_CASE(import_thunk_cache_key_separates_slot_widths)
+{
+	const mana::detail::ThunkCacheKey pe32{0x200, 0x20, 4};
+	const mana::detail::ThunkCacheKey pe32_plus{0x200, 0x20, 8};
+
+	BOOST_CHECK(!(pe32 == pe32_plus));
+}
+
+BOOST_AUTO_TEST_CASE(import_thunk_malformed_table_is_not_cached)
+{
+	auto image = make_ordinal_thunk_image(false,
+		{ordinal_value(false, 10)}, false);
+	image.section({0x3000, 32, 0x280, 32});
+	image.put32(0x284, 0x1000);
+	image.put32(0x290, 0x2000);
+	std::vector<mana::detail::ParserDiagnostic> diagnostics;
+	mana::detail::ImportMetrics metrics;
+
+	const auto result = mana::detail::parse_imports(image.view(), {0x20, 40},
+		{0x3000, 32}, false, import_limits(),
+		[&](mana::detail::ParserDiagnostic diagnostic) {
+			diagnostics.push_back(diagnostic);
+		}, &metrics);
+
+	BOOST_REQUIRE_EQUAL(result.libraries.size(), 2);
+	BOOST_CHECK_EQUAL(result.libraries[0].functions.size(), 1);
+	BOOST_CHECK_EQUAL(result.libraries[1].functions.size(), 1);
+	BOOST_CHECK_EQUAL(metrics.thunk_slot_reads, 2);
+	BOOST_CHECK_EQUAL(metrics.thunk_cache_hits, 0);
+	BOOST_CHECK_EQUAL(metrics.thunk_cache_entries, 0);
+}
+
+BOOST_AUTO_TEST_CASE(import_thunk_read_failure_is_not_cached)
+{
+	auto image = make_ordinal_thunk_image(false,
+		{ordinal_value(false, 10)}, true);
+	image.section({0x3000, 32, 0x280, 32});
+	image.put32(0x284, 0x1000);
+	image.put32(0x290, 0x2000);
+	auto view = image.view();
+	const auto read_at = view.read_at;
+	bool failed_once = false;
+	view.read_at = [&](std::uint64_t offset, void* destination,
+		std::size_t count) {
+		if (!failed_once && offset == 0x200 && count == 4) {
+			failed_once = true;
+			return false;
+		}
+		return read_at(offset, destination, count);
+	};
+	std::vector<mana::detail::ParserDiagnostic> diagnostics;
+	mana::detail::ImportMetrics metrics;
+
+	const auto result = mana::detail::parse_imports(view, {0x20, 40},
+		{0x3000, 32}, false, import_limits(),
+		[&](mana::detail::ParserDiagnostic diagnostic) {
+			diagnostics.push_back(diagnostic);
+		}, &metrics);
+
+	BOOST_REQUIRE_EQUAL(result.libraries.size(), 2);
+	BOOST_CHECK(result.libraries[0].functions.empty());
+	BOOST_REQUIRE_EQUAL(result.libraries[1].functions.size(), 1);
+	BOOST_CHECK_EQUAL(metrics.thunk_slot_reads, 3);
+	BOOST_CHECK_EQUAL(metrics.thunk_cache_hits, 0);
+	BOOST_CHECK_EQUAL(metrics.thunk_cache_entries, 1);
+}
+
+BOOST_AUTO_TEST_CASE(import_thunk_cache_hit_avoids_thunk_and_name_reads)
+{
+	auto image = make_repeated_dll_image(0x1000, 0x1000);
+	image.section({0x1000, 6, 0x100, 6});
+	image.section({0x3000, 7, 0x200, 7});
+	image.put_ascii(0x100, "A.dll");
+	image.put32(0x180, 0x3000);
+	image.put32(0x184, 0);
+	put_descriptor(image, 0x34, 0x2000, 0x1000, 0x2000);
+	image.put16(0x200, 9);
+	image.put_ascii(0x202, "Func");
+	auto limits = import_limits();
+	limits.physical_string_bytes = 13;
+	limits.materialized_dll_name_bytes = 10;
+	limits.materialized_function_name_bytes = 8;
+	std::vector<mana::detail::ParserDiagnostic> diagnostics;
+	mana::detail::ImportMetrics metrics;
+
+	const auto result = parse_standard_imports(image.view(), 0x20, 60,
+		limits, diagnostics, &metrics);
+
+	BOOST_REQUIRE_EQUAL(result.libraries.size(), 2);
+	BOOST_REQUIRE_EQUAL(result.libraries[1].functions.size(), 1);
+	BOOST_CHECK_EQUAL(metrics.thunk_slot_reads, 2);
+	BOOST_CHECK_EQUAL(metrics.thunk_cache_hits, 1);
+	BOOST_CHECK_EQUAL(metrics.string_read_calls, 2);
+	BOOST_CHECK_EQUAL(metrics.string_cache_hits, 2);
+}
+
+BOOST_AUTO_TEST_CASE(import_thunk_unique_functions_use_one_duplicate_probe_each)
+{
+	std::vector<std::uint64_t> values;
+	for (std::uint16_t ordinal = 1; ordinal <= 64; ++ordinal) {
+		values.push_back(ordinal_value(false, ordinal));
+	}
+	auto image = make_ordinal_thunk_image(false, values, true);
+	std::vector<mana::detail::ParserDiagnostic> diagnostics;
+	mana::detail::ImportMetrics metrics;
+
+	const auto result = parse_standard_imports_for_architecture(image.view(),
+		false, import_limits(), diagnostics, &metrics);
+
+	BOOST_REQUIRE_EQUAL(result.libraries.size(), 1);
+	BOOST_REQUIRE_EQUAL(result.libraries[0].functions.size(), values.size());
+	BOOST_CHECK_EQUAL(metrics.duplicate_checks, values.size());
+	for (std::size_t i = 0; i < values.size(); ++i) {
+		BOOST_CHECK_EQUAL(result.libraries[0].functions[i].AddressOfData,
+			values[i]);
+	}
+}
+
+BOOST_AUTO_TEST_CASE(import_thunk_duplicate_identity_stops_with_partial_output)
+{
+	const auto repeated = ordinal_value(false, 11);
+	auto image = make_ordinal_thunk_image(false, {repeated, repeated}, true);
+	std::vector<mana::detail::ParserDiagnostic> diagnostics;
+	mana::detail::ImportMetrics metrics;
+
+	const auto result = parse_standard_imports_for_architecture(image.view(),
+		false, import_limits(), diagnostics, &metrics);
+
+	BOOST_REQUIRE_EQUAL(result.libraries.size(), 1);
+	BOOST_REQUIRE_EQUAL(result.libraries[0].functions.size(), 1);
+	BOOST_CHECK_EQUAL(result.libraries[0].functions[0].AddressOfData, repeated);
+	BOOST_CHECK_EQUAL(metrics.duplicate_checks, 2);
+	BOOST_REQUIRE_EQUAL(diagnostics.size(), 1);
+	BOOST_CHECK(diagnostics[0] ==
+		mana::detail::ParserDiagnostic::import_malformed);
+}
+
+BOOST_AUTO_TEST_CASE(import_function_limit_accepts_exactly_ten_thousand)
+{
+	for (const std::size_t count : {9999U, 10000U, 10001U}) {
+		std::vector<std::uint64_t> values;
+		values.reserve(count);
+		for (std::size_t i = 0; i < count; ++i) {
+			values.push_back(ordinal_value(false,
+				static_cast<std::uint16_t>(i + 1)));
+		}
+		auto image = make_ordinal_thunk_image(false, values, true);
+		std::vector<mana::detail::ParserDiagnostic> diagnostics;
+		mana::detail::ImportMetrics metrics;
+
+		const auto result = parse_standard_imports_for_architecture(image.view(),
+			false, import_limits(16, std::min<std::size_t>(count, 10000)),
+			diagnostics, &metrics);
+
+		BOOST_REQUIRE_EQUAL(result.libraries.size(), 1);
+		BOOST_CHECK_EQUAL(result.libraries[0].functions.size(),
+			std::min<std::size_t>(count, 10000));
+		BOOST_CHECK_EQUAL(metrics.duplicate_checks,
+			std::min<std::size_t>(count, 10000));
+		BOOST_CHECK_EQUAL(metrics.thunk_slot_reads,
+			count <= 10000 ? count + 1 : count);
+		BOOST_CHECK(result.exhausted == false);
+		BOOST_CHECK(diagnostics.empty() == (count <= 10000));
+	}
+}
+
+BOOST_AUTO_TEST_CASE(import_function_limit_charges_each_logical_cache_hit)
+{
+	for (const std::uint64_t limit : {3ULL, 4ULL, 5ULL}) {
+		auto image = make_ordinal_thunk_image(false,
+			{ordinal_value(false, 12), ordinal_value(false, 13)},
+			true, 0, 0, true);
+		std::vector<mana::detail::ParserDiagnostic> diagnostics;
+		mana::detail::ImportMetrics metrics;
+
+		const auto result = parse_standard_imports_for_architecture(image.view(),
+			false, import_limits(16, limit), diagnostics, &metrics);
+
+		BOOST_CHECK(result.exhausted == (limit < 4));
+		BOOST_REQUIRE_EQUAL(result.libraries.size(), 2);
+		BOOST_CHECK_EQUAL(result.libraries[0].functions.size(), 2);
+		BOOST_CHECK_EQUAL(result.libraries[1].functions.size(),
+			std::min<std::uint64_t>(limit - 2, 2));
+		BOOST_CHECK_EQUAL(metrics.thunk_slot_reads, 3);
+		BOOST_CHECK_EQUAL(metrics.thunk_cache_hits, 1);
+		BOOST_CHECK_EQUAL(metrics.duplicate_checks,
+			std::min<std::uint64_t>(limit, 4));
+		BOOST_CHECK(diagnostics.empty() == (limit >= 4));
+	}
+}
+
+BOOST_AUTO_TEST_CASE(import_function_limit_failure_does_not_cache_table)
+{
+	auto image = make_ordinal_thunk_image(false,
+		{ordinal_value(false, 16), ordinal_value(false, 17)}, true);
+	std::vector<mana::detail::ParserDiagnostic> diagnostics;
+	mana::detail::ImportMetrics metrics;
+
+	const auto result = parse_standard_imports_for_architecture(image.view(),
+		false, import_limits(16, 1), diagnostics, &metrics);
+
+	BOOST_CHECK(result.exhausted);
+	BOOST_REQUIRE_EQUAL(result.libraries.size(), 1);
+	BOOST_CHECK_EQUAL(result.libraries[0].functions.size(), 1);
+	BOOST_CHECK_EQUAL(metrics.thunk_cache_entries, 0);
+}
+
+BOOST_AUTO_TEST_CASE(import_function_limit_compact_boundaries)
+{
+	for (const std::uint64_t limit : {1ULL, 2ULL, 3ULL}) {
+		auto image = make_ordinal_thunk_image(false,
+			{ordinal_value(false, 14), ordinal_value(false, 15)}, true);
+		std::vector<mana::detail::ParserDiagnostic> diagnostics;
+		mana::detail::ImportMetrics metrics;
+
+		const auto result = parse_standard_imports_for_architecture(image.view(),
+			false, import_limits(16, limit), diagnostics, &metrics);
+
+		BOOST_REQUIRE_EQUAL(result.libraries.size(), 1);
+		BOOST_CHECK_EQUAL(result.libraries[0].functions.size(),
+			std::min<std::uint64_t>(limit, 2));
+		BOOST_CHECK(result.exhausted == (limit < 2));
+		BOOST_CHECK_EQUAL(metrics.duplicate_checks,
+			std::min<std::uint64_t>(limit, 2));
+	}
 }
 
 BOOST_AUTO_TEST_SUITE_END()

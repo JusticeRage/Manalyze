@@ -60,6 +60,7 @@ struct ImportMetrics
 	std::uint64_t string_cache_hits = 0;
 	std::uint64_t thunk_slot_reads = 0;
 	std::uint64_t thunk_cache_hits = 0;
+	std::uint64_t thunk_cache_entries = 0;
 	std::uint64_t duplicate_checks = 0;
 	std::uint64_t function_name_cache_entries = 0;
 };
@@ -88,6 +89,42 @@ struct DecodedImportName
 {
 	std::uint16_t hint;
 	std::string name;
+};
+
+struct ThunkCacheKey
+{
+	std::uint64_t physical_offset;
+	std::uint64_t extent;
+	std::size_t slot_width;
+
+	bool operator==(const ThunkCacheKey& other) const
+	{
+		return physical_offset == other.physical_offset &&
+			extent == other.extent && slot_width == other.slot_width;
+	}
+};
+
+struct ThunkCacheKeyHash
+{
+	std::size_t operator()(const ThunkCacheKey& key) const noexcept;
+};
+
+struct ImportIdentity
+{
+	std::uint64_t address_of_data;
+	std::uint16_t hint;
+	std::string name;
+
+	bool operator==(const ImportIdentity& other) const
+	{
+		return address_of_data == other.address_of_data &&
+			hint == other.hint && name == other.name;
+	}
+};
+
+struct ImportIdentityHash
+{
+	std::size_t operator()(const ImportIdentity& identity) const noexcept;
 };
 
 enum class ParserDiagnostic
