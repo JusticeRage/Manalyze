@@ -84,14 +84,21 @@ namespace {
 		memset(&header, 0, fixed_size);
 		if (!current_offset(file, position) || position > extent_end ||
 			extent_end - position < fixed_size ||
-			fread(&header, 1, fixed_size, file) != fixed_size ||
-			!read_utf16z_bounded(file, extent_end, header.Key) ||
+			fread(&header, 1, fixed_size, file) != fixed_size) {
+			return false;
+		}
+		if (header.Length == 0 || header.Length < fixed_size ||
+			header.Length > extent_end - position) {
+			return false;
+		}
+		const std::uint64_t block_end = position + header.Length;
+		if (!read_utf16z_bounded(file, block_end, header.Key) ||
 			!current_offset(file, position)) {
 			return false;
 		}
 
 		const std::uint64_t padding = (4 - position % 4) % 4;
-		if (position > extent_end || padding > extent_end - position) {
+		if (position > block_end || padding > block_end - position) {
 			return false;
 		}
 		return seek_absolute(file, position + padding);
@@ -696,15 +703,6 @@ DECLSPEC pversion_info Resource::interpret_as()
 	long saved_offset = -1;
 	std::unique_lock<std::mutex> lock(io_mutex_or_fallback(_io_mutex));
 	auto res = std::make_shared<version_info>();
-	unsigned int bytes_read; // Is calculated by calling ftell before and after reading a structure, and keeping the difference.
-	unsigned int bytes_remaining;
-	unsigned int language;
-	std::stringstream ss;
-	std::uint64_t resource_end = 0;
-
-	// We are going to read a lot of structures which look like a version info header.
-	// They will all be read into this variable, one at a time.
-	auto current_structure = std::make_shared<vs_version_info_header>();
 	if (!_reach_data(f, saved_offset)) {
 		return pversion_info();
 	}
@@ -712,131 +710,193 @@ DECLSPEC pversion_info Resource::interpret_as()
 	if (!fits_file_range(resource_start, _size, _file_size)) {
 		PRINT_ERROR << "Invalid RT_VERSION resource bounds." << DEBUG_INFO << std::endl;
 		res.reset();
-		goto END;
 	}
-	resource_end = resource_start + _size;
-	if (!read_version_header_bounded(res->Header, f, resource_end))
-	{
-		PRINT_ERROR << "Could not read the RT_VERSION root header within its resource bounds."
-			<< DEBUG_INFO << std::endl;
-		res.reset();
-		goto END;
-	}
-	res->Value = std::make_shared<fixed_file_info>();
-	memset(res->Value.get(), 0, sizeof(fixed_file_info));
-
-	// 0xFEEF04BD is a magic located at the beginning of the VS_FIXED_FILE_INFO structure.
-	if (sizeof(fixed_file_info) != fread(res->Value.get(), 1, sizeof(fixed_file_info), f) || res->Value->Signature != 0xfeef04bd)
-	{
-		PRINT_ERROR << "Could not read a VS_FIXED_FILE_INFO!" << DEBUG_INFO << std::endl;
-		res.reset();
-		goto END;
-	}
-
-	bytes_read = ftell(f);
-	if (!parse_version_info_header(*current_structure, f))
-	{
-		res.reset();
-		goto END;
-	}
-
-	// This (uninteresting) VAR_FILE_INFO structure may be located before the STRING_FILE_INFO we're after.
-	// In this case, just skip it.
-	if (current_structure->Key == "VarFileInfo")
-	{
-		bytes_read = ftell(f) - bytes_read;
-		fseek(f, current_structure->Length - bytes_read, SEEK_CUR);
-		if (!parse_version_info_header(*current_structure, f))
-		{
-			res.reset();
-			goto END;
-		}
-	}
-
-	if (current_structure->Key != "StringFileInfo")
-	{
-		PRINT_ERROR << "StringFileInfo expected, read " << current_structure->Key << " instead." << DEBUG_INFO << std::endl;
-		res.reset();
-		goto END;
-	}
-
-	// We don't need the contents of StringFileInfo. Replace them with the next structure.
-	bytes_read = ftell(f);
-	if (!parse_version_info_header(*current_structure, f))
-	{
-		res.reset();
-		goto END;
-	}
-
-	// In the file, the language information is an int stored into a "unicode" string.
-	ss << std::hex << current_structure->Key;
-	ss >> language;
-	if (!ss.fail()) {
-		res->Language = *nt::translate_to_flag((language >> 16) & 0xFFFF, nt::LANG_IDS);
-	}
-	else
-	{
-		PRINT_WARNING << "A language ID could not be translated (" << std::hex << res->Language << ")!" << std::endl;
-		res->Language = "UNKNOWN";
-	}
-
-	bytes_read = ftell(f) - bytes_read;
-	if (current_structure->Length < bytes_read)
-	{
-		PRINT_ERROR << "The StringTableInfo has an invalid size." << DEBUG_INFO << std::endl;
-		res.reset();
-		goto END;
-	}
-	bytes_remaining = current_structure->Length - bytes_read;
-
-	// Read the StringTable
-	while (bytes_remaining > 0)
-	{
-		unsigned int current_offset = ftell(f);
-		if (!parse_version_info_header(*current_structure, f))
-		{
-			res.reset();
-			goto END;
-		}
-
-		// Structures are aligned on DWORD boundaries, but the Length field doesn't reflect that. Update
-		// it here to facilitate the parsing.
-		if (current_structure->Length % 4 != 0) {
-			current_structure->Length += 4 - current_structure->Length % 4;
-		}
-
-		// Only process structures that contain data.
-		if (current_structure->ValueLength != 0)
-		{
-			std::string value;
-			if (ftell(f) - current_offset < current_structure->Length) {
-				value = utils::read_unicode_string(f);
+	else {
+		const std::uint64_t resource_end = resource_start + _size;
+		auto read_block = [&](vs_version_info_header& header,
+			std::uint64_t parent_end, const char* block_name,
+			std::uint64_t& block_start, std::uint64_t& block_end) -> bool {
+			if (!current_offset(f, block_start) || block_start > parent_end ||
+				!read_version_header_bounded(header, f, parent_end)) {
+				PRINT_ERROR << "Could not read the RT_VERSION " << block_name
+					<< " header within its parent bounds." << DEBUG_INFO << std::endl;
+				return false;
 			}
-			// Add the key/value to our internal representation
-			auto p = std::make_shared<string_pair>(current_structure->Key, value);
-			res->StringTable.push_back(p);
-		}
 
-		if (current_structure->Length > 0 && current_structure->Length < bytes_remaining)
-		{
-			bytes_remaining -= current_structure->Length;
-			unsigned int next_structure_offset = current_offset + current_structure->Length;
-			fseek(f, next_structure_offset, SEEK_SET);
-		}
-		else {
-			bytes_remaining = 0;
+			std::uint64_t after_header = 0;
+			if (!current_offset(f, after_header) || after_header < block_start) {
+				PRINT_ERROR << "Could not determine the RT_VERSION " << block_name
+					<< " extent." << DEBUG_INFO << std::endl;
+				return false;
+			}
+			const std::uint64_t consumed = after_header - block_start;
+			if (header.Length == 0 || header.Length < consumed) {
+				PRINT_ERROR << "The RT_VERSION " << block_name
+					<< " has an invalid Length." << DEBUG_INFO << std::endl;
+				return false;
+			}
+			if (header.Length > parent_end - block_start) {
+				PRINT_ERROR << "The RT_VERSION " << block_name
+					<< " exceeds its parent bounds." << DEBUG_INFO << std::endl;
+				return false;
+			}
+			block_end = block_start + header.Length;
+			return true;
+		};
+
+		auto seek_next_block = [&](std::uint64_t block_start,
+			std::uint64_t declared_length, std::uint64_t block_end,
+			std::uint64_t parent_end, const char* block_name) -> bool {
+			if (block_end == parent_end) {
+				return seek_absolute(f, block_end);
+			}
+			const std::uint64_t alignment = (4 - declared_length % 4) % 4;
+			const std::uint64_t remaining = parent_end - block_end;
+			if (remaining <= alignment) {
+				return seek_absolute(f, parent_end);
+			}
+			const std::uint64_t aligned_length = declared_length + alignment;
+			const std::uint64_t next_start = block_start + aligned_length;
+			if (next_start > parent_end || !seek_absolute(f, next_start)) {
+				PRINT_ERROR << "Could not reach the next RT_VERSION " << block_name
+					<< " within its parent bounds." << DEBUG_INFO << std::endl;
+				return false;
+			}
+			return true;
+		};
+
+		const bool parsed = [&]() -> bool {
+			std::uint64_t root_start = 0;
+			std::uint64_t root_end = 0;
+			if (!read_block(res->Header, resource_end, "root", root_start, root_end)) {
+				return false;
+			}
+
+			std::uint64_t fixed_info_offset = 0;
+			if (!current_offset(f, fixed_info_offset) ||
+				!fits_file_range(fixed_info_offset, sizeof(fixed_file_info), root_end)) {
+				PRINT_ERROR << "VS_FIXED_FILE_INFO exceeds the RT_VERSION resource."
+					<< DEBUG_INFO << std::endl;
+				return false;
+			}
+			res->Value = std::make_shared<fixed_file_info>();
+			memset(res->Value.get(), 0, sizeof(fixed_file_info));
+			if (fread(res->Value.get(), 1, sizeof(fixed_file_info), f) != sizeof(fixed_file_info) ||
+				res->Value->Signature != 0xfeef04bd) {
+				PRINT_ERROR << "Could not read the RT_VERSION VS_FIXED_FILE_INFO."
+					<< DEBUG_INFO << std::endl;
+				return false;
+			}
+
+			bool found_string_file_info = false;
+			std::uint64_t child_start = 0;
+			if (!current_offset(f, child_start) || child_start > root_end) {
+				PRINT_ERROR << "Could not determine the RT_VERSION child extent."
+					<< DEBUG_INFO << std::endl;
+				return false;
+			}
+			while (child_start < root_end) {
+				vs_version_info_header child;
+				std::uint64_t child_end = 0;
+				if (!read_block(child, root_end, "child", child_start, child_end)) {
+					return false;
+				}
+
+				if (child.Key == "StringFileInfo") {
+					found_string_file_info = true;
+					bool found_string_table = false;
+					std::uint64_t table_start = 0;
+					if (!current_offset(f, table_start) || table_start > child_end) {
+						PRINT_ERROR << "Could not determine the RT_VERSION StringTable extent."
+							<< DEBUG_INFO << std::endl;
+						return false;
+					}
+					while (table_start < child_end) {
+						vs_version_info_header table;
+						std::uint64_t table_end = 0;
+						if (!read_block(table, child_end, "StringTable",
+							table_start, table_end)) {
+							return false;
+						}
+						found_string_table = true;
+
+						unsigned int language = 0;
+						std::stringstream ss(table.Key);
+						ss >> std::hex >> language;
+						if (!ss.fail()) {
+							res->Language = *nt::translate_to_flag(
+								(language >> 16) & 0xFFFF, nt::LANG_IDS);
+						}
+						else {
+							PRINT_WARNING << "An RT_VERSION language ID could not be translated ("
+								<< table.Key << ")!" << std::endl;
+							res->Language = "UNKNOWN";
+						}
+
+						std::uint64_t string_start = 0;
+						if (!current_offset(f, string_start) || string_start > table_end) {
+							PRINT_ERROR << "Could not determine the RT_VERSION string extent."
+								<< DEBUG_INFO << std::endl;
+							return false;
+						}
+						while (string_start < table_end) {
+							vs_version_info_header string;
+							std::uint64_t string_end = 0;
+							if (!read_block(string, table_end, "string",
+								string_start, string_end)) {
+								return false;
+							}
+							if (string.ValueLength != 0) {
+								std::string value;
+								if (!read_utf16z_bounded(f, string_end, value)) {
+									PRINT_ERROR << "Could not read an RT_VERSION string value "
+										<< "within its string bounds." << DEBUG_INFO << std::endl;
+									return false;
+								}
+								res->StringTable.push_back(std::make_shared<string_pair>(
+									string.Key, value));
+							}
+							if (!seek_next_block(string_start, string.Length, string_end,
+								table_end, "string") || !current_offset(f, string_start)) {
+								return false;
+							}
+						}
+
+						if (!seek_next_block(table_start, table.Length, table_end,
+							child_end, "StringTable") || !current_offset(f, table_start)) {
+							return false;
+						}
+					}
+					if (!found_string_table) {
+						PRINT_ERROR << "The RT_VERSION StringFileInfo contains no StringTable."
+							<< DEBUG_INFO << std::endl;
+						return false;
+					}
+				}
+				else if (child.Key != "VarFileInfo") {
+					PRINT_ERROR << "StringFileInfo or VarFileInfo expected in RT_VERSION, read "
+						<< child.Key << " instead." << DEBUG_INFO << std::endl;
+					return false;
+				}
+
+				if (!seek_next_block(child_start, child.Length, child_end,
+					root_end, "child") || !current_offset(f, child_start)) {
+					return false;
+				}
+			}
+
+			if (!found_string_file_info) {
+				PRINT_ERROR << "StringFileInfo expected in RT_VERSION."
+					<< DEBUG_INFO << std::endl;
+				return false;
+			}
+			return true;
+		}();
+		if (!parsed) {
+			res.reset();
 		}
 	}
 
-	/*
-	   Theoretically, there may be a VarFileInfo (with translation information) structure afterwards
-	   if it wasn't encountered before).
-	   In practice, I find it irrelevant to my interests, and supporting it would increase the
-	   complexity of the version_info structure. If you *absolutely* need this for some reason,
-	   let me know.
-	*/
-
-	END:
 	if (f != nullptr && saved_offset != -1) {
 		if (fseek(f, saved_offset, SEEK_SET)) {
 			res.reset();

@@ -647,6 +647,64 @@ BOOST_AUTO_TEST_CASE(reject_version_header_without_bounded_key)
 	BOOST_CHECK_NE(errors.str().find("RT_VERSION"), std::string::npos);
 }
 
+BOOST_AUTO_TEST_CASE(reject_version_key_outside_declared_root_length)
+{
+	std::vector<std::uint8_t> blob(1024 * 1024, 0x41);
+	write_u16(blob, 0, 8);
+	write_u16(blob, 2, 0);
+	write_u16(blob, 4, 0);
+	write_u16(blob, blob.size() - sizeof(std::uint16_t), 0);
+	auto resource = make_version_resource(blob, static_cast<std::uint32_t>(blob.size()));
+	ErrorCapture errors;
+	BOOST_CHECK(!resource->interpret_as<mana::pversion_info>());
+	BOOST_CHECK_NE(errors.str().find("Could not read the RT_VERSION root header"),
+		std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(reject_varfileinfo_length_smaller_than_header)
+{
+	auto original = read_version_blob();
+	std::vector<std::uint8_t> blob;
+	blob.insert(blob.end(), original.begin(), original.begin() + 0x5c);
+	blob.insert(blob.end(), original.begin() + 0x290, original.end());
+	blob.insert(blob.end(), original.begin() + 0x5c, original.begin() + 0x290);
+	write_u16(blob, 0x5c, 0x1f);
+	auto resource = make_version_resource(blob, static_cast<std::uint32_t>(blob.size()));
+	ErrorCapture errors;
+	BOOST_CHECK(!resource->interpret_as<mana::pversion_info>());
+	BOOST_REQUIRE(resource->get_raw_data());
+	BOOST_CHECK_NE(errors.str().find("RT_VERSION"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(reject_varfileinfo_skip_past_resource_extent)
+{
+	auto original = read_version_blob();
+	std::vector<std::uint8_t> blob;
+	blob.insert(blob.end(), original.begin(), original.begin() + 0x5c);
+	blob.insert(blob.end(), original.begin() + 0x290, original.end());
+	blob.insert(blob.end(), original.begin() + 0x5c, original.begin() + 0x290);
+	write_u16(blob, 0, 0x9f);
+	auto resource = make_version_resource(blob, 0x9f);
+	ErrorCapture errors;
+	BOOST_CHECK(!resource->interpret_as<mana::pversion_info>());
+	BOOST_REQUIRE_EQUAL(resource->get_raw_data()->size(), 0x9f);
+	BOOST_CHECK_NE(errors.str().find("RT_VERSION"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(reject_version_string_past_resource_extent)
+{
+	auto blob = read_version_blob();
+	blob.resize(0x290);
+	write_u16(blob, 0, 0xbc);
+	write_u16(blob, 0x5c, 0x60);
+	write_u16(blob, 0x80, 0x3c);
+	auto resource = make_version_resource(blob, 0xbc);
+	ErrorCapture errors;
+	BOOST_CHECK(!resource->interpret_as<mana::pversion_info>());
+	BOOST_REQUIRE_EQUAL(resource->get_raw_data()->size(), 0xbc);
+	BOOST_CHECK_NE(errors.str().find("RT_VERSION"), std::string::npos);
+}
+
 // ----------------------------------------------------------------------------
 
 BOOST_AUTO_TEST_CASE(interpret_versioninfo)
