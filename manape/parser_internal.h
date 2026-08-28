@@ -93,17 +93,12 @@ struct DecodedImportName
 
 struct ThunkCacheKey
 {
-	std::uint64_t physical_offset;
-	std::uint64_t initialized_extent;
-	std::uint64_t total_extent;
+	std::uint64_t table_rva;
 	std::size_t slot_width;
 
 	bool operator==(const ThunkCacheKey& other) const
 	{
-		return physical_offset == other.physical_offset &&
-			initialized_extent == other.initialized_extent &&
-			total_extent == other.total_extent &&
-			slot_width == other.slot_width;
+		return table_rva == other.table_rva && slot_width == other.slot_width;
 	}
 };
 

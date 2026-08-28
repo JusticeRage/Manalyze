@@ -969,7 +969,7 @@ BOOST_AUTO_TEST_CASE(import_thunk_shared_table_is_physically_decoded_once)
 	BOOST_CHECK(diagnostics.empty());
 }
 
-BOOST_AUTO_TEST_CASE(import_thunk_cache_key_normalizes_physical_source)
+BOOST_AUTO_TEST_CASE(import_thunk_cache_distinguishes_same_physical_source_rvas)
 {
 	CompactImageBuilder image(0x400);
 	image.headers(0x80).image(0, 0x8000, 1);
@@ -990,11 +990,12 @@ BOOST_AUTO_TEST_CASE(import_thunk_cache_key_normalizes_physical_source)
 
 	BOOST_REQUIRE_EQUAL(result.libraries.size(), 2);
 	BOOST_CHECK_EQUAL(result.libraries[1].functions.size(), 1);
-	BOOST_CHECK_EQUAL(metrics.thunk_slot_reads, 2);
-	BOOST_CHECK_EQUAL(metrics.thunk_cache_hits, 1);
+	BOOST_CHECK_EQUAL(metrics.thunk_slot_reads, 4);
+	BOOST_CHECK_EQUAL(metrics.thunk_cache_hits, 0);
+	BOOST_CHECK_EQUAL(metrics.thunk_cache_entries, 2);
 }
 
-BOOST_AUTO_TEST_CASE(import_thunk_cache_key_includes_mapped_extent)
+BOOST_AUTO_TEST_CASE(import_thunk_cache_distinguishes_different_extent_rvas)
 {
 	CompactImageBuilder image(0x400);
 	image.headers(0x80).image(0, 0x8000, 1);
@@ -1018,7 +1019,7 @@ BOOST_AUTO_TEST_CASE(import_thunk_cache_key_includes_mapped_extent)
 	BOOST_CHECK_EQUAL(metrics.thunk_cache_hits, 0);
 }
 
-BOOST_AUTO_TEST_CASE(import_thunk_cache_key_separates_backing_layout)
+BOOST_AUTO_TEST_CASE(import_thunk_cache_distinguishes_backing_layout_rvas)
 {
 	for (const bool pe32_plus : {false, true}) {
 		const std::size_t slot_size = pe32_plus ? 8 : 4;
@@ -1059,7 +1060,44 @@ BOOST_AUTO_TEST_CASE(import_thunk_cache_key_separates_backing_layout)
 	}
 }
 
-BOOST_AUTO_TEST_CASE(import_thunk_cache_bypasses_unstable_overlapping_mapping)
+BOOST_AUTO_TEST_CASE(import_thunk_cache_distinguishes_raw_fallback_tail_aliases)
+{
+	for (const bool pe32_plus : {false, true}) {
+		const std::size_t slot_size = pe32_plus ? 8 : 4;
+		CompactImageBuilder image(0x400);
+		image.headers(0x80).image(0, 0x8000, 1);
+		image.section({0x1000, 6, 0x100, 6});
+		image.section({0x2000, slot_size, 0x200, 2 * slot_size});
+		image.section({0x3000, slot_size, 0x200, slot_size});
+		put_descriptor(image, 0x20, 0x2000, 0x1000, 0x2000);
+		put_descriptor(image, 0x34, 0x3000, 0x1000, 0x3000);
+		put_descriptor(image, 0x48, 0, 0, 0);
+		image.put_ascii(0x100, "A.dll");
+		const auto raw = ordinal_value(pe32_plus, 29);
+		if (pe32_plus) image.put64(0x200, raw);
+		else image.put32(0x200, static_cast<std::uint32_t>(raw));
+		std::vector<mana::detail::ParserDiagnostic> diagnostics;
+		mana::detail::ImportMetrics metrics;
+
+		const auto result = parse_standard_imports_for_architecture(image.view(),
+			pe32_plus, import_limits(), diagnostics, &metrics);
+
+		BOOST_REQUIRE_EQUAL(result.libraries.size(), 2);
+		BOOST_CHECK_EQUAL(result.libraries[0].functions.size(), 1);
+		BOOST_CHECK_EQUAL(result.libraries[1].functions.size(), 1);
+		BOOST_CHECK_EQUAL(metrics.thunk_slot_reads, 3);
+		BOOST_CHECK_EQUAL(metrics.thunk_cache_hits, 0);
+		BOOST_CHECK_EQUAL(metrics.thunk_cache_entries, 1);
+		BOOST_CHECK_EQUAL(metrics.duplicate_checks, 2);
+		BOOST_CHECK_EQUAL(diagnostics.size(), 1);
+		if (!diagnostics.empty()) {
+			BOOST_CHECK(diagnostics[0] ==
+				mana::detail::ParserDiagnostic::import_malformed);
+		}
+	}
+}
+
+BOOST_AUTO_TEST_CASE(import_thunk_cache_distinguishes_overlap_precedence_rvas)
 {
 	for (const bool pe32_plus : {false, true}) {
 		const std::size_t slot_size = pe32_plus ? 8 : 4;
@@ -1097,7 +1135,7 @@ BOOST_AUTO_TEST_CASE(import_thunk_cache_bypasses_unstable_overlapping_mapping)
 	}
 }
 
-BOOST_AUTO_TEST_CASE(import_thunk_cache_bypasses_unstable_raw_fallback_mapping)
+BOOST_AUTO_TEST_CASE(import_thunk_cache_distinguishes_raw_fallback_precedence_rvas)
 {
 	for (const bool pe32_plus : {false, true}) {
 		for (const bool virtual_precedence : {false, true}) {
@@ -1145,8 +1183,8 @@ BOOST_AUTO_TEST_CASE(import_thunk_cache_bypasses_unstable_raw_fallback_mapping)
 
 BOOST_AUTO_TEST_CASE(import_thunk_cache_key_separates_slot_widths)
 {
-	const mana::detail::ThunkCacheKey pe32{0x200, 0x20, 0x20, 4};
-	const mana::detail::ThunkCacheKey pe32_plus{0x200, 0x20, 0x20, 8};
+	const mana::detail::ThunkCacheKey pe32{0x2000, 4};
+	const mana::detail::ThunkCacheKey pe32_plus{0x2000, 8};
 
 	BOOST_CHECK(!(pe32 == pe32_plus));
 }
