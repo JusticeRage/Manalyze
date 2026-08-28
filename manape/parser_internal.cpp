@@ -2,8 +2,40 @@
 
 #include <algorithm>
 #include <limits>
+#include <unordered_map>
 
 namespace mana::detail {
+
+namespace {
+
+struct ImportParseContext
+{
+	explicit ImportParseContext(const ImportLimits& limits)
+		: descriptors(limits.descriptors), functions(limits.functions),
+		  physical_string_bytes(limits.physical_string_bytes),
+		  materialized_dll_name_bytes(limits.materialized_dll_name_bytes),
+		  materialized_function_name_bytes(
+			  limits.materialized_function_name_bytes)
+	{}
+
+	WorkBudget descriptors;
+	WorkBudget functions;
+	WorkBudget physical_string_bytes;
+	WorkBudget materialized_dll_name_bytes;
+	WorkBudget materialized_function_name_bytes;
+	std::unordered_map<std::uint64_t, std::string> successful_strings;
+	std::unordered_map<std::uint64_t, std::vector<import_lookup_table>>
+		successful_thunks;
+	bool exhausted = false;
+	bool budget_diagnostic_attempted = false;
+};
+
+void emit_diagnostic(const DiagnosticSink& sink, ParserDiagnostic diagnostic)
+{
+	if (sink) sink(diagnostic);
+}
+
+} // namespace
 
 std::optional<MappedSpan> resolve_mapped_span(const ImageView& image,
 	std::uint64_t rva)
@@ -70,6 +102,77 @@ std::optional<MappedSpan> resolve_mapped_span(const ImageView& image,
 		return MappedSpan{SpanBacking::zero_fill, rva, remaining, 0, region};
 	}
 	return std::nullopt;
+}
+
+ImportParseResult parse_imports(const ImageView& image,
+	const image_data_directory& standard_directory,
+	const image_data_directory&,
+	bool,
+	const ImportLimits& limits,
+	const DiagnosticSink& diagnostics,
+	ImportMetrics*)
+{
+	ImportParseResult result;
+	if (standard_directory.VirtualAddress == 0) return result;
+
+	constexpr std::uint64_t descriptor_size = 5 * sizeof(std::uint32_t);
+	if (standard_directory.Size != 0 &&
+		standard_directory.Size < descriptor_size) {
+		emit_diagnostic(diagnostics, ParserDiagnostic::import_extent_too_small);
+		return result;
+	}
+
+	const auto root = resolve_mapped_span(image,
+		standard_directory.VirtualAddress);
+	if (!root || root->backing != SpanBacking::initialized) {
+		emit_diagnostic(diagnostics, ParserDiagnostic::import_malformed);
+		return result;
+	}
+
+	std::uint64_t remaining = standard_directory.Size != 0 ?
+		standard_directory.Size : root->size;
+	std::uint64_t cursor = standard_directory.VirtualAddress;
+	ImportParseContext context(limits);
+	bool terminated = false;
+
+	while (remaining >= descriptor_size) {
+		const auto span = resolve_mapped_span(image, cursor);
+		if (!span || span->backing != SpanBacking::initialized ||
+			span->size < descriptor_size || !image.read_at) {
+			break;
+		}
+
+		image_import_descriptor descriptor{};
+		if (!image.read_at(span->file_offset, &descriptor, descriptor_size)) {
+			emit_diagnostic(diagnostics, ParserDiagnostic::import_malformed);
+			return result;
+		}
+		if (descriptor.OriginalFirstThunk == 0 && descriptor.FirstThunk == 0) {
+			terminated = true;
+			break;
+		}
+		if (!context.descriptors.charge(1)) {
+			context.exhausted = true;
+			if (!context.budget_diagnostic_attempted) {
+				context.budget_diagnostic_attempted = true;
+				emit_diagnostic(diagnostics,
+					ParserDiagnostic::import_budget_exhausted);
+			}
+			result.exhausted = true;
+			return result;
+		}
+
+		result.libraries.push_back(
+			ParsedImportLibrary{false, descriptor, {}, {}});
+		cursor += descriptor_size;
+		remaining -= descriptor_size;
+	}
+
+	if (!terminated) {
+		emit_diagnostic(diagnostics,
+			ParserDiagnostic::import_descriptor_unterminated);
+	}
+	return result;
 }
 
 } // namespace mana::detail

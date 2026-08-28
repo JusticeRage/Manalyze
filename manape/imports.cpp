@@ -16,6 +16,7 @@
 */
 
 #include "manape/pe.h"
+#include "manape/parser_internal.h"
 
 #include <regex>
 #include <set>
@@ -130,26 +131,74 @@ bool PE::_parse_imports()
 	if (!_ioh || _file_handle == nullptr) { // Image Optional Header wasn't parsed successfully.
 		return false;
 	}
-	if (!_reach_directory(IMAGE_DIRECTORY_ENTRY_IMPORT))	{ // No imports
-		return true;
+
+	detail::ImageView image{
+		_file_size,
+		_ioh->SizeOfHeaders,
+		_ioh->SizeOfImage,
+		_ioh->ImageBase,
+		_ioh->FileAlignment,
+		{},
+		[this](std::uint64_t offset, void* destination, std::size_t size) {
+			return _locked_read_at(offset, destination, size);
+		},
+	};
+	image.sections.reserve(_sections.size());
+	for (const auto& section : _sections) {
+		image.sections.push_back({
+			section->get_virtual_address(),
+			section->get_virtual_size(),
+			section->get_pointer_to_raw_data(),
+			section->get_size_of_raw_data(),
+		});
 	}
 
-	while (true) // We stop at the first NULL IMAGE_IMPORT_DESCRIPTOR.
-	{
-		pimage_import_descriptor iid(new image_import_descriptor);
-		memset(iid.get(), 0, 5*sizeof(std::uint32_t)); // Don't overwrite the last member (a string)
-
-		if (20 != fread(iid.get(), 1, 20, _file_handle.get()))
-		{
-			PRINT_ERROR << "Could not read the IMAGE_IMPORT_DESCRIPTOR." << std::endl;
-			return true; // Don't give up on the rest of the parsing.
-		}
-
-		// Exit condition
-		if (iid->OriginalFirstThunk == 0 && iid->FirstThunk == 0) {
+	const detail::ImportLimits limits{
+		65536,
+		1000000,
+		256ULL * 1024 * 1024,
+		64ULL * 1024 * 1024,
+		256ULL * 1024 * 1024,
+	};
+	const auto diagnostics = [](detail::ParserDiagnostic diagnostic) {
+		switch (diagnostic) {
+		case detail::ParserDiagnostic::import_extent_too_small:
+			CAPPED_LOGGING_ERROR
+			PRINT_ERROR << "Import directory extent contains no complete IMAGE_IMPORT_DESCRIPTOR."
+				<< DEBUG_INFO_INSIDEPE << std::endl;
+			CAPPED_LOGGING_END
+			break;
+		case detail::ParserDiagnostic::import_descriptor_unterminated:
+			CAPPED_LOGGING_ERROR
+			PRINT_ERROR << "Import descriptor table is not null-terminated within its mapped extent."
+				<< DEBUG_INFO_INSIDEPE << std::endl;
+			CAPPED_LOGGING_END
+			break;
+		case detail::ParserDiagnostic::import_budget_exhausted:
+			CAPPED_LOGGING_ERROR
+			PRINT_ERROR << "Import parsing work budget exhausted."
+				<< DEBUG_INFO_INSIDEPE << std::endl;
+			CAPPED_LOGGING_END
+			break;
+		case detail::ParserDiagnostic::import_malformed:
+			CAPPED_LOGGING_ERROR
+			PRINT_ERROR << "Could not read the IMAGE_IMPORT_DESCRIPTOR."
+				<< DEBUG_INFO_INSIDEPE << std::endl;
+			CAPPED_LOGGING_END
+			break;
+		default:
 			break;
 		}
+	};
+	const auto parsed = detail::parse_imports(image,
+		_ioh->directories[IMAGE_DIRECTORY_ENTRY_IMPORT],
+		_ioh->directories[IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT],
+		get_architecture() != PE::x86, limits, diagnostics);
 
+	for (const auto& parsed_library : parsed.libraries) {
+		if (!parsed_library.descriptor) continue;
+		auto iid = std::make_shared<image_import_descriptor>(
+			*parsed_library.descriptor);
 		// Non-standard parsing. The Name RVA is translated to an actual string here.
 		auto offset = rva_to_offset(iid->Name);
 		if (!offset) { // Try to use the RVA as a direct address if the imports are outside of a section.
@@ -166,12 +215,13 @@ bool PE::_parse_imports()
 			}
 
 			PRINT_ERROR << "Could not read an import's name." << std::endl;
-			return true;
+			break;
 		}
 
 		pImportedLibrary library = pImportedLibrary(new ImportedLibrary(library_name, iid));
 		_imports.push_back(library);
 	}
+	if (parsed.exhausted) return true;
 
 	// Parse the IMPORT_LOOKUP_TABLE for each imported library
 	for (auto it = _imports.begin() ; it != _imports.end() ; ++it)
@@ -199,7 +249,31 @@ bool PE::_parse_imports()
 				PRINT_WARNING << "An error occurred while trying to read functions imported by module " << *(*it)->get_name()
 							  << "." << DEBUG_INFO_INSIDEPE << std::endl;
 			}
+			break;
+		}
+	}
+
+	if (_reach_directory(IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT)) {
+		delay_load_directory_table dldt;
+		memset(&dldt, 0, 8*sizeof(std::uint32_t));
+		if (1 != fread(&dldt, 8*sizeof(std::uint32_t), 1, _file_handle.get())) {
+			PRINT_WARNING << "Could not read the Delay-Load Directory Table!" << std::endl;
 			return true;
+		}
+
+		unsigned int offset = rva_to_offset(dldt.Name);
+		if (offset == 0) {
+			PRINT_WARNING << "Could not read the name of the DLL to be delay-loaded!" << std::endl;
+			return true;
+		}
+		std::string name;
+		utils::read_string_at_offset(_file_handle.get(), offset, name);
+		pImportedLibrary library(new ImportedLibrary(name));
+		dldt.NameStr = name;
+		_delay_load_directory_table = dldt;
+		offset = rva_to_offset(dldt.DelayImportNameTable);
+		if (_parse_import_lookup_table(offset, library)) {
+			_imports.push_back(library);
 		}
 	}
 
@@ -210,42 +284,7 @@ bool PE::_parse_imports()
 
 bool PE::_parse_delayed_imports()
 {
-    if (!_ioh || _file_handle == nullptr) { // Image Optional Header wasn't parsed successfully.
-        return false;
-    }
-    if (!_reach_directory(IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT))	{ // No delayed imports
-        return true;
-    }
-
-    delay_load_directory_table dldt;
-	memset(&dldt, 0, 8*sizeof(std::uint32_t));
-    if (1 != fread(&dldt, 8*sizeof(std::uint32_t), 1, _file_handle.get()))
-    {
-        PRINT_WARNING << "Could not read the Delay-Load Directory Table!" << std::endl;
-        return true;
-    }
-
-    unsigned int offset = rva_to_offset(dldt.Name);
-    if (offset == 0)
-    {
-        PRINT_WARNING << "Could not read the name of the DLL to be delay-loaded!" << std::endl;
-        return true;
-    }
-
-	// Read the delayed DLL's name
-    std::string name;
-    utils::read_string_at_offset(_file_handle.get(), offset, name);
-	pImportedLibrary library(new ImportedLibrary(name));
-
-	dldt.NameStr = name;
-        _delay_load_directory_table = dldt;
-
-	// Read the imports
-	offset = rva_to_offset(dldt.DelayImportNameTable);
-
-	if (_parse_import_lookup_table(offset, library)) {
-		_imports.push_back(library);
-	}
+	// Delay imports are parsed by _parse_imports() so both paths can share budgets.
 	return true;
 }
 

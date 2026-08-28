@@ -1,10 +1,12 @@
 #include <cstdint>
 #include <limits>
 #include <optional>
+#include <vector>
 
 #include <boost/test/unit_test.hpp>
 
 #include "manape/parser_internal.h"
+#include "import_tls_fixtures.h"
 
 namespace {
 
@@ -24,6 +26,33 @@ void check_span(const std::optional<mana::detail::MappedSpan>& span,
 	BOOST_CHECK_EQUAL(span->size, size);
 	BOOST_CHECK_EQUAL(span->file_offset, file_offset);
 	BOOST_CHECK_EQUAL(span->region, region);
+}
+
+constexpr mana::detail::ImportLimits import_limits(std::uint64_t descriptors = 16)
+{
+	return {descriptors, 128, 4096, 4096, 4096};
+}
+
+void put_descriptor(CompactImageBuilder& image, std::size_t offset,
+	std::uint32_t original_first_thunk, std::uint32_t name,
+	std::uint32_t first_thunk)
+{
+	image.put32(offset, original_first_thunk);
+	image.put32(offset + 4, 0);
+	image.put32(offset + 8, 0);
+	image.put32(offset + 12, name);
+	image.put32(offset + 16, first_thunk);
+}
+
+mana::detail::ImportParseResult parse_standard_imports(
+	const mana::detail::ImageView& image, std::uint32_t rva, std::uint32_t size,
+	const mana::detail::ImportLimits& limits,
+	std::vector<mana::detail::ParserDiagnostic>& diagnostics)
+{
+	return mana::detail::parse_imports(image, {rva, size}, {0, 0}, false,
+		limits, [&](mana::detail::ParserDiagnostic diagnostic) {
+			diagnostics.push_back(diagnostic);
+		});
 }
 
 } // namespace
@@ -122,6 +151,180 @@ BOOST_AUTO_TEST_CASE(mapped_span_rejects_zero_alignment_and_wrapped_ranges)
 	check_span(mana::detail::resolve_mapped_span(near_limit, max - 1),
 		mana::detail::SpanBacking::zero_fill, max - 1, 1, 0, 1);
 	BOOST_CHECK(!mana::detail::resolve_mapped_span(near_limit, max));
+}
+
+BOOST_AUTO_TEST_CASE(import_descriptor_uses_exact_oft_ft_terminator)
+{
+	CompactImageBuilder image(0x200);
+	image.headers(0x200);
+	put_descriptor(image, 0x40, 0x100, 0x120, 0x140);
+	image.put32(0x40 + 24, 1);
+	image.put32(0x40 + 28, 2);
+	image.put32(0x40 + 32, 3);
+	std::vector<mana::detail::ParserDiagnostic> diagnostics;
+
+	const auto result = parse_standard_imports(image.view(), 0x40, 40,
+		import_limits(), diagnostics);
+
+	BOOST_REQUIRE_EQUAL(result.libraries.size(), 1);
+	BOOST_REQUIRE(result.libraries[0].descriptor.has_value());
+	BOOST_CHECK_EQUAL(result.libraries[0].descriptor->OriginalFirstThunk, 0x100);
+	BOOST_CHECK(diagnostics.empty());
+}
+
+BOOST_AUTO_TEST_CASE(import_descriptor_stops_at_declared_extent)
+{
+	CompactImageBuilder image(0x200);
+	image.headers(0x200);
+	put_descriptor(image, 0x40, 0x100, 0x120, 0x140);
+	put_descriptor(image, 0x54, 0x150, 0x160, 0x170);
+	std::vector<mana::detail::ParserDiagnostic> diagnostics;
+
+	const auto result = parse_standard_imports(image.view(), 0x40, 20,
+		import_limits(), diagnostics);
+
+	BOOST_CHECK_EQUAL(result.libraries.size(), 1);
+	BOOST_REQUIRE_EQUAL(diagnostics.size(), 1);
+	BOOST_CHECK(diagnostics[0] ==
+		mana::detail::ParserDiagnostic::import_descriptor_unterminated);
+}
+
+BOOST_AUTO_TEST_CASE(import_descriptor_rejects_too_small_declared_extent)
+{
+	for (const std::uint32_t size : {1U, 19U}) {
+		CompactImageBuilder image(0x100);
+		image.headers(0x100);
+		put_descriptor(image, 0x40, 1, 2, 3);
+		std::size_t reads = 0;
+		auto view = image.view();
+		const auto read_at = view.read_at;
+		view.read_at = [&](std::uint64_t offset, void* destination,
+			std::size_t count) {
+			++reads;
+			return read_at(offset, destination, count);
+		};
+		std::vector<mana::detail::ParserDiagnostic> diagnostics;
+
+		const auto result = parse_standard_imports(view, 0x40, size,
+			import_limits(), diagnostics);
+
+		BOOST_CHECK(result.libraries.empty());
+		BOOST_CHECK_EQUAL(reads, 0);
+		BOOST_REQUIRE_EQUAL(diagnostics.size(), 1);
+		BOOST_CHECK(diagnostics[0] ==
+			mana::detail::ParserDiagnostic::import_extent_too_small);
+	}
+}
+
+BOOST_AUTO_TEST_CASE(import_descriptor_ignores_partial_declared_tail)
+{
+	CompactImageBuilder image(0x100);
+	image.headers(0x100);
+	put_descriptor(image, 0x40, 1, 2, 3);
+	std::size_t bytes_read = 0;
+	auto view = image.view();
+	const auto read_at = view.read_at;
+	view.read_at = [&](std::uint64_t offset, void* destination,
+		std::size_t count) {
+		bytes_read += count;
+		return read_at(offset, destination, count);
+	};
+	std::vector<mana::detail::ParserDiagnostic> diagnostics;
+
+	const auto result = parse_standard_imports(view, 0x40, 39,
+		import_limits(), diagnostics);
+
+	BOOST_CHECK_EQUAL(result.libraries.size(), 1);
+	BOOST_CHECK_EQUAL(bytes_read, 20);
+	BOOST_REQUIRE_EQUAL(diagnostics.size(), 1);
+	BOOST_CHECK(diagnostics[0] ==
+		mana::detail::ParserDiagnostic::import_descriptor_unterminated);
+}
+
+BOOST_AUTO_TEST_CASE(import_descriptor_zero_size_stops_at_header_extent)
+{
+	CompactImageBuilder image(0x140);
+	image.headers(0x100);
+	put_descriptor(image, 0xec, 1, 2, 3);
+	put_descriptor(image, 0x100, 4, 5, 6);
+	std::vector<mana::detail::ParserDiagnostic> diagnostics;
+
+	const auto result = parse_standard_imports(image.view(), 0xec, 0,
+		import_limits(), diagnostics);
+
+	BOOST_CHECK_EQUAL(result.libraries.size(), 1);
+	BOOST_REQUIRE_EQUAL(diagnostics.size(), 1);
+	BOOST_CHECK(diagnostics[0] ==
+		mana::detail::ParserDiagnostic::import_descriptor_unterminated);
+}
+
+BOOST_AUTO_TEST_CASE(import_descriptor_zero_size_stops_at_section_extent)
+{
+	CompactImageBuilder image(0x300);
+	image.image(0, 0x2000, 0x100);
+	image.section({0x1000, 0x100, 0x100, 0x100});
+	put_descriptor(image, 0x1ec, 1, 2, 3);
+	put_descriptor(image, 0x200, 4, 5, 6);
+	std::vector<mana::detail::ParserDiagnostic> diagnostics;
+
+	const auto result = parse_standard_imports(image.view(), 0x10ec, 0,
+		import_limits(), diagnostics);
+
+	BOOST_CHECK_EQUAL(result.libraries.size(), 1);
+	BOOST_REQUIRE_EQUAL(diagnostics.size(), 1);
+	BOOST_CHECK(diagnostics[0] ==
+		mana::detail::ParserDiagnostic::import_descriptor_unterminated);
+}
+
+BOOST_AUTO_TEST_CASE(import_descriptor_budget_preserves_completed_output)
+{
+	CompactImageBuilder image(0x200);
+	image.headers(0x200);
+	put_descriptor(image, 0x40, 1, 2, 3);
+	put_descriptor(image, 0x54, 4, 5, 6);
+	std::size_t descriptor_reads = 0;
+	auto view = image.view();
+	const auto read_at = view.read_at;
+	view.read_at = [&](std::uint64_t offset, void* destination,
+		std::size_t count) {
+		if (count == 20) ++descriptor_reads;
+		return read_at(offset, destination, count);
+	};
+	std::vector<mana::detail::ParserDiagnostic> diagnostics;
+
+	const auto result = parse_standard_imports(view, 0x40, 60,
+		import_limits(1), diagnostics);
+
+	BOOST_CHECK(result.exhausted);
+	BOOST_CHECK_EQUAL(result.libraries.size(), 1);
+	BOOST_CHECK_EQUAL(descriptor_reads, 2);
+	BOOST_REQUIRE_EQUAL(diagnostics.size(), 1);
+	BOOST_CHECK(diagnostics[0] ==
+		mana::detail::ParserDiagnostic::import_budget_exhausted);
+}
+
+BOOST_AUTO_TEST_CASE(import_descriptor_terminator_is_read_but_not_charged)
+{
+	CompactImageBuilder image(0x100);
+	image.headers(0x100);
+	put_descriptor(image, 0x40, 1, 2, 3);
+	std::size_t descriptor_reads = 0;
+	auto view = image.view();
+	const auto read_at = view.read_at;
+	view.read_at = [&](std::uint64_t offset, void* destination,
+		std::size_t count) {
+		if (count == 20) ++descriptor_reads;
+		return read_at(offset, destination, count);
+	};
+	std::vector<mana::detail::ParserDiagnostic> diagnostics;
+
+	const auto result = parse_standard_imports(view, 0x40, 40,
+		import_limits(1), diagnostics);
+
+	BOOST_CHECK(!result.exhausted);
+	BOOST_CHECK_EQUAL(result.libraries.size(), 1);
+	BOOST_CHECK_EQUAL(descriptor_reads, 2);
+	BOOST_CHECK(diagnostics.empty());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

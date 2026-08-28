@@ -17,9 +17,59 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <sstream>
+
 #include "fixtures.h"
+#include "import_tls_fixtures.h"
+#include "manacommons/color.h"
 #include "manape/pe.h"
 #include "import_hash.h"
+
+namespace {
+
+class ErrorCapture
+{
+public:
+	ErrorCapture()
+		: previous_level(utils::get_log_level()),
+		  previous_buffer(std::cerr.rdbuf(captured.rdbuf()))
+	{ utils::set_log_level(utils::LogLevel::ERROR); }
+
+	~ErrorCapture()
+	{
+		std::cerr.rdbuf(previous_buffer);
+		utils::set_log_level(previous_level);
+	}
+
+	std::string str() const { return captured.str(); }
+
+private:
+	utils::LogLevel previous_level;
+	std::ostringstream captured;
+	std::streambuf* previous_buffer;
+};
+
+std::vector<std::uint8_t> make_standard_import_failure_with_valid_delay(
+	bool malformed_name)
+{
+	auto bytes = read_binary_file("testfiles/manatest3.exe");
+	constexpr std::size_t first_descriptor = 0x26e8;
+	write_u32(bytes, first_descriptor + (malformed_name ? 12 : 0),
+		0xfffffff0);
+	return bytes;
+}
+
+void check_valid_delay_import(const mana::PE& pe)
+{
+	const auto delay = pe.get_delay_load_table();
+	BOOST_REQUIRE(delay);
+	BOOST_CHECK_EQUAL(delay->NameStr, "ADVAPI32.dll");
+	const auto functions = pe.find_imports("CryptAcquireContextW");
+	BOOST_REQUIRE(functions);
+	BOOST_CHECK_EQUAL(functions->size(), 1);
+}
+
+} // namespace
 
 // ----------------------------------------------------------------------------
 BOOST_FIXTURE_TEST_SUITE(resources, SetWorkingDirectory)
@@ -147,6 +197,105 @@ BOOST_AUTO_TEST_CASE(hash_imports)
 	mana::PE pe("testfiles/manatest.exe");
 	std::string h = hash::hash_imports(pe);
 	BOOST_CHECK(h == "924ac5aa343a9f838d5c16a5d77de2ec");
+}
+
+BOOST_AUTO_TEST_CASE(import_descriptor_exact_boundary)
+{
+	const auto bytes = make_import_extent_pe(0x366c, 40, false);
+	ErrorCapture logs;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(),
+		"import-exact-boundary.exe");
+
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_REQUIRE(pe->get_imported_dlls());
+	BOOST_CHECK_EQUAL(pe->get_imported_dlls()->size(), 1);
+	BOOST_CHECK_EQUAL(logs.str().find("IMAGE_IMPORT_DESCRIPTOR"),
+		std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(import_descriptor_beyond_declared_extent)
+{
+	const auto bytes = make_import_extent_pe(0x366c, 20, false);
+	ErrorCapture logs;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(),
+		"import-beyond-extent.exe");
+
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_REQUIRE(pe->get_imported_dlls());
+	BOOST_CHECK_EQUAL(pe->get_imported_dlls()->size(), 1);
+	BOOST_CHECK_NE(logs.str().find(
+		"Import descriptor table is not null-terminated within its mapped extent."),
+		std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(import_zero_size_header_extent)
+{
+	const auto bytes = make_import_extent_pe(0x3ec, 0, true);
+	ErrorCapture logs;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(),
+		"import-zero-header.exe");
+
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_REQUIRE(pe->get_imported_dlls());
+	BOOST_CHECK_EQUAL(pe->get_imported_dlls()->size(), 1);
+	BOOST_CHECK_NE(logs.str().find(
+		"Import descriptor table is not null-terminated within its mapped extent."),
+		std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(import_zero_size_section_extent)
+{
+	const auto bytes = make_import_extent_pe(0x3fec, 0, false);
+	ErrorCapture logs;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(),
+		"import-zero-section.exe");
+
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_REQUIRE(pe->get_imported_dlls());
+	BOOST_CHECK_EQUAL(pe->get_imported_dlls()->size(), 1);
+	BOOST_CHECK_NE(logs.str().find(
+		"Import descriptor table is not null-terminated within its mapped extent."),
+		std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(import_standard_malformed_name_preserves_delay)
+{
+	const auto bytes = make_standard_import_failure_with_valid_delay(true);
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(),
+		"malformed-standard-name.exe");
+
+	BOOST_REQUIRE(pe && pe->is_valid());
+	check_valid_delay_import(*pe);
+}
+
+BOOST_AUTO_TEST_CASE(import_standard_malformed_thunk_preserves_delay)
+{
+	const auto bytes = make_standard_import_failure_with_valid_delay(false);
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(),
+		"malformed-standard-thunk.exe");
+
+	BOOST_REQUIRE(pe && pe->is_valid());
+	check_valid_delay_import(*pe);
+}
+
+BOOST_AUTO_TEST_CASE(import_malformed_recovers_later_directories)
+{
+	auto bytes = read_binary_file("testfiles/manatest.exe");
+	constexpr std::size_t import_directory_size =
+		0x108 + 96 + IMAGE_DIRECTORY_ENTRY_IMPORT * 8 + 4;
+	write_u32(bytes, import_directory_size, 1);
+	ErrorCapture logs;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(),
+		"malformed-import.exe");
+
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_REQUIRE(pe->get_debug_info());
+	BOOST_CHECK_EQUAL(pe->get_debug_info()->size(), 4);
+	BOOST_REQUIRE(pe->get_config());
+	BOOST_CHECK_EQUAL(pe->get_config()->Size, 0x5c);
+	BOOST_CHECK_NE(logs.str().find(
+		"Import directory extent contains no complete IMAGE_IMPORT_DESCRIPTOR."),
+		std::string::npos);
 }
 
 // ----------------------------------------------------------------------------

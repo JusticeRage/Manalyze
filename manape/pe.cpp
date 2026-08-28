@@ -1207,7 +1207,6 @@ bool PE::_parse_directories(detail::WorkBudget& rich_budget,
 	}
 
 	_parse_imports();
-	_parse_delayed_imports();
 	_parse_exports();
 	_parse_resources();
 	_parse_debug();
