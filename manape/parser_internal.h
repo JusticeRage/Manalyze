@@ -63,6 +63,32 @@ struct ImportMetrics
 	std::uint64_t duplicate_checks = 0;
 };
 
+enum class StringSourceKind { mapped_rva, direct_file_offset };
+
+struct StringCacheKey
+{
+	StringSourceKind kind;
+	std::uint64_t source;
+	std::uint64_t extent;
+
+	bool operator==(const StringCacheKey& other) const
+	{
+		return kind == other.kind && source == other.source &&
+			extent == other.extent;
+	}
+};
+
+struct StringCacheKeyHash
+{
+	std::size_t operator()(const StringCacheKey& key) const noexcept;
+};
+
+struct DecodedImportName
+{
+	std::uint16_t hint;
+	std::string name;
+};
+
 enum class ParserDiagnostic
 {
 	import_extent_too_small,

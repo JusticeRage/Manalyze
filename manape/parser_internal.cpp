@@ -1,6 +1,7 @@
 #include "manape/parser_internal.h"
 
 #include <algorithm>
+#include <array>
 #include <limits>
 #include <unordered_map>
 
@@ -8,14 +9,32 @@ namespace mana::detail {
 
 namespace {
 
+constexpr std::size_t string_read_chunk = 4096;
+
+enum class DecodeStatus { success, malformed, exhausted };
+
+struct StringSource
+{
+	StringCacheKey key;
+};
+
+template<typename Value>
+struct PendingDecode
+{
+	Value value;
+	StringCacheKey key;
+	bool cache_hit;
+};
+
 struct ImportParseContext
 {
-	explicit ImportParseContext(const ImportLimits& limits)
+	explicit ImportParseContext(const ImportLimits& limits,
+		ImportMetrics* parse_metrics)
 		: descriptors(limits.descriptors), functions(limits.functions),
 		  physical_string_bytes(limits.physical_string_bytes),
 		  materialized_dll_name_bytes(limits.materialized_dll_name_bytes),
 		  materialized_function_name_bytes(
-			  limits.materialized_function_name_bytes)
+			  limits.materialized_function_name_bytes), metrics(parse_metrics)
 	{}
 
 	WorkBudget descriptors;
@@ -23,9 +42,13 @@ struct ImportParseContext
 	WorkBudget physical_string_bytes;
 	WorkBudget materialized_dll_name_bytes;
 	WorkBudget materialized_function_name_bytes;
-	std::unordered_map<std::uint64_t, std::string> successful_strings;
+	std::unordered_map<StringCacheKey, std::string, StringCacheKeyHash>
+		successful_dll_strings;
+	std::unordered_map<StringCacheKey, DecodedImportName, StringCacheKeyHash>
+		successful_function_names;
 	std::unordered_map<std::uint64_t, std::vector<import_lookup_table>>
 		successful_thunks;
+	ImportMetrics* metrics;
 	bool exhausted = false;
 	bool budget_diagnostic_attempted = false;
 };
@@ -35,7 +58,236 @@ void emit_diagnostic(const DiagnosticSink& sink, ParserDiagnostic diagnostic)
 	if (sink) sink(diagnostic);
 }
 
+void exhaust_imports(ImportParseContext& context,
+	const DiagnosticSink& diagnostics)
+{
+	context.exhausted = true;
+	if (context.budget_diagnostic_attempted) return;
+	context.budget_diagnostic_attempted = true;
+	emit_diagnostic(diagnostics, ParserDiagnostic::import_budget_exhausted);
+}
+
+std::optional<StringSource> resolve_string_source(const ImageView& image,
+	std::uint64_t source, bool allow_direct_fallback)
+{
+	const auto span = resolve_mapped_span(image, source);
+	if (span) {
+		if (span->backing != SpanBacking::initialized) return std::nullopt;
+		return StringSource{{StringSourceKind::mapped_rva,
+			span->file_offset, span->size}};
+	}
+	if (!allow_direct_fallback || source == 0 || source >= image.file_size) {
+		return std::nullopt;
+	}
+	return StringSource{{StringSourceKind::direct_file_offset,
+		source, image.file_size - source}};
+}
+
+DecodeStatus read_string_bytes(const ImageView& image,
+	const StringCacheKey& key, std::size_t prefix_size,
+	ImportParseContext& context, std::array<std::uint8_t, 2>& prefix,
+	std::string& value)
+{
+	if (!image.read_at) return DecodeStatus::malformed;
+	std::uint64_t consumed = 0;
+	std::size_t prefix_written = 0;
+	std::array<std::uint8_t, string_read_chunk> buffer{};
+	while (consumed < key.extent) {
+		const std::size_t request = static_cast<std::size_t>(
+			std::min<std::uint64_t>(string_read_chunk, key.extent - consumed));
+		if (!context.physical_string_bytes.charge(request)) {
+			return DecodeStatus::exhausted;
+		}
+		if (context.metrics) {
+			++context.metrics->string_read_calls;
+			context.metrics->string_bytes_read += request;
+		}
+		if (!image.read_at(key.source + consumed, buffer.data(), request)) {
+			return DecodeStatus::malformed;
+		}
+
+		for (std::size_t i = 0; i < request; ++i) {
+			if (prefix_written < prefix_size) {
+				prefix[prefix_written++] = buffer[i];
+				continue;
+			}
+			if (buffer[i] == 0) return DecodeStatus::success;
+			value.push_back(static_cast<char>(buffer[i]));
+		}
+		consumed += request;
+	}
+	return DecodeStatus::malformed;
+}
+
+DecodeStatus decode_dll_name(const ImageView& image, std::uint64_t source,
+	bool allow_direct_fallback, ImportParseContext& context,
+	PendingDecode<std::string>& decoded)
+{
+	const auto location = resolve_string_source(image, source,
+		allow_direct_fallback);
+	if (!location) return DecodeStatus::malformed;
+	decoded.key = location->key;
+	const auto cached = context.successful_dll_strings.find(decoded.key);
+	if (cached != context.successful_dll_strings.end()) {
+		decoded.value = cached->second;
+		decoded.cache_hit = true;
+		if (context.metrics) ++context.metrics->string_cache_hits;
+		return DecodeStatus::success;
+	}
+
+	std::array<std::uint8_t, 2> unused{};
+	decoded.cache_hit = false;
+	return read_string_bytes(image, decoded.key, 0, context, unused,
+		decoded.value);
+}
+
+DecodeStatus decode_function_name(const ImageView& image,
+	std::uint64_t source, ImportParseContext& context,
+	PendingDecode<DecodedImportName>& decoded)
+{
+	const auto location = resolve_string_source(image, source, false);
+	if (!location) return DecodeStatus::malformed;
+	decoded.key = location->key;
+	const auto cached = context.successful_function_names.find(decoded.key);
+	if (cached != context.successful_function_names.end()) {
+		decoded.value = cached->second;
+		decoded.cache_hit = true;
+		if (context.metrics) ++context.metrics->string_cache_hits;
+		return DecodeStatus::success;
+	}
+
+	std::array<std::uint8_t, 2> hint{};
+	decoded.cache_hit = false;
+	const auto status = read_string_bytes(image, decoded.key, hint.size(),
+		context, hint, decoded.value.name);
+	if (status != DecodeStatus::success) return status;
+	decoded.value.hint = static_cast<std::uint16_t>(hint[0]) |
+		(static_cast<std::uint16_t>(hint[1]) << 8);
+	return DecodeStatus::success;
+}
+
+bool read_mapped_value(const ImageView& image, std::uint64_t rva,
+	void* destination, std::size_t size)
+{
+	const auto span = resolve_mapped_span(image, rva);
+	return span && span->backing == SpanBacking::initialized &&
+		span->size >= size && image.read_at &&
+		image.read_at(span->file_offset, destination, size);
+}
+
+bool traverse_import_table(const ImageView& image, std::uint64_t table_rva,
+	bool pe32_plus, ParsedImportLibrary& library, ImportParseContext& context,
+	const DiagnosticSink& diagnostics)
+{
+	const std::size_t slot_size = pe32_plus ? sizeof(std::uint64_t) :
+		sizeof(std::uint32_t);
+	const std::uint64_t ordinal_mask = pe32_plus ? 0x8000000000000000ULL :
+		0x80000000ULL;
+	std::uint64_t cursor = table_rva;
+	while (true) {
+		std::uint64_t raw = 0;
+		if (!read_mapped_value(image, cursor, &raw, slot_size)) {
+			emit_diagnostic(diagnostics, ParserDiagnostic::import_malformed);
+			return false;
+		}
+		if (context.metrics) ++context.metrics->thunk_slot_reads;
+		if (raw == 0) return true;
+		if (library.functions.size() > 10000) {
+			emit_diagnostic(diagnostics, ParserDiagnostic::import_malformed);
+			return false;
+		}
+		if (!context.functions.charge(1)) {
+			exhaust_imports(context, diagnostics);
+			return false;
+		}
+
+		import_lookup_table function{};
+		function.AddressOfData = raw;
+		if ((raw & ordinal_mask) == 0) {
+			PendingDecode<DecodedImportName> decoded{};
+			const auto status = decode_function_name(image,
+				raw & 0x7fffffffULL, context, decoded);
+			if (status == DecodeStatus::exhausted) {
+				exhaust_imports(context, diagnostics);
+				return false;
+			}
+			if (status != DecodeStatus::success) {
+				emit_diagnostic(diagnostics, ParserDiagnostic::import_malformed);
+				return false;
+			}
+			if (!context.materialized_function_name_bytes.charge(
+				decoded.value.name.size())) {
+				exhaust_imports(context, diagnostics);
+				return false;
+			}
+			function.Hint = decoded.value.hint;
+			function.Name = decoded.value.name;
+			if (!decoded.cache_hit) {
+				context.successful_function_names.emplace(decoded.key,
+					std::move(decoded.value));
+			}
+		}
+
+		const auto duplicate = std::find_if(library.functions.begin(),
+			library.functions.end(), [&](const import_lookup_table& existing) {
+				return function.AddressOfData == existing.AddressOfData &&
+					function.Hint == existing.Hint &&
+					function.Name == existing.Name;
+			});
+		if (duplicate != library.functions.end()) {
+			emit_diagnostic(diagnostics, ParserDiagnostic::import_malformed);
+			return false;
+		}
+		library.functions.push_back(std::move(function));
+		if (cursor > std::numeric_limits<std::uint64_t>::max() - slot_size) {
+			emit_diagnostic(diagnostics, ParserDiagnostic::import_malformed);
+			return false;
+		}
+		cursor += slot_size;
+	}
+}
+
+bool materialize_library_name(const ImageView& image,
+	std::uint64_t source, bool allow_direct_fallback, bool delay_loaded,
+	const std::optional<image_import_descriptor>& descriptor,
+	ImportParseResult& result, ImportParseContext& context,
+	const DiagnosticSink& diagnostics)
+{
+	PendingDecode<std::string> decoded{};
+	const auto status = decode_dll_name(image, source, allow_direct_fallback,
+		context, decoded);
+	if (status == DecodeStatus::exhausted) {
+		exhaust_imports(context, diagnostics);
+		return false;
+	}
+	if (status != DecodeStatus::success) {
+		emit_diagnostic(diagnostics, ParserDiagnostic::import_malformed);
+		return false;
+	}
+	if (!context.materialized_dll_name_bytes.charge(decoded.value.size())) {
+		exhaust_imports(context, diagnostics);
+		return false;
+	}
+	result.libraries.push_back({delay_loaded, descriptor,
+		decoded.value, {}});
+	if (!decoded.cache_hit) {
+		context.successful_dll_strings.emplace(decoded.key,
+			std::move(decoded.value));
+	}
+	return true;
+}
+
 } // namespace
+
+std::size_t StringCacheKeyHash::operator()(const StringCacheKey& key) const noexcept
+{
+	std::size_t value = std::hash<std::uint64_t>{}(key.source);
+	value ^= std::hash<std::uint64_t>{}(key.extent) + 0x9e3779b9 +
+		(value << 6) + (value >> 2);
+	value ^= std::hash<unsigned int>{}(static_cast<unsigned int>(key.kind)) +
+		0x9e3779b9 + (value << 6) + (value >> 2);
+	return value;
+}
 
 std::optional<MappedSpan> resolve_mapped_span(const ImageView& image,
 	std::uint64_t rva)
@@ -106,36 +358,39 @@ std::optional<MappedSpan> resolve_mapped_span(const ImageView& image,
 
 ImportParseResult parse_imports(const ImageView& image,
 	const image_data_directory& standard_directory,
-	const image_data_directory&,
-	bool,
+	const image_data_directory& delay_directory,
+	bool pe32_plus,
 	const ImportLimits& limits,
 	const DiagnosticSink& diagnostics,
-	ImportMetrics*)
+	ImportMetrics* metrics)
 {
 	ImportParseResult result;
-	if (standard_directory.VirtualAddress == 0) return result;
+	ImportParseContext context(limits, metrics);
+	std::vector<image_import_descriptor> descriptors;
 
 	constexpr std::uint64_t descriptor_size = 5 * sizeof(std::uint32_t);
-	if (standard_directory.Size != 0 &&
+	bool standard_can_continue = standard_directory.VirtualAddress != 0;
+	if (standard_can_continue && standard_directory.Size != 0 &&
 		standard_directory.Size < descriptor_size) {
 		emit_diagnostic(diagnostics, ParserDiagnostic::import_extent_too_small);
-		return result;
+		standard_can_continue = false;
 	}
 
-	const auto root = resolve_mapped_span(image,
-		standard_directory.VirtualAddress);
-	if (!root || root->backing != SpanBacking::initialized) {
-		emit_diagnostic(diagnostics, ParserDiagnostic::import_malformed);
-		return result;
+	std::optional<MappedSpan> root;
+	if (standard_can_continue) {
+		root = resolve_mapped_span(image, standard_directory.VirtualAddress);
+		if (!root || root->backing != SpanBacking::initialized) {
+			emit_diagnostic(diagnostics, ParserDiagnostic::import_malformed);
+			standard_can_continue = false;
+		}
 	}
 
-	std::uint64_t remaining = standard_directory.Size != 0 ?
-		standard_directory.Size : root->size;
+	std::uint64_t remaining = !standard_can_continue ? 0 :
+		(standard_directory.Size != 0 ? standard_directory.Size : root->size);
 	std::uint64_t cursor = standard_directory.VirtualAddress;
-	ImportParseContext context(limits);
 	bool terminated = false;
 
-	while (remaining >= descriptor_size) {
+	while (standard_can_continue && remaining >= descriptor_size) {
 		const auto span = resolve_mapped_span(image, cursor);
 		if (!span || span->backing != SpanBacking::initialized ||
 			span->size < descriptor_size || !image.read_at) {
@@ -152,26 +407,57 @@ ImportParseResult parse_imports(const ImageView& image,
 			break;
 		}
 		if (!context.descriptors.charge(1)) {
-			context.exhausted = true;
-			if (!context.budget_diagnostic_attempted) {
-				context.budget_diagnostic_attempted = true;
-				emit_diagnostic(diagnostics,
-					ParserDiagnostic::import_budget_exhausted);
-			}
-			result.exhausted = true;
-			return result;
+			exhaust_imports(context, diagnostics);
+			break;
 		}
 
-		result.libraries.push_back(
-			ParsedImportLibrary{false, descriptor, {}, {}});
+		descriptors.push_back(descriptor);
 		cursor += descriptor_size;
 		remaining -= descriptor_size;
 	}
 
-	if (!terminated) {
+	if (standard_can_continue && !terminated && !context.exhausted) {
 		emit_diagnostic(diagnostics,
 			ParserDiagnostic::import_descriptor_unterminated);
 	}
+
+	bool standard_names_valid = true;
+	if (!context.exhausted) {
+		for (const auto& descriptor : descriptors) {
+			if (!materialize_library_name(image, descriptor.Name, true, false,
+				descriptor, result, context, diagnostics)) {
+				standard_names_valid = false;
+				break;
+			}
+		}
+	}
+
+	if (!context.exhausted && standard_names_valid) {
+		for (auto& library : result.libraries) {
+			const auto& descriptor = *library.descriptor;
+			const std::uint64_t table_rva = descriptor.OriginalFirstThunk != 0 ?
+				descriptor.OriginalFirstThunk : descriptor.FirstThunk;
+			if (!traverse_import_table(image, table_rva, pe32_plus, library,
+				context, diagnostics)) {
+				break;
+			}
+		}
+	}
+
+	if (!context.exhausted && delay_directory.VirtualAddress != 0) {
+		delay_load_directory_table delay{};
+		if (read_mapped_value(image, delay_directory.VirtualAddress, &delay,
+			8 * sizeof(std::uint32_t)) &&
+			materialize_library_name(image, delay.Name, false, true,
+				std::nullopt, result, context, diagnostics)) {
+			delay.NameStr = result.libraries.back().name;
+			result.delay_directory = delay;
+			traverse_import_table(image, delay.DelayImportNameTable, pe32_plus,
+				result.libraries.back(), context, diagnostics);
+		}
+	}
+
+	result.exhausted = context.exhausted;
 	return result;
 }
 

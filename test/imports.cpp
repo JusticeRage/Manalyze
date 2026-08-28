@@ -102,6 +102,34 @@ std::vector<std::uint8_t> make_import_exhaustion_pe()
 	return bytes;
 }
 
+std::vector<std::uint8_t> make_import_name_boundary_pe(bool terminate)
+{
+	auto bytes = read_binary_file("testfiles/manatest.exe");
+	constexpr std::size_t first_descriptor = 0x1c6c;
+	constexpr std::size_t name_offset = 0x255d;
+	constexpr std::uint32_t name_rva = 0x3f5d;
+	write_u32(bytes, first_descriptor + 12, name_rva);
+	const std::string name = terminate ? "EDGE" : "EDGEX";
+	std::copy(name.begin(), name.end(), bytes.begin() + name_offset);
+	if (terminate) bytes[name_offset + name.size()] = 0;
+	bytes[0x2562] = 0;
+	return bytes;
+}
+
+std::vector<std::uint8_t> make_repeated_import_objects_pe()
+{
+	auto bytes = read_binary_file("testfiles/manatest.exe");
+	constexpr std::size_t optional_header = 0x108;
+	constexpr std::size_t import_directory = optional_header + 96 +
+		IMAGE_DIRECTORY_ENTRY_IMPORT * 8;
+	constexpr std::size_t first_descriptor = 0x1c6c;
+	std::copy_n(bytes.begin() + first_descriptor, 20,
+		bytes.begin() + first_descriptor + 20);
+	std::fill_n(bytes.begin() + first_descriptor + 40, 20, 0);
+	write_u32(bytes, import_directory + 4, 60);
+	return bytes;
+}
+
 void check_valid_delay_import(const mana::PE& pe)
 {
 	const auto delay = pe.get_delay_load_table();
@@ -358,11 +386,56 @@ BOOST_AUTO_TEST_CASE(import_exhaustion_recovers_later_directories)
 	const auto output = logs.str();
 	BOOST_CHECK_NE(output.find("Import parsing work budget exhausted."),
 		std::string::npos);
-	const std::string name_error = "Could not read an import's name.";
-	const auto first_name_error = output.find(name_error);
-	BOOST_REQUIRE_NE(first_name_error, std::string::npos);
-	BOOST_CHECK_EQUAL(output.find(name_error,
-		first_name_error + name_error.size()), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(import_name_accepts_nul_at_mapped_boundary)
+{
+	const auto bytes = make_import_name_boundary_pe(true);
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(),
+		"import-name-boundary.exe");
+
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_REQUIRE(pe->get_imported_dlls());
+	BOOST_REQUIRE_EQUAL(pe->get_imported_dlls()->size(), 8);
+	BOOST_CHECK_EQUAL(pe->get_imported_dlls()->front(), "EDGE");
+}
+
+BOOST_AUTO_TEST_CASE(import_name_does_not_cross_mapped_boundary)
+{
+	const auto bytes = make_import_name_boundary_pe(false);
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(),
+		"import-name-unterminated.exe");
+
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_REQUIRE(pe->get_imported_dlls());
+	BOOST_CHECK(pe->get_imported_dlls()->empty());
+}
+
+BOOST_AUTO_TEST_CASE(import_name_objects_do_not_share_mutable_state)
+{
+	const auto bytes = make_repeated_import_objects_pe();
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(),
+		"repeated-import-objects.exe");
+
+	BOOST_REQUIRE(pe && pe->is_valid());
+	const auto imports = pe->get_imports();
+	BOOST_REQUIRE(imports);
+	BOOST_REQUIRE_EQUAL(imports->size(), 2);
+	const auto first_descriptor = imports->at(0)->get_image_import_descriptor();
+	const auto second_descriptor = imports->at(1)->get_image_import_descriptor();
+	BOOST_REQUIRE(first_descriptor && second_descriptor);
+	BOOST_CHECK(first_descriptor != second_descriptor);
+	first_descriptor->Name = 0;
+	BOOST_CHECK_NE(first_descriptor->Name, second_descriptor->Name);
+
+	const auto first_functions = imports->at(0)->get_imports();
+	const auto second_functions = imports->at(1)->get_imports();
+	BOOST_REQUIRE(first_functions && second_functions);
+	BOOST_REQUIRE(!first_functions->empty() && !second_functions->empty());
+	BOOST_CHECK(first_functions->front() != second_functions->front());
+	first_functions->front()->Name = "mutated";
+	BOOST_CHECK_NE(first_functions->front()->Name,
+		second_functions->front()->Name);
 }
 
 // ----------------------------------------------------------------------------
