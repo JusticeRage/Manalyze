@@ -189,7 +189,9 @@ void PE::_initialize(const detail::PEParserWorkLimits& limits,
 	// Failure is acceptable from here on.
 	_initialized = true;
 	detail::WorkBudget rich_budget(limits.rich_entries);
-	_parse_coff_symbols();
+	detail::WorkBudget coff_symbol_budget(limits.coff_symbol_records);
+	detail::WorkBudget coff_string_budget(limits.coff_string_table_bytes);
+	_parse_coff_symbols(coff_symbol_budget, coff_string_budget, stats);
 	_parse_directories(rich_budget, stats);
 }
 
@@ -532,8 +534,10 @@ bool PE::_parse_pe_header()
 
 // ----------------------------------------------------------------------------
 
-bool PE::_parse_coff_symbols()
+bool PE::_parse_coff_symbols(detail::WorkBudget& symbol_budget,
+	detail::WorkBudget& string_budget, detail::PEParserWorkStats* stats)
 {
+	(void) string_budget;
 	if (!_h_pe || _file_handle == nullptr) {
 		return false;
 	}
@@ -542,32 +546,53 @@ bool PE::_parse_coff_symbols()
 		return true;
 	}
 
-	if (fseek(_file_handle.get(), _h_pe->PointerToSymbolTable, SEEK_SET))
+	constexpr std::uint64_t COFF_SYMBOL_SIZE = 18;
+	const std::uint64_t symbol_offset = _h_pe->PointerToSymbolTable;
+	const std::uint64_t symbol_count = _h_pe->NumberOfSymbols;
+	if (symbol_offset > _file_size ||
+		symbol_offset > static_cast<std::uint64_t>(std::numeric_limits<long>::max()) ||
+		symbol_count > (_file_size - symbol_offset) / COFF_SYMBOL_SIZE) {
+		PRINT_ERROR << "COFF symbol table extends beyond the end of the file."
+			<< DEBUG_INFO_INSIDEPE << std::endl;
+		return false;
+	}
+	const std::uint64_t symbol_bytes = symbol_count * COFF_SYMBOL_SIZE;
+	if (!symbol_budget.charge(symbol_count)) {
+		CAPPED_LOGGING_WARNING
+			PRINT_WARNING << "COFF symbol-record budget exhausted; stopping optional COFF parsing."
+				<< DEBUG_INFO_INSIDEPE << std::endl;
+		CAPPED_LOGGING_END
+		return false;
+	}
+
+	if (fseek(_file_handle.get(), static_cast<long>(symbol_offset), SEEK_SET))
 	{
-		PRINT_ERROR << "Could not reach PE COFF symbols (fseek to offset " <<  _h_pe->PointerToSymbolTable << " failed)."
+		PRINT_ERROR << "Could not reach PE COFF symbols (fseek to offset " << symbol_offset << " failed)."
 					<< DEBUG_INFO_INSIDEPE << std::endl;
 		return false;
 	}
 
-	for (unsigned int i = 0 ; i < _h_pe->NumberOfSymbols ; ++i)
+	coff_symbol symbol;
+	for (std::uint64_t bytes_read = 0; bytes_read < symbol_bytes;
+		bytes_read += COFF_SYMBOL_SIZE)
 	{
-		pcoff_symbol sym = std::make_shared<coff_symbol>();
-		memset(sym.get(), 0, sizeof(coff_symbol));
+		memset(&symbol, 0, sizeof(symbol));
 
-		if (18 != fread(sym.get(), 1, 18, _file_handle.get())) // Each symbol has a fixed size of 18 bytes.
+		if (COFF_SYMBOL_SIZE != fread(&symbol, 1, COFF_SYMBOL_SIZE, _file_handle.get()))
 		{
 			PRINT_ERROR << "Could not read a COFF symbol." << DEBUG_INFO_INSIDEPE << std::endl;
 			return false;
 		}
+		if (stats) ++stats->coff_symbol_records_read;
 
-		if (sym->SectionNumber > _sections.size())
+		if (symbol.SectionNumber > _sections.size())
 		{
-			PRINT_WARNING << "COFF symbol's section number is bigger than the number of sections!"
-						  << DEBUG_INFO_INSIDEPE << std::endl;
+			CAPPED_LOGGING_WARNING
+				PRINT_WARNING << "COFF symbol's section number is bigger than the number of sections!"
+							  << DEBUG_INFO_INSIDEPE << std::endl;
+			CAPPED_LOGGING_END
 			continue;
 		}
-
-		_coff_symbols.push_back(sym);
 	}
 
 	// Read the COFF string table

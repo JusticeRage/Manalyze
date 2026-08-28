@@ -332,7 +332,8 @@ private:
 	 * Reads the (optional) PE COFF symbols of an executable.
 	 * /!\ This relies on the information gathered in _parse_pe_header.
 	 */
-	bool _parse_coff_symbols();
+	bool _parse_coff_symbols(detail::WorkBudget& symbol_budget,
+		detail::WorkBudget& string_budget, detail::PEParserWorkStats* stats);
 
 	/**
 	 *	@brief	Parses the IMAGE_OPTIONAL_HEADER structure of a PE.

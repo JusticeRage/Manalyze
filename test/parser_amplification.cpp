@@ -234,6 +234,25 @@ std::vector<std::uint8_t> make_rich_pe(std::size_t entry_count, bool include_dan
 	return bytes;
 }
 
+std::vector<std::uint8_t> make_coff_pe(
+	std::uint32_t declared_symbol_count,
+	std::uint32_t physical_symbol_count,
+	const std::vector<std::uint8_t>& string_payload)
+{
+	auto bytes = read_binary_file("testfiles/manatest.exe");
+	const std::uint32_t symbol_offset = static_cast<std::uint32_t>(bytes.size());
+	bytes.resize(bytes.size() + static_cast<std::size_t>(physical_symbol_count) * 18, 0);
+	write_u32(bytes, 0xfc, symbol_offset);
+	write_u32(bytes, 0x100, declared_symbol_count);
+	const std::uint32_t string_table_size =
+		static_cast<std::uint32_t>(sizeof(std::uint32_t) + string_payload.size());
+	const std::size_t table_offset = bytes.size();
+	bytes.resize(bytes.size() + sizeof(std::uint32_t));
+	write_u32(bytes, table_offset, string_table_size);
+	bytes.insert(bytes.end(), string_payload.begin(), string_payload.end());
+	return bytes;
+}
+
 std::shared_ptr<mana::PE> parse_with_rich_limit(const std::vector<std::uint8_t>& bytes,
 	std::uint64_t rich_limit, mana::detail::PEParserWorkStats& stats)
 {
@@ -241,6 +260,17 @@ std::shared_ptr<mana::PE> parse_with_rich_limit(const std::vector<std::uint8_t>&
 	limits.rich_entries = rich_limit;
 	return mana::detail::PEParserTestAccess::create_from_bytes(
 		bytes.data(), bytes.size(), "generated-rich.exe", limits, stats);
+}
+
+std::shared_ptr<mana::PE> parse_with_coff_limits(const std::vector<std::uint8_t>& bytes,
+	std::uint64_t symbol_limit, std::uint64_t string_limit,
+	mana::detail::PEParserWorkStats& stats)
+{
+	auto limits = mana::detail::production_pe_parser_work_limits();
+	limits.coff_symbol_records = symbol_limit;
+	limits.coff_string_table_bytes = string_limit;
+	return mana::detail::PEParserTestAccess::create_from_bytes(
+		bytes.data(), bytes.size(), "generated-coff.exe", limits, stats);
 }
 
 void check_generated_tuple(const mana::rich_header& rich, std::size_t index)
@@ -373,6 +403,120 @@ BOOST_AUTO_TEST_CASE(existing_rich_values_are_unchanged)
 BOOST_AUTO_TEST_CASE(production_rich_limit_is_stable)
 {
 	BOOST_CHECK_EQUAL(mana::detail::production_pe_parser_work_limits().rich_entries, 1048576);
+}
+
+BOOST_AUTO_TEST_CASE(coff_symbol_exact_physical_extent_is_validated_without_retention)
+{
+	SilenceLogsFixture silence_logs;
+	const auto bytes = make_coff_pe(1, 1, {});
+	mana::detail::PEParserWorkStats stats;
+	auto pe = parse_with_coff_limits(bytes, 1, 4, stats);
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK_EQUAL(stats.coff_symbol_records_read, 1);
+	BOOST_CHECK_EQUAL(mana::detail::PEParserTestAccess::retained_coff_symbols(*pe), 0);
+	BOOST_CHECK_EQUAL(mana::detail::PEParserTestAccess::retained_coff_strings(*pe), 0);
+}
+
+BOOST_AUTO_TEST_CASE(coff_symbol_extent_failure_precedes_budget_and_preserves_metadata)
+{
+	const auto bytes = make_coff_pe(2, 1, {});
+	const auto control_bytes = read_binary_file("testfiles/manatest.exe");
+	auto control = mana::PE::create_from_bytes(
+		control_bytes.data(), control_bytes.size(), "control-manatest.exe");
+	BOOST_REQUIRE(control && control->is_valid());
+	mana::detail::PEParserWorkStats stats;
+	ErrorCapture errors(utils::LogLevel::WARNING);
+	auto pe = parse_with_coff_limits(bytes, 1, 4, stats);
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK_EQUAL(stats.coff_symbol_records_read, 0);
+	BOOST_CHECK_EQUAL(mana::detail::PEParserTestAccess::retained_coff_symbols(*pe), 0);
+	BOOST_CHECK_EQUAL(mana::detail::PEParserTestAccess::retained_coff_strings(*pe), 0);
+	BOOST_REQUIRE(pe->get_sections());
+	BOOST_CHECK_EQUAL(pe->get_sections()->size(), control->get_sections()->size());
+	BOOST_REQUIRE_EQUAL(pe->get_debug_info()->size(), control->get_debug_info()->size());
+	BOOST_REQUIRE(!pe->get_debug_info()->empty());
+	BOOST_CHECK_EQUAL(pe->get_debug_info()->front()->Filename,
+		control->get_debug_info()->front()->Filename);
+	const std::string output = errors.str();
+	BOOST_CHECK_NE(output.find("COFF symbol table extends beyond the end of the file"),
+		std::string::npos);
+	BOOST_CHECK_EQUAL(output.find("COFF symbol-record budget exhausted"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(coff_symbol_limit_accepts_below_limit_records_without_retention)
+{
+	SilenceLogsFixture silence_logs;
+	const auto bytes = make_coff_pe(2, 2, {});
+	mana::detail::PEParserWorkStats stats;
+	auto pe = parse_with_coff_limits(bytes, 3, 4, stats);
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK_EQUAL(stats.coff_symbol_records_read, 2);
+	BOOST_CHECK_EQUAL(mana::detail::PEParserTestAccess::retained_coff_symbols(*pe), 0);
+}
+
+BOOST_AUTO_TEST_CASE(coff_symbol_limit_accepts_exact_limit_records_without_retention)
+{
+	SilenceLogsFixture silence_logs;
+	const auto bytes = make_coff_pe(3, 3, {});
+	mana::detail::PEParserWorkStats stats;
+	auto pe = parse_with_coff_limits(bytes, 3, 4, stats);
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK_EQUAL(stats.coff_symbol_records_read, 3);
+	BOOST_CHECK_EQUAL(mana::detail::PEParserTestAccess::retained_coff_symbols(*pe), 0);
+}
+
+BOOST_AUTO_TEST_CASE(coff_symbol_limit_rejects_complete_table_before_iteration)
+{
+	const auto bytes = make_coff_pe(4, 4, {});
+	mana::detail::PEParserWorkStats stats;
+	ErrorCapture warnings(utils::LogLevel::WARNING);
+	auto pe = parse_with_coff_limits(bytes, 3, 4, stats);
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK_EQUAL(stats.coff_symbol_records_read, 0);
+	BOOST_CHECK_EQUAL(mana::detail::PEParserTestAccess::retained_coff_symbols(*pe), 0);
+	BOOST_CHECK_EQUAL(mana::detail::PEParserTestAccess::retained_coff_strings(*pe), 0);
+	const std::string diagnostic = "COFF symbol-record budget exhausted";
+	const std::string output = warnings.str();
+	const std::size_t first = output.find(diagnostic);
+	BOOST_REQUIRE_NE(first, std::string::npos);
+	BOOST_CHECK_EQUAL(output.find(diagnostic, first + diagnostic.size()), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(production_coff_symbol_limit_is_stable)
+{
+	BOOST_CHECK_EQUAL(
+		mana::detail::production_pe_parser_work_limits().coff_symbol_records, 1048576);
+}
+
+BOOST_AUTO_TEST_CASE(cap_malformed_coff_symbol_diagnostics_without_stopping_scan)
+{
+	if (!is_cap_test_child()) {
+		BOOST_CHECK_EQUAL(run_cap_test_child(), EXIT_SUCCESS);
+		return;
+	}
+
+	const std::uint32_t symbol_count = LOG_CAP + 5;
+	const std::size_t symbol_offset = read_binary_file("testfiles/manatest.exe").size();
+	auto bytes = make_coff_pe(symbol_count, symbol_count, {});
+	for (std::uint32_t i = 0; i < symbol_count; ++i) {
+		write_u16(bytes, symbol_offset + static_cast<std::size_t>(i) * 18 + 12, 0xffff);
+	}
+	mana::detail::PEParserWorkStats stats;
+	ErrorCapture warnings(utils::LogLevel::WARNING);
+	auto pe = parse_with_coff_limits(bytes, symbol_count, 4, stats);
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK_EQUAL(stats.coff_symbol_records_read, symbol_count);
+	BOOST_CHECK_EQUAL(mana::detail::PEParserTestAccess::retained_coff_symbols(*pe), 0);
+
+	const std::string diagnostic = "COFF symbol's section number";
+	const std::string output = warnings.str();
+	std::size_t count = 0;
+	for (std::size_t position = output.find(diagnostic); position != std::string::npos;
+		position = output.find(diagnostic, position + diagnostic.size())) {
+		++count;
+	}
+	BOOST_CHECK_GT(count, 0);
+	BOOST_CHECK_LT(count, symbol_count);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
