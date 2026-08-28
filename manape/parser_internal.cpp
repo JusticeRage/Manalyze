@@ -257,7 +257,7 @@ bool traverse_import_table(const ImageView& image, std::uint64_t table_rva,
 			extent += next->size;
 		}
 	}
-	const ThunkCacheKey key{root->file_offset, extent, slot_size};
+	const ThunkCacheKey key{root->file_offset, root->size, extent, slot_size};
 	std::unordered_set<ImportIdentity, ImportIdentityHash> identities;
 	const auto cached = context.successful_thunks.find(key);
 	if (cached != context.successful_thunks.end()) {
@@ -364,7 +364,9 @@ std::size_t StringCacheKeyHash::operator()(const StringCacheKey& key) const noex
 std::size_t ThunkCacheKeyHash::operator()(const ThunkCacheKey& key) const noexcept
 {
 	std::size_t value = std::hash<std::uint64_t>{}(key.physical_offset);
-	value ^= std::hash<std::uint64_t>{}(key.extent) + 0x9e3779b9 +
+	value ^= std::hash<std::uint64_t>{}(key.initialized_extent) + 0x9e3779b9 +
+		(value << 6) + (value >> 2);
+	value ^= std::hash<std::uint64_t>{}(key.total_extent) + 0x9e3779b9 +
 		(value << 6) + (value >> 2);
 	value ^= std::hash<std::size_t>{}(key.slot_width) + 0x9e3779b9 +
 		(value << 6) + (value >> 2);
