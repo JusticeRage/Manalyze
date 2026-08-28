@@ -212,6 +212,55 @@ mana::detail::ImportParseResult parse_standard_imports_for_architecture(
 		}, metrics);
 }
 
+CompactImageBuilder make_tls_image(bool pe32_plus,
+	const std::vector<std::uint64_t>& callbacks, bool terminate,
+	std::size_t partial_tail = 0, std::size_t zero_fill_tail = 0,
+	std::optional<std::uint64_t> callback_va = std::nullopt)
+{
+	const std::size_t slot_size = pe32_plus ? 8 : 4;
+	const std::size_t initialized_size = callbacks.size() * slot_size +
+		(terminate ? slot_size : 0) + partial_tail;
+	const std::uint64_t image_base = pe32_plus ? 0x140000000ULL : 0x400000ULL;
+	CompactImageBuilder image(std::max<std::size_t>(0x200,
+		0x100 + initialized_size));
+	image.headers(0x80).image(image_base, 0x4000, 1);
+	image.section({0x1000, initialized_size + zero_fill_tail,
+		0x100, initialized_size});
+	if (pe32_plus) {
+		image.put64(0x20, 0x1111222233334444ULL);
+		image.put64(0x28, 0x5555666677778888ULL);
+		image.put64(0x30, 0x9999aaaabbbbccccULL);
+		image.put64(0x38, callback_va.value_or(image_base + 0x1000));
+		image.put32(0x40, 0x12345678);
+		image.put32(0x44, 0x9abcdef0);
+	} else {
+		image.put32(0x20, 0x401111);
+		image.put32(0x24, 0x402222);
+		image.put32(0x28, 0x403333);
+		image.put32(0x2c, static_cast<std::uint32_t>(
+			callback_va.value_or(image_base + 0x1000)));
+		image.put32(0x30, 0x12345678);
+		image.put32(0x34, 0x9abcdef0);
+	}
+	for (std::size_t i = 0; i < callbacks.size(); ++i) {
+		if (pe32_plus) image.put64(0x100 + i * slot_size, callbacks[i]);
+		else image.put32(0x100 + i * slot_size,
+			static_cast<std::uint32_t>(callbacks[i]));
+	}
+	return image;
+}
+
+mana::detail::TlsParseResult parse_tls_image(
+	const mana::detail::ImageView& image, bool pe32_plus,
+	std::uint32_t declared_size, mana::detail::WorkBudget& budget,
+	std::vector<mana::detail::ParserDiagnostic>& diagnostics)
+{
+	return mana::detail::parse_tls(image, {0x20, declared_size}, pe32_plus,
+		budget, [&](mana::detail::ParserDiagnostic diagnostic) {
+			diagnostics.push_back(diagnostic);
+		});
+}
+
 } // namespace
 
 BOOST_AUTO_TEST_SUITE(parser_internal)
@@ -1640,6 +1689,317 @@ BOOST_AUTO_TEST_CASE(delay_import_is_suppressed_after_standard_exhaustion)
 	BOOST_REQUIRE_EQUAL(diagnostics.size(), 1);
 	BOOST_CHECK(diagnostics[0] ==
 		mana::detail::ParserDiagnostic::import_budget_exhausted);
+}
+
+BOOST_AUTO_TEST_CASE(tls_pe32_decodes_fixed_root_and_four_byte_slots)
+{
+	auto image = make_tls_image(false, {0x11223344, 0xaabbccdd}, true);
+	mana::detail::WorkBudget budget(2);
+	std::vector<mana::detail::ParserDiagnostic> diagnostics;
+
+	const auto result = parse_tls_image(image.view(), false, 24, budget,
+		diagnostics);
+
+	BOOST_REQUIRE(result.directory);
+	BOOST_CHECK_EQUAL(result.directory->StartAddressOfRawData, 0x401111);
+	BOOST_CHECK_EQUAL(result.directory->EndAddressOfRawData, 0x402222);
+	BOOST_CHECK_EQUAL(result.directory->AddressOfIndex, 0x403333);
+	BOOST_CHECK_EQUAL(result.directory->AddressOfCallbacks, 0x401000);
+	BOOST_CHECK_EQUAL(result.directory->SizeOfZeroFill, 0x12345678);
+	BOOST_CHECK_EQUAL(result.directory->Characteristics, 0x9abcdef0);
+	BOOST_REQUIRE_EQUAL(result.directory->Callbacks.size(), 2);
+	BOOST_CHECK_EQUAL(result.directory->Callbacks[0], 0x11223344);
+	BOOST_CHECK_EQUAL(result.directory->Callbacks[1], 0xaabbccdd);
+	BOOST_CHECK_EQUAL(budget.remaining(), 0);
+	BOOST_CHECK(diagnostics.empty());
+}
+
+BOOST_AUTO_TEST_CASE(tls_pe32_plus_decodes_fixed_root_and_eight_byte_slots)
+{
+	auto image = make_tls_image(true, {0x1122334455667788ULL}, true);
+	mana::detail::WorkBudget budget(1);
+	std::vector<mana::detail::ParserDiagnostic> diagnostics;
+
+	const auto result = parse_tls_image(image.view(), true, 40, budget,
+		diagnostics);
+
+	BOOST_REQUIRE(result.directory);
+	BOOST_CHECK_EQUAL(result.directory->StartAddressOfRawData,
+		0x1111222233334444ULL);
+	BOOST_CHECK_EQUAL(result.directory->EndAddressOfRawData,
+		0x5555666677778888ULL);
+	BOOST_CHECK_EQUAL(result.directory->AddressOfIndex,
+		0x9999aaaabbbbccccULL);
+	BOOST_REQUIRE_EQUAL(result.directory->Callbacks.size(), 1);
+	BOOST_CHECK_EQUAL(result.directory->Callbacks[0], 0x1122334455667788ULL);
+	BOOST_CHECK(diagnostics.empty());
+}
+
+BOOST_AUTO_TEST_CASE(tls_root_sizes_are_minimums_and_callbacks_are_external)
+{
+	for (const bool pe32_plus : {false, true}) {
+		const std::uint32_t minimum = pe32_plus ? 40 : 24;
+		for (const std::uint32_t declared : {minimum, minimum + 8}) {
+			auto image = make_tls_image(pe32_plus, {0xabcdef01}, true);
+			mana::detail::WorkBudget budget(1);
+			std::vector<mana::detail::ParserDiagnostic> diagnostics;
+
+			const auto result = parse_tls_image(image.view(), pe32_plus, declared,
+				budget, diagnostics);
+
+			BOOST_REQUIRE(result.directory);
+			BOOST_REQUIRE_EQUAL(result.directory->Callbacks.size(), 1);
+			BOOST_CHECK_EQUAL(result.directory->Callbacks[0], 0xabcdef01);
+			BOOST_CHECK_EQUAL(result.directory->SizeOfZeroFill, 0x12345678);
+			BOOST_CHECK_EQUAL(result.directory->Characteristics, 0x9abcdef0);
+			BOOST_CHECK(diagnostics.empty());
+		}
+	}
+}
+
+BOOST_AUTO_TEST_CASE(tls_rejects_undersized_and_truncated_fixed_roots)
+{
+	for (const bool pe32_plus : {false, true}) {
+		const std::uint32_t minimum = pe32_plus ? 40 : 24;
+		auto image = make_tls_image(pe32_plus, {}, true);
+		mana::detail::WorkBudget budget(4);
+		std::vector<mana::detail::ParserDiagnostic> diagnostics;
+		auto result = parse_tls_image(image.view(), pe32_plus, minimum - 1,
+			budget, diagnostics);
+		BOOST_CHECK(!result.directory);
+		BOOST_CHECK_EQUAL(budget.remaining(), 4);
+
+		diagnostics.clear();
+		auto truncated = image.view();
+		truncated.size_of_headers = 0x20 + minimum - 1;
+		result = parse_tls_image(truncated, pe32_plus, minimum, budget,
+			diagnostics);
+		BOOST_CHECK(!result.directory);
+		BOOST_CHECK_EQUAL(budget.remaining(), 4);
+	}
+}
+
+BOOST_AUTO_TEST_CASE(tls_zero_callback_va_is_unretained_and_does_no_slot_read)
+{
+	auto image = make_tls_image(true, {0x1122334455667788ULL}, true, 0, 0, 0);
+	auto view = image.view();
+	const auto read_at = view.read_at;
+	std::size_t callback_reads = 0;
+	view.read_at = [&](std::uint64_t offset, void* destination,
+		std::size_t size) {
+		if (offset >= 0x100) ++callback_reads;
+		return read_at(offset, destination, size);
+	};
+	mana::detail::WorkBudget budget(7);
+	std::vector<mana::detail::ParserDiagnostic> diagnostics;
+
+	const auto result = parse_tls_image(view, true, 40, budget, diagnostics);
+
+	BOOST_CHECK(!result.directory);
+	BOOST_CHECK(!result.exhausted);
+	BOOST_CHECK_EQUAL(budget.remaining(), 7);
+	BOOST_CHECK_EQUAL(callback_reads, 0);
+	BOOST_REQUIRE_EQUAL(diagnostics.size(), 1);
+	BOOST_CHECK(diagnostics[0] ==
+		mana::detail::ParserDiagnostic::tls_callback_va_invalid);
+}
+
+BOOST_AUTO_TEST_CASE(tls_rejects_invalid_callback_va_without_direct_fallback)
+{
+	for (const bool pe32_plus : {false, true}) {
+		const std::uint64_t image_base = pe32_plus ? 0x140000000ULL : 0x400000;
+		const std::vector<std::uint64_t> addresses{
+			image_base - 1,
+			image_base + 0x4000,
+			image_base + 0x4001,
+			std::numeric_limits<std::uint64_t>::max(),
+		};
+		for (const auto address : addresses) {
+			auto image = make_tls_image(pe32_plus, {0x12345678}, true, 0, 0,
+				address);
+			mana::detail::WorkBudget budget(1);
+			std::vector<mana::detail::ParserDiagnostic> diagnostics;
+
+			const auto result = parse_tls_image(image.view(), pe32_plus,
+				pe32_plus ? 40 : 24, budget, diagnostics);
+
+			BOOST_CHECK(!result.directory);
+			BOOST_CHECK_EQUAL(budget.remaining(), 1);
+			BOOST_REQUIRE_EQUAL(diagnostics.size(), 1);
+			BOOST_CHECK(diagnostics[0] ==
+				mana::detail::ParserDiagnostic::tls_callback_va_invalid);
+		}
+	}
+}
+
+BOOST_AUTO_TEST_CASE(tls_callback_targets_need_not_map_inside_image)
+{
+	auto image = make_tls_image(true, {0xffffffffffffffffULL}, true);
+	mana::detail::WorkBudget budget(1);
+	std::vector<mana::detail::ParserDiagnostic> diagnostics;
+
+	const auto result = parse_tls_image(image.view(), true, 40, budget,
+		diagnostics);
+
+	BOOST_REQUIRE(result.directory);
+	BOOST_REQUIRE_EQUAL(result.directory->Callbacks.size(), 1);
+	BOOST_CHECK_EQUAL(result.directory->Callbacks[0],
+		0xffffffffffffffffULL);
+	BOOST_CHECK(diagnostics.empty());
+}
+
+BOOST_AUTO_TEST_CASE(tls_physical_null_at_initialized_boundary_terminates)
+{
+	for (const bool pe32_plus : {false, true}) {
+		auto image = make_tls_image(pe32_plus, {0x1234}, true);
+		mana::detail::WorkBudget budget(1);
+		std::vector<mana::detail::ParserDiagnostic> diagnostics;
+
+		const auto result = parse_tls_image(image.view(), pe32_plus,
+			pe32_plus ? 40 : 24, budget, diagnostics);
+
+		BOOST_REQUIRE(result.directory);
+		BOOST_REQUIRE_EQUAL(result.directory->Callbacks.size(), 1);
+		BOOST_CHECK(diagnostics.empty());
+	}
+}
+
+BOOST_AUTO_TEST_CASE(tls_same_region_zero_fill_is_a_terminator)
+{
+	for (const bool pe32_plus : {false, true}) {
+		const std::size_t slot_size = pe32_plus ? 8 : 4;
+		auto image = make_tls_image(pe32_plus, {0x1234}, false, 0,
+			slot_size);
+		auto view = image.view();
+		const auto read_at = view.read_at;
+		std::size_t slot_reads = 0;
+		view.read_at = [&](std::uint64_t offset, void* destination,
+			std::size_t size) {
+			if (offset >= 0x100) ++slot_reads;
+			return read_at(offset, destination, size);
+		};
+		mana::detail::WorkBudget budget(1);
+		std::vector<mana::detail::ParserDiagnostic> diagnostics;
+
+		const auto result = parse_tls_image(view, pe32_plus,
+			pe32_plus ? 40 : 24, budget, diagnostics);
+
+		BOOST_REQUIRE(result.directory);
+		BOOST_REQUIRE_EQUAL(result.directory->Callbacks.size(), 1);
+		BOOST_CHECK_EQUAL(slot_reads, 1);
+		BOOST_CHECK(diagnostics.empty());
+	}
+}
+
+BOOST_AUTO_TEST_CASE(tls_region_boundary_and_partial_slot_are_unterminated)
+{
+	for (const bool pe32_plus : {false, true}) {
+		for (const std::size_t partial : {std::size_t{0}, std::size_t{1}}) {
+			auto image = make_tls_image(pe32_plus, {0x1234}, false, partial);
+			auto view = image.view();
+			const auto read_at = view.read_at;
+			std::size_t slot_reads = 0;
+			view.read_at = [&](std::uint64_t offset, void* destination,
+				std::size_t size) {
+				if (offset >= 0x100) ++slot_reads;
+				return read_at(offset, destination, size);
+			};
+			mana::detail::WorkBudget budget(2);
+			std::vector<mana::detail::ParserDiagnostic> diagnostics;
+
+			const auto result = parse_tls_image(view, pe32_plus,
+				pe32_plus ? 40 : 24, budget, diagnostics);
+
+			BOOST_REQUIRE(result.directory);
+			BOOST_REQUIRE_EQUAL(result.directory->Callbacks.size(), 1);
+			BOOST_CHECK_EQUAL(slot_reads, 1);
+			BOOST_REQUIRE_EQUAL(diagnostics.size(), 1);
+			BOOST_CHECK(diagnostics[0] ==
+				mana::detail::ParserDiagnostic::tls_callback_unterminated);
+		}
+	}
+}
+
+BOOST_AUTO_TEST_CASE(tls_callback_table_does_not_cross_into_adjacent_region)
+{
+	for (const bool pe32_plus : {false, true}) {
+		const std::size_t slot_size = pe32_plus ? 8 : 4;
+		auto image = make_tls_image(pe32_plus, {0x1234}, false);
+		image.section({0x1000 + slot_size, slot_size, 0x180, slot_size});
+		mana::detail::WorkBudget budget(2);
+		std::vector<mana::detail::ParserDiagnostic> diagnostics;
+
+		const auto result = parse_tls_image(image.view(), pe32_plus,
+			pe32_plus ? 40 : 24, budget, diagnostics);
+
+		BOOST_REQUIRE(result.directory);
+		BOOST_REQUIRE_EQUAL(result.directory->Callbacks.size(), 1);
+		BOOST_REQUIRE_EQUAL(diagnostics.size(), 1);
+		BOOST_CHECK(diagnostics[0] ==
+			mana::detail::ParserDiagnostic::tls_callback_unterminated);
+	}
+}
+
+BOOST_AUTO_TEST_CASE(tls_unmapped_or_unreadable_table_retains_fixed_root)
+{
+	auto image = make_tls_image(false, {}, false, 0, 0, 0x402000);
+	for (const bool fail_read : {false, true}) {
+		auto view = image.view();
+		if (fail_read) {
+			view.sections = {{0x2000, 4, 0x100, 4}};
+			const auto read_at = view.read_at;
+			view.read_at = [read_at](std::uint64_t offset, void* destination,
+				std::size_t size) {
+				return offset < 0x100 && read_at(offset, destination, size);
+			};
+		}
+		mana::detail::WorkBudget budget(1);
+		std::vector<mana::detail::ParserDiagnostic> diagnostics;
+
+		const auto result = parse_tls_image(view, false, 24, budget,
+			diagnostics);
+
+		BOOST_REQUIRE(result.directory);
+		BOOST_CHECK(result.directory->Callbacks.empty());
+		BOOST_REQUIRE_EQUAL(diagnostics.size(), 1);
+		BOOST_CHECK(diagnostics[0] ==
+			mana::detail::ParserDiagnostic::tls_callback_unterminated);
+	}
+}
+
+BOOST_AUTO_TEST_CASE(tls_callback_budget_reads_then_charges_nonzero_only)
+{
+	for (const bool pe32_plus : {false, true}) {
+		for (const std::uint64_t limit : {0ULL, 1ULL, 2ULL, 3ULL}) {
+			auto image = make_tls_image(pe32_plus,
+				{0x11111111, 0x22222222}, true);
+			auto view = image.view();
+			const auto read_at = view.read_at;
+			std::size_t slot_reads = 0;
+			view.read_at = [&](std::uint64_t offset, void* destination,
+				std::size_t size) {
+				if (offset >= 0x100) ++slot_reads;
+				return read_at(offset, destination, size);
+			};
+			mana::detail::WorkBudget budget(limit);
+			std::vector<mana::detail::ParserDiagnostic> diagnostics;
+
+			const auto result = parse_tls_image(view, pe32_plus,
+				pe32_plus ? 40 : 24, budget, diagnostics);
+
+			BOOST_REQUIRE(result.directory);
+			const auto retained = std::min<std::uint64_t>(limit, 2);
+			BOOST_CHECK_EQUAL(result.directory->Callbacks.size(), retained);
+			BOOST_CHECK(result.exhausted == (limit < 2));
+			BOOST_CHECK_EQUAL(slot_reads, limit < 2 ? retained + 1 : 3);
+			BOOST_CHECK_EQUAL(budget.remaining(), limit > 2 ? limit - 2 : 0);
+			BOOST_CHECK_EQUAL(diagnostics.size(), limit < 2 ? 1 : 0);
+			if (limit < 2) {
+				BOOST_CHECK(diagnostics[0] ==
+					mana::detail::ParserDiagnostic::tls_budget_exhausted);
+			}
+		}
+	}
 }
 
 BOOST_AUTO_TEST_SUITE_END()

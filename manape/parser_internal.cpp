@@ -12,6 +12,24 @@ namespace {
 
 constexpr std::size_t string_read_chunk = 4096;
 
+std::uint32_t decode_u32(const std::uint8_t* bytes)
+{
+	std::uint32_t value = 0;
+	for (std::size_t i = 0; i < sizeof(value); ++i) {
+		value |= static_cast<std::uint32_t>(bytes[i]) << (8 * i);
+	}
+	return value;
+}
+
+std::uint64_t decode_u64(const std::uint8_t* bytes)
+{
+	std::uint64_t value = 0;
+	for (std::size_t i = 0; i < sizeof(value); ++i) {
+		value |= static_cast<std::uint64_t>(bytes[i]) << (8 * i);
+	}
+	return value;
+}
+
 enum class DecodeStatus { success, malformed, exhausted };
 
 struct StringSource
@@ -562,6 +580,113 @@ ImportParseResult parse_imports(const ImageView& image,
 
 	result.exhausted = context.exhausted;
 	return result;
+}
+
+TlsParseResult parse_tls(const ImageView& image,
+	const image_data_directory& directory,
+	bool pe32_plus,
+	WorkBudget& callback_budget,
+	const DiagnosticSink& diagnostics)
+{
+	TlsParseResult result;
+	const std::size_t root_size = pe32_plus ? 40 : 24;
+	if (directory.VirtualAddress == 0 || directory.Size < root_size) {
+		return result;
+	}
+
+	const auto root = resolve_mapped_span(image, directory.VirtualAddress);
+	if (!root || root->backing != SpanBacking::initialized ||
+		root->size < root_size || !image.read_at) {
+		return result;
+	}
+	std::array<std::uint8_t, 40> bytes{};
+	if (!image.read_at(root->file_offset, bytes.data(), root_size)) {
+		return result;
+	}
+
+	image_tls_directory tls{};
+	if (pe32_plus) {
+		tls.StartAddressOfRawData = decode_u64(bytes.data());
+		tls.EndAddressOfRawData = decode_u64(bytes.data() + 8);
+		tls.AddressOfIndex = decode_u64(bytes.data() + 16);
+		tls.AddressOfCallbacks = decode_u64(bytes.data() + 24);
+		tls.SizeOfZeroFill = decode_u32(bytes.data() + 32);
+		tls.Characteristics = decode_u32(bytes.data() + 36);
+	} else {
+		tls.StartAddressOfRawData = decode_u32(bytes.data());
+		tls.EndAddressOfRawData = decode_u32(bytes.data() + 4);
+		tls.AddressOfIndex = decode_u32(bytes.data() + 8);
+		tls.AddressOfCallbacks = decode_u32(bytes.data() + 12);
+		tls.SizeOfZeroFill = decode_u32(bytes.data() + 16);
+		tls.Characteristics = decode_u32(bytes.data() + 20);
+	}
+
+	if (tls.AddressOfCallbacks == 0 ||
+		tls.AddressOfCallbacks < image.image_base) {
+		emit_diagnostic(diagnostics,
+			ParserDiagnostic::tls_callback_va_invalid);
+		return result;
+	}
+	const std::uint64_t table_rva =
+		tls.AddressOfCallbacks - image.image_base;
+	if (table_rva >= image.size_of_image) {
+		emit_diagnostic(diagnostics,
+			ParserDiagnostic::tls_callback_va_invalid);
+		return result;
+	}
+
+	result.directory = std::move(tls);
+	const std::size_t slot_size = pe32_plus ? 8 : 4;
+	const auto table_root = resolve_mapped_span(image, table_rva);
+	if (!table_root) {
+		emit_diagnostic(diagnostics,
+			ParserDiagnostic::tls_callback_unterminated);
+		return result;
+	}
+	const std::size_t region = table_root->region;
+	std::uint64_t cursor = table_rva;
+	while (true) {
+		if (cursor >= image.size_of_image) {
+			emit_diagnostic(diagnostics,
+				ParserDiagnostic::tls_callback_unterminated);
+			return result;
+		}
+		const auto span = resolve_mapped_span(image, cursor);
+		if (!span || span->region != region) {
+			emit_diagnostic(diagnostics,
+				ParserDiagnostic::tls_callback_unterminated);
+			return result;
+		}
+		if (span->backing == SpanBacking::zero_fill) return result;
+		if (span->size < slot_size || !image.read_at) {
+			emit_diagnostic(diagnostics,
+				ParserDiagnostic::tls_callback_unterminated);
+			return result;
+		}
+
+		std::array<std::uint8_t, 8> slot{};
+		if (!image.read_at(span->file_offset, slot.data(), slot_size)) {
+			emit_diagnostic(diagnostics,
+				ParserDiagnostic::tls_callback_unterminated);
+			return result;
+		}
+		const std::uint64_t callback = pe32_plus ? decode_u64(slot.data()) :
+			decode_u32(slot.data());
+		if (callback == 0) return result;
+		if (!callback_budget.charge(1)) {
+			result.exhausted = true;
+			emit_diagnostic(diagnostics,
+				ParserDiagnostic::tls_budget_exhausted);
+			return result;
+		}
+		result.directory->Callbacks.push_back(callback);
+		if (cursor > std::numeric_limits<std::uint64_t>::max() - slot_size) {
+			emit_diagnostic(diagnostics,
+				ParserDiagnostic::tls_callback_unterminated);
+			return result;
+		}
+		cursor += slot_size;
+	}
 }
 
 } // namespace mana::detail

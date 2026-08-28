@@ -47,8 +47,11 @@
 #endif
 
 #include "fixtures.h"
+#include "import_tls_fixtures.h"
 #include "manacommons/color.h"
 #include "manape/pe.h"
+
+std::vector<std::uint8_t> make_tls_budget_exhaustion_pe();
 
 namespace {
 
@@ -535,6 +538,83 @@ BOOST_AUTO_TEST_CASE(reject_tls_directory_smaller_than_pe32_plus_root)
 	BOOST_REQUIRE(pe && pe->is_valid());
 	BOOST_CHECK(pe->get_tls() == nullptr);
 	BOOST_CHECK_NE(errors.str().find("IMAGE_TLS_DIRECTORY"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(tls_larger_declared_roots_decode_only_fixed_prefix)
+{
+	for (const bool pe32_plus : {false, true}) {
+		auto bytes = make_tls_callbacks_pe(pe32_plus,
+			{pe32_plus ? 0x1122334455667788ULL : 0x11223344ULL}, true);
+		write_u64(bytes, pe32_plus ? 0x2ec0 + 40 : 0x2580 + 24,
+			0xffffffffffffffffULL);
+		write_u32(bytes, pe32_plus ? 0x1c4 : 0x1b4, pe32_plus ? 48 : 32);
+		auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(),
+			pe32_plus ? "large-tls64-root.exe" : "large-tls32-root.exe");
+		BOOST_REQUIRE(pe && pe->is_valid());
+		const auto tls = pe->get_tls();
+		BOOST_REQUIRE(tls);
+		BOOST_REQUIRE_EQUAL(tls->Callbacks.size(), 1);
+		BOOST_CHECK_EQUAL(tls->Callbacks[0],
+			pe32_plus ? 0x1122334455667788ULL : 0x11223344ULL);
+		BOOST_CHECK_EQUAL(tls->SizeOfZeroFill, 0);
+		BOOST_CHECK_EQUAL(tls->Characteristics, 0);
+	}
+}
+
+BOOST_AUTO_TEST_CASE(tls_zero_callback_va_is_unset_and_recovers_later_directories)
+{
+	auto bytes = make_tls_callbacks_pe(false, {0x401234}, true);
+	write_u32(bytes, 0x2580 + 12, 0);
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(),
+		"zero-tls-callback-va.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(pe->get_tls() == nullptr);
+	BOOST_CHECK_NE(errors.str().find("Could not reach the TLS callback table."),
+		std::string::npos);
+	BOOST_REQUIRE(pe->get_config());
+	BOOST_CHECK_EQUAL(pe->get_config()->SecurityCookie, 0x404004);
+	BOOST_REQUIRE(pe->get_certificates());
+	BOOST_CHECK(!pe->get_certificates()->empty());
+	BOOST_REQUIRE(pe->get_rich_header());
+}
+
+BOOST_AUTO_TEST_CASE(tls_unterminated_table_retains_callbacks_and_recovers)
+{
+	auto bytes = make_tls_callbacks_pe(false, {0x401234}, false);
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(),
+		"unterminated-tls-callbacks.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	const auto tls = pe->get_tls();
+	BOOST_REQUIRE(tls);
+	BOOST_REQUIRE_EQUAL(tls->Callbacks.size(), 1);
+	BOOST_CHECK_EQUAL(tls->Callbacks[0], 0x401234);
+	BOOST_CHECK_NE(errors.str().find(
+		"TLS callback table is not null-terminated within mapped data."),
+		std::string::npos);
+	BOOST_REQUIRE(pe->get_config());
+	BOOST_REQUIRE(pe->get_certificates());
+	BOOST_CHECK(!pe->get_certificates()->empty());
+	BOOST_REQUIRE(pe->get_rich_header());
+}
+
+BOOST_AUTO_TEST_CASE(tls_production_budget_retains_prefix_and_recovers)
+{
+	auto bytes = make_tls_budget_exhaustion_pe();
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(),
+		"tls-budget-exhaustion.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	const auto tls = pe->get_tls();
+	BOOST_REQUIRE(tls);
+	BOOST_CHECK_EQUAL(tls->Callbacks.size(), 1048576);
+	BOOST_CHECK_NE(errors.str().find("TLS callback work budget exhausted."),
+		std::string::npos);
+	BOOST_REQUIRE(pe->get_config());
+	BOOST_REQUIRE(pe->get_certificates());
+	BOOST_CHECK(!pe->get_certificates()->empty());
+	BOOST_REQUIRE(pe->get_rich_header());
 }
 
 BOOST_AUTO_TEST_CASE(reject_truncated_debug_directory_root)

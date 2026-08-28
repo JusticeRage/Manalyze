@@ -60,6 +60,7 @@ void create_file(const fs::path & ph, const std::string & contents = std::string
 std::vector<std::uint8_t> read_binary_file(const fs::path& path);
 void write_u16(std::vector<std::uint8_t>& bytes, size_t offset, std::uint16_t value);
 void write_u32(std::vector<std::uint8_t>& bytes, size_t offset, std::uint32_t value);
+void write_u64(std::vector<std::uint8_t>& bytes, size_t offset, std::uint64_t value);
 int run_cap_test_child(const char* test_name);
 bool is_cap_test_child(const char* test_name);
 

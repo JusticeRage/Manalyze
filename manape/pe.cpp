@@ -20,6 +20,7 @@
 #endif
 
 #include "manape/pe.h"
+#include "manape/parser_internal.h"
 #include "manape/pe_parser_internal.h"
 
 #if defined(MANALYZE_PARSER_TESTING)
@@ -1447,55 +1448,71 @@ bool PE::_parse_tls()
 		return false;
 	}
 
-	const std::uint64_t directory_size =
-		_ioh->Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32+") ? 40 : 24;
-	if (!_reach_directory(IMAGE_DIRECTORY_ENTRY_TLS, directory_size, "IMAGE_TLS_DIRECTORY"))	{ // No TLS callbacks
+	const bool pe32_plus =
+		_ioh->Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32+");
+	const std::uint64_t directory_size = pe32_plus ? 40 : 24;
+	if (!_reach_directory(IMAGE_DIRECTORY_ENTRY_TLS, directory_size,
+		"IMAGE_TLS_DIRECTORY"))	{
 		return true;
 	}
 
-	image_tls_directory tls;
-	unsigned int size = 4*sizeof(std::uint64_t) + 2*sizeof(std::uint32_t);
-	memset(&tls, 0, size);
-
-	bool read_root = false;
-	if (get_architecture() == x64) {
-		read_root = fread(&tls, 1, size, _file_handle.get()) == size;
-	}
-	else
-	{
-		read_root =
-			fread(&tls.StartAddressOfRawData, 1, sizeof(std::uint32_t), _file_handle.get()) == sizeof(std::uint32_t) &&
-			fread(&tls.EndAddressOfRawData, 1, sizeof(std::uint32_t), _file_handle.get()) == sizeof(std::uint32_t) &&
-			fread(&tls.AddressOfIndex, 1, sizeof(std::uint32_t), _file_handle.get()) == sizeof(std::uint32_t) &&
-			fread(&tls.AddressOfCallbacks, 1, sizeof(std::uint32_t), _file_handle.get()) == sizeof(std::uint32_t) &&
-			fread(&tls.SizeOfZeroFill, 1, 2 * sizeof(std::uint32_t), _file_handle.get()) == 2 * sizeof(std::uint32_t);
-	}
-
-	if (!read_root)
-	{
-		PRINT_ERROR << "Could not read the IMAGE_TLS_DIRECTORY." << DEBUG_INFO_INSIDEPE << std::endl;
-		return true; // Non-fatal
+	detail::ImageView image{
+		_file_size,
+		_ioh->SizeOfHeaders,
+		_ioh->SizeOfImage,
+		_ioh->ImageBase,
+		_ioh->FileAlignment,
+		{},
+		[this](std::uint64_t offset, void* destination, std::size_t size) {
+			return _locked_read_at(offset, destination, size);
+		},
+	};
+	image.sections.reserve(_sections.size());
+	for (const auto& section : _sections) {
+		image.sections.push_back({
+			section->get_virtual_address(),
+			section->get_virtual_size(),
+			section->get_pointer_to_raw_data(),
+			section->get_size_of_raw_data(),
+		});
 	}
 
-	// Go to the offset table
-	unsigned int offset = _va_to_offset(tls.AddressOfCallbacks);
-	if (!offset || fseek(_file_handle.get(), offset, SEEK_SET))
-	{
-		PRINT_ERROR << "Could not reach the TLS callback table." << DEBUG_INFO_INSIDEPE << std::endl;
-		return true; // Non-fatal
-	}
-
-	std::uint64_t callback_address = 0;
-	unsigned int callback_size = _ioh->Magic == nt::IMAGE_OPTIONAL_HEADER_MAGIC.at("PE32+") ? sizeof(std::uint64_t) : sizeof(std::uint32_t);
-	while (true) // break on null callback
-	{
-		if (callback_size != fread(&callback_address, 1, callback_size, _file_handle.get()) || !callback_address) { // Exit condition.
+	bool diagnosed = false;
+	const auto diagnostics = [&diagnosed](detail::ParserDiagnostic diagnostic) {
+		diagnosed = true;
+		switch (diagnostic) {
+		case detail::ParserDiagnostic::tls_callback_va_invalid:
+			CAPPED_LOGGING_ERROR
+			PRINT_ERROR << "Could not reach the TLS callback table."
+				<< DEBUG_INFO_INSIDEPE << std::endl;
+			CAPPED_LOGGING_END
+			break;
+		case detail::ParserDiagnostic::tls_callback_unterminated:
+			CAPPED_LOGGING_ERROR
+			PRINT_ERROR << "TLS callback table is not null-terminated within mapped data."
+				<< DEBUG_INFO_INSIDEPE << std::endl;
+			CAPPED_LOGGING_END
+			break;
+		case detail::ParserDiagnostic::tls_budget_exhausted:
+			CAPPED_LOGGING_ERROR
+			PRINT_ERROR << "TLS callback work budget exhausted."
+				<< DEBUG_INFO_INSIDEPE << std::endl;
+			CAPPED_LOGGING_END
+			break;
+		default:
 			break;
 		}
-		tls.Callbacks.push_back(callback_address);
+	};
+	detail::WorkBudget callback_budget(1048576);
+	const auto result = detail::parse_tls(image,
+		_ioh->directories[IMAGE_DIRECTORY_ENTRY_TLS], pe32_plus,
+		callback_budget, diagnostics);
+	if (result.directory) {
+		_tls = *result.directory;
+	} else if (!diagnosed) {
+		PRINT_ERROR << "Could not read the IMAGE_TLS_DIRECTORY."
+			<< DEBUG_INFO_INSIDEPE << std::endl;
 	}
-
-	_tls = tls;
 	return true;
 }
 

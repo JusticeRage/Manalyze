@@ -81,6 +81,16 @@ void write_u32(std::vector<std::uint8_t>& bytes, size_t offset, std::uint32_t va
 	}
 }
 
+void write_u64(std::vector<std::uint8_t>& bytes, size_t offset, std::uint64_t value)
+{
+	if (offset > bytes.size() || bytes.size() - offset < sizeof(value)) {
+		throw std::out_of_range("64-bit fixture patch exceeds input");
+	}
+	for (size_t i = 0; i < sizeof(value); ++i) {
+		bytes[offset + i] = static_cast<std::uint8_t>(value >> (8 * i));
+	}
+}
+
 // ----------------------------------------------------------------------------
 
 SetupFiles::SetupFiles()

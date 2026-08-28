@@ -154,6 +154,12 @@ struct ImportParseResult
 	bool exhausted = false;
 };
 
+struct TlsParseResult
+{
+	std::optional<image_tls_directory> directory;
+	bool exhausted = false;
+};
+
 std::optional<MappedSpan> resolve_mapped_span(const ImageView& image,
 	std::uint64_t rva);
 
@@ -164,5 +170,11 @@ ImportParseResult parse_imports(const ImageView& image,
 	const ImportLimits& limits,
 	const DiagnosticSink& diagnostics,
 	ImportMetrics* metrics = nullptr);
+
+TlsParseResult parse_tls(const ImageView& image,
+	const image_data_directory& directory,
+	bool pe32_plus,
+	WorkBudget& callback_budget,
+	const DiagnosticSink& diagnostics);
 
 } // namespace mana::detail
