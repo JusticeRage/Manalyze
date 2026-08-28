@@ -177,6 +177,52 @@ bool read_mapped_value(const ImageView& image, std::uint64_t rva,
 		image.read_at(span->file_offset, destination, size);
 }
 
+bool mapped_ranges_intersect(std::uint64_t first_start,
+	std::uint64_t first_size, std::uint64_t second_start,
+	std::uint64_t second_size)
+{
+	if (first_size == 0 || second_size == 0) return false;
+	if (first_start <= second_start) {
+		return second_start - first_start < first_size;
+	}
+	return first_start - second_start < second_size;
+}
+
+bool import_table_mapping_is_cacheable(const ImageView& image,
+	std::uint64_t table_rva, const MappedSpan& root, std::uint64_t extent)
+{
+	if (root.region == 0) return true;
+	const std::size_t selected_index = root.region - 1;
+	if (selected_index >= image.sections.size()) return false;
+	const auto& selected = image.sections[selected_index];
+	const bool virtual_match = table_rva >= selected.virtual_address &&
+		table_rva - selected.virtual_address < selected.virtual_size;
+
+	if (virtual_match) {
+		for (std::size_t i = 0; i < selected_index; ++i) {
+			const auto& section = image.sections[i];
+			if (mapped_ranges_intersect(table_rva, extent,
+				section.virtual_address, section.virtual_size)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	for (std::size_t i = 0; i < image.sections.size(); ++i) {
+		const auto& section = image.sections[i];
+		if (mapped_ranges_intersect(table_rva, extent,
+			section.virtual_address, section.virtual_size)) {
+			return false;
+		}
+		if (i < selected_index && mapped_ranges_intersect(table_rva, extent,
+			section.virtual_address, section.raw_size)) {
+			return false;
+		}
+	}
+	return true;
+}
+
 bool materialize_import(std::uint64_t raw, std::uint64_t ordinal_mask,
 	const ImageView& image, ParsedImportLibrary& library,
 	std::unordered_set<ImportIdentity, ImportIdentityHash>& identities,
@@ -258,17 +304,21 @@ bool traverse_import_table(const ImageView& image, std::uint64_t table_rva,
 		}
 	}
 	const ThunkCacheKey key{root->file_offset, root->size, extent, slot_size};
+	const bool cacheable = import_table_mapping_is_cacheable(image, table_rva,
+		*root, extent);
 	std::unordered_set<ImportIdentity, ImportIdentityHash> identities;
-	const auto cached = context.successful_thunks.find(key);
-	if (cached != context.successful_thunks.end()) {
-		if (context.metrics) ++context.metrics->thunk_cache_hits;
-		for (const auto raw : cached->second) {
-			if (!materialize_import(raw, ordinal_mask, image, library,
-				identities, context, diagnostics)) {
-				return false;
+	if (cacheable) {
+		const auto cached = context.successful_thunks.find(key);
+		if (cached != context.successful_thunks.end()) {
+			if (context.metrics) ++context.metrics->thunk_cache_hits;
+			for (const auto raw : cached->second) {
+				if (!materialize_import(raw, ordinal_mask, image, library,
+					identities, context, diagnostics)) {
+					return false;
+				}
 			}
+			return true;
 		}
-		return true;
 	}
 
 	std::vector<std::uint64_t> pending;
@@ -280,10 +330,12 @@ bool traverse_import_table(const ImageView& image, std::uint64_t table_rva,
 			return false;
 		}
 		if (span->backing == SpanBacking::zero_fill) {
-			context.successful_thunks.emplace(key, std::move(pending));
-			if (context.metrics) {
-				context.metrics->thunk_cache_entries =
-					context.successful_thunks.size();
+			if (cacheable) {
+				context.successful_thunks.emplace(key, std::move(pending));
+				if (context.metrics) {
+					context.metrics->thunk_cache_entries =
+						context.successful_thunks.size();
+				}
 			}
 			return true;
 		}
@@ -299,10 +351,12 @@ bool traverse_import_table(const ImageView& image, std::uint64_t table_rva,
 			return false;
 		}
 		if (raw == 0) {
-			context.successful_thunks.emplace(key, std::move(pending));
-			if (context.metrics) {
-				context.metrics->thunk_cache_entries =
-					context.successful_thunks.size();
+			if (cacheable) {
+				context.successful_thunks.emplace(key, std::move(pending));
+				if (context.metrics) {
+					context.metrics->thunk_cache_entries =
+						context.successful_thunks.size();
+				}
 			}
 			return true;
 		}
