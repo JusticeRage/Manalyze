@@ -132,6 +132,49 @@ BOOST_AUTO_TEST_CASE(reject_overdeclared_nested_tlv)
 	BOOST_CHECK_EQUAL(digest.digest.front(), 0xaa);
 }
 
+BOOST_AUTO_TEST_CASE(reject_empty_required_attribute_with_diagnostic)
+{
+	const auto encoded = from_hex("3000");
+	auto asn1 = make_asn1_string(encoded);
+	AuthenticodeDigest digest;
+	digest.algorithm = "unchanged";
+	digest.digest = {0xaa};
+	ErrorCapture errors;
+	BOOST_CHECK(!plugin::parse_spc_asn1(asn1.get(), digest));
+	BOOST_CHECK_NE(errors.str().find("SpcAttributeTypeAndOptionalValue"), std::string::npos);
+	BOOST_CHECK_EQUAL(digest.algorithm, "unchanged");
+	BOOST_REQUIRE_EQUAL(digest.digest.size(), 1);
+	BOOST_CHECK_EQUAL(digest.digest.front(), 0xaa);
+}
+
+BOOST_AUTO_TEST_CASE(reject_null_spc_data_with_diagnostic)
+{
+	AuthenticodeDigest digest;
+	digest.algorithm = "unchanged";
+	digest.digest = {0xaa};
+	ErrorCapture errors;
+	BOOST_CHECK(!plugin::parse_spc_asn1(nullptr, digest));
+	BOOST_CHECK_NE(errors.str().find("SpcIndirectDataContent"), std::string::npos);
+	BOOST_CHECK_EQUAL(digest.algorithm, "unchanged");
+	BOOST_REQUIRE_EQUAL(digest.digest.size(), 1);
+	BOOST_CHECK_EQUAL(digest.digest.front(), 0xaa);
+}
+
+BOOST_AUTO_TEST_CASE(reject_empty_spc_data_with_diagnostic)
+{
+	Asn1StringPtr asn1(ASN1_STRING_new(), ASN1_STRING_free);
+	BOOST_REQUIRE(asn1);
+	AuthenticodeDigest digest;
+	digest.algorithm = "unchanged";
+	digest.digest = {0xaa};
+	ErrorCapture errors;
+	BOOST_CHECK(!plugin::parse_spc_asn1(asn1.get(), digest));
+	BOOST_CHECK_NE(errors.str().find("SpcIndirectDataContent"), std::string::npos);
+	BOOST_CHECK_EQUAL(digest.algorithm, "unchanged");
+	BOOST_REQUIRE_EQUAL(digest.digest.size(), 1);
+	BOOST_CHECK_EQUAL(digest.digest.front(), 0xaa);
+}
+
 BOOST_AUTO_TEST_CASE(reject_empty_certificate_before_bio_creation)
 {
 	auto bytes = read_binary_file("testfiles/manatest.exe");

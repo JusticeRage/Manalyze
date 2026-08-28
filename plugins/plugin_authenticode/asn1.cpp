@@ -40,6 +40,8 @@ bool asn1_read(const unsigned char*& cursor,
     if (!cursor || remaining == 0 ||
         remaining > static_cast<std::size_t>(std::numeric_limits<long>::max()))
     {
+        PRINT_ERROR << "[plugin_authenticode] Invalid " << object_name
+                    << " ASN.1 input span." << std::endl;
         return false;
     }
 
@@ -179,6 +181,8 @@ bool parse_spc_asn1(const ASN1_STRING* asn1, AuthenticodeDigest& digest)
     const int encoded_length = asn1 ? ASN1_STRING_length(asn1) : 0;
     if (encoded_length <= 0)
     {
+        PRINT_ERROR << "[plugin_authenticode] Invalid SpcIndirectDataContent"
+                       " ASN.1 input span." << std::endl;
         return false;
     }
 #if OPENSSL_VERSION_NUMBER >= 0x10100000L
@@ -188,6 +192,8 @@ bool parse_spc_asn1(const ASN1_STRING* asn1, AuthenticodeDigest& digest)
 #endif
     if (!cursor)
     {
+        PRINT_ERROR << "[plugin_authenticode] Invalid SpcIndirectDataContent"
+                       " ASN.1 input span." << std::endl;
         return false;
     }
     std::size_t remaining = static_cast<std::size_t>(encoded_length);
