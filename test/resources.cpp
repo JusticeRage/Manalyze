@@ -21,16 +21,40 @@ along with Manalyze.  If not, see <http://www.gnu.org/licenses/>.
 #include <cstring>
 #include <fstream>
 #include <limits>
+#include <sstream>
 #include <thread>
 #include <type_traits>
 #include <vector>
 
 #include "fixtures.h"
+#include "manacommons/color.h"
 #include "manape/pe.h"
 #include "manape/resources.h"
 #include "hash-library/hashes.h"
 
 namespace {
+
+class ErrorCapture
+{
+public:
+	ErrorCapture()
+		: previous_level(utils::get_log_level()),
+		  previous_buffer(std::cerr.rdbuf(captured.rdbuf()))
+	{ utils::set_log_level(utils::LogLevel::ERROR); }
+
+	~ErrorCapture()
+	{
+		std::cerr.rdbuf(previous_buffer);
+		utils::set_log_level(previous_level);
+	}
+
+	std::string str() const { return captured.str(); }
+
+private:
+	utils::LogLevel previous_level;
+	std::ostringstream captured;
+	std::streambuf* previous_buffer;
+};
 
 std::vector<std::uint8_t> make_repeated_resource_tree(std::uint16_t root_count,
 	std::uint16_t type_count, std::uint16_t name_count)
@@ -154,6 +178,66 @@ BOOST_AUTO_TEST_CASE(reject_resource_tree_over_total_budget)
 	auto resources = pe->get_resources();
 	BOOST_REQUIRE(resources);
 	BOOST_CHECK(resources->empty());
+}
+
+BOOST_AUTO_TEST_CASE(reject_unmapped_resource_root_with_named_error)
+{
+	auto bytes = make_repeated_resource_tree(1, 1, 1);
+	constexpr size_t optional_header = 0x128;
+	constexpr size_t resource_directory =
+		optional_header + 96 + IMAGE_DIRECTORY_ENTRY_RESOURCE * 8;
+	write_u32(bytes, resource_directory, 0xffff0000);
+
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "unmapped-resource-root.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(pe->get_resources()->empty());
+	BOOST_CHECK_NE(errors.str().find("IMAGE_RESOURCE_DIRECTORY"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(reject_overflowing_resource_relative_rva)
+{
+	auto bytes = make_repeated_resource_tree(1, 1, 1);
+	constexpr size_t optional_header = 0x128;
+	constexpr size_t resource_directory =
+		optional_header + 96 + IMAGE_DIRECTORY_ENTRY_RESOURCE * 8;
+	constexpr size_t section_table = optional_header + 0xe0;
+	constexpr size_t resource_section = section_table + 4 * 40;
+
+	write_u32(bytes, resource_directory, 0xfffffff0);
+	write_u32(bytes, resource_section + 8, 1);
+	write_u32(bytes, resource_section + 12, 0xfffffff0);
+	constexpr size_t first_language_entry = 0x2040;
+	write_u32(bytes, first_language_entry + 4, 0x1010);
+	write_u32(bytes, 0x400, 0x1010);
+	write_u32(bytes, 0x404, 1);
+	write_u32(bytes, 0x408, 0);
+	write_u32(bytes, 0x40c, 0);
+	bytes[0x410] = 0x41;
+
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "wrapped-resource-rva.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	BOOST_CHECK(pe->get_resources()->empty());
+	BOOST_CHECK_NE(errors.str().find("IMAGE_RESOURCE_DATA_ENTRY"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(keep_valid_resource_after_invalid_data_entry_offset)
+{
+	auto bytes = make_repeated_resource_tree(1, 1, 2);
+	constexpr size_t first_language_entry = 0x2040;
+	constexpr size_t second_language_entry = 0x2048;
+	write_u32(bytes, first_language_entry, 0x409);
+	write_u32(bytes, first_language_entry + 4, 0x7ffffff0);
+	write_u32(bytes, second_language_entry, 0x40c);
+
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(), "recover-resource-leaf.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	const auto resources = pe->get_resources();
+	BOOST_REQUIRE_EQUAL(resources->size(), 1);
+	BOOST_CHECK_EQUAL(*resources->front()->get_language(), "French - France");
+	BOOST_CHECK_NE(errors.str().find("IMAGE_RESOURCE_DATA_ENTRY"), std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(parse_resources)

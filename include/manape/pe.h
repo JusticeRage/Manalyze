@@ -464,9 +464,8 @@ private:
 	 *
 	 *	@param	image_resource_directory& dir The structure to fill.
 	 *	@param	size_t& remaining_entries The remaining resource-tree entry budget.
-	 *	@param	unsigned int offset The offset at which to jump before reading the directory.
+	 *	@param	std::uint64_t relative_offset The offset at which to jump before reading the directory.
 	 *			The offset is relative to the beginning of the resource "section" (NOT a RVA).
-	 *			If it is 0, the function reads from the cursor's current location.
 	 *
 	 *	Implementation is located in resources.cpp
 	 *
@@ -480,8 +479,8 @@ private:
 	};
 
 	resource_directory_result _read_image_resource_directory(image_resource_directory& dir,
-													  size_t& remaining_entries,
-													  unsigned int offset = 0) const;
+												  size_t& remaining_entries,
+												  std::uint64_t relative_offset = 0) const;
 
 	std::string							_path;
 	std::string							_resource_path;

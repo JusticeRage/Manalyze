@@ -30,6 +30,20 @@ namespace mana
 namespace {
 	constexpr size_t MAX_RESOURCE_DIRECTORY_ENTRIES = 0x100;
 	constexpr size_t MAX_RESOURCE_ENTRIES = 10000;
+	constexpr std::uint64_t IMAGE_RESOURCE_DIRECTORY_SIZE = 16;
+	constexpr std::uint64_t IMAGE_RESOURCE_DATA_ENTRY_SIZE = 16;
+
+	bool fits_file_range(std::uint64_t offset, std::uint64_t size,
+		std::uint64_t file_size)
+	{
+		return offset <= file_size && size <= file_size - offset;
+	}
+
+	bool seek_absolute(FILE* file, std::uint64_t offset)
+	{
+		return offset <= static_cast<std::uint64_t>(std::numeric_limits<long>::max()) &&
+			fseek(file, static_cast<long>(offset), SEEK_SET) == 0;
+	}
 
 	// Fallback mutex only serializes access within this translation unit.
 	std::mutex& io_mutex_or_fallback(const pMutex& mutex) {
@@ -40,23 +54,29 @@ namespace {
 }
 
 PE::resource_directory_result PE::_read_image_resource_directory(image_resource_directory& dir,
-	size_t& remaining_entries, unsigned int offset) const
+	size_t& remaining_entries, std::uint64_t relative_offset) const
 {
 	if (!_ioh || _file_handle == nullptr) {
 		return resource_directory_result::read_error;
 	}
 
-	if (offset)
-	{
-		offset = rva_to_offset(_ioh->directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress) + offset;
-		if (!offset || fseek(_file_handle.get(), offset, SEEK_SET))
-		{
-			PRINT_ERROR << "Could not reach an IMAGE_RESOURCE_DIRECTORY." << DEBUG_INFO_INSIDEPE << std::endl;
-			return resource_directory_result::read_error;
-		}
+	const std::uint64_t root_offset =
+		rva_to_offset(_ioh->directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress);
+	if (!root_offset ||
+		relative_offset > std::numeric_limits<std::uint64_t>::max() - root_offset) {
+		PRINT_ERROR << "Invalid IMAGE_RESOURCE_DIRECTORY relative offset."
+			<< DEBUG_INFO_INSIDEPE << std::endl;
+		return resource_directory_result::read_error;
+	}
+	const std::uint64_t target = root_offset + relative_offset;
+	if (!fits_file_range(target, IMAGE_RESOURCE_DIRECTORY_SIZE, _file_size) ||
+		!seek_absolute(_file_handle.get(), target)) {
+		PRINT_ERROR << "Invalid IMAGE_RESOURCE_DIRECTORY bounds."
+			<< DEBUG_INFO_INSIDEPE << std::endl;
+		return resource_directory_result::read_error;
 	}
 
-	unsigned int size = 2*sizeof(std::uint32_t) + 4*sizeof(std::uint16_t);
+	unsigned int size = static_cast<unsigned int>(IMAGE_RESOURCE_DIRECTORY_SIZE);
 	dir.Entries.clear();
 	if (size != fread(&dir, 1, size, _file_handle.get()))
 	{
@@ -99,23 +119,37 @@ PE::resource_directory_result PE::_read_image_resource_directory(image_resource_
 		// For named entries, NameOrId is a RVA to a string: retrieve it and NameOrId has high bit set to 1.
 		if (entry->NameOrId & 0x80000000)
 		{
-			// The offset of the string is relative
-			auto name_offset = rva_to_offset(_ioh->directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress)
-				+ (entry->NameOrId & 0x7FFFFFFF);
-			if (!name_offset || !utils::read_string_at_offset(_file_handle.get(), name_offset, entry->NameStr, true))
+			const std::uint64_t name_relative_offset = entry->NameOrId & 0x7fffffffu;
+			const long next_entry_offset = ftell(_file_handle.get());
+			if (name_relative_offset > std::numeric_limits<std::uint64_t>::max() - root_offset)
 			{
-				PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DIRECTORY_ENTRY's name." << DEBUG_INFO_INSIDEPE << std::endl;
+				PRINT_ERROR << "Invalid IMAGE_RESOURCE_DIRECTORY_ENTRY name offset."
+					<< DEBUG_INFO_INSIDEPE << std::endl;
 				return resource_directory_result::read_error;
 			}
-		}
+			const std::uint64_t name_offset = root_offset + name_relative_offset;
+			if (next_entry_offset < 0 ||
+				name_offset > std::numeric_limits<unsigned int>::max() ||
+				!fits_file_range(name_offset, sizeof(std::uint16_t), _file_size) ||
+				!seek_absolute(_file_handle.get(), name_offset)) {
+				PRINT_ERROR << "Invalid IMAGE_RESOURCE_DIRECTORY_ENTRY name bounds."
+					<< DEBUG_INFO_INSIDEPE << std::endl;
+				return resource_directory_result::read_error;
+			}
 
-		// Immediately reject obvious bogus entries.
-		if ((entry->OffsetToData & 0x7FFFFFFF) > _file_size)
-		{
-			CAPPED_LOGGING_WARNING
-			PRINT_WARNING << "Ignored an invalid IMAGE_RESOURCE_DIRECTORY_ENTRY." << DEBUG_INFO_INSIDEPE << std::endl;
-			CAPPED_LOGGING_END
-			continue;
+			std::uint16_t name_length = 0;
+			const std::uint64_t saved_offset = static_cast<std::uint64_t>(next_entry_offset);
+			if (sizeof(name_length) != fread(&name_length, 1, sizeof(name_length), _file_handle.get()) ||
+				!fits_file_range(name_offset, sizeof(name_length) +
+					2 * static_cast<std::uint64_t>(name_length), _file_size) ||
+				!fits_file_range(saved_offset, 0, _file_size) ||
+				!seek_absolute(_file_handle.get(), saved_offset) ||
+				!utils::read_string_at_offset(_file_handle.get(),
+					static_cast<unsigned int>(name_offset), entry->NameStr, true)) {
+				PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DIRECTORY_ENTRY's name."
+					<< DEBUG_INFO_INSIDEPE << std::endl;
+				return resource_directory_result::read_error;
+			}
 		}
 
 		dir.Entries.push_back(entry);
@@ -138,7 +172,8 @@ bool PE::_parse_resources()
 	if (!_ioh || _file_handle == nullptr) {
 		return false;
 	}
-	if (!_reach_directory(IMAGE_DIRECTORY_ENTRY_RESOURCE))	{ // No resources.
+	if (!_reach_directory(IMAGE_DIRECTORY_ENTRY_RESOURCE, 0,
+		"IMAGE_RESOURCE_DIRECTORY"))	{ // No resources.
 		return true;
 	}
 
@@ -183,24 +218,28 @@ bool PE::_parse_resources()
 				image_resource_data_entry entry;
 				memset(&entry, 0, sizeof(image_resource_data_entry));
 
-				unsigned int offset = rva_to_offset(_ioh->directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress + ((*it3)->OffsetToData & 0x7FFFFFFF));
-				if (!offset || fseek(_file_handle.get(), offset, SEEK_SET))
+				const std::uint64_t data_entry_rva =
+					static_cast<std::uint64_t>(_ioh->directories[IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress) +
+					static_cast<std::uint64_t>((*it3)->OffsetToData & 0x7fffffffu);
+				if (data_entry_rva > std::numeric_limits<std::uint32_t>::max())
 				{
-					PRINT_ERROR << "Could not reach an IMAGE_RESOURCE_DATA_ENTRY." << DEBUG_INFO_INSIDEPE << std::endl;
-					return false;
+					PRINT_ERROR << "Invalid IMAGE_RESOURCE_DATA_ENTRY relative RVA."
+						<< DEBUG_INFO_INSIDEPE << std::endl;
+					continue;
+				}
+				const std::uint64_t data_entry_offset = rva_to_offset(data_entry_rva);
+				if (!data_entry_offset ||
+					!fits_file_range(data_entry_offset, IMAGE_RESOURCE_DATA_ENTRY_SIZE, _file_size) ||
+					!seek_absolute(_file_handle.get(), data_entry_offset))
+				{
+					PRINT_ERROR << "Invalid IMAGE_RESOURCE_DATA_ENTRY bounds."
+						<< DEBUG_INFO_INSIDEPE << std::endl;
+					continue;
 				}
 
 				if (sizeof(image_resource_data_entry) != fread(&entry, 1, sizeof(image_resource_data_entry), _file_handle.get()))
 				{
 					PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DATA_ENTRY." << DEBUG_INFO_INSIDEPE << std::endl;
-					return false;
-				}
-
-				if (entry.Size > _file_size)
-				{
-					CAPPED_LOGGING_WARNING
-					PRINT_WARNING << "Ignored an invalid IMAGE_RESOURCE_DATA_ENTRY" << DEBUG_INFO_INSIDEPE << std::endl;
-					CAPPED_LOGGING_END
 					continue;
 				}
 
@@ -234,8 +273,8 @@ bool PE::_parse_resources()
 					r_language = *nt::translate_to_flag((*it3)->NameOrId, nt::LANG_IDS);
 				}
 
-				offset = rva_to_offset(entry.OffsetToData);
-				if (!offset)
+				std::uint64_t payload_offset = rva_to_offset(entry.OffsetToData);
+				if (!payload_offset)
 				{
 					CAPPED_LOGGING_WARNING
 					PRINT_WARNING << "Could not locate the section containing resource ";
@@ -247,8 +286,15 @@ bool PE::_parse_resources()
 					}
 					std::cerr << ". Trying to use the RVA as an offset..." << DEBUG_INFO_INSIDEPE << std::endl;
 					CAPPED_LOGGING_END
-					offset = entry.OffsetToData;
+					payload_offset = entry.OffsetToData;
 				}
+				if (payload_offset > std::numeric_limits<std::uint32_t>::max() ||
+					!fits_file_range(payload_offset, entry.Size, _file_size)) {
+					PRINT_ERROR << "Invalid IMAGE_RESOURCE_DATA_ENTRY payload bounds."
+						<< DEBUG_INFO_INSIDEPE << std::endl;
+					continue;
+				}
+				const std::uint32_t offset = static_cast<std::uint32_t>(payload_offset);
 				pResource res;
 				if (entry.Size == 0)
 				{
