@@ -20,6 +20,9 @@ target_compile_definitions(manalyze-parser-tests PRIVATE
 	MANAPE_STATIC MANALYZE_PARSER_TESTING)
 target_link_libraries(manalyze-parser-tests
 	manape-parser-test-static manacommons ${MANALYZE_BOOST_TEST_LIBS})
+
+add_executable(parser-amplification-benchmark parser_amplification_benchmark.cpp)
+target_link_libraries(parser-amplification-benchmark manape)
 if (Threads_FOUND)
 	target_link_libraries(manalyze-parser-tests Threads::Threads)
 endif()
