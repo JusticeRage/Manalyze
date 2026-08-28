@@ -240,6 +240,28 @@ BOOST_AUTO_TEST_CASE(keep_valid_resource_after_invalid_data_entry_offset)
 	BOOST_CHECK_NE(errors.str().find("IMAGE_RESOURCE_DATA_ENTRY"), std::string::npos);
 }
 
+BOOST_AUTO_TEST_CASE(keep_valid_resource_after_malformed_named_directory_entry)
+{
+	auto bytes = make_repeated_resource_tree(2, 1, 1);
+	constexpr size_t resource_raw = 0x2000;
+	constexpr size_t root_entries = resource_raw + 16;
+	write_u16(bytes, resource_raw + 12, 1);
+	write_u16(bytes, resource_raw + 14, 1);
+	write_u32(bytes, root_entries, 0xfffffff0);
+
+	ErrorCapture errors;
+	auto pe = mana::PE::create_from_bytes(bytes.data(), bytes.size(),
+		"recover-named-resource-entry.exe");
+	BOOST_REQUIRE(pe && pe->is_valid());
+	const auto resources = pe->get_resources();
+	BOOST_REQUIRE_EQUAL(resources->size(), 1);
+	BOOST_CHECK_EQUAL(*resources->front()->get_type(), "RT_RCDATA");
+	const auto payload = resources->front()->get_raw_data();
+	BOOST_REQUIRE_EQUAL(payload->size(), 1);
+	BOOST_CHECK_EQUAL(payload->front(), 0x41);
+	BOOST_CHECK_NE(errors.str().find("IMAGE_RESOURCE_DIRECTORY_ENTRY"), std::string::npos);
+}
+
 BOOST_AUTO_TEST_CASE(parse_resources)
 {
 	mana::PE pe("testfiles/manatest.exe");

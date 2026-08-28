@@ -121,34 +121,51 @@ PE::resource_directory_result PE::_read_image_resource_directory(image_resource_
 		{
 			const std::uint64_t name_relative_offset = entry->NameOrId & 0x7fffffffu;
 			const long next_entry_offset = ftell(_file_handle.get());
+			if (next_entry_offset < 0) {
+				PRINT_ERROR << "Could not locate the next IMAGE_RESOURCE_DIRECTORY_ENTRY."
+					<< DEBUG_INFO_INSIDEPE << std::endl;
+				return resource_directory_result::read_error;
+			}
+			const std::uint64_t saved_offset = static_cast<std::uint64_t>(next_entry_offset);
+			bool valid_name = true;
+			std::uint64_t name_offset = 0;
 			if (name_relative_offset > std::numeric_limits<std::uint64_t>::max() - root_offset)
 			{
 				PRINT_ERROR << "Invalid IMAGE_RESOURCE_DIRECTORY_ENTRY name offset."
 					<< DEBUG_INFO_INSIDEPE << std::endl;
-				return resource_directory_result::read_error;
+				valid_name = false;
 			}
-			const std::uint64_t name_offset = root_offset + name_relative_offset;
-			if (next_entry_offset < 0 ||
-				name_offset > std::numeric_limits<unsigned int>::max() ||
+			else {
+				name_offset = root_offset + name_relative_offset;
+			}
+			if (valid_name &&
+				(name_offset > std::numeric_limits<unsigned int>::max() ||
 				!fits_file_range(name_offset, sizeof(std::uint16_t), _file_size) ||
-				!seek_absolute(_file_handle.get(), name_offset)) {
+				!seek_absolute(_file_handle.get(), name_offset))) {
 				PRINT_ERROR << "Invalid IMAGE_RESOURCE_DIRECTORY_ENTRY name bounds."
 					<< DEBUG_INFO_INSIDEPE << std::endl;
-				return resource_directory_result::read_error;
+				valid_name = false;
 			}
 
 			std::uint16_t name_length = 0;
-			const std::uint64_t saved_offset = static_cast<std::uint64_t>(next_entry_offset);
-			if (sizeof(name_length) != fread(&name_length, 1, sizeof(name_length), _file_handle.get()) ||
+			if (valid_name &&
+				(sizeof(name_length) != fread(&name_length, 1, sizeof(name_length), _file_handle.get()) ||
 				!fits_file_range(name_offset, sizeof(name_length) +
 					2 * static_cast<std::uint64_t>(name_length), _file_size) ||
-				!fits_file_range(saved_offset, 0, _file_size) ||
-				!seek_absolute(_file_handle.get(), saved_offset) ||
 				!utils::read_string_at_offset(_file_handle.get(),
-					static_cast<unsigned int>(name_offset), entry->NameStr, true)) {
+					static_cast<unsigned int>(name_offset), entry->NameStr, true))) {
 				PRINT_ERROR << "Could not read an IMAGE_RESOURCE_DIRECTORY_ENTRY's name."
 					<< DEBUG_INFO_INSIDEPE << std::endl;
+				valid_name = false;
+			}
+			if (!fits_file_range(saved_offset, 0, _file_size) ||
+				!seek_absolute(_file_handle.get(), saved_offset)) {
+				PRINT_ERROR << "Could not restore the next IMAGE_RESOURCE_DIRECTORY_ENTRY."
+					<< DEBUG_INFO_INSIDEPE << std::endl;
 				return resource_directory_result::read_error;
+			}
+			if (!valid_name) {
+				continue;
 			}
 		}
 
