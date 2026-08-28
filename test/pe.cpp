@@ -24,7 +24,25 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <cerrno>
+#include <cstdlib>
 #include <sstream>
+
+#if defined(_WIN32)
+#	include <windows.h>
+#elif defined(__APPLE__)
+#	include <mach-o/dyld.h>
+#	include <sys/wait.h>
+#	include <unistd.h>
+#elif defined(__FreeBSD__)
+#	include <sys/types.h>
+#	include <sys/sysctl.h>
+#	include <sys/wait.h>
+#	include <unistd.h>
+#else
+#	include <sys/wait.h>
+#	include <unistd.h>
+#endif
 
 #include "fixtures.h"
 #include "manacommons/color.h"
@@ -59,6 +77,138 @@ private:
 	std::ostringstream captured;
 	std::streambuf* previous_buffer;
 };
+
+const char* const CAP_TEST_CHILD = "MANALYZE_CAP_TEST_CHILD";
+const char* const CAP_TEST_NAME =
+	"resources/cap_malformed_debug_diagnostics_without_stopping_scan";
+
+std::string current_test_executable()
+{
+#if defined(_WIN32)
+	std::vector<char> path(MAX_PATH);
+	for (;;) {
+		const DWORD length = ::GetModuleFileNameA(nullptr, path.data(),
+			static_cast<DWORD>(path.size()));
+		if (length == 0) {
+			return {};
+		}
+		if (length < path.size()) {
+			return std::string(path.data(), length);
+		}
+		path.resize(path.size() * 2);
+	}
+#elif defined(__APPLE__)
+	std::uint32_t size = 0;
+	_NSGetExecutablePath(nullptr, &size);
+	std::vector<char> path(size);
+	if (_NSGetExecutablePath(path.data(), &size) == 0) {
+		return path.data();
+	}
+	return {};
+#elif defined(__FreeBSD__)
+	const int mib[] = { CTL_KERN, KERN_PROC, KERN_PROC_PATHNAME, -1 };
+	size_t size = 0;
+	if (::sysctl(mib, 4, nullptr, &size, nullptr, 0) != 0 || size == 0) {
+		return {};
+	}
+	std::vector<char> path(size);
+	if (::sysctl(mib, 4, path.data(), &size, nullptr, 0) == 0 && size != 0) {
+		return path.data();
+	}
+	return {};
+#elif defined(__linux__)
+	std::vector<char> path(1024);
+	for (;;) {
+		const ssize_t length = ::readlink("/proc/self/exe", path.data(), path.size());
+		if (length < 0) {
+			return {};
+		}
+		if (static_cast<size_t>(length) < path.size()) {
+			return std::string(path.data(), static_cast<size_t>(length));
+		}
+		path.resize(path.size() * 2);
+	}
+#else
+	return {};
+#endif
+}
+
+std::string fixture_compatible_argv0()
+{
+	const fs::path original(unit::master_test_suite().argv[0]);
+	if (original.is_absolute()) {
+		return original.string();
+	}
+	return (fs::current_path().parent_path() / "bin" / original.filename()).string();
+}
+
+int run_cap_test_child()
+{
+	const std::string executable = current_test_executable();
+	if (executable.empty()) {
+		return EXIT_FAILURE;
+	}
+	const std::string argv0 = fixture_compatible_argv0();
+	const std::string run_test = std::string("--run_test=") + CAP_TEST_NAME;
+
+#if defined(_WIN32)
+	std::string command_line = "\"" + argv0 + "\" " + run_test + " --log_level=error";
+	STARTUPINFOA startup_info = {};
+	startup_info.cb = sizeof(startup_info);
+	PROCESS_INFORMATION process_info = {};
+	if (!::SetEnvironmentVariableA(CAP_TEST_CHILD, "1")) {
+		return EXIT_FAILURE;
+	}
+	const BOOL created = ::CreateProcessA(executable.c_str(), command_line.data(), nullptr,
+		nullptr, FALSE, 0, nullptr, nullptr, &startup_info, &process_info);
+	::SetEnvironmentVariableA(CAP_TEST_CHILD, nullptr);
+	if (!created) {
+		return EXIT_FAILURE;
+	}
+	bool succeeded = false;
+	const DWORD wait_result = ::WaitForSingleObject(process_info.hProcess, INFINITE);
+	if (wait_result == WAIT_OBJECT_0) {
+		DWORD exit_code = EXIT_FAILURE;
+		succeeded = ::GetExitCodeProcess(process_info.hProcess, &exit_code) && exit_code == 0;
+	} else {
+		constexpr DWORD reap_timeout_ms = 5000;
+		const BOOL terminated = ::TerminateProcess(process_info.hProcess, EXIT_FAILURE);
+		const DWORD reap_result = ::WaitForSingleObject(process_info.hProcess, reap_timeout_ms);
+		if (!terminated || reap_result != WAIT_OBJECT_0) {
+			succeeded = false;
+		}
+	}
+	::CloseHandle(process_info.hThread);
+	::CloseHandle(process_info.hProcess);
+	return succeeded ? EXIT_SUCCESS : EXIT_FAILURE;
+#else
+	const pid_t pid = ::fork();
+	if (pid == 0) {
+		if (::setenv(CAP_TEST_CHILD, "1", 1) != 0) {
+			::_exit(EXIT_FAILURE);
+		}
+		char* const child_argv[] = {
+			const_cast<char*>(argv0.c_str()),
+			const_cast<char*>(run_test.c_str()),
+			const_cast<char*>("--log_level=error"),
+			nullptr
+		};
+		::execv(executable.c_str(), child_argv);
+		::_exit(EXIT_FAILURE);
+	}
+	if (pid < 0) {
+		return EXIT_FAILURE;
+	}
+
+	int status = 0;
+	while (::waitpid(pid, &status, 0) < 0) {
+		if (errno != EINTR) {
+			return EXIT_FAILURE;
+		}
+	}
+	return WIFEXITED(status) ? WEXITSTATUS(status) : EXIT_FAILURE;
+#endif
+}
 
 std::vector<std::uint8_t> make_certificate_pe(std::uint32_t directory_size,
 	std::uint32_t certificate_length, const std::vector<std::uint8_t>& payload,
@@ -885,6 +1035,11 @@ BOOST_AUTO_TEST_CASE(capped_logging_respects_message_severity)
 
 BOOST_AUTO_TEST_CASE(cap_malformed_debug_diagnostics_without_stopping_scan)
 {
+	if (std::getenv(CAP_TEST_CHILD) == nullptr) {
+		BOOST_REQUIRE_EQUAL(run_cap_test_child(), EXIT_SUCCESS);
+		return;
+	}
+
 	auto bytes = read_binary_file("testfiles/manatest.exe");
 	const size_t malformed_entries = LOG_CAP + 5;
 	const size_t first_entry = 0x17a0;
